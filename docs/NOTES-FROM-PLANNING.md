@@ -74,7 +74,7 @@ Planning session, 2026-10-15 09:10 UTC. Alan looked at the three options drawn o
 
 ## 2026-10-15, entry 429: Discord attachments may go on the GitHub issues (Alan's consent)
 
-**Status: actioned 2026-10-15; every section done but 2.5's server paste, which is written as request 102 and waits for Alan to run it. Section 2 was first refused by Claude Code's permission check (posters' personal data) and done once Alan gave his word in the session (request 101). Section 3: nothing ships.**
+**Status: actioned 2026-10-15; every section done. 2.5's server paste, request 102, was run by Alan on 2026-10-16 at 07:45 UTC and is recorded in `docs/RESTORE.md`. Section 2 was first refused by Claude Code's permission check (posters' personal data) and done once Alan gave his word in the session (request 101). Section 3: nothing ships.**
 
 Planning session, 2026-10-15 09:05 UTC. Alan, in the planning chat, 2026-10-15 03:01 Denver: "The discord is public and it is fine to
 publish them to github. It does not need additional permission to do that."
@@ -768,7 +768,7 @@ the worker against recorded Discord replies (no network in tests). Website and s
 
 ## 2026-10-13, entry 418: the upload page, from a tester's bug report (take after 417, before 415 and 416)
 
-**Status: actioned 2026-10-13; sections 2, 3 and 4 done. Section 1 waits on request 99, a read-only paste for Alan, because Code's own connection to the server is refused; the page now says the status of any reply that is not GroupLab's either way.**
+**Status: actioned 2026-10-13; every section done. Section 1 was finished on 2026-10-16 from request 99's answer: the failed post got nginx status 499 (the connection closed before any reply) and was stored all the same; the server's logs are in Denver time.**
 
 From the planning session, 2026-10-13 08:00 UTC. Order for the inbox now: **417, 418, 419, then 415 and 416.** Budget for all of them:
 stop at **70% of the week** (raised from entry 415's 55%: the week resets 2026-10-15 02:00 UTC and Alan would rather use it than leave

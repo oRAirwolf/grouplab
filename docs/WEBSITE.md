@@ -224,6 +224,10 @@ The workflow failing, or the new commit not being live 30 minutes after a publis
 
 Reading the sync log over SSH is allowed for diagnosis. Any other change to the server needs its own entry.
 
+**The server's logs are in Denver time**, -0600 in summer and -0700 from 1 November, not UTC (request 99, 2026-10-16: a paste
+that searched a UTC window found nothing). A paste that reads nginx's access logs for grouplab.org converts its window first; they
+reach back to 21 September 2026.
+
 ## The fallback
 
 The manual deploy brief in the website chat's own folder still exists and still works. It is not used any more, and it is not kept in step with this document; it is there only in case this pipeline has to be bypassed once.

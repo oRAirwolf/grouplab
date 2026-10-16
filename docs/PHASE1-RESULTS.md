@@ -497,10 +497,19 @@ pixels it measures) nor the printer's scale (it multiplies sizes and never moves
 
 ## Entry 418: the upload page, from a tester's bug report (2026-10-13)
 
-1. **Which reply it was: waiting on request 99.** Code's own connection to the server is refused, so the access log's lines for the
-   posts of 12 October are one read-only paste for Alan. What the files show without it: Quack's two .50 AE uploads are byte for byte
-   the same, and the first (`312dab10`, 02:53:26 UTC) arrived although the page said it had not; `06910ef5`, sent three minutes later, went
-   to `C:\Dev\grouplab-trash\2026-10-13\` (section 4). The page's "could not read" is any reply that is not GroupLab's JSON.
+1. **Which reply it was** (request 99, answered 2026-10-16). The server's nginx logs are in Denver time (-0600 in October), so the
+   first paste's UTC window found nothing; Alan's corrected read-only paste over 11 October 19:00 to 12 October 04:59 local found every
+   post to the upload page. The failed one is at 20:53:26 -0600 (02:53:26 UTC): **status 499 with 0 bytes**, nginx's word for the other
+   end closing the connection before any reply was sent. So it was not a 413 from nginx or Cloudflare, and not PHP's `post_max_size`:
+   the receiver read the whole post and stored it as `312dab10`, stamped 02:53:26 UTC, the same second. **The first "1 of 2" was stored
+   although the page said it failed**, and Quack's resend three minutes later (`06910ef5`) went to the trash (section 4). Since nginx
+   sent nothing, the reply the page could not read was Cloudflare's own error page, sent when its side closed as the receiver finished;
+   most likely its 524 timeout, which nginx's log cannot tell apart from Cloudflare's other pages. After it: 200 with 57 bytes
+   (GroupLab's reply) at 20:56, 21:02, 21:04 and 21:08, which with the first make the five an address may send an hour
+   (`RATE_PER_HOUR`), so the sixth at 21:09:50 got 429 with 175 bytes, the "come back in an hour" reply; then 200 at 22:00 and 22:01.
+   Seven stored, as the submissions folder shows. The page built in section 2 already says this case plainly: a 524 is "took too long",
+   a dropped connection is said as one, and both say it may have arrived and that sending again is safe because a photo already in is
+   kept once. The logs reach back to 21 September; **a paste that reads them uses Denver time** (-0600, and -0700 from 1 November).
 2. **Progress and plain errors.** The page sends with progress events: a plain bar under the button, the megabytes sent of the total,
    then "Received, checking the files", then the reference. Before a byte is sent it says what is over and what to do: a file over 30 MB,
    a set over 30 files or 400 MB, a PDF or another type. A reply that is not GroupLab's own says what happened with its status (413 is
@@ -878,6 +887,8 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
 5. **The server** is request 102, one paste in request 100's form from this commit on `main`: fetch and check the six files, back up the
    worker, install, run once, then prove the token can write contents by committing `discord/check/entry-429.txt` (OK or STOP with
    GitHub's answer). `docs/RESTORE.md`'s rows for the crash-reports files and the Discord copies now name `discord/`.
+   **Run by Alan on 2026-10-16 at 07:45 UTC**: six files `OK`, backed up, installed, `OK: the token can put attachments on issues`
+   (the check file is commit 26e83e9f in `grouplab-crash-reports`), and the worker's log clean; recorded in `docs/RESTORE.md`.
 
 ## Entry 430: the selected shot in magenta (question 99 answered) (2026-10-15)
 

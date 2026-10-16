@@ -9,25 +9,26 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-15, entry 431 (before it: entries 429 section 2, 430, 429, 428, 425, 427, 426, 424 and 423).
+**Last rewritten:** 2026-10-16, requests 102 and 99 recorded (before it: entries 431, 429 section 2, 430, 429, 428, 425, 427, 426 and 424).
 
 ---
 
 ## In flight
 
-- **Entries 421 to 424 and 426 are done.** Of the 2026-10-13 queue, 418 section 1 waits on request 99 and 415 section 3.2 is not done.
+- **Entries 418 and 421 to 424 and 426 are done** (418 section 1 from request 99, 2026-10-16: the failed post got nginx 499 and was
+  stored all the same). Of the 2026-10-13 queue, 415 section 3.2 is not done.
 - **Entries 427 and 428 are done**: Alan installed the Discord worker's fix (request 100, 08:56 UTC); it then filed #31 to #34.
   #31 (entry 418), #32 (entry 417) and #33 (entry 425) were already fixed and are closed. #34 (the tab strip's scrollbar over the
   tabs) is fixed by entry 431: the bar is a row of its own under the tabs (`TabScrollBar`), closed naming nightly 195.
-- **Entry 429 is done but its server paste** (request 102): the Discord worker commits each kept attachment into grouplab-crash-reports
-  and shows it on its issue (5baf3bbf); #30 to #34's six pictures are on them. The paste installs it and proves the token can write.
+- **Entry 429 is done**: the Discord worker commits each kept attachment into grouplab-crash-reports and shows it on its issue
+  (5baf3bbf), installed by Alan on 2026-10-16 07:45 UTC (request 102; RESTORE.md); the token's write check passed.
 - **Entries 425 and 430 are done**: the selected shot is ringed with a crosshair over everything, on the picture, the plot and the
   small sheet, in magenta (#ff3df5 dark, #b0009f light; question 99 answered (b)); its row has an amber bar. Question 100: the
   magenta is 68 from the light theme's fourth sheet and 84 to 93 from two bull marks; kept as Alan chose meanwhile.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
-- **Waiting on Alan:** requests 102 and 99 (this queue), 83, 70, 72, 74 to 77; 86 later.
+- **Waiting on Alan:** requests 83, 70, 72, 74 to 77; 86 later.
 
 ## The next three
 
@@ -58,7 +59,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **24** (102 the Discord bot's server paste for entry 429; 99 a read-only log paste for entry 418; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **22** (86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -74,7 +75,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (99 answered by entry 430 and arch
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.194 (2026-10-15 10:40 UTC, from 4959d77f): entry 430, the selected shot in magenta. 193 carried 423 to 427.
+- **Last nightly:** 0.2.0-nightly.195 (2026-10-15 13:16 UTC, from 92799dbd): entry 431, the tab strip's scrollbar on a row of its own. 194 carried 430.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
 - Crash reports open: none. #34 closed by entry 431 (nightly 195); #29 to #33, filed from Discord on 2026-10-15, closed as fixed. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
 
@@ -89,6 +90,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **The server's logs are in Denver time** (-0600, -0700 from 1 November), not UTC; a log paste converts its window (request 99).
 - **The zero's words are `ZeroWords`** (entry 424), read by the desktop panel, the report and the phone; `ZeroAxis.Rounded` has the
   clicks on every axis, `Clicks` only on one worth dialling.
 - **A tab can hold a set** (entry 423): `OpenTarget.Set` parks each picture of the set as a tab parks a target, and the pool is worked out
@@ -105,7 +107,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   at the start of a run (entries 335 and 336).
 - **Helpers only when Alan asks, ending at the week's reset; chores to chores-haiku, wording to docs-sonnet** (CLAUDE.md, 2026-10-08).
   A finished worker's subjects are compared with main before its worktree goes to the trash.
-- **A photograph's scale comes from the printer chosen**, where one is, across and down; a scan's own measured scale always wins.
 - **`android/GroupLab.Android/` ships** (entry 275): a change to the Android application alone now starts a nightly and is in its notes.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
 - **Requests for Alan go in `docs/notes/for-alan.md`**, never only in the panel. It holds only open requests and the latest summary

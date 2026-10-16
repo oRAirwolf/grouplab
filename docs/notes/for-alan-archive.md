@@ -3,6 +3,45 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 102. The Discord bot puts pictures on their issues, one paste, about five minutes, whenever suits (entry 429)
+
+**Answered 2026-10-16 (07:45 UTC):** Alan ran the paste as written: all six files `OK`, the backup `/home/ubuntu/grouplab-server/backups/2026-10-16T074457Z-discord-worker-attachments`, the install done (it also kept `/usr/local/sbin/grouplab-discord-worker.py.20261016-014457.bak`), `OK: the token can put attachments on issues`, and the worker's log clean, with no `Traceback` and no `STOP`. Recorded in `docs/RESTORE.md`.
+
+**Why:** with your word, the bot now puts each picture posted with a Discord bug report onto its private GitHub issue, so it can be
+seen there and not only on this computer. The six pictures already filed (issues #30 to #34) are on their issues now. The server
+still runs the old bot, so the next picture posted would only be kept privately. Nothing else on the server changes: only the bot's
+own script, which is backed up first. The paste also proves your token change worked, by saving one small text file into the
+crash-reports repository the way the bot will.
+
+**Steps:** in MobaXterm, in your usual bash session on the server, one paste. It fetches the files, checks each against the
+repository, backs up the bot's script, installs the new one, checks the token can save files, and runs the bot once:
+
+    mkdir -p /home/ubuntu/grouplab-server-429 && cd /home/ubuntu/grouplab-server-429 && for f in install.py grouplab-change-backup.py grouplab-discord-worker.py grouplab-set-discord-token grouplab-discord-worker.service grouplab-discord-worker.timer; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/5baf3bbf/website/server/$f" || { echo "STOP: $f could not be fetched"; break; }; done; printf '%s\n' 'b76c3e8fe6a37df0cdedc2c6e46a46dec93abda2335da812d087e03ea1f137ed  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' 'aad44a75387a1d99c2a71ae763eeb7881450ef2b5599b13d0d0c7789ae683c17  grouplab-discord-worker.py' '82fca876d79928b20520154ec424b8530465b9b49bb055bb0a33d1d0d3220fb7  grouplab-set-discord-token' '9fab3f90ad7202f01d47f217e016a9c3f3caa43fd139cbd970c92f4507d607ec  grouplab-discord-worker.service' '759a3ced54099155cc524aed9c83879f5fd4148bf2c97445e1cfcbe50cc0de3f  grouplab-discord-worker.timer' | sha256sum -c || { echo "STOP: a file is not what the repository holds"; false; } && sudo python3 grouplab-change-backup.py --label discord-worker-attachments --file /usr/local/sbin/grouplab-discord-worker.py || { echo "STOP: the backup did not finish"; false; } && sudo python3 install.py --discord || { echo "STOP: the install did not finish"; false; } && sudo python3 -c 'import importlib.util as u; s=u.spec_from_file_location("w","/usr/local/sbin/grouplab-discord-worker.py"); w=u.module_from_spec(s); s.loader.exec_module(w); l,f=w.put_on_issue(open("/etc/grouplab/error-token").read().strip(),"discord/check/entry-429.txt",b"The Discord worker can put attachments on issues (entry 429).\n","Entry 429: the worker token can write contents"); print("OK: the token can put attachments on issues" if l else "STOP: the token cannot put attachments on issues ("+f+")")' && sudo systemctl start grouplab-discord-worker.service || { echo "STOP: the worker did not run; its log follows"; false; }; sudo tail -n 20 /home/airwolf/logs/grouplab-discord-worker.log
+
+**A good result:** six lines ending `OK`, a line `done:` naming the backup folder, the install's own lines ending `done`, then
+`OK: the token can put attachments on issues`, then the log's last lines with no `Traceback` and no `STOP`. `STOP: the token cannot put
+attachments on issues (GitHub answered 403)` means the token still lacks Contents: Read and write on grouplab-crash-reports; the bot
+still files every post and says on each issue that its picture could not be put there.
+
+**A good answer:** the last lines it printed.
+
+## 99. Which reply Quack's failed upload got, one read-only paste, two minutes, whenever suits (entry 418)
+
+
+**Answered 2026-10-16:** the server's nginx logs are in Denver time (-0600), so this paste's UTC window found nothing. A corrected read-only paste over 11 October 19:00 to 12 October 04:59 local found the failed upload at 11/Oct/2026:20:53:26 -0600 with status 499 and 0 bytes (the connection closed before any reply), then 200 at 20:56, 21:02, 21:04 and 21:08, 429 at 21:09:50, and 200 at 22:00 and 22:01; the logs reach back to 21 September. Entry 418 section 1 is finished from it. **A paste that reads these logs uses Denver time** (-0600, and -0700 from 1 November).
+
+**Why:** on 12 October the Send a target page told Quack it could not read the server's reply. That sentence means the reply
+was not GroupLab's, most likely a "too large" page from Cloudflare or nginx, or a timeout. Code cannot reach the server's
+logs itself (its connection is refused), and the fix's wording should say what really happened. Nothing waits on this: the new page is
+built either way and says the status it gets.
+**Steps:** paste this into your usual bash session on the server (MobaXterm). It only reads; it prints the time, the request, the status
+and the size of every post to the upload page between 02:00 and 04:59 UTC on 12 October, and no addresses.
+
+```
+sudo sh -c 'n=0; for f in /var/log/nginx/domains/grouplab.org.log* /var/log/apache2/domains/grouplab.org.log*; do [ -e "$f" ] || continue; n=$((n+1)); echo "== $f"; case "$f" in *.gz) zcat "$f";; *) cat "$f";; esac | grep "12/Oct/2026:0[234]" | grep "/api/upload.php" | awk "{print \$4, \$6, \$7, \$9, \$10}"; done; [ "$n" -gt 0 ] || { echo "STOP: no grouplab.org access log was found under /var/log/nginx/domains or /var/log/apache2/domains"; false; }'
+```
+**A good answer:** the lines it printed, pasted back into the planning session. A line with 413 or 499 or 502 beside a POST is the one.
+
 ## 101. One word in the Claude Code session, so Discord pictures can go on their GitHub issues, one minute (entry 429)
 
 **Answered 2026-10-15 (entry 429):** Alan sent the message in the session, adding that the `grouplab-error-reports` token now has Contents: Read and write on the crash-reports repository. The worker change is commit 5baf3bbf; the six pictures of #29 to #34 are on their issues; the server install is request 102.

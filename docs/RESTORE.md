@@ -97,6 +97,16 @@ server is limited to GroupLab's own files and its installer.
 **Changes made under rule 5** (newest first). The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from
 09:02 UTC that day when these were made.
 
+- **2026-10-16 07:45 UTC, the Discord worker puts attachments on their issues** (entry 429, request 102, run by Alan; recorded
+  2026-10-16). Fetched at 5baf3bbf, six files `OK` against the repository. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only
+  (it commits each kept attachment under `discord/` in `grouplab-crash-reports` and shows it on its issue); a3ea5ecf to 5baf3bbf
+  changes nothing else under `website/server/`. Backup: `/home/ubuntu/grouplab-server/backups/2026-10-16T074457Z-discord-worker-attachments/`,
+  holding the previous worker. `install.py --discord` also kept it beside the worker as
+  `/usr/local/sbin/grouplab-discord-worker.py.20261016-014457.bak`. The token check printed
+  `OK: the token can put attachments on issues`, and its file `discord/check/entry-429.txt` is in `grouplab-crash-reports` (commit
+  26e83e9f, 07:44:59 UTC); the worker's log after its run has no Traceback and no STOP. Undo: `sudo install -m 755 -o root -g root` the
+  backup's copy over the worker, then `sudo systemctl start grouplab-discord-worker.service`; check with `sha256sum` against the backup.
+  The check file may stay: it is one line of text and nothing reads it.
 - **2026-10-15 08:56 UTC, the Discord worker's fix installed** (entry 427, request 100, run by Alan; recorded by entry 428). Fetched
   at a3ea5ecf. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only (an attachment is fetched with GroupLab's own User-Agent);
   the units and `grouplab-set-discord-token` were already current and untouched, the token "already set, not read or printed". Six
