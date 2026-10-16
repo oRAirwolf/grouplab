@@ -66,7 +66,7 @@ alignment's phase correlations.
 
 ## 2026-10-16, entry 432: the iOS workflow's red steps ("The iPad and landscape" and "Real taps")
 
-**Status: actioned 2026-10-16; sections 1, 2 and 5 done, and a real fault the fixed check then found (a second picture shared in after a result asked its caliber off screen) fixed. Section 3 is half done: the photo picker's failure is fixed; the keyboard's Next failure is traced to its first press and logged step by step, its cause not yet found. Section 4 waits on the ios-app.yml run of the fix.**
+**Status: actioned 2026-10-16; sections 1, 2 and 5 done, and a real fault the fixed check then found (a second picture shared in after a result asked its caliber off screen) fixed. Section 3 is half done: the photo picker's failure is fixed; the keyboard's Next failure is traced to its first press and logged step by step, its cause not yet found. Section 4 met: ios-app.yml run 38883488382 on a2a0345a is green, every step.**
 
 Alan, 2026-10-16 07:48 UTC, choosing overnight work: fix the iOS CI. He is asleep; nothing in this entry needs him. Entries 432, 433
 and 434 arrive together and are taken in number order, one commit each, under the usual usage guard.

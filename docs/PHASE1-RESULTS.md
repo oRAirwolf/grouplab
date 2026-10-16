@@ -949,6 +949,8 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
    round trip: no data file was written", although the log shows the export written (426,038 bytes) and the share sheet open. Since
    entry 377 (1fb8f104, 2026-10-05) the phone writes the export in the cache's `shared` folder, and the check looked only in the cache
    itself: another check wrong about the app, hidden behind the iPad step. It now looks where the app writes (`DataSelfTest`).
+4. **Green:** ios-app.yml run 38883488382 on a2a0345a passed every step, the self-test, the iPad and landscape, Compare and Real taps.
+   Real taps' Next on Targets passed there too; it fails on some runs only, and the new log lines will say where when it next does.
 3. **"Real taps" fails at two different taps**, each on some runs only (18 red runs read):
    - **Step 23, closing the photo picker** (12 runs). The simulator has no camera, so Take a picture opens the picker in its place. On a
      slow runner the app asked for it 2.8 s after the camera's place showed (run 38513312105: `camera.none` 21.385, `ios.pick` 24.161),

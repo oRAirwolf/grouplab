@@ -17,7 +17,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entries 432 to 434 (2026-10-16)**: 432 fixed the iOS self-test (it answers the caliber question entry 376 B3 asks), which then
   found a real fault, fixed: a second picture shared in after a result asked its caliber off screen. Real taps' picker close is fixed;
-  the keyboard's lost first Next is logged step by step, cause not found. 432 waits on its ios-app.yml run. 433 made the close cheaper (scan
+  the keyboard's lost first Next is logged step by step, cause not found. ios-app.yml is green. 433 made the close cheaper (scan
   202 to 102 ms, all identical); 415 section 3.2 is done by it. 434 traced the four false marks and changed nothing.
 - **Entries 418 and 421 to 424 and 426 are done** (418 section 1 from request 99: the failed post got nginx 499 and was stored).
 - **Entries 427 to 429 and 431 are done**: the Discord worker files posts and puts their pictures on the issues (installed 2026-10-16,
@@ -97,8 +97,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
-- **ios-app.yml's "The iPad and landscape" failed from 2026-10-06 (e0c3277f) until entry 432**: the self-test waited on the caliber
-  question. "Real taps" can still lose the first Next on Targets (5 of 18 red runs); `keyboard.bar` and `keyboard.next` say where.
+- **ios-app.yml is green again** (run 38883488382, a2a0345a) after red from 2026-10-06: the self-test waited on the caliber question.
+  "Real taps" can still lose the first Next on Targets (5 of 18 red runs); `keyboard.bar` and `keyboard.next` say where.
 - **The committed corpus counts record is behind main** on 29 of 55 images (entry 433 found it; rewriting it is planning's review).
 - **The database is schema version 3** (entry 407 section 5): a new build's first open copies `grouplab.db` to `grouplab.pre-v2.db`.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
