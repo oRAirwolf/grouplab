@@ -1371,7 +1371,8 @@
       "guide": "13-on-the-phone",
       "note": [
         "from any photo app",
-        "choose several photos at once"
+        "choose several photos at once",
+        "A second picture shared or opened into GroupLab"
       ],
       "mobile": {
         "noPicture": "the photo picker and the list of apps are Android's own screens, photographed at the next sitting with the phone"

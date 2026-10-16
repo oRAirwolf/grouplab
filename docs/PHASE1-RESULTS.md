@@ -939,6 +939,12 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
    caliber typed into the box and Continue pressed, each time it shows (`AnswerCalibreWhile` in `ios/GroupLab.iOS/SelfTest.cs`). A new
    check, "caliber asked", passes only where the question was asked at least once, so B3 is now held on iOS too. Nothing was skipped,
    deleted or loosened. The iOS project builds only on the Mac runners, so this is proven by the run in section 4.
+   **Run 38873299212 (25c20598) then found a real fault**: "The iPad and landscape" and Real taps passed, and the Compare step, which had
+   not run since 2026-10-05, failed on the second picture onwards (chosen, cancel while reading, open in, shared, and the parity tour and
+   data round trip after them). The question sits on the Capture start; after the first picture's result the Capture screen shows the
+   result, so a second picture shared or opened into GroupLab raised the question where nobody could see it and was never read, on iPhone,
+   iPad and Android alike, since entry 376 B3. Fixed in the app: the start comes back with the question, the result staying open in its
+   tab (`AskFirst` in `CapturePage`); `Entry432Tests` fails on the old page and passes on the new. Release-note kind `fixed`.
 3. **"Real taps" fails at two different taps**, each on some runs only (18 red runs read):
    - **Step 23, closing the photo picker** (12 runs). The simulator has no camera, so Take a picture opens the picker in its place. On a
      slow runner the app asked for it 2.8 s after the camera's place showed (run 38513312105: `camera.none` 21.385, `ios.pick` 24.161),

@@ -1,5 +1,6 @@
 using System.Globalization;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using GroupLab.App;
 using GroupLab.App.Diagnostics;
@@ -289,6 +290,14 @@ public sealed class CapturePage : UserControl
         afterAsk = then;
         OfferRecent();
         Move(askFields);
+        // Entry 432: the question sits on the start, so where a result is showing, as when a second picture is shared or opened into
+        // GroupLab after the first was read, the start comes back first; otherwise the question was raised where nobody could see it and
+        // the picture was never read. The result stays open in its tab and the bar's Result button returns to it.
+        if (!home.GetLogicalAncestors().Contains(this))
+        {
+            ShowStart();
+        }
+
         ask.IsVisible = true;
         DiagnosticLog.Info("capture.ask", ("calibre", false));
     }
