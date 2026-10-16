@@ -25,6 +25,27 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-16, entry 434: the four false hole marks left after entry 415 (proof checklist row 3)
+
+**Status: actioned 2026-10-16; every section done. Nothing honest removes the four marks, so detection is unchanged (section 4) and what was tried is written down.**
+
+Alan, 2026-10-16 07:48 UTC, choosing overnight work: fewer false hole marks. Nothing in it needs him.
+
+After entry 415, 4 false marks remain on the nine corpus photographs with a hole truth. Entry 410 section 1 already tried refusing a
+faint mark that hugs a printed edge; it removed four shading marks on diamond-22lr and lost a real hole on scan 4 of 2026-09-20 (bull
+11), so it was not kept. Do not try that rule again with tightened numbers.
+
+1. Say what makes each of the four marks now, per mark, from the mark and the stage that made it.
+2. Change detection only where the cause is a mechanism that would occur on other sheets (a crease's shadow, tape, paper outside the
+   printed area), never a setting chosen because it removes these four. Entry 410 section 1.4 names one candidate: a shadow's residual
+   has one sign and fades away from the edge that casts it, while a hole's is a step all round its rim. Nine photographs are too few to
+   tune on; say so where a change is close to that line.
+3. Kept only if no hole is lost anywhere: the corpus, the rendered sheets, the scans (`RangeScanCountsTests`), the 2026-10-04 range
+   pictures, the scoreboards and the learning loop's held-out share. A flier must still be found.
+4. If nothing honest removes them, take the change back and write down what was tried and why it failed. That closes the entry.
+5. Proof checklist row 3 updated with the count. Release-note kind `fixed` only if a person would see fewer wrong marks. Worth an
+   article? Record the decision in RESEARCH.md.
+
 ## 2026-10-16, entry 433: Phase 9, finding the holes faster (entry 415 section 3.2)
 
 **Status: actioned 2026-10-16; every section done. The close is cheaper with every result identical; the phase correlations were not changed, because no cheaper transform keeps the same shifts.**

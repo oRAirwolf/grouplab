@@ -103,6 +103,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| The four false hole marks left on the corpus, and a hole's step all round its rim (entry 434) | not written | Nine photographs with a hole truth cannot separate the mechanism from the sheets it was found on, and the one test tried separated nothing: real holes step as weakly as the false marks. Already covered in substance by entry 415's row. |
 | Where finding the holes spends its time, and a cheaper close (entry 433) | not written | Ordinary engineering a shooter never sees: a 600 dpi scan's holes found about a tenth sooner and a photograph's no sooner. The one finding another developer could use, that a binary erosion need only work from each row's first set pixel to its last, is a line in PERFORMANCE.md, not an article. |
 | Reading a photograph's codes, a cut-out stopped at its first code (entry 415 section 3) | not written | Ordinary engineering a shooter sees only as a reading a few tens of milliseconds quicker; PERFORMANCE.md keeps the tables. |
 | The six false hole marks on the corpus, and a crinkle's moved print (entry 415 section 2) | not written | Nine photographs with a hole truth cannot separate the mechanism from the sheet it was found on: two marks removed, both on one crinkled sheet, and the first version of the change lost holes on a zero grid's crossings. PHASE1-RESULTS.md records each mark's cause; worth revisiting when the learning loop's corrected submissions reach the held-out share. |

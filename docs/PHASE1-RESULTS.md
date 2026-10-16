@@ -977,6 +977,31 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
    are found about a tenth sooner, and no person would notice.
 5. **Worth an article?** Not written (docs/RESEARCH.md): ordinary engineering a shooter never sees.
 
+## Entry 434: the four false hole marks left after entry 415 (2026-10-16)
+
+1. **What makes each of the four**, from the mark, the expected print and the residual around it (a scratch test, deleted after, running
+   each corpus picture exactly as `grouplab scoreboard --corpus` does):
+   - **diamond-22lr, two marks centred on a diamond's white window** (bulls at about (1.36, 8.40) and (2.81, 8.42) in): the window's
+     edges sit unevenly off the render where the crinkle stretched it, and the aiming dot inside it shows as a crescent; the close joins
+     the bands and the crescent into one ring of residue (hull solidity 0.50 and 0.46, about 0.26 in). One shift of the print cannot
+     explain a stretch, which is why entry 415's moved-print check lets them through.
+   - **diamond-22lr, one mark at (1.47, 3.03) in**: a real hole beside a diamond's edge, whose crease shadow lies along that edge. The two
+     closed into one long mark (elongation 2.08, about two calibres of area); the split put one centre on the hole, which is found, and
+     the other on the shadow, which is the false mark.
+   - **dominus-k, one mark at (7.83, 10.56) in**, below the frame: faint residue on the tape's edge, 0.126 in across, a quarter of a
+     .243 calibre's area, just over the size floor.
+2. **The candidate tried, measured before any change:** a hole's residual is a step all round its rim, a shadow's or a band's is not.
+   For every mark on the nine pictures (222 real holes and the four), the weakest of eight sectors' step from inside the mark to a ring
+   just outside it. **It separates nothing:** real holes step as weakly as the false marks (the weakest real holes -1.54, -1.01, -0.80);
+   two false marks lie among 5 and 16 real holes, one beyond all but one; only the split's far half (-3.14) is below every real hole,
+   and a line placed for one half of one split on one sheet is the setting the entry rules out. Nine photographs are too few to tune on.
+   Entry 410's rule about faint marks hugging a printed edge was not tried again.
+3. **Nothing was changed in detection, so no hole could be lost**; the corpus, rendered sheets, scans, range pictures, scoreboards and
+   the learning loop are as main left them (entry 433's checks of 2026-10-16: every scoreboard identical).
+4. **Closed by section 4:** nothing honest removes them; this is what was tried and why it failed.
+5. **Proof checklist row 3** still says 4 false marks and now names each one's cause. No release note a person would see. **Worth an
+   article?** Not written (docs/RESEARCH.md).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
