@@ -945,6 +945,10 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
    result, so a second picture shared or opened into GroupLab raised the question where nobody could see it and was never read, on iPhone,
    iPad and Android alike, since entry 376 B3. Fixed in the app: the start comes back with the question, the result staying open in its
    tab (`AskFirst` in `CapturePage`); `Entry432Tests` fails on the old page and passes on the new. Release-note kind `fixed`.
+   **Run 38878915397 (2776a941)** then passed every picture check, the iPad and landscape and Real taps; Compare failed only on "data
+   round trip: no data file was written", although the log shows the export written (426,038 bytes) and the share sheet open. Since
+   entry 377 (1fb8f104, 2026-10-05) the phone writes the export in the cache's `shared` folder, and the check looked only in the cache
+   itself: another check wrong about the app, hidden behind the iPad step. It now looks where the app writes (`DataSelfTest`).
 3. **"Real taps" fails at two different taps**, each on some runs only (18 red runs read):
    - **Step 23, closing the photo picker** (12 runs). The simulator has no camera, so Take a picture opens the picker in its place. On a
      slow runner the app asked for it 2.8 s after the camera's place showed (run 38513312105: `camera.none` 21.385, `ios.pick` 24.161),

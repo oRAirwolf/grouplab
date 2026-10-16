@@ -61,7 +61,10 @@ internal static class DataSelfTest
             });
             await SelfTest.WaitFor(() => ReferenceEquals(IosPhone.Top(), before), TimeSpan.FromSeconds(10));
 
-            var file = new DirectoryInfo(IosPhone.Caches).EnumerateFiles("grouplab-data-*" + GroupLab.Core.Records.DataExport.Extension)
+            // Entry 432: since entry 377 the export is written in the cache's shared folder, where Android's share sheet can read it; this
+            // looked only in the cache itself and found nothing, unseen while the checks before it failed first.
+            var folder = new DirectoryInfo(Path.Combine(IosPhone.Caches, "shared"));
+            var file = (folder.Exists ? folder.EnumerateFiles("grouplab-data-*" + GroupLab.Core.Records.DataExport.Extension) : Enumerable.Empty<FileInfo>())
                 .Where(f => f.LastWriteTimeUtc >= started).OrderByDescending(f => f.LastWriteTimeUtc).FirstOrDefault();
             check.Numbers["shareSheet"] = sheet ? 1 : 0;
             check.Numbers["kb"] = file is null ? 0 : file.Length / 1024;
