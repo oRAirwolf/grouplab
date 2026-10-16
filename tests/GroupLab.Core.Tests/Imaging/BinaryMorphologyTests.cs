@@ -40,6 +40,38 @@ public class BinaryMorphologyTests
         Assert.Contains(managed, b => b == 0);
     }
 
+    /// <summary>
+    /// Entry 433: the close now works only the columns that can change: an erosion from a row's first set pixel to its last, a dilation
+    /// within a half width of another row's set pixels. Marks well inside a wide picture, as a residual has them, with nothing on the top or bottom edge,
+    /// rows set from side to side, and marks closer together than the element, so each of those stretches is where the answer is decided.
+    /// </summary>
+    public static TheoryData<int, int, int, int> Marks => new()
+    {
+        // width, height, radius, seed
+        { 600, 200, 33, 21 }, { 1200, 400, 30, 22 }, { 900, 300, 12, 23 }, { 300, 300, 50, 24 }, { 1500, 160, 3, 25 }, { 700, 500, 66, 26 },
+    };
+
+    [Theory]
+    [MemberData(nameof(Marks))]
+    public void ACloseOfMarksInsideAWidePictureIsOpenCvsToTheByte(int width, int height, int radius, int seed)
+    {
+        var pixels = MarksInside(width, height, radius, seed);
+        using var element = Cv2.GetStructuringElement(MorphShapes.Ellipse, new Size((2 * radius) + 1, (2 * radius) + 1));
+        element.GetArray(out byte[] points);
+        var halves = BinaryMorphology.HalfWidths(points, element.Cols, element.Rows)!;
+
+        using var source = Mat.FromPixelData(height, width, MatType.CV_8UC1, pixels);
+        using var expected = new Mat();
+        Cv2.MorphologyEx(source, expected, MorphTypes.Close, element);
+        expected.GetArray(out byte[] native);
+
+        var managed = BinaryMorphology.Close(pixels, width, height, halves);
+
+        int differ = native.Zip(managed).Count(p => p.First != p.Second);
+        Assert.True(differ == 0, $"{differ} of {pixels.Length} pixels differ at radius {radius}");
+        Assert.True(managed.Count(b => b == 1) > pixels.Count(b => b == 1), "the close filled nothing, so it tested nothing");
+    }
+
     [Fact]
     public void OnlyAnImageOfZerosAndOnesIsTakenAsBinary()
     {
@@ -62,6 +94,45 @@ public class BinaryMorphologyTests
         Assert.Null(BinaryMorphology.HalfWidths([1, 1, 1, 1, 0, 1, 1, 1, 1], 3, 3));
         Assert.Null(BinaryMorphology.HalfWidths([0, 1, 1, 0, 1, 0, 0, 1, 0], 3, 3));
         Assert.Null(BinaryMorphology.HalfWidths([1, 1, 1, 1], 2, 2));
+    }
+
+    /// <summary>Round marks and pairs of marks closer than the element, a few rows set from side to side, nothing on the edges; seeded.</summary>
+    private static byte[] MarksInside(int width, int height, int radius, int seed)
+    {
+        var random = new Random(seed);
+        var pixels = new byte[width * height];
+        void Disc(int cx, int cy, int r)
+        {
+            for (int y = Math.Max(1, cy - r); y <= Math.Min(height - 2, cy + r); y++)
+            {
+                for (int x = Math.Max(1, cx - r); x <= Math.Min(width - 2, cx + r); x++)
+                {
+                    if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= r * r)
+                    {
+                        pixels[(y * width) + x] = 1;
+                    }
+                }
+            }
+        }
+
+        for (int k = 0; k < 12; k++)
+        {
+            int cx = random.Next(width / 5, 4 * width / 5), cy = random.Next(height / 5, 4 * height / 5), r = 1 + random.Next(Math.Max(2, radius / 2));
+            Disc(cx, cy, r);
+            // A second mark just beyond this one, inside the element's reach, which the close joins.
+            Disc(cx + r + 1 + random.Next(Math.Max(1, radius)), cy + random.Next(-r, r + 1), 1 + random.Next(Math.Max(2, radius / 3)));
+        }
+
+        int band = random.Next(height / 3, 2 * height / 3);
+        for (int y = band; y < Math.Min(height - 1, band + 2); y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                pixels[(y * width) + x] = 1;
+            }
+        }
+
+        return pixels;
     }
 
     /// <summary>Specks, round blobs, a few lines and set pixels on every edge, seeded.</summary>

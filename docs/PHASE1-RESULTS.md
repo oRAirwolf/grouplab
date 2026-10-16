@@ -955,6 +955,28 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
      the log (`keyboard.bar`, `keyboard.next` in `KeyboardRoom`), and the next failing run says which one stops. No retry was put round it.
 5. Nothing needed Alan.
 
+## Entry 433: finding the holes faster (2026-10-16)
+
+1. **Measured first**, from one Release build, with timers put into `RenderDifferenceHoleDetector.Detect` and taken out after, on the
+   16 corpus photographs the four local scoreboards read and the 600 dpi sample with 25 shots (docs/PERFORMANCE.md, "Entry 433"). All of
+   finding the holes: 498 ms median on a photograph (125 to 1726), 1238 on the scan. The largest step is now the marks one by one (132
+   and 344, most of it each mark's moments), then the close (44 and 202), then the alignment (52 and 159); the close is 3 to 437 ms on a
+   photograph, more than the 3 to 14 entry 410 saw on its pictures; why it grew was not looked into.
+2. **The close** now works only the columns that can change (`BinaryMorphology.Pass`): an erosion from each row's first set pixel to its
+   last, a dilation within a half width of another row's set pixels. On the scan 202 ms to 102, and hole finding about 1238 to 1133; on a
+   photograph the median close 44 to 42, the slowest 437 to 322. **The phase correlations were not changed:** OpenCV already pads each
+   cell to its best transform size and the cells already run at once, so what is left is the transforms, about 33 ms of work a cell at
+   600 dpi, and a different transform gives different shifts. No QR detector runs on several threads.
+3. **Nothing moved:** the four corpus scoreboards, the synthetic scoreboard, `corpus counts` (committed and local) and the identify sweep
+   are identical before and after but for their time columns. `BinaryMorphologyTests` holds the close to OpenCV's own on six new wide
+   pictures with marks inside them as well as the ten before; a stretch cut too short fails 16 of 18. The baseline gate passed.
+   **Found while checking, not changed:** `grouplab corpus counts` reports that its committed record differs from main's own output on
+   29 of 55 images (and the local manifest's likewise), before this change as after it; the record has not been rewritten since
+   detection changed in entries 415 and 417. Rewriting it with `--write` is a review of what changed, left to the planning session.
+4. **Written down** under its own heading in docs/PERFORMANCE.md, before and after. Release-note kind `internal`: a 600 dpi scan's holes
+   are found about a tenth sooner, and no person would notice.
+5. **Worth an article?** Not written (docs/RESEARCH.md): ordinary engineering a shooter never sees.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

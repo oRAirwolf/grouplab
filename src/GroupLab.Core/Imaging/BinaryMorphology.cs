@@ -115,6 +115,10 @@ public static class BinaryMorphology
     /// <summary>
     /// One dilation or erosion. A dilation sets a pixel where some row of the element finds a set pixel within its half width; an erosion
     /// keeps a pixel set only where no row of the element finds an unset one. Rows beyond the image are skipped, as OpenCV's default border is.
+    /// Entry 433: only the columns that can change are worked. An erosion keeps nothing a row did not already have set, since the element's
+    /// middle row reaches the pixel itself, so a row is worked only from its first set pixel to its last. A dilation sets nothing further
+    /// than a row's half width beyond another row's set pixels, so each row in reach is combined only over that stretch. Every pixel outside
+    /// these is the answer the whole row gave before.
     /// </summary>
     private static byte[] Pass(byte[] source, int width, int height, int[] halfWidths, bool dilate)
     {
@@ -122,7 +126,16 @@ public static class BinaryMorphology
         int reach = halfWidths.Length / 2;
         var distance = new byte[source.Length];
         var hasSought = new bool[height];
-        Parallel.For(0, height, y => hasSought[y] = RowDistance(source.AsSpan(y * width, width), distance.AsSpan(y * width, width), sought));
+        // The first and last set pixel of each row, -1 where it has none.
+        var first = new int[height];
+        var last = new int[height];
+        Parallel.For(0, height, y =>
+        {
+            var row = source.AsSpan(y * width, width);
+            hasSought[y] = RowDistance(row, distance.AsSpan(y * width, width), sought);
+            first[y] = row.IndexOf((byte)1);
+            last[y] = row.LastIndexOf((byte)1);
+        });
 
         // How many rows up to each one hold what is sought, so a row with none of it within reach is decided at once.
         var before = new int[height + 1];
@@ -143,20 +156,33 @@ public static class BinaryMorphology
                 {
                     return;
                 }
-            }
-            else
-            {
-                // An erosion keeps nothing in a row that is unset itself, and keeps all of a row with no unset pixel anywhere in reach.
-                if (hasSought[y] && source.AsSpan(y * width, width).IndexOfAnyExcept((byte)0) < 0)
+
+                for (int other = top; other <= bottom; other++)
                 {
-                    return;
+                    if (!hasSought[other])
+                    {
+                        continue;
+                    }
+
+                    int half = halfWidths[other - y + reach];
+                    int from = Math.Max(0, first[other] - half), to = Math.Min(width - 1, last[other] + half);
+                    Combine(row[from..(to + 1)], distance.AsSpan((other * width) + from, to - from + 1), (byte)half, dilate);
                 }
 
-                row.Fill(1);
-                if (!anyInReach)
-                {
-                    return;
-                }
+                return;
+            }
+
+            // An erosion keeps nothing in a row that is unset itself, and keeps all of a row with no unset pixel anywhere in reach.
+            if (first[y] < 0)
+            {
+                return;
+            }
+
+            var kept = row[first[y]..(last[y] + 1)];
+            kept.Fill(1);
+            if (!anyInReach)
+            {
+                return;
             }
 
             for (int other = top; other <= bottom; other++)
@@ -166,7 +192,7 @@ public static class BinaryMorphology
                     continue;
                 }
 
-                Combine(row, distance.AsSpan(other * width, width), (byte)halfWidths[other - y + reach], dilate);
+                Combine(kept, distance.AsSpan((other * width) + first[y], kept.Length), (byte)halfWidths[other - y + reach], dilate);
             }
         });
 

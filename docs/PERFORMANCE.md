@@ -48,6 +48,42 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 433: finding the holes, measured again, and a cheaper close
+
+**Measured first, from one Release build** (timers put into `RenderDifferenceHoleDetector.Detect` for this measurement and taken out
+after), on the 16 corpus photographs the four local scoreboards read and on the 600 dpi sample with 25 shots, warm, median ms:
+
+| stage | photographs (fastest, median, slowest) | 600 dpi scan |
+|---|---|---|
+| drawing the sheet and the expected picture | 24, 94, 370 | 221 |
+| the paper, the sheet's edge and the inks | 16, 46, 353 | 86 |
+| the alignment, all cells (phase correlation inside it: 244 ms of work on a photograph, 837 on the scan, spread over threads) | 16, 52, 134 | 159 |
+| the residual, the open and the threshold | 18, 32, 100 | 145 |
+| the close | 3, 44, 437 | 202 |
+| the marks' outlines | 15, 24, 70 | 78 |
+| the marks one by one (moments 72 and 127 of it; the moved print check 4 and 90) | 5, 132, 608 | 344 |
+| all of finding the holes | 125, 498, 1726 | 1238 |
+
+The note under entry 352 named the close and the phase correlations; the marks one by one are now the largest step, and the close second.
+
+**The close, made cheaper without moving anything.** An erosion keeps a pixel only where it was set, since the element's middle row
+reaches the pixel itself, so each row is now worked only from its first set pixel to its last; a dilation sets nothing further than a
+row's half width beyond another row's set pixels, so each row in reach is combined only over that stretch (`BinaryMorphology.Pass`).
+Every pixel is the answer the whole row gave before: `BinaryMorphologyTests` compares it with OpenCV's own close on ten pictures and six
+more with marks inside a wide picture, and a stretch cut too short fails 16 of the 18. On the 600 dpi sample the close went from 202 ms
+to 102 and finding the holes from about 1238 to 1133; on a photograph, whose residual has set pixels across most rows, the median close
+went from 44 to 42 and the slowest from 437 to 322. `grouplab bench --runs 5` hardly moves (its 600 dpi scan has no holes, so its close
+was already cheap: 474 to 472 ms; the generated sheet 193 to 179; the phone photograph 173 to 169). **Nothing moved:** the four corpus
+scoreboards, the synthetic one, `corpus counts` (committed and local) and the identify sweep are identical before and after but for their
+time columns. **The baseline gate passed** (finding the holes 179 ms on the generated sheet against 294, 472 on the 600 dpi scan against 693).
+
+**The phase correlations, not changed, and why.** OpenCV's `phaseCorrelate` already pads each cell to its best transform size, and the
+cells already run at once; what is left is the transforms themselves, about 33 ms of work a cell at 600 dpi. A smaller or differently
+sized transform gives different shifts, so it cannot be made cheaper and keep every result. Nothing here reads QR codes on several threads.
+
+**Next, if planning wants it:** the moments of each mark, 72 ms on a typical photograph and up to 590 on one with a large mark, are a
+plain sum over each mark's pixels, the order of whose additions fixes the last digit.
+
 ## Entry 415 section 3: reading a photograph's codes, still on one thread
 
 **Where the time goes.** `SheetIdentification.Identify` on the 600 dpi sample, five Fold 7 pictures of the 2026-09-27 and 28 sittings and

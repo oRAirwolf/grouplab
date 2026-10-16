@@ -25,6 +25,24 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-16, entry 433: Phase 9, finding the holes faster (entry 415 section 3.2)
+
+**Status: actioned 2026-10-16; every section done. The close is cheaper with every result identical; the phase correlations were not changed, because no cheaper transform keeps the same shifts.**
+
+Alan, 2026-10-16 07:48 UTC, choosing overnight work: faster hole finding. This is entry 415 section 3.2, not done then because entry
+416 was taken first. Nothing in it needs him.
+
+PERFORMANCE.md: on a phone photograph, finding the holes takes 180 to 540 ms, mostly the closing of the threshold mask and the
+alignment's phase correlations.
+
+1. Measure first, from one build, where the time in hole finding goes, per stage, on the corpus photographs and on a 600 dpi scan.
+2. Make the closing and the phase correlations cheaper. Nothing here may run OpenCV's QR detectors on several threads (entry 414).
+3. Each change is kept only if every scoreboard, the identify sweep and the corpus counts are identical but for their time columns, and
+   the baseline gate passes. A change that cannot keep identical results is taken back and written down; that is a result too.
+4. Each change under its own heading in PERFORMANCE.md, before and after, from one build. A Release-note of kind `changed` only where a
+   person would notice (a photograph or scan read noticeably sooner); otherwise `internal`.
+5. Worth an article? Record the decision in RESEARCH.md.
+
 ## 2026-10-16, entry 432: the iOS workflow's red steps ("The iPad and landscape" and "Real taps")
 
 **Status: actioned 2026-10-16; sections 1, 2 and 5 done. Section 3 is half done: the photo picker's failure is fixed; the keyboard's Next failure is traced to its first press and logged step by step, its cause not yet found. Section 4 waits on the ios-app.yml run of this commit.**
