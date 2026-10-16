@@ -75,7 +75,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (99 answered by entry 430 and arch
 
 - **Last nightly:** 0.2.0-nightly.196 (2026-10-16 11:20 UTC, from 0206b663): entries 432 and 433, the caliber question after a result. 195 carried 431.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
-- Crash reports open: none. #34 closed by entry 431 (nightly 195); #29 to #33, filed from Discord on 2026-10-15, closed as fixed. Issue 28 (nightly 183, Android: the exception behind 27) closed 2026-10-12 as fixed by entry 401 in nightly 184.
+- Crash reports open: **#35** (Discord, Quack, nightly 195, 2026-10-16 08:05): on a pooled set, a click on the small preview picks several shots, some from another bull, and the second and third targets' shots never show in it. For planning; not yet fixed.
 
 ## The inbox
 
