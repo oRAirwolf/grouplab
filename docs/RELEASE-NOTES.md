@@ -495,7 +495,7 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 - Targets can now save or share any sheet for a thermal label printer's own app, such as the Phomemo M834's: a black and white picture at 300 dpi and a PDF at the page's true size, with a darkness test page.
 - On the Targets screen, Save for a printer app sits on its own line under the print buttons, where it is never cut off.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.166)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
