@@ -98,3 +98,4 @@
 0.2.0-nightly.193
 0.2.0-nightly.194
 0.2.0-nightly.195
+0.2.0-nightly.196
