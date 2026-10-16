@@ -12,6 +12,24 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.196
+
+**2026-10-16**, commit `0206b66`. Nightly.
+
+**What you will notice**
+
+- A second picture shared or opened into GroupLab after a result now asks for its caliber where you can see it, instead of quietly doing nothing.
+
+**Under the hood**
+
+- The built-in check for iPhone and iPad finds your exported data file where GroupLab saves it, so it tests the export again.
+- A 600 dpi scan's holes are found about a tenth sooner, with exactly the same result as before.
+- The built-in check for iPhone and iPad answers the caliber question on every target, as you do, so it tests reading a picture again.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.196)
+
+---
+
 ## 0.2.0-nightly.195
 
 **2026-10-15**, commit `92799db`. Nightly.
