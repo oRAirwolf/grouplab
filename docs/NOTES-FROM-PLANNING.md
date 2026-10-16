@@ -25,6 +25,28 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-16, entry 432: the iOS workflow's red steps ("The iPad and landscape" and "Real taps")
+
+**Status: actioned 2026-10-16; sections 1, 2 and 5 done. Section 3 is half done: the photo picker's failure is fixed; the keyboard's Next failure is traced to its first press and logged step by step, its cause not yet found. Section 4 waits on the ios-app.yml run of this commit.**
+
+Alan, 2026-10-16 07:48 UTC, choosing overnight work: fix the iOS CI. He is asleep; nothing in this entry needs him. Entries 432, 433
+and 434 arrive together and are taken in number order, one commit each, under the usual usage guard.
+
+STATE lists it: ios-app.yml's "The iPad and landscape" step has failed on runs since 2026-10-11, and "Real taps" on some (again on
+nightly 192's run).
+
+1. Find the first run where "The iPad and landscape" failed and the commit it ran on, and read the failing step's own output (the
+   assertion or screenshot that failed, not the whole log). Say in plain words what it caught: a real fault in the app on an iPad or in
+   landscape, or a check that is wrong about the app.
+2. If it is a real fault, fix the app, and the Release-note says what an iPad or landscape user will see differently (kind `fixed`).
+   If the check is wrong, fix the check so it tests what it was written to test. Never skip, delete or loosen a step to make it green.
+3. "Real taps": find which tap fails and why it fails only sometimes (timing, an element not yet on screen, a simulator that is still
+   starting). Fix the cause. A retry is acceptable only around something outside the app (the simulator starting), and the commit says
+   why.
+4. Done when the last commit's ios-app.yml run is green. While waiting on CI, start entry 433, and check the run between steps.
+5. If the cause turns out to be something only Alan can do (a certificate, an Apple account setting), write it into for-alan.md as a
+   request with the steps, do everything else, and carry on to entry 433.
+
 ## 2026-10-15, entry 431: issue #34, the tab strip's scrollbar gets its own row below the tabs (concept A)
 
 **Status: actioned 2026-10-15; every section done. 2.4 closes #34 once the commit is on main, naming nightly 195.**

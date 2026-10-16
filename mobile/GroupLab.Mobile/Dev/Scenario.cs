@@ -942,6 +942,9 @@ internal static class Scenario
     /// (37091489314) closed once, found nothing, and said so, while the picker was still on its way: the camera's place asks for it a
     /// moment after it shows. So this keeps closing whatever appears until nothing has been up for <see cref="Quiet"/>, and fails, saying
     /// so, where a system sheet is still up when <paramref name="most"/> has passed.
+    /// Entry 432: a picker asked for and not yet on screen is on its way, not left open. On a slow simulator the camera's place asked for
+    /// it 2.8 s after it showed (run 38513312105), past the quiet time, and this failed in the moment between the asking and the picker
+    /// appearing; so such a picker is waited for, and closed, within <paramref name="most"/>, and only one still unseen then is a failure.
     /// </summary>
     private static async Task<(bool, string)> Close(TimeSpan most)
     {
@@ -956,13 +959,8 @@ internal static class Scenario
                 closed.Add(what);
                 quiet.Restart();
             }
-            else if (quiet.Elapsed >= Quiet && !await OnUi(() => SystemSheetUp?.Invoke() == true))
+            else if (quiet.Elapsed >= Quiet && !await OnUi(() => SystemSheetUp?.Invoke() == true) && PickerLeftOpen() is null)
             {
-                if (PickerLeftOpen() is { } open)
-                {
-                    return (false, open);
-                }
-
                 return (true, (closed.Count == 0 ? "nothing was open" : "closed " + string.Join(", then ", closed))
                     + $"; nothing up for {Quiet.TotalSeconds:0.#} s");
             }
@@ -972,6 +970,11 @@ internal static class Scenario
 
         bool sheet = await OnUi(() => SystemSheetUp?.Invoke() == true);
         string said = closed.Count == 0 ? "nothing closed" : "closed " + string.Join(", then ", closed);
+        if (!sheet && PickerLeftOpen() is { } open)
+        {
+            return (false, $"{open} after {most.TotalSeconds:0} s ({said})");
+        }
+
         return sheet ? (false, $"a system sheet is still up after {most.TotalSeconds:0} s ({said})") : (true, said);
     }
 

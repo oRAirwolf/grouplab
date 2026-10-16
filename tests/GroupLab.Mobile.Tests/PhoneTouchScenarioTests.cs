@@ -82,7 +82,28 @@ public class PhoneTouchScenarioTests
         Assert.Contains(failed, f => f.StartsWith("23 close: the photo picker was opened", StringComparison.Ordinal) && f.Contains("does not see it", StringComparison.Ordinal));
     }
 
-    private static async Task<List<string>> TapThrough(bool noCamera, bool blind = false)
+    /// <summary>
+    /// Entry 432: on a slow simulator (run 38513312105) the camera's place asked for the picker 2.8 s after it showed, past close's quiet
+    /// time, and the picker came on screen a moment after the asking; close looked in between, found the log's record of a picker and
+    /// nothing on screen, and failed, and every later step with it. Here the picker comes after the quiet time has run out: close waits
+    /// for it, closes it, and every tap does its job.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task CloseWaitsForAPickerStillOnItsWay()
+    {
+        var quiet = Scenario.Quiet;
+        Scenario.Quiet = TimeSpan.FromSeconds(1);
+        try
+        {
+            await TapThrough(noCamera: true, pickerLate: TimeSpan.FromMilliseconds(1500));
+        }
+        finally
+        {
+            Scenario.Quiet = quiet;
+        }
+    }
+
+    private static async Task<List<string>> TapThrough(bool noCamera, bool blind = false, TimeSpan pickerLate = default)
     {
         if (Phone.Platform is null)
         {
@@ -96,6 +117,7 @@ public class PhoneTouchScenarioTests
         Phone.Settings.SaveShotSetup(null, null);
         phone.AllowCamera = true;
         phone.NoCameraOpensPicker = noCamera;
+        phone.PickerShowsAfter = pickerLate;
         if (noCamera && !blind)
         {
             Scenario.SystemSheetUp = () => phone.PickerUp;
@@ -166,6 +188,7 @@ public class PhoneTouchScenarioTests
             phone.ClosePicker();
             phone.AllowCamera = false;
             phone.NoCameraOpensPicker = false;
+            phone.PickerShowsAfter = TimeSpan.Zero;
             Scenario.SystemSheetUp = null;
             Scenario.CloseSystemSheet = null;
             Phone.Settings.SaveShotSetup(was, wasInches);

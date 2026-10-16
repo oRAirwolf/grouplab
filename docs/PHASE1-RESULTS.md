@@ -926,6 +926,35 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
    them when they do not fit; its PDF follows with the nightly's guide run. `target-tabs` in `website/features.json` claims the note.
 6. Issue #34 is closed with the commit and nightly 195.
 
+## Entry 432: the iOS workflow's red steps (2026-10-16)
+
+1. **"The iPad and landscape" was a check wrong about the app.** It first failed on run 37416825125 (e0c3277f, 2026-10-06), not
+   2026-10-11; it last passed on 7dfc3691. Every tour stopped after the Settings screen and sat "running" until its 400 s limit: the
+   app logged `capture.ask calibre=False` as the sample was handed over, and nothing answered. Entry 376 item B3 (5df65754, between those
+   two commits) made GroupLab ask for the caliber of every new target and empty it after each result, on Alan's word; the self-test still
+   relied on the caliber it saves before the start, which the app now never reads. The full self-test had the same fault (paste, chosen
+   picture, cancel while reading, open in, shared, the parity tour and the data round trip all FAILED in `ios-results.json`), unseen
+   because the Compare step that judges them never ran after the iPad step failed. Nothing in the app was wrong on an iPad or in landscape.
+2. **The fix is to the check**: while the self-test or the tour runs, the question is answered as a person answers it, the sample's
+   caliber typed into the box and Continue pressed, each time it shows (`AnswerCalibreWhile` in `ios/GroupLab.iOS/SelfTest.cs`). A new
+   check, "caliber asked", passes only where the question was asked at least once, so B3 is now held on iOS too. Nothing was skipped,
+   deleted or loosened. The iOS project builds only on the Mac runners, so this is proven by the run in section 4.
+3. **"Real taps" fails at two different taps**, each on some runs only (18 red runs read):
+   - **Step 23, closing the photo picker** (12 runs). The simulator has no camera, so Take a picture opens the picker in its place. On a
+     slow runner the app asked for it 2.8 s after the camera's place showed (run 38513312105: `camera.none` 21.385, `ios.pick` 24.161),
+     past the close step's 2 s quiet time, and the close step read the log's "picker opened" in the moment before the picker was on
+     screen and failed at once; every later step failed after it. Fixed in the step (`Close` in `mobile/GroupLab.Mobile/Dev/Scenario.cs`):
+     a picker asked for and not yet seen is waited for and closed within the step's own 15 s; one still unseen then fails as before.
+     `PhoneTouchScenarioTests.CloseWaitsForAPickerStillOnItsWay` brings the picker after the quiet time: it fails on the old step and
+     passes on the new one. Not a retry: the step now waits for the thing it closes.
+   - **Steps 5 to 12, Next on the keyboard on Targets** (5 runs). The first press on Next after a tap into a field is lost and each later
+     press moves the focus one field, so every check is one field behind (run 38705763402). The runner delivered the press at the right
+     place (08:48:48.68), the hold had found Next settled and reachable there, exactly as in a passing run (38740221248), and the app
+     logged nothing: no focus change and no keyboard closing. Avalonia 12.1.2's iOS touch handling and its text responder were read and
+     neither takes the press. The cause is not found yet, so the press, the release and Next's move of the focus are now each written to
+     the log (`keyboard.bar`, `keyboard.next` in `KeyboardRoom`), and the next failing run says which one stops. No retry was put round it.
+5. Nothing needed Alan.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

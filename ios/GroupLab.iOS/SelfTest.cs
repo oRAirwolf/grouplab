@@ -88,6 +88,50 @@ internal static class SelfTest
         KeepAwakeWhile(() => Find<IdleScreen>() is not null);
     }, TimeSpan.FromSeconds(2));
 
+    /// <summary>How many times the question for a caliber was answered in this run (<see cref="AnswerCalibreWhile"/>).</summary>
+    private static int calibreAnswers;
+
+    /// <summary>
+    /// Entry 432: since entry 376 item B3 GroupLab asks for the caliber of every new target and empties it after each result, so the one
+    /// saved before the start (<see cref="Prepare"/>) is never used, and every picture the self-test handed over waited on the question
+    /// until the workflow gave up. A person answers it each time; so does the self-test, with the sample's caliber, typed into the box and
+    /// Continue pressed, for as long as <paramref name="driving"/> holds. On the interface thread.
+    /// </summary>
+    private static void AnswerCalibreWhile(Func<bool> driving)
+    {
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(250) };
+        timer.Tick += (_, _) =>
+        {
+            if (!driving())
+            {
+                timer.Stop();
+                return;
+            }
+
+            if (CapturePage.Latest is not { Asking: true } page
+                || page.GetVisualDescendants().OfType<Button>().FirstOrDefault(b => b.IsEffectivelyVisible
+                    && Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "capture-ask-continue") is not { } go)
+            {
+                return;
+            }
+
+            page.TypedCalibre = SelfTestChecks.SampleCalibre;
+            go.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            calibreAnswers++;
+            DiagnosticLog.Info("selftest.calibre", ("answered", calibreAnswers));
+        };
+        timer.Start();
+    }
+
+    /// <summary>Entry 432: the question for a caliber was asked when a picture was handed over, as entry 376 item B3 wants.</summary>
+    private static SelfTestCheck CalibreAsked() => new("caliber asked")
+    {
+        Passed = calibreAnswers > 0,
+        Detail = calibreAnswers > 0
+            ? $"GroupLab asked for the caliber {calibreAnswers} time(s) and was answered {SelfTestChecks.SampleCalibre}"
+            : "GroupLab never asked for the caliber, though every new target should",
+    };
+
     /// <summary>Keeps the screen from dimming while <paramref name="driving"/> holds, and gives the choice back to iOS the moment it does not.</summary>
     private static void KeepAwakeWhile(Func<bool> driving)
     {
@@ -134,6 +178,7 @@ internal static class SelfTest
         // The self-test is a sitting: the screen stays on while it runs, and only then.
         bool running = true;
         await OnUi(() => KeepAwakeWhile(() => running));
+        await OnUi(() => AnswerCalibreWhile(() => running));
         try
         {
             Say("running");
@@ -214,6 +259,7 @@ internal static class SelfTest
                 // Entry 307: Your data exported to the share sheet, and the file opened in GroupLab again brings its import plan. After the
                 // tour, which starts from the result this would leave behind.
                 checks.Add(await DataSelfTest.RoundTrip());
+                checks.Add(CalibreAsked());
             }
 
             // Entry 268 on iOS: the black idle screen over everything, as the --idle sitting shows it.
@@ -245,6 +291,7 @@ internal static class SelfTest
         var checks = new List<SelfTestCheck>();
         bool running = true;
         await OnUi(() => KeepAwakeWhile(() => running));
+        await OnUi(() => AnswerCalibreWhile(() => running));
         try
         {
             Say("running");
@@ -266,6 +313,7 @@ internal static class SelfTest
             if (NativeOpenCv.Linked)
             {
                 checks.Add(await Chosen(Path.Combine(Folder, "sample.png"), n));
+                checks.Add(CalibreAsked());
             }
         }
         catch (Exception e) when (e is not OutOfMemoryException)

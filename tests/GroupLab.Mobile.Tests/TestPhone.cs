@@ -130,9 +130,22 @@ internal sealed class TestPhone : IPhonePlatform
         }
 
         GroupLab.App.Diagnostics.DiagnosticLog.Info("ios.pick", ("source", source.ToString()));
-        picking = new TaskCompletionSource<IReadOnlyList<PhotoHandle>>();
-        return picking.Task;
+        var asked = new TaskCompletionSource<IReadOnlyList<PhotoHandle>>();
+        if (PickerShowsAfter > TimeSpan.Zero)
+        {
+            // Entry 432: asked for, and on screen only a moment later, as a slow simulator presents it.
+            Avalonia.Threading.DispatcherTimer.RunOnce(() => picking = asked, PickerShowsAfter);
+        }
+        else
+        {
+            picking = asked;
+        }
+
+        return asked.Task;
     }
+
+    /// <summary>Entry 432: how long after it is asked for the stand-in photo picker comes on screen; none by default.</summary>
+    public TimeSpan PickerShowsAfter { get; set; }
 
     public bool IsCamera(object? content) => content is TextBlock { Text: "camera" };
 

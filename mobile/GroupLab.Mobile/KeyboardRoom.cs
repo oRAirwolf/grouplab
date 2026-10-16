@@ -275,7 +275,10 @@ internal sealed class KeyboardRoom
     {
         if (Focused is { } field && Following(field) is { } box)
         {
-            box.Focus(NavigationMethod.Tab);
+            bool moved = box.Focus(NavigationMethod.Tab);
+            // Entry 432: on the simulator the first Next after a tap into a field was sometimes delivered and did nothing; each step of it
+            // is said in the log (with the press and release below), so the next time shows where it stops.
+            DiagnosticLog.Info("keyboard.next", ("to", Avalonia.Automation.AutomationProperties.GetAutomationId(box) ?? box.Name ?? "field"), ("moved", moved));
             return;
         }
 
@@ -299,6 +302,11 @@ internal sealed class KeyboardRoom
             return;
         }
 
+        if (source == bar || source.GetVisualAncestors().Contains(bar))
+        {
+            DiagnosticLog.Info("keyboard.bar", ("pointer", "pressed"), ("on", source.GetType().Name));
+        }
+
         // A field, the bar on the keyboard, or anything not on the Shell itself, such as a pop-up's list of suggestions, keeps the keyboard.
         if (source is TextBox || source.GetVisualAncestors().Any(v => v is TextBox) || source == bar || source.GetVisualAncestors().Contains(bar)
             || !source.GetVisualAncestors().Contains(shell))
@@ -314,6 +322,11 @@ internal sealed class KeyboardRoom
 
     private void OutsideReleased(object? sender, PointerReleasedEventArgs e)
     {
+        if (barShown && e.Source is Visual released && (released == bar || released.GetVisualAncestors().Contains(bar)))
+        {
+            DiagnosticLog.Info("keyboard.bar", ("pointer", "released"), ("on", released.GetType().Name), ("pressed", next.IsPressed));
+        }
+
         down = false;
         bool close = pressedOutside;
         bool closed = closedWhileDown;
