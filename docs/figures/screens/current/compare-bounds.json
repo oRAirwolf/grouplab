@@ -1,0 +1,25 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Close this target": [
+      278,
+      8,
+      20,
+      20
+    ],
+    "Open another target": [
+      312,
+      6,
+      30,
+      22
+    ],
+    "gl-cf25-ltr-scan.png, Marking": [
+      61,
+      4,
+      213,
+      27
+    ]
+  }
+}

@@ -5,12 +5,6 @@
   "controls": {
     "2026-10-17": [
       109,
-      381,
-      1187,
-      19
-    ],
-    "2099-01-01": [
-      109,
       349,
       1187,
       19
@@ -27,15 +21,21 @@
       149,
       27
     ],
-    "Compare the session Second load, GroupLab 5x5 Load Development, Letter": [
+    "Compare the session 6 ARC, Dominus K, GroupLab 5x5 Load Development with Load Block, Letter": [
       77,
-      343,
+      407,
+      32,
+      32
+    ],
+    "Compare the session 6 ARC, Magnus S, GroupLab 5x5 Load Development with Load Block, Letter": [
+      77,
+      375,
       32,
       32
     ],
     "Compare the session Test load, GroupLab 5x5 Load Development, Letter": [
       77,
-      375,
+      343,
       32,
       32
     ],
