@@ -834,7 +834,8 @@
       ],
       "since": "next",
       "note": [
-        "New users can choose Walk me through a demo"
+        "New users can choose Walk me through a demo",
+        "The guided demo's printing step now works on macOS and Linux"
       ],
       "guide": "walk-me-through-a-demo"
     },
