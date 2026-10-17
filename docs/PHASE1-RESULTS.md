@@ -1260,9 +1260,11 @@ site build pass.
    so the review queue has something in it), and is never offered to the project.
 3. **The steps** are one list of data (`MainWindow.DemoSteps`: screen, named control, words, and what Next does), 13 of them: the
    sample, GroupLab reading it, the review queue, the caliber, Accept and analyze, the plot and figures, each figure's range and why,
-   clicking a hole, the zero correction, Session records and the report, Targets and Print, Ballistics, and where to get help.
+   clicking a hole, the zero correction, Session records and the report, Targets and its print button, Ballistics, and where to
+   get help.
    Comparing loads and several sheets are left out: honestly shown they need a second sample. **The tour never prints**: its Targets
-   step points at Print and has no action (a test holds that).
+   step points at Open to print, the print button on every platform (Print... is Windows only), and has no action (a test holds
+   that).
 4. **How it behaves.** Each step draws entry 437's marking around the real control, an amber outline with a halo in the window's own
    background and the step's number in a badge, with a card beside it (the step, "6 of 13", Back, Next, End the tour) placed below,
    above or beside the control so it never covers it, and following it as the window lays out. The rest of the window stays usable

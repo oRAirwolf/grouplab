@@ -76,14 +76,18 @@ public sealed partial class MainWindow
         new(Destination.Analyse, "ZeroCorrection", "The zero correction",
             "How far the group's center is from your aim, in your scope's clicks. When the shots cannot tell a click from luck, it says to leave it, and why."),
         new(Destination.Sessions, "Session records", "Sessions and the report",
-            "Every accepted sheet is kept here by its load, date and time. The analysis's Report button makes one dated page to print or share."),
-        new(Destination.Library, "Print…", "Print a sheet",
+            "Every accepted sheet is kept here by its load, date and time. The analysis's Report button makes one dated page to print or share.",
+            w => { w.ShowLibrary(); w.ChooseLibrarySheet(w.TargetsPanel.Sheets.First(s => s.File == DemoSheetFile).Definition.Name); return Task.CompletedTask; }),
+        // "Open to print" is the print button on every platform; on Windows "Print..." sits beside it. Neither is ever pressed by the tour.
+        new(Destination.Library, "Open to print", "Print a sheet",
             "Targets holds every sheet. Check your printer once, then print at actual size. The tour stops here: printing is always your own press."),
         new(Destination.Ballistics, "BallisticViewHit", "Ballistics",
             "The dope table, and the chance of a hit on a plate or a ring at your distance, worked out from your own group and rifle."),
         new(Destination.Settings, "Report a problem…", "Where to get help",
             "The user guide and glossary are on grouplab.org, and Report a problem sends the developer what went wrong. You can take this tour again from Settings."),
     ];
+
+    private const string DemoSheetFile = "GL-CF25-LTR.gltd.json";
 
     private readonly Canvas demoLayer = new() { IsVisible = false };
     private readonly Border demoSpot = new() { IsHitTestVisible = false, Classes = { AppStyles.DemoHalo } };
@@ -482,7 +486,7 @@ public sealed partial class MainWindow
     /// </summary>
     private string WriteDemoSheet()
     {
-        var definition = targetsPanel.Sheets.First(s => s.File == "GL-CF25-LTR.gltd.json").Definition;
+        var definition = targetsPanel.Sheets.First(s => s.File == DemoSheetFile).Definition;
         const double Dpi = 300;
         var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], Dpi);
         double s = 254 / Dpi;

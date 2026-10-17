@@ -150,7 +150,8 @@ public class Entry439Tests
     public void ThePrintStepNeverPrints()
     {
         // Entry 439 section 2.11: the tour stops at the Print button; printing is the person's own press.
-        var print = MainWindow.DemoSteps.Single(s => s.Control == "Print…");
+        var print = MainWindow.DemoSteps.Single(s => s.Screen == Destination.Library);
+        Assert.Equal("Open to print", print.Control);
         Assert.Null(print.Do);
     }
 }

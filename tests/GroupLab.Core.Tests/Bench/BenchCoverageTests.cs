@@ -45,6 +45,7 @@ public class BenchCoverageTests
     {
         ["CaliberChoices"] = "The caliber box's list as one types: a filter over the cartridge table's 605 rows, done once per key press, too small to time against an analysis.",
         ["CartridgeLookup"] = "Loading the 605-row cartridge table once and matching a typed name against it; measured by nothing a reading waits on.",
+        ["PrimerNumbers"] = "The website statistics primer's examples, drawn once on a fixed seed by `grouplab primer`; nothing is read from a target, and PrimerTests holds the file to it.",
         ["GridStyle2"] = "The zeroing grid's fixed numbers and its three sentences of scale. Drawing the grid is measured, in rendering the sheet.",
         ["GridStyle3"] = "The C3 zeroing grid's fixed numbers, its numbers' wording and its legend. Drawing it is rendering a sheet, which is measured.",
         ["BullColours"] = "Entry 297's three bull colors and their tints, fixed values; drawing a colored sheet is rendering a sheet, which is measured.",
