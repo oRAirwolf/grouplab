@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1702 |
+| code | 1710 |
 | measured | 2167 |
-| decided | 1434 |
+| decided | 1439 |
 | unbacked | 0 |
-| **total** | **5303** |
+| **total** | **5316** |
 
-**1546** of them were read one sentence at a time and their backing written against the sentence. The other **3757** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1559** of them were read one sentence at a time and their backing written against the sentence. The other **3757** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3941,7 +3941,7 @@ one that matters.
 - *code* (website/build.py newest_build(): the newest nightly's number, date and commit, read from its own entry in docs/RELEASE-NOTES.md, which the nightly writes as it publishes (entry 338); the stable file names are the ones .github/workflows/nightly.yml uploads to the moving release): Windows Mac iPhone and iPad Android Linux Windows The installer Newest Download the installer grouplab-setup-win-x64.exe Nightly 197, built 2026-10-17 from commit a50420c .
 - *code* (PrivilegesRequired=lowest in packaging/windows/grouplab.iss; src/GroupLab.Core/Updates/UpdateRun.cs asks, then installs silently (entry 119); .github/workflows/nightly.yml publishes only after ci.yml passes on windows, ubuntu and macos (entry 338 carries the honest line)): No administrator rights needed Keeps itself up to date: asks first, then updates in the background Rebuilt after every change that passes the tests on Windows, Linux and macOS Honestly: it passed the tests, which is not the same as somebody having used it.
 - *decided* (NOTES-FROM-PLANNING.md entry 369: the Microsoft Store follows the nightlies, every published nightly submitted automatically (.github/workflows/store-follow.yml)): Microsoft Store Updates itself The Store keeps GroupLab up to date itself and installs it without the "Windows protected your PC" warning.
-- *measured* (docs/notes/external-status.md, which store-status.yml writes from the Store API each time the Store's state changes (entries 336 and 338); the page reads it at build time (website/build.py store_version)): Updates come from the Store, like any Store app, and GroupLab's own updater is switched off in that copy Windows 10 version 1809 or later Version 0.2.196 today; the Store's page and GroupLab's Settings screen name it too Not sure?
+- *measured* (docs/notes/external-status.md, which store-status.yml writes from the Store API each time the Store's state changes (entries 336 and 338); the page reads it at build time (website/build.py store_version)): Updates come from the Store, like any Store app, and GroupLab's own updater is switched off in that copy Windows 10 version 1809 or later Version 0.2.197 today; the Store's page and GroupLab's Settings screen name it too Not sure?
 - *code* (package-windows.ps1 and .github/workflows/package.yml build it; ci.yml tests on windows-latest): The zip: nothing to install grouplab-win-x64.zip Windows 10 and 11.
 - *code* (UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs; entry 116 section 5 and entry 147: the builds are unsigned): Nothing to install Tells you when a newer build exists; you download it yourself Download the zip When Windows says "Windows protected your PC" The Windows and Linux builds are unsigned, because signing costs money the project has not spent.
 - *decided* (entry 116 section 5 and entry 147: the builds are unsigned): Windows says this about any program nobody has paid to sign.
@@ -5394,6 +5394,22 @@ one that matters.
 - *decided* (entry 129: the upload form asks for the diameter): The diameter, not the cartridge name, because that is what measures a hole: a 6.5 Creedmoor and a 6.5x55 both put a 0.264 in bullet through the paper.
 - *decided* (entry 165 section 2: the publishable consent level, in website/api/limits.json consentTexts): GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab&#x27;s public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use.
 - *code* (LICENSE, and the footer in website/build.py shell()): Send the photos Free and open source under GPL-3.0.
+
+### site:testpage/index.html
+
+- *decided* (the test page's header, ruler and navigation, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)): GroupLab Skip to content 0 1 2 3 4 5 6 7 8 9 10 11 GROUP LAB DOWNLOAD TOUR FEATURES SEND A TARGET GUIDES RESEARCH PAUSE MOTION DOWNLOAD Download Tour Features Send a target Guides Research Community Release notes Support GitHub GROUP LAB Know what your rifle really shoots.
+- *code* (every figure on the analysis carries its interval: src/GroupLab.Core/Statistics, docs/STATISTICS.md, held by the statistics tests; the same promise as the home page's lead (entries 130 and 145)): GroupLab measures the group and gives every figure with the range it could really be.
+- *code* (website/features.json every-hole, as published on the Features page with its own backing, and the review queue in docs/USER-GUIDE.md section 4; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)): MARKING 01 Finds the holes It reads the sheet, finds each hole and gives it to its bull.
+- *code* (website/features.json six-figures and why, as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)): ANALYSIS 02 Every figure with its range Mean radius, CEP, sigma and the rest, each with how big it could really be, and why.
+- *code* (website/features.json compare, as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)): LOADS 03 Compare loads honestly Two loads side by side, and a plain answer when the data cannot yet tell them apart.
+- *code* (website/features.json ballistics, the hit probability on Ballistics, as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)): BALLISTICS 04 Hit probability The chance of a hit on a plate or a ring at your distance, worked out from your own group.
+- *code* (website/features.json pool-set (each sheet's shots in their own shade), as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)): SETS 05 Several sheets, one group The sheets of a set pool into one group, each sheet in its own color.
+- *code* (website/features.json sessions and one-page-report, with docs/USER-GUIDE.md section 13 (each result named by its load, date and time), as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)): SESSIONS 06 Sessions and a one-page report Every result kept by load, date and time, and one dated page to print or share.
+- *decided* (the section's heading, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)): 02 / HONEST FREE AND OPEN SOURCE No bragging numbers.
+- *code* (LICENSE, the GPL-3.0 text, at the repository's root): A Free and open source GPL-3.0.
+- *decided* (docs/PLATFORM-SUPPORT.md, the one platform statement (iPhone and iPad through TestFlight's public beta)): C On what you already own Windows, macOS, Linux and Android, with iPhone and iPad in a public beta.
+- *decided* (the section's heading; the phone applications are in docs/PLATFORM-SUPPORT.md (entry 440, Alan's choice of concept B for the home page, 2026-10-17)): 03 / PHONE ANDROID, IPHONE AND IPAD Measure it at the bench.
+- *decided* (the test page's footer, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)): Support Release notes GitHub Discord &#169; 2026 the GroupLab contributors.
 
 ### site:tour/analysis-open/index.html
 

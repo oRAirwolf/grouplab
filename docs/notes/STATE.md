@@ -9,15 +9,16 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-17, entry 436 (before it: entry 435, entries 432 to 434, requests 102 and 99, entry 431).
+**Last rewritten:** 2026-10-17, entry 440 (before it: entry 436, entry 435, entries 432 to 434).
 
 ---
 
 ## In flight
 
-- **Entry 436 (2026-10-17)**: the user guide has 62 subsections; its contents list nests them, folds all but the section being
-  read and follows the reader; every heading has a link mark and the address bar follows; the PDFs carry bookmarks. Section 5 (the
-  live checks) is recorded with entry 437.
+- **Entry 440 (2026-10-17)**: concept B, the new home page, is built at grouplab.org/testpage/ for Alan to approve: noindex, not in the
+  sitemap, linked from nowhere (a build check). **The home page at / is unchanged** until Alan approves and an entry swaps it in.
+- **Entry 436 (2026-10-17)**: the user guide has 62 subsections, a contents list that follows the reader, a link on every heading and
+  PDF bookmarks; checked live.
 - **Entries 418, 421 to 424, 426 to 429 and 431 to 435 are done**: CI fails when a guide has a commit its PDF has not (435); the
   iOS self-test is green (432); the keyboard's lost first Next is logged, cause not found; #31 to #34 are closed.
 - **Entries 425 and 430 are done**: the selected shot is ringed in magenta over everything; question 100 asks about its contrast.
@@ -45,7 +46,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entries 437 (guide pictures with markings), 438 (a statistics primer) and 439 (a guided demo in the application).
+1. Entries 437 (guide pictures with markings; started, in a stash), 438 (a statistics primer) and 439 (a guided demo in the application).
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 

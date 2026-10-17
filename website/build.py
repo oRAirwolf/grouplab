@@ -23,6 +23,7 @@ import datetime
 import hashlib
 import html
 import json
+import math
 import os
 import re
 import shutil
@@ -237,6 +238,20 @@ def build_images() -> None:
         dst.parent.mkdir(parents=True, exist_ok=True)
         img.save(dst, "WEBP", quality=90, method=6)
 
+    # Entry 440 section 3.1: the test page's orbit and cards carry smaller copies than the 1400 pixel screens, sized to how large they are
+    # shown, so the page weighs less than the home page it may replace.
+    for name, width, folder in [(n, 360, "small") for n in sorted(set(TESTPAGE_INNER + TESTPAGE_OUTER))] + [(c[3], 560, "card") for c in TESTPAGE_CARDS]:
+        for theme in ("dark", "light"):
+            src = PHONE_SCREENS / f"{name}-{theme}.png" if name.startswith("fold-") else SCREENS / f"{name}-{theme}-1400x900.png"
+            img = Image.open(need(src)).convert("RGB")
+            img = img.resize((width, round(img.height * width / img.width)), Image.LANCZOS)
+            if folder == "small":
+                # An orbit slot shows the top of its picture at 230 by 148, so a phone's tall screen is cut to that shape here.
+                img = img.crop((0, 0, width, min(img.height, round(width * 148 / 230))))
+            dst = OUT / "assets" / "screens" / folder / f"{name}-{theme}.webp"
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            img.save(dst, "WEBP", quality=74, method=6)
+
     # Link preview image, 1200 by 630, cut from the dark analysis screen.
     img = Image.open(need(SCREENS / "analysis-dark-1400x900.png")).convert("RGB")
     w, h = img.size
@@ -350,6 +365,11 @@ TERM_SKIP = {"a", "code", "pre", "h1", "h2", "h3", "h4", "h5", "h6", "script", "
 VOID = {"br", "img", "hr", "input", "meta", "link", "source", "wbr", "col", "area", "base", "embed", "param", "track"}
 
 
+# Entry 440: a decorative label, such as the test page's strip of feature names, opts out of glossary links with this attribute on an element
+# holding only text and spans; the words are explained where they are read as prose.
+NO_TERMS = 'data-terms="off"'
+
+
 def explain(body: str) -> str:
     """Entry 154 section 2: the first appearance of each glossary term in a page's body becomes a link to its entry, carrying the plain
     sentence, which terms.js shows on hover and on tap. Only the first appearance, because a page with every "sigma" underlined is
@@ -363,7 +383,7 @@ def explain(body: str) -> str:
                 if m.group(1):
                     if skip and skip[-1] == name:
                         skip.pop()
-                elif name in TERM_SKIP and name not in VOID and not token.endswith("/>"):
+                elif (name in TERM_SKIP or NO_TERMS in token) and name not in VOID and not token.endswith("/>"):
                     skip.append(name)
             out.append(token)
             continue
@@ -438,7 +458,7 @@ def term_problems() -> list[str]:
                     if m.group(1):
                         if skip and skip[-1] == name:
                             skip.pop()
-                    elif name in TERM_SKIP and name not in VOID and not token.endswith("/>"):
+                    elif (name in TERM_SKIP or NO_TERMS in token) and name not in VOID and not token.endswith("/>"):
                         skip.append(name)
                 continue
             if skip:
@@ -1613,6 +1633,219 @@ def page_what_can_be_measured() -> str:
     return shell("/what-can-be-measured/", "What GroupLab can measure",
                  "Where the scale comes from, what a GroupLab sheet adds, and what a sheet printed at the wrong size does to every figure.",
                  body, "Tour")
+
+
+# ---------------------------------------------------------------- the new home page, concept B, at /testpage/
+
+# Entry 440: Alan chose concept B ("Orbit") from the planning session's canvas, and asked to see it built before it replaces the home page:
+# "show me the final result but dont publish it to the home page until I approve it". So it lives at /testpage/, kept out of sight
+# (noindex, not in the sitemap, linked from nowhere; testpage_problems holds all four), and the home page at / is unchanged.
+TESTPAGE_PATH = "/testpage/"
+# The orbit's screens, as drawn: the inner ring, then the outer. A name with "fold-" is a phone screen.
+TESTPAGE_INNER = ["analysis-open", "compare", "marking", "ballistics-hit"]
+TESTPAGE_OUTER = ["groups", "fold-result", "sessions", "analysis-open", "fold-capture", "marking"]
+TESTPAGE_TAGS = ["Finds the holes", "Mean radius", "CEP 50 and 90", "Every figure with its range", "Load comparison",
+                 "Zero correction in clicks", "Dope table", "Hit probability", "Phone capture", "Store-bought targets", "Pooled sets",
+                 "One-page report"]
+# (label, number, feature key, picture, title, words), the feature key being the Features page entry the card opens.
+TESTPAGE_CARDS = [
+    ("Marking", "01", "every-hole", "marking", "Finds the holes",
+     "It reads the sheet, finds each hole and gives it to its bull. You check only the few it is unsure of."),
+    ("Analysis", "02", "six-figures", "analysis-open", "Every figure with its range",
+     "Mean radius, CEP, sigma and the rest, each with how big it could really be, and why."),
+    ("Loads", "03", "compare", "compare", "Compare loads honestly",
+     "Two loads side by side, and a plain answer when the data cannot yet tell them apart."),
+    ("Ballistics", "04", "ballistics", "ballistics-hit", "Hit probability",
+     "The chance of a hit on a plate or a ring at your distance, worked out from your own group."),
+    ("Sets", "05", "pool-set", "groups", "Several sheets, one group",
+     "The sheets of a set pool into one group, each sheet in its own color."),
+    ("Sessions", "06", "one-page-report", "sessions", "Sessions and a one-page report",
+     "Every result kept by load, date and time, and one dated page to print or share."),
+]
+TESTPAGE_POINTS = [
+    ("A", "Free and open source", "GPL-3.0. Every line of how a figure is worked out can be read, checked and built yourself."),
+    ("B", "The range, not just the number", "A figure without its range invites a story. GroupLab shows how big each one could really be."),
+    ("C", "On what you already own", "Windows, macOS, Linux and Android, with iPhone and iPad in a public beta."),
+]
+TESTPAGE_SECTIONS = [("measure", "Measure"), ("honest", "Honest"), ("phone", "Phone"), ("start", "Get started")]
+
+TESTPAGE_MARK = ('<svg class="tp-logo" width="26" height="26" viewBox="0 0 100 100" aria-hidden="true">'
+                 '<circle cx="50" cy="50" r="40" class="tp-ring-line"/><circle cx="50" cy="50" r="21" class="tp-ring-line"/>'
+                 '<circle cx="61.94" cy="32.75" r="11" class="tp-hit"/><circle cx="52.75" cy="41.94" r="11" class="tp-hit"/>'
+                 '<circle cx="65.31" cy="45.31" r="11" class="tp-hit"/></svg>')
+ICON_PAUSE = '<svg class="ico tp-motion-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 5v14M16 5v14"/></svg>'
+
+
+def testpage_small(name: str, theme: str) -> str:
+    """The orbit's copy of a screen, 360 pixels across, made by build_images (entry 440 section 3.1)."""
+    return f"/assets/screens/small/{name}-{theme}.webp"
+
+
+def testpage_slots(names: list[str], radius: int, w: int, h: int, start: float) -> str:
+    """Pictures spaced round a ring of the given radius, as the canvas placed them; each turns back as its ring turns, so it stays upright."""
+    out = []
+    for i, name in enumerate(names):
+        a = start + i * 2 * math.pi / len(names)
+        left, top = radius + radius * math.cos(a) - w / 2, radius + radius * math.sin(a) - h / 2
+        imgs = "".join(f'<img class="only-{t}" src="{testpage_small(name, t)}" alt="" width="{w}" height="{h}" loading="lazy" decoding="async">'
+                       for t in ("dark", "light"))
+        out.append(f'<div class="tp-slot" style="left:{left:.1f}px;top:{top:.1f}px;width:{w}px;height:{h}px">'
+                   f'<div class="tp-up"><div class="tp-shot">{imgs}</div></div></div>')
+    return "".join(out)
+
+
+def testpage_phone(name: str, alt: str, cls: str = "") -> str:
+    """A phone screen in its dark frame; a name with a theme is that picture alone, as drawn, and one without is the theme's own."""
+    files = [name] if name.endswith(("-dark", "-light")) else phone_themes(name)
+    w, h = Image.open(need(PHONE_SCREENS / f"{files[-1]}.png")).size
+    return "".join(
+        f'<img class="tp-phone-shot {cls}{"" if len(files) == 1 else " only-" + stem.rsplit("-", 1)[1]}" src="/assets/screens/phone/{stem}.webp" '
+        f'alt="{esc(alt)}" width="{w // 2}" height="{h // 2}" loading="lazy" decoding="async">' for stem in files)
+
+
+def testpage_card_picture(name: str, alt: str) -> str:
+    """A card's screen in both themes, from the 560 pixel copies build_images makes; only the theme shown is fetched."""
+    return "".join(f'<img class="tp-card-img only-{t}" src="/assets/screens/card/{name}-{t}.webp" alt="{esc(alt)}" width="560" height="360" '
+                   f'loading="lazy" decoding="async">' for t in ("dark", "light"))
+
+
+def page_testpage() -> str:
+    year = datetime.date.today().year
+    bar = "".join(f'<a href="{href}">{esc(label.upper())}</a>' for label, href in nav() if label not in NAV_MORE)
+    menu = "".join(f'<a href="{href}">{esc(label)}</a>' for label, href in nav()) + f'<a href="{GITHUB}">GitHub</a>'
+    ticks = "".join(f'<span class="tp-tick-n mono" style="top:{i * 200 + 12}px">{i}</span>' for i in range(12))
+    tags = "".join(f'<span><span class="tp-dot">&#183;</span> {esc(t.upper())}</span>' for t in TESTPAGE_TAGS)
+    cards = "".join(
+        f'<a class="tp-card tp-ease" href="{FEATURES_PATH}#{key}"><div class="tp-strip-label mono" data-terms="off"><span>{esc(tag.upper())}</span><span>{n}</span></div>'
+        f'<div class="tp-card-pic">{testpage_card_picture(pic, title)}</div>'
+        f'<div class="tp-card-text"><h3>{esc(title)}</h3><p>{esc(words)}</p></div></a>'
+        for tag, n, key, pic, title, words in TESTPAGE_CARDS)
+    points = "".join(f'<div class="tp-point tp-ease"><p class="tp-letter mono">{l}</p><h3>{esc(t)}</h3><p>{esc(words)}</p></div>'
+                     for l, t, words in TESTPAGE_POINTS)
+    index = "".join(f'<a href="#{key}">{esc(label.upper())}</a>' for key, label in TESTPAGE_SECTIONS)
+    phones = (testpage_phone("fold-capture", "Capture on the phone", "tp-low") + testpage_phone("fold-result-dark", "A result on the phone")
+              + testpage_phone("fold-result-light", "A result in the light theme", "tp-low tp-third"))
+    main = f"""
+<section class="tp-hero" id="top">
+<div class="tp-orbits" aria-hidden="true">
+<div class="tp-circle tp-core"></div>
+<div class="tp-ring tp-inner">{testpage_slots(TESTPAGE_INNER, 330, 210, 135, -0.5)}</div>
+<div class="tp-ring tp-outer">{testpage_slots(TESTPAGE_OUTER, 560, 230, 148, 0.2)}</div>
+<div class="tp-circle tp-dashed"></div>
+</div>
+<div class="tp-hero-text">
+<h1 class="cond">GROUP<span class="tp-amber">LAB</span></h1>
+<p class="tp-tagline">Know what your rifle <em>really</em> shoots.</p>
+<p class="tp-lead tp-wide">Photograph any target. GroupLab measures the group and gives every figure with the range it could really be.</p>
+<div class="tp-actions tp-wide">
+<a class="tp-btn tp-primary mono" href="/download/">DOWNLOAD FREE</a>
+<a class="tp-btn mono" href="{GITHUB}">VIEW THE SOURCE</a>
+</div>
+<p class="tp-platforms mono tp-wide">GPL-3.0 &#183; WINDOWS &#183; MACOS &#183; LINUX &#183; ANDROID &#183; IPHONE AND IPAD BETA</p>
+</div>
+<div class="tp-hero-phone">
+<p class="tp-lead">Photograph any target. Every figure comes with the range it could really be.</p>
+<a class="tp-btn tp-primary mono" href="/download/?device=android#android">GET IT FOR ANDROID</a>
+<a class="tp-btn mono" href="/download/?device=iphone#iphone">IPHONE AND IPAD BETA</a>
+</div>
+</section>
+<nav class="tp-index mono" aria-label="Sections of this page">{index}</nav>
+<div class="tp-band"><div class="tp-ticker mono"><div class="tp-tags" data-terms="off">{tags}</div><div class="tp-tags tp-again" aria-hidden="true" data-terms="off">{tags}</div></div></div>
+
+<section class="tp-section" id="measure">
+<div class="tp-strip-label mono tp-head" data-terms="off"><span>01 / MEASURE</span><span class="tp-wide">REAL SCREENS, RENDERED FROM THE CURRENT BUILD</span></div>
+<div class="tp-intro tp-ease">
+<h2>Five shots are a hint. <em>GroupLab</em> tells you how big a hint.</h2>
+<p>A small group is mostly luck. Every figure here comes with the range it could really be, so you know when to shoot more and when to stop.</p>
+</div>
+<div class="tp-cards">{cards}</div>
+</section>
+
+<section class="tp-section" id="honest">
+<div class="tp-strip-label mono tp-head" data-terms="off"><span>02 / HONEST</span><span class="tp-wide">FREE AND OPEN SOURCE</span></div>
+<div class="tp-intro tp-ease"><h2>No bragging numbers.</h2></div>
+<div class="tp-points">{points}</div>
+</section>
+
+<section class="tp-section" id="phone">
+<div class="tp-strip-label mono tp-head" data-terms="off"><span>03 / PHONE</span><span class="tp-wide">ANDROID, IPHONE AND IPAD</span></div>
+<div class="tp-phone-row">
+<div class="tp-phone-words tp-ease"><h2>Measure it at the bench.</h2><p>Point the phone at the sheet, flat on the table or straight on at the backer, and read the group before you walk back.</p></div>
+<div class="tp-phones">{phones}</div>
+</div>
+</section>
+
+<section class="tp-section tp-close" id="start">
+<h2 class="cond tp-ease">START MEASURING.</h2>
+<div class="tp-actions">
+<a class="tp-btn tp-primary mono" href="/download/"><span class="tp-wide">DOWNLOAD FOR DESKTOP</span><span class="tp-narrow">DOWNLOAD FREE</span></a>
+<a class="tp-btn mono tp-wide" href="/download/#android">GET IT ON YOUR PHONE</a>
+</div>
+<p class="mono tp-free">Free &#183; open source</p>
+</section>
+"""
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GroupLab</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Photograph any target. GroupLab measures the group and gives every figure with the range it could really be.">
+<meta name="grouplab-site-build" content="{COMMIT}">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#131417" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f3f0" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/plex-sans-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/testpage.css">
+<script src="/assets/js/theme.js"></script>
+<script src="/assets/js/terms.js" defer></script>
+<script src="/assets/js/testpage.js" defer></script>
+</head>
+<body class="tp">
+<a class="skip" href="#main">Skip to content</a>
+<div class="tp-ruler" aria-hidden="true"><span class="tp-ruler-mark"></span>{ticks}</div>
+<header class="tp-header">
+<a class="tp-brand cond" href="/" aria-label="GroupLab home">{TESTPAGE_MARK}<span class="tp-word">GROUP<span class="tp-amber">LAB</span></span></a>
+<nav class="tp-nav mono" aria-label="Main">{bar}</nav>
+<button type="button" class="tp-motion tp-button mono" aria-pressed="false" aria-label="Pause motion">{ICON_PAUSE}<span class="tp-motion-word">PAUSE MOTION</span></button>
+<button type="button" class="theme-toggle tp-button tp-square" aria-label="Switch between dark and light">{ICON_THEME}</button>
+<a class="tp-dl mono" href="/download/">DOWNLOAD</a>
+<details class="tp-menu">
+<summary class="tp-button tp-square" aria-label="Menu">{ICON_MENU}</summary>
+<nav class="menu-panel" aria-label="Main">{menu}</nav>
+</details>
+</header>
+<main id="main">{explain(main)}</main>
+<footer class="tp-footer"><span>GroupLab is free and open source under the GPL-3.0.</span>
+<nav class="tp-footer-links" aria-label="Footer"><a href="/support/">Support</a><a href="/releases/">Release notes</a><a href="{GITHUB}">GitHub</a><a href="{DISCORD}">Discord</a></nav>
+<span class="tp-copy">&#169; {year} the GroupLab contributors.</span></footer>
+</body>
+</html>
+"""
+
+
+def testpage_problems(out: Path = OUT) -> list[str]:
+    """Entry 440 section 1.2: the test page stays out of sight until Alan approves it: noindex, not in the sitemap, in no navigation and
+    linked from no other page. A whole-site check: a page meant to be hidden that is found is not something to publish."""
+    found = []
+    page = out / "testpage" / "index.html"
+    if not page.exists():
+        return ["testpage/index.html: the page was not built"]
+    if '<meta name="robots" content="noindex, nofollow">' not in page.read_text(encoding="utf-8"):
+        found.append("testpage/index.html: it has no noindex, nofollow robots tag")
+    sitemap = out / "sitemap.xml"
+    if sitemap.exists() and TESTPAGE_PATH in sitemap.read_text(encoding="utf-8"):
+        found.append("sitemap.xml: it lists the test page")
+    if any(href == TESTPAGE_PATH for _, href in NAV + nav()):
+        found.append("website/build.py: the navigation names the test page")
+    for other in sorted(out.rglob("*.html")):
+        if other != page and re.search(r'href="(?:https://grouplab\.org)?/testpage/?["#?]', other.read_text(encoding="utf-8", errors="replace")):
+            found.append(f"{other.relative_to(out).as_posix()}: it links to the test page")
+    return found
 
 
 def releases() -> list[tuple[str, str, str]]:
@@ -2979,6 +3212,281 @@ GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list
 })();
 """
 
+TESTPAGE_CSS = r"""
+/* Entry 440: the concept B home page, at /testpage/ until Alan approves it. The site's tokens and fonts; the layout is the canvas's. */
+.tp{--ring:#6b727b;--rule:46px;overflow-x:hidden}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .tp{--ring:#8f8b83}}
+:root[data-theme="light"] .tp{--ring:#8f8b83}
+/* The canvas sets headings and links in plain Plex Sans at their own weights, so the page needs four font files, not six. */
+.tp h1,.tp h2,.tp h3{font-family:"IBM Plex Sans",system-ui,sans-serif;letter-spacing:normal;text-transform:none}
+.tp a{font-weight:400}
+.tp .cond{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700}
+.tp-amber{color:var(--amber)}
+.tp-ring-line{fill:none;stroke:var(--ring);stroke-width:6}
+.tp-hit{fill:var(--amber)}
+.tp main,.tp-footer,.tp-band{margin-right:var(--rule)}
+.tp-ruler{position:fixed;top:0;right:0;bottom:0;width:var(--rule);border-left:1px solid var(--line);z-index:3;overflow:hidden;
+background-image:linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px),linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px);
+background-size:9px 40px,18px 200px;background-repeat:repeat-y;background-position:right 0 top 20px,right 0 top 20px}
+.tp-tick-n{position:absolute;right:22px;font-size:10px;color:var(--faint)}
+.tp-ruler-mark{position:absolute;right:0;top:0;width:var(--rule);height:2px;background:var(--amber);transform:translateY(0)}
+.tp-header{position:fixed;top:0;left:0;right:var(--rule);z-index:6;display:flex;align-items:center;gap:28px;padding:16px 40px;
+border-bottom:1px solid transparent;transition:background-color .2s,border-color .2s}
+.tp-header.tp-solid{background:var(--bg);border-bottom-color:var(--line)}
+.tp-brand{display:flex;align-items:center;gap:10px;font-size:18px;letter-spacing:.04em;color:var(--text)}
+.tp-brand:hover{text-decoration:none}
+.tp-word{display:inline-block;transform-origin:0 0}
+.tp-nav{display:flex;gap:22px;flex-wrap:wrap;margin-left:auto;font-size:12px;letter-spacing:.08em}
+.tp-nav a{color:var(--dim)}
+.tp-nav a:hover{color:var(--text);text-decoration:none}
+.tp-button{height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--dim);font-size:11px;
+letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.tp-square{width:36px;padding:0;color:var(--text)}
+.tp-motion-icon{display:none}
+html:not(.tp-js) .tp-motion{display:none}
+.tp-dl{height:36px;display:flex;align-items:center;padding:0 16px;border-radius:8px;background:var(--text);color:var(--bg);font-size:12px;letter-spacing:.08em}
+.tp-dl:hover{text-decoration:none;opacity:.9}
+.tp-menu{display:none;position:relative}
+.tp-menu summary{list-style:none}
+.tp-menu summary::-webkit-details-marker{display:none}
+.tp-hero{position:relative;height:940px;overflow:hidden;background:var(--sunk)}
+.tp-orbits{position:absolute;left:50%;top:470px;width:0;height:0}
+.tp-circle,.tp-ring{position:absolute;border-radius:50%}
+.tp-core{left:-130px;top:-130px;width:260px;height:260px;border:1px solid var(--line)}
+.tp-inner{left:-330px;top:-330px;width:660px;height:660px;border:1px solid var(--line2)}
+.tp-outer{left:-560px;top:-560px;width:1120px;height:1120px;border:1px solid var(--line2)}
+.tp-dashed{left:-780px;top:-780px;width:1560px;height:1560px;border:1px dashed var(--line)}
+.tp-slot{position:absolute}
+.tp-up{width:100%;height:100%}
+.tp-shot{width:100%;height:100%;border-radius:10px;border:1px solid var(--line2);box-shadow:var(--shadow);overflow:hidden;background:var(--panel)}
+.tp-shot img{width:100%;height:100%;object-fit:cover;object-position:top left}
+@keyframes tp-spin{to{transform:rotate(360deg)}}
+@keyframes tp-spin-back{to{transform:rotate(-360deg)}}
+@keyframes tp-tick{to{transform:translateX(-50%)}}
+html.tp-js:not(.tp-still) .tp-inner{animation:tp-spin 120s linear infinite}
+html.tp-js:not(.tp-still) .tp-inner .tp-up{animation:tp-spin-back 120s linear infinite}
+html.tp-js:not(.tp-still) .tp-outer{animation:tp-spin-back 200s linear infinite}
+html.tp-js:not(.tp-still) .tp-outer .tp-up{animation:tp-spin 200s linear infinite}
+.tp-ring,.tp-up,.tp-ticker{will-change:transform}
+.tp-hero-text{position:absolute;left:0;right:0;top:300px;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 40px;z-index:2}
+.tp-hero h1{display:inline-block;margin:0;font-size:136px;line-height:.9;letter-spacing:.01em;transform-origin:0 0}
+.tp-tagline{margin:22px 0 6px;font-size:30px;font-weight:600;color:var(--text)}
+.tp-tagline em{font-weight:400}
+.tp-lead{margin:0 0 28px;max-width:560px;font-size:17px;line-height:1.6;color:var(--dim)}
+.tp-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.tp-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:8px;border:1px solid var(--line2);
+background:var(--bg);color:var(--text);font-size:13px;letter-spacing:.08em}
+.tp-btn:hover{text-decoration:none;border-color:var(--text)}
+.tp-btn.tp-primary{background:var(--amber);border-color:var(--amber);color:var(--on-amber)}
+.tp-btn.tp-primary:hover{opacity:.92}
+.tp-platforms{margin:22px 0 0;font-size:11px;letter-spacing:.1em;color:var(--faint)}
+.tp-hero-phone{display:none}
+.tp-narrow{display:none}
+.tp-index{position:fixed;right:calc(var(--rule) + 24px);bottom:24px;z-index:4;display:flex;flex-direction:column;align-items:flex-end;
+font-size:12px;letter-spacing:.1em;line-height:1.7;padding:8px 10px;border-radius:6px;background:var(--bg)}
+.tp-index a{color:var(--faint)}
+.tp-index a:hover{color:var(--text);text-decoration:none}
+.tp-index a.tp-here{color:var(--text)}
+.tp-band{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:14px 0;background:var(--bg)}
+.tp-ticker{display:flex;width:max-content;font-size:12px;letter-spacing:.1em;color:var(--dim)}
+.tp-tags{display:flex;gap:40px;padding-right:40px}
+.tp-tags>span{white-space:nowrap}
+.tp-dot{color:var(--amber)}
+html.tp-js:not(.tp-still) .tp-ticker{animation:tp-tick 40s linear infinite}
+.tp-band:hover .tp-ticker,.tp-band:focus-within .tp-ticker{animation-play-state:paused}
+html:not(.tp-js) .tp-again,.tp-still .tp-again{display:none}
+html:not(.tp-js) .tp-ticker,.tp-still .tp-ticker{width:auto;padding:0 40px}
+html:not(.tp-js) .tp-tags,.tp-still .tp-tags{flex-wrap:wrap;row-gap:8px;padding-right:0}
+.tp-section{border-top:1px solid var(--line);scroll-margin-top:68px}
+#measure{border-top:0}
+.tp-strip-label{display:flex;justify-content:space-between;gap:16px;font-size:11px;letter-spacing:.1em;color:var(--faint);padding:12px 20px}
+.tp-head{padding:18px 40px;font-size:12px;border-bottom:1px solid var(--line)}
+.tp-intro{padding:90px 40px 70px}
+.tp-intro h2,.tp-phone-words h2{margin:0 0 18px;font-size:64px;line-height:1.02;font-weight:600;max-width:900px}
+.tp-intro h2 em{font-weight:400}
+.tp-intro p,.tp-phone-words p{margin:0;max-width:620px;font-size:18px;line-height:1.6;color:var(--dim)}
+#honest .tp-intro{padding-bottom:40px}
+#honest .tp-intro h2{margin:0}
+.tp-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));border-top:1px solid var(--line)}
+.tp-card{display:block;background:var(--panel);color:var(--text);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tp-card:hover{text-decoration:none}
+.tp-card .tp-strip-label{border-bottom:1px solid var(--line)}
+.tp-card-pic{height:280px;overflow:hidden;background:var(--sunk)}
+.tp-card-img{width:100%;height:100%;object-fit:cover;object-position:top left;transition:transform .6s ease}
+.tp-card:hover .tp-card-img{transform:scale(1.05)}
+.tp-card-text{padding:22px 22px 28px}
+.tp-card h3,.tp-point h3{margin:0 0 8px;font-size:24px;font-weight:600}
+.tp-card p,.tp-point p{margin:0;font-size:16px;line-height:1.55;color:var(--dim)}
+.tp-points{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));border-top:1px solid var(--line)}
+.tp-point{padding:32px 40px 48px;border-right:1px solid var(--line)}
+.tp-point h3{margin-bottom:10px}
+.tp .tp-point .tp-letter{font-size:13px;color:var(--amber);margin-bottom:14px}
+.tp-phone-row{padding:80px 40px;display:flex;flex-wrap:wrap;gap:56px;align-items:center}
+.tp-phone-words{flex:1 1 360px;min-width:0}
+.tp-phone-words h2{font-size:56px;line-height:1.04}
+.tp-phones{flex:1 1 560px;display:flex;gap:22px;justify-content:center;padding-bottom:30px}
+.tp-phone-shot{height:440px;width:auto;border-radius:24px;border:6px solid #0b0c0e;box-shadow:var(--shadow)}
+.tp-phone-shot.tp-low{transform:translateY(30px)}
+.tp-close{background:var(--sunk);padding:110px 40px;text-align:center}
+.tp-close h2{margin:0 0 26px;font-size:96px;line-height:.95}
+.tp .tp-free{margin:18px 0 0;font-size:12px;color:var(--faint)}
+.tp-footer{border-top:1px solid var(--line);padding:36px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:14px;color:var(--faint)}
+.tp-footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.tp-copy{flex-basis:100%;font-size:13px}
+html.tp-js:not(.tp-still) .tp-ease{transition:opacity .7s ease,transform .7s ease}
+html.tp-js:not(.tp-still) .tp-ease:not(.tp-in){opacity:0;transform:translateY(18px)}
+@media (max-width:1100px){
+.tp-header{gap:16px;padding:14px 24px}
+.tp-nav{gap:16px}
+}
+@media (max-width:980px){.tp-nav{display:none}.tp-menu{display:block;margin-left:auto}}
+@media (max-width:860px){
+.tp{--rule:0px}
+.tp-ruler,.tp-index,.tp-wide{display:none}
+.tp-narrow{display:inline}
+.tp-header{position:sticky;background:var(--bg);border-bottom-color:var(--line);padding:10px 16px;gap:8px}
+.tp-brand{font-size:17px}
+.tp-motion{width:44px;padding:0;color:var(--text)}
+.tp-motion-word,.tp-dl{display:none}
+.tp-motion-icon{display:block}
+.tp-square,.tp-menu summary{width:44px;height:44px}
+.tp-menu .menu-panel{top:52px}
+.tp-hero{height:700px}
+.tp-orbits{top:300px;transform:scale(.5)}
+.tp-hero-text{top:240px;padding:0 16px}
+.tp-hero h1{font-size:72px}
+.tp-tagline{margin-top:14px;font-size:22px}
+.tp-hero-phone{display:flex;flex-direction:column;gap:10px;position:absolute;left:16px;right:16px;bottom:24px;z-index:2}
+.tp-hero-phone .tp-lead{margin:0 0 6px;max-width:none;font-size:16px;line-height:1.55;text-align:center;background:var(--sunk)}
+.tp-hero-phone .tp-btn{padding:15px}
+.tp-band{padding:12px 0}
+.tp-ticker{font-size:11px}
+.tp-head{padding:14px 16px;font-size:11px}
+.tp-intro{padding:44px 16px 32px}
+#honest .tp-intro{padding-bottom:12px}
+.tp-intro h2,.tp-phone-words h2{font-size:36px;line-height:1.05}
+.tp-intro p,.tp-phone-words p{font-size:16px;line-height:1.55}
+.tp-cards{grid-template-columns:minmax(0,1fr)}
+.tp-card{border-right:0}
+.tp-card .tp-strip-label{padding:10px 16px;font-size:10px;border-bottom:0}
+.tp-card-pic{height:200px}
+.tp-card-text{padding:16px 16px 22px}
+.tp-card h3,.tp-point h3{font-size:20px;margin-bottom:6px}
+.tp-card p,.tp-point p{font-size:15px;line-height:1.5}
+.tp-points{grid-template-columns:minmax(0,1fr);border-top:0}
+.tp-point{padding:22px 16px;border-right:0;border-bottom:1px solid var(--line)}
+.tp .tp-point .tp-letter{font-size:12px;margin-bottom:8px}
+.tp-phone-row{padding:44px 16px;gap:24px}
+.tp-phone-words{flex-basis:100%}
+.tp-phone-words h2{font-size:32px}
+.tp-phones{flex-basis:100%;gap:14px;padding-bottom:18px}
+.tp-phone-shot{height:340px;border-radius:18px;border-width:4px;max-width:calc(50% - 7px);object-fit:contain}
+.tp-phone-shot.tp-low{transform:translateY(18px)}
+.tp-third{display:none !important}
+.tp-close{padding:60px 16px}
+.tp-close h2{font-size:52px;margin-bottom:20px}
+.tp-close .tp-btn{width:100%;padding:15px}
+.tp-footer{padding:26px 16px}
+}
+@media (prefers-reduced-motion: reduce){
+.tp-card-img,.tp-header{transition:none}
+html.tp-js .tp-ease{transition:none}
+}
+"""
+
+TESTPAGE_JS = """// NOTES-FROM-PLANNING.md entry 440: the concept B home page's motion. Without this script the page is complete and still: nothing turns,
+// the strip of features wraps instead of scrolling, and every section is shown. Pause motion, or prefers-reduced-motion, gives the same.
+(() => {
+  const root = document.documentElement;
+  root.classList.add("tp-js");
+  const KEY = "grouplab-motion";
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let paused = false;
+  try { paused = localStorage.getItem(KEY) === "paused"; } catch (_) {}
+  const still = () => paused || reduced.matches;
+  const header = document.querySelector(".tp-header");
+  const h1 = document.querySelector(".tp-hero h1");
+  const word = document.querySelector(".tp-word");
+  const mark = document.querySelector(".tp-ruler-mark");
+  const button = document.querySelector(".tp-motion");
+
+  // The wordmark docks: as the hero scrolls away the big GROUPLAB shrinks and moves to where the header's small one is, then hands over.
+  let from = null;
+  const measure = () => {
+    h1.style.transform = "";
+    const a = h1.getBoundingClientRect(), b = word.getBoundingClientRect();
+    from = { x: a.left, y: a.top + window.scrollY, w: a.width, bx: b.left, by: b.top, bw: b.width };
+  };
+  const dock = () => {
+    if (!h1 || !word) return;
+    const y = window.scrollY;
+    if (still()) {
+      h1.style.transform = ""; h1.style.opacity = ""; word.style.opacity = "";
+      if (header) header.classList.toggle("tp-solid", y > 8);
+      return;
+    }
+    if (!from) measure();
+    const p = Math.min(1, Math.max(0, y / Math.max(1, from.y - from.by)));
+    // The header fills in only once the wordmark has arrived, so it never covers the wordmark on its way up.
+    if (header) header.classList.toggle("tp-solid", p >= 1);
+    const s = 1 + (from.bw / from.w - 1) * p;
+    const tx = (from.bx - from.x) * p, ty = y + (from.by - from.y) * p;
+    h1.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + s + ")";
+    h1.style.opacity = p >= 1 ? "0" : "1";
+    word.style.opacity = p >= 1 ? "1" : "0";
+  };
+  // The ruler's amber line is how far down the page the reader is.
+  const ruler = () => {
+    if (!mark) return;
+    const room = document.documentElement.scrollHeight - window.innerHeight;
+    const p = room > 0 ? Math.min(1, window.scrollY / room) : 0;
+    mark.style.transform = "translateY(" + Math.round(p * (window.innerHeight - 2)) + "px)";
+  };
+  let queued = false;
+  const frame = () => { queued = false; dock(); ruler(); };
+  const later = () => { if (!queued) { queued = true; requestAnimationFrame(frame); } };
+  window.addEventListener("scroll", later, { passive: true });
+  window.addEventListener("resize", () => { from = null; later(); });
+
+  const apply = () => {
+    root.classList.toggle("tp-still", still());
+    if (button) {
+      const words = paused ? "Play motion" : "Pause motion";
+      button.setAttribute("aria-pressed", String(paused));
+      button.setAttribute("aria-label", words);
+      const w = button.querySelector(".tp-motion-word");
+      if (w) w.textContent = words.toUpperCase();
+    }
+    from = null;
+    later();
+  };
+  if (button) button.addEventListener("click", () => {
+    paused = !paused;
+    try { localStorage.setItem(KEY, paused ? "paused" : "moving"); } catch (_) {}
+    apply();
+  });
+  if (reduced.addEventListener) reduced.addEventListener("change", apply);
+  apply();
+
+  // The section index marks the section in view; its links jump there as any link does.
+  const index = [...document.querySelectorAll(".tp-index a")];
+  const eases = [...document.querySelectorAll(".tp-ease")];
+  if (!("IntersectionObserver" in window)) { for (const e of eases) e.classList.add("tp-in"); return; }
+  const here = (id) => { for (const a of index) a.classList.toggle("tp-here", a.hash === "#" + id); };
+  here(index.length ? index[0].hash.slice(1) : "");
+  const watch = new IntersectionObserver((seen) => {
+    for (const s of seen) if (s.isIntersecting) here(s.target.id);
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  for (const a of index) { const s = document.getElementById(a.hash.slice(1)); if (s) watch.observe(s); }
+  // Each section's heading and cards ease in as they arrive, once.
+  const arrive = new IntersectionObserver((seen) => {
+    for (const s of seen) if (s.isIntersecting) { s.target.classList.add("tp-in"); arrive.unobserve(s.target); }
+  }, { rootMargin: "0px 0px -8% 0px" });
+  for (const e of eases) arrive.observe(e);
+})();
+"""
+
+
 CSS = r"""
 @font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url(/assets/fonts/plex-sans-400.woff2) format("woff2")}
 @font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url(/assets/fonts/plex-sans-500.woff2) format("woff2")}
@@ -3841,8 +4349,12 @@ def main() -> None:
     write("assets/js/theme.js", JS)
     write("assets/js/terms.js", TERMS_JS)
     write("assets/js/guide-toc.js", GUIDE_TOC_JS)
+    write("assets/css/testpage.css", TESTPAGE_CSS.strip() + "\n")
+    write("assets/js/testpage.js", TESTPAGE_JS)
 
     write("index.html", page_home())
+    # Entry 440: concept B, out of sight until Alan approves it; the home page above is unchanged.
+    write("testpage/index.html", page_testpage())
     write("download/index.html", page_download())
     write("shoot-a-target/index.html", page_shoot())
     # Entry 129: the page and the receiver go up together or not at all. A form posting to a path the server does
@@ -3920,6 +4432,7 @@ def main() -> None:
     # (their last published copy is kept where it can be fetched); a picture that is only old publishes and is reported.
     problems += figure_problems + limit_problems()
     problems += link_problems()
+    problems += testpage_problems()
     problems += raw_table_problems()
     problems += php_problems()
     problems += send_problems()

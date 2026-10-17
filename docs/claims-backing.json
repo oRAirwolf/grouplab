@@ -7052,6 +7052,58 @@
   "![Two loads compared](figures/screens/current/compare-light-1400x900.png) ### The loads are never ranked by their figures alone When the intervals overlap, the screen says the data do not separate the loads.": {
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
+  },
+  "GroupLab Skip to content 0 1 2 3 4 5 6 7 8 9 10 11 GROUP LAB DOWNLOAD TOUR FEATURES SEND A TARGET GUIDES RESEARCH PAUSE MOTION DOWNLOAD Download Tour Features Send a target Guides Research Community Release notes Support GitHub GROUP LAB Know what your rifle really shoots.": {
+   "kind": "decided",
+   "where": "the test page's header, ruler and navigation, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "GroupLab measures the group and gives every figure with the range it could really be.": {
+   "kind": "code",
+   "where": "every figure on the analysis carries its interval: src/GroupLab.Core/Statistics, docs/STATISTICS.md, held by the statistics tests; the same promise as the home page's lead (entries 130 and 145)"
+  },
+  "MARKING 01 Finds the holes It reads the sheet, finds each hole and gives it to its bull.": {
+   "kind": "code",
+   "where": "website/features.json every-hole, as published on the Features page with its own backing, and the review queue in docs/USER-GUIDE.md section 4; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "ANALYSIS 02 Every figure with its range Mean radius, CEP, sigma and the rest, each with how big it could really be, and why.": {
+   "kind": "code",
+   "where": "website/features.json six-figures and why, as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "LOADS 03 Compare loads honestly Two loads side by side, and a plain answer when the data cannot yet tell them apart.": {
+   "kind": "code",
+   "where": "website/features.json compare, as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "BALLISTICS 04 Hit probability The chance of a hit on a plate or a ring at your distance, worked out from your own group.": {
+   "kind": "code",
+   "where": "website/features.json ballistics, the hit probability on Ballistics, as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "SETS 05 Several sheets, one group The sheets of a set pool into one group, each sheet in its own color.": {
+   "kind": "code",
+   "where": "website/features.json pool-set (each sheet's shots in their own shade), as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "SESSIONS 06 Sessions and a one-page report Every result kept by load, date and time, and one dated page to print or share.": {
+   "kind": "code",
+   "where": "website/features.json sessions and one-page-report, with docs/USER-GUIDE.md section 13 (each result named by its load, date and time), as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "02 / HONEST FREE AND OPEN SOURCE No bragging numbers.": {
+   "kind": "decided",
+   "where": "the section's heading, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "A Free and open source GPL-3.0.": {
+   "kind": "code",
+   "where": "LICENSE, the GPL-3.0 text, at the repository's root"
+  },
+  "C On what you already own Windows, macOS, Linux and Android, with iPhone and iPad in a public beta.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, the one platform statement (iPhone and iPad through TestFlight's public beta)"
+  },
+  "03 / PHONE ANDROID, IPHONE AND IPAD Measure it at the bench.": {
+   "kind": "decided",
+   "where": "the section's heading; the phone applications are in docs/PLATFORM-SUPPORT.md (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "Support Release notes GitHub Discord &#169; 2026 the GroupLab contributors.": {
+   "kind": "decided",
+   "where": "the test page's footer, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
   }
  },
  "rules": [

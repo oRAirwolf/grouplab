@@ -1099,6 +1099,44 @@ site build pass.
    `claims.py --check` 5303 backed, `consistency.py --offline` 0 findings, `readme.py --check` and `counts.py --check` current.
    `UserGuideTests` read no bold leads and needed no change; it gained the bookmark tests.
 9. **Tour and Features** do not describe the guide page's layout, so nothing there is now wrong.
+10. **Live, section 5** (checked 2026-10-17 by chores-haiku, read only, with curl): grouplab.org served 436b5f1d. `#5-read-the-analysis`,
+   `#fudd-buster-mode` and `#13-several-targets-open-at-once` each name exactly one heading (an h2, then two h3s), and the side list has
+   each, the two subsections nested under sections 5 and 13; `guide-toc.js` and the 1421 KB PDF answer 200. The list is in the page
+   twice by design: the side list and the phone's "On this page" disclosure.
+
+## Entry 440: the new home page, concept B, built at /testpage/ for Alan to approve (2026-10-17)
+
+1. **The page** is `page_testpage` in `website/build.py`, with its own stylesheet (`/assets/css/testpage.css`) and script
+   (`/assets/js/testpage.js`), the site's tokens, self-hosted Plex fonts and theme switch. It has the concept's own header and footer
+   and its sections in the canvas's order: the orbit hero, the feature strip, 01 / MEASURE with six cards, 02 / HONEST, 03 / PHONE,
+   the closing call and the footer. The canvas's words are kept. **The home page at `/` is unchanged.**
+2. **Out of sight:** a `noindex, nofollow` robots tag, not in `sitemap.xml`, in no navigation, linked from no page. `testpage_problems`
+   checks all four on every build and stops the publish if one fails (a hidden page found is a whole-site matter, not a page to hold
+   back); `tests/python/site-testpage-tests.py` (10 checks, run by website.yml) proves each check catches its case.
+3. **Where the buttons go:** Download free and Download for desktop go to `/download/`, which picks the visitor's platform (the
+   current home page's button links the Windows installer directly, which a generic "Download free" should not do to a Mac or phone
+   visitor); View the source to GitHub; the phone buttons to `/download/?device=android#android` and `?device=iphone#iphone`; each
+   card to its Features entry (every-hole, six-figures, compare, ballistics, pool-set, one-page-report).
+4. **Motion**, all `transform` and `opacity`: the two rings turn opposite ways (120 s and 200 s a turn) with each picture turned back
+   so it stays upright; the wordmark docks into the header as the hero scrolls away and hands over to the small one (the header fills
+   in only then, so it never covers the wordmark on its way); the ruler's amber line follows how far down the page the reader is
+   (hidden below 860 px); the section index stays bottom right and marks the section in view (hidden on phones); the strip scrolls
+   sideways and stops under the pointer; headings and cards ease in once. **Pause motion** stops all of it and is remembered in the
+   browser (`grouplab-motion`, read and written in try/catch). Under `prefers-reduced-motion`, or with scripts off, nothing moves,
+   nothing is hidden, and the strip wraps instead of scrolling.
+5. **Weight**, first load with the cache off, measured in headless Chrome from a local copy: the test page 430 KB in 24 files at 1440
+   by 900 and 380 KB at 390 by 844; the current home page 523 KB at both. Two things made it lighter than a first build's 636 KB: the
+   orbit and the cards use their own copies (360 and 560 pixels, WebP), the orbit's phone screens cut to their slot's shape; and
+   headings and links are set as the canvas sets them, in plain Plex Sans at 400 and 600, so two font files (Plex Sans 500 and Mono
+   500) are not needed.
+6. **Glossary words:** the page's main content goes through the same glossary step as every page. Decorative labels (the strip, the
+   section labels, the cards' label strips) now opt out with `data-terms="off"`, which the glossary check honours too, so a word is
+   explained where it is read as prose and never inside a moving strip.
+7. **Checked** in headless Chrome: dark and light at 1440 wide and 390 wide; docked state (wordmark gone, header word shown, header
+   filled); Pause motion stops the rings and is remembered across a reload; reduced motion shows everything still; the section index
+   marks the section in view; no sideways scroll at 390. **Claims:** the page's 13 checkable sentences are backed in
+   `docs/claims-backing.json` (the cards by their Features entries, the platforms by docs/PLATFORM-SUPPORT.md, the licence by LICENSE).
+   No sentence had to change.
 
 ## Decision log
 

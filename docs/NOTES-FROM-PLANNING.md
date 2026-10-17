@@ -25,9 +25,77 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-17, entry 440: the new home page, concept B, built at grouplab.org/testpage/ for Alan to approve
+
+**Status: actioned 2026-10-17; sections 1 to 3 and 4.1 done; 4.2 and 4.3 (the live check and the four screenshots) follow the publish and are recorded with entry 437.**
+
+From the planning session, 2026-10-17 11:10 UTC. **Priority: take this straight after entry 436, before 437 to 439** (Alan wants to see
+it). Alan, 2026-10-17: "Build B and show me the final result but dont publish it to the home page until I approve it. Maybe make it a
+url like grouplab.org/testpage".
+
+Alan chose concept B ("Orbit") from the planning session's canvas of two home page directions. It is his word on the look for this
+page (CLAUDE.md, never change the look without Alan). **The home page at `/` does not change in this entry.** When Alan approves, a
+later entry swaps it in. Nothing here needs Alan. Website only, so no application release note (entry 168). Main model throughout.
+
+## The reference
+
+`C:\Dev\grouplab-local\homepage-concept-b\` holds the canvas's two artboards (`B-Desktop.dc.html`, `B-Phone.dc.html`) and a README that
+maps each picture to the site's screenshot. They are canvas files: read them for the layout, copy, colors and motion, and build the page
+the site's own way in `website/build.py` with the site's tokens, self-hosted Plex fonts and `screen()` pictures in both themes. Do not
+copy the canvas runtime (`support.js`, `DCLogic`).
+
+## 1. The page
+
+1. **`/testpage/`**, built by `website/build.py` like any page, with its own header and footer as drawn (concept B's header, not the
+   site's current one), and the site's light and dark themes with the existing theme switch.
+2. **Kept out of sight:** `<meta name="robots" content="noindex, nofollow">`, not in `sitemap.xml`, not in any navigation, and no page
+   on the site links to it. A site test holds all four.
+3. **Sections, in order, as drawn:** the hero (screens circling the target's rings around the GROUPLAB wordmark, the tagline, the two
+   buttons, the platforms line, the section index bottom right); the feature strip that scrolls sideways; 01 / MEASURE (the statement
+   and six feature cards with their numbered label strips); 02 / HONEST (three lettered points); 03 / PHONE (three phone pictures);
+   the closing call to action; the footer.
+4. **Buttons and links go where the current home page's do:** Download to the same download logic as today (the platform the visitor
+   is on, if the current page does that), the source to GitHub, the feature cards to their Features page entries, the phone call to
+   action to the download page's phone part.
+5. **Copy:** the canvas's words, kept. Every checkable sentence backed in `claims-backing.json` (most already back the current home
+   page). If one cannot be backed, change it to one that can and say so in the report.
+
+## 2. The motion, which the canvas could only partly show
+
+1. **The orbit:** the screens ride the rings, the inner ring one way and the outer the other, slowly, each picture staying upright.
+   A "Pause motion" button stops all of it and is remembered for the visitor (browser storage, in a try/catch).
+2. **The wordmark docks on scroll:** as the hero scrolls away, the big GROUPLAB wordmark shrinks and moves into the header, where the
+   small one takes its place; scrolling back reverses it.
+3. **The ruler down the right edge** has mil-style ticks and an amber line that marks how far down the page the reader is. Hidden below
+   860 px.
+4. **The section index** (MEASURE, HONEST, PHONE, GET STARTED) stays in the bottom right corner, marks the section in view and jumps to
+   one on a click. Hidden on phones.
+5. **The feature strip** scrolls sideways continuously; each section's heading and cards ease in as they come into view; a card's
+   picture zooms slightly on hover.
+6. **`prefers-reduced-motion`** or "Pause motion": everything still and fully readable, nothing hidden that only motion reveals.
+   With scripts off, the page is complete and still.
+7. No library. Small scripts under `/assets/js/`, `defer`, like the site's others; CSS animation where it can do the job.
+
+## 3. Weight and speed
+
+1. The orbit's pictures are small copies made at build time (about 480 px wide, WebP), not the 1400 px screenshots; only the hero's
+   pictures load at once, everything below lazily.
+2. Record in the report the page's total transfer on first load, desktop and phone, and keep it under the current home page's or
+   say why not. The orbit must stay smooth on a phone: animate only `transform` and `opacity`.
+
+## 4. Checks and showing Alan
+
+1. The site's own tests pass, and the new test of 1.2 holds.
+2. After it publishes, confirm the commit is live in `grouplab-site-build` and that `https://grouplab.org/testpage/` answers.
+3. Take four screenshots of the live page (desktop 1440 wide and phone 390 wide, light and dark, the hero and one full-page each) into
+   `C:\Dev\grouplab-local\homepage-concept-b\screens\`. The planning session shows them to Alan and walks the live page with him.
+4. The report says the page is live at `/testpage/` and that the home page is unchanged.
+
+---
+
 ## 2026-10-17, entry 436: the user guide's contents open by section, follow the reader, and every section has a link
 
-**Status: actioned 2026-10-17; sections 1 to 4 done. Section 5, the live checks, runs after the site publishes and is recorded with entry 437.**
+**Status: actioned 2026-10-17; every section done (section 5's live checks recorded with entry 440).**
 
 From the planning session, 2026-10-17 10:20 UTC. Alan asked for this himself, so it is his word on the look (CLAUDE.md, "never change
 the look without Alan"). Alan, 2026-10-17: "Can you rebuild the user guide so when you click on one of the topics in the table of
