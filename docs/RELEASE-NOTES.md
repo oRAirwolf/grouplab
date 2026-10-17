@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.197
+
+**2026-10-17**, commit `a50420c`. Nightly.
+
+**What you will notice**
+
+- On a pooled set, the small sheet at the top left of the analysis now shows every sheet's shots, each in its sheet's color, and a click on a bull picks only the shots fired at that bull. (Issue 35, thanks to Quack).
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.197)
+
+---
+
 ## 0.2.0-nightly.196
 
 **2026-10-16**, commit `0206b66`. Nightly.
