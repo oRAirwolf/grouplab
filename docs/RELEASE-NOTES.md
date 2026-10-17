@@ -500,7 +500,7 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 
 - The phone can now send targets to the project as the computer does, over Wi-Fi unless you allow mobile data; it stays switched off until the app stores' privacy answers are updated, so nothing changes in this build.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.167)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
