@@ -1245,6 +1245,45 @@ site build pass.
    the glossary's words used its way. On a phone the six-column hit table scrolls inside itself (all guides' tables do now below 860
    px), and the page is 390 px wide at 390.
 
+## Entry 439: "Walk me through a demo", a guided tour of GroupLab on a sample target (2026-10-17)
+
+1. **Where it is offered.** Once, after the first run's questions are answered, as its own card: "Walk me through a demo (about
+   five minutes)" or "Not now", and never again on its own after either (Esc is Not now). Any time from Settings, a row near the top
+   ("Walk me through a demo", and "Carry on from step N of 13" when a tour was left part way, which does the steps before it for the
+   person so the screen is where that step expects), and from the header's menu. The offer sits beside the first run, not on it, so
+   the first run's own questions and tests are unchanged.
+2. **The sample is made by GroupLab** when the demo starts: the 25-bull Letter sheet as it prints, one simulated hole a bull, the way
+   the tests make theirs (`SyntheticSheet`), written into the application's own folder. **This differs from the entry**, which names
+   a shipped `samples/sample-25-shots.png`: no such file exists, and the only sample (`gl-cf25-ltr-d-25-shots-600-dpi.png`) is a real
+   person's consented scan carried by the Windows zip alone. Question 101 asks whether this is what was meant; the testing guide's
+   stale sentence is corrected. It opens in a tab of its own named "Demo: sample sheet", is read as any sheet is (24 of 25 holes found,
+   so the review queue has something in it), and is never offered to the project.
+3. **The steps** are one list of data (`MainWindow.DemoSteps`: screen, named control, words, and what Next does), 13 of them: the
+   sample, GroupLab reading it, the review queue, the caliber, Accept and analyze, the plot and figures, each figure's range and why,
+   clicking a hole, the zero correction, Session records and the report, Targets and Print, Ballistics, and where to get help.
+   Comparing loads and several sheets are left out: honestly shown they need a second sample. **The tour never prints**: its Targets
+   step points at Print and has no action (a test holds that).
+4. **How it behaves.** Each step draws entry 437's marking around the real control, an amber outline with a halo in the window's own
+   background and the step's number in a badge, with a card beside it (the step, "6 of 13", Back, Next, End the tour) placed below,
+   above or beside the control so it never covers it, and following it as the window lays out. The rest of the window stays usable
+   and is not dimmed. The person can do the step or press Next and GroupLab does it. Tab and Enter reach every button, Next takes
+   the focus with the step's words as its description, and Esc ends the tour. Checked in both themes at 1280 by 720 and 1400 by 900.
+5. **Nothing the demo makes is kept** unless the last step's "Keep this demo in Sessions" is ticked: its tab closes with nothing
+   asked, every session it saved (found by its picture) is deleted, and its picture is removed. `Entry439Tests` holds that the
+   database is the same after a finished tour and after one ended part way with Esc, that keeping keeps exactly one session, and that
+   the offer comes once.
+6. **It stays in step with the application.** Controls are named one way for the guide's positions files and the demo
+   (`ControlNames`, which the test recorder now uses too), and the headless walk fails, naming the step, when a step points at a
+   control that is not on its screen. To give the steps something to point at, the rail's six buttons now carry accessible names
+   (they had only tooltips, so a screen reader could not name them), and the picture, status line, review queue, plot and zero
+   correction carry names.
+7. **The weekly render walk** photographs the demo at its plot step (`demo-tour`), for the Features page (a new feature, "since next")
+   and the tour's Settings stop; the user guide gains a "Walk me through a demo" subsection under Settings and a line at its start;
+   the testing guide's first minute now starts with the demo; the README's feature list names it.
+8. **The phone tour (section 5) is the next entry's work**: the desktop tour filled this one. Android and iPhone need the same offer
+   and steps for their own screens (Capture with the sample chosen from the app's files, the result, Shots, Share a picture, Sessions,
+   Ballistics, Targets), and their own headless walk.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -1,10 +1,7 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using Avalonia;
-using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.VisualTree;
 
 namespace GroupLab.App.Tests;
@@ -15,7 +12,7 @@ namespace GroupLab.App.Tests;
 /// A control's name is its <c>Name</c>, else its accessible name, else the words on it (a button, tab, check box or menu entry). The first
 /// visible control with a name keeps it; a control scrolled or clipped out of sight is not on the picture and is left out.
 /// </summary>
-internal static partial class ScreenBounds
+internal static class ScreenBounds
 {
     public static string Json(Window window, int pixelWidth, int pixelHeight)
     {
@@ -25,9 +22,7 @@ internal static partial class ScreenBounds
         var controls = new SortedDictionary<string, int[]>(StringComparer.Ordinal);
         foreach (var control in window.GetVisualDescendants().OfType<Control>())
         {
-            // A part of a control's template (its border, its presenter) is not something a reader looks for; the control itself is.
-            if (control.TemplatedParent is not null || !control.IsEffectivelyVisible || control.Opacity == 0 || Key(control) is not { } key
-                || controls.ContainsKey(key))
+            if (!control.IsEffectivelyVisible || control.Opacity == 0 || Key(control) is not { } key || controls.ContainsKey(key))
             {
                 continue;
             }
@@ -70,39 +65,7 @@ internal static partial class ScreenBounds
         return r.Width > 0 && r.Height > 0 ? r : null;
     }
 
-    private static string? Key(Control control)
-    {
-        if (!string.IsNullOrWhiteSpace(control.Name))
-        {
-            return control.Name;
-        }
-
-        if (AutomationProperties.GetName(control) is { Length: > 0 } spoken)
-        {
-            return Words(spoken);
-        }
-
-        object? content = control switch
-        {
-            TabItem tab => tab.Header,
-            MenuItem item => item.Header,
-            Button or ToggleButton => ((ContentControl)control).Content,
-            _ => null,
-        };
-        string? text = content switch
-        {
-            string s => s,
-            TextBlock block => block.Text,
-            Control inner => inner.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).FirstOrDefault(t => !string.IsNullOrWhiteSpace(t)),
-            _ => null,
-        };
-        return string.IsNullOrWhiteSpace(text) ? null : Words(text);
-    }
-
-    private static string Words(string text) => Space().Replace(text, " ").Trim();
+    private static string? Key(Control control) => ControlNames.Of(control);
 
     private static readonly JsonSerializerOptions Options = new() { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
-
-    [GeneratedRegex(@"\s+")]
-    private static partial Regex Space();
 }

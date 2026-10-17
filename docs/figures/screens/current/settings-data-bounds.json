@@ -3,6 +3,18 @@
   "width": 1400,
   "height": 900,
   "controls": {
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
     "Check for updates": [
       238,
       75,
@@ -21,11 +33,23 @@
       20,
       20
     ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
     "Detailed logging": [
       77,
       598,
       122,
       32
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
     ],
     "Export all my data…": [
       79,
@@ -51,11 +75,35 @@
       141,
       27
     ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
     "Support GroupLab": [
       79,
       714,
       136,
       27
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
     ],
     "What GroupLab sends": [
       77,

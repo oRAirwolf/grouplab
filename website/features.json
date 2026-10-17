@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "A screen reader now names each button down the left side of the window",
     "Accepting a sheet a second time no longer loses the chronograph readings",
     "Switching from a thermal printer back to your sheet printer no longer leaves a red warning",
     "On the phone, closing the last open target from the Open targets sheet",
@@ -819,6 +820,23 @@
       "mobile": {
         "noPicture": "the phone's Fudd buster page is photographed at the next sitting with the phone"
       }
+    },
+    {
+      "key": "demo-tour",
+      "group": "Reading a target",
+      "name": "Walk me through a demo",
+      "sentence": "A guided tour of thirteen steps on a sample sheet GroupLab makes itself, offered once after the first run's questions and any time from Settings, that you can do yourself or let GroupLab do with Next, and that nothing you make in it is kept unless you choose.",
+      "shot": "demo-tour",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "next",
+      "note": [
+        "New users can choose Walk me through a demo"
+      ],
+      "guide": "walk-me-through-a-demo"
     },
     {
       "key": "csv",

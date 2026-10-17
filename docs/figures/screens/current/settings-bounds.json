@@ -3,27 +3,39 @@
   "width": 1400,
   "height": 900,
   "controls": {
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
     "Angles": [
       215,
-      172,
+      238,
       90,
       32
     ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
     "Both": [
       77,
-      748,
+      814,
       56,
       32
     ],
     "Calibers": [
       77,
-      660,
+      726,
       76,
       32
     ],
     "Cartridges": [
       77,
-      704,
+      770,
       89,
       32
     ],
@@ -33,21 +45,33 @@
       20,
       20
     ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
     "Distances": [
       238,
-      325,
+      391,
       70,
       32
     ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
+    ],
     "Give the clicks anyway": [
       77,
-      530,
+      596,
       159,
       32
     ],
     "Lengths": [
       238,
-      285,
+      351,
       70,
       32
     ],
@@ -59,15 +83,45 @@
     ],
     "Say leave it, and why": [
       77,
-      486,
+      552,
       150,
       32
     ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
     "Show a group's size on the paper first, and its angle beneath, for shooting at one distance": [
       77,
-      369,
+      435,
       545,
       32
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
+    ],
+    "Walk me through a demo": [
+      79,
+      130,
+      175,
+      27
     ],
     "gl-cf25-ltr-scan.png, Analysis": [
       61,

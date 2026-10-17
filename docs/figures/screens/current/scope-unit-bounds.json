@@ -21,6 +21,18 @@
       157,
       27
     ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
     "Both, I have rifles of each": [
       524,
       479,
@@ -39,11 +51,23 @@
       20,
       20
     ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
     "Detect on a GroupLab sheet": [
       913,
       46,
       192,
       27
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
     ],
     "Fit the image to the view": [
       893,
@@ -123,6 +147,12 @@
       34,
       34
     ],
+    "Picture": [
+      53,
+      134,
+      969,
+      742
+    ],
     "Place bulls, on a target GroupLab did not print": [
       291,
       93,
@@ -140,6 +170,12 @@
       93,
       34,
       34
+    ],
+    "ReviewQueue": [
+      1045,
+      839,
+      339,
+      15
     ],
     "Rifle and barrel": [
       1045,
@@ -183,11 +219,23 @@
       34,
       34
     ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
     "Set": [
       1265,
       249,
       46,
       27
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
     ],
     "SetupBlock": [
       1045,
@@ -224,6 +272,18 @@
       437,
       142,
       32
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1307,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
     ],
     "Undo (Ctrl+Z)": [
       384,

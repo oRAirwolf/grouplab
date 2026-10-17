@@ -128,6 +128,15 @@ public static class AppStyles
     /// </summary>
     public const string ProblemCard = "problem-card";
 
+    /// <summary>Entry 439: the guided demo's spotlight, an amber outline inside a halo of the window's own background, and its numbered badge.</summary>
+    public const string DemoHalo = "demo-halo";
+
+    public const string DemoSpot = "demo-spot";
+
+    public const string DemoBadge = "demo-badge";
+
+    public const string DemoBadgeText = "demo-badge-text";
+
     /// <summary>The amber bar a dismissed problem leaves under the header, with the way back to it (entry 356 section 6).</summary>
     public const string ProblemBar = "problem-bar";
 
@@ -306,6 +315,10 @@ public static class AppStyles
         Rule(x => x.OfType<Border>().Class(Keycap), (Border.BackgroundProperty, Brush(p.Sunk)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.SurfaceRadius), (Border.PaddingProperty, new Thickness(Tokens.Space4, 0)), (Layoutable.MarginProperty, new Thickness(Tokens.Space8, 0, 0, 0))),
         Rule(x => x.OfType<TextBlock>().Class(KeycapText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, Tokens.SectionLabelSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Warn), (TextBlock.ForegroundProperty, Brush(p.Amber))),
+        Rule(x => x.OfType<Border>().Class(DemoHalo), (Border.BorderBrushProperty, Brush(p.Bg)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(8))),
+        Rule(x => x.OfType<Border>().Class(DemoSpot), (Border.BorderBrushProperty, Brush(p.Amber)), (Border.BorderThicknessProperty, new Thickness(2)), (Border.CornerRadiusProperty, new CornerRadius(7))),
+        Rule(x => x.OfType<Border>().Class(DemoBadge), (Border.BackgroundProperty, Brush(p.Amber)), (Border.BorderBrushProperty, Brush(p.Bg)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(11))),
+        Rule(x => x.OfType<TextBlock>().Class(DemoBadgeText), (TextBlock.ForegroundProperty, Brush(p.OnAmber)), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.FontSizeProperty, Tokens.LabelSize)),
         Rule(x => x.OfType<Border>().Class(ProblemCard), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(8)), (Border.PaddingProperty, new Thickness(Tokens.Space24))),
         Rule(x => x.OfType<Border>().Class(ProblemBar), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(0, 0, 0, 1)), (Border.PaddingProperty, new Thickness(Tokens.Space16, Tokens.Space8))),
         Rule(x => x.OfType<Border>().Class(ReviewCard), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.ButtonRadius), (Border.PaddingProperty, new Thickness(Tokens.Space12))),

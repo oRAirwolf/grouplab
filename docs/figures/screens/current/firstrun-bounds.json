@@ -21,11 +21,23 @@
       157,
       27
     ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
     "Ask me each time": [
       393,
       677,
       132,
       27
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
     ],
     "Both, I have rifles of each": [
       516,
@@ -45,11 +57,23 @@
       20,
       20
     ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
     "Detect on a GroupLab sheet": [
       913,
       46,
       192,
       27
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
     ],
     "Fit the image to the view": [
       893,
@@ -141,6 +165,12 @@
       34,
       34
     ],
+    "Picture": [
+      53,
+      134,
+      969,
+      742
+    ],
     "Place bulls, on a target GroupLab did not print": [
       291,
       93,
@@ -158,6 +188,12 @@
       93,
       34,
       34
+    ],
+    "ReviewQueue": [
+      1045,
+      839,
+      339,
+      15
     ],
     "Rifle and barrel": [
       1045,
@@ -213,11 +249,23 @@
       181,
       27
     ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
     "Set": [
       1265,
       249,
       46,
       27
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
     ],
     "SetupBlock": [
       1045,
@@ -254,6 +302,18 @@
       91,
       142,
       32
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1307,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
     ],
     "Testing only. I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection. They are kept by the project and never published. GPS location data is removed from every photo when it arrives.": [
       391,

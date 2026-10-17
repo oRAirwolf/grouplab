@@ -767,6 +767,11 @@
      "settings-data",
      "The lower half of Settings: Sharing, with what GroupLab sends, then Sending targets, Error reports and Hardware survey; Your data, with the Export all my data and Import data buttons; Diagnostics, with Detailed logging, Report a problem and Support GroupLab; and Crash records",
      "The lower half of Settings. Under Sharing you see what GroupLab may send and that each is still closed. Under Your data, Export all my data and Import data move everything you have kept between computers, and nothing is sent anywhere. Under Diagnostics are Detailed logging, Report a problem and Support GroupLab."
+    ],
+    [
+     "demo-tour",
+     "Step 6 of the Walk me through a demo tour: an amber outline and a numbered badge around the real control, and a card beside it with Back, Next and End the tour",
+     "Walk me through a demo, a thirteen step tour on a sample sheet GroupLab makes itself. It is offered once after the first run's questions, and any time from the row near the top of Settings or the header's ... menu. Do each step yourself or press Next and GroupLab does it. End the tour whenever you like, and carry on later from where you left off. It never prints by itself, and nothing it makes is kept unless you tick Keep this demo in Sessions on the last step."
     ]
    ],
    "steps": [

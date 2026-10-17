@@ -9,21 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-17, entry 438 (before it: entries 437, 440 and 436, entry 435).
+**Last rewritten:** 2026-10-17, entry 439 (before it: entries 438, 437, 440 and 436).
 
 ---
 
 ## In flight
 
+- **Entry 439 (2026-10-17)**: Walk me through a demo on the desktop: offered once after the first run, in Settings and the menu; 13
+  steps as data (`MainWindow.DemoSteps`) walked headless by `Entry439Tests`; GroupLab makes the sample (question 101). **The phone
+  tour is the next entry's work.**
 - **Entry 438 (2026-10-17)**: Statistics for shooters, a fourth guide at /guides/statistics-primer/, every number from Core's
   `PrimerNumbers` (held by `PrimerTests`), its figures stepping through them, a one-page summary in Letter and A4.
-- **Entries 437 and 440 (2026-10-17)**: the guide shows 26 pictures, 15 with markings named from each screen's `-bounds.json`
-  (Compare loads waits for the weekly job); concept B is at /testpage/ for Alan, and **the home page is unchanged** until he approves.
-- **Entries 418 and 421 to 436 are done**: the guide's subsections and links (436); CI fails on a guide PDF behind its guide (435);
-  the iOS self-test is green (432); the selected shot is ringed in magenta (430, question 100); #31 to #34 are closed.
+- **Entries 418 and 421 to 437 and 440 are done**: guide markings (437); concept B at /testpage/ for Alan, home page unchanged
+  (440); guide subsections and links (436); magenta selection (430, question 100); #31 to #34 closed.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
-- **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
-  row names its material (entry 414 section 4).
+- **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests, 31 met; the rest name their material (entry 414).
 - **Waiting on Alan:** requests 83, 70, 72, 74 to 77; 86 later.
 
 ## The next three
@@ -45,7 +45,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 439 (a guided demo in the application).
+1. The phone's guided demo (entry 439 section 5), when planning sends it; question 101 on the demo's sample.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 
@@ -61,7 +61,8 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (99 answered by entry 430 and archived 2026-10-15):
+Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (99 answered by entry 430 and archived 2026-10-15):
+- **101** the guided demo's sample: GroupLab makes it, where entry 439 named a shipped file that does not exist (entry 439)
 
 - **100** the selection's magenta is near the light theme's fourth sheet and two bull marks (entry 430)
 - **98** several pictures of one single-page design dropped together: a tab each meanwhile (entry 423)
@@ -82,7 +83,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 439.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 

@@ -344,6 +344,8 @@ public sealed partial class MainWindow
             if (!card.IsVisible && !errors.IsVisible && !survey.IsVisible && !scope.IsVisible)
             {
                 firstRun.IsVisible = false;
+                // Entry 439 section 1.1: after the first run's questions, the guided demo is offered, once.
+                OfferDemoIfDue();
             }
         }
 

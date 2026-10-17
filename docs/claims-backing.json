@@ -7204,6 +7204,58 @@
   "User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Statistics for shooters Glossary Download as PDF On this page Mil or MOA Each rifle keeps its own Everything aiming follows it Getting GroupLab 1.": {
    "kind": "code",
    "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "Walk me through a demo A guided tour of thirteen steps on a sample sheet GroupLab makes itself, offered once after the first run&#x27;s questions and any time from Settings, that you can do yourself or let GroupLab do with Next, and that nothing you make in it is kept unless you choose.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "In the user guide The numbers Works in your scope&#x27;s unit The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.": {
+   "kind": "code",
+   "where": "website/features.json scope-unit, from UnitSettings.Aiming and the first run question (entry 294 section 1)"
+  },
+  "GroupLab makes its own sample, a sheet with 25 shots that is nobody's target, and opens it in a tab called \"Demo: sample sheet\".": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "A second way, on Windows only: the zip's samples folder holds gl-cf25-ltr-d-25-shots-600-dpi.png , a real 25-shot GroupLab sheet shot and scanned for the project, and published with its shooter's consent.": {
+   "kind": "code",
+   "where": "scripts/package-windows.ps1 lines 76 to 81 (the Windows zip's samples folder, and nothing else carries one) and samples/PROVENANCE.md (the scan's consent record) (entry 439, question 101)"
+  },
+  "Settings Walk me through a demo 13.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "The settings The lower half of the settings: Export all my data, Import data, What GroupLab sends Walk me through a demo A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "menu; Settings also says Carry on from step N of 13 when you left one part way.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "Each step outlines the real control and you can do it yourself or press Next and GroupLab does it.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "Do each step yourself or press Next and GroupLab does it.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "A second way, on Windows only: the zip's `samples` folder holds `gl-cf25-ltr-d-25-shots-600-dpi.png`, a real 25-shot GroupLab sheet shot and scanned for the project, and published with its shooter's consent.": {
+   "kind": "code",
+   "where": "scripts/package-windows.ps1 lines 76 to 81 (the Windows zip's samples folder, and nothing else carries one) and samples/PROVENANCE.md (the scan's consent record) (entry 439, question 101)"
+  },
+  "![The settings](figures/screens/current/settings-light-1400x900.png) ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab sends](figures/screens/current/settings-data-light-1400x900.png) ### Walk me through a demo A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "menu; Settings also says **Carry on from step N of 13** when you left one part way.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "Each step outlines the real control and you can do it yourself or press **Next** and GroupLab does it.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
   }
  },
  "rules": [

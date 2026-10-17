@@ -9,17 +9,35 @@
       143,
       27
     ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
     "BackingChoice": [
       1045,
       267,
       160,
       32
     ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
     "Close this target": [
       278,
       8,
       20,
       20
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
     ],
     "Detect on a GroupLab sheet": [
       805,
@@ -32,6 +50,12 @@
       46,
       104,
       27
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
     ],
     "Fit the image to the view": [
       893,
@@ -105,6 +129,12 @@
       160,
       32
     ],
+    "Picture": [
+      53,
+      134,
+      969,
+      742
+    ],
     "Place bulls, on a target GroupLab did not print": [
       291,
       93,
@@ -128,6 +158,12 @@
       303,
       233,
       32
+    ],
+    "ReviewQueue": [
+      1045,
+      386,
+      339,
+      405
     ],
     "Rotate left ([)": [
       931,
@@ -159,6 +195,18 @@
       34,
       34
     ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
     "SetupBlock": [
       1045,
       134,
@@ -170,6 +218,18 @@
       46,
       92,
       27
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
     ],
     "The shot on bull 14 is two shots": [
       1060,

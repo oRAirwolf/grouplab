@@ -8,6 +8,8 @@ The rail down the left of the window is how you move around it:
 - then load comparison;
 - the gear at the foot is the settings.
 
+If you are new, **Walk me through a demo** in Settings takes you through GroupLab on a sample sheet it makes itself, in about five minutes.
+
 ## Mil or MOA
 
 GroupLab works in your scope's unit, mil or MOA, and neither is the default. The first time it starts, on the computer and on the phone,
@@ -624,6 +626,10 @@ The gear opens the settings:
 
 ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab sends](figures/screens/current/settings-data-light-1400x900.png)
 <!-- marks: Export all my data… | Import data… | What GroupLab sends -->
+
+### Walk me through a demo
+
+A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target. It is offered once after the first run's questions, and any time from the row near the top of Settings or the header's ... menu; Settings also says **Carry on from step N of 13** when you left one part way. Each step outlines the real control and you can do it yourself or press **Next** and GroupLab does it. **End the tour** or Esc stops it at any step. It stops at Print, because printing is always your own press. Nothing the demo makes (its tab, its session, its picture) is kept unless you tick **Keep this demo in Sessions** on the last step. The tour is on the computer only for now.
 
 ## 13. On the phone
 

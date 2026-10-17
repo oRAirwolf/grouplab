@@ -33,6 +33,18 @@
       143,
       27
     ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
     "Bull for the shot on bull 4": [
       1142,
       697,
@@ -75,6 +87,12 @@
       20,
       20
     ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
     "Counted: the shot on bull 4": [
       1074,
       769,
@@ -98,6 +116,12 @@
       46,
       104,
       27
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
     ],
     "Fit the image to the view": [
       893,
@@ -171,6 +195,12 @@
       34,
       34
     ],
+    "Picture": [
+      53,
+      134,
+      969,
+      742
+    ],
     "Place bulls, on a target GroupLab did not print": [
       291,
       93,
@@ -225,11 +255,35 @@
       34,
       34
     ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
     "Show work": [
       1001,
       46,
       92,
       27
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
     ],
     "Undo (Ctrl+Z)": [
       384,

@@ -273,7 +273,8 @@ public sealed partial class MainWindow
     {
         var current = targets.Current;
         var state = session.State;
-        current.Name = current.Set?.Name ?? state.SheetLabel ?? (state.ImagePath is { } path ? Path.GetFileName(path) : plotDefinition?.Name);
+        // Entry 439: the demo's tab is named for what it is, whatever its picture's file is called.
+        current.Name = current.Demo ? DemoWords.TabName : current.Set?.Name ?? state.SheetLabel ?? (state.ImagePath is { } path ? Path.GetFileName(path) : plotDefinition?.Name);
         current.Analysing = analysing;
         current.Unsaved = HasUnsavedWork;
         if (rebuild)

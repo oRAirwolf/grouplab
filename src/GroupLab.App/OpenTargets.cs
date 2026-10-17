@@ -26,6 +26,9 @@ internal sealed class OpenTarget
     /// <summary>Entry 423: the sheets of a set, or pictures pooled, read together in this one tab; null for a tab of one target.</summary>
     public SetGroup? Set { get; set; }
 
+    /// <summary>Entry 439: the tab the guided demo opened, named for it and removed when the demo ends.</summary>
+    public bool Demo { get; set; }
+
     /// <summary>The name on the tab.</summary>
     public string Label => TargetTabWords.Label(Name);
 

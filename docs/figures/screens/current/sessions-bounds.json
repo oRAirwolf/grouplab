@@ -5,9 +5,27 @@
   "controls": {
     "2026-10-17": [
       109,
+      381,
+      1187,
+      19
+    ],
+    "2099-01-01": [
+      109,
       349,
       1187,
       19
+    ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
     ],
     "Close this target": [
       280,
@@ -15,27 +33,27 @@
       20,
       20
     ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
     "Compare the chosen": [
       79,
       201,
       149,
       27
     ],
-    "Compare the session 6 ARC, Dominus K, GroupLab 5x5 Load Development with Load Block, Letter": [
+    "Compare the session Second load, GroupLab 5x5 Load Development, Letter": [
       77,
-      407,
-      32,
-      32
-    ],
-    "Compare the session 6 ARC, Magnus S, GroupLab 5x5 Load Development with Load Block, Letter": [
-      77,
-      375,
+      343,
       32,
       32
     ],
     "Compare the session Test load, GroupLab 5x5 Load Development, Letter": [
       77,
-      343,
+      375,
       32,
       32
     ],
@@ -44,6 +62,12 @@
       345,
       76,
       27
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
     ],
     "Load": [
       337,
@@ -68,6 +92,30 @@
       155,
       180,
       32
+    ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
     ],
     "gl-cf25-ltr-scan.png, Analysis": [
       61,

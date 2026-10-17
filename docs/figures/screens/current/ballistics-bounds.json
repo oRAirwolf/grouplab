@@ -3,6 +3,12 @@
   "width": 1400,
   "height": 900,
   "controls": {
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
     "At one range": [
       1286,
       136,
@@ -33,11 +39,29 @@
       87,
       27
     ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
     "Close this target": [
       280,
       8,
       20,
       20
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
     ],
     "Keep these on the records": [
       72,
@@ -62,6 +86,30 @@
       83,
       160,
       32
+    ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
     ],
     "TrajectorySeriesDrop": [
       776,

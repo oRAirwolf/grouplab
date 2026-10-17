@@ -225,6 +225,18 @@ public sealed class AppSettingsStore(string path)
     public bool SaveShowWork(bool shown) => Save(file => file["showWork"] = shown);
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 439 section 1: the guided demo is offered on the first run once, whatever the answer, and a tour left
+    /// part of the way through can start again where it was left.
+    /// </summary>
+    public bool LoadDemoOffered() => Read(file => file["demoOffered"]?.GetValueKind() == JsonValueKind.True);
+
+    public bool SaveDemoOffered() => Save(file => file["demoOffered"] = true);
+
+    public int LoadDemoStep() => Read(file => file["demoStep"]?.GetValueKind() == JsonValueKind.Number ? file["demoStep"]!.GetValue<int>() : 0);
+
+    public bool SaveDemoStep(int step) => Save(file => file["demoStep"] = step);
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 314 section 1: what the caliber box offers, Calibers, Cartridges or Both; Both until one is chosen. One
     /// setting on the desktop, Android and iOS.
     /// </summary>

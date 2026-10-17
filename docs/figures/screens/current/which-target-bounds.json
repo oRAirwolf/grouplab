@@ -15,11 +15,29 @@
       90,
       27
     ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
     "Close this target": [
-      371,
+      375,
       8,
       20,
       20
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
     ],
     "Detect on a GroupLab sheet": [
       913,
@@ -32,6 +50,12 @@
       293,
       32,
       32
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
     ],
     "Fit the image to the view": [
       893,
@@ -100,7 +124,7 @@
       40
     ],
     "Open another target": [
-      405,
+      409,
       6,
       30,
       22
@@ -110,6 +134,12 @@
       93,
       34,
       34
+    ],
+    "Picture": [
+      53,
+      134,
+      969,
+      742
     ],
     "Place bulls, on a target GroupLab did not print": [
       291,
@@ -128,6 +158,12 @@
       93,
       34,
       34
+    ],
+    "ReviewQueue": [
+      1045,
+      275,
+      339,
+      15
     ],
     "Rotate left ([)": [
       931,
@@ -165,6 +201,18 @@
       34,
       34
     ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
     "SetupBlock": [
       1045,
       134,
@@ -182,6 +230,18 @@
       824,
       313,
       40
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1307,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
     ],
     "Undo (Ctrl+Z)": [
       384,
@@ -207,10 +267,10 @@
       34,
       34
     ],
-    "grouplab-codeless-6373b328242144079ba9b2194bc4fb86.png, Marking": [
+    "grouplab-codeless-45b917f0307e4d9dab4d245785f4c207.png, Marking": [
       61,
       4,
-      306,
+      310,
       27
     ],
     "why ▸": [

@@ -54,7 +54,7 @@ public sealed partial class MainWindow : Window
     /// tab's session here (planning, 2026-10-07, MainWindow.Tabs.cs).
     /// </summary>
     private MarkingSession session = new();
-    private readonly MarkingCanvas canvas = new();
+    private readonly MarkingCanvas canvas = new() { Name = "Picture" };
 
     /// <summary>
     /// The analysis showing its work, DESIGN.md section 19 [r3] and NOTES-FROM-PLANNING.md entry 97 section 3: every stage's record on a
@@ -79,7 +79,8 @@ public sealed partial class MainWindow : Window
     private bool showingStage;
 
     private readonly Dictionary<MarkingTool, ToggleButton> toolButtons = [];
-    private readonly TextBlock status = new() { Margin = new Thickness(Tokens.Space16, Tokens.Space4), TextWrapping = TextWrapping.NoWrap, TextTrimming = TextTrimming.CharacterEllipsis, Classes = { AppStyles.Secondary } };
+    // Entry 439: these four carry names the guided demo points at, and the user guide's pictures record their places by.
+    private readonly TextBlock status = new() { Name = "StatusLine", Margin = new Thickness(Tokens.Space16, Tokens.Space4), TextWrapping = TextWrapping.NoWrap, TextTrimming = TextTrimming.CharacterEllipsis, Classes = { AppStyles.Secondary } };
     // NOTES-FROM-PLANNING.md entry 76 section 4: a detection the window starts on its own shows that it is running and can be stopped.
     private readonly ProgressBar detectionProgress = new() { IsIndeterminate = true, Width = 120, VerticalAlignment = VerticalAlignment.Center, IsVisible = false };
     private readonly Button cancelDetection = new() { Content = "Cancel detection", Margin = new Thickness(Tokens.Space8, 2), IsVisible = false };
@@ -91,7 +92,7 @@ public sealed partial class MainWindow : Window
 
     // DESIGN.md section 13 and NOTES-FROM-PLANNING.md entry 83 section 4: the assignment editor's review queue, what needs a decision and how
     // to give it, at the top of the panel, driven from the keyboard.
-    private readonly StackPanel review = new() { Spacing = Tokens.Space8 };
+    private readonly StackPanel review = new() { Name = "ReviewQueue", Spacing = Tokens.Space8 };
     private string? currentReview;
 
     /// <summary>Entry 374 section 4: the person clicked an answered item in the queue, so its card shows, with Ask again.</summary>
@@ -318,7 +319,7 @@ public sealed partial class MainWindow : Window
     /// <summary>The last detection's registration residual in inches, for the analysis pill; null for a marking scaled by hand or reopened.</summary>
     private double? registrationResidual;
 
-    private readonly CompositePlot plot = new();
+    private readonly CompositePlot plot = new() { Name = "Plot" };
 
     /// <summary>The shots the plot has picked: one clicked, or the two an extreme spread line joins.</summary>
     private HashSet<int> plotSelection = [];
@@ -362,7 +363,7 @@ public sealed partial class MainWindow : Window
     /// the statistics say how well the rifle shoots, read afterwards sitting down. It also has a different truth condition, being a claim
     /// about what the rifle will do next rather than a description of the shots on the sheet.
     /// </summary>
-    private readonly StackPanel zeroPanel = new() { Spacing = Tokens.Space4 };
+    private readonly StackPanel zeroPanel = new() { Name = "ZeroCorrection", Spacing = Tokens.Space4 };
 
     // DESIGN.md section 19 and NOTES-FROM-PLANNING.md entry 73 section 7: the figures that change decisions stay in view with their
     // intervals, and the reference figures sit one click away in a panel that remembers whether it was opened.
@@ -1216,6 +1217,8 @@ public sealed partial class MainWindow : Window
         // Entry 356: a dialog that needs the person sits over the work, under the toasts and the first run's questions.
         layered.Children.Add(BuildProblemLayer());
         layered.Children.Add(toaster.Layer);
+        // Entry 439: the guided demo's spotlight and card sit over the work, under the first run's questions, which can start it.
+        layered.Children.Add(BuildDemoLayer());
         layered.Children.Add(BuildFirstRun());
         Content = layered;
         SetTool(MarkingTool.Pan);
@@ -3472,7 +3475,11 @@ public sealed partial class MainWindow : Window
         DiagnosticLog.Info("analysis.accept", ("open", open));
         SetAnalysing(true);
         SaveSession();
-        OfferToSend();
+        // Entry 439: the demo's sheet is one GroupLab made up, so it is never offered to the project.
+        if (!targets.Current.Demo)
+        {
+            OfferToSend();
+        }
     }
 
     /// <summary>
@@ -5644,6 +5651,8 @@ public sealed partial class MainWindow : Window
             }
         };
         ToolTip.SetTip(railHere, "Analyze");
+        // Entry 439: each rail button is named for a screen reader as its tip names it; the guided demo finds them by the same names.
+        Avalonia.Automation.AutomationProperties.SetName(railHere, "Analyze");
         top.Children.Add(railHere);
         foreach (var (icon, tip, action) in new (string, string, Action)[]
         {
@@ -5662,6 +5671,7 @@ public sealed partial class MainWindow : Window
             var button = new Button { Content = Icons.Draw(icon), Classes = { AppStyles.RailButton } };
             button.Click += (_, _) => action();
             ToolTip.SetTip(button, tip);
+            Avalonia.Automation.AutomationProperties.SetName(button, tip);
             top.Children.Add(button);
             if (icon == Icons.Records)
             {
@@ -5688,6 +5698,7 @@ public sealed partial class MainWindow : Window
         railSettings = new Button { Content = Icons.Draw(Icons.Settings), Classes = { AppStyles.RailButton } };
         railSettings.Click += (_, _) => ShowSettings(!showingSettings);
         ToolTip.SetTip(railSettings, "Settings");
+        Avalonia.Automation.AutomationProperties.SetName(railSettings, "Settings");
         var rail = new DockPanel { Width = 52, Margin = new Thickness(0, 0, 0, Tokens.Space8), LastChildFill = false };
         DockPanel.SetDock(top, Dock.Top);
         DockPanel.SetDock(railSettings, Dock.Bottom);
@@ -5774,6 +5785,8 @@ public sealed partial class MainWindow : Window
     {
         var column = new StackPanel { Margin = new Thickness(Tokens.Space24, Tokens.Space20), Spacing = Tokens.Space12, MaxWidth = 640, HorizontalAlignment = HorizontalAlignment.Left };
         column.Children.Add(new TextBlock { Text = "Settings", Classes = { AppStyles.Title } });
+        // Entry 439 section 1.2: the guided demo, near the top, from the start or from where it was left.
+        column.Children.Add(DemoSettingsRow());
 
         // Entry 25 section 1: one application-wide unit setting on three axes, which every figure obeys and no stored value does.
         // Entry 294 section 1: the scope's unit at the top, said plainly, with one line on what it changes.
@@ -6067,6 +6080,8 @@ public sealed partial class MainWindow : Window
                 OpenReport(null);
                 return Task.CompletedTask;
             }),
+            // Entry 439 section 1.2: the guided demo, from the start, wherever the person is.
+            (DemoWords.SettingsRow, () => StartDemo()),
         })
         {
             var item = new MenuItem { Header = label };
