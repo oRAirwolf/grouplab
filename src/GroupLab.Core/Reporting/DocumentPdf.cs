@@ -44,13 +44,24 @@ public static partial class DocumentPdf
         return [.. markdown.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n').Select(l => Picture().Match(l.Trim())).Where(m => m.Success).Select(m => m.Groups["path"].Value)];
     }
 
-    public static byte[] Write(string markdown, Func<string, DocumentImage?> images) => PdfWriter.Write(Pages(markdown, images));
+    /// <summary>The PDF, with a bookmark for every section and subsection (entry 436 section 4.2).</summary>
+    public static byte[] Write(string markdown, Func<string, DocumentImage?> images)
+    {
+        var (pages, bookmarks) = Lay(markdown, images);
+        return PdfWriter.Write(pages, bookmarks);
+    }
 
-    public static IReadOnlyList<Scene> Pages(string markdown, Func<string, DocumentImage?> images)
+    public static IReadOnlyList<Scene> Pages(string markdown, Func<string, DocumentImage?> images) => Lay(markdown, images).Pages;
+
+    /// <summary>The headings at levels 2 and 3, where each one starts, as the PDF's bookmarks.</summary>
+    public static IReadOnlyList<PdfBookmark> Bookmarks(string markdown) => Lay(markdown, _ => null).Bookmarks;
+
+    private static (IReadOnlyList<Scene> Pages, IReadOnlyList<PdfBookmark> Bookmarks) Lay(string markdown, Func<string, DocumentImage?> images)
     {
         ArgumentNullException.ThrowIfNull(markdown);
         ArgumentNullException.ThrowIfNull(images);
         var pages = new List<List<SceneItem>> { new() };
+        var bookmarks = new List<PdfBookmark>();
         long y = Margin, width = PageWidth - (2 * Margin);
         void Need(long height)
         {
@@ -117,6 +128,11 @@ public static partial class DocumentPdf
                 long size = level switch { 1 => Pt(20), 2 => Pt(14), _ => Pt(11.5) };
                 Need(size * 3);
                 y += level == 1 ? 0 : Pt(8);
+                if (level is 2 or 3)
+                {
+                    bookmarks.Add(new PdfBookmark(Inline(line[level..].Trim()), level, pages.Count - 1, y));
+                }
+
                 Lines(line[level..].Trim(), size, Ink);
                 if (level <= 2)
                 {
@@ -146,11 +162,11 @@ public static partial class DocumentPdf
 
         Flush();
         int count = pages.Count;
-        return [.. pages.Select((items, i) =>
+        return ([.. pages.Select((items, i) =>
         {
             items.Add(new TextRun(SceneLayer.Name, Grey, PageWidth - Margin, PageHeight - (Margin / 2), Pt(8), FormattableString.Invariant($"page {i + 1} of {count}"), TextAnchor.Right));
             return new Scene(PageWidth, PageHeight, 0, items);
-        })];
+        })], bookmarks);
     }
 
     [GeneratedRegex(@"\[(?<text>[^\]]+)\]\((?<url>[^)]+)\)")]

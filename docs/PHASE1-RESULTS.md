@@ -1041,6 +1041,65 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
 The wording of sections 2 to 8 was done by docs-sonnet and read before commit. readme `--check`, claims `--check` (all backed) and the
 site build pass.
 
+## Entry 436: the user guide's contents open by section, follow the reader, and every section has a link (2026-10-17)
+
+1. **Subsections.** 62 bold leads in `docs/USER-GUIDE.md` became `###` headings with their own words, the trailing period or comma
+   dropped (docs-sonnet). Three were shortened where the lead ran on into its sentence: "Several bulls on any target", "Words underlined
+   with dots", "Android updates itself from an APK"; in each, the whole original lead stays in the paragraph. Left alone on purpose:
+   wrapped text and button names inside a sentence (`**Marking**`, `**Result** button`, `**Add hole here**`, `**It is a store-bought
+   target**`, `**Printer calibrated or serviced**`), leads in the middle of a paragraph, three that read as button names (Advanced,
+   Back, Export) and one with a button name nested in it. No `##` line changed. Per section:
+   - **Mil or MOA**: Each rifle keeps its own; Everything aiming follows it; Getting GroupLab.
+   - **1. Print a sheet**: Three sheets come with the E bull as well; And three with the C bull; The large format sheets print on Letter or A4; Label targets are for a thermal label printer; The zeroing grids are for sighting in by eye; Made for your optic; Several bulls on any target; Store-bought targets; Scale markers; Add a store-bought target; Find holes (Experimental); Large targets; Check the size before you shoot; Your own sheet; A volunteer pack.
+   - **2. Shoot it**: none, it has no natural parts.
+   - **3. Photograph or scan it**: A flat scan at 600 dpi is the best record of a sheet; Flat on a table, or straight on at the backer; Real inches from a photograph.
+   - **4. Mark it and settle the review queue**: Several targets open at once; When a picture names no sheet; Change an answer; Name the caliber if you know it; Holes between bulls, and marks off the grid.
+   - **5. Read the analysis**: Tap a number to switch units; Click a hole to edit it; Words underlined with dots; Six figures stay in view; Velocity and the vertical; The zero correction; The two cards; What each "why" says, in plain words; The full CEP table and the fitted ellipse; Fudd buster mode; Shots Needed to Zero.
+   - **6. Sessions and the report**: One-page report.
+   - **7. Comparing loads**: The loads are never ranked by their figures alone; Each session is named by what tells it apart.
+   - **8. The zero correction at another distance, and the dope table**: Chronograph readings; How the screen is laid out; The dope table; At another distance; Hit probability.
+   - **9. Keeping GroupLab up to date**: Android updates itself from an APK.
+   - **10. Comparing several sheets at once**: The sheets of a set pool into one group; Quicker: drop them together.
+   - **11. If something goes wrong**: Report a problem; Send to GroupLab and Send diagnostics, on the phone; Sending in targets.
+   - **12. Settings**: none, it has no natural parts.
+   - **13. On the phone**: The bar along the bottom; Capture; Show diagnostics on the camera; A photograph from any photo app; On iPhone and iPad; Updates on phones that stop apps in the background; The picture check; The result; Several targets open at once; Sessions, Ballistics and Targets; A target GroupLab did not print.
+2. **The contents list** (`toc_list`, `page_guide` in `website/build.py`) is each section with its subsections under it, all in the HTML.
+   `/assets/js/guide-toc.js` (no library, `defer`) folds every section but the one being read, marks the current section and
+   subsection with the amber left border the hover already used (`aria-current="location"` on the deeper one), opens a section when its
+   line is clicked, and scrolls the list itself when it is taller than the window. An `IntersectionObserver` on the headings says when
+   to look again; the heading being read is the last one above 30 percent of the window. The fold is a 0.2 s height change, none under
+   `prefers-reduced-motion`. Below 1100 px the same list is a closed "On this page" disclosure at the top of the guide, in the download
+   page's existing fold style; choosing a line closes it.
+3. **Links.** Every h2 and h3 has an id; the h2 ids are unchanged (`site-guide-tests.py` holds them to the slugs of the `##` lines). The
+   one repeated subsection, "Several targets open at once", is `13-several-targets-open-at-once` in section 13. Each heading carries a
+   `#` link mark shown on hover and keyboard focus; clicking it puts the full address in the address bar with `replaceState`, scrolls the
+   heading up, copies the address, and says "Link copied" in a `role="status"` note (or "The link is in the address bar" when the
+   clipboard refuses). While scrolling, the address bar follows the heading being read with `replaceState`, only after the reader has
+   scrolled, so the history gains nothing. An address with a section lands it just under the sticky header (the page already had
+   `scroll-padding-top: 88px`; the headings add 16 px) with its section open.
+4. **Checked in headless Chrome** at 1400 by 900 and 390 by 844, both themes, from a local copy of the built site: on load nothing is
+   open; scrolled into section 5 it opens with "Six figures stay in view" marked and the address following, history length unchanged; in
+   section 13 the list had scrolled itself 273 px to keep the entry in sight; `#5-read-the-analysis` and `#fudd-buster-mode` landed
+   184 px down before the margin fix, which is what found the doubled padding; clicking section 8 in the list opened it; the phone
+   disclosure works and closes on a choice; with scripts off the side list shows every section and subsection; the testing guide has
+   its 9 sections and 2 subsections in the same list.
+5. **The build's checks** (`guide_problems`): an id used twice, a link to `#x` with nothing called x, a side list that does not name
+   every heading in order, and a user guide with no h3. `feature_problems` now accepts any id on the built guide, so a Features link
+   to a subsection is checked the same way. **One choice to note:** these are page checks, so under entry 387 a failure holds back the
+   guide page (keeping the copy grouplab.org serves) rather than stopping the whole site; the message names the page, and a test holds
+   that. If planning wants it to stop the publish instead, it is one line (`paged` to `problems`).
+6. **Features.** 31 of the 62 "In the user guide" links now point at their subsection (docs-sonnet's choice, checked here), for
+   example scale-markers, fudd-buster, shots-to-zero, picture-check; the other 31 span several subsections and keep their section.
+7. **The PDFs** were made again. Subsections are set at 11.5 pt with no rule under them, as `DocumentPdf` already set level 3 headings.
+   GroupLab's PDF writer now writes bookmarks when it is given them (`PdfWriter.Write(pages, bookmarks)`, `DocumentPdf.Bookmarks`): one per
+   section, its subsections under it, folded, and the panel opens with them. With no bookmarks a PDF is byte for byte as before
+   (`APdfWithNoBookmarksIsUnchanged`), so no sheet changes. The user guide is 1421 KB (1348 before), the testing guide 287 KB.
+8. **What else reads the guide.** `scripts/claims.py` keyed 35 backed sentences by their old bold leads; the backing of each was carried
+   to its new wording (28 by a matching script, 7 contents-list or picture lines by hand), and the extractor now ignores the `#` marks.
+   `claims.py --check` 5303 backed, `consistency.py --offline` 0 findings, `readme.py --check` and `counts.py --check` current.
+   `UserGuideTests` read no bold leads and needed no change; it gained the bookmark tests.
+9. **Tour and Features** do not describe the guide page's layout, so nothing there is now wrong.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -56,4 +56,32 @@ public class UserGuideTests
         Assert.Contains("/XObject << /Im0 ", pdf, StringComparison.Ordinal);
         Assert.Contains("/Im0 Do", pdf, StringComparison.Ordinal);
     }
+
+    /// <summary>Entry 436 section 4.2: the guide's PDF has a bookmark for every section and subsection, each subsection under its section.</summary>
+    [Fact]
+    public void TheGuidePdfHasABookmarkForEverySectionAndSubsection()
+    {
+        string markdown = File.ReadAllText(Repo.PathTo("docs", "USER-GUIDE.md"));
+        var headings = markdown.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n')
+            .Where(l => l.StartsWith("## ", StringComparison.Ordinal) || l.StartsWith("### ", StringComparison.Ordinal)).ToList();
+        var bookmarks = DocumentPdf.Bookmarks(markdown);
+        Assert.Equal(headings.Select(h => DocumentPdf.Inline(h.TrimStart('#').Trim())), bookmarks.Select(b => b.Title));
+        Assert.Contains(bookmarks, b => b.Level == 3);
+
+        string pdf = System.Text.Encoding.Latin1.GetString(DocumentPdf.Write("# T\n\n## One\n\n### A\n\nText.\n\n### B\n\n## Two\n", _ => null));
+        Assert.Contains("/Outlines ", pdf, StringComparison.Ordinal);
+        Assert.Contains("/PageMode /UseOutlines", pdf, StringComparison.Ordinal);
+        Assert.Contains("/Title (One)", pdf, StringComparison.Ordinal);
+        Assert.Contains("/Count -2", pdf, StringComparison.Ordinal);
+        Assert.Contains("/Type /Outlines /First 7 0 R /Last 10 0 R /Count 2", pdf, StringComparison.Ordinal);
+    }
+
+    /// <summary>Every other PDF GroupLab writes, sheets above all, is byte for byte what it was without bookmarks.</summary>
+    [Fact]
+    public void APdfWithNoBookmarksIsUnchanged()
+    {
+        var pages = DocumentPdf.Pages("# T\n\nText.", _ => null);
+        Assert.Equal(GroupLab.Core.Rendering.Pdf.PdfWriter.Write(pages), GroupLab.Core.Rendering.Pdf.PdfWriter.Write(pages, []));
+        Assert.DoesNotContain("/Outlines", System.Text.Encoding.Latin1.GetString(GroupLab.Core.Rendering.Pdf.PdfWriter.Write(pages)), StringComparison.Ordinal);
+    }
 }

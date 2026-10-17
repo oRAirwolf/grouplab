@@ -1436,7 +1436,7 @@ def slug(text: str) -> str:
     return s
 
 
-def render_guide(md_file: Path) -> tuple[str, str, list[tuple[str, str]]]:
+def render_guide(md_file: Path, marks: bool = False) -> tuple[str, str, list[tuple[str, str, list[tuple[str, str]]]]]:
     src = md_file.read_text(encoding="utf-8")
     title_m = re.match(r"#\s+(.+)\n", src)
     title = title_m.group(1).strip() if title_m else md_file.stem
@@ -1453,15 +1453,26 @@ def render_guide(md_file: Path) -> tuple[str, str, list[tuple[str, str]]]:
     src = "\n".join(fixed)
     body = markdown.markdown(src, extensions=["tables", "sane_lists", "fenced_code"])
 
-    # Headings get ids, and h2s build the contents list.
-    toc: list[tuple[str, str]] = []
+    # Headings get ids, and the contents list is each h2 with its h3s under it. Entry 436 section 3.1: the h2 ids never change, because
+    # features.json and every link already sent point at them; an h3 that would repeat an id carries its section's number in front.
+    toc: list[tuple[str, str, list[tuple[str, str]]]] = []
+    seen: set[str] = set()
 
     def head(m: re.Match) -> str:
         level, inner = m.group(1), m.group(2)
+        text = re.sub(r"<[^>]+>", "", inner)
         hid = slug(inner)
+        if level == "3" and hid in seen and toc:
+            number = re.match(r"(\d+)-", toc[-1][0])
+            hid = f"{number.group(1) if number else toc[-1][0]}-{hid}"
+        seen.add(hid)
         if level == "2":
-            toc.append((hid, re.sub(r"<[^>]+>", "", inner)))
-        return f'<h{level} id="{hid}">{inner}</h{level}>'
+            toc.append((hid, text, []))
+        elif toc:
+            toc[-1][2].append((hid, text))
+        # Entry 436 section 3.2: a link mark, shown on hover and on focus; guide-toc.js copies its address, and without it it is a link.
+        mark = f'<a class="hlink" href="#{hid}" aria-label="Link to {esc(html.unescape(text))}">#</a>' if marks else ""
+        return f'<h{level} id="{hid}">{inner}{mark}</h{level}>'
 
     body = re.sub(r"<h([23])>(.*?)</h\1>", head, body)
 
@@ -1495,6 +1506,32 @@ def _swap(m: re.Match) -> str:
     return f'<figure class="guide-fig">{screen(mm.group(1), html.unescape(alt))}<figcaption class="mono faint small">{alt}</figcaption></figure>'
 
 
+def guide_ids(page: str) -> list[str]:
+    """Every id on a page, repeats kept, so a duplicate can be found."""
+    return re.findall(r'\sid="([^"]+)"', page)
+
+
+def guide_problems(out: Path = OUT) -> list[str]:
+    """Entry 436 sections 3.1 and 4.5, the guides' own page checks: every id once, every link to a part of the page has its target, and
+    the side list names every heading in order in the HTML as built, so it is whole with scripts off. The user guide has subsections."""
+    found = []
+    for key, *_ in GUIDES:
+        rel = f"guides/{key}/index.html"
+        page = (out / rel).read_text(encoding="utf-8")
+        ids = guide_ids(page)
+        for dup in sorted({i for i in ids if ids.count(i) > 1}):
+            found.append(f"{rel}: the id {dup!r} is on more than one element")
+        for target in sorted(set(re.findall(r'href="#([^"]+)"', page)) - set(ids)):
+            found.append(f"{rel}: a link to #{target} has no heading or element with that id")
+        side = re.search(r'<nav class="toc"[^>]*>(.*?)</nav>', page, re.S)
+        listed = re.findall(r'href="#([^"]+)"', side.group(1)) if side else []
+        if listed != re.findall(r'<h[23] id="([^"]+)"', page):
+            found.append(f"{rel}: the contents list does not name every heading, in order, in the page as built")
+        if key == "user-guide" and "<h3 id=" not in page:
+            found.append(f"{rel}: the user guide has no subsections (entry 436 section 1)")
+    return found
+
+
 def guide_tabs(current: str) -> str:
     tabs = []
     for key, _, _, label, _ in GUIDES:
@@ -1505,9 +1542,21 @@ def guide_tabs(current: str) -> str:
     return "".join(tabs)
 
 
+def toc_list(toc: list[tuple[str, str, list[tuple[str, str]]]]) -> str:
+    """Entry 436 section 2.1: every section with its subsections under it, all in the HTML, so the list is whole with scripts off."""
+    def a(hid: str, text: str) -> str:
+        return f'<a href="#{hid}">{esc(html.unescape(text))}</a>'
+    items = []
+    for hid, text, subs in toc:
+        inner = "".join(f"<li>{a(s, t)}</li>" for s, t in subs)
+        items.append(f"<li>{a(hid, text)}" + (f"<ol>{inner}</ol>" if subs else "") + "</li>")
+    return "<ol>\n" + "\n".join(items) + "\n</ol>"
+
+
 def page_guide(key: str, md: str, pdf: str, label: str, desc: str) -> str:
-    title, content, toc = render_guide(need(REPO / "docs" / md))
-    toc_html = "\n".join(f'<a href="#{hid}">{esc(html.unescape(text))}</a>' for hid, text in toc)
+    title, content, toc = render_guide(need(REPO / "docs" / md), marks=True)
+    toc_html = toc_list(toc)
+    # Entry 436 section 2.4: below 1100 px the side list is hidden, so the same list opens from the top of the guide.
     body = f"""
 <section class="wrap guide-bar">
 <nav class="tabs" aria-label="Guides">{guide_tabs(key)}</nav>
@@ -1520,9 +1569,18 @@ def page_guide(key: str, md: str, pdf: str, label: str, desc: str) -> str:
 </nav>
 <article class="prose">
 <h1>{esc(title)}</h1>
+<details class="dl-fold toc-mini">
+<summary>On this page</summary>
+<div class="dl-fold-body">
+<nav aria-label="On this page, short">
+{toc_html}
+</nav>
+</div>
+</details>
 {content}
 </article>
 </section>
+<script src="/assets/js/guide-toc.js" defer></script>
 """
     return shell(f"/guides/{key}/", label, desc, body, "Guides")
 
@@ -1539,7 +1597,7 @@ def page_what_can_be_measured() -> str:
     A page that states its own version of this is the fault coming back.
     """
     title, content, toc = render_guide(need(REPO / "docs" / "WHAT-CAN-BE-MEASURED.md"))
-    toc_html = "\n".join(f'<a href="#{hid}">{esc(html.unescape(text))}</a>' for hid, text in toc)
+    toc_html = "\n".join(f'<a href="#{hid}">{esc(html.unescape(text))}</a>' for hid, text, _ in toc)
     body = f"""
 <section class="wrap guide">
 <nav class="toc" aria-label="On this page">
@@ -2344,8 +2402,8 @@ def feature_problems() -> list[str]:
     tours = set(tour()["screens"])
     shots = {p.name[: -len("-light-1400x900.png")] for p in SCREENS.glob("*-light-1400x900.png")}
     articles = {m["slug"] for m in research_articles()} if "research_articles" in globals() else set()
-    guide = need(REPO / "docs" / "USER-GUIDE.md").read_text(encoding="utf-8")
-    anchors = {slug(h) for h in re.findall(r"^## (.+)$", guide, re.M)}
+    # Entry 436 section 4.3: a feature may point at a subsection, so every id the page carries counts.
+    anchors = guide_ids(render_guide(need(REPO / "docs" / "USER-GUIDE.md"))[1])
     published = published_sentences()
     keys = set()
     for f in data["features"]:
@@ -2799,6 +2857,128 @@ TERMS_JS = """// NOTES-FROM-PLANNING.md entry 154: a glossary word explains itse
 })();
 """
 
+GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list opens the section being read and folds the rest, marks where the reader
+// is, and the address bar follows without adding to the history; a heading's link mark copies its address. Without this script the list
+// is whole and every mark is a plain link, which is the mechanism; this is the enhancement.
+(() => {
+  const article = document.querySelector("article.prose");
+  if (!article) return;
+  const toc = document.querySelector("nav.toc");
+  const heads = [...article.querySelectorAll("h2[id], h3[id]")];
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const links = new Map();
+  if (toc) {
+    toc.classList.add("js");
+    for (const a of toc.querySelectorAll("a[href^='#']")) links.set(decodeURIComponent(a.hash.slice(1)), a);
+  }
+  const sectionOf = (h) => {
+    for (let i = heads.indexOf(h); i >= 0; i--) if (heads[i].tagName === "H2") return heads[i];
+    return null;
+  };
+  const fold = (li, open) => {
+    const sub = li.querySelector(":scope > ol");
+    li.classList.toggle("open", open);
+    if (sub) sub.style.maxHeight = open ? sub.scrollHeight + "px" : "0px";
+  };
+  // When the list is taller than the window, it scrolls itself so the current entry stays in sight, after the fold has settled.
+  const keep = (a) => {
+    const go = () => {
+      if (toc.scrollHeight <= toc.clientHeight) return;
+      const top = a.offsetTop, bottom = top + a.offsetHeight, room = 48;
+      if (top < toc.scrollTop + room) toc.scrollTop = top - room;
+      else if (bottom > toc.scrollTop + toc.clientHeight - room) toc.scrollTop = bottom - toc.clientHeight + room;
+    };
+    go();
+    if (!still.matches) setTimeout(go, 260);
+  };
+  let current;
+  const show = (h) => {
+    if (h === current || !toc) return;
+    current = h;
+    const section = h ? sectionOf(h) : null;
+    const sec = section ? links.get(section.id) : null;
+    const sub = h && h !== section ? links.get(h.id) : null;
+    for (const li of toc.querySelectorAll(":scope > ol > li")) fold(li, sec ? li === sec.parentElement : false);
+    for (const a of toc.querySelectorAll("a.here")) { a.classList.remove("here"); a.removeAttribute("aria-current"); }
+    if (sec) sec.classList.add("here");
+    if (sub) sub.classList.add("here");
+    const deepest = sub || sec;
+    if (deepest) { deepest.setAttribute("aria-current", "location"); keep(deepest); }
+  };
+  // The heading being read is the last one above a line near the top of the window.
+  const reading = () => {
+    const line = Math.min(window.innerHeight * 0.3, 260);
+    let found = null;
+    for (const h of heads) { if (h.getBoundingClientRect().top <= line) found = h; else break; }
+    return found;
+  };
+  let moved = false, addressed, pinned = null;
+  const address = (h) => {
+    if (!moved || h === addressed) return;
+    addressed = h;
+    history.replaceState(history.state, "", h ? "#" + h.id : location.pathname + location.search);
+  };
+  const update = () => {
+    if (pinned) return;
+    const h = reading();
+    show(h);
+    address(h);
+  };
+  // A jump to a heading near the end may not bring it up to the line, so it stays the current one until that scroll has finished.
+  const pin = (h) => {
+    pinned = h;
+    show(h);
+    addressed = h;
+    const done = () => { pinned = null; };
+    if ("onscrollend" in window) window.addEventListener("scrollend", done, { once: true });
+    setTimeout(done, 1200);
+  };
+  window.addEventListener("scroll", () => { moved = true; }, { once: true, passive: true });
+  if ("IntersectionObserver" in window) {
+    const watch = new IntersectionObserver(update, { rootMargin: "0px 0px -70% 0px" });
+    for (const h of heads) watch.observe(h);
+  }
+  const target = () => {
+    const h = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    return h && heads.includes(h) ? h : null;
+  };
+  if (target()) pin(target()); else update();
+  window.addEventListener("hashchange", () => { if (target()) pin(target()); });
+  const mini = article.querySelector("details.toc-mini");
+  document.addEventListener("click", (e) => {
+    const a = e.target instanceof Element ? e.target.closest("a[href^='#']") : null;
+    if (!a) return;
+    if (mini && mini.contains(a)) mini.open = false;
+    if (toc && toc.contains(a)) {
+      const h = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+      if (h) setTimeout(() => pin(h), 0);
+    }
+  });
+  // The link mark: the section's full address in the address bar and on the clipboard, and a short note a screen reader hears too.
+  const note = document.createElement("p");
+  note.className = "link-note";
+  note.setAttribute("role", "status");
+  document.body.append(note);
+  let hide;
+  article.addEventListener("click", async (e) => {
+    const a = e.target instanceof Element ? e.target.closest("a.hlink") : null;
+    if (!a) return;
+    e.preventDefault();
+    const h = a.parentElement;
+    const url = location.origin + location.pathname + location.search + "#" + h.id;
+    history.replaceState(history.state, "", "#" + h.id);
+    pin(h);
+    h.scrollIntoView({ block: "start", behavior: still.matches ? "auto" : "smooth" });
+    let said = "Link copied";
+    try { await navigator.clipboard.writeText(url); } catch (_) { said = "The link is in the address bar"; }
+    note.textContent = said;
+    note.classList.add("on");
+    clearTimeout(hide);
+    hide = setTimeout(() => { note.classList.remove("on"); note.textContent = ""; }, 2400);
+  });
+})();
+"""
+
 CSS = r"""
 @font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url(/assets/fonts/plex-sans-400.woff2) format("woff2")}
 @font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url(/assets/fonts/plex-sans-500.woff2) format("woff2")}
@@ -3046,6 +3226,24 @@ p.text,.text p,.text{color:var(--text)}
 .toc a{display:block;padding:7px 0 7px 14px;font-size:14px;font-weight:400;color:var(--dim);border-left:2px solid var(--line)}
 .toc a:hover{color:var(--text);border-left-color:var(--amber);text-decoration:none}
 .toc p{margin-bottom:10px}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.toc ol ol{padding:2px 0 6px}
+.toc ol ol a{padding:5px 0 5px 28px;font-size:13px}
+.toc a.here{color:var(--text);border-left-color:var(--amber)}
+.toc.js ol ol{overflow:hidden;max-height:0;visibility:hidden;transition:max-height .2s ease,visibility 0s linear .2s}
+.toc.js li.open>ol{visibility:visible;transition:max-height .2s ease}
+.toc-mini{display:none}
+.dl-fold.toc-mini ol{list-style:none;padding-left:0}
+.dl-fold.toc-mini ol ol{padding-left:16px;margin-bottom:6px}
+.toc-mini a{display:block;padding:5px 0;color:var(--text)}
+.dl-fold.toc-mini ol ol a{color:var(--dim)}
+.prose h2,.prose h3{scroll-margin-top:16px}
+.hlink{margin-left:.4em;font-weight:400;color:var(--faint);opacity:0}
+.prose h2:hover .hlink,.prose h3:hover .hlink,.hlink:focus-visible{opacity:1}
+.hlink:hover{color:var(--amber);text-decoration:none}
+.link-note{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:6;margin:0;padding:8px 14px;font-size:14px;color:var(--text);background:var(--panel2);border:1px solid var(--line2);border-radius:6px;opacity:0;pointer-events:none;transition:opacity .15s}
+.link-note.on{opacity:1}
+@media (prefers-reduced-motion: reduce){.toc.js ol ol,.toc.js li.open>ol,.link-note{transition:none}}
 .prose{flex-grow:1;min-width:0;max-width:780px;display:flex;flex-direction:column;gap:18px}
 .prose h1{font-size:clamp(32px,4vw,44px);margin-bottom:6px}
 .prose h2{font-size:28px;margin-top:28px}
@@ -3173,6 +3371,7 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
 .grid-3{grid-template-columns:repeat(1,minmax(0,1fr))}
 .toc{display:none}
+.toc-mini{display:block}
 }
 @media (max-width:860px){
 .wrap{padding-left:16px;padding-right:16px}
@@ -3641,6 +3840,7 @@ def main() -> None:
     write("assets/js/how-it-works.js", _how_it_works.JS.strip() + "\n")
     write("assets/js/theme.js", JS)
     write("assets/js/terms.js", TERMS_JS)
+    write("assets/js/guide-toc.js", GUIDE_TOC_JS)
 
     write("index.html", page_home())
     write("download/index.html", page_download())
@@ -3727,6 +3927,7 @@ def main() -> None:
     problems += download_problems()
     problems += _how_it_works.problems(published_articles(), lambda rel: (REPO / rel).exists())
     paged = research_problems() + figure_theme_problems() + tour_problems() + feature_problems() + term_problems() + parity_problems()
+    paged += guide_problems()
     stale = _screens_stamp.problems() + _readme_images.problems()
     stop, report = settle(problems, paged, stale, OUT, os.environ.get("GROUPLAB_LIVE_SITE"))
     for line in report:

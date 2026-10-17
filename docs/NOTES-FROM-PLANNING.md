@@ -25,6 +25,86 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-17, entry 436: the user guide's contents open by section, follow the reader, and every section has a link
+
+**Status: actioned 2026-10-17; sections 1 to 4 done. Section 5, the live checks, runs after the site publishes and is recorded with entry 437.**
+
+From the planning session, 2026-10-17 10:20 UTC. Alan asked for this himself, so it is his word on the look (CLAUDE.md, "never change
+the look without Alan"). Alan, 2026-10-17: "Can you rebuild the user guide so when you click on one of the topics in the table of
+contents, it shows the sub sections of that category? As you scroll down the page, it should minimize and maximize the part of the
+table of contents that you are currently on. Each section should be linkable so somebody can send a link to a specific section of the
+guide."
+
+Nothing here needs Alan. One commit if it fits. It is website and guide work only, so no application release note (entry 168).
+
+## What is there now (read only, checked 2026-10-17)
+
+- `docs/USER-GUIDE.md` has 14 `##` sections and **no `###` headings at all**. Inside a section, the parts are paragraphs that open with
+  a bold lead, such as `**Several targets open at once.**` (section 4) or `**Fudd buster mode,**` (section 5); there are about 76 such
+  lines, and not all of them are parts (line 143 `**Marking**, with ...` and line 515 `**Result** button.` are wrapped text).
+- `website/build.py` `render_guide` gives ids to h2 and h3 and puts only h2 in the contents; `page_guide` writes a flat list of links
+  in `<nav class="toc">`. `.toc` is `display:none` below 1100 px, so on a phone or a tablet the guide has no contents at all.
+- `website/features.json` links to h2 ids only (for example `5-read-the-analysis`, 13 features), and nothing in `src/` links into
+  the guide, so the h2 ids must stay exactly as they are and nothing else depends on them.
+
+## 1. Give the guide real subsections
+
+1. In `docs/USER-GUIDE.md`, turn each bold lead that begins a part of its section into a `###` heading with the same words, the
+   trailing period or comma dropped, and the paragraph's text kept below it unchanged. A bold lead that is wrapped text, a button
+   name inside a sentence, or a list item is left alone. Do not invent a subsection or reword the guide; a section with no natural
+   parts (2 "Shoot it", for example) simply has no children.
+2. Where a heading would be long, it may be shortened to the words someone would look for, keeping the guide's terms
+   (`docs/RETIRED-WORDING.json` still applies).
+3. List the headings made, per section, in PHASE1-RESULTS.md.
+
+## 2. The contents list opens by section and follows the reader
+
+1. The contents list becomes nested: each section, and under it its subsections. In the page as built, every subsection is in the
+   HTML, so the list is complete with JavaScript off and nothing is hidden from a search engine or a screen reader.
+2. With JavaScript on (a small `/assets/js/guide-toc.js`, no library, loaded `defer` like `terms.js`): only the section the reader is
+   in shows its subsections; the others are folded to their one line. Clicking a section in the list goes to it and opens its
+   subsections. As the reader scrolls, the section in view opens and the one left behind folds, and the current section and current
+   subsection are marked the way the hover already is (the amber left border). Use `IntersectionObserver`. The fold has no animation
+   under `prefers-reduced-motion`.
+3. The list stays sticky as now, and scrolls itself so the current entry is always visible in it when the list is taller than the
+   window.
+4. On screens below 1100 px, where the list is hidden today, put the same nested list at the top of the guide as a closed
+   "On this page" disclosure (a `<details>`), in the site's existing styles, so a phone reader can reach a section too. Nothing new in
+   the look beyond that.
+
+## 3. Every section and subsection can be linked
+
+1. Every h2 and h3 has an id. **The h2 ids do not change.** An h3 id is the slug of its heading; if two would be the same (for
+   example "Several targets open at once" in sections 4 and 13), the later one carries its section's number in front. The build
+   fails on a duplicate id, and on a contents link or a `features.json` `guide` value with no matching id.
+2. Each heading shows a small link mark on hover and on keyboard focus; clicking it puts the section's full address in the address bar
+   and copies it to the clipboard, with a short "Link copied" note that a screen reader also hears. No dialog.
+3. Opening an address with a section in it lands on that heading, not under the sticky header (`scroll-margin-top`, as the glossary
+   does), with its section open in the contents list.
+4. While scrolling, the address bar follows the section in view with `history.replaceState`, never adding a history entry, so copying
+   the address bar also gives a link to where the reader is. The Back button is not filled with sections.
+
+## 4. Everything built from the guide
+
+1. The testing guide uses the same page code, so it gets the same contents behavior; check it reads well with its own headings.
+2. The guide PDFs are made again from the guides (the check from entry 435 requires it). Check that the new `###` headings read well
+   in the PDF, and give the PDF bookmarks for them if the tool that makes it allows.
+3. Where a feature in `features.json` is described by one subsection, its "In the user guide" link may point at that subsection
+   instead of the whole section. Code's call, feature by feature; the build check in 3.1 holds every one.
+4. `UserGuideTests`, `scripts/consistency.py`, `scripts/claims.py` and anything else that reads `USER-GUIDE.md`: keep them passing,
+   and change a test only where it read the old bold leads, saying so in the commit.
+5. Add the site's own page checks: the guide has h3 headings, every id is unique, every contents link resolves, every `features.json`
+   guide link resolves, and the page still has its full contents list with scripts off.
+
+## 5. After it publishes
+
+Within 20 minutes, confirm the commit is live in `grouplab-site-build`, then open three addresses on the live site and record what
+each did: `https://grouplab.org/guides/user-guide/#5-read-the-analysis`, a subsection of section 5, and a subsection of section 13.
+Say in the report whether the Tour or Features pages describe the guide page in a way that is now wrong, and fix it in the same task
+if so.
+
+---
+
 ## 2026-10-16, entry 435: consistency audit, 2026-10-16
 
 **Status: actioned 2026-10-16; every section done.**

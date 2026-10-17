@@ -299,7 +299,7 @@
         "GroupLab now recognizes nine store-bought targets",
         "When a picture of the Shoot-N-C bullseye cannot show whether it is the 6 inch or the 8 inch"
       ],
-      "guide": "1-print-a-sheet"
+      "guide": "store-bought-targets"
     },
     {
       "key": "problem-dialog",
@@ -326,9 +326,9 @@
         "a problem that stops your work"
       ],
       "tour": "marking",
-      "guide": "4-mark-it-and-settle-the-review-queue"
+      "guide": "when-a-picture-names-no-sheet"
     },
-    {"key": "scale-markers", "group": "Reading a target", "name": "Scale markers beside a target", "sentence": "Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once. Scale labels can also be printed from a label printer such as the Phomemo M220, straight from Android.", "shot": "scale-markers", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "mobile": {"shot": "fold-scale-markers"}, "since": "next", "note": ["GroupLab can now take a target's scale from markers laid beside it", "Corner brackets no longer need a neat cut", "A label printer such as the Phomemo M220 now has its own printer check label", "On Android, Targets, Scale markers can now print two scale labels straight to the Phomemo M220", "The second of two M220 scale labels"], "guide": "1-print-a-sheet"},
+    {"key": "scale-markers", "group": "Reading a target", "name": "Scale markers beside a target", "sentence": "Corner brackets, scale bars or stickers on a measured board, printed from Targets, or a bank card, laid beside a target GroupLab did not print, give it the scale from the photo with nothing typed or tapped, in Add a store-bought target and when marking by hand; a card is blanked out of the photo at once. Scale labels can also be printed from a label printer such as the Phomemo M220, straight from Android.", "shot": "scale-markers", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "mobile": {"shot": "fold-scale-markers"}, "since": "next", "note": ["GroupLab can now take a target's scale from markers laid beside it", "Corner brackets no longer need a neat cut", "A label printer such as the Phomemo M220 now has its own printer check label", "On Android, Targets, Scale markers can now print two scale labels straight to the Phomemo M220", "The second of two M220 scale labels"], "guide": "scale-markers"},
     {
       "key": "add-store-target",
       "group": "Reading a target",
@@ -348,7 +348,7 @@
       "since": "next",
       "note": ["Add a store-bought target, on the Targets screen of the computer and the phone", "Photos in Add a store-bought target now show the right way up", "Add a store-bought target now finds the corners", "While placing the corners you can zoom in", "Add a store-bought target no longer takes the edge of the counter", "Add a store-bought target now finds the aiming marks", "Add a store-bought target now warns before saving"],
       "tour": "fingerprint",
-      "guide": "1-print-a-sheet"
+      "guide": "add-a-store-bought-target"
     },
     {
       "key": "reads-itself",
@@ -483,7 +483,7 @@
       "since": "next",
       "note": "GroupLab now asks whether your scope is in mil or MOA",
       "tour": "firstrun",
-      "guide": "mil-or-moa",
+      "guide": "each-rifle-keeps-its-own",
       "mobile": {
         "noPicture": "the phone's scope question is photographed at the next sitting with the phone"
       }
@@ -504,7 +504,7 @@
       "since": "next",
       "note": "Tap any number to switch its units",
       "tour": "analysis",
-      "guide": "5-read-the-analysis",
+      "guide": "tap-a-number-to-switch-units",
       "mobile": {
         "noPicture": "tapping a number on the phone's result is photographed at the next sitting with the phone"
       }
@@ -576,7 +576,7 @@
         "the tab strip's scrollbar now sits in its own row below the tabs"
       ],
       "tour": "marking",
-      "guide": "4-mark-it-and-settle-the-review-queue"
+      "guide": "several-targets-open-at-once"
     },
     {
       "key": "six-figures",
@@ -597,7 +597,7 @@
         "now says leave it, and why"
       ],
       "tour": "analysis",
-      "guide": "5-read-the-analysis",
+      "guide": "six-figures-stay-in-view",
       "article": "mean-radius-or-extreme-spread",
       "mobile": {
         "shot": "fold-result"
@@ -619,7 +619,7 @@
       "since": "next",
       "note": "now say how many shots a zeroing group needs",
       "tour": "analysis-open",
-      "guide": "5-read-the-analysis",
+      "guide": "shots-needed-to-zero",
       "article": "shots-to-zero",
       "mobile": {
         "noPicture": "the phone's full figures are photographed at the next sitting with the phone"
@@ -644,7 +644,7 @@
         "You can now enter the day's temperature, altitude, humidity and shot angle"
       ],
       "tour": "analysis",
-      "guide": "5-read-the-analysis",
+      "guide": "velocity-and-the-vertical",
       "mobile": {
         "noPicture": "the phone's card is photographed at the next sitting with the phone"
       }
@@ -689,7 +689,7 @@
       "since": "next",
       "note": "Changing what a chronograph reading goes with is now a row per reading",
       "tour": "ballistics",
-      "guide": "8-the-zero-correction-at-another-distance-and-the-dope-table"
+      "guide": "chronograph-readings"
     },
     {
       "key": "cep",
@@ -707,7 +707,7 @@
       "since": "0.2.0-nightly.111",
       "note": "The analysis screen can now draw and list CEP 99",
       "tour": "analysis-open",
-      "guide": "5-read-the-analysis",
+      "guide": "the-full-cep-table-and-the-fitted-ellipse",
       "article": "cep-explained",
       "mobile": {
         "noPicture": "the phone's full figures are photographed at the next sitting with the phone"
@@ -729,7 +729,7 @@
       "since": "0.2.0-nightly.28",
       "note": "Every figure on the analysis page can now tell you what it means",
       "tour": "analysis-open",
-      "guide": "5-read-the-analysis",
+      "guide": "what-each-why-says-in-plain-words",
       "article": "how-many-shots",
       "mobile": {
         "noPicture": "the phone's full figures are photographed at the next sitting with the phone"
@@ -815,7 +815,7 @@
       "since": "next",
       "note": "Fudd buster mode",
       "tour": "analysis-open",
-      "guide": "5-read-the-analysis",
+      "guide": "fudd-buster-mode",
       "mobile": {
         "noPicture": "the phone's Fudd buster page is photographed at the next sitting with the phone"
       }
@@ -879,7 +879,7 @@
       "since": "0.2.0-nightly.111",
       "note": "Design your own sheet can now make a sheet for your optic",
       "tour": "optic",
-      "guide": "1-print-a-sheet",
+      "guide": "made-for-your-optic",
       "article": "can-you-see-the-bull",
       "mobile": {
         "shot": "fold-targets"
@@ -902,7 +902,7 @@
       "since": "0.2.0-nightly.111",
       "note": "The four zeroing grids are redrawn to be read through a scope",
       "tour": "targets",
-      "guide": "1-print-a-sheet",
+      "guide": "the-zeroing-grids-are-for-sighting-in-by-eye",
       "mobile": {
         "noPicture": "the grid pictures are the sheets as they print, the same on the phone"
       }
@@ -926,7 +926,7 @@
       },
       "note": "For a target larger than a scanner takes",
       "tour": "targets",
-      "guide": "1-print-a-sheet"
+      "guide": "large-targets"
     },
     {
       "key": "true-size",
@@ -1148,7 +1148,7 @@
       ],
       "reworded": "0.2.0-nightly.196",
       "tour": "sessions",
-      "guide": "10-comparing-several-sheets-at-once",
+      "guide": "the-sheets-of-a-set-pool-into-one-group",
       "mobile": {
         "noPicture": "the phone's set checklist is photographed at the next sitting with the phone"
       }
@@ -1170,7 +1170,7 @@
       "since": "next",
       "note": "three sheets with a new bull",
       "tour": "targets",
-      "guide": "1-print-a-sheet",
+      "guide": "three-sheets-come-with-the-e-bull-as-well",
       "article": "can-you-see-the-bull",
       "mobile": {
         "shot": "tab-targets-landscape"
@@ -1193,7 +1193,7 @@
       "since": "next",
       "note": "the C bull",
       "tour": "targets",
-      "guide": "1-print-a-sheet",
+      "guide": "and-three-with-the-c-bull",
       "article": "can-you-see-the-bull",
       "mobile": {
         "shot": "tab-targets-landscape"
@@ -1215,7 +1215,7 @@
       "since": "next",
       "note": "sets of four Letter or A4 sheets",
       "tour": "targets",
-      "guide": "1-print-a-sheet",
+      "guide": "the-large-format-sheets-print-on-letter-or-a4",
       "mobile": {
         "shot": "tab-targets-landscape"
       }
@@ -1256,7 +1256,7 @@
       "since": "next",
       "note": ["Six-bull label targets for thermal label printers", "Targets can now be laid out on 4x6, A6 and 100 x 150 mm labels", "When printing for a thermal printer, GroupLab now warns", "for a thermal label printer's own app", "On Windows, Targets can now print a sheet straight to a Phomemo M834", "Pages printed straight to the Phomemo M834", "Connecting to a label printer now starts each way of connecting at once"],
       "tour": "targets",
-      "guide": "1-print-a-sheet"
+      "guide": "label-targets-are-for-a-thermal-label-printer"
     },
     {
       "key": "dev-build",
@@ -1284,7 +1284,7 @@
         "Android"
       ],
       "since": "next",
-      "guide": "9-keeping-grouplab-up-to-date",
+      "guide": "android-updates-itself-from-an-apk",
       "note": [
         "GroupLab Dev now updates itself",
         "Testers who installed GroupLab from Google Play now receive every nightly",
@@ -1320,7 +1320,7 @@
         "Android"
       ],
       "since": "next",
-      "guide": "13-on-the-phone",
+      "guide": "sessions-ballistics-and-targets",
       "note": ["Targets screen", "On Android, Targets can now print a sheet straight to a Phomemo M834", "On Android, printing straight to the Phomemo M834 no longer waits", "Printing straight to the Phomemo M834 from Android now prints the whole page", "Printing straight to the Phomemo M834 from Android now feeds", "Pages printed straight to the Phomemo M834"],
       "mobile": {
         "shot": "fold-targets"
@@ -1336,7 +1336,7 @@
         "Android"
       ],
       "since": "next",
-      "guide": "13-on-the-phone",
+      "guide": "capture",
       "note": "Guided or Manual",
       "mobile": {
         "noPicture": "the new camera screen is photographed at the next sitting with the phone"
@@ -1353,7 +1353,7 @@
         "iPhone and iPad"
       ],
       "since": "next",
-      "guide": "13-on-the-phone",
+      "guide": "the-picture-check",
       "note": "checked",
       "mobile": {
         "noPicture": "the check after a picture is photographed at the next sitting with the phone"
@@ -1369,7 +1369,7 @@
         "Android"
       ],
       "since": "next",
-      "guide": "13-on-the-phone",
+      "guide": "a-photograph-from-any-photo-app",
       "note": [
         "from any photo app",
         "choose several photos at once",
@@ -1420,7 +1420,7 @@
       "since": "next",
       "note": "Zero from this group window",
       "tour": "analysis",
-      "guide": "5-read-the-analysis",
+      "guide": "the-zero-correction",
       "mobile": {
         "noPicture": "the phone's Zero from this group page is photographed at the next sitting with the phone"
       }
@@ -1481,7 +1481,7 @@
       "since": "next",
       "note": "a one-page report",
       "tour": "analysis",
-      "guide": "6-sessions-and-the-report",
+      "guide": "one-page-report",
       "mobile": {
         "noPicture": "the phone's Report page is photographed at the next sitting with the phone"
       }
@@ -1497,7 +1497,7 @@
       ],
       "since": "next",
       "note": "On the phone, several targets can now be open at once",
-      "guide": "13-on-the-phone",
+      "guide": "13-several-targets-open-at-once",
       "mobile": {
         "shot": "fold-open-targets"
       }
@@ -1516,7 +1516,7 @@
         "At Android's largest text sizes, the phone's bottom bar now shows its icons alone",
         "On the iPhone, GroupLab's text now grows and shrinks with your own text size setting"
       ],
-      "guide": "13-on-the-phone",
+      "guide": "the-bar-along-the-bottom",
       "mobile": {
         "shot": "fold-targets-largest-text"
       }

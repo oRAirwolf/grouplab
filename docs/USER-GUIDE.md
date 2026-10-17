@@ -14,16 +14,22 @@ GroupLab works in your scope's unit, mil or MOA, and neither is the default. The
 it asks **Is your scope in mil or MOA?**, with a third answer, **Both, I have rifles of each**, and whether you measure sizes on the paper
 in inches or millimeters. Your answer becomes the **Scope unit** at the top of Units in Settings, where you can change it at any time.
 
-**Each rifle keeps its own.** A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other
+### Each rifle keeps its own
+
+A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other
 value you type. When a session names a rifle, that rifle's unit wins over Settings; when it names none, Settings decides. If you answered
 Both, a session with no rifle asks which rifle it was.
 
-**Everything aiming follows it:** the zero correction, the clicks, Shots Needed to Zero, the dope table, the hit chance, the table of
+### Everything aiming follows it
+
+Everything aiming follows it: the zero correction, the clicks, Shots Needed to Zero, the dope table, the hit chance, the table of
 each shot's offset, Zero from this group, and group sizes shown as angles. With a mil scope the zero correction reads in mil alone,
 such as "dial 0.30 mil left, 3 clicks left", with no MOA next to it. The other unit is never far: tap a number to
 switch it, or press and hold it for every unit it can take, and GroupLab remembers that figure's choice.
 
-**Getting GroupLab.** The download page, grouplab.org/download/, has every build. On Windows, the Microsoft Store carries GroupLab too
+### Getting GroupLab
+
+The download page, grouplab.org/download/, has every build. On Windows, the Microsoft Store carries GroupLab too
 and gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself ([Get it from
 Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build the moment it is made. On an iPhone or iPad, GroupLab is in a public beta through Apple's TestFlight: install TestFlight from
 the App Store, then open [the invitation](https://testflight.apple.com/join/A3xyT6C6) on the device.
@@ -43,40 +49,68 @@ zoom on any screen; **Open as PDF** under it opens the real PDF in your viewer. 
 - **Open to print** opens the PDF in your viewer instead. Print it from there at Actual size or 100 percent, never Fit.
 - **Save PDF** keeps the file.
 
-**Three sheets come with the E bull as well**: the 5x5 load development sheets for Letter, Letter with the load block, and A4, each with every
+### Three sheets come with the E bull as well
+
+Three sheets come with the E bull as well: the 5x5 load development sheets for Letter, Letter with the load block, and A4, each with every
 bull a black disc with a 0.36 in white center and a small dot. The aim point test of 2026-09-26 found it could be centered on through
 every high power scope at 10x, where the usual bull could not. They sit beside the usual ones in the list, with their own identifiers.
 
-**And three with the C bull**: the same three sheets with every bull a black diamond standing on a point, 1.25 in point to point, with a
+### And three with the C bull
+
+And three with the C bull: the same three sheets with every bull a black diamond standing on a point, 1.25 in point to point, with a
 white diamond center and a small dot. Its points lie on the vertical and horizontal lines through the aim, so a crosshair lines up with the
 shape. **Design your own sheet** offers the rings, E or C for its bull, and **Made for your optic** a disc or a diamond, sized by the same
 rule. None of them replaces the usual bull.
 
-**The large format sheets print on Letter or A4.** Each is a set of four sheets with eight 1.5 in or 1.4 in bulls apiece, the same bulls
+### The large format sheets print on Letter or A4
+
+Each is a set of four sheets with eight 1.5 in or 1.4 in bulls apiece, the same bulls
 and spacing the tabloid and A3 sheets had; each sheet has its own markers and codes, so scan or photograph them one at a time. A tabloid or
 A3 sheet you printed before still reads. The roll sheets are for a plotter, and a photograph of a whole one needs a phone of about 50 MP.
 
-**Label targets are for a thermal label printer.** Each 4x6, A6 or 100 by 150 mm label holds six bulls the size of the Letter sheets', in a set of five labels that pool into one group like the 300 yard tiles; a printer check label measures a label printer on its own paper, across and along the feed. Choose a thermal printer under **Print on** and GroupLab draws the page one dot at a time in black only, with every code and marker on whole dots, shows every dot in the preview, and names anything a narrow printer would cut off before you print. Thermal paper darkens in heat and fades in sunlight, so photograph a thermal target the day you shoot it. For a label printer GroupLab does not print to itself, **Save for a printer app…** on the computer, or **Share for a printer app** on the phone, hands the sheet to the printer's own app as a black and white picture at 300 dpi and a PDF, both at the page's true size; print them at 100 percent or actual size, never fit to page. The **darkness test page** beside it shows what each darkness setting in the app does to fine lines. No label printer has printed GroupLab's check page yet, so until one has, label printing should work but is not proven. On Windows, with **Phomemo M834** chosen under **Print on** and the printer paired in Windows Settings (Bluetooth and devices, Add device), **Print on the Phomemo M834** sends the sheet straight to it over Bluetooth, the same page the phone sends, with **A continuous roll** or **Fanfold sheets** chosen as on the phone; it has not yet been tried on a real M834 from a computer. Close the Phomemo app on the phone while the computer prints, since the printer takes one connection at a time. On macOS and Linux the choice says it is not available there yet.
+### Label targets are for a thermal label printer
 
-**The zeroing grids are for sighting in by eye.** Each prints at exact scale, so at the bench you fire, read the correction off the grid, dial it and fire again. The squares are a scope's own: 0.2 mil or 0.5 MOA, with a small tick at every click (0.1 mil or 1/4 MOA) between the lines along the center cross and the frame. The legend above the grid, large enough to read through the scope, says what a square and a tick are; each line's distance from the aim is written outside the grid, and nothing on it. Aim at the diamond. A 4 in or 10 cm bar at the bottom checks the print: measure it before you shoot. The sheet has no load block, so enter the load on the session. The design, C3, was chosen by Alan with Jylee and Unholy. For a zero worked out from a group, and the group figures, shoot a [5x5 sheet](#2-shoot-it) instead. GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
+Each 4x6, A6 or 100 by 150 mm label holds six bulls the size of the Letter sheets', in a set of five labels that pool into one group like the 300 yard tiles; a printer check label measures a label printer on its own paper, across and along the feed. Choose a thermal printer under **Print on** and GroupLab draws the page one dot at a time in black only, with every code and marker on whole dots, shows every dot in the preview, and names anything a narrow printer would cut off before you print. Thermal paper darkens in heat and fades in sunlight, so photograph a thermal target the day you shoot it. For a label printer GroupLab does not print to itself, **Save for a printer app…** on the computer, or **Share for a printer app** on the phone, hands the sheet to the printer's own app as a black and white picture at 300 dpi and a PDF, both at the page's true size; print them at 100 percent or actual size, never fit to page. The **darkness test page** beside it shows what each darkness setting in the app does to fine lines. No label printer has printed GroupLab's check page yet, so until one has, label printing should work but is not proven. On Windows, with **Phomemo M834** chosen under **Print on** and the printer paired in Windows Settings (Bluetooth and devices, Add device), **Print on the Phomemo M834** sends the sheet straight to it over Bluetooth, the same page the phone sends, with **A continuous roll** or **Fanfold sheets** chosen as on the phone; it has not yet been tried on a real M834 from a computer. Close the Phomemo app on the phone while the computer prints, since the printer takes one connection at a time. On macOS and Linux the choice says it is not available there yet.
 
-**Made for your optic.** Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet. GroupLab sizes a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at that magnification, the size the aim point test found people can center on, with nothing small at the middle for a crosshair to cover. It makes as many sheets as the shots need, and each sheet's codes say which of the set it is. Analyze each sheet by itself for now; putting a set together into one group is still to come.
+### The zeroing grids are for sighting in by eye
 
-**A target GroupLab did not print, with several bulls** (suggested by Unholy, also TNA). Choose **Place bulls** (B) and tap each bull's aim point; drag one to move it, and Delete takes the chosen one away. Shots go to their nearest bull and are drawn in its color, so a shot on the wrong bull shows. **Lasso** (O): draw round several shots, then tap the bull they belong to. For the scale, tap four corners of something rectangular whose size you know, such as the paper's edge, which removes the photograph's angle; or draw a length near a bull, a ring's width or a grid square, and choose **Use it as bull N's own scale**, then a second at right angles to it. GroupLab says when the bulls' scales disagree, which means the photograph was taken at an angle, and how uncertain the sizes are because of it. Under Advanced, **Bull by bull** gives each bull as its own group beside the pooled one. With the bulls tool in hand, **Save these bulls** keeps them as a template; on the next sheet of the same target, tap its first two bulls and **Place the rest**.
+Each prints at exact scale, so at the bench you fire, read the correction off the grid, dial it and fire again. The squares are a scope's own: 0.2 mil or 0.5 MOA, with a small tick at every click (0.1 mil or 1/4 MOA) between the lines along the center cross and the frame. The legend above the grid, large enough to read through the scope, says what a square and a tick are; each line's distance from the aim is written outside the grid, and nothing on it. Aim at the diamond. A 4 in or 10 cm bar at the bottom checks the print: measure it before you shoot. The sheet has no load block, so enter the load on the session. The design, C3, was chosen by Alan with Jylee and Unholy. For a zero worked out from a group, and the group figures, shoot a [5x5 sheet](#2-shoot-it) instead. GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
 
-**Store-bought targets.** <!--count:store-targets:Words-->Nine<!--/count--> store-bought targets, from Birchwood Casey and the National Target Company, are recognized on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent for the five made from 600 dpi scans and to within about 0.6 to 0.75 percent for those made from phone photographs, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike. The list grows as targets are added to it, and a target added after your build reaches it without a new build: GroupLab looks for a newer signed list when it starts (on a phone, only on Wi-Fi with the battery and storage not low, at most every six hours) and uses it only when its signature checks. There is no way to send one in yet.
+### Made for your optic
 
-**Scale markers.** Put one of these beside a target GroupLab did not print and it takes the scale from the photo, with nothing typed or tapped. Targets, Scale markers prints them at actual size on Letter or A4: **corner brackets**, four L shaped pieces cut roughly from one page, one placed flat near each corner of the target, anywhere close: their printed codes give the scale and the camera's angle, so the cut does not need to be neat, and GroupLab finds the target's corners from its own edges where they show against the surface; **scale bars**, two strips with a code at each end 10.000 in apart (250 mm on A4), one laid along an edge for the scale, two in an L for the angle too, or two end to end for a poster; and **board stickers**, four codes stuck near the corners of your target board and measured once (Measure a board, with any GroupLab sheet on the board), after which every photo of a target on that board has its scale with nothing placed. **Scale labels**, for a label printer such as the Phomemo M220, are rows of codes across a label of the size loaded, stuck flat on the target where you will not shoot; they are read across only, because a label printer's paper feed is not exact. **Save the printer check label** gives one label to print at 100 percent and scan at 600 dpi, and **Measure a scanned check label** measures the printer across its head and along its feed and keeps the result with the label size, so every later label is laid out for that size. On Android, **Print two scale labels on the Phomemo M220** sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first. A **bank card**, driver's license or gift card laid back side up beside the target needs nothing printed: GroupLab blanks the card out of the photo at once, never keeps, shows in a saved picture, logs or sends that part of it, and never reads anything on a card. Markers count in Add a store-bought target (Markers in the photo, chosen by itself when they are found) and when you mark a target by hand. On computer-made photos a measured board was typically within 0.015 percent, a scale bar 0.06, corner brackets 0.07 on a 12 in target and 0.2 on a 23 by 35 in poster, and a card 0.15. Printed markers are corrected by your printer check, and without one can be off by up to 1.5 percent. Every piece has to lie flat on the same surface as the target. Brackets must touch the target's corners: a gap of 2 mm makes a 12 in target read about 2 percent large, though the scale is still right. A bar can touch the target or lie a little apart; the scale is the same either way. A board that swells evenly cannot be told from one that has not, so measure it again now and then and whenever it gets wet; a board whose stickers have moved, GroupLab notices and asks you to measure again.
+Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet. GroupLab sizes a bull you can center on through that optic: a black disc with a white center that subtends about 3.5 arcminutes at that magnification, the size the aim point test found people can center on, with nothing small at the middle for a crosshair to cover. It makes as many sheets as the shots need, and each sheet's codes say which of the set it is. Analyze each sheet by itself for now; putting a set together into one group is still to come.
 
-**Add a store-bought target.** On Targets, **Add a store-bought target** teaches GroupLab one it does not know, from a photograph of a blank one, in five steps, one question at a time: **Photo**, **Size and scale**, **Straighten**, **The bulls** and **Name and send**. On the computer the steps are listed on the left, done ones ticked in teal and the current one amber, the photo in the middle and the question on the right with **Back** and **Next**; on the phone each step fills the screen, with a five-part bar and Back at the top and one big button at the bottom. Choose or take a photo of the target flat and square on, all four corners in it. GroupLab shows it the way up it was taken, and **Rotate left** and **Rotate right** (R and Shift R on the computer) turn it a quarter turn for a target photographed sideways. It finds the corners from the paper's edges and color, so white paper on a light counter works; where it cannot, it says why and starts four amber handles at its best guess for you to drag. Scroll or pinch to zoom in; while you drag a corner, a magnifier above it shows the point under your finger, and a corner let go lands on the clear corner of the picture nearest it, with **Undo**. **How big is this target?** takes one true length three ways: **Its printed size**, the width and height on the package; **A GroupLab sheet in the photo**, laid on the target; or **Two points and a distance**, both ends of something you measured and its length. Under the one picked is what GroupLab measured for it on computer-made photos of two test posters, typically within 0.01 percent at 12 by 18 in and 0.28 percent at 23 by 35 in from the printed size, 0.16 and 0.40 percent from two points, and a Letter sheet too small to read at all on the larger poster; no way is called the best, because none was at every size. **Straighten** shows the corners to check; **The bulls** shows the target straightened with each bull it found as a numbered ring: tap or click a ring to remove it, or the picture to add one, and **These are right** moves on. Last, type the name on its package: where it matches a target already in GroupLab's library at another size, GroupLab says it joins that family; at the same size, that GroupLab already knows it. **Save reference file** on the computer, or **Save and share the file** on the phone, writes the file: the fingerprint, name, size and bulls, never the photo. Send it to GroupLab's maker; each file is checked by hand before it joins the library a later GroupLab recognizes.
+### Several bulls on any target
 
-**Find holes (Experimental).** Once the scale is set, and the bulls if you placed them, the button under the scale proposes the holes: a hole darker than the paper, a hole in a black bull where what shows through is lighter than the ink, and on a fluorescent target a dark center inside its bright ring. Each one is a mark like any other, to keep, drag onto its hole or delete, and one GroupLab is not sure of is in the review with the reason. It is experimental: it misses some holes, such as one on the edge of a black bull, and it can take printing for a hole, so look at every mark before you trust the figures. Undo takes all of them back at once, and pressing it again replaces only the marks you have not touched.
+A target GroupLab did not print, with several bulls (suggested by Unholy, also TNA). Choose **Place bulls** (B) and tap each bull's aim point; drag one to move it, and Delete takes the chosen one away. Shots go to their nearest bull and are drawn in its color, so a shot on the wrong bull shows. **Lasso** (O): draw round several shots, then tap the bull they belong to. For the scale, tap four corners of something rectangular whose size you know, such as the paper's edge, which removes the photograph's angle; or draw a length near a bull, a ring's width or a grid square, and choose **Use it as bull N's own scale**, then a second at right angles to it. GroupLab says when the bulls' scales disagree, which means the photograph was taken at an angle, and how uncertain the sizes are because of it. Under Advanced, **Bull by bull** gives each bull as its own group beside the pooled one. With the bulls tool in hand, **Save these bulls** keeps them as a template; on the next sheet of the same target, tap its first two bulls and **Place the rest**.
 
-**Large targets.** A sheet larger than Letter or A4 does not fit a flatbed scanner. For each one the Targets screen works out how many pixels an inch a phone photograph of the whole sheet gives and says whether that is enough. Tiled Letter or A4 pages are the better choice for a large target: each page scans by itself, and a plotter can print them all on one large page with cut lines between them.
+### Store-bought targets
 
-**Check the size before you shoot.** Measure from the center of bull 1 to the center of bull 5 with a ruler. On the Letter 5x5 sheet it is 5.98 in (152.0 mm). If it is not, the printer scaled the sheet, and it should be printed again.
+<!--count:store-targets:Words-->Nine<!--/count--> store-bought targets, from Birchwood Casey and the National Target Company, are recognized on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent for the five made from 600 dpi scans and to within about 0.6 to 0.75 percent for those made from phone photographs, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike. The list grows as targets are added to it, and a target added after your build reaches it without a new build: GroupLab looks for a newer signed list when it starts (on a phone, only on Wi-Fi with the battery and storage not low, at most every six hours) and uses it only when its signature checks. There is no way to send one in yet.
 
-**Your own sheet.** Design your own sheet, at the top of Targets, lays out a grid of bulls:
+### Scale markers
+
+Put one of these beside a target GroupLab did not print and it takes the scale from the photo, with nothing typed or tapped. Targets, Scale markers prints them at actual size on Letter or A4: **corner brackets**, four L shaped pieces cut roughly from one page, one placed flat near each corner of the target, anywhere close: their printed codes give the scale and the camera's angle, so the cut does not need to be neat, and GroupLab finds the target's corners from its own edges where they show against the surface; **scale bars**, two strips with a code at each end 10.000 in apart (250 mm on A4), one laid along an edge for the scale, two in an L for the angle too, or two end to end for a poster; and **board stickers**, four codes stuck near the corners of your target board and measured once (Measure a board, with any GroupLab sheet on the board), after which every photo of a target on that board has its scale with nothing placed. **Scale labels**, for a label printer such as the Phomemo M220, are rows of codes across a label of the size loaded, stuck flat on the target where you will not shoot; they are read across only, because a label printer's paper feed is not exact. **Save the printer check label** gives one label to print at 100 percent and scan at 600 dpi, and **Measure a scanned check label** measures the printer across its head and along its feed and keeps the result with the label size, so every later label is laid out for that size. On Android, **Print two scale labels on the Phomemo M220** sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first. A **bank card**, driver's license or gift card laid back side up beside the target needs nothing printed: GroupLab blanks the card out of the photo at once, never keeps, shows in a saved picture, logs or sends that part of it, and never reads anything on a card. Markers count in Add a store-bought target (Markers in the photo, chosen by itself when they are found) and when you mark a target by hand. On computer-made photos a measured board was typically within 0.015 percent, a scale bar 0.06, corner brackets 0.07 on a 12 in target and 0.2 on a 23 by 35 in poster, and a card 0.15. Printed markers are corrected by your printer check, and without one can be off by up to 1.5 percent. Every piece has to lie flat on the same surface as the target. Brackets must touch the target's corners: a gap of 2 mm makes a 12 in target read about 2 percent large, though the scale is still right. A bar can touch the target or lie a little apart; the scale is the same either way. A board that swells evenly cannot be told from one that has not, so measure it again now and then and whenever it gets wet; a board whose stickers have moved, GroupLab notices and asks you to measure again.
+
+### Add a store-bought target
+
+On Targets, **Add a store-bought target** teaches GroupLab one it does not know, from a photograph of a blank one, in five steps, one question at a time: **Photo**, **Size and scale**, **Straighten**, **The bulls** and **Name and send**. On the computer the steps are listed on the left, done ones ticked in teal and the current one amber, the photo in the middle and the question on the right with **Back** and **Next**; on the phone each step fills the screen, with a five-part bar and Back at the top and one big button at the bottom. Choose or take a photo of the target flat and square on, all four corners in it. GroupLab shows it the way up it was taken, and **Rotate left** and **Rotate right** (R and Shift R on the computer) turn it a quarter turn for a target photographed sideways. It finds the corners from the paper's edges and color, so white paper on a light counter works; where it cannot, it says why and starts four amber handles at its best guess for you to drag. Scroll or pinch to zoom in; while you drag a corner, a magnifier above it shows the point under your finger, and a corner let go lands on the clear corner of the picture nearest it, with **Undo**. **How big is this target?** takes one true length three ways: **Its printed size**, the width and height on the package; **A GroupLab sheet in the photo**, laid on the target; or **Two points and a distance**, both ends of something you measured and its length. Under the one picked is what GroupLab measured for it on computer-made photos of two test posters, typically within 0.01 percent at 12 by 18 in and 0.28 percent at 23 by 35 in from the printed size, 0.16 and 0.40 percent from two points, and a Letter sheet too small to read at all on the larger poster; no way is called the best, because none was at every size. **Straighten** shows the corners to check; **The bulls** shows the target straightened with each bull it found as a numbered ring: tap or click a ring to remove it, or the picture to add one, and **These are right** moves on. Last, type the name on its package: where it matches a target already in GroupLab's library at another size, GroupLab says it joins that family; at the same size, that GroupLab already knows it. **Save reference file** on the computer, or **Save and share the file** on the phone, writes the file: the fingerprint, name, size and bulls, never the photo. Send it to GroupLab's maker; each file is checked by hand before it joins the library a later GroupLab recognizes.
+
+### Find holes (Experimental)
+
+Once the scale is set, and the bulls if you placed them, the button under the scale proposes the holes: a hole darker than the paper, a hole in a black bull where what shows through is lighter than the ink, and on a fluorescent target a dark center inside its bright ring. Each one is a mark like any other, to keep, drag onto its hole or delete, and one GroupLab is not sure of is in the review with the reason. It is experimental: it misses some holes, such as one on the edge of a black bull, and it can take printing for a hole, so look at every mark before you trust the figures. Undo takes all of them back at once, and pressing it again replaces only the marks you have not touched.
+
+### Large targets
+
+A sheet larger than Letter or A4 does not fit a flatbed scanner. For each one the Targets screen works out how many pixels an inch a phone photograph of the whole sheet gives and says whether that is enough. Tiled Letter or A4 pages are the better choice for a large target: each page scans by itself, and a plotter can print them all on one large page with cut lines between them.
+
+### Check the size before you shoot
+
+Measure from the center of bull 1 to the center of bull 5 with a ruler. On the Letter 5x5 sheet it is 5.98 in (152.0 mm). If it is not, the printer scaled the sheet, and it should be printed again.
+
+### Your own sheet
+
+Design your own sheet, at the top of Targets, lays out a grid of bulls:
 - you choose the page, the rows and columns, the spacing, the ring, the sighters and a load block;
 - the bull's size can also be given in inches, MOA or mil, the angles read at the distance you give, so a 0.25 mil bull is 0.90 in across at 100 yd; the E and C bulls take the size exactly, and the rings take the nearest ring set;
 - the bull's size can be given in inches, MOA or mil, the angles at the distance you give, so a 0.25 mil bull is 0.90 in across at 100 yd; the E and C bulls take the size exactly and the rings take the nearest ring set;
@@ -85,7 +119,9 @@ A3 sheet you printed before still reads. The roll sheets are for a plotter, and 
 
 Save to your own sheets keeps a design in the list. There you can rename it, duplicate it, or delete it after GroupLab asks. Duplicate works on a built-in sheet too, as the start of one of your own. Deleting a sheet never makes a session unreadable, because every session keeps its own copy of the sheet it was analyzed against.
 
-**A volunteer pack.** Print a volunteer pack, beside the chosen sheet, gives the sheet and one page of instructions together, for someone shooting a sheet for the project.
+### A volunteer pack
+
+Print a volunteer pack, beside the chosen sheet, gives the sheet and one page of instructions together, for someone shooting a sheet for the project.
 
 ## 2. Shoot it
 
@@ -101,7 +137,7 @@ A sheet with one scoring bull takes a group. Every shot on it goes to that bull,
 
 ## 3. Photograph or scan it
 
-**A flat scan at 600 dpi is the best record of a sheet.**
+### A flat scan at 600 dpi is the best record of a sheet
 
 GroupLab reads the resolution your scanner wrote into the file and uses it as a starting point, then measures the real resolution from the sheet's own printed markers and tells you both. Where the two disagree, the markers win, because they were printed at a known size and the file's number is only what the scanner meant to do.
 
@@ -111,14 +147,18 @@ For photographs:
 - keep the whole sheet and all its corner squares in the frame;
 - do not crop the pictures, and do not send them through a messaging app, which shrinks them.
 
-**Flat on a table, or straight on at the backer.** The phone's camera works either way. Lay the sheet flat and hold the phone over it,
+### Flat on a table, or straight on at the backer
+
+The phone's camera works either way. Lay the sheet flat and hold the phone over it,
 or leave the sheet on its backer at the range and hold the phone upright, straight on to it, in portrait or landscape. The word under the
 camera's level says which, **Looking down** or **Upright**, and the level turns green in either when the camera is square to the sheet.
 Once the sheet's corner squares are read, the sheet's own angle decides, so a backer leaning back, or a table that is not level, is still
 square when the phone is square to the sheet. Guided takes the picture by itself in either position under the same rules: square to the
 sheet within 37 degrees, steady, and the sheet read.
 
-**Real inches from a photograph.** A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your
+### Real inches from a photograph
+
+A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your
 printer printed at 97 percent makes every group read about 3 percent large. For real inches from a photograph, scan one sheet or measure one ruler distance, once per printer; GroupLab remembers it.
 The easiest way is the printer check, offered the first time GroupLab opens and the first time you print, and always in Settings under
 **Printers**. Name the printer, print the check page at actual size, and measure it one way: lay any bank, gift or ID card inside its
@@ -139,13 +179,17 @@ Open image, in the header's menu, opens a scan or a photograph. On a GroupLab sh
 3. It finds the holes by comparing the image with the sheet as printed.
 4. It gives each hole to a bull.
 
-**Several targets open at once.** On the computer, each target has its own tab across the top of the window: its name, **Analysis** or
+### Several targets open at once
+
+On the computer, each target has its own tab across the top of the window: its name, **Analysis** or
 **Marking**, with **not saved** while it has marks that are not saved, and a dot, amber when not saved. The **+** tab opens another target
 the way Open image does, and **Ctrl+Tab** goes to the next tab (**Ctrl+Shift+Tab** the one before). Each tab keeps its own target, zoom,
 marks and undo, so switching never loses or mixes anything. A tab's **×** closes it, and asks first when it has marks that are not saved. When there are more tabs than fit, a thin bar in a row of its own under them scrolls the row, and the tab you
 choose or open is always brought fully into view.
 
-**When a picture names no sheet.** A picture of a target GroupLab did not print is not a mistake: GroupLab asks **Which target is this?**
+### When a picture names no sheet
+
+A picture of a target GroupLab did not print is not a mistake: GroupLab asks **Which target is this?**
 in the middle of the window, with **Mark it by hand** first (one true length: the sheet's size, a ring, or a ruler in the picture),
 **It is a store-bought target**, and **It is a GroupLab sheet**. A picture that has a GroupLab sheet's corner squares or codes, but whose
 codes would not read, says so in the middle of the window instead: the picture with its corner codes outlined, what got done and what did
@@ -179,11 +223,17 @@ The pill in the header counts the marks that need you. The review queue in the s
 - **Refused candidate:** something the detector saw and did not take as a hole.
 - **Bulls with nothing on them:** when you have said how many rounds you fired and GroupLab finds fewer, it names the bulls that are empty. **A shortfall is never allowed to pass as a clean result.**
 
-**Change an answer.** An answered item stays in the queue, marked DONE. Click it and its card says what you answered, with **Ask again**, which opens the question once more, and its choices, which change the answer straight away. On the phone, answered marks fold up under one line, **Show the answered marks**, each with **Ask again**. Undo takes either back.
+### Change an answer
 
-**Name the caliber if you know it.** It sets the smallest hole GroupLab will accept, which matters most for small calibers, and it gives you the edge-to-edge figure. On one of the test scans it is the difference between nineteen holes found and twenty-four; on another it is the difference between missing the shot at the edge of the scan and finding it. A .22 hole in paper is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to go on.
+An answered item stays in the queue, marked DONE. Click it and its card says what you answered, with **Ask again**, which opens the question once more, and its choices, which change the answer straight away. On the phone, answered marks fold up under one line, **Show the answered marks**, each with **Ask again**. Undo takes either back.
 
-**Holes between bulls, and marks off the grid.** A hole that lands between two bulls, or beside the grid rather than on it, is kept, counted and offered to you. It is never dropped for being in the wrong place. Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: **a figure that rests on a guess is marked as resting on a guess.**
+### Name the caliber if you know it
+
+It sets the smallest hole GroupLab will accept, which matters most for small calibers, and it gives you the edge-to-edge figure. On one of the test scans it is the difference between nineteen holes found and twenty-four; on another it is the difference between missing the shot at the edge of the scan and finding it. A .22 hole in paper is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to go on.
+
+### Holes between bulls, and marks off the grid
+
+A hole that lands between two bulls, or beside the grid rather than on it, is kept, counted and offered to you. It is never dropped for being in the wrong place. Where GroupLab is not sure which bull a hole belongs to, it says so and the figures built on that assignment carry the doubt with them until you have settled it: **a figure that rests on a guess is marked as resting on a guess.**
 
 The queue works from the keyboard:
 - **Space** goes to the next item.
@@ -216,7 +266,9 @@ The analysis has three columns:
 - **In the center:** the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, over the bull's rings drawn as wide gray bands. Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid, CEP 95 dashed and CEP 99 in dashes and dots; the extreme spread is a red dashed line between the two shots furthest apart. Toggles beside the plot turn CEP 50, CEP 90, CEP 95, CEP 99 and the extreme spread on and off, and GroupLab remembers them; CEP 95 and CEP 99 start off. CEP 99 on also lists it with the figures, with its range, and where your shots are too few to reach that far out, fewer than one expected outside the circle, it says the circle is the model's guess rather than something the shots show. Under Advanced, **A circle for any percent** takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is remembered. **Group** and **Whole target** beside them frame the group alone or the entire bull with the group inside it, also remembered. The mouse wheel or a pinch zooms, dragging empty paper moves the view, and a double click returns to the fitted view. An excluded shot is drawn hollow and is never removed.
 - **On the right:** the zero correction, the figures and the two judgment cards.
 
-**Tap a number to switch units.** Tap an angle to switch that number between mil and MOA, a size on the paper to switch it between
+### Tap a number to switch units
+
+Tap an angle to switch that number between mil and MOA, a size on the paper to switch it between
 inches and centimeters, and a distance to switch it between yards and meters. Only the number you tap changes, and GroupLab remembers
 the unit for that figure, so mean radius in MOA stays in MOA the next time while extreme spread can stay in mil; figures you never tap
 follow the scope unit ([Mil or MOA](#mil-or-moa)). Right-click a number, or press and hold it on the phone, to choose any unit it can take, SMOA and millimeters
@@ -224,7 +276,9 @@ included. A figure's name still explains it when you tap it; only the number swi
 
 ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png)
 
-**Click a hole to edit it.** A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:
+### Click a hole to edit it
+
+A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:
 - **Sighter**, which sets it aside from the group, as a shot on a sighter bull already is;
 - **Flyer**, which calls it out on the sheet and in the list and **changes no figure**;
 - **Leave out of the figures**, which does change them and asks no reason (a reason stored earlier is shown, read only, and still printed in reports): every figure, the report and the saved session then leave the shot out, it stays on the sheet drawn hollow, and each figure's detail gives the figure again with every shot;
@@ -238,13 +292,19 @@ Flyer and "leave out" are deliberately two different things. Pointing at a shot 
 
 Every edit shows a small message at the bottom of the screen saying what changed, with **Undo** on it. Ctrl+Z and Ctrl+Y work everywhere, Command Z and Shift Command Z on a Mac, and the Undo on the message is the same undo.
 
-**Every word you may not know is underlined with dots,** a figure's name or a word like sigma, MOA or bull, here and on the website. Hold the pointer over it, or tab to it, for two or three plain sentences saying what it means; click it or press Enter for the whole entry, with **More in the glossary**. For a figure the sentences say what it is good for and what the number of shots does to it. Every explanation says something about sample size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group as a measurement of a rifle.
+### Words underlined with dots
 
-**Six figures stay in view:** center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. **With the shot distance set, each is an angle first,** in your scope's unit (the session's rifle's, or the one in Settings), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100. Mil and MOA are the two a scope is marked in; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 0.46 mil, 1.59 MOA or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel says an angle needs the distance, with a button to set it. A setting puts the size on the paper first, for a shooter who only shoots one distance. **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.
+Every word you may not know is underlined with dots, a figure's name or a word like sigma, MOA or bull, here and on the website. Hold the pointer over it, or tab to it, for two or three plain sentences saying what it means; click it or press Enter for the whole entry, with **More in the glossary**. For a figure the sentences say what it is good for and what the number of shots does to it. Every explanation says something about sample size, because every one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group as a measurement of a rifle.
+
+### Six figures stay in view
+
+Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. **With the shot distance set, each is an angle first,** in your scope's unit (the session's rifle's, or the one in Settings), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100. Mil and MOA are the two a scope is marked in; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 0.46 mil, 1.59 MOA or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel says an angle needs the distance, with a button to set it. A setting puts the size on the paper first, for a shooter who only shoots one distance. **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.
 
 **Advanced** holds everything else, closed until you open it: sigma, the strips across and up and down, the order the shots were fired in, the two cards below, the full CEP table, the sighters, and carrying the correction to another distance. GroupLab remembers whether you opened it.
 
-**Velocity and the vertical,** directly under the group's figures, says how much of the group's up-and-down spread comes from velocity
+### Velocity and the vertical
+
+Velocity and the vertical, directly under the group's figures, says how much of the group's up-and-down spread comes from velocity
 alone. It needs the session's chronograph readings (Ballistics, Chronograph), the shot distance and the load's BC; without one of them
 it says which, with a button to it. The share is in amber with its range, at the confidence it states, then a meter from none to all of
 it and two bars on one scale: the vertical spread measured on the shots, and the spread velocity alone would make at that distance by
@@ -276,7 +336,9 @@ another; the figures above pool them all. **Zero from this group,** under the ze
 with the scope named and how well the center is known at this many shots, and opens Shots Needed to Zero or carries the offset into
 Ballistics, whose dope then includes it at every range until you stop it.
 
-**The zero correction** gives the group center's offset across and up and down on the paper and in your scope's unit alone, mil or MOA, and the distance it is for. Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page switches the length unit between inches and centimeters, and changes nothing that is stored.
+### The zero correction
+
+The zero correction gives the group center's offset across and up and down on the paper and in your scope's unit alone, mil or MOA, and the distance it is for. Where your rifle records its scope's click value, the line beneath spells it out in clicks with the click value stated: "Dial 2 clicks left and 8 clicks up, at 0.1 mil a click". The clicks are never guessed: a scope that adjusts in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send you the wrong way. A metric and imperial toggle on the page switches the length unit between inches and centimeters, and changes nothing that is stored.
 
 It says what to dial when the group's center is far enough from the aim to be told from chance. An axis that is not is named and left
 alone, with why: "Dial 1 click left, at 0.1 mil a click. Elevation: leave it. 0.08 mil low is within what these 20 shots can tell apart
@@ -286,22 +348,31 @@ Settings, **Zero correction**, has **When an axis is inside the scatter**: **Say
 anyway**, which rounds both axes to whole clicks and marks the uncertain one ("The up click is within the scatter; more shots would tell
 whether it is needed"). An axis that rounds to no click says "no click" either way. The same setting is on the phone.
 
-**The two cards,** in Advanced:
+### The two cards
+
+The two cards, in Advanced:
 - **Shape** says whether the group is round, as far as its shots can tell. It also says whether it strings vertically, and what that test could have detected. A test on few shots misses most real stringing, so "no evidence" is not evidence of none.
 - **Worst shot** says whether the shot furthest out is further than groups of that size usually put their worst. Even when it is, that makes it worth a look, not a flyer. Whether it was called or pulled is yours to say.
 
-**What each "why" says, in plain words:**
+### What each "why" says, in plain words
+
 - **Zero correction:** first why an axis got no click (or got one anyway); then how well the center is known on each axis, as "0.225 in (0.06 mil)"; what rounding to whole clicks leaves; how it was worked out, on each axis separately when the group is taller than it is wide, or both together when it is round; and that moving a zero between distances needs the ballistics screen.
 - **CEP:** these circles come from the group's sigma, assuming the shots scatter evenly about the center.
 - **Shape:** how often a truly round group would look this far from round, and the shape of the group's error ellipse.
 - **Worst shot:** how far out the worst shot sits in the group's own mean radii, against where simulated round groups put theirs.
 - **Decisions left unmade:** every figure here inherits the decisions still open.
 
-**The full CEP table and the fitted ellipse** are in Advanced, one more click away, and GroupLab remembers whether you opened them. The table gives the CEP at 50, 90, 95 and 99 percent three ways. The fit gives the center and the spread on each axis with their intervals, and the error ellipse.
+### The full CEP table and the fitted ellipse
 
-**Fudd buster mode,** Unholy's idea and his name for it, sits beside it from twenty shots: a window that shows, with your own shots, the tightest and the widest three-shot groups among them, what averaging three-shot or five-shot groups would have said against every shot, and the zero chased five shots at a time, with how far each correction was from where the rifle shoots.
+The full CEP table and the fitted ellipse are in Advanced, one more click away, and GroupLab remembers whether you opened them. The table gives the CEP at 50, 90, 95 and 99 percent three ways. The fit gives the center and the spread on each axis with their intervals, and the error ellipse.
 
-**Shots Needed to Zero,** suggested by Jylee, sits under them. From the group's spread and your scope's click value (the rifle's own, or chosen there) it says how many shots a zeroing group needs before its center, dialed to the nearest click, lands on the click closest to the true zero, or within one click of it, 90, 95 and 99 times in 100. Within one click usually takes a handful of shots; the closest click can take hundreds, because a true zero near the line between two clicks is hard to resolve. The spread measured on a few shots may be larger than it looks, so GroupLab allows for that by simulation, and shows its trials and seed; tick **Treat the measured sigma as exact** to work it out exactly instead.
+### Fudd buster mode
+
+Fudd buster mode, Unholy's idea and his name for it, sits beside it from twenty shots: a window that shows, with your own shots, the tightest and the widest three-shot groups among them, what averaging three-shot or five-shot groups would have said against every shot, and the zero chased five shots at a time, with how far each correction was from where the rifle shoots.
+
+### Shots Needed to Zero
+
+Shots Needed to Zero, suggested by Jylee, sits under them. From the group's spread and your scope's click value (the rifle's own, or chosen there) it says how many shots a zeroing group needs before its center, dialed to the nearest click, lands on the click closest to the true zero, or within one click of it, 90, 95 and 99 times in 100. Within one click usually takes a handful of shots; the closest click can take hundreds, because a true zero near the line between two clicks is hard to resolve. The spread measured on a few shots may be larger than it looks, so GroupLab allows for that by simulation, and shows its trials and seed; tick **Treat the measured sigma as exact** to work it out exactly instead.
 
 **Export** writes the complete record as a GroupLab file, which names its photo by file name only, never the folders it sits in, so keep the two side by side: moved together they reopen anywhere, and where the photo is not beside it GroupLab says so and asks for it. Or it writes the shot coordinates as CSV for a spreadsheet: one row a shot, across and up from the point of aim in inches, MOA and mil, with the distance in the header, and each row naming its sheet, its session and the distance. **Import shots from a CSV,** in the menu, reads coordinates exported by other software: it starts from GroupLab's guesses at which column is across, which is up and down, the unit, which way is up, and whether the numbers are measured from the point of aim or from the group's own center, each to check and change, and a choice it cannot guess starts empty and says so; then it shows the analysis. Numbers measured from the group's center say nothing about where the aim was, so then there is no offset from aim. There is no image with an import, so the figures are the whole of it. **Choose several files at once** to put shots from many sheets together in one group, of any kind of sheet: they must have the same columns, as GroupLab's own exports do.
 
@@ -320,7 +391,9 @@ The analysis's **Report** button saves the session as a PDF, the full report or 
 
 Every line on it is one the screen shows.
 
-**One-page report** is one dated page, on Letter or on A4 as your region prints: the picture, a plot centered on the group and scaled to
+### One-page report
+
+One-page report is one dated page, on Letter or on A4 as your region prints: the picture, a plot centered on the group and scaled to
 fill it with its grid stated, the figures table, the load and equipment, and a sentence saying how sure the mean radius is at this many
 shots. The phone makes the same page.
 
@@ -330,9 +403,13 @@ Tick two or more sessions in Session records and press Compare the chosen. They 
 
 ![Two loads compared](figures/screens/current/compare-light-1400x900.png)
 
-**The loads are never ranked by their figures alone.** When the intervals overlap, the screen says the data do not separate the loads. The sentence under each chart and the verdict are one decision, so they never disagree. Every test also says what it could have detected, and the table at the foot gives the shots per load it takes to resolve a smaller difference. Sessions shot at different distances are compared as angles, and the screen says so.
+### The loads are never ranked by their figures alone
 
-**Each session is named by what tells it apart:** its load where you gave one, then its date where two would read the same, then its time, with the sheet's name beneath. Two sessions shot on one sheet on one day read "2026-09-29, 04:40" and "2026-09-29, 05:01", not the sheet's name twice.
+When the intervals overlap, the screen says the data do not separate the loads. The sentence under each chart and the verdict are one decision, so they never disagree. Every test also says what it could have detected, and the table at the foot gives the shots per load it takes to resolve a smaller difference. Sessions shot at different distances are compared as angles, and the screen says so.
+
+### Each session is named by what tells it apart
+
+Each session is named by what tells it apart: its load where you gave one, then its date where two would read the same, then its time, with the sheet's name beneath. Two sessions shot on one sheet on one day read "2026-09-29, 04:40" and "2026-09-29, 05:01", not the sheet's name twice.
 
 ## 8. The zero correction at another distance, and the dope table
 
@@ -344,7 +421,9 @@ The ballistics screen keeps what the solver needs on your rifle and load records
 
 All of it is optional. A record without what the solver needs says which field is missing.
 
-**Chronograph readings.** Under the trajectory, **Chronograph** takes a session's velocities: type or paste them and press **Read the
+### Chronograph readings
+
+Under the trajectory, **Chronograph** takes a session's velocities: type or paste them and press **Read the
 list**, or press **Import a file** for a Garmin Xero export from ShotView (a CSV, or an Excel file in which each sheet is a string:
 choose the string by its name), a CSV from a spreadsheet (the column of velocities found by its header, or chosen, in ft/s or m/s), a
 LabRadar report, or a BulletSeeker export. The Xero reader reads every one of Alan's exports since May 2024; the LabRadar and
@@ -368,7 +447,9 @@ and Velocity and the vertical uses them. On the phone the same is under Velocity
 
 ![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png)
 
-**How the screen is laid out.** Three columns, like the analysis:
+### How the screen is laid out
+
+Three columns, like the analysis:
 - **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table**, which becomes
   **Work out the chance** in the hit probability view.
 - **On the left:** the settings in sections that fold, **The rifle**, **The load**, **The air** and **The table**. A folded section
@@ -382,14 +463,20 @@ and Velocity and the vertical uses them. On the phone the same is under Velocity
 
 On a narrow window the side columns shrink, and below that the right column moves under the middle.
 
-**The dope table** gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter. Aerodynamic jump is not modeled, and the table says so.
+### The dope table
 
-**At another distance.** On the analysis, the zero correction can be carried to a second distance, with its uncertainty carried with it. An offset that could not be told from zero is not carried.
+The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter. Aerodynamic jump is not modeled, and the table says so.
+
+### At another distance
+
+On the analysis, the zero correction can be carried to a second distance, with its uncertainty carried with it. An offset that could not be told from zero is not carried.
 
 The ballistics screen also carries the analyzed group to another distance, as a prediction and never a measurement. With neither a velocity
 spread nor a crosswind uncertainty given, it is the group scaled by angle and nothing more.
 
-**Hit probability.** The middle's second view works out the chance of a hit on a circle, a rectangle or an IPSC outline at a distance. In
+### Hit probability
+
+The middle's second view works out the chance of a hit on a circle, a rectangle or an IPSC outline at a distance. In
 it the rifle, the load and the air fold to their one-line summaries, and the left holds **The target**, **What you are unsure of** and
 **The shot and the simulation**. The target's distance and the range on the right are the same, so the hold shown and the chance are
 for the same shot:
@@ -420,7 +507,9 @@ When you do, GroupLab downloads the installer, checks it against the SHA-256 the
 
 If an update ever fails, the build you had is still installed and still works. Nothing is removed until the new one is in place.
 
-**GroupLab on Android updates itself when installed from an APK**, GroupLab Dev or the plain APK. A plain APK from before nightly 177 has no updater, so install one newer plain APK by hand once; it keeps itself current after that. The build looks for a newer nightly when it starts and about
+### Android updates itself from an APK
+
+GroupLab on Android updates itself when installed from an APK, GroupLab Dev or the plain APK. A plain APK from before nightly 177 has no updater, so install one newer plain APK by hand once; it keeps itself current after that. The build looks for a newer nightly when it starts and about
 every six hours, downloads it on Wi-Fi in the background, and checks both its SHA-256 and that it is signed with the same key as the copy
 you have before installing it. The first time, it asks for Android's "Install unknown apps" permission and opens that page for you, and
 Android asks you to confirm the first update; Google Play Protect asks to scan the new copy first, on the first install and on updates, as
@@ -431,14 +520,18 @@ updates it.
 
 ## 10. Comparing several sheets at once
 
-**The sheets of a set pool into one group.** When Made for your optic needs several sheets for your shots, each sheet's codes say which of the
+### The sheets of a set pool into one group
+
+When Made for your optic needs several sheets for your shots, each sheet's codes say which of the
 set it is. Print the set, shoot it, open each scan or photograph and choose **Accept and analyze** on each, in any order; then in **Session
 records** tick them and choose **Pool the chosen**. GroupLab says which sheets of the set are still missing and how many shots it has of the
 bulls the set holds, and opens the pooled set on the analysis screen in a tab of its own: every shot on one plot, measured from its own
 bull, every figure a sheet has, and the Shots list naming each shot by sheet and bull (2.5 is bull 5 on sheet 2). Each sheet's shots are
 in their own shade; tap a sheet in the plot's key to show its shots alone. A sheet read twice counts once.
 
-**Quicker: drop them together.** Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads
+### Quicker: drop them together
+
+Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads
 each one's codes first. When they are sheets of one set they open in **one tab**, named for the set ("GroupLab 3x3 2 MOA, Set of 3 Letter
 Sheets, 3 sheets"); the sheets are read one after another while the status line says "Reading sheet 2 of 3", each is saved as its own
 session record, and the tab shows the pooled set, with no question asked. **Check one sheet** on its analysis screen opens one sheet alone
@@ -456,17 +549,23 @@ Meanwhile **Compare loads** puts the sessions of two or more loads side by side,
 
 ## 11. If something goes wrong
 
-**Report a problem** is in the settings, under Diagnostics. It opens a window that lists what the report holds before anything is written: GroupLab's log of this run and the one before, the version of GroupLab, the operating system and the display, and, if you write them, a description of up to 500 characters and a way to reach you. It holds no photographs and no location. **Save only** writes the report as a zip where you choose, and **Show me the file** opens the folder it went to. Nothing is sent unless you press **Send**, which appears only when the project's report address is open; otherwise the window tells you to send the zip by opening an issue on GitHub or by email, with the build line from the settings page.
+### Report a problem
+
+Report a problem is in the settings, under Diagnostics. It opens a window that lists what the report holds before anything is written: GroupLab's log of this run and the one before, the version of GroupLab, the operating system and the display, and, if you write them, a description of up to 500 characters and a way to reach you. It holds no photographs and no location. **Save only** writes the report as a zip where you choose, and **Show me the file** opens the folder it went to. Nothing is sent unless you press **Send**, which appears only when the project's report address is open; otherwise the window tells you to send the zip by opening an issue on GitHub or by email, with the build line from the settings page.
 
 GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never. A report holds the version, the system, the error and the names of the last things done, never anything you typed, and never a photograph, file name or location. On the computer a report can also carry GroupLab's log from this run and the last, with anything you typed replaced by its length, and that is asked about first; on the phones it stays off for now. Crash records are written to your own machine whether or not you ever send them. They name the version, the build train and the line it happened on, and they never contain a photograph, a location or anything read out of one.
 
-**Send to GroupLab and Send diagnostics, on the phone.** Settings, About, **Send to GroupLab** sends the two newest logs and any crash
+### Send to GroupLab and Send diagnostics, on the phone
+
+Settings, About, **Send to GroupLab** sends the two newest logs and any crash
 record straight to GroupLab's maker by the same route as an error report, with a note if you write one, and says the reference it was
 given; nothing about where you are, no picture, no file names, and no name you typed goes with it. **Send diagnostics** puts GroupLab's newest logs, any crash records and the pictures
 kept of a sitting into one file and opens the share sheet, so you choose where it goes: AirDrop, Files, OneDrive, email or a message.
 GroupLab sends nothing itself. The logs hold no location and no file names, and a kept picture has had its metadata taken out.
 
-**Sending in targets.** The page at `grouplab.org/targets/` takes scans and photographs of targets that help GroupLab get better at reading them. You choose how they may be used: testing only, kept by the project and never published, or may be published in GroupLab's public test data and research. GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
+### Sending in targets
+
+The page at `grouplab.org/targets/` takes scans and photographs of targets that help GroupLab get better at reading them. You choose how they may be used: testing only, kept by the project and never published, or may be published in GroupLab's public test data and research. GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.
 
 ## 12. Settings
 
@@ -492,14 +591,18 @@ plain APK and the Google Play internal test (if you are invited) are signed with
 Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates: it is Google's
 own check, takes a few seconds, and is expected. It uses the same engine as the computer, so the same picture gives the same numbers.
 
-**The bar along the bottom** goes to the five places, **Capture**, **Sessions**, **Ballistics**, **Targets** and **Settings**, each an
+### The bar along the bottom
+
+The bar along the bottom goes to the five places, **Capture**, **Sessions**, **Ballistics**, **Targets** and **Settings**, each an
 icon over its name, the place you are in with its icon in an amber pill. GroupLab's text follows the phone's own text size setting, on
 Android and on the iPhone (Larger Text), and changes while it is open when you change the setting. On the iPhone the largest
 accessibility sizes stop at the size Android's largest reaches, so the screens still fit. When the text is so large that a name would not fit its share of the
 bar, the bar shows the five icons alone, larger, and goes back to the names when the text is smaller again; your phone's screen reader
 still reads each one out by name, and a long press shows it. A wider screen, such as a folding phone opened, keeps the names for longer.
 
-**Capture** is the first screen: the GroupLab mark, as wide as the screen allows without the page scrolling, one row with the caliber
+### Capture
+
+Capture is the first screen: the GroupLab mark, as wide as the screen allows without the page scrolling, one row with the caliber
 and distance (**Change** types new ones; the distance is remembered from the last target, the caliber never is), **Take a picture**, **Choose a photo** and **Print a target** side by side, with **From another app** and **Paste a
 picture** beneath, a **Getting started on your phone** card that opens this section, and grouplab.org and the version at the foot. For
 every new target **Take a picture** or **Choose a photo** asks for the caliber in a sheet over the page, with the calibers you used
@@ -522,7 +625,9 @@ canceled, and **Store-bought or hand-drawn** for a target GroupLab did not print
 which it remembers for that picture. A picture with no GroupLab marks at all asks **Which target is this?** instead, calmly, with **Mark it
 by hand** first.
 
-**Show diagnostics on the camera.** Settings, About, **Show diagnostics on the camera** is off until you turn it on, on Android, iPhone
+### Show diagnostics on the camera
+
+Settings, About, **Show diagnostics on the camera** is off until you turn it on, on Android, iPhone
 and iPad alike. With it on, a small block of numbers sits in the bottom corner of the camera: how many frames a second the camera is
 judging and how long each takes, the instruction and the check holding it back (the angle, the focus or the light, with its value), the
 tilt, and the torch's level. While a picture is read the same corner names the step being read, how long that step and the whole reading
@@ -530,7 +635,9 @@ have taken, and on both screens the memory GroupLab is using and how warm the ph
 taken or read; it is there so that a screenshot shows somebody helping you exactly where GroupLab was. The log records the same memory
 and warmth with each step of a reading and each change of instruction.
 
-**A photograph from any photo app.** **Choose a photo** opens Android's photo picker, which shows the photographs in your photo apps,
+### A photograph from any photo app
+
+**Choose a photo** opens Android's photo picker, which shows the photographs in your photo apps,
 those kept only in the cloud included where Google Photos keeps them, and asks for no permission to your storage; a phone without one
 offers the apps instead. **From another app** lists every app that offers pictures by name: Google Photos, Samsung Gallery, your phone
 maker's own gallery, Drive, OneDrive, Dropbox and Files. A picture shared into GroupLab from any app, or opened or edited with it, is read
@@ -539,7 +646,9 @@ another; when they are all sheets of one set, the set's checklist opens with the
 downloaded first, with a line saying which app it is coming from and a **Cancel**; the phone has to be online for that. GroupLab always
 reads the whole photograph, and when an app hands over a smaller copy it says so before reading it and suggests another way.
 
-**On iPhone and iPad** (in a public beta through TestFlight): **Choose a photo** opens Photos, iCloud Photos included, with no
+### On iPhone and iPad
+
+On iPhone and iPad (in a public beta through TestFlight): **Choose a photo** opens Photos, iCloud Photos included, with no
 question about access, and **From another app** opens Files, which reaches iCloud Drive, Google Drive, OneDrive and Dropbox. iOS lets no
 app open another app's library, so a Google Photos picture is **shared** into GroupLab: in Google Photos, Share, then GroupLab. The same
 works from Photos and any other app, and **Open in GroupLab** from Files; the picture opens straight into analysis. A picture opened
@@ -549,7 +658,9 @@ sitting is in `sitting` with what the camera read before it and how it was analy
 it off deletes what was kept. On the camera the panel with the instruction sits above the preview rather than
 over it, so the preview shows the whole of what the picture will hold.
 
-**Updates on phones that stop apps in the background.** GroupLab Dev looks for an update every time it opens, as well as about every six
+### Updates on phones that stop apps in the background
+
+GroupLab Dev looks for an update every time it opens, as well as about every six
 hours, so an update is late at worst and never missed. Many phones stop that six-hourly check to save battery unless you allow it (the
 names differ a little between versions):
 
@@ -561,10 +672,14 @@ names differ a little between versions):
 - **Samsung:** Settings, Apps, GroupLab Dev, Battery, Unrestricted.
 - **Motorola:** Settings, Apps, GroupLab Dev, App battery usage, Unrestricted.
 
-**The picture check.** Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the
+### The picture check
+
+Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the
 picture itself: mostly what GroupLab corrected, sometimes what would help next time. Use it, or take it again.
 
-**The result.** The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell, and tap a
+### The result
+
+The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell, and tap a
 number to switch its units. The picture of the sheet stands upright across the screen, with a ring on every hole and a line from each hole to its bull; **Lines to bulls** turns them off. Unsure lines are dashed in orange with a **?**. In Fix holes, **Next unsure hole** goes to the next one, tapping a bull chooses it, and tapping holes gives them to it or takes them away; **Done with bull C3** ends it. **Bull by bull** in the
 figures does the same from a list, which is the way to check which bull each shot was given to. **Fix holes** opens it under a crosshair fixed in the middle: pinch to zoom and drag the picture until the crosshair is on a hole,
 then **Add a hole here**, or **Remove this hole**, with **Undo** for each. After adding or moving a hole, GroupLab asks which bull it
@@ -578,7 +693,9 @@ the changes back to the result, which measures again; leaving any other way asks
 the session, and sharing the shots as a CSV file. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
 and a card of GroupLab's guesses at what each column is, each line tapped to change, then **Import** and the result. Several files with the same columns can be chosen at once and are read as one group.
 
-**Several targets open at once.** Every target you read on Capture or open from Sessions stays open until you close it, each as you left
+### Several targets open at once
+
+Every target you read on Capture or open from Sessions stays open until you close it, each as you left
 it, marks not yet saved included. The target's name at the top of its result, or above the step while you mark it by hand, opens **Open
 targets**: a row for each, with a small picture of it, whether it is at **Analysis** or **Marking, not saved**, and a close button. Tap a
 row to switch to it; **Open another target** goes to the start of Capture with the others kept. A result is saved in Sessions as you go,
@@ -586,7 +703,9 @@ so closing it loses nothing; marking by hand is saved only when it is finished, 
 Opening a session that is already open switches to it. Up to eight are kept open; past that the oldest that would lose nothing is closed,
 and it stays in Sessions.
 
-**Sessions, Ballistics and Targets.** Sessions keeps every result, each named by its load, date and time; tick two or more to compare
+### Sessions, Ballistics and Targets
+
+Sessions keeps every result, each named by its load, date and time; tick two or more to compare
 loads, one figure at a time: each load's name on a line of its own, and its range and value beneath. Extreme spread has no range there,
 so it says so and points you to mean radius. In **All figures**, a value too long to sit beside its name goes on the line under it. Ballistics is a
 tab of its own: the dope, the trajectory and the chance of a hit. Targets prints a sheet through Android's print dialog or shares its
@@ -595,7 +714,9 @@ the Phomemo app, with **Paper in the M834** for a roll (fed 15.5 mm further so t
 curls, so flatten a sheet (rolled the other way, or under a heavy book) before scanning it; at the range a clip or tape is enough; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
 the Fold 7 opened, the result shows the sheet beside the numbers.
 
-**A target GroupLab did not print** is marked by hand: choose **Mark it by hand** when GroupLab asks which target it is. The
+### A target GroupLab did not print
+
+A target GroupLab did not print is marked by hand: choose **Mark it by hand** when GroupLab asks which target it is. The
 picture moves under a crosshair that stays in the middle: set the two ends of a length you know and type it, set the aim point, then
 **Add hole here** on each hole, with **Undo**. A mark under the crosshair can be removed; once the scale is known the crosshair's ring is
 your bullet's size. In GroupLab Dev, the development build, **Find holes (Experimental)** at the holes proposes them, as on the computer:

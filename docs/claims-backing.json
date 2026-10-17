@@ -6912,6 +6912,146 @@
   "0.08 mil low is within what these 20 shots can tell apart (about 0.11 mil either way).\" When neither axis is, it says so for each and how many shots would settle it, and Shots Needed to Zero works the number out.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/ZeroWords.cs For, used by MainWindow's zero panel and AnalysisPanel on the phone; held by ZeroWordsTests and ZeroSectionTests.InsideTheScatterTheLineSaysLeaveItOrWithTheSettingGivesTheClick (entry 424)"
+  },
+  "User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Glossary Download as PDF On this page Mil or MOA Each rifle keeps its own Everything aiming follows it Getting GroupLab 1.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
+  },
+  "Sessions and the report One-page report 7.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "Each rifle keeps its own A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)"
+  },
+  "Three sheets come with the E bull as well Three sheets come with the E bull as well: the 5x5 load development sheets for Letter, Letter with the load block, and A4, each with every bull a black disc with a 0.36 in white center and a small dot.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs Additions and EDiscs; targets/GL-CF25-*-E.gltd.json (entry 243 section 1.1)"
+  },
+  "And three with the C bull And three with the C bull: the same three sheets with every bull a black diamond standing on a point, 1.25 in point to point, with a white diamond center and a small dot.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs CBullSheets and CDiscs, targets/GL-CF25-*-C.gltd.json; src/GroupLab.App/PrintPanel.cs BullChoices and genShape; src/GroupLab.Cli/Library/TargetGenerator.cs Diamond; held by DiamondBullTests and TargetGeneratorTests (entry 243 section 4)"
+  },
+  "The large format sheets print on Letter or A4 Each is a set of four sheets with eight 1.5 in or 1.4 in bulls apiece, the same bulls and spacing the tabloid and A3 sheets had; each sheet has its own markers and codes, so scan or photograph them one at a time.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs RedrawnLarge and Tiles, targets/GL-LR25-T*.gltd.json and GL-LR30-T.gltd.json, the originals in targets/frozen/large-format-1; src/GroupLab.Core/Capture/PhotographLimit.cs for the 50 MP photograph (entry 243 section 1.4)"
+  },
+  "Label targets are for a thermal label printer Each 4x6, A6 or 100 by 150 mm label holds six bulls the size of the Letter sheets', in a set of five labels that pool into one group like the 300 yard tiles; a printer check label measures a label printer on its own paper, across and along the feed.": {
+   "kind": "code",
+   "where": "entry 358 sections 1 to 3 and 8: targets/GL-X6-*.gltd.json and src/GroupLab.Cli/Library/LibraryBuilder.cs (six bulls of the 25 bull Letter sheets' size, five labels a set, the printer check label GL-SCALE-4X6-1), src/GroupLab.Core/Printing/Thermal/ThermalRaster.cs (one dot at a time, black only, whole-dot codes and markers, the cut-off named), src/GroupLab.Core/Printing/Labels/printers.json (every profile tested: false; IOutsideWorld.FindPrintersAsync finds no printer on any platform yet)"
+  },
+  "Made for your optic Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)"
+  },
+  "Check the size before you shoot Measure from the center of bull 1 to the center of bull 5 with a ruler.": {
+   "kind": "code",
+   "where": "the print screen's check line and targets/GL-CF25-LTR.gltd.json"
+  },
+  "Real inches from a photograph A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your printer printed at 97 percent makes every group read about 3 percent large.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs PrinterProfile, RulerSpan; AutomaticMarking.Run printer; MainWindow.Printer.cs; android PrinterCard.cs (entry 271)"
+  },
+  "Six figures stay in view Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.": {
+   "kind": "code",
+   "where": "MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)"
+  },
+  "The dope table The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs"
+  },
+  "Quicker: drop them together Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads each one's codes first.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)"
+  },
+  "The picture check Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next time.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)"
+  },
+  "### Each rifle keeps its own A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)"
+  },
+  "### Three sheets come with the E bull as well Three sheets come with the E bull as well: the 5x5 load development sheets for Letter, Letter with the load block, and A4, each with every bull a black disc with a 0.36 in white center and a small dot.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs Additions and EDiscs; targets/GL-CF25-*-E.gltd.json (entry 243 section 1.1)"
+  },
+  "### And three with the C bull And three with the C bull: the same three sheets with every bull a black diamond standing on a point, 1.25 in point to point, with a white diamond center and a small dot.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs CBullSheets and CDiscs, targets/GL-CF25-*-C.gltd.json; src/GroupLab.App/PrintPanel.cs BullChoices and genShape; src/GroupLab.Cli/Library/TargetGenerator.cs Diamond; held by DiamondBullTests and TargetGeneratorTests (entry 243 section 4)"
+  },
+  "### The large format sheets print on Letter or A4 Each is a set of four sheets with eight 1.5 in or 1.4 in bulls apiece, the same bulls and spacing the tabloid and A3 sheets had; each sheet has its own markers and codes, so scan or photograph them one at a time.": {
+   "kind": "code",
+   "where": "src/GroupLab.Cli/Library/LibraryBuilder.cs RedrawnLarge and Tiles, targets/GL-LR25-T*.gltd.json and GL-LR30-T.gltd.json, the originals in targets/frozen/large-format-1; src/GroupLab.Core/Capture/PhotographLimit.cs for the 50 MP photograph (entry 243 section 1.4)"
+  },
+  "### Label targets are for a thermal label printer Each 4x6, A6 or 100 by 150 mm label holds six bulls the size of the Letter sheets', in a set of five labels that pool into one group like the 300 yard tiles; a printer check label measures a label printer on its own paper, across and along the feed.": {
+   "kind": "code",
+   "where": "entry 358 sections 1 to 3 and 8: targets/GL-X6-*.gltd.json and src/GroupLab.Cli/Library/LibraryBuilder.cs (six bulls of the 25 bull Letter sheets' size, five labels a set, the printer check label GL-SCALE-4X6-1), src/GroupLab.Core/Printing/Thermal/ThermalRaster.cs (one dot at a time, black only, whole-dot codes and markers, the cut-off named), src/GroupLab.Core/Printing/Labels/printers.json (every profile tested: false; IOutsideWorld.FindPrintersAsync finds no printer on any platform yet)"
+  },
+  "### Made for your optic Under Design your own sheet, give the distance, the lowest magnification you will shoot at (1 for a red dot, with the dot's size in MOA) and the number of shots, and press Make the sheet.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Gltd/Derivation/GridStyle2.cs, src/GroupLab.Cli/Library/TargetGenerator.cs (ArcminutesSeen 3.5), src/GroupLab.Core/Capture/PhotographLimit.cs and CutSheet (entry 226)"
+  },
+  "### Check the size before you shoot Measure from the center of bull 1 to the center of bull 5 with a ruler.": {
+   "kind": "code",
+   "where": "the print screen's check line and targets/GL-CF25-LTR.gltd.json"
+  },
+  "### Real inches from a photograph A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your printer printed at 97 percent makes every group read about 3 percent large.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs PrinterProfile, RulerSpan; AutomaticMarking.Run printer; MainWindow.Printer.cs; android PrinterCard.cs (entry 271)"
+  },
+  "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) ### Click a hole to edit it A small editor opens beside it, not a dialog over the page.": {
+   "kind": "code",
+   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
+  },
+  "### Six figures stay in view Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90.": {
+   "kind": "code",
+   "where": "MainWindow.Refresh's kept figures, src/GroupLab.App/MainWindow.cs (entry 169)"
+  },
+  "![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png) ### How the screen is laid out Three columns, like the analysis: - **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table**, which becomes **Work out the chance** in the hit probability view.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.BallisticsLayout.cs BallisticBar, BallisticSection, AtOneRange, ArrangeBallistics; tests/GroupLab.App.Tests/Entry247Tests.cs; entry 247"
+  },
+  "### The dope table The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs"
+  },
+  "### Quicker: drop them together Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads each one's codes first.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)"
+  },
+  "### The picture check Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes on the picture itself: mostly what GroupLab corrected, sometimes what would help next time.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)"
+  },
+  "Mark it and settle the review queue Several targets open at once When a picture names no sheet Change an answer Name the caliber if you know it Holes between bulls, and marks off the grid 5.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "Comparing loads The loads are never ranked by their figures alone Each session is named by what tells it apart 8.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "The zero correction at another distance, and the dope table Chronograph readings How the screen is laid out The dope table At another distance Hit probability 9.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "Keeping GroupLab up to date Android updates itself from an APK 10.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "Comparing several sheets at once The sheets of a set pool into one group Quicker: drop them together 11.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "If something goes wrong Report a problem Send to GroupLab and Send diagnostics, on the phone Sending in targets 12.": {
+   "kind": "code",
+   "where": "website/build.py: the guide's contents, generated from its headings"
+  },
+  "![Two loads compared](figures/screens/current/compare-light-1400x900.png) ### The loads are never ranked by their figures alone When the intervals overlap, the screen says the data do not separate the loads.": {
+   "kind": "code",
+   "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
   }
  },
  "rules": [

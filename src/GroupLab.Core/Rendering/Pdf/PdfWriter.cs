@@ -11,6 +11,9 @@ namespace GroupLab.Core.Rendering.Pdf;
 /// circles filled with the even-odd rule, which is the disc-stack construction of section 3.4 and leaves a graphics
 /// stack nothing to interpret. Output is deterministic, with no timestamps and uncompressed content (conformance test 38).
 /// </summary>
+/// <summary>A heading's place for the PDF's bookmarks: its words, its level, the page (from 0) and how far down it starts, in half-dmm.</summary>
+public sealed record PdfBookmark(string Title, int Level, int Page, long Y);
+
 public static class PdfWriter
 {
     /// <summary>Points per half-dmm: 72 points per inch over 508 half-dmm per inch.</summary>
@@ -22,9 +25,16 @@ public static class PdfWriter
     /// </summary>
     private const double Kappa = 0.5519150244935105707;
 
-    public static byte[] Write(IReadOnlyList<Scene> pages, double scale = 1.0)
+    public static byte[] Write(IReadOnlyList<Scene> pages, double scale = 1.0) => Write(pages, [], scale);
+
+    /// <summary>
+    /// The pages with a bookmark for each heading, NOTES-FROM-PLANNING.md entry 436 section 4.2: a level 3 heading sits under the level 2
+    /// before it, and each section starts folded. With no bookmarks the file is byte for byte what it was before.
+    /// </summary>
+    public static byte[] Write(IReadOnlyList<Scene> pages, IReadOnlyList<PdfBookmark> bookmarks, double scale = 1.0)
     {
         ArgumentNullException.ThrowIfNull(pages);
+        ArgumentNullException.ThrowIfNull(bookmarks);
         if (pages.Count == 0)
         {
             throw new ArgumentException("A PDF needs at least one page.", nameof(pages));
@@ -73,6 +83,11 @@ public static class PdfWriter
             {
                 throw new InvalidOperationException("the bold font is not where the pages point");
             }
+        }
+
+        if (bookmarks.Count > 0)
+        {
+            Outline(objects, pages, bookmarks);
         }
 
         var pdf = new StringBuilder("%PDF-1.7\n%âãÏÓ\n");
@@ -212,8 +227,70 @@ public static class PdfWriter
             TextAnchor.Centre => text.X - (width / 2.0),
             _ => text.X,
         };
+        // The page transform flips y, so the text matrix flips it back to keep glyphs upright.
+        s.Append(CultureInfo.InvariantCulture, $"BT /{(text.Bold ? "F2" : "F1")} {text.FontSize} Tf 1 0 0 -1 {Number(x)} {text.Baseline} Tm ({Escape(text.Text)}) Tj ET\n");
+    }
+
+    /// <summary>The outline objects after everything else, and the catalogue pointing at them and opening the bookmarks panel.</summary>
+    private static void Outline(List<string> objects, IReadOnlyList<Scene> pages, IReadOnlyList<PdfBookmark> bookmarks)
+    {
+        int root = objects.Count + 1;
+        int Obj(int index) => root + 1 + index;
+        int top = bookmarks.Min(b => b.Level);
+        var parent = new int[bookmarks.Count];
+        var children = new List<int>[bookmarks.Count + 1];
+        for (int i = 0; i <= bookmarks.Count; i++)
+        {
+            children[i] = [];
+        }
+
+        int last = -1;
+        for (int i = 0; i < bookmarks.Count; i++)
+        {
+            parent[i] = bookmarks[i].Level > top && last >= 0 ? last : -1;
+            children[parent[i] < 0 ? bookmarks.Count : parent[i]].Add(i);
+            if (parent[i] < 0)
+            {
+                last = i;
+            }
+        }
+
+        var roots = children[bookmarks.Count];
+        objects.Add($"<< /Type /Outlines /First {Obj(roots[0])} 0 R /Last {Obj(roots[^1])} 0 R /Count {roots.Count} >>");
+        for (int i = 0; i < bookmarks.Count; i++)
+        {
+            var b = bookmarks[i];
+            var siblings = children[parent[i] < 0 ? bookmarks.Count : parent[i]];
+            int at = siblings.IndexOf(i);
+            var item = new StringBuilder();
+            item.Append(CultureInfo.InvariantCulture, $"<< /Title ({Escape(b.Title)}) /Parent {(parent[i] < 0 ? root : Obj(parent[i]))} 0 R");
+            if (at > 0)
+            {
+                item.Append(CultureInfo.InvariantCulture, $" /Prev {Obj(siblings[at - 1])} 0 R");
+            }
+
+            if (at < siblings.Count - 1)
+            {
+                item.Append(CultureInfo.InvariantCulture, $" /Next {Obj(siblings[at + 1])} 0 R");
+            }
+
+            if (children[i].Count > 0)
+            {
+                item.Append(CultureInfo.InvariantCulture, $" /First {Obj(children[i][0])} 0 R /Last {Obj(children[i][^1])} 0 R /Count -{children[i].Count}");
+            }
+
+            var page = pages[b.Page];
+            item.Append(CultureInfo.InvariantCulture, $" /Dest [{4 + (2 * b.Page)} 0 R /XYZ 0 {Number((page.Height - b.Y) * PointsPerUnit)} null] >>");
+            objects.Add(item.ToString());
+        }
+
+        objects[0] = objects[0].Replace("/Pages 2 0 R", $"/Pages 2 0 R /Outlines {root} 0 R /PageMode /UseOutlines", StringComparison.Ordinal);
+    }
+
+    private static string Escape(string text)
+    {
         var escaped = new StringBuilder();
-        foreach (char c in text.Text)
+        foreach (char c in text)
         {
             char mapped = HelveticaMetrics.ToWinAnsi(c);
             if (mapped is '(' or ')' or '\\')
@@ -224,8 +301,7 @@ public static class PdfWriter
             escaped.Append(mapped);
         }
 
-        // The page transform flips y, so the text matrix flips it back to keep glyphs upright.
-        s.Append(CultureInfo.InvariantCulture, $"BT /{(text.Bold ? "F2" : "F1")} {text.FontSize} Tf 1 0 0 -1 {Number(x)} {text.Baseline} Tm ({escaped}) Tj ET\n");
+        return escaped.ToString();
     }
 
     private static string Channel(byte value) => Number(value / 255.0);
