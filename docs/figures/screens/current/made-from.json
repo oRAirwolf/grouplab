@@ -1,9 +1,9 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 194,
+  "afterNightly": 196,
   "screens": {
-    "analysis": "843f95b149ba3112bcc0f83d2f2b2451cdd1ce4d70d67a6cafbda7e7207e00f2",
-    "analysis-open": "a917d1ea206e879d6817e509b55809ed4b18c7140566b7b02425d3f8012a3f48",
+    "analysis": "aaf72f0391a90ed2de53fb7704e556d8b3f673b935dcc7a09e99aab88656ff8b",
+    "analysis-open": "4fc3dc29e8a4ad0994dfcffa43f35c1ac7294c5a4194176d00ef85b83712986c",
     "ballistics": "601681e3198641ba0c72d42c03798e75faa5fa79e67f476ca91e107014c633d7",
     "ballistics-hit": "92617adb83ce9ccee03f31baf6ecbde9e7941f8b3ca4c8d5c0eee9cf59c558eb",
     "bull-lines": "94a62447375cf850f5a934ac18fe40de681909c9f14aab66d61d6fdbffc38162",
@@ -23,7 +23,7 @@
     "readings-here": "61825ff7c3c61aa048efa1a7872ebe4a4af65748588ab3f8eee1b8438f817bde",
     "scale-markers": "b97b911a249549637827b5e6e2adef46076e6eafdff9a2b823c0fba468a5315b",
     "scope-unit": "1ed2ca5de98e1c5dcd3f70918f69f462ff4b954d3508fb10561947ed2bda3d31",
-    "sessions": "bbad8beaa7069d51d5a97553e682f66f8549d8656782fed0520ac9df75a17cdc",
+    "sessions": "3edbc44cf3a2288ce7d9fc6899fab1dd74fd5ca1dfeb0fdf83678dab83228862",
     "set-tab": "ac77f4385307f73b4b8e22a365c4b15dee7b57bffdb7a9f13890cf844eaf5862",
     "settings": "e8b895227ae25d4e0638e0f846e6cf1e9fe6647c1b09654fde47c706c7bc38e3",
     "sheet-c-bull": "f2af0c23504fd9e3acb59dceff899eaa4aee646a912f996b05051ed5b4a1635e",
@@ -46,10 +46,10 @@
     "sheet-zero-moa-100m": "3ad52e756aa2e98de55dcbd7564625147cb3d19e7482634abcddeb827db0a234",
     "sheet-zero-moa-100y": "c866cd2245f2aa1522df1185ba0932abe4d8067f2fe0c650fcea890fe00c65b0",
     "shots-open": "e09b7259d3adb4e88b18f689816d3abe8fecb29ebc362063f29c66a9259a99d7",
-    "shots-to-zero": "326810a932a8dc34c9a86c447912abe891f0bc0b894a932543f223b42fca5e3a",
+    "shots-to-zero": "bea0510775899405d7afe09af7c323fa0c3d87185bdd3935e375bf9cd6b7f73e",
     "store-target": "ef2dcaeadf6327f7840a3843bf4bf3aac1b7041af505e61c520afdfde08d00c4",
-    "targets": "3ad6348acb3cb3763ca154b884f97d2b5abc5e7d68a52c0b9667a2d3040a0f86",
-    "targets-zero": "39f264a107938611ede9978121b598371b35418a157bc7d52bf4f1f2242a9d28",
+    "targets": "78705edea27383c4e920f42ed96fa207df7869428d07eff55972521e1ee9c5ea",
+    "targets-zero": "ad25361880ee01bf41ecca2ba36a7729a3fb667c6a09ff33f0a2c36d20bc0eba",
     "velocity": "6be985580ab9b6399dc13aa63942223e8ada698d45c6a7d3ae62af2fb8b2644e",
     "which-target": "45aa9bc03360aa1229fd13e05086a7e6524fb13b20d5e1089bf27a842f5f2fcb"
   }
