@@ -9,18 +9,18 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-16, entries 432 to 434 (before them: requests 102 and 99, entries 431, 429 section 2, 430, 429, 428, 425 and 427).
+**Last rewritten:** 2026-10-16, entry 435 (before it: entries 432 to 434, requests 102 and 99, entries 431, 429 section 2, 430).
 
 ---
 
 ## In flight
 
-- **Entries 432 to 434 (2026-10-16)**: 432 fixed the iOS self-test (it answers the caliber question entry 376 B3 asks), which then
-  found a real fault, fixed: a second picture shared in after a result asked its caliber off screen. Real taps' picker close is fixed;
-  the keyboard's lost first Next is logged step by step, cause not found. ios-app.yml is green. 433 made the close cheaper (scan
-  202 to 102 ms, all identical); 415 section 3.2 is done by it. 434 traced the four false marks and changed nothing.
-- **Entries 418 and 421 to 424 and 426 are done** (418 section 1 from request 99: the failed post got nginx 499 and was stored).
-- **Entries 427 to 429 and 431 are done**: the Discord worker files posts and puts their pictures on the issues (installed 2026-10-16,
+- **Entry 435 (2026-10-16)**: the audit's eight findings fixed; the guide PDFs remade, and CI now fails when a guide has a commit
+  its PDF has not ("The guide PDFs are made from their guides").
+- **Entries 432 to 434 (2026-10-16)**: 432 fixed the iOS self-test, which found a fault, fixed (a second picture shared in after a
+  result asked its caliber off screen); the keyboard's lost first Next is logged, cause not found. ios-app.yml is green. 433 made
+  the close cheaper (202 to 102 ms, all identical). 434 traced the four false marks and changed nothing.
+- **Entries 418, 421 to 424, 426 to 429 and 431 are done**: the Discord worker files posts and puts their pictures on the issues (installed 2026-10-16,
   request 102); #31 to #34 are closed, #34 by entry 431's tab scrollbar row (nightly 195).
 - **Entries 425 and 430 are done**: the selected shot is ringed in magenta over everything; question 100 asks about its contrast.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).

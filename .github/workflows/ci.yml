@@ -406,6 +406,11 @@ jobs:
       - name: The consistency audit, as warnings
         run: python scripts/consistency.py --warn --offline
 
+      # NOTES-FROM-PLANNING.md entry 435 section 1: the guide PDFs' check above only warned, and the user guide's PDF fell three commits
+      # behind its guide while the site served it. This one fails.
+      - name: The guide PDFs are made from their guides
+        run: python scripts/consistency.py --guides
+
       # NOTES-FROM-PLANNING.md entry 159 section 5.4: every checkable sentence the built site, the README and the documents publish has its
       # backing in docs/claims-backing.json, read one sentence at a time or classified by a rule that says what the document is. A new or
       # changed sentence with nothing behind it fails here, which is what makes the audit worth doing once.

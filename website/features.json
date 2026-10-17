@@ -1131,7 +1131,7 @@
       "key": "pool-set",
       "group": "Sheets and printing",
       "name": "Pool the sheets of a set",
-      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing. Dropped onto the window together, the sheets of a set open in one tab, pooled with no question asked, and each sheet can be opened alone there to check and fix; on the phone, sheets chosen together open as the set's checklist with the pooled group showing.",
+      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing. Dropped onto the window together, the sheets of a set open in one tab, pooled with no question asked, and each sheet can be opened alone there to check and fix; on the phone, sheets chosen together open as the set's checklist with the pooled group showing. Asked for by Quack and Jylee.",
       "shot": "set-tab",
       "platforms": [
         "Windows",
@@ -1146,6 +1146,7 @@
         "now opens your pooled set on the analysis screen in its own tab",
         "open in one tab, pooled"
       ],
+      "reworded": "0.2.0-nightly.196",
       "tour": "sessions",
       "guide": "10-comparing-several-sheets-at-once",
       "mobile": {
@@ -1382,7 +1383,7 @@
       "key": "shots-table",
       "group": "The numbers",
       "name": "Every shot, and which count",
-      "sentence": "The Shots list is short rows: each shot's offset across and up from its aim point and its distance from its own bull. Open one in place to change its bull, say when it was fired, count it or leave it out (struck through, with no reason asked), or delete it as not a hole, which can still be undone. On the computer, a click on a hole or a bull on the picture brings its place in the side panel fully into view and flashes it, and the line under the picture says what the click did. The list ends with the group's center, the mean of the shots counted, which is the zero correction's figure.",
+      "sentence": "The Shots list is short rows: each shot's offset across and up from its aim point and its distance from its own bull. Open one in place to change its bull, say when it was fired, count it or leave it out (struck through, with no reason asked), or delete it as not a hole, which can still be undone. On the computer, a click on a hole or a bull on the picture brings its place in the side panel fully into view and flashes it, and the line under the picture says what the click did. The list ends with the group's center, the mean of the shots counted, which is the zero correction's figure. On the phone, a bull chosen in Bull by bull brings the picture into view the same way. Suggested by Jylee.",
       "shot": "shots-open",
       "platforms": [
         "Windows",
@@ -1396,6 +1397,7 @@
         "The Shots list is now short rows",
         "Leaving a shot out no longer asks why",
         "ends with the group's center"],
+      "reworded": "0.2.0-nightly.196",
       "tour": "analysis",
       "guide": "5-read-the-analysis",
       "mobile": {

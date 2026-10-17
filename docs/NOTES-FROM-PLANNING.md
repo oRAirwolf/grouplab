@@ -25,6 +25,111 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-16, entry 435: consistency audit, 2026-10-16
+
+**Status: actioned 2026-10-16; every section done.**
+
+From the planning session's scheduled consistency audit, 2026-10-16 15:55 UTC (entry 267 section 2b). Read only: README.md, the live
+grouplab.org (home, /download/, /features/, /tour/, /shoot-a-target/, /guides/, /releases/, /support/, and the served user guide PDF),
+website/features.json, docs/RELEASE-NOTES.md (nightlies 190 to 196), docs/notes/STATE.md, docs/notes/for-alan.md,
+docs/PLATFORM-SUPPORT.md, docs/PHONE-PARITY.md, docs/ANDROID.md, the guides, the inbox and the log to 71391a81. No GitHub issue labelled
+`consistency` exists, open or closed, so nothing here repeats one. Nothing here needs Alan. Fix them together in one change, in the usual
+way: the source file first, then whatever is generated from it (README sections, the site, the PDFs). Wording passes may go to
+docs-sonnet.
+
+## 1. The user guide PDF on the site is behind its guide
+
+- Where: docs/USER-GUIDE.pdf, last committed in 77b3db39 (2026-10-14); docs/USER-GUIDE.md changed since in f65147e8 (entry 425),
+  95f3e109 (entry 430) and 92799dbd (entry 431). The site serves the old PDF at https://grouplab.org/guides/user-guide.pdf
+  (last-modified 2026-10-16 11:23 UTC, but built from the old file).
+- What it says: the PDF has no word of the magenta ring on the selected shot (USER-GUIDE.md line 215) or of the tab strip's scrollbar in
+  a row of its own (section on several targets open at once). Checked: the served PDF's text has no "magenta" and no "row of its own";
+  the HTML guide at https://grouplab.org/guides/user-guide/ has both.
+- What it should say: the PDF made again from the guide.
+- Also: commit c6f3de8e added a check for guide PDFs older than their guides. It did not stop this; see why (perhaps it only compares
+  against the newest nightly, or only warns) and make it hold.
+
+## 2. The download page says every build keeps its release
+
+- Where: website/build.py line 1095, live at https://grouplab.org/download/ under "Every file in nightly 196, on GitHub".
+- What it says: "Every build keeps a release of its own, so a bug report names something that still exists."
+- What it should say: something true under entry 185, for example that each of the newest thirty builds keeps a release of its own, and
+  older ones are removed with their tags (their notes stay on the Release notes page).
+- Evidence: scripts/release-notes.py line 497 ("the nightly keeps its newest thirty releases and deletes the rest with their tags"), and
+  the "[notes] The builds the thirty-release rule removed" commit with every nightly (958dfa96 for nightly 196).
+
+## 3. The support link is described as having no address
+
+- Where: README.md line 461, under Planned, Phase 4.
+- What it says: "An unobtrusive support link ... There is no address yet, so the item on the settings screen says so rather than opening
+  anything, and a test fails if an address appears anywhere else. It becomes one browser launch when Alan has a page."
+- What it should say: Support GroupLab in Settings opens https://grouplab.org/support/ in the browser, with no payment handled inside the
+  application, and the address is written in one place, held by SupportLinkTests. Whether its state moves from Built, not proven is
+  Code's call by the usual rule; do not change the state without its evidence.
+- Evidence: src/GroupLab.App/SupportLink.cs (Address is "https://grouplab.org/support/"; NoAddressYet is kept only for the old tests,
+  "Nothing shows this now"); src/GroupLab.App/MainWindow.cs lines 6007 to 6019.
+
+## 4. Discord bug reports now carry their pictures, and nothing public says so
+
+- Where: README.md line 121; website/build.py line 1385 (live at https://grouplab.org/support/, under Discord).
+- What it says: "For anything private, or anything with a photograph attached, the support address is better."
+- Why it no longer fits: since entry 429 and request 102 (installed 2026-10-16), each post in the Discord's bug-reports forum is filed as
+  a bug report for the developer in grouplab-crash-reports, with its pictures on the issue. A photograph posted there now reaches the
+  bug report. The support page does not mention the bug-reports forum at all as a way to report a problem.
+- What it should say: in a sentence, that a post in the bug-reports forum becomes a bug report for the developer, pictures included,
+  and that anything private still goes to the support address. Keep the scope Alan gave (entry 429 section 1.2): the pictures go on the
+  issue only, not on grouplab.org, public test data or an article.
+- Evidence: docs/NOTES-FROM-PLANNING.md entry 429; nightly 194's note ("pictures posted in the GroupLab Discord's bug-reports forum may
+  go on their private bug reports"); website/links.json line 35 ("bug-reports (forum)").
+
+## 5. The Mac sentence reads as if nightly 190 had broken Command shortcuts
+
+- Where: docs/PLATFORM-SUPPORT.md line 24, and its copies in README.md line 183 and on https://grouplab.org/download/ (What is supported
+  and tested).
+- What it says: "... The second ran nightly 190 on a Mac with Apple silicon, opened flatbed scans, ... pooled sheets in Session records.
+  Command shortcuts such as Command Z did not work, and pinch zoom had not been built on any platform; both are fixed in builds after
+  nightly 94, and neither fix has been checked on a Mac yet."
+- Why it is wrong: placed after the second tester, the Command Z sentence reads as his finding on nightly 190, which cannot be, since the
+  fixes came after nightly 94. It was Fenix's finding on nightly 93 (README.md line 660).
+- What it should say: the same words, moved to follow the first tester's sentences (nightly 93), before "The second ran nightly 190".
+  Entry 421 section 1 kept the sentence itself; that stands. Only its place changes.
+
+## 6. Jylee's two latest ideas are not in the thanks or on the Features page
+
+- Where: README.md line 659 (Thanks); website/features.json, features `shots-table` and `pool-set` (live at
+  https://grouplab.org/features/).
+- What it says: "**Jylee** suggested Shots Needed to Zero, and helped choose the C3 zeroing grid with Unholy." The two features carry no
+  credit line, while others do ("Suggested by Jylee.", "Unholy's idea", "Requested by Unholy").
+- What it should say: Jylee also suggested that a click on the picture bring its place in the side panel into view (entry 422), and asked,
+  with Quack, for the scans of a set dropped together to open in one tab, pooled (entry 423). Add the matching credit to `shots-table`
+  and `pool-set` (for `pool-set`, Quack and Jylee). Quack's Thanks line may say the dropped set too. Names as the testers gave them;
+  Justin by first name only if he is ever named.
+- Evidence: docs/RELEASE-NOTES.md, nightly 192 ("thank you to Jylee for the idea") and nightly 193 ("as Quack and Jylee asked");
+  docs/notes/for-alan.md, the "For Jylee" notes for entries 422 and 423.
+
+## 7. The phone's half of entry 422 is missing from the feature and its parity row
+
+- Where: website/features.json, `shots-table` sentence; docs/PHONE-PARITY.md line 81.
+- What it says: "On the computer, a click on a hole or a bull on the picture brings its place in the side panel fully into view and
+  flashes it ..." and nothing about the phone. The parity row says only "the Shots page from a result".
+- What it should say: also that on the phone a bull chosen in Bull by bull brings the picture into view the same way.
+- Evidence: docs/RELEASE-NOTES.md, nightly 192 ("on the phone a bull chosen in Bull by bull brings the picture into view the same way").
+
+## 8. CLAIMS.md says the GPL section 7 permission is not in force
+
+- Where: docs/CLAIMS.md line 519.
+- What it says: "the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned".
+- Why it is wrong: LICENSE begins with that additional permission (entry 279 section 1), README.md lines 665 to 667 say so, and iOS is in
+  a public TestFlight beta. The rest of that line (no outside legal review; Google's closed test of 12 testers for 14 days) still holds
+  and stays.
+- What it should say: the permission is in LICENSE since entry 279, for the App Store and TestFlight; no lawyer review is planned.
+- Evidence: LICENSE lines 1 to 8; README.md "License" section.
+
+Not findings (checked and left): the download page, home page and release notes all name nightly 196 and agree; Android is offered as
+GroupLab Dev, the APK and the Play internal test everywhere; no page says a lawyer is reviewing anything; "What GroupLab is not" is
+absent; the Mac is "two testers, nightlies 93 and 190" everywhere; any-photo-app lists Android only, which PHONE-PARITY.md line 39 explains
+(iOS "on a device"). The tour's mobile pictures say "from nightly 195" while 196 is out; that is expected until the next screenshot run.
+
 ## 2026-10-16, entry 434: the four false hole marks left after entry 415 (proof checklist row 3)
 
 **Status: actioned 2026-10-16; every section done. Nothing honest removes the four marks, so detection is unchanged (section 4) and what was tried is written down.**

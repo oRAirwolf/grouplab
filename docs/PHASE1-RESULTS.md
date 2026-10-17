@@ -1014,6 +1014,33 @@ his note that the `grouplab-error-reports` token now has Contents: Read and writ
 5. **Proof checklist row 3** still says 4 false marks and now names each one's cause. No release note a person would see. **Worth an
    article?** Not written (docs/RESEARCH.md).
 
+## Entry 435: consistency audit of 2026-10-16 (2026-10-16)
+
+1. **The user guide's PDF** is made again from the guide (`grouplab user-guide`), so it has the magenta ring on the selected shot and the
+   tab strip's scrollbar in a row of its own; the testing guide's PDF was remade with it (its words are unchanged, its pictures newer).
+   **Why the check of 2026-10-07 did not stop it:** `guide_pdfs` in `scripts/consistency.py` did find it, but CI runs that script with
+   `--warn`, so it was only ever a warning. It now asks git whether the guide has a commit after its PDF's last one (a rebase cannot
+   reorder that, as it can commit times), and a new CI step, "The guide PDFs are made from their guides", runs it with `--guides`, which
+   fails. Before the PDFs were remade it failed naming the three commits.
+2. **The download page** says each of the newest thirty builds keeps a release, older ones are removed with their tags, and their notes
+   stay on the Release notes page (`website/build.py`).
+3. **The README's support link** line says Support GroupLab in Settings opens grouplab.org/support, with the address in one place held by
+   `SupportLinkTests`. Its state stays Built, not proven: nothing new proves it.
+4. **The README and the support page** say a post in the Discord's bug-reports forum becomes a bug report for the developer, its pictures
+   on that report and nowhere else, and that anything private goes to the support address.
+5. **The Mac sentence** about Command shortcuts and pinch zoom now follows the first tester's (nightly 93) sentences in
+   `docs/PLATFORM-SUPPORT.md`, and the README's copy was regenerated from it; the download page follows on the next site build.
+6. **Thanks and credits**: Jylee's line names the click that brings a shot's place into view and, with Quack, the dropped set; Quack's
+   line names the dropped set; `shots-table` ends "Suggested by Jylee." and `pool-set` "Asked for by Quack and Jylee.", both marked
+   reworded since nightly 196.
+7. **The phone's half of entry 422** is in the `shots-table` sentence and the parity row.
+8. **The GPL section 7 permission**: the wrong words were in six backing records' "where" fields in `docs/claims-backing.json`; they now
+   cite entry 279 section 1 (the permission is in LICENSE) and entry 267 (no lawyer review), and `docs/CLAIMS.md` was regenerated.
+   `DESIGN.md` line 560 still says the permission is not in force; it is the design as decided in its day, a record, and is left.
+
+The wording of sections 2 to 8 was done by docs-sonnet and read before commit. readme `--check`, claims `--check` (all backed) and the
+site build pass.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

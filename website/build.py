@@ -1092,7 +1092,7 @@ def page_download() -> str:
 </details>
 </section>
 <section class="wrap section-sm last row-between">
-<p>Every build keeps a release of its own, so a bug report names something that still exists. If something does not work, the <a href="{DISCORD}">Discord</a> is somewhere to ask.</p>
+<p>Each of the newest thirty builds keeps a release of its own, so a bug report names something that still exists; older ones are removed with their tags, and their notes stay on the Release notes page. If something does not work, the <a href="{DISCORD}">Discord</a> is somewhere to ask.</p>
 <a href="/releases/">What changed in each build</a>
 <a href="{GITHUB}/releases">Every build on GitHub</a>
 </section>
@@ -1382,7 +1382,7 @@ def page_support() -> str:
 <div class="panel pad stack tight">
 <h2 class="h3">Discord</h2>
 <p>Questions, bug reports, target sheets, and what people are shooting. The project's developer reads it.</p>
-<p class="small">For anything private, or anything with a photograph attached, the support address below is better.</p>
+<p class="small">A post in the bug-reports forum becomes a bug report for the developer, and the pictures you post there go on that report and nowhere else. For anything private, the support address below is better.</p>
 <div class="actions">{btn("What is in the Discord", DISCORD, True)}</div>
 </div>
 </section>

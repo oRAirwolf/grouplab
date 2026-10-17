@@ -1015,7 +1015,7 @@
   },
   "It waits on the license permission under License, for distribution rather than for development.": {
    "kind": "decided",
-   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
+   "where": "NOTES-FROM-PLANNING.md entry 267 (no outside legal review for now) and entry 279 section 1 (the GPL section 7 app-store permission is in LICENSE, for the App Store and TestFlight); a public Play listing needs Google's closed test of 12 testers for 14 days"
   },
   "It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop.": {
    "kind": "decided",
@@ -3063,19 +3063,19 @@
   },
   "iOS is Phase 8 and would need the GPL section 7 additional permission described under License, which is not in force and not pursued now.": {
    "kind": "decided",
-   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
+   "where": "NOTES-FROM-PLANNING.md entry 267 (no outside legal review for now) and entry 279 section 1 (the GPL section 7 app-store permission is in LICENSE, for the App Store and TestFlight); a public Play listing needs Google's closed test of 12 testers for 14 days"
   },
   "**An additional permission under section 7, for app-store distribution, is not in force, and not pursued now.** Plain GPL-3.0 conflicts with Apple's App Store terms, and GPL applications have been removed from that store before over exactly this; it would be revisited only before an iOS release, which is not planned.": {
    "kind": "decided",
-   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
+   "where": "NOTES-FROM-PLANNING.md entry 267 (no outside legal review for now) and entry 279 section 1 (the GPL section 7 app-store permission is in LICENSE, for the App Store and TestFlight); a public Play listing needs Google's closed test of 12 testers for 14 days"
   },
   "- **The path to a public Play listing is Google's own rule** for a new personal developer account: a closed test with at least 12 testers for 14 days.": {
    "kind": "decided",
-   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
+   "where": "NOTES-FROM-PLANNING.md entry 267 (no outside legal review for now) and entry 279 section 1 (the GPL section 7 app-store permission is in LICENSE, for the App Store and TestFlight); a public Play listing needs Google's closed test of 12 testers for 14 days"
   },
   "Nothing else holds it (entry 267: the GPL section 7 app-store permission concerns Apple's App Store, and is not pursued while iOS is not planned).": {
    "kind": "decided",
-   "where": "NOTES-FROM-PLANNING.md entry 267: no outside legal review for now; the GPL section 7 app-store permission is not in force and not pursued while iOS is not planned; a public Play listing needs Google's closed test of 12 testers for 14 days"
+   "where": "NOTES-FROM-PLANNING.md entry 267 (no outside legal review for now) and entry 279 section 1 (the GPL section 7 app-store permission is in LICENSE, for the App Store and TestFlight); a public Play listing needs Google's closed test of 12 testers for 14 days"
   },
   "A card in the frame as the ruler a photograph lacks (entry 271 section 3, a study; nothing is built) A photograph cannot measure how large a sheet was printed, because nothing in the frame has a known absolute size (`docs/WHAT-CAN-BE-MEASURED.md`).": {
    "kind": "decided",
@@ -6849,9 +6849,9 @@
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entries 392, 400, 414 and 415 section 3 (the optimizations and their measurements); docs/RELEASE-NOTES.md nightlies 186 and 189; Phase 9 table row says In progress"
   },
-  "Quack's flatbed scans on a Mac showed holes being missed and the snap landing on the wrong side of the rim, a report on the upload page led to its progress bar and to sets of up to 30 photographs, and a question about reading a set of three sheets as one led to the pooled set in its own tab.": {
+  "Quack's flatbed scans on a Mac showed holes being missed and the snap landing on the wrong side of the rim, a report on the upload page led to its progress bar and to sets of up to 30 photographs, and a question about reading a set of three sheets as one led to the pooled set in its own tab, and Quack's ask with Jylee led to a set of scans dropped together opening in one tab.": {
    "kind": "decided",
-   "where": "docs/NOTES-FROM-PLANNING.md entries 417, 418 and 420; Quack may be thanked by name (Alan, 2026-10-11)"
+   "where": "docs/NOTES-FROM-PLANNING.md entries 417, 418, 420 and 423; docs/RELEASE-NOTES.md nightly 193 (as Quack and Jylee asked); Quack may be thanked by name (Alan, 2026-10-11)"
   },
   "**macOS builds are published, and the Apple silicon build has been run on two Macs.** Two testers have run it.": {
    "kind": "decided",
