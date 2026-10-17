@@ -155,7 +155,7 @@ What the newest builds changed that you would notice, from their release notes.
 **0.2.0-nightly.198**, 2026-10-17
 
 - New users can choose Walk me through a demo, on first launch or from Settings, for a guided tour on a sample target GroupLab makes for it; nothing it makes is kept unless you ask. [Walk me through a demo](https://grouplab.org/features/#demo-tour)
-- The guided demo's printing step now works on macOS and Linux, pointing at Open to print and choosing the sheet first.
+- The guided demo's printing step now works on macOS and Linux, pointing at Open to print and choosing the sheet first. [Walk me through a demo](https://grouplab.org/features/#demo-tour)
 - A screen reader now names each button down the left side of the window, such as Targets and Session records.
 
 **0.2.0-nightly.197**, 2026-10-17
