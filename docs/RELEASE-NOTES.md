@@ -12,6 +12,26 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.198
+
+**2026-10-17**, commit `15815b9`. Nightly.
+
+**What you will notice**
+
+- New users can choose Walk me through a demo, on first launch or from Settings, for a guided tour on a sample target GroupLab makes for it; nothing it makes is kept unless you ask.
+- The guided demo's printing step now works on macOS and Linux, pointing at Open to print and choosing the sheet first.
+- A screen reader now names each button down the left side of the window, such as Targets and Session records.
+
+**Under the hood**
+
+- GroupLab can now work out the figures for the website's new statistics guide and set its PDFs on A4 as well as Letter, with tables; nothing in the application changes.
+- The user guide's downloadable PDF now carries the guide's new pictures, with numbered outlines on the buttons the text talks about, and phone pictures at a phone's size.
+- The PDF writer can now give a document bookmarks for its sections; only the guides use it, and every sheet and report is written exactly as before.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.198)
+
+---
+
 ## 0.2.0-nightly.197
 
 **2026-10-17**, commit `a50420c`. Nightly.
