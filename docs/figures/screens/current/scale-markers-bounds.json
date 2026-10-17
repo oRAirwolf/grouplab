@@ -1,0 +1,157 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Add a store-bought target": [
+      252,
+      157,
+      180,
+      27
+    ],
+    "Board stickers for a label printer…": [
+      96,
+      453,
+      228,
+      27
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Design your own sheet": [
+      79,
+      157,
+      161,
+      27
+    ],
+    "Fit": [
+      1044,
+      827,
+      42,
+      27
+    ],
+    "GroupLab 3x3 2 MOA, C Bull, A4": [
+      77,
+      825,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, E Bull, A4": [
+      77,
+      844,
+      360,
+      12
+    ],
+    "GroupLab 5x5 Load Development, 100 m, A4": [
+      77,
+      749,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Load Development, A4": [
+      77,
+      806,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Load Development, C Bull, A4": [
+      77,
+      768,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Load Development, E Bull, A4": [
+      77,
+      787,
+      360,
+      19
+    ],
+    "Label size loaded": [
+      203,
+      551,
+      140,
+      32
+    ],
+    "Measure a board…": [
+      336,
+      453,
+      137,
+      27
+    ],
+    "Measure a scanned check label…": [
+      311,
+      616,
+      223,
+      27
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Open as PDF": [
+      1098,
+      827,
+      102,
+      27
+    ],
+    "Paper for scale markers": [
+      94,
+      411,
+      100,
+      32
+    ],
+    "Print board stickers": [
+      499,
+      413,
+      143,
+      27
+    ],
+    "Print corner brackets": [
+      204,
+      413,
+      152,
+      27
+    ],
+    "Print scale bars": [
+      368,
+      413,
+      119,
+      27
+    ],
+    "Save four scale labels for the printer's app…": [
+      353,
+      553,
+      288,
+      27
+    ],
+    "Save the printer check label…": [
+      96,
+      616,
+      203,
+      27
+    ],
+    "Zoom in": [
+      863,
+      827,
+      74,
+      27
+    ],
+    "Zoom out": [
+      949,
+      827,
+      83,
+      27
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

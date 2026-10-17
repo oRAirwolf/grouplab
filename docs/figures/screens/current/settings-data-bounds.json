@@ -1,0 +1,73 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Check for updates": [
+      238,
+      75,
+      138,
+      13
+    ],
+    "Check now": [
+      386,
+      75,
+      91,
+      10
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Detailed logging": [
+      77,
+      598,
+      122,
+      32
+    ],
+    "Export all my data…": [
+      79,
+      501,
+      145,
+      27
+    ],
+    "Import data…": [
+      236,
+      501,
+      109,
+      27
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Report a problem…": [
+      79,
+      671,
+      141,
+      27
+    ],
+    "Support GroupLab": [
+      79,
+      714,
+      136,
+      27
+    ],
+    "What GroupLab sends": [
+      77,
+      186,
+      133,
+      17
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

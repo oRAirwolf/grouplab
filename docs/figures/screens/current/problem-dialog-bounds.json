@@ -1,0 +1,241 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Accept and analyze": [
+      1205,
+      46,
+      143,
+      27
+    ],
+    "Add a hole": [
+      1047,
+      461,
+      90,
+      27
+    ],
+    "Choose the sheet": [
+      371,
+      379,
+      138,
+      42
+    ],
+    "Close this target": [
+      374,
+      8,
+      20,
+      20
+    ],
+    "Detect on a GroupLab sheet": [
+      818,
+      46,
+      192,
+      27
+    ],
+    "Dismiss": [
+      817,
+      256,
+      32,
+      32
+    ],
+    "Fit the image to the view": [
+      893,
+      823,
+      34,
+      34
+    ],
+    "GroupLab could not read this sheet's codes": [
+      154,
+      231,
+      720,
+      438
+    ],
+    "Impact": [
+      215,
+      93,
+      34,
+      34
+    ],
+    "It is a store-bought or hand-drawn target": [
+      501,
+      446,
+      278,
+      34
+    ],
+    "Lasso shots onto a bull": [
+      329,
+      93,
+      34,
+      34
+    ],
+    "Lines to bulls": [
+      1045,
+      346,
+      105,
+      32
+    ],
+    "Mark it by hand": [
+      708,
+      379,
+      126,
+      42
+    ],
+    "MaterialFold": [
+      1045,
+      207,
+      157,
+      17
+    ],
+    "More": [
+      1352,
+      42,
+      34,
+      34
+    ],
+    "Next unsure hole": [
+      1149,
+      461,
+      128,
+      27
+    ],
+    "One shot on each bull I used. GroupLab asks about any bull that seems to hold two.": [
+      1058,
+      746,
+      313,
+      40
+    ],
+    "Open another target": [
+      408,
+      6,
+      30,
+      22
+    ],
+    "Pan, and click a mark to select it": [
+      63,
+      93,
+      34,
+      34
+    ],
+    "Place bulls, on a target GroupLab did not print": [
+      291,
+      93,
+      34,
+      34
+    ],
+    "Point of aim": [
+      177,
+      93,
+      34,
+      34
+    ],
+    "Redo (Ctrl+Y)": [
+      422,
+      93,
+      34,
+      34
+    ],
+    "Rotate left ([)": [
+      931,
+      823,
+      34,
+      34
+    ],
+    "Rotate right (])": [
+      969,
+      823,
+      34,
+      34
+    ],
+    "Same setup as the last target": [
+      1047,
+      136,
+      200,
+      27
+    ],
+    "Scale: length": [
+      101,
+      93,
+      34,
+      34
+    ],
+    "Scale: rectangle": [
+      139,
+      93,
+      34,
+      34
+    ],
+    "Select": [
+      253,
+      93,
+      34,
+      34
+    ],
+    "SetupBlock": [
+      1045,
+      134,
+      339,
+      90
+    ],
+    "Show what went wrong": [
+      371,
+      492,
+      174,
+      17
+    ],
+    "Show work: codes not read": [
+      1014,
+      46,
+      187,
+      27
+    ],
+    "Some bulls took two or more. Then tap those bulls on the sheet.": [
+      1058,
+      824,
+      313,
+      40
+    ],
+    "The picture, its corner codes outlined": [
+      179,
+      300,
+      170,
+      220
+    ],
+    "Try again, reading harder": [
+      517,
+      379,
+      183,
+      42
+    ],
+    "Undo (Ctrl+Z)": [
+      384,
+      93,
+      34,
+      34
+    ],
+    "Zoom in": [
+      817,
+      823,
+      34,
+      34
+    ],
+    "Zoom out": [
+      855,
+      823,
+      34,
+      34
+    ],
+    "grouplab-codeless-f1ed6e3b709a467586b5b6097f8b1e5f.png, Marking": [
+      61,
+      4,
+      309,
+      27
+    ],
+    "why ▸": [
+      1353,
+      621,
+      31,
+      15
+    ]
+  }
+}

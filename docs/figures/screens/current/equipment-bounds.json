@@ -1,0 +1,145 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Add another": [
+      79,
+      295,
+      100,
+      27
+    ],
+    "Bartlein is on Test rifle now": [
+      747,
+      813,
+      28,
+      32
+    ],
+    "Cancel": [
+      817,
+      716,
+      67,
+      27
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Edit": [
+      1314,
+      816,
+      50,
+      27
+    ],
+    "EquipmentField_cartridge": [
+      1062,
+      360,
+      298,
+      30
+    ],
+    "EquipmentField_clickUnit": [
+      1062,
+      427,
+      298,
+      32
+    ],
+    "EquipmentField_clickValue": [
+      747,
+      496,
+      140,
+      30
+    ],
+    "EquipmentField_firearm": [
+      1062,
+      291,
+      298,
+      32
+    ],
+    "EquipmentField_manufacturer": [
+      747,
+      360,
+      299,
+      30
+    ],
+    "EquipmentField_name": [
+      747,
+      291,
+      299,
+      30
+    ],
+    "EquipmentField_notes": [
+      747,
+      630,
+      613,
+      60
+    ],
+    "EquipmentField_scope": [
+      747,
+      427,
+      299,
+      30
+    ],
+    "EquipmentField_sightHeightInches": [
+      1062,
+      496,
+      140,
+      30
+    ],
+    "EquipmentField_stock": [
+      1062,
+      563,
+      298,
+      30
+    ],
+    "EquipmentField_zeroDistanceYards": [
+      747,
+      563,
+      140,
+      30
+    ],
+    "EquipmentRow": [
+      77,
+      262,
+      631,
+      19
+    ],
+    "EquipmentTabLoad": [
+      147,
+      157,
+      62,
+      27
+    ],
+    "EquipmentTabRifle": [
+      79,
+      157,
+      60,
+      27
+    ],
+    "Factory is on Test rifle now": [
+      747,
+      849,
+      28,
+      27
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Save": [
+      749,
+      716,
+      56,
+      27
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

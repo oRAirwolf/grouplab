@@ -75,11 +75,13 @@ COUNTED = re.compile(
 # unwrapped before the other tags are replaced by spaces.
 TERM = re.compile(r'<a class="term"[^>]*>(.*?)</a>')
 HLINK = re.compile(r'<a class="hlink"[^>]*>#</a>')
+# Entry 437: a picture's badges and the numbers pointing at them are pointers, not words of a sentence.
+MARKS = re.compile(r'<span class="marks"[^>]*>.*?</span></span>|\s?<span class="mark-ref"[^>]*>\(?[1-9]\)?</span>|<!-- marks: .*? -->|(?<=[\w*`\"]) \([1-9]\)(?=[\s,.;:)?!*])')
 
 
 def sentences(text: str) -> list[str]:
     # Entry 436: a heading's link mark is a "#" for the eye, not a word of the sentence.
-    text = HLINK.sub("", text)
+    text = MARKS.sub("", HLINK.sub("", text))
     text = WS.sub(" ", TAG.sub(" ", TERM.sub(r"\1", text)))
     return [s.strip() for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
 

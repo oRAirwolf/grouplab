@@ -1,0 +1,259 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "1": [
+      1079,
+      538,
+      78,
+      27
+    ],
+    "2": [
+      1079,
+      574,
+      78,
+      27
+    ],
+    "3": [
+      1079,
+      610,
+      78,
+      27
+    ],
+    "4": [
+      1079,
+      646,
+      78,
+      27
+    ],
+    "Accept and analyze": [
+      1205,
+      46,
+      143,
+      27
+    ],
+    "Bull for the shot on bull 4": [
+      1142,
+      697,
+      120,
+      32
+    ],
+    "Check your printer": [
+      1047,
+      387,
+      136,
+      27
+    ],
+    "Choose the shot on bull 1": [
+      1045,
+      536,
+      28,
+      32
+    ],
+    "Choose the shot on bull 2": [
+      1045,
+      572,
+      28,
+      32
+    ],
+    "Choose the shot on bull 3": [
+      1045,
+      608,
+      28,
+      32
+    ],
+    "Choose the shot on bull 4": [
+      1045,
+      644,
+      28,
+      32
+    ],
+    "Close this target": [
+      278,
+      8,
+      20,
+      20
+    ],
+    "Counted: the shot on bull 4": [
+      1074,
+      769,
+      78,
+      32
+    ],
+    "Delete, not a hole": [
+      1076,
+      826,
+      131,
+      27
+    ],
+    "Detect on a GroupLab sheet": [
+      805,
+      46,
+      192,
+      27
+    ],
+    "Discard edits": [
+      1097,
+      46,
+      104,
+      27
+    ],
+    "Fit the image to the view": [
+      893,
+      823,
+      34,
+      34
+    ],
+    "I will pick bulls": [
+      1045,
+      159,
+      116,
+      27
+    ],
+    "Impact": [
+      215,
+      93,
+      34,
+      34
+    ],
+    "Lasso shots onto a bull": [
+      329,
+      93,
+      34,
+      34
+    ],
+    "Load for every bull": [
+      1133,
+      202,
+      160,
+      32
+    ],
+    "Measure this sheet with a ruler": [
+      1047,
+      422,
+      210,
+      27
+    ],
+    "More": [
+      1352,
+      42,
+      34,
+      34
+    ],
+    "One a column": [
+      1218,
+      134,
+      108,
+      21
+    ],
+    "One a row": [
+      1128,
+      134,
+      86,
+      21
+    ],
+    "One load": [
+      1045,
+      134,
+      79,
+      21
+    ],
+    "Open another target": [
+      312,
+      6,
+      30,
+      22
+    ],
+    "Pan, and click a mark to select it": [
+      63,
+      93,
+      34,
+      34
+    ],
+    "Place bulls, on a target GroupLab did not print": [
+      291,
+      93,
+      34,
+      34
+    ],
+    "Place in the firing order for the shot on bull 4": [
+      1142,
+      733,
+      120,
+      32
+    ],
+    "Point of aim": [
+      177,
+      93,
+      34,
+      34
+    ],
+    "Redo (Ctrl+Y)": [
+      422,
+      93,
+      34,
+      34
+    ],
+    "Rotate left ([)": [
+      931,
+      823,
+      34,
+      34
+    ],
+    "Rotate right (])": [
+      969,
+      823,
+      34,
+      34
+    ],
+    "Scale: length": [
+      101,
+      93,
+      34,
+      34
+    ],
+    "Scale: rectangle": [
+      139,
+      93,
+      34,
+      34
+    ],
+    "Select": [
+      253,
+      93,
+      34,
+      34
+    ],
+    "Show work": [
+      1001,
+      46,
+      92,
+      27
+    ],
+    "Undo (Ctrl+Z)": [
+      384,
+      93,
+      34,
+      34
+    ],
+    "Zoom in": [
+      817,
+      823,
+      34,
+      34
+    ],
+    "Zoom out": [
+      855,
+      823,
+      34,
+      34
+    ],
+    "gl-cf25-ltr-scan.png, Marking": [
+      61,
+      4,
+      213,
+      27
+    ]
+  }
+}

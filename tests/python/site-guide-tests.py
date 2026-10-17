@@ -44,7 +44,7 @@ def main() -> int:
         md = tmp / "g.md"
         md.write_text("# T\n\n## 4. Mark it\n\n### Several targets open at once\n\nA.\n\n## 13. On the phone\n\n"
                       "### Several targets open at once\n\nB.\n\n## Mil or MOA\n\n### Capture\n\n### Capture\n", encoding="utf-8")
-        _, body, toc = build.render_guide(md, marks=True)
+        _, body, toc = build.render_guide(md, links=True)
         check("an h2 keeps its slug as its id", '<h2 id="4-mark-it">' in body)
         check("the first of two same h3s keeps its slug", 'id="several-targets-open-at-once"' in body)
         check("the later one carries its section's number", 'id="13-several-targets-open-at-once"' in body)
@@ -61,7 +61,7 @@ def main() -> int:
 
         # The real guide: every h2 id is exactly the slug of its line, as features.json and every link sent already expect.
         guide = (REPO / "docs" / "USER-GUIDE.md").read_text(encoding="utf-8")
-        _, real, real_toc = build.render_guide(REPO / "docs" / "USER-GUIDE.md", marks=True)
+        _, real, real_toc = build.render_guide(REPO / "docs" / "USER-GUIDE.md", links=True)
         check("the user guide's h2 ids did not change",
               [h for h, _, _ in real_toc] == [build.slug(h) for h in re.findall(r"^## (.+?)\r?$", guide, re.M)])
         check("the user guide has subsections", any(subs for _, _, subs in real_toc))
@@ -89,6 +89,45 @@ def main() -> int:
               any("no subsections" in p for p in problems(page(["a"], [(2, "a")]))))
         check("a problem names its page, so only that page is held back",
               all(build.pages_of(p, tmp / "out") == ["guides/user-guide/index.html"] for p in problems(dup)))
+
+        # Entry 437 section 2.3: a marking names a control on its picture, never a position, and the build fails when the control is gone.
+        screens = tmp / "screens"
+        screens.mkdir()
+        (screens / "demo-bounds.json").write_text('{"width": 1400, "height": 900, "controls": {"Find holes": [10, 10, 100, 30], '
+                                                  '"Accept and analyze": [1385, 885, 10, 10]}}', encoding="utf-8")
+        real_screens, build.SCREENS = build.SCREENS, screens
+
+        def marked(names: str, caption: str, text: str) -> tuple[str, list[str]]:
+            build.GUIDE_FIGURE_PROBLEMS.clear()
+            (tmp / "m.md").write_text(f"# T\n\n## 1. One\n\n{text}\n\n![{caption}](figures/screens/current/demo-light-1400x900.png)\n"
+                                      f"<!-- marks: {names} -->\n\n## 2. Two\n\nNothing (1) here.\n", encoding="utf-8")
+            return build.render_guide(tmp / "m.md")[1], sorted(build.GUIDE_FIGURE_PROBLEMS)
+
+        try:
+            body, found = marked("Find holes | Accept and analyze", "The screen: 1 Find holes, 2 Accept and analyze",
+                                 "Press Find holes (1), then Accept and analyze (2).")
+            check("a marking on a control the picture has draws an outline and a badge",
+                  'id="fig-demo-1"' in body and 'id="fig-demo-2"' in body and body.count('class="mark-badge"') == 2)
+            check("the text's numbers and the caption's point at their outlines",
+                  body.count('data-mark="fig-demo-1"') == 2 and body.count('data-mark="fig-demo-2"') == 2)
+            check("a badge at the picture's edge is moved inside it", "left:1.571%;top:2.444%" in body and "left:98.429%;top:97.556%" in body)
+            check("(1) under a heading with no marked picture fails", any("(1) in the text has no marked picture" in p for p in found), str(found))
+            body, found = marked("Find holes | Detect", "The screen: 1 Find holes, 2 Detect", "Find holes (1) and Detect (2).")
+            check("a marking naming a control the picture does not have fails the build",
+                  any("marks 'Detect', which is not among its controls" in p for p in found), str(found))
+            body, found = marked("Find holes", "The screen, with nothing listed", "Find holes (1).")
+            check("a caption that does not list its markings fails", any("does not list its markings" in p for p in found), str(found))
+            body, found = marked("Find holes | Accept and analyze | Find holes | Accept and analyze", "1 a, 2 b, 3 c, 4 d", "(1)")
+            check("more than three markings on a picture fails", any("three at most" in p for p in found), str(found))
+            out = tmp / "out2"
+            for key in ("user-guide", "testing-guide"):
+                (out / "guides" / key).mkdir(parents=True)
+                (out / "guides" / key / "index.html").write_text(good if key == "user-guide" else page(["a"], [(2, "a")]), encoding="utf-8")
+            check("those problems reach the page checks",
+                  any("three at most" in p for p in build.guide_problems(out)))
+        finally:
+            build.SCREENS = real_screens
+            build.GUIDE_FIGURE_PROBLEMS.clear()
 
         # features.json: a guide link to a subsection is accepted, one to nothing is not.
         anchors = set(ids)

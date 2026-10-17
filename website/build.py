@@ -1456,11 +1456,20 @@ def slug(text: str) -> str:
     return s
 
 
-def render_guide(md_file: Path, marks: bool = False) -> tuple[str, str, list[tuple[str, str, list[tuple[str, str]]]]]:
+def render_guide(md_file: Path, links: bool = False) -> tuple[str, str, list[tuple[str, str, list[tuple[str, str]]]]]:
     src = md_file.read_text(encoding="utf-8")
     title_m = re.match(r"#\s+(.+)\n", src)
     title = title_m.group(1).strip() if title_m else md_file.stem
     src = src[title_m.end():] if title_m else src
+    # Entry 437 section 2.2: a picture's markings are one line under it, "<!-- marks: Find holes | review queue -->", naming controls on
+    # that screen in the order the text mentions them; the line is taken out here and the names drawn over the picture below.
+    marks: dict[str, list[str]] = {}
+
+    def take(m: re.Match) -> str:
+        marks[m.group(2)] = [n.strip() for n in m.group(3).split("|") if n.strip()]
+        return m.group(1)
+
+    src = re.sub(r"^(!\[[^\]]*\]\(([^)]+)\))[ \t]*\r?\n<!-- marks: (.*?) -->[ \t]*$", take, src, flags=re.M)
     # GitHub starts a list straight after a line of text; Python-Markdown needs a blank line first.
     lines, fixed = src.split("\n"), []
     for i, line in enumerate(lines):
@@ -1491,21 +1500,37 @@ def render_guide(md_file: Path, marks: bool = False) -> tuple[str, str, list[tup
         elif toc:
             toc[-1][2].append((hid, text))
         # Entry 436 section 3.2: a link mark, shown on hover and on focus; guide-toc.js copies its address, and without it it is a link.
-        mark = f'<a class="hlink" href="#{hid}" aria-label="Link to {esc(html.unescape(text))}">#</a>' if marks else ""
+        mark = f'<a class="hlink" href="#{hid}" aria-label="Link to {esc(html.unescape(text))}">#</a>' if links else ""
         return f'<h{level} id="{hid}">{inner}{mark}</h{level}>'
 
     body = re.sub(r"<h([23])>(.*?)</h\1>", head, body)
 
-    # Screenshots: repository renders become the site's WebP pair, one per theme.
-    def img(m: re.Match) -> str:
-        src_attr, alt = m.group(1), m.group(2)
-        mm = re.search(r"figures/screens/current/([a-z-]+?)-(light|dark)-1400x900\.png", src_attr)
-        if not mm:
-            sys.exit(f"build: guide image not in screens/current: {src_attr}")
-        return f'<figure class="guide-fig">{screen(mm.group(1), html.unescape(alt))}<figcaption class="mono faint small">{alt}</figcaption></figure>'
+    # Screenshots: repository renders become the site's WebP pair, one per theme; a phone's picture is shown at a phone's size.
+    page = GUIDE_PAGES.get(md_file.name, md_file.name)
 
-    body = re.sub(r'<p><img alt="([^"]*)" src="([^"]+)" ?/?></p>', _swap, body)
-    body = re.sub(r'<p><img src="([^"]+)" alt="([^"]*)" ?/?></p>', img, body)
+    def img(src_attr: str, alt: str) -> str:
+        desk = re.search(r"figures/screens/current/([a-z0-9-]+?)-(light|dark)-1400x900\.png", src_attr)
+        phone = re.search(r"figures/screens/phone/([a-z0-9-]+?)-(light|dark)\.png", src_attr)
+        if not desk and not phone:
+            sys.exit(f"build: guide image not in screens/current or screens/phone: {src_attr}")
+        name = (desk or phone).group(1)
+        names = marks.get(src_attr, [])
+        fig = f"fig-{name}"
+        if desk:
+            pic = screen(name, html.unescape(alt))
+            overlay = mark_overlay(name, names, fig, page) if names else ""
+            pic = f'<div class="fig-marks">{pic}{overlay}</div>' if overlay else pic
+        else:
+            pic = phone_screen(name, html.unescape(alt))
+            if names:
+                GUIDE_FIGURE_PROBLEMS.add(f"{page}: the phone picture {name} has markings, and no phone picture has its controls' positions yet")
+        caption = caption_refs(alt, fig, len(names), page) if names else alt
+        count = f' data-marks="{len(names)}"' if names else ""
+        return f'<figure class="guide-fig" id="{fig}"{count}>{pic}<figcaption class="mono faint small">{caption}</figcaption></figure>'
+
+    body = re.sub(r'<p><img alt="([^"]*)" src="([^"]+)" ?/?></p>', lambda m: img(m.group(2), m.group(1)), body)
+    body = re.sub(r'<p><img src="([^"]+)" alt="([^"]*)" ?/?></p>', lambda m: img(m.group(1), m.group(2)), body)
+    body = text_refs(body, page)
 
     # Links: relative repository links go to GitHub.
     def link(m: re.Match) -> str:
@@ -1518,12 +1543,93 @@ def render_guide(md_file: Path, marks: bool = False) -> tuple[str, str, list[tup
     return title, body, toc
 
 
-def _swap(m: re.Match) -> str:
-    alt, src_attr = m.group(1), m.group(2)
-    mm = re.search(r"figures/screens/current/([a-z-]+?)-(light|dark)-1400x900\.png", src_attr)
-    if not mm:
-        sys.exit(f"build: guide image not in screens/current: {src_attr}")
-    return f'<figure class="guide-fig">{screen(mm.group(1), html.unescape(alt))}<figcaption class="mono faint small">{alt}</figcaption></figure>'
+# Entry 437: which built page each guide becomes, so a marking's problem names the page it holds back; and the problems found while
+# rendering, read by guide_problems.
+GUIDE_PAGES = {g[1]: f"guides/{g[0]}/index.html" for g in GUIDES}
+GUIDE_FIGURE_PROBLEMS: set[str] = set()
+BADGE = 22  # half a badge's width, in a 1400 pixel picture's own pixels, at the width the guide shows it
+
+
+def mark_overlay(name: str, names: list[str], fig: str, page: str) -> str:
+    """Entry 437 section 3: an outline round each named control and a numbered badge on its top left corner, placed from the screen's
+    positions file in the picture's own pixels and laid over the picture, so they scale with it and the PNG is untouched. A badge at the
+    picture's edge moves inside it, and one that would sit on another moves along its outline."""
+    path = SCREENS / f"{name}-bounds.json"
+    if not path.exists():
+        GUIDE_FIGURE_PROBLEMS.add(f"{page}: the picture {name} has markings and no positions file, docs/figures/screens/current/{name}-bounds.json")
+        return ""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    w, h = data["width"], data["height"]
+    if len(names) > 3:
+        GUIDE_FIGURE_PROBLEMS.add(f"{page}: the picture {name} has {len(names)} markings; three at most (entry 437 section 3.6)")
+    spans, placed = [], []
+    for n, control in enumerate(names, 1):
+        box = data["controls"].get(control)
+        if box is None:
+            GUIDE_FIGURE_PROBLEMS.add(f"{page}: the picture {name} marks {control!r}, which is not among its controls ({name}-bounds.json)")
+            continue
+        x, y, bw, bh = box
+        bx, by = x, y
+        for _ in range(12):
+            bx, by = min(max(bx, BADGE), w - BADGE), min(max(by, BADGE), h - BADGE)
+            if all(abs(bx - px) >= 2 * BADGE or abs(by - py) >= 2 * BADGE for px, py in placed):
+                break
+            if bx + 2 * BADGE + 4 <= x + bw:
+                bx += 2 * BADGE + 4
+            else:
+                by += 2 * BADGE + 4
+        placed.append((bx, by))
+
+        def pct(v: float, t: float) -> str:
+            return f"{100 * v / t:.3f}%"
+
+        spans.append(f'<span class="mark-box" id="{fig}-{n}" style="left:{pct(x, w)};top:{pct(y, h)};width:{pct(bw, w)};height:{pct(bh, h)}"></span>'
+                     f'<span class="mark-badge" style="left:{pct(bx, w)};top:{pct(by, h)}">{n}</span>')
+    return f'<span class="marks" aria-hidden="true">{"".join(spans)}</span>' if spans else ""
+
+
+def mark_ref(fig: str, n: int, text: str) -> str:
+    return f'<span class="mark-ref" data-mark="{fig}-{n}" tabindex="0">{text}</span>'
+
+
+def caption_refs(alt: str, fig: str, count: int, page: str) -> str:
+    """Entry 437 section 3.3: the caption lists the markings, "1 Find holes, 2 the review queue", and each number points at its outline."""
+    m = re.search(r"(?:^|(?<=[:.;] ))1 (?=\D)", alt)
+    if m is None:
+        GUIDE_FIGURE_PROBLEMS.add(f"{page}: the caption of {fig} does not list its markings as 1 ..., 2 ...")
+        return alt
+    tail, found = alt[m.start():], set()
+
+    def one(k: re.Match) -> str:
+        n = int(k.group(1))
+        if n > count or n in found:
+            return k.group(0)
+        found.add(n)
+        return mark_ref(fig, n, k.group(1)) + " "
+
+    tail = re.sub(r"(?:^|(?<=, )|(?<=and ))([1-9]) (?=\D)", one, tail)
+    if found != set(range(1, count + 1)):
+        GUIDE_FIGURE_PROBLEMS.add(f"{page}: the caption of {fig} lists {sorted(found)} for {count} markings")
+    return alt[:m.start()] + tail
+
+
+def text_refs(body: str, page: str) -> str:
+    """Entry 437 section 3.3: "Find holes (1)" in the text under a heading points at the marked picture under the same heading. A
+    number with no marked picture there, or past its count, fails the page, as does a heading with two marked pictures."""
+    out = []
+    for part in re.split(r"(?=<h[23] )", body):
+        figs = re.findall(r'<figure class="guide-fig" id="([^"]+)" data-marks="(\d)">', part)
+
+        def one(k: re.Match) -> str:
+            n = int(k.group(1))
+            if len(figs) != 1 or n > int(figs[0][1]):
+                GUIDE_FIGURE_PROBLEMS.add(f"{page}: ({n}) in the text has no marked picture with that number under its heading")
+                return k.group(0)
+            return mark_ref(figs[0][0], n, k.group(0))
+
+        pieces = re.split(r"(<figure .*?</figure>|<[^>]+>)", part, flags=re.S)
+        out.append("".join(p if p.startswith("<") else re.sub(r"\(([1-9])\)", one, p) for p in pieces))
+    return "".join(out)
 
 
 def guide_ids(page: str) -> list[str]:
@@ -1534,7 +1640,7 @@ def guide_ids(page: str) -> list[str]:
 def guide_problems(out: Path = OUT) -> list[str]:
     """Entry 436 sections 3.1 and 4.5, the guides' own page checks: every id once, every link to a part of the page has its target, and
     the side list names every heading in order in the HTML as built, so it is whole with scripts off. The user guide has subsections."""
-    found = []
+    found = sorted(GUIDE_FIGURE_PROBLEMS)
     for key, *_ in GUIDES:
         rel = f"guides/{key}/index.html"
         page = (out / rel).read_text(encoding="utf-8")
@@ -1574,7 +1680,7 @@ def toc_list(toc: list[tuple[str, str, list[tuple[str, str]]]]) -> str:
 
 
 def page_guide(key: str, md: str, pdf: str, label: str, desc: str) -> str:
-    title, content, toc = render_guide(need(REPO / "docs" / md), marks=True)
+    title, content, toc = render_guide(need(REPO / "docs" / md), links=True)
     toc_html = toc_list(toc)
     # Entry 436 section 2.4: below 1100 px the side list is hidden, so the same list opens from the top of the guide.
     body = f"""
@@ -3187,6 +3293,16 @@ GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list
       if (h) setTimeout(() => pin(h), 0);
     }
   });
+  // Entry 437 section 3.4: pointing at, or focusing, a marking's number in the text or the caption thickens that outline.
+  const hot = (e, on) => {
+    const r = e.target instanceof Element ? e.target.closest(".mark-ref") : null;
+    const box = r ? document.getElementById(r.dataset.mark) : null;
+    if (box) box.classList.toggle("hot", on);
+  };
+  article.addEventListener("mouseover", (e) => hot(e, true));
+  article.addEventListener("mouseout", (e) => hot(e, false));
+  article.addEventListener("focusin", (e) => hot(e, true));
+  article.addEventListener("focusout", (e) => hot(e, false));
   // The link mark: the section's full address in the address bar and on the clipboard, and a short note a screen reader hears too.
   const note = document.createElement("p");
   note.className = "link-note";
@@ -3763,6 +3879,16 @@ p.text,.text p,.text{color:var(--text)}
 .prose th,.prose td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
 .prose th{color:var(--dim);font-weight:600}
 .guide-fig{margin:8px 0;display:flex;flex-direction:column;gap:10px}
+.guide-fig img.phone-shot{width:auto;max-width:100%;max-height:560px;margin:0 auto;border-radius:14px}
+.fig-marks{position:relative}
+.marks{position:absolute;inset:1px;pointer-events:none}
+.mark-box{position:absolute;border:2px solid var(--amber);border-radius:6px;box-shadow:0 0 0 1px var(--bg),inset 0 0 0 1px var(--bg);transition:border-width .12s}
+.mark-box.hot{border-width:4px}
+.mark-badge{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--amber);color:var(--on-amber);
+font:600 13px/22px "IBM Plex Sans",sans-serif;text-align:center;box-shadow:0 0 0 1px var(--bg)}
+.mark-ref{color:var(--amber);font-weight:600;cursor:default;border-radius:3px}
+.mark-ref:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){.mark-box{transition:none}}
 a.plain{color:var(--text)}
 
 /* the features page and its spotlight, entry 242 */

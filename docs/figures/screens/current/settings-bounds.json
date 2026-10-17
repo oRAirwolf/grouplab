@@ -1,0 +1,79 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Angles": [
+      215,
+      172,
+      90,
+      32
+    ],
+    "Both": [
+      77,
+      748,
+      56,
+      32
+    ],
+    "Calibers": [
+      77,
+      660,
+      76,
+      32
+    ],
+    "Cartridges": [
+      77,
+      704,
+      89,
+      32
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Distances": [
+      238,
+      325,
+      70,
+      32
+    ],
+    "Give the clicks anyway": [
+      77,
+      530,
+      159,
+      32
+    ],
+    "Lengths": [
+      238,
+      285,
+      70,
+      32
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Say leave it, and why": [
+      77,
+      486,
+      150,
+      32
+    ],
+    "Show a group's size on the paper first, and its angle beneath, for shooting at one distance": [
+      77,
+      369,
+      545,
+      32
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Accept and analyze": [
+      1205,
+      46,
+      143,
+      27
+    ],
+    "BackingChoice": [
+      1045,
+      267,
+      160,
+      32
+    ],
+    "Close this target": [
+      278,
+      8,
+      20,
+      20
+    ],
+    "Detect on a GroupLab sheet": [
+      805,
+      46,
+      192,
+      27
+    ],
+    "Discard edits": [
+      1097,
+      46,
+      104,
+      27
+    ],
+    "Fit the image to the view": [
+      893,
+      823,
+      34,
+      34
+    ],
+    "Impact": [
+      215,
+      93,
+      34,
+      34
+    ],
+    "Lasso shots onto a bull": [
+      329,
+      93,
+      34,
+      34
+    ],
+    "Leave the count": [
+      1060,
+      609,
+      120,
+      27
+    ],
+    "Lines to bulls": [
+      1045,
+      847,
+      105,
+      29
+    ],
+    "MaterialFold": [
+      1045,
+      134,
+      157,
+      17
+    ],
+    "More": [
+      1352,
+      42,
+      34,
+      34
+    ],
+    "NEXT": [
+      1045,
+      764,
+      339,
+      27
+    ],
+    "NOW": [
+      1045,
+      712,
+      339,
+      44
+    ],
+    "Open another target": [
+      312,
+      6,
+      30,
+      22
+    ],
+    "Pan, and click a mark to select it": [
+      63,
+      93,
+      34,
+      34
+    ],
+    "PaperChoice": [
+      1045,
+      210,
+      160,
+      32
+    ],
+    "Place bulls, on a target GroupLab did not print": [
+      291,
+      93,
+      34,
+      34
+    ],
+    "Point of aim": [
+      177,
+      93,
+      34,
+      34
+    ],
+    "Redo (Ctrl+Y)": [
+      422,
+      93,
+      34,
+      34
+    ],
+    "Remember these for my next sheet": [
+      1045,
+      303,
+      233,
+      32
+    ],
+    "Rotate left ([)": [
+      931,
+      823,
+      34,
+      34
+    ],
+    "Rotate right (])": [
+      969,
+      823,
+      34,
+      34
+    ],
+    "Scale: length": [
+      101,
+      93,
+      34,
+      34
+    ],
+    "Scale: rectangle": [
+      139,
+      93,
+      34,
+      34
+    ],
+    "Select": [
+      253,
+      93,
+      34,
+      34
+    ],
+    "SetupBlock": [
+      1045,
+      134,
+      339,
+      201
+    ],
+    "Show work": [
+      1001,
+      46,
+      92,
+      27
+    ],
+    "The shot on bull 14 is two shots": [
+      1060,
+      578,
+      216,
+      27
+    ],
+    "Undo (Ctrl+Z)": [
+      384,
+      93,
+      34,
+      34
+    ],
+    "Zoom in": [
+      817,
+      823,
+      34,
+      34
+    ],
+    "Zoom out": [
+      855,
+      823,
+      34,
+      34
+    ],
+    "gl-cf25-ltr-scan.png, Marking": [
+      61,
+      4,
+      213,
+      27
+    ]
+  }
+}

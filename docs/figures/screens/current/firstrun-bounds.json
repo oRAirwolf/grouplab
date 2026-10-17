@@ -1,0 +1,283 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Accept and analyze": [
+      1205,
+      46,
+      143,
+      27
+    ],
+    "Add or edit equipment": [
+      1047,
+      734,
+      160,
+      27
+    ],
+    "Add this sheet's shots": [
+      1047,
+      655,
+      157,
+      27
+    ],
+    "Ask me each time": [
+      393,
+      677,
+      132,
+      27
+    ],
+    "Both, I have rifles of each": [
+      516,
+      133,
+      178,
+      27
+    ],
+    "CalibreBox": [
+      1051,
+      247,
+      204,
+      32
+    ],
+    "Close this target": [
+      224,
+      8,
+      20,
+      20
+    ],
+    "Detect on a GroupLab sheet": [
+      913,
+      46,
+      192,
+      27
+    ],
+    "Fit the image to the view": [
+      893,
+      823,
+      34,
+      34
+    ],
+    "Impact": [
+      215,
+      93,
+      34,
+      34
+    ],
+    "Lasso shots onto a bull": [
+      329,
+      93,
+      34,
+      34
+    ],
+    "Load": [
+      1045,
+      692,
+      200,
+      32
+    ],
+    "MOA": [
+      449,
+      133,
+      55,
+      27
+    ],
+    "MaterialFold": [
+      1045,
+      771,
+      157,
+      17
+    ],
+    "May be published. I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab's public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published.": [
+      391,
+      541,
+      612,
+      68
+    ],
+    "Mil": [
+      393,
+      133,
+      44,
+      27
+    ],
+    "More": [
+      1352,
+      42,
+      34,
+      34
+    ],
+    "Never": [
+      537,
+      677,
+      62,
+      27
+    ],
+    "New target, Marking": [
+      61,
+      4,
+      159,
+      27
+    ],
+    "Not known": [
+      1053,
+      285,
+      91,
+      27
+    ],
+    "Open another target": [
+      258,
+      6,
+      30,
+      22
+    ],
+    "Open image…": [
+      483,
+      509,
+      109,
+      27
+    ],
+    "Pan, and click a mark to select it": [
+      63,
+      93,
+      34,
+      34
+    ],
+    "Place bulls, on a target GroupLab did not print": [
+      291,
+      93,
+      34,
+      34
+    ],
+    "Point of aim": [
+      177,
+      93,
+      34,
+      34
+    ],
+    "Redo (Ctrl+Y)": [
+      422,
+      93,
+      34,
+      34
+    ],
+    "Rifle and barrel": [
+      1045,
+      617,
+      200,
+      32
+    ],
+    "Rotate left ([)": [
+      931,
+      823,
+      34,
+      34
+    ],
+    "Rotate right (])": [
+      969,
+      823,
+      34,
+      34
+    ],
+    "Rounds fired at the group, sighters not counted": [
+      1051,
+      546,
+      90,
+      32
+    ],
+    "Scale: length": [
+      101,
+      93,
+      34,
+      34
+    ],
+    "Scale: rectangle": [
+      139,
+      93,
+      34,
+      34
+    ],
+    "Select": [
+      253,
+      93,
+      34,
+      34
+    ],
+    "Send everything I open, to help improve GroupLab": [
+      393,
+      642,
+      325,
+      27
+    ],
+    "Send finished targets only": [
+      730,
+      642,
+      181,
+      27
+    ],
+    "Set": [
+      1265,
+      249,
+      46,
+      27
+    ],
+    "SetupBlock": [
+      1045,
+      146,
+      339,
+      642
+    ],
+    "ShotDistance": [
+      1051,
+      419,
+      90,
+      32
+    ],
+    "ShotDistanceUnit": [
+      1149,
+      419,
+      70,
+      32
+    ],
+    "Show work": [
+      1109,
+      46,
+      92,
+      27
+    ],
+    "Sizes in inches": [
+      391,
+      91,
+      113,
+      32
+    ],
+    "Sizes in millimeters": [
+      512,
+      91,
+      142,
+      32
+    ],
+    "Testing only. I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection. They are kept by the project and never published. GPS location data is removed from every photo when it arrives.": [
+      391,
+      482,
+      619,
+      51
+    ],
+    "Undo (Ctrl+Z)": [
+      384,
+      93,
+      34,
+      34
+    ],
+    "Zoom in": [
+      817,
+      823,
+      34,
+      34
+    ],
+    "Zoom out": [
+      855,
+      823,
+      34,
+      34
+    ]
+  }
+}

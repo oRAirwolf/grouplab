@@ -290,6 +290,14 @@ public class Entry109Tests
 
         void Save(Avalonia.Controls.Window window, string name)
         {
+            // Entry 437: a notice fades by itself a few seconds after it appears, so no picture shows one. The walk analyzes the same
+            // sample many times, and its "another copy of a sheet" notices had piled up over the corner of every later screen, covering
+            // controls the guide's markings point at.
+            if (window is MainWindow main)
+            {
+                main.Confirmations.Clear();
+            }
+
             Dispatcher.UIThread.RunJobs();
             AvaloniaHeadlessPlatform.ForceRenderTimerTick();
             Dispatcher.UIThread.RunJobs();
@@ -298,6 +306,12 @@ public class Entry109Tests
             foreach (string output in outputs)
             {
                 frame.Save(Path.Combine(output, name + ".png"), new PngBitmapEncoderOptions());
+                // Entry 437 section 2.1: the size the site shows gets its controls' positions; both themes lay out the same, so once.
+                const string Shown = "-light-1400x900";
+                if (name.EndsWith(Shown, StringComparison.Ordinal))
+                {
+                    File.WriteAllText(Path.Combine(output, name[..^Shown.Length] + "-bounds.json"), ScreenBounds.Json(window, frame.PixelSize.Width, frame.PixelSize.Height));
+                }
             }
         }
 
@@ -562,6 +576,12 @@ public class Entry109Tests
                         window.AdvancedPanel.IsExpanded = false;
                         window.ShowSettings();
                         Save(window, $"settings-{name}-{size}");
+                        // Entry 437 section 1.3: the lower half of Settings, from Your data down, which the user guide's section 12 describes.
+                        var yourData = window.GetLogicalDescendants().OfType<TextBlock>().First(t => t.Text == "Your data");
+                        yourData.BringIntoView(new Avalonia.Rect(0, 0, 1, 4000));
+                        Save(window, $"settings-data-{name}-{size}");
+                        // The other theme is photographed in this same window, and its Settings picture starts from the top.
+                        Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<ScrollViewer>(yourData)?.ScrollToHome();
                         window.ShowSettings(false);
                         window.ShowSessions();
                         Save(window, $"sessions-{name}-{size}");

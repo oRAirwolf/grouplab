@@ -7104,6 +7104,102 @@
   "Support Release notes GitHub Discord &#169; 2026 the GroupLab contributors.": {
    "kind": "decided",
    "where": "the test page's footer, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+  },
+  "The first question GroupLab asks: Mil, MOA, Both Each rifle keeps its own A rifle's record has its scope unit and one click : 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)"
+  },
+  "A store-bought bullseye recognized, with GroupLab asking which of the 6 in and 8 in Shoot-N-C bullseyes it is Scale markers Put one of these beside a target GroupLab did not print and it takes the scale from the photo, with nothing typed or tapped.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/store-target, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "The marking screen with a line from each hole to its bull: Lines to bulls, Next unsure hole, Done Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/bull-lines, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "A line reads it back, for example \"GroupLab will read it as: 23 bulls fired at, one shot each, rows 1 to 5 as Load A to Load E.\" The side panel question How did you shoot this sheet, with its three answers and the Loads on this sheet buttons A sheet with one scoring bull takes a group.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/groups, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "The side panel for a photograph: Check your printer, Measure this sheet with a ruler 4.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/shots-open, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "The question GroupLab asks about a picture with no sheet: Mark it by hand, It is a store-bought target, It is a GroupLab sheet Every result is an ordinary mark that you can move, delete or reassign.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/which-target, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "The ballistics screen: Work out the table, Trajectory, Hit probability The dope table The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs"
+  },
+  "A pooled set of three sheets: The set tab Quicker: drop them together Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads each one's codes first.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)"
+  },
+  "![The first question GroupLab asks: 1 Mil, 2 MOA, 3 Both](figures/screens/current/scope-unit-light-1400x900.png) ### Each rifle keeps its own A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)"
+  },
+  "![A rifle's record in Equipment: 1 Scope unit, 2 Click value](figures/screens/current/equipment-light-1400x900.png) ### Everything aiming follows it Everything aiming follows it: the zero correction, the clicks, Shots Needed to Zero, the dope table, the hit chance, the table of each shot's offset, Zero from this group, and group sizes shown as angles.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/equipment, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "![Targets, with a built-in sheet chosen: 1 Open as PDF, 2 Bulls in](figures/screens/current/targets-light-1400x900.png) - **Bulls in** black, blue or red, for any sheet, built in or your own, on the computer and the phone.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Rendering/BullColour.cs BullColours.Apply; src/GroupLab.App/PrintPanel.cs ColourNote; RenderDifferenceHoleDetector Inks; entry 297"
+  },
+  "![The marking screen with a line from each hole to its bull: 1 Lines to bulls, 2 Next unsure hole, 3 Done](figures/screens/current/bull-lines-light-1400x900.png) Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10.": {
+   "kind": "decided",
+   "where": "how the sheets are designed to be shot, docs/TARGET-LIBRARY.md"
+  },
+  "A line reads it back, for example \"GroupLab will read it as: 23 bulls fired at, one shot each, rows 1 to 5 as Load A to Load E.\" ![The side panel question How did you shoot this sheet, with its three answers and the Loads on this sheet buttons](figures/screens/current/groups-light-1400x900.png) A sheet with one scoring bull takes a group.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/SheetReading.cs SheetReading (the read-back line and the three ways of shooting a sheet); entry 407 section 2"
+  },
+  "![The side panel for a photograph: 1 Check your printer, 2 Measure this sheet with a ruler](figures/screens/current/shots-open-light-1400x900.png) ## 4.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/shots-open, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "![The question GroupLab asks about a picture with no sheet: 1 Mark it by hand, 2 It is a store-bought target, 3 It is a GroupLab sheet](figures/screens/current/which-target-light-1400x900.png) Every result is an ordinary mark that you can move, delete or reassign.": {
+   "kind": "code",
+   "where": "MarkingSession in src/GroupLab.Core/Marking/MarkingSession.cs"
+  },
+  "![Velocity and the vertical, with the share velocity explains: 1 Conditions on the day, 2 Velocity band](figures/screens/current/velocity-light-1400x900.png) **Back**, top left, returns to marking with every edit as you left it.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/velocity, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "![Session records: 1 Rifle filter, 2 Load filter, 3 Delete](figures/screens/current/sessions-light-1400x900.png) The analysis's **Report** button saves the session as a PDF, the full report or one page.": {
+   "kind": "code",
+   "where": "ReportButton in src/GroupLab.App/MainWindow.GroupTools.cs: Full report and One-page report (entry 280 section 2)"
+  },
+  "![The ballistics screen: 1 Work out the table, 2 Trajectory, 3 Hit probability](figures/screens/current/ballistics-light-1400x900.png) ### The dope table The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Ballistics.cs the dope table's velocity and energy columns; tests/GroupLab.App.Tests/Entry112Tests.cs"
+  },
+  "![Hit probability, with the first round and the simulated impacts: 1 The target shape](figures/screens/current/ballistics-hit-light-1400x900.png) A wind call is drawn once for a whole string, never per shot, because every shot you fire on one reading shares its error.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/ballistics-hit, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "![A pooled set of three sheets: 1 The set tab](figures/screens/current/set-tab-light-1400x900.png) ### Quicker: drop them together Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads each one's codes first.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)"
+  },
+  "The first question GroupLab asks: Mil, MOA, Both Each rifle keeps its own A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/scope-unit, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "![A store-bought bullseye recognized, with GroupLab asking which of the 6 in and 8 in Shoot-N-C bullseyes it is](figures/screens/current/store-target-light-1400x900.png) ### Scale markers Put one of these beside a target GroupLab did not print and it takes the scale from the photo, with nothing typed or tapped.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/store-target, rendered by the application's own tests, and the controls it marks, from its -bounds.json; the caption says what it shows (entry 437)"
+  },
+  "![The settings](figures/screens/current/settings-light-1400x900.png) ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab sends](figures/screens/current/settings-data-light-1400x900.png) ## 13.": {
+   "kind": "code",
+   "where": "android/GroupLab.Android: CapturePage.cs, CaptureScreen.cs, FeedbackView.cs, ResultView.cs, FiguresView.cs, SessionsPage.cs, BallisticsPage.cs, TargetsPage.cs, PrinterCheckPage.cs, MainActivity.cs share intents; docs/PHONE-PARITY.md (entry 275 section 15)"
+  },
+  "The settings The lower half of the settings: Export all my data, Import data, What GroupLab sends 13.": {
+   "kind": "code",
+   "where": "the pictures docs/figures/screens/current/settings and settings-data, rendered by the application's own tests, and the controls settings-data marks, from its -bounds.json; the captions say what they show (entry 437)"
   }
  },
  "rules": [

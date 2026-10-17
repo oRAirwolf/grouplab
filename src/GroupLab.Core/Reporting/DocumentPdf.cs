@@ -108,14 +108,20 @@ public static partial class DocumentPdf
             {
                 Flush();
             }
+            else if (line.StartsWith("<!--", StringComparison.Ordinal))
+            {
+                // A note for the site, such as entry 437's line naming a picture's markings; GuideVerb draws them into the picture.
+            }
             else if (picture.Success)
             {
                 Flush();
                 if (images(picture.Groups["path"].Value) is { } image)
                 {
-                    long height = width * image.PixelHeight / image.PixelWidth;
+                    // Entry 437 section 1.1: a phone's tall picture is set at most half a page high, at its own proportions, not stretched across.
+                    long height = Math.Min(width * image.PixelHeight / image.PixelWidth, PageHeight / 2);
+                    long shown = height * image.PixelWidth / image.PixelHeight;
                     Need(height + Pt(20));
-                    pages[^1].Add(new ImageBox(SceneLayer.Labels, Margin, y + Pt(4), width, height, image.Jpeg, image.PixelWidth, image.PixelHeight));
+                    pages[^1].Add(new ImageBox(SceneLayer.Labels, Margin + ((width - shown) / 2), y + Pt(4), shown, height, image.Jpeg, image.PixelWidth, image.PixelHeight));
                     y += height + Pt(4);
                     Lines(picture.Groups["alt"].Value, Pt(8), Grey);
                     y += Pt(6);

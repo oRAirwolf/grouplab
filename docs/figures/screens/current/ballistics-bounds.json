@@ -1,0 +1,121 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "At one range": [
+      1286,
+      136,
+      80,
+      32
+    ],
+    "BallisticUnitsImperial": [
+      1086,
+      85,
+      78,
+      27
+    ],
+    "BallisticUnitsMetric": [
+      1168,
+      85,
+      64,
+      27
+    ],
+    "BallisticViewHit": [
+      447,
+      138,
+      112,
+      27
+    ],
+    "BallisticViewTrajectory": [
+      356,
+      138,
+      87,
+      27
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Keep these on the records": [
+      72,
+      628,
+      182,
+      27
+    ],
+    "Load": [
+      313,
+      83,
+      160,
+      32
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Rifle": [
+      145,
+      83,
+      160,
+      32
+    ],
+    "TrajectorySeriesDrop": [
+      776,
+      181,
+      55,
+      27
+    ],
+    "TrajectorySeriesEnergy": [
+      1003,
+      181,
+      67,
+      27
+    ],
+    "TrajectorySeriesVelocity": [
+      925,
+      181,
+      74,
+      27
+    ],
+    "TrajectorySeriesWind": [
+      835,
+      181,
+      86,
+      27
+    ],
+    "Work it out": [
+      1117,
+      631,
+      92,
+      27
+    ],
+    "Work out the table": [
+      1244,
+      85,
+      138,
+      27
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ],
+    "▸": [
+      70,
+      669,
+      230,
+      19
+    ],
+    "▾": [
+      70,
+      136,
+      230,
+      19
+    ]
+  }
+}

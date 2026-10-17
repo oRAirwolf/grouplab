@@ -1,0 +1,235 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Add a store-bought target": [
+      252,
+      157,
+      180,
+      27
+    ],
+    "Bulls in": [
+      510,
+      573,
+      140,
+      32
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Design your own sheet": [
+      79,
+      157,
+      161,
+      27
+    ],
+    "Duplicate": [
+      461,
+      392,
+      83,
+      27
+    ],
+    "Fit": [
+      1044,
+      827,
+      42,
+      27
+    ],
+    "GroupLab 3x3 2 MOA, A4": [
+      77,
+      403,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, C Bull, A4": [
+      77,
+      365,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, C Bull, Letter": [
+      77,
+      687,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, C Bull, Set of 3 A4 Sheets": [
+      77,
+      422,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, C Bull, Set of 3 Letter Sheets": [
+      77,
+      744,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, E Bull, A4": [
+      77,
+      384,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, E Bull, Letter": [
+      77,
+      706,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, E Bull, Set of 3 A4 Sheets": [
+      77,
+      441,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, E Bull, Set of 3 Letter Sheets": [
+      77,
+      763,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, Letter": [
+      77,
+      725,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, Set of 3 A4 Sheets": [
+      77,
+      460,
+      360,
+      19
+    ],
+    "GroupLab 3x3 2 MOA, Set of 3 Letter Sheets": [
+      77,
+      782,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Load Development with Load Block, C Bull, Letter": [
+      77,
+      513,
+      360,
+      34
+    ],
+    "GroupLab 5x5 Load Development with Load Block, E Bull, Letter": [
+      77,
+      547,
+      360,
+      34
+    ],
+    "GroupLab 5x5 Load Development with Load Block, Letter": [
+      77,
+      581,
+      360,
+      34
+    ],
+    "GroupLab 5x5 Load Development, 100 m, A4": [
+      77,
+      289,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Load Development, A4": [
+      77,
+      346,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Load Development, C Bull, A4": [
+      77,
+      308,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Load Development, C Bull, Letter": [
+      77,
+      479,
+      360,
+      34
+    ],
+    "GroupLab 5x5 Load Development, E Bull, A4": [
+      77,
+      327,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Load Development, E Bull, Letter": [
+      77,
+      615,
+      360,
+      34
+    ],
+    "GroupLab 5x5 Load Development, Letter": [
+      77,
+      649,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Rimfire, 50 m, A4": [
+      77,
+      828,
+      360,
+      19
+    ],
+    "GroupLab 5x5 Rimfire, 50 yd, Letter": [
+      77,
+      847,
+      360,
+      9
+    ],
+    "GroupLab 5x6 Load Development, Letter": [
+      77,
+      668,
+      360,
+      19
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Open as PDF": [
+      1098,
+      827,
+      102,
+      27
+    ],
+    "Print on": [
+      513,
+      529,
+      260,
+      32
+    ],
+    "Print the actual-size instruction along the bottom of each sheet": [
+      459,
+      710,
+      362,
+      34
+    ],
+    "Zoom in": [
+      863,
+      827,
+      74,
+      27
+    ],
+    "Zoom out": [
+      949,
+      827,
+      83,
+      27
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

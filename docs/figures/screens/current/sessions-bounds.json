@@ -1,0 +1,79 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "2026-10-17": [
+      109,
+      381,
+      1187,
+      19
+    ],
+    "2099-01-01": [
+      109,
+      349,
+      1187,
+      19
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Compare the chosen": [
+      79,
+      201,
+      149,
+      27
+    ],
+    "Compare the session Second load, GroupLab 5x5 Load Development, Letter": [
+      77,
+      343,
+      32,
+      32
+    ],
+    "Compare the session Test load, GroupLab 5x5 Load Development, Letter": [
+      77,
+      375,
+      32,
+      32
+    ],
+    "Delete": [
+      1298,
+      345,
+      76,
+      27
+    ],
+    "Load": [
+      337,
+      155,
+      180,
+      32
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Pool the chosen": [
+      79,
+      244,
+      121,
+      27
+    ],
+    "Rifle": [
+      112,
+      155,
+      180,
+      32
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

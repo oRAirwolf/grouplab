@@ -1137,6 +1137,73 @@ site build pass.
    marks the section in view; no sideways scroll at 390. **Claims:** the page's 13 checkable sentences are backed in
    `docs/claims-backing.json` (the cards by their Features entries, the platforms by docs/PLATFORM-SUPPORT.md, the licence by LICENSE).
    No sentence had to change.
+8. **Live** (sections 4.2 and 4.3): grouplab.org served 74cf38fd within about seven minutes of the publish; `/testpage/` answers 200
+   with its noindex tag and is not in the live sitemap, and the home page is unchanged. Eight screenshots of the live page, desktop at
+   1440 and phone at 390, light and dark, the hero and the whole page each (after scrolling through once, so every section has eased
+   in and every picture loaded), are in `C:\Dev\grouplab-local\homepage-concept-b\screens\` for the planning session to show Alan.
+
+## Entry 437: more screenshots in the user guide, and markings on them that stay right (2026-10-17)
+
+1. **Pictures added** (docs-sonnet chose and captioned them; checked here against the pictures): 19 new, none of the seven removed, so
+   the guide shows 26. Per section: Mil or MOA, scope-unit and equipment; 1, scale-markers, fingerprint and store-target; 2,
+   bull-lines and groups; 3, shots-open; 4, which-target; 5, velocity; 8, pairing and ballistics-hit (the ballistics picture moved down
+   to "How the screen is laid out"); 10, set-tab; 12, settings-data (new, below); 13, four phone pictures (fold-capture,
+   fold-result-landscape, fold-open-targets, fold-sessions-landscape), shown at a phone's size. **One new render**: the lower half of
+   Settings, `settings-data`, which section 12 describes (Your data, Diagnostics, Report a problem), added to the render walk, to
+   `screens.json` and `SOURCES.md`, and to the tour's Settings stop as its second picture. **Screens the guide describes that have no
+   render yet**, each needing a new state in the render walk, listed for the next pass: the update bar (9); the Report a problem
+   window (11), a window of its own that the walk does not open; the live camera with its level (3 and 13), which needs a camera; the
+   Design your own sheet form scrolled to Make the sheet (1); the hole editor (5); on the phone, the picture check, Fix holes,
+   marking by hand, Ballistics and Targets (13), which come from the emulator's sweep, not this walk.
+2. **Where things are on each picture.** When `Entry109Tests` photographs a screen at 1400 by 900 in the light theme, it now writes
+   `<screen>-bounds.json` beside it (`ScreenBounds`): every visible control with a name, as `[x, y, width, height]` in the picture's
+   own pixels, clipped to what is on the picture. A control's name is its `Name`, else its accessible name, else the words on it
+   (button, tab, check box, menu entry); parts of a control's template are left out, and the first visible control with a name keeps it.
+   The weekly screenshot job writes them with the pictures and commits the folder, so a picture and its positions are always retaken
+   together. **The phone pictures have none:** they are taken on the Android emulator by `scripts/android-screens.sh` from the screen
+   alone, and nothing there reads the application's layout yet; section 13's phone pictures are therefore shown unmarked.
+3. **The markdown says which controls a picture marks**, in one line under it, `<!-- marks: Accept and analyze | Next unsure hole -->`,
+   names in the order the text mentions them; GitHub shows nothing for it. `render_guide` takes it out and draws the markings;
+   the text's "(1)" and the caption's "1 ..." become numbers that point at their outline. **The site build fails** (the guide page is held
+   back, as every page check since entry 387) when a marking names a control not in its picture's positions file, a marked picture
+   has no positions file, a picture has more than three markings, a caption does not list its markings, or a "(n)" in the text has no
+   marked picture with that number under its heading. `site-guide-tests.py` holds each of these (26 checks).
+4. **The look, as section 3 set it:** an amber (`--amber`) outline 2 px wide with a 1 px halo in the page's background, outside and
+   inside, and a 22 px amber badge with its number in the page's dark text color (`--on-amber`) in Plex Sans, on the outline's top left
+   corner, moved inside the picture at its edge and along the outline when it would sit on another badge (`mark_overlay`). It is laid
+   over the picture as positioned elements sized in percent of the picture, so it scales with it and the PNG is untouched; HTML rather
+   than an SVG layer, because a badge has to stay 22 px across however small the picture is shown, which an SVG scaled with the
+   picture cannot do. Pointing at or focusing a number in the text or caption thickens that outline to 4 px (no animation under
+   reduced motion). Badges and outlines are `aria-hidden`; the caption, which is the alt text, says the same in words.
+5. **In the PDF** `GuideVerb` draws the same outlines and badges into each picture from the same positions file and the same
+   placement (white halo for the paper), and `DocumentPdf` skips the marks line and sets a phone's tall picture at most half a page
+   high at its own proportions instead of across the page.
+6. **Which controls are marked** (2.4, docs-sonnet's choice from each positions file): scope-unit, Mil, MOA and Both; equipment, the
+   scope unit and click value fields; targets, Open as PDF and Bulls in; scale-markers, the three print buttons; fingerprint, the
+   steps, Next and Its printed size; bull-lines, Lines to bulls, Next unsure hole and Done; shots-open, Check your printer and Measure
+   this sheet with a ruler; which-target, its three answers; velocity, Conditions on the day and Velocity band; sessions, the rifle
+   and load filters and Delete; pairing, the three choices under a reading; ballistics, Work out the table and the Trajectory and Hit
+   probability tabs; ballistics-hit, the target shape; set-tab, the set's tab; settings-data, Export all my data, Import data and What GroupLab sends. A second marking on set-tab (a single table row
+   standing for the whole Shots list) was dropped here as misleading. **Unmarked, and why:** analysis-open and settings, because no
+   control the text under them sends the reader to has a name in their positions files (the six figures are not controls); marking,
+   because it shares its heading with which-target; compare, which has no positions file yet (below); store-target, whose picture is
+   put together from two windows and has none; and the phone pictures.
+7. **The pictures were retaken** to go with their positions: the positions must come from the same render as the picture, so this
+   commit carries a fresh render of every desktop screen, exactly as the weekly job makes them, except **Compare loads**, whose
+   published picture is Alan's own two suppressor sheets from the test data (186 MB, not downloaded here): it keeps its picture, has
+   no positions file and no markings until the weekly job retakes both. **Fixed on the way:** the render walk analyzes the same
+   sample many times, and its "This looks like another copy of a sheet" notices had piled up in the corner of every later screen (two
+   in the published pictures, covering Open as PDF on Targets); a notice fades by itself in a few seconds, so the walk now clears
+   them before each picture.
+8. **Checked** in headless Chrome, all 14 marked pictures at 1400 by 900 in both themes: every outline sits on its control, badges
+   clear the edges, and numbers in text and caption thicken their outline. Before and after, the Session records picture:
+   [before](figures/entry-437/sessions-before.png), [after](figures/entry-437/sessions-after.png).
+9. **The PDF** was made again: 35 pages, the markings drawn into its pictures, the phone pictures half a page high and centered; the
+   user guide PDF is 4104 KB (1421 before), a reasonable download for 26 pictures. Pictures are now held to 1400 by 1100 pixels, which
+   is what half a page shows at about 200 dots an inch.
+10. **Claims:** the extractor now ignores a picture's badges and the bracketed numbers, as it ignores the heading marks; the backing of
+   each sentence that only gained a number was carried over, and each new caption is backed by its picture and positions file
+   (5322 claims, all backed).
 
 ## Decision log
 

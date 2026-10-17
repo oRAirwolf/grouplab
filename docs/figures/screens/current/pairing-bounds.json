@@ -1,0 +1,187 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "A shot of this group…": [
+      503,
+      576,
+      152,
+      27
+    ],
+    "At one range": [
+      1286,
+      136,
+      80,
+      32
+    ],
+    "BallisticUnitsImperial": [
+      1086,
+      85,
+      78,
+      27
+    ],
+    "BallisticUnitsMetric": [
+      1168,
+      85,
+      64,
+      27
+    ],
+    "Cancel": [
+      920,
+      576,
+      67,
+      27
+    ],
+    "Close this target": [
+      271,
+      8,
+      20,
+      20
+    ],
+    "Keep these on the records": [
+      72,
+      662,
+      182,
+      27
+    ],
+    "Leave it out": [
+      821,
+      576,
+      95,
+      27
+    ],
+    "Load": [
+      313,
+      83,
+      160,
+      32
+    ],
+    "Not this group": [
+      388,
+      576,
+      111,
+      27
+    ],
+    "Open another target": [
+      305,
+      6,
+      30,
+      22
+    ],
+    "Reading 1, 2689 fps: Not this group. Change it": [
+      576,
+      420,
+      160,
+      27
+    ],
+    "Reading 10, 2706 fps: Shot 2a. Change it": [
+      576,
+      804,
+      160,
+      27
+    ],
+    "Reading 11, 2690 fps: Shot 2b. Change it": [
+      576,
+      837,
+      160,
+      27
+    ],
+    "Reading 12, 2697 fps: Shot 2c. Change it": [
+      576,
+      870,
+      160,
+      6
+    ],
+    "Reading 2, 2696 fps: Not this group. Change it": [
+      576,
+      453,
+      160,
+      27
+    ],
+    "Reading 3, 2703 fps: Not this group. Change it": [
+      576,
+      486,
+      160,
+      27
+    ],
+    "Reading 4, 2710 fps: Not this group. Change it": [
+      576,
+      519,
+      160,
+      27
+    ],
+    "Reading 5, 2694 fps: Shot 1a, clean bore. Change it": [
+      576,
+      639,
+      160,
+      27
+    ],
+    "Reading 6, 2701 fps: Shot 1b. Change it": [
+      576,
+      672,
+      160,
+      27
+    ],
+    "Reading 7, 2708 fps: Shot 1c. Change it": [
+      576,
+      705,
+      160,
+      27
+    ],
+    "Reading 8, 2692 fps: Shot 1d. Change it": [
+      576,
+      738,
+      160,
+      27
+    ],
+    "Reading 9, 2699 fps: Shot 1e, left out in ShotView. Change it": [
+      576,
+      771,
+      195,
+      27
+    ],
+    "Rifle": [
+      145,
+      83,
+      160,
+      32
+    ],
+    "This group, clean bore": [
+      659,
+      576,
+      158,
+      27
+    ],
+    "Work it out": [
+      1117,
+      631,
+      92,
+      27
+    ],
+    "Work out the table": [
+      1244,
+      85,
+      138,
+      27
+    ],
+    "sample-target.png, Analysis": [
+      61,
+      4,
+      206,
+      27
+    ],
+    "▸": [
+      70,
+      703,
+      230,
+      19
+    ],
+    "▾": [
+      70,
+      136,
+      230,
+      19
+    ]
+  }
+}

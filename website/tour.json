@@ -762,6 +762,13 @@
      "Collects what is useful and lets you look at it before anything leaves your machine."
     ]
    ],
+   "moreShots": [
+    [
+     "settings-data",
+     "The lower half of Settings: Sharing, with what GroupLab sends, then Sending targets, Error reports and Hardware survey; Your data, with the Export all my data and Import data buttons; Diagnostics, with Detailed logging, Report a problem and Support GroupLab; and Crash records",
+     "The lower half of Settings. Under Sharing you see what GroupLab may send and that each is still closed. Under Your data, Export all my data and Import data move everything you have kept between computers, and nothing is sent anywhere. Under Diagnostics are Detailed logging, Report a problem and Support GroupLab."
+    ]
+   ],
    "steps": [
     "Set your units once. Everything on every screen follows.",
     "Choose a theme, or leave it following the system.",

@@ -9,19 +9,19 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-17, entry 440 (before it: entry 436, entry 435, entries 432 to 434).
+**Last rewritten:** 2026-10-17, entry 437 (before it: entries 440 and 436, entry 435, entries 432 to 434).
 
 ---
 
 ## In flight
 
+- **Entry 437 (2026-10-17)**: the user guide shows 26 pictures; 15 carry numbered markings that name controls from each screen's
+  positions file (`<screen>-bounds.json`, written by the render walk), and the site build holds every name. Compare loads has no
+  positions file until the weekly screenshot job retakes it with the test data.
 - **Entry 440 (2026-10-17)**: concept B, the new home page, is built at grouplab.org/testpage/ for Alan to approve: noindex, not in the
   sitemap, linked from nowhere (a build check). **The home page at / is unchanged** until Alan approves and an entry swaps it in.
-- **Entry 436 (2026-10-17)**: the user guide has 62 subsections, a contents list that follows the reader, a link on every heading and
-  PDF bookmarks; checked live.
-- **Entries 418, 421 to 424, 426 to 429 and 431 to 435 are done**: CI fails when a guide has a commit its PDF has not (435); the
-  iOS self-test is green (432); the keyboard's lost first Next is logged, cause not found; #31 to #34 are closed.
-- **Entries 425 and 430 are done**: the selected shot is ringed in magenta over everything; question 100 asks about its contrast.
+- **Entries 418 and 421 to 436 are done**: the guide's subsections and links (436); CI fails on a guide PDF behind its guide (435);
+  the iOS self-test is green (432); the selected shot is ringed in magenta (430, question 100); #31 to #34 are closed.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests (11 and 13 on rendered sheets), 31 met; every other
   row names its material (entry 414 section 4).
@@ -46,7 +46,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entries 437 (guide pictures with markings; started, in a stash), 438 (a statistics primer) and 439 (a guided demo in the application).
+1. Entries 438 (a statistics primer) and 439 (a guided demo in the application).
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 
@@ -83,7 +83,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entries 437, 438 and 439.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entries 438 and 439.
 
 ## Things that would surprise somebody who was not here yesterday
 

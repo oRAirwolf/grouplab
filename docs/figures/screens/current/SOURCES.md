@@ -146,6 +146,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `settings-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `settings-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `settings-light-2560x1440.png` | no sheet at all |
+| `settings-data-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `settings-data-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `settings-data-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `settings-data-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `settings-data-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `settings-data-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `settings-data-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `settings-data-light-2560x1440.png` | Entry109Tests synthetic sheet |
 | `optic-dark-1280x720.png` | sheet made by the generator |
 | `optic-dark-1400x900.png` | sheet made by the generator |
 | `optic-dark-1920x1080.png` | sheet made by the generator |

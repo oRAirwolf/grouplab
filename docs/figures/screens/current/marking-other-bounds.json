@@ -1,0 +1,175 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Accept and analyze": [
+      1205,
+      46,
+      143,
+      27
+    ],
+    "Close this target": [
+      326,
+      8,
+      20,
+      20
+    ],
+    "Detect again, keeping 20": [
+      931,
+      46,
+      174,
+      27
+    ],
+    "Fit the image to the view": [
+      893,
+      823,
+      34,
+      34
+    ],
+    "Impact": [
+      215,
+      93,
+      34,
+      34
+    ],
+    "Lasso shots onto a bull": [
+      329,
+      93,
+      34,
+      34
+    ],
+    "MaterialFold": [
+      1045,
+      134,
+      157,
+      17
+    ],
+    "More": [
+      1352,
+      42,
+      34,
+      34
+    ],
+    "NEXT": [
+      1045,
+      429,
+      339,
+      27
+    ],
+    "NOW": [
+      1045,
+      464,
+      339,
+      27
+    ],
+    "One shot": [
+      1060,
+      326,
+      80,
+      27
+    ],
+    "Open another target": [
+      360,
+      6,
+      30,
+      22
+    ],
+    "Pan, and click a mark to select it": [
+      63,
+      93,
+      34,
+      34
+    ],
+    "Place bulls, on a target GroupLab did not print": [
+      291,
+      93,
+      34,
+      34
+    ],
+    "Point of aim": [
+      177,
+      93,
+      34,
+      34
+    ],
+    "Redo (Ctrl+Y)": [
+      422,
+      93,
+      34,
+      34
+    ],
+    "Rotate left ([)": [
+      931,
+      823,
+      34,
+      34
+    ],
+    "Rotate right (])": [
+      969,
+      823,
+      34,
+      34
+    ],
+    "Scale: length": [
+      101,
+      93,
+      34,
+      34
+    ],
+    "Scale: rectangle": [
+      139,
+      93,
+      34,
+      34
+    ],
+    "Select": [
+      253,
+      93,
+      34,
+      34
+    ],
+    "SetupBlock": [
+      1045,
+      134,
+      339,
+      17
+    ],
+    "Show work": [
+      1109,
+      46,
+      92,
+      27
+    ],
+    "Two shots": [
+      1144,
+      326,
+      87,
+      27
+    ],
+    "Undo (Ctrl+Z)": [
+      384,
+      93,
+      34,
+      34
+    ],
+    "Zoom in": [
+      817,
+      823,
+      34,
+      34
+    ],
+    "Zoom out": [
+      855,
+      823,
+      34,
+      34
+    ],
+    "sample-target.png, Marking, not saved": [
+      61,
+      4,
+      261,
+      27
+    ]
+  }
+}

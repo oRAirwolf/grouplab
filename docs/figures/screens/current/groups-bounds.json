@@ -1,0 +1,211 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Accept and analyze": [
+      1205,
+      46,
+      143,
+      27
+    ],
+    "Close this target": [
+      335,
+      8,
+      20,
+      20
+    ],
+    "Detect on a GroupLab sheet": [
+      805,
+      46,
+      192,
+      27
+    ],
+    "Discard edits": [
+      1097,
+      46,
+      104,
+      27
+    ],
+    "Every hole to its nearest bull, however many. Nothing is asked.": [
+      1058,
+      338,
+      313,
+      40
+    ],
+    "Fit the image to the view": [
+      893,
+      823,
+      34,
+      34
+    ],
+    "I will pick bulls": [
+      1045,
+      725,
+      116,
+      27
+    ],
+    "Impact": [
+      215,
+      93,
+      34,
+      34
+    ],
+    "Lasso shots onto a bull": [
+      329,
+      93,
+      34,
+      34
+    ],
+    "Load for every bull": [
+      1133,
+      768,
+      160,
+      32
+    ],
+    "More": [
+      1352,
+      42,
+      34,
+      34
+    ],
+    "One a column": [
+      1218,
+      694,
+      108,
+      27
+    ],
+    "One a row": [
+      1128,
+      694,
+      86,
+      27
+    ],
+    "One load": [
+      1045,
+      694,
+      79,
+      27
+    ],
+    "One shot on each bull I used. GroupLab asks about any bull that seems to hold two.": [
+      1058,
+      182,
+      313,
+      40
+    ],
+    "Open another target": [
+      369,
+      6,
+      30,
+      22
+    ],
+    "Pan, and click a mark to select it": [
+      63,
+      93,
+      34,
+      34
+    ],
+    "Place bulls, on a target GroupLab did not print": [
+      291,
+      93,
+      34,
+      34
+    ],
+    "Point of aim": [
+      177,
+      93,
+      34,
+      34
+    ],
+    "Put this away": [
+      1047,
+      624,
+      106,
+      27
+    ],
+    "Redo (Ctrl+Y)": [
+      422,
+      93,
+      34,
+      34
+    ],
+    "Rotate left ([)": [
+      931,
+      823,
+      34,
+      34
+    ],
+    "Rotate right (])": [
+      969,
+      823,
+      34,
+      34
+    ],
+    "Scale: length": [
+      101,
+      93,
+      34,
+      34
+    ],
+    "Scale: rectangle": [
+      139,
+      93,
+      34,
+      34
+    ],
+    "Select": [
+      253,
+      93,
+      34,
+      34
+    ],
+    "Show work": [
+      1001,
+      46,
+      92,
+      27
+    ],
+    "Some bulls took two or more. Then tap those bulls on the sheet.": [
+      1058,
+      260,
+      313,
+      40
+    ],
+    "Tap the bulls that took two": [
+      1047,
+      451,
+      185,
+      27
+    ],
+    "Tap the bulls you fired at": [
+      1047,
+      486,
+      173,
+      27
+    ],
+    "Undo (Ctrl+Z)": [
+      384,
+      93,
+      34,
+      34
+    ],
+    "Zoom in": [
+      817,
+      823,
+      34,
+      34
+    ],
+    "Zoom out": [
+      855,
+      823,
+      34,
+      34
+    ],
+    "gl-cf25-ltr-scan.png, Marking, not saved": [
+      61,
+      4,
+      270,
+      27
+    ]
+  }
+}

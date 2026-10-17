@@ -19,7 +19,8 @@ public class UserGuideTests
             Assert.True(pictures.Count >= 1, $"{guide}.md names {pictures.Count} pictures");
             Assert.All(pictures, p =>
             {
-                Assert.StartsWith("figures/screens/current/", p, StringComparison.Ordinal);
+                // Entry 437 section 1.1: section 13 shows the phone's own pictures.
+                Assert.True(p.StartsWith("figures/screens/current/", StringComparison.Ordinal) || p.StartsWith("figures/screens/phone/", StringComparison.Ordinal), p);
                 Assert.True(File.Exists(Repo.PathTo(["docs", .. p.Split('/')])), $"docs/{p} is named by {guide}.md and is not there");
             });
             Assert.True(File.Exists(Repo.PathTo("docs", guide + ".pdf")), $"docs/{guide}.pdf is missing: run `grouplab user-guide` and commit it.");
@@ -74,6 +75,33 @@ public class UserGuideTests
         Assert.Contains("/Title (One)", pdf, StringComparison.Ordinal);
         Assert.Contains("/Count -2", pdf, StringComparison.Ordinal);
         Assert.Contains("/Type /Outlines /First 7 0 R /Last 10 0 R /Count 2", pdf, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Entry 437 section 3.5: in the PDF a marked picture carries its markings, drawn from the same positions file the site reads, and the
+    /// marks line under a picture is a note for the site, never printed as text.
+    /// </summary>
+    [Fact]
+    public void TheGuidePdfDrawsEachMarkingOnItsControl()
+    {
+        string markdown = File.ReadAllText(Repo.PathTo("docs", "USER-GUIDE.md"));
+        var marks = GroupLab.Cli.GuideVerb.Marks(markdown);
+        Assert.NotEmpty(marks);
+        var (path, names) = marks.First();
+        string png = Repo.PathTo(["docs", .. path.Split('/')]);
+        var plain = GroupLab.Cli.GuideVerb.Picture(png)!;
+        var marked = GroupLab.Cli.GuideVerb.Picture(png, names)!;
+        Assert.NotEqual(plain.Jpeg, marked.Jpeg);
+
+        using var bounds = System.Text.Json.JsonDocument.Parse(File.ReadAllText(png.Replace("-light-1400x900.png", "-bounds.json", StringComparison.Ordinal)));
+        var box = bounds.RootElement.GetProperty("controls").GetProperty(names[0]);
+        using var image = OpenCvSharp.Cv2.ImDecode(marked.Jpeg, OpenCvSharp.ImreadModes.Color);
+        // Halfway along the outline's top edge, the amber line (blue low, red high) is drawn.
+        var at = image.At<OpenCvSharp.Vec3b>(box[1].GetInt32(), box[0].GetInt32() + (box[2].GetInt32() / 2));
+        Assert.True(at.Item2 > 150 && at.Item0 < 120, $"the outline of {names[0]} is not amber at its top edge: {at.Item2},{at.Item1},{at.Item0}");
+
+        var text = string.Join(" ", DocumentPdf.Pages(markdown, _ => null).SelectMany(p => p.Items.OfType<GroupLab.Core.Rendering.TextRun>()).Select(t => t.Text));
+        Assert.DoesNotContain("marks:", text, StringComparison.Ordinal);
     }
 
     /// <summary>Every other PDF GroupLab writes, sheets above all, is byte for byte what it was without bookmarks.</summary>

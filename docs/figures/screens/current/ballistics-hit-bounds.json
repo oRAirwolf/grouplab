@@ -1,0 +1,121 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "At one range": [
+      1286,
+      136,
+      80,
+      32
+    ],
+    "BallisticUnitsImperial": [
+      1074,
+      85,
+      78,
+      27
+    ],
+    "BallisticUnitsMetric": [
+      1156,
+      85,
+      64,
+      27
+    ],
+    "BallisticViewHit": [
+      447,
+      138,
+      112,
+      27
+    ],
+    "BallisticViewTrajectory": [
+      356,
+      138,
+      87,
+      27
+    ],
+    "Chance of a hit from": [
+      70,
+      345,
+      230,
+      32
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Conditions": [
+      70,
+      744,
+      230,
+      32
+    ],
+    "Load": [
+      313,
+      83,
+      160,
+      32
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Rifle": [
+      145,
+      83,
+      160,
+      32
+    ],
+    "Target shape": [
+      70,
+      525,
+      230,
+      32
+    ],
+    "Target width": [
+      70,
+      582,
+      96,
+      32
+    ],
+    "Unit of the target's size": [
+      170,
+      582,
+      90,
+      32
+    ],
+    "Work it out": [
+      1117,
+      631,
+      92,
+      27
+    ],
+    "Work out the chance": [
+      1232,
+      85,
+      150,
+      27
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ],
+    "▸": [
+      70,
+      136,
+      230,
+      19
+    ],
+    "▾": [
+      70,
+      301,
+      230,
+      19
+    ]
+  }
+}

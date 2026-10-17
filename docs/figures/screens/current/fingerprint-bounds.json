@@ -1,0 +1,127 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "A GroupLab sheet in the photo": [
+      1024,
+      451,
+      328,
+      51
+    ],
+    "A bank card in the photo": [
+      1024,
+      624,
+      329,
+      51
+    ],
+    "Back": [
+      1018,
+      827,
+      56,
+      27
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Height in inches": [
+      1166,
+      391,
+      84,
+      32
+    ],
+    "Its printed size": [
+      1024,
+      351,
+      293,
+      72
+    ],
+    "Markers in the photo": [
+      1024,
+      223,
+      344,
+      100
+    ],
+    "Name and send, to come": [
+      77,
+      318,
+      183,
+      40
+    ],
+    "Next: straighten": [
+      1250,
+      827,
+      124,
+      27
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Photo, done": [
+      77,
+      142,
+      183,
+      40
+    ],
+    "Size and scale, now": [
+      77,
+      186,
+      183,
+      40
+    ],
+    "Steps": [
+      77,
+      142,
+      183,
+      714
+    ],
+    "Straighten, to come": [
+      77,
+      230,
+      183,
+      40
+    ],
+    "The bulls, to come": [
+      77,
+      274,
+      183,
+      40
+    ],
+    "The photo of the target": [
+      293,
+      142,
+      707,
+      714
+    ],
+    "Two points and a distance": [
+      1024,
+      530,
+      335,
+      66
+    ],
+    "Width in inches": [
+      1052,
+      391,
+      84,
+      32
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ],
+    "‹ Targets": [
+      79,
+      97,
+      77,
+      27
+    ]
+  }
+}

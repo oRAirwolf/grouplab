@@ -25,9 +25,90 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-17, entry 437: more screenshots in the user guide, and markings on them that stay right
+
+**Status: actioned 2026-10-17; every section done. 1.3 lists the screens still without a render, and Compare loads keeps its picture without markings until the weekly job retakes it.**
+
+From the planning session, 2026-10-17 10:30 UTC. Take it after entry 436, which gives the guide its subsections. Alan, 2026-10-17:
+"Also, can screenshots be added to more sections? Or graphics that help people understand what the screenshot is showing? Like arrows,
+highlights, etc?"
+
+Nothing here needs Alan. **The look of the markings was left to the planning session** (Alan, 2026-10-17 10:26 UTC: "Use your best
+judgement with marking styles"), so no canvas is coming; section 3 says what it is, and all of this entry may be built and published.
+
+## What is there now (read only, checked 2026-10-17)
+
+- `docs/USER-GUIDE.md` shows 7 screenshots: targets, marking, analysis-open, sessions, compare, ballistics, settings.
+- `docs/figures/screens/current/` already holds about 30 desktop screens the guide never shows (among them which-target, marking-other,
+  set-tab, scale-markers, store-target, optic, targets-zero, bull-lines, scope-unit, shots-open, shots-to-zero, velocity, groups,
+  ballistics-hit, equipment, pairing, fingerprint, problem-dialog, readings-here), and `docs/figures/screens/phone/` about 20 phone and
+  tablet screens. Section 13 "On the phone" has no picture at all, and nor do 3, 9, 10 and 11.
+- The desktop pictures are rendered by the App tests (`PublishedRendersTests`) and retaken weekly by `screenshots.yml`; the site shows
+  each in both themes through `screen()` in `website/build.py`, lazily loaded.
+
+## 1. Put the pictures that exist where they help
+
+1. Go through the guide section by section (with entry 436's subsections) and add a screenshot wherever the text describes a screen or
+   a control a reader has to find and no picture shows it. Use the renders that exist first. Every section that describes a screen
+   gets at least one, section 13 included (from `phone/`, phone pictures sized as phones, not stretched to the desktop width).
+2. One picture per idea: do not add a picture that shows the same thing as one a few paragraphs up. Every picture keeps a caption and
+   alt text that say what it shows.
+3. Where a screen the text describes has no render yet, add it to `PublishedRendersTests` and `screens.json` rather than leaving a gap,
+   or list it in PHASE1-RESULTS.md with the reason it cannot be rendered.
+4. The PDF is remade; check the pictures fit its pages and the file stays a sensible size for a download, and give the size.
+5. List, per section, which pictures were added.
+
+## 2. Record where things are on each picture
+
+So that an arrow or a highlight can never point at the wrong place after the weekly job retakes the pictures:
+
+1. When `PublishedRendersTests` renders a screen, it also writes, beside it, the position and size of every named control on that
+   screen (the controls' existing names, in the picture's own pixels), for example `current/analysis-open-bounds.json`. The phone
+   pictures get the same where their capture can provide it; say which ones cannot.
+2. A marking in the guide names a control, never a pixel position. Give the guide's markdown a way to say which controls a picture
+   marks (one short line under the image, numbered in the order the text mentions them), and have `render_guide` read it.
+3. **The site build fails** when a marking names a control that is not in its picture's positions file, so a renamed or removed
+   button breaks the build instead of leaving an arrow pointing at nothing. A test holds this.
+4. Choose, for each picture added in section 1 and for the 7 already there, the one to three controls the text most needs the reader
+   to find, and write them in. Do not mark everything.
+
+## 3. Draw the markings, in this look
+
+Chosen by the planning session on Alan's word (above). The reasons are given so a later change can weigh them.
+
+1. **A numbered badge and an outline, nothing else.** Each marked control gets a rounded outline around it and a small filled circle
+   with its number, sitting on the outline's top left corner (moved inside the picture when the corner is at its edge, and moved along
+   the outline when two badges would overlap). No arrows: on a crowded screen they cross other controls and need room the picture does
+   not have. No dimming of the rest: it hides the context that tells a reader where on the screen they are, and it reads badly in the
+   dark theme.
+2. **Color: the site's amber (`--amber`)**, the accent the contents list already uses for the current section, never magenta (the
+   application's selected shot, question 100) and never a sheet's or a bull's color. The outline is 2 px at the picture's displayed
+   size with a 1 px halo in the page's background color, so it stays visible on light and dark screens alike. The badge is amber with
+   its number in the page's dark text color, at least 20 px across however small the picture is shown, and the number is in the
+   site's own font.
+3. **The numbers are the words.** The text that mentions a marked control gives its number in brackets, "Find holes (1)", in the order
+   the text mentions them, and the caption lists them, "1 Find holes, 2 the review queue". The caption is what the alt text announces,
+   so a screen reader hears the same thing the picture shows.
+4. **Pointing at a number shows its marking.** Hovering or focusing a number in the text or the caption makes that outline a little
+   thicker; the others stay as they are. No pulsing, no animation under `prefers-reduced-motion`.
+5. **Drawn by the page over the picture** (an SVG laid over the image, positioned from the bounds file in the picture's own pixels), so
+   it scales with the picture and the PNG stays untouched for every other use. **In the PDF** the same outlines and badges are drawn
+   into the picture when the PDF is made, from the same bounds file.
+6. **At most three markings on a picture.** If the text needs more, the picture is probably showing too much; use a second picture or
+   a cropped one.
+
+Check both themes at desktop and phone width before publishing, and put a before and after of one picture in the report's results.
+
+## Helpers
+
+Section 1's choosing and captions and section 2.4's choice of controls are writing work for docs-sonnet. Section 2.1 to 2.3 changes the
+App tests and the site build, so it stays on the main model.
+
+---
+
 ## 2026-10-17, entry 440: the new home page, concept B, built at grouplab.org/testpage/ for Alan to approve
 
-**Status: actioned 2026-10-17; sections 1 to 3 and 4.1 done; 4.2 and 4.3 (the live check and the four screenshots) follow the publish and are recorded with entry 437.**
+**Status: actioned 2026-10-17; every section done (4.2 and 4.3, the live check and the screenshots, recorded with entry 437).**
 
 From the planning session, 2026-10-17 11:10 UTC. **Priority: take this straight after entry 436, before 437 to 439** (Alan wants to see
 it). Alan, 2026-10-17: "Build B and show me the final result but dont publish it to the home page until I approve it. Maybe make it a

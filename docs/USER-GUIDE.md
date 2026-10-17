@@ -11,14 +11,20 @@ The rail down the left of the window is how you move around it:
 ## Mil or MOA
 
 GroupLab works in your scope's unit, mil or MOA, and neither is the default. The first time it starts, on the computer and on the phone,
-it asks **Is your scope in mil or MOA?**, with a third answer, **Both, I have rifles of each**, and whether you measure sizes on the paper
+it asks **Is your scope in mil (1) or MOA (2)?**, with a third answer, **Both, I have rifles of each** (3), and whether you measure sizes on the paper
 in inches or millimeters. Your answer becomes the **Scope unit** at the top of Units in Settings, where you can change it at any time.
+
+![The first question GroupLab asks: 1 Mil, 2 MOA, 3 Both](figures/screens/current/scope-unit-light-1400x900.png)
+<!-- marks: Mil | MOA | Both, I have rifles of each -->
 
 ### Each rifle keeps its own
 
-A rifle's record has its scope unit and one click: 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other
+A rifle's record has its scope unit (1) and one click (2): 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other
 value you type. When a session names a rifle, that rifle's unit wins over Settings; when it names none, Settings decides. If you answered
 Both, a session with no rifle asks which rifle it was.
+
+![A rifle's record in Equipment: 1 Scope unit, 2 Click value](figures/screens/current/equipment-light-1400x900.png)
+<!-- marks: EquipmentField_clickUnit | EquipmentField_clickValue -->
 
 ### Everything aiming follows it
 
@@ -39,11 +45,12 @@ the App Store, then open [the invitation](https://testflight.apple.com/join/A3xy
 Open **Targets** from the rail. It lists the built-in sheets by family, read only, and your own sheets after them. Choose a sheet and
 everything it takes to print it is beside the list, with the page filling the rest of the screen. The page is drawn live from the same
 shapes and letters as its PDF, so it is exactly what prints, changes the moment any setting or designer field does, and stays sharp at any
-zoom on any screen; **Open as PDF** under it opens the real PDF in your viewer. The phone's Targets screen draws its page the same way.
+zoom on any screen; **Open as PDF** (1) under it opens the real PDF in your viewer. The phone's Targets screen draws its page the same way.
 
-![Targets, with a built-in sheet chosen](figures/screens/current/targets-light-1400x900.png)
+![Targets, with a built-in sheet chosen: 1 Open as PDF, 2 Bulls in](figures/screens/current/targets-light-1400x900.png)
+<!-- marks: Open as PDF | Bulls in -->
 
-- **Bulls in** black, blue or red, for any sheet, built in or your own, on the computer and the phone. Only the bulls, their rings and numbers take the color; the corner codes, markers, title and load block stay black. Lines print in the full color and large solid areas, such as the C bull's diamond, as a lighter tint, so a hole shows dark against it. The preview and the PDF follow the choice at once, and GroupLab remembers it for that sheet. GroupLab finds the color from the photograph, so nothing needs to be set when you read the sheet. On a black and white printer the colors print as gray. On a color inkjet, filled bulls use less ink in color than in black, while ring bulls and zeroing grids use a little more, since a colored line takes two inks; blue uses a little less than red.
+- **Bulls in** (2) black, blue or red, for any sheet, built in or your own, on the computer and the phone. Only the bulls, their rings and numbers take the color; the corner codes, markers, title and load block stay black. Lines print in the full color and large solid areas, such as the C bull's diamond, as a lighter tint, so a hole shows dark against it. The preview and the PDF follow the choice at once, and GroupLab remembers it for that sheet. GroupLab finds the color from the photograph, so nothing needs to be set when you read the sheet. On a black and white printer the colors print as gray. On a color inkjet, filled bulls use less ink in color than in black, while ring bulls and zeroing grids use a little more, since a colored line takes two inks; blue uses a little less than red.
 - **The load block** can be left blank, to write in at the range, or filled in now from the fields shown. On a sheet with room for it, a filled block also carries an instance code, so GroupLab reads the load straight off the sheet.
 - **Print** (on Windows) prints from inside GroupLab at actual size. It refuses, with the reason, when the paper is not the sheet's or ink would fall in the printer's margin. When the job is sent, a confirmation names the printer and the pages.
 - **Open to print** opens the PDF in your viewer instead. Print it from there at Actual size or 100 percent, never Fit.
@@ -88,13 +95,21 @@ A target GroupLab did not print, with several bulls (suggested by Unholy, also T
 
 <!--count:store-targets:Words-->Nine<!--/count--> store-bought targets, from Birchwood Casey and the National Target Company, are recognized on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent for the five made from 600 dpi scans and to within about 0.6 to 0.75 percent for those made from phone photographs, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike. The list grows as targets are added to it, and a target added after your build reaches it without a new build: GroupLab looks for a newer signed list when it starts (on a phone, only on Wi-Fi with the battery and storage not low, at most every six hours) and uses it only when its signature checks. There is no way to send one in yet.
 
+![A store-bought bullseye recognized, with GroupLab asking which of the 6 in and 8 in Shoot-N-C bullseyes it is](figures/screens/current/store-target-light-1400x900.png)
+
 ### Scale markers
 
-Put one of these beside a target GroupLab did not print and it takes the scale from the photo, with nothing typed or tapped. Targets, Scale markers prints them at actual size on Letter or A4: **corner brackets**, four L shaped pieces cut roughly from one page, one placed flat near each corner of the target, anywhere close: their printed codes give the scale and the camera's angle, so the cut does not need to be neat, and GroupLab finds the target's corners from its own edges where they show against the surface; **scale bars**, two strips with a code at each end 10.000 in apart (250 mm on A4), one laid along an edge for the scale, two in an L for the angle too, or two end to end for a poster; and **board stickers**, four codes stuck near the corners of your target board and measured once (Measure a board, with any GroupLab sheet on the board), after which every photo of a target on that board has its scale with nothing placed. **Scale labels**, for a label printer such as the Phomemo M220, are rows of codes across a label of the size loaded, stuck flat on the target where you will not shoot; they are read across only, because a label printer's paper feed is not exact. **Save the printer check label** gives one label to print at 100 percent and scan at 600 dpi, and **Measure a scanned check label** measures the printer across its head and along its feed and keeps the result with the label size, so every later label is laid out for that size. On Android, **Print two scale labels on the Phomemo M220** sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first. A **bank card**, driver's license or gift card laid back side up beside the target needs nothing printed: GroupLab blanks the card out of the photo at once, never keeps, shows in a saved picture, logs or sends that part of it, and never reads anything on a card. Markers count in Add a store-bought target (Markers in the photo, chosen by itself when they are found) and when you mark a target by hand. On computer-made photos a measured board was typically within 0.015 percent, a scale bar 0.06, corner brackets 0.07 on a 12 in target and 0.2 on a 23 by 35 in poster, and a card 0.15. Printed markers are corrected by your printer check, and without one can be off by up to 1.5 percent. Every piece has to lie flat on the same surface as the target. Brackets must touch the target's corners: a gap of 2 mm makes a 12 in target read about 2 percent large, though the scale is still right. A bar can touch the target or lie a little apart; the scale is the same either way. A board that swells evenly cannot be told from one that has not, so measure it again now and then and whenever it gets wet; a board whose stickers have moved, GroupLab notices and asks you to measure again.
+Put one of these beside a target GroupLab did not print and it takes the scale from the photo, with nothing typed or tapped. Targets, Scale markers prints them at actual size on Letter or A4: **corner brackets** (1), four L shaped pieces cut roughly from one page, one placed flat near each corner of the target, anywhere close: their printed codes give the scale and the camera's angle, so the cut does not need to be neat, and GroupLab finds the target's corners from its own edges where they show against the surface; **scale bars** (2), two strips with a code at each end 10.000 in apart (250 mm on A4), one laid along an edge for the scale, two in an L for the angle too, or two end to end for a poster; and **board stickers** (3), four codes stuck near the corners of your target board and measured once (Measure a board, with any GroupLab sheet on the board), after which every photo of a target on that board has its scale with nothing placed. **Scale labels**, for a label printer such as the Phomemo M220, are rows of codes across a label of the size loaded, stuck flat on the target where you will not shoot; they are read across only, because a label printer's paper feed is not exact. **Save the printer check label** gives one label to print at 100 percent and scan at 600 dpi, and **Measure a scanned check label** measures the printer across its head and along its feed and keeps the result with the label size, so every later label is laid out for that size. On Android, **Print two scale labels on the Phomemo M220** sends two labels of the size loaded straight to the printer over Bluetooth, with no Phomemo app; on Android 10 and 11 pair the printer in Bluetooth settings first. A **bank card**, driver's license or gift card laid back side up beside the target needs nothing printed: GroupLab blanks the card out of the photo at once, never keeps, shows in a saved picture, logs or sends that part of it, and never reads anything on a card. Markers count in Add a store-bought target (Markers in the photo, chosen by itself when they are found) and when you mark a target by hand. On computer-made photos a measured board was typically within 0.015 percent, a scale bar 0.06, corner brackets 0.07 on a 12 in target and 0.2 on a 23 by 35 in poster, and a card 0.15. Printed markers are corrected by your printer check, and without one can be off by up to 1.5 percent. Every piece has to lie flat on the same surface as the target. Brackets must touch the target's corners: a gap of 2 mm makes a 12 in target read about 2 percent large, though the scale is still right. A bar can touch the target or lie a little apart; the scale is the same either way. A board that swells evenly cannot be told from one that has not, so measure it again now and then and whenever it gets wet; a board whose stickers have moved, GroupLab notices and asks you to measure again.
+
+![Targets with the Scale markers card open: 1 Corner brackets, 2 Scale bars, 3 Board stickers](figures/screens/current/scale-markers-light-1400x900.png)
+<!-- marks: Print corner brackets | Print scale bars | Print board stickers -->
 
 ### Add a store-bought target
 
-On Targets, **Add a store-bought target** teaches GroupLab one it does not know, from a photograph of a blank one, in five steps, one question at a time: **Photo**, **Size and scale**, **Straighten**, **The bulls** and **Name and send**. On the computer the steps are listed on the left, done ones ticked in teal and the current one amber, the photo in the middle and the question on the right with **Back** and **Next**; on the phone each step fills the screen, with a five-part bar and Back at the top and one big button at the bottom. Choose or take a photo of the target flat and square on, all four corners in it. GroupLab shows it the way up it was taken, and **Rotate left** and **Rotate right** (R and Shift R on the computer) turn it a quarter turn for a target photographed sideways. It finds the corners from the paper's edges and color, so white paper on a light counter works; where it cannot, it says why and starts four amber handles at its best guess for you to drag. Scroll or pinch to zoom in; while you drag a corner, a magnifier above it shows the point under your finger, and a corner let go lands on the clear corner of the picture nearest it, with **Undo**. **How big is this target?** takes one true length three ways: **Its printed size**, the width and height on the package; **A GroupLab sheet in the photo**, laid on the target; or **Two points and a distance**, both ends of something you measured and its length. Under the one picked is what GroupLab measured for it on computer-made photos of two test posters, typically within 0.01 percent at 12 by 18 in and 0.28 percent at 23 by 35 in from the printed size, 0.16 and 0.40 percent from two points, and a Letter sheet too small to read at all on the larger poster; no way is called the best, because none was at every size. **Straighten** shows the corners to check; **The bulls** shows the target straightened with each bull it found as a numbered ring: tap or click a ring to remove it, or the picture to add one, and **These are right** moves on. Last, type the name on its package: where it matches a target already in GroupLab's library at another size, GroupLab says it joins that family; at the same size, that GroupLab already knows it. **Save reference file** on the computer, or **Save and share the file** on the phone, writes the file: the fingerprint, name, size and bulls, never the photo. Send it to GroupLab's maker; each file is checked by hand before it joins the library a later GroupLab recognizes.
+On Targets, **Add a store-bought target** teaches GroupLab one it does not know, from a photograph of a blank one, in five steps, one question at a time: **Photo**, **Size and scale**, **Straighten**, **The bulls** and **Name and send**. On the computer the steps (1) are listed on the left, done ones ticked in teal and the current one amber, the photo in the middle and the question on the right with **Back** and **Next** (2); on the phone each step fills the screen, with a five-part bar and Back at the top and one big button at the bottom. Choose or take a photo of the target flat and square on, all four corners in it. GroupLab shows it the way up it was taken, and **Rotate left** and **Rotate right** (R and Shift R on the computer) turn it a quarter turn for a target photographed sideways. It finds the corners from the paper's edges and color, so white paper on a light counter works; where it cannot, it says why and starts four amber handles at its best guess for you to drag. Scroll or pinch to zoom in; while you drag a corner, a magnifier above it shows the point under your finger, and a corner let go lands on the clear corner of the picture nearest it, with **Undo**. **How big is this target?** takes one true length three ways: **Its printed size** (3), the width and height on the package; **A GroupLab sheet in the photo**, laid on the target; or **Two points and a distance**, both ends of something you measured and its length. Under the one picked is what GroupLab measured for it on computer-made photos of two test posters, typically within 0.01 percent at 12 by 18 in and 0.28 percent at 23 by 35 in from the printed size, 0.16 and 0.40 percent from two points, and a Letter sheet too small to read at all on the larger poster; no way is called the best, because none was at every size. **Straighten** shows the corners to check; **The bulls** shows the target straightened with each bull it found as a numbered ring: tap or click a ring to remove it, or the picture to add one, and **These are right** moves on. Last, type the name on its package: where it matches a target already in GroupLab's library at another size, GroupLab says it joins that family; at the same size, that GroupLab already knows it. **Save reference file** on the computer, or **Save and share the file** on the phone, writes the file: the fingerprint, name, size and bulls, never the photo. Send it to GroupLab's maker; each file is checked by hand before it joins the library a later GroupLab recognizes.
+
+![Add a store-bought target at its second step, How big is this target: 1 The steps, 2 Next, 3 Its printed size](figures/screens/current/fingerprint-light-1400x900.png)
+<!-- marks: Steps | Next: straighten | Its printed size -->
 
 ### Find holes (Experimental)
 
@@ -129,9 +144,14 @@ Print a volunteer pack, beside the chosen sheet, gives the sheet and one page of
 - For a load development sheet, fire one shot per bull, in order, starting at bull 1. The sighter bulls are for sighters, and GroupLab keeps them out of the group unless you ask for them to be analyzed.
 - Write only in the load block.
 
-GroupLab matches the holes to the bulls as one sheet, not hole by hole: with a rifle that is not yet zeroed, most holes sit nearer the bull below or beside the one aimed at, and it still gives each to the bull it was fired at, reading the sheet in the order it is shot, from bull 1. Where the holes fit two sets of bulls equally well, it asks which bulls you fired at, in the middle of the screen, with its own guess first. Each shot is named by its bull, Bull 7, or Bull 7, shot 2 where a bull holds more than one, and a thin line runs from every hole to the bull it was given, on the analysis and in Fix holes. **Lines to bulls** in the side panel's block, Which bull each shot belongs to, switches them off, and the choice is remembered. A line worth a second look is dashed in orange with a **?** beside the hole: GroupLab was not sure, or the line is long for the sheet, or it crosses into a neighboring bull. **Next unsure hole** goes to the next one. To move holes, click a bull to choose it (a blue ring, its lines blue, the others dimmed), then click a hole to give it to that bull, or click one of its holes to take it away; the block says, for example, "C3 has 2 shots". **Done**, Escape or clicking the bull again ends it.
+GroupLab matches the holes to the bulls as one sheet, not hole by hole: with a rifle that is not yet zeroed, most holes sit nearer the bull below or beside the one aimed at, and it still gives each to the bull it was fired at, reading the sheet in the order it is shot, from bull 1. Where the holes fit two sets of bulls equally well, it asks which bulls you fired at, in the middle of the screen, with its own guess first. Each shot is named by its bull, Bull 7, or Bull 7, shot 2 where a bull holds more than one, and a thin line runs from every hole to the bull it was given, on the analysis and in Fix holes. **Lines to bulls** (1) in the side panel's block, Which bull each shot belongs to, switches them off, and the choice is remembered. A line worth a second look is dashed in orange with a **?** beside the hole: GroupLab was not sure, or the line is long for the sheet, or it crosses into a neighboring bull. **Next unsure hole** (2) goes to the next one. To move holes, click a bull to choose it (a blue ring, its lines blue, the others dimmed), then click a hole to give it to that bull, or click one of its holes to take it away; the block says, for example, "C3 has 2 shots". **Done** (3), Escape or clicking the bull again ends it.
+
+![The marking screen with a line from each hole to its bull: 1 Lines to bulls, 2 Next unsure hole, 3 Done](figures/screens/current/bull-lines-light-1400x900.png)
+<!-- marks: Lines to bulls | Next unsure hole | Done -->
 
 Some sheets break one shot a bull on purpose, such as two shots into each of bulls 1 to 10. Say so before you accept the marking, in the side panel's Groups section, under **How did you shoot this sheet?**: **One shot on each bull I used**, **Some bulls took two or more** (then tap those bulls), or **Every hole to its nearest bull, however many**. Bulls left blank are found by themselves, and a line says how many ("N bulls unused. Wrong? Tap them.") with buttons to tap the bulls that took two or the bulls you fired at. Under them, **Loads on this sheet** sets **One load**, **One a row**, **One a column** or **I will pick bulls** (shift-click the bulls, then choose a load), and the sheet shows each row's or column's load beside it. A line reads it back, for example "GroupLab will read it as: 23 bulls fired at, one shot each, rows 1 to 5 as Load A to Load E."
+
+![The side panel question How did you shoot this sheet, with its three answers and the Loads on this sheet buttons](figures/screens/current/groups-light-1400x900.png)
 
 A sheet with one scoring bull takes a group. Every shot on it goes to that bull, however far out, and the review asks nothing about how many there are; say how many you fired, in Rounds fired, and a count that disagrees names the mark most likely to hold two.
 
@@ -167,9 +187,12 @@ two long lines with a ruler or tape, or scan it. GroupLab shows how large the pr
 that printer's sheets are then corrected, and each result says so in one line, such as "Corrected for My printer, 99.2 by 99.4%, checked
 28 September". A check measures the sheets printed before it. If you calibrate or service the printer, or change its settings, press
 **Printer calibrated or serviced** under that printer in Settings: sheets printed before stay corrected by the old check, and every result
-it corrects says so and offers **Check your printer** again, which is worth doing on a sheet printed now. GroupLab offers the same after
+it corrects says so and offers **Check your printer** (1) again, which is worth doing on a sheet printed now. GroupLab offers the same after
 about six months. The paper's own edge is checked on every photo too: GroupLab says when it disagrees with the printer's figures by more than about 1.5 percent,
-or when a sheet looks printed with Fit to page. On any one photograph, **Measure this sheet with a ruler** corrects just that sheet.
+or when a sheet looks printed with Fit to page. On any one photograph, **Measure this sheet with a ruler** (2) corrects just that sheet.
+
+![The side panel for a photograph: 1 Check your printer, 2 Measure this sheet with a ruler](figures/screens/current/shots-open-light-1400x900.png)
+<!-- marks: Check your printer | Measure this sheet with a ruler -->
 
 ## 4. Mark it and settle the review queue
 
@@ -190,8 +213,8 @@ choose or open is always brought fully into view.
 ### When a picture names no sheet
 
 A picture of a target GroupLab did not print is not a mistake: GroupLab asks **Which target is this?**
-in the middle of the window, with **Mark it by hand** first (one true length: the sheet's size, a ring, or a ruler in the picture),
-**It is a store-bought target**, and **It is a GroupLab sheet**. A picture that has a GroupLab sheet's corner squares or codes, but whose
+in the middle of the window, with **Mark it by hand** (1) first (one true length: the sheet's size, a ring, or a ruler in the picture),
+**It is a store-bought target** (2), and **It is a GroupLab sheet** (3). A picture that has a GroupLab sheet's corner squares or codes, but whose
 codes would not read, says so in the middle of the window instead: the picture with its corner codes outlined, what got done and what did
 not, and **Choose the sheet** first, then **Try again, reading harder** and **Mark it by hand**; under a line, **Not a GroupLab sheet?**
 for a store-bought or hand-drawn target, which GroupLab remembers for that picture; and **Show what went wrong**. **Try again, reading
@@ -202,6 +225,9 @@ under the header with **Choose the sheet** and **All choices**, and Show work sa
 work on the computer, such as a picture or a file that could not be opened, a save, export, send or print that failed, or Find holes
 without a scale, opens the same kind of window with what to do next; what needs no decision, such as saved or sent, stays in the status
 line. In any such window Enter takes the first choice and Escape closes it.
+
+![The question GroupLab asks about a picture with no sheet: 1 Mark it by hand, 2 It is a store-bought target, 3 It is a GroupLab sheet](figures/screens/current/which-target-light-1400x900.png)
+<!-- marks: Mark it by hand | It is a store-bought target | It is a GroupLab sheet -->
 
 Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes by hand against a length or a rectangle of known size. To change that scale, tap its two ends or four corners again and enter the new size, or choose the length or rectangle tool and **Change the length of the scale in use**; every figure follows. Typing a caliber offers the calibers and cartridges that match, with spacing and points forgiven, so "65 creed" finds 6.5 Creedmoor, and choosing one from the list, with a click or with Enter, sets it at once. **Caliber box shows** in Settings, the same on the phone, chooses what the list offers: **Calibers**, the bullet diameters with their usual names, such as .308 (7.62 mm, .30); **Cartridges**, the names, each with its diameter, such as 6.5 Creedmoor, 0.264 in; or **Both**, calibers first and then cartridges, which is where it starts. Any other diameter can still be typed in inches or in millimeters.
 
@@ -308,7 +334,7 @@ Velocity and the vertical, directly under the group's figures, says how much of 
 alone. It needs the session's chronograph readings (Ballistics, Chronograph), the shot distance and the load's BC; without one of them
 it says which, with a button to it. The share is in amber with its range, at the confidence it states, then a meter from none to all of
 it and two bars on one scale: the vertical spread measured on the shots, and the spread velocity alone would make at that distance by
-the solver, flown in the conditions on the day. **Conditions on the day**, under the block once it has readings, holds them: closed,
+the solver, flown in the conditions on the day. **Conditions on the day** (1), under the block once it has readings, holds them: closed,
 one line says what is in use and where it came from; open, the temperature, the altitude (or **Use station pressure instead of
 altitude**), the humidity and the shot angle, in your own units, with **Fill from Ballistics** for this rifle and load, **Standard day** to
 clear them, a link to the rifle's page for its sight height and zero, and **Remember for my next sheet**, which offers them to your next
@@ -319,10 +345,13 @@ narrow it. Where each reading was paired with its shot when the readings were ac
 measured slope and the solver's, and a sentence says whether they agree, and if not, to check the distance, the BC or the order the
 readings were paired in. Its why lists the readings' own spread, the solver's height per 10 fps, both vertical spreads, and that the
 range errs wide, never narrow. It also says which conditions were used and where they came from, or that the standard day was assumed.
-**Velocity band**, beside the plot's other toggles, draws the band velocity alone would make about the group center in amber, with the
+**Velocity band** (2), beside the plot's other toggles, draws the band velocity alone would make about the group center in amber, with the
 measured spread as dotted lines; it starts on and is remembered. On the phone the same is a card above All figures, with Velocity band
 under the plot; with no readings its **Import a file** and **Type them in** open a page to import your chronograph's file or type the readings. On the computer, with no readings the block says what readings add and offers **Import a file**, **Type them in** and a place to drop a Garmin Xero, LabRadar or CSV file. Type them in opens a box for the speeds in the order fired ("12 of 23 entered"), and **Match to shots** pairs them as Ballistics proposes. Ballistics' **Chronograph** section is still there: import a file from your chronograph (CSV, TXT
 or Excel), or paste the velocities, then **Accept the mapping**.
+
+![Velocity and the vertical, with the share velocity explains: 1 Conditions on the day, 2 Velocity band](figures/screens/current/velocity-light-1400x900.png)
+<!-- marks: Conditions on the day | Velocity band -->
 
 **Back**, top left, returns to marking with every edit as you left it. The badge beside Show work reads **Scale checked** when the sheet's own markers set the scale; Show work has the detail. **Own window** moves the figures to a window of their own, for a second monitor, and closing that window puts them back.
 
@@ -379,11 +408,12 @@ Shots Needed to Zero, suggested by Jylee, sits under them. From the group's spre
 ## 6. Sessions and the report
 
 Accept and analyze saves the sheet as a session: the marking with every edit, its figures, a proof image and its own copy of the sheet. **After that, and after any change, it saves itself**: the status bar says when ("Saved 12 seconds ago in grouplab.db"), that it is safe to close, and the ··· menu at the top right has **Open the session's folder**. In Settings, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes. Session records, in the rail, lists them newest first:
-- filter them by rifle and by load;
+- filter them by rifle (1) and by load (2);
 - open one back to its analysis, which needs no image;
-- delete one, after GroupLab asks.
+- delete one (3), after GroupLab asks.
 
-![Session records](figures/screens/current/sessions-light-1400x900.png)
+![Session records: 1 Rifle filter, 2 Load filter, 3 Delete](figures/screens/current/sessions-light-1400x900.png)
+<!-- marks: Rifle | Load | Delete -->
 
 The analysis's **Report** button saves the session as a PDF, the full report or one page. **Full report:**
 - **Page 1:** the particulars, the plot, the figures with their intervals, the zero correction and the cards.
@@ -439,29 +469,33 @@ the string into runs and only one stretch of them has as many shots as the group
 left out of its own figures is left out, then one marked clean bore is this group's clean bore shot, while there are more readings than
 shots; and where the numbering skips a deleted shot, the shot fired in that place goes without a reading. To change a mark, click it on
 the computer, which opens the choices under its row, or tap it on the phone, which opens a sheet from the bottom; both offer the same
-four, **Not this group**, **A shot of this group** (then the shots to choose from), **This group, clean bore** and **Leave it out**.
+four, **Not this group** (1), **A shot of this group** (2) (then the shots to choose from), **This group, clean bore** (3) and **Leave it out**.
 Changing one mark never changes another without saying so: choosing a shot another reading has swaps the two and says so, and taking a
 reading off its shot says that shot now has no reading. Press **Accept the mapping** on the computer, or **Keep this pairing** on the
 phone; **Leave unpaired** keeps the readings with no shot beside any of them. The readings' own spread becomes the load's velocity SD,
 and Velocity and the vertical uses them. On the phone the same is under Velocity and the vertical's **Import a file** and **Type them in**.
 
-![The ballistics screen](figures/screens/current/ballistics-light-1400x900.png)
+![Chronograph readings paired with shots, with the choices open under one row: 1 Not this group, 2 A shot of this group, 3 This group, clean bore](figures/screens/current/pairing-light-1400x900.png)
+<!-- marks: Not this group | A shot of this group… | This group, clean bore -->
 
 ### How the screen is laid out
 
 Three columns, like the analysis:
-- **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table**, which becomes
+- **Along the top:** the rifle and the load, Imperial or Metric, and the one amber button, **Work out the table** (1), which becomes
   **Work out the chance** in the hit probability view.
 - **On the left:** the settings in sections that fold, **The rifle**, **The load**, **The air** and **The table**. A folded section
   says what it holds in one line, and GroupLab remembers which you left open. A field the solver still needs says "needed" beside it,
   and its section opens.
-- **In the middle:** **Trajectory** or **Hit probability**, chosen at the top and remembered. The trajectory is a large chart of drop,
+- **In the middle:** **Trajectory** (2) or **Hit probability** (3), chosen at the top and remembered. The trajectory is a large chart of drop,
   wind drift, velocity or energy with the zero marked, and the dope table under it.
 - **On the right, At one range:** the elevation for one range in large amber figures, with the clicks and the drop under it, then the
   wind, velocity, energy, time of flight and stability. Clicking a row of the table or a point on the chart sets the range, and its row
   is highlighted. Under it, the analyzed group carried to that range.
 
 On a narrow window the side columns shrink, and below that the right column moves under the middle.
+
+![The ballistics screen: 1 Work out the table, 2 Trajectory, 3 Hit probability](figures/screens/current/ballistics-light-1400x900.png)
+<!-- marks: Work out the table | BallisticViewTrajectory | BallisticViewHit -->
 
 ### The dope table
 
@@ -476,7 +510,7 @@ spread nor a crosswind uncertainty given, it is the group scaled by angle and no
 
 ### Hit probability
 
-The middle's second view works out the chance of a hit on a circle, a rectangle or an IPSC outline at a distance. In
+The middle's second view works out the chance of a hit on a circle, a rectangle or an IPSC outline (1) at a distance. In
 it the rifle, the load and the air fold to their one-line summaries, and the left holds **The target**, **What you are unsure of** and
 **The shot and the simulation**. The target's distance and the range on the right are the same, so the hold shown and the chance are
 for the same shot:
@@ -494,6 +528,9 @@ for the same shot:
 - For a string of several shots on one reading it gives the chance of at least one hit and the hits to expect.
 - The simulated impacts are drawn over the target beside the card, and a curve shows the chance against distance with its interval as a
   band.
+
+![Hit probability, with the first round and the simulated impacts: 1 The target shape](figures/screens/current/ballistics-hit-light-1400x900.png)
+<!-- marks: Target shape -->
 
 A wind call is drawn once for a whole string, never per shot, because every shot you fire on one reading shares its error. When the group
 behind the precision is too small to say anything, the screen says so and how many shots would make it mean something. The same seed gives
@@ -525,9 +562,12 @@ updates it.
 When Made for your optic needs several sheets for your shots, each sheet's codes say which of the
 set it is. Print the set, shoot it, open each scan or photograph and choose **Accept and analyze** on each, in any order; then in **Session
 records** tick them and choose **Pool the chosen**. GroupLab says which sheets of the set are still missing and how many shots it has of the
-bulls the set holds, and opens the pooled set on the analysis screen in a tab of its own: every shot on one plot, measured from its own
+bulls the set holds, and opens the pooled set on the analysis screen in a tab of its own (1): every shot on one plot, measured from its own
 bull, every figure a sheet has, and the Shots list naming each shot by sheet and bull (2.5 is bull 5 on sheet 2). Each sheet's shots are
 in their own shade; tap a sheet in the plot's key to show its shots alone. A sheet read twice counts once.
+
+![A pooled set of three sheets: 1 The set tab](figures/screens/current/set-tab-light-1400x900.png)
+<!-- marks: GroupLab 3x3 2 MOA, Set of 3 Letter Sheets, 3 sheets, Analysis -->
 
 ### Quicker: drop them together
 
@@ -572,13 +612,16 @@ The page at `grouplab.org/targets/` takes scans and photographs of targets that 
 The gear opens the settings:
 - **Units:** first the **Scope unit: mil / MOA**, with a line saying what it changes (see [Mil or MOA](#mil-or-moa)), then lengths and distances, each chosen on its own. They change only how figures are shown. Beneath them, a box puts a group's size on the paper before its angle. The phone's Settings starts with the same Units.
 - **Theme:** dark, light, high contrast, or follow the system.
-- **Your data:** **Export all my data** writes one file, ending `.grouplab`, holding every session with GroupLab's own picture of the sheet and its marks, your rifles, barrels and loads, your designed sheets, and your printers and units; **Import data** reads one on any GroupLab, on the computer or the phone. Importing never overwrites or duplicates anything: before anything is written it says what it would add and lists anything here that differs from the file, which is kept as it is here, and you can cancel. The file follows GroupLab's rule for photographs (no location, no metadata, not where the original photograph is kept) and stays with you. On the phone, Export all my data opens the share sheet, so the file can be saved to Files or sent to your computer, and a `.grouplab` file opened with GroupLab from another app offers to import it.
+- **Your data:** **Export all my data** (1) writes one file, ending `.grouplab`, holding every session with GroupLab's own picture of the sheet and its marks, your rifles, barrels and loads, your designed sheets, and your printers and units; **Import data** (2) reads one on any GroupLab, on the computer or the phone. Importing never overwrites or duplicates anything: before anything is written it says what it would add and lists anything here that differs from the file, which is kept as it is here, and you can cancel. The file follows GroupLab's rule for photographs (no location, no metadata, not where the original photograph is kept) and stays with you. On the phone, Export all my data opens the share sheet, so the file can be saved to Files or sent to your computer, and a `.grouplab` file opened with GroupLab from another app offers to import it.
 - **Layout:** every split between panes, on the marking and analysis screens, Targets (the list, the sheet's column and the preview), Equipment and Ballistics, can be dragged by its grip, and GroupLab remembers where you left each one. **Reset layout** puts every pane back to its default size at once. On a tablet or an unfolded phone held sideways, the line between the sheet and the numbers on a result is dragged the same way, and the phone's Settings has the same Reset layout.
-- **Sharing:** the three things GroupLab may send, in the order the first run screen asks them. Each shows its choice and one short line; **More** opens the full explanation of what it sends, and stays open once you have opened it. **What GroupLab sends**, above them, opens the page on grouplab.org that says exactly what leaves your device. **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them; on the computer also **Send everything I open**, which sends every picture you open, read or not, and stays off on the phones for now. **Error reports:** send them automatically, ask each time, or never, and what a report holds. **Hardware survey:** take part or not, what a report holds, the benchmark, and a button that gives this copy of GroupLab a new random number. The benchmark runs only when you start it, from **Run the benchmark now**; it shows how far it has got, can be canceled, and says when it finished and what it found. Settings says when it last ran. On the first run screen, Yes to the survey asks whether to run the benchmark now or later.
+- **Sharing:** the three things GroupLab may send, in the order the first run screen asks them. Each shows its choice and one short line; **More** opens the full explanation of what it sends, and stays open once you have opened it. **What GroupLab sends** (3), above them, opens the page on grouplab.org that says exactly what leaves your device. **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them; on the computer also **Send everything I open**, which sends every picture you open, read or not, and stays off on the phones for now. **Error reports:** send them automatically, ask each time, or never, and what a report holds. **Hardware survey:** take part or not, what a report holds, the benchmark, and a button that gives this copy of GroupLab a new random number. The benchmark runs only when you start it, from **Run the benchmark now**; it shows how far it has got, can be canceled, and says when it finished and what it found. Settings says when it last ran. On the first run screen, Yes to the survey asks whether to run the benchmark now or later.
 - **Log:** how much the diagnostic log records, and where it is.
 - **Problems:** a way to report a problem, and any crash records not yet dealt with.
 
 ![The settings](figures/screens/current/settings-light-1400x900.png)
+
+![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab sends](figures/screens/current/settings-data-light-1400x900.png)
+<!-- marks: Export all my data… | Import data… | What GroupLab sends -->
 
 ## 13. On the phone
 
@@ -624,6 +667,8 @@ the sheet it looks like, **Choose the sheet**, **Take it again**, **Try again, r
 canceled, and **Store-bought or hand-drawn** for a target GroupLab did not print,
 which it remembers for that picture. A picture with no GroupLab marks at all asks **Which target is this?** instead, calmly, with **Mark it
 by hand** first.
+
+![Capture on the phone, with the caliber and distance row, Take a picture, Choose a photo, Print a target and the five places along the bottom](figures/screens/phone/fold-capture-light.png)
 
 ### Show diagnostics on the camera
 
@@ -693,6 +738,8 @@ the changes back to the result, which measures again; leaving any other way asks
 the session, and sharing the shots as a CSV file. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
 and a card of GroupLab's guesses at what each column is, each line tapped to change, then **Import** and the result. Several files with the same columns can be chosen at once and are read as one group.
 
+![The result held sideways, with Fix holes and the start of the sheet on the left, the unit choice and the figures on the right](figures/screens/phone/fold-result-landscape-light.png)
+
 ### Several targets open at once
 
 Every target you read on Capture or open from Sessions stays open until you close it, each as you left
@@ -702,6 +749,8 @@ row to switch to it; **Open another target** goes to the start of Capture with t
 so closing it loses nothing; marking by hand is saved only when it is finished, so closing a target with marks not saved asks first.
 Opening a session that is already open switches to it. Up to eight are kept open; past that the oldest that would lose nothing is closed,
 and it stays in Sessions.
+
+![The Open targets sheet with two targets open, each with a small picture, its state and a close button, and Open another target](figures/screens/phone/fold-open-targets-light.png)
 
 ### Sessions, Ballistics and Targets
 
@@ -713,6 +762,8 @@ PDF, and prints the printer check page; on Android it also prints straight to a 
 the Phomemo app, with **Paper in the M834** for a roll (fed 15.5 mm further so the sheet clears the tear bar) or fanfold sheets; thermal roll paper
 curls, so flatten a sheet (rolled the other way, or under a heavy book) before scanning it; at the range a clip or tape is enough; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
 the Fold 7 opened, the result shows the sheet beside the numbers.
+
+![Sessions on the phone held sideways, with Open a session file, Import shots from a CSV file and the one session just analyzed](figures/screens/phone/fold-sessions-landscape-light.png)
 
 ### A target GroupLab did not print
 
