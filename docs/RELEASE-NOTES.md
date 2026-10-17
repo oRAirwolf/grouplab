@@ -485,7 +485,7 @@ This build has no change to the application; it behaves exactly as nightly 168 d
 - The scale markers' instructions now say to tuck the corner brackets against the target's corners, touching, and that a scale bar may touch the target or lie a little apart.
 - Add a store-bought target now calls the corners found only when two ways of looking at the photo agree on them, so a wrong outline is almost never presented as found; when unsure it says so and starts the corners at its best guess.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.168)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
