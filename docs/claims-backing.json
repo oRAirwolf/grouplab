@@ -7200,9 +7200,18 @@
   "The settings The lower half of the settings: Export all my data, Import data, What GroupLab sends 13.": {
    "kind": "code",
    "where": "the pictures docs/figures/screens/current/settings and settings-data, rendered by the application's own tests, and the controls settings-data marks, from its -bounds.json; the captions say what they show (entry 437)"
+  },
+  "User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Statistics for shooters Glossary Download as PDF On this page Mil or MOA Each rifle keeps its own Everything aiming follows it Getting GroupLab 1.": {
+   "kind": "code",
+   "where": "website/build.py shell(): the page frame and navigation, with More (entry 304)"
   }
  },
  "rules": [
+  {
+   "surface": "^docs/STATISTICS-PRIMER\\.md$|^site:guides/statistics-primer/",
+   "kind": "measured",
+   "where": "docs/figures/primer/primer-data.json, every number the primer shows, written by GroupLab.Core's PrimerNumbers on seed 20261017 and held to it by PrimerTests (the five-shot interval of 0.68 to 1.92, 81 shots for 20 percent tighter and the CEP and mean radius multiples also held to the published articles); the multiples and intervals are docs/STATISTICS.md sections 3 to 9 and 12.4; the user guide links go to headings the site build checks (entry 438)"
+  },
   {
    "surface": "^site:features/",
    "match": "^The\\ pictures\\ are\\ taken\\ on\\ the\\ Android\\ emulator,\\ sized\\ as\\ a\\ Galaxy\\ Z\\ Fold\\ 7\\ and\\ a\\ Galaxy\\ Tab\\ S8\\ Ultra,\\ after\\ each\\ nightly\\ \\(these\\ are\\ from\\ nightly \\d+\\);\\ the\\ result\\ in\\ them\\ is\\ Alan's\\ own\\ 600\\ dpi\\ scan\\ of\\ a\\ 25\\ shot\\ group,\\ published\\ with\\ his\\ consent\\.$",

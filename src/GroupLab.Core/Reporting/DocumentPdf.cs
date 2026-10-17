@@ -17,8 +17,12 @@ public sealed record DocumentImage(byte[] Jpeg, int PixelWidth, int PixelHeight)
 public static partial class DocumentPdf
 {
     private const long Inch = 508;
-    private const long PageWidth = 17 * Inch / 2;
-    private const long PageHeight = 11 * Inch;
+    private const long LetterWidth = 17 * Inch / 2;
+    private const long LetterHeight = 11 * Inch;
+
+    /// <summary>A4, 210 by 297 mm, in the same half-dmm units: entry 438's one-page summary comes in both sizes.</summary>
+    private const long A4Width = 4200;
+    private const long A4Height = 5940;
     private const long Margin = 3 * Inch / 4;
 
     private static readonly Rgb Ink = new(20, 20, 20);
@@ -31,7 +35,9 @@ public static partial class DocumentPdf
     public static string Inline(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
+        // Entry 438: a link within the document or into another guide (USER-GUIDE.md#...) is set as its words alone.
         string linked = Link().Replace(text, m => m.Groups["text"].Value == m.Groups["url"].Value || m.Groups["url"].Value.StartsWith('#')
+            || m.Groups["url"].Value.Contains(".md#", StringComparison.Ordinal)
             ? m.Groups["text"].Value
             : $"{m.Groups["text"].Value} ({m.Groups["url"].Value})");
         return linked.Replace("**", "", StringComparison.Ordinal).Replace("`", "", StringComparison.Ordinal);
@@ -45,27 +51,28 @@ public static partial class DocumentPdf
     }
 
     /// <summary>The PDF, with a bookmark for every section and subsection (entry 436 section 4.2).</summary>
-    public static byte[] Write(string markdown, Func<string, DocumentImage?> images)
+    public static byte[] Write(string markdown, Func<string, DocumentImage?> images, bool a4 = false)
     {
-        var (pages, bookmarks) = Lay(markdown, images);
+        var (pages, bookmarks) = Lay(markdown, images, a4);
         return PdfWriter.Write(pages, bookmarks);
     }
 
-    public static IReadOnlyList<Scene> Pages(string markdown, Func<string, DocumentImage?> images) => Lay(markdown, images).Pages;
+    public static IReadOnlyList<Scene> Pages(string markdown, Func<string, DocumentImage?> images, bool a4 = false) => Lay(markdown, images, a4).Pages;
 
     /// <summary>The headings at levels 2 and 3, where each one starts, as the PDF's bookmarks.</summary>
-    public static IReadOnlyList<PdfBookmark> Bookmarks(string markdown) => Lay(markdown, _ => null).Bookmarks;
+    public static IReadOnlyList<PdfBookmark> Bookmarks(string markdown) => Lay(markdown, _ => null, false).Bookmarks;
 
-    private static (IReadOnlyList<Scene> Pages, IReadOnlyList<PdfBookmark> Bookmarks) Lay(string markdown, Func<string, DocumentImage?> images)
+    private static (IReadOnlyList<Scene> Pages, IReadOnlyList<PdfBookmark> Bookmarks) Lay(string markdown, Func<string, DocumentImage?> images, bool a4)
     {
+        long pageWidth = a4 ? A4Width : LetterWidth, pageHeight = a4 ? A4Height : LetterHeight;
         ArgumentNullException.ThrowIfNull(markdown);
         ArgumentNullException.ThrowIfNull(images);
         var pages = new List<List<SceneItem>> { new() };
         var bookmarks = new List<PdfBookmark>();
-        long y = Margin, width = PageWidth - (2 * Margin);
+        long y = Margin, width = pageWidth - (2 * Margin);
         void Need(long height)
         {
-            if (y + height > PageHeight - Margin && y > Margin)
+            if (y + height > pageHeight - Margin && y > Margin)
             {
                 pages.Add([]);
                 y = Margin;
@@ -99,14 +106,69 @@ public static partial class DocumentPdf
             }
         }
 
+        // Entry 438: a table, its columns sharing the width, the header row in ink with a rule under it and the rest in grey.
+        var table = new List<string[]>();
+        void Table()
+        {
+            if (table.Count == 0)
+            {
+                return;
+            }
+
+            int columns = table.Max(r => r.Length);
+            long column = width / columns, size = Pt(9.5), line = size * 5 / 4;
+            y += Pt(4);
+            for (int r = 0; r < table.Count; r++)
+            {
+                var cells = Enumerable.Range(0, columns)
+                    .Select(c => c < table[r].Length ? ReportWriter.Wrap(Inline(table[r][c]), size, column - Pt(8)) : (IReadOnlyList<string>)[]).ToList();
+                int rows = Math.Max(1, cells.Max(c => c.Count));
+                Need((rows * line) + Pt(6));
+                for (int c = 0; c < columns; c++)
+                {
+                    for (int k = 0; k < cells[c].Count; k++)
+                    {
+                        pages[^1].Add(new TextRun(SceneLayer.Labels, r == 0 ? Ink : Grey, Margin + (c * column), y + ((k + 1) * line) - (size / 4), size, cells[c][k], TextAnchor.Left));
+                    }
+                }
+
+                y += (rows * line) + Pt(4);
+                if (r == 0)
+                {
+                    pages[^1].Add(new RectFill(SceneLayer.Labels, Rule, Margin, y - Pt(2), width, 3));
+                }
+            }
+
+            y += Pt(6);
+            table.Clear();
+        }
+
         foreach (string raw in markdown.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n'))
         {
             string line = raw.TrimEnd();
             var picture = Picture().Match(line.Trim());
             var numbered = Numbered().Match(line);
+            if (line.StartsWith('|'))
+            {
+                Flush();
+                if (line.Trim('|', ' ', '-', ':').Length > 0)
+                {
+                    table.Add([.. line.Trim().Trim('|').Split('|').Select(c => c.Trim())]);
+                }
+
+                continue;
+            }
+
+            Table();
             if (line.Length == 0)
             {
                 Flush();
+            }
+            else if (line.Trim() == "<!-- math -->")
+            {
+                // Entry 438: the page folds these parts under this label; on paper the label is all that marks them.
+                Flush();
+                Lines("The math, if you want it", Pt(10), Ink);
             }
             else if (line.StartsWith("<!--", StringComparison.Ordinal))
             {
@@ -118,7 +180,7 @@ public static partial class DocumentPdf
                 if (images(picture.Groups["path"].Value) is { } image)
                 {
                     // Entry 437 section 1.1: a phone's tall picture is set at most half a page high, at its own proportions, not stretched across.
-                    long height = Math.Min(width * image.PixelHeight / image.PixelWidth, PageHeight / 2);
+                    long height = Math.Min(width * image.PixelHeight / image.PixelWidth, pageHeight / 2);
                     long shown = height * image.PixelWidth / image.PixelHeight;
                     Need(height + Pt(20));
                     pages[^1].Add(new ImageBox(SceneLayer.Labels, Margin + ((width - shown) / 2), y + Pt(4), shown, height, image.Jpeg, image.PixelWidth, image.PixelHeight));
@@ -167,11 +229,12 @@ public static partial class DocumentPdf
         }
 
         Flush();
+        Table();
         int count = pages.Count;
         return ([.. pages.Select((items, i) =>
         {
-            items.Add(new TextRun(SceneLayer.Name, Grey, PageWidth - Margin, PageHeight - (Margin / 2), Pt(8), FormattableString.Invariant($"page {i + 1} of {count}"), TextAnchor.Right));
-            return new Scene(PageWidth, PageHeight, 0, items);
+            items.Add(new TextRun(SceneLayer.Name, Grey, pageWidth - Margin, pageHeight - (Margin / 2), Pt(8), FormattableString.Invariant($"page {i + 1} of {count}"), TextAnchor.Right));
+            return new Scene(pageWidth, pageHeight, 0, items);
         })], bookmarks);
     }
 

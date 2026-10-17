@@ -702,7 +702,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 33 0 R >>
 endobj
 33 0 obj
-<< /Length 4354 >>
+<< /Length 4564 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -712,39 +712,41 @@ BT /F1 99 Tf 1 0 0 -1 381 536 Tm (5. Read the analysis) Tj ET
 381 566 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 666 Tm (The analysis has three columns:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 789 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 789 Tm (On the left: the sheet small, drawn from its definition with every shot on it, then the load and the shot table. A) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 877 Tm (click on a bull in the small sheet selects the shots given to that bull, and a click on a shot wide of every bull) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 965 Tm (selects that shot. For a pooled set, every sheet's shots are drawn over the one sheet, each sheet in its own) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1053 Tm (color, and a click on a bull selects its shot from every sheet. A shot picked anywhere, on the plot, the picture) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1141 Tm (or a row of the table, is ringed with a cross through it in all three places, in magenta, a color nothing else in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1229 Tm (GroupLab uses, edged in black on the dark theme and white on the light, over every other mark, and its row) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1317 Tm (has an amber bar, a brighter fill and bold numbers; the table scrolls to it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1419 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1419 Tm (In the center: the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1507 Tm (over the bull's rings drawn as wide gray bands. Green lines cross at the group's center and blue lines at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1595 Tm (where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid, CEP) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1683 Tm (95 dashed and CEP 99 in dashes and dots; the extreme spread is a red dashed line between the two shots) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1771 Tm (furthest apart. Toggles beside the plot turn CEP 50, CEP 90, CEP 95, CEP 99 and the extreme spread on) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1859 Tm (and off, and GroupLab remembers them; CEP 95 and CEP 99 start off. CEP 99 on also lists it with the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1947 Tm (figures, with its range, and where your shots are too few to reach that far out, fewer than one expected) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2035 Tm (outside the circle, it says the circle is the model's guess rather than something the shots show. Under) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2123 Tm (Advanced, A circle for any percent takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2211 Tm (remembered. Group and Whole target beside them frame the group alone or the entire bull with the group) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2299 Tm (inside it, also remembered. The mouse wheel or a pinch zooms, dragging empty paper moves the view, and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2387 Tm (a double click returns to the fitted view. An excluded shot is drawn hollow and is never removed.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2489 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2489 Tm (On the right: the zero correction, the figures and the two judgment cards.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 666 Tm (If these figures are new to you, you can learn them from the beginning in Statistics for shooters) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 754 Tm (\(STATISTICS-PRIMER.md\).) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 877 Tm (The analysis has three columns:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1000 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1000 Tm (On the left: the sheet small, drawn from its definition with every shot on it, then the load and the shot table. A) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1088 Tm (click on a bull in the small sheet selects the shots given to that bull, and a click on a shot wide of every bull) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1176 Tm (selects that shot. For a pooled set, every sheet's shots are drawn over the one sheet, each sheet in its own) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1264 Tm (color, and a click on a bull selects its shot from every sheet. A shot picked anywhere, on the plot, the picture) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1352 Tm (or a row of the table, is ringed with a cross through it in all three places, in magenta, a color nothing else in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1440 Tm (GroupLab uses, edged in black on the dark theme and white on the light, over every other mark, and its row) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1528 Tm (has an amber bar, a brighter fill and bold numbers; the table scrolls to it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1630 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1630 Tm (In the center: the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1718 Tm (over the bull's rings drawn as wide gray bands. Green lines cross at the group's center and blue lines at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1806 Tm (where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid, CEP) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1894 Tm (95 dashed and CEP 99 in dashes and dots; the extreme spread is a red dashed line between the two shots) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1982 Tm (furthest apart. Toggles beside the plot turn CEP 50, CEP 90, CEP 95, CEP 99 and the extreme spread on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2070 Tm (and off, and GroupLab remembers them; CEP 95 and CEP 99 start off. CEP 99 on also lists it with the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2158 Tm (figures, with its range, and where your shots are too few to reach that far out, fewer than one expected) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2246 Tm (outside the circle, it says the circle is the model's guess rather than something the shots show. Under) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2334 Tm (Advanced, A circle for any percent takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2422 Tm (remembered. Group and Whole target beside them frame the group alone or the entire bull with the group) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2510 Tm (inside it, also remembered. The mouse wheel or a pinch zooms, dragging empty paper moves the view, and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2598 Tm (a double click returns to the fitted view. An excluded shot is drawn hollow and is never removed.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2700 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2700 Tm (On the right: the zero correction, the figures and the two judgment cards.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 2657 Tm (Tap a number to switch units) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 2868 Tm (Tap a number to switch units) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 2783 Tm (Tap an angle to switch that number between mil and MOA, a size on the paper to switch it between inches and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2871 Tm (centimeters, and a distance to switch it between yards and meters. Only the number you tap changes, and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2959 Tm (GroupLab remembers the unit for that figure, so mean radius in MOA stays in MOA the next time while extreme) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3047 Tm (spread can stay in mil; figures you never tap follow the scope unit \(Mil or MOA\). Right-click a number, or press) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3135 Tm (and hold it on the phone, to choose any unit it can take, SMOA and millimeters included. A figure's name still) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3223 Tm (explains it when you tap it; only the number switches.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2994 Tm (Tap an angle to switch that number between mil and MOA, a size on the paper to switch it between inches and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3082 Tm (centimeters, and a distance to switch it between yards and meters. Only the number you tap changes, and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3170 Tm (GroupLab remembers the unit for that figure, so mean radius in MOA stays in MOA the next time while extreme) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3258 Tm (spread can stay in mil; figures you never tap follow the scope unit \(Mil or MOA\). Right-click a number, or press) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3346 Tm (and hold it on the phone, to choose any unit it can take, SMOA and millimeters included. A figure's name still) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3434 Tm (explains it when you tap it; only the number switches.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 15 of 36) Tj ET
 Q
 endstream
@@ -20909,7 +20911,7 @@ endobj
 << /Title (5. Read the analysis) /Parent 101 0 R /Prev 127 0 R /Next 145 0 R /First 134 0 R /Last 144 0 R /Count -11 /Dest [32 0 R /XYZ 0 730.062992 null] >>
 endobj
 134 0 obj
-<< /Title (Tap a number to switch units) /Parent 133 0 R /Next 135 0 R /Dest [32 0 R /XYZ 0 426.897638 null] >>
+<< /Title (Tap a number to switch units) /Parent 133 0 R /Next 135 0 R /Dest [32 0 R /XYZ 0 396.992126 null] >>
 endobj
 135 0 obj
 << /Title (Click a hole to edit it) /Parent 133 0 R /Prev 134 0 R /Next 136 0 R /Dest [34 0 R /XYZ 0 386.220472 null] >>
@@ -21076,152 +21078,152 @@ xref
 0000052231 00000 n 
 0000058308 00000 n 
 0000058436 00000 n 
-0000062843 00000 n 
-0000062998 00000 n 
-0000066721 00000 n 
-0000066849 00000 n 
-0000074221 00000 n 
-0000074376 00000 n 
-0000078238 00000 n 
-0000078366 00000 n 
-0000084813 00000 n 
-0000084968 00000 n 
-0000088506 00000 n 
-0000088661 00000 n 
-0000091595 00000 n 
-0000091723 00000 n 
-0000096595 00000 n 
-0000096750 00000 n 
-0000099239 00000 n 
-0000099394 00000 n 
-0000102446 00000 n 
-0000102601 00000 n 
-0000105740 00000 n 
-0000105868 00000 n 
-0000109739 00000 n 
-0000109894 00000 n 
-0000113424 00000 n 
-0000113552 00000 n 
-0000120753 00000 n 
-0000120908 00000 n 
-0000122449 00000 n 
-0000122604 00000 n 
-0000126093 00000 n 
-0000126221 00000 n 
-0000129918 00000 n 
-0000130073 00000 n 
-0000133123 00000 n 
-0000133251 00000 n 
-0000140227 00000 n 
-0000140382 00000 n 
-0000142557 00000 n 
-0000142712 00000 n 
-0000144724 00000 n 
-0000144880 00000 n 
-0000148325 00000 n 
-0000249399 00000 n 
-0000351792 00000 n 
-0000618608 00000 n 
-0000788488 00000 n 
-0000996059 00000 n 
-0001147867 00000 n 
-0001351699 00000 n 
-0001557532 00000 n 
-0001751865 00000 n 
-0001876041 00000 n 
-0002091878 00000 n 
-0002352203 00000 n 
-0002593795 00000 n 
-0002676541 00000 n 
-0002794199 00000 n 
-0003004633 00000 n 
-0003205955 00000 n 
-0003462523 00000 n 
-0003728761 00000 n 
-0003825738 00000 n 
-0003927820 00000 n 
-0003990692 00000 n 
-0004066425 00000 n 
-0004134509 00000 n 
-0004188821 00000 n 
-0004188899 00000 n 
-0004189048 00000 n 
-0004189172 00000 n 
-0004189314 00000 n 
-0004189430 00000 n 
-0004189600 00000 n 
-0004189741 00000 n 
-0004189879 00000 n 
-0004190039 00000 n 
-0004190199 00000 n 
-0004190358 00000 n 
-0004190492 00000 n 
-0004190634 00000 n 
-0004190769 00000 n 
-0004190897 00000 n 
-0004191037 00000 n 
-0004191179 00000 n 
-0004191307 00000 n 
-0004191453 00000 n 
-0004191582 00000 n 
-0004191699 00000 n 
-0004191825 00000 n 
-0004192002 00000 n 
-0004192155 00000 n 
-0004192315 00000 n 
-0004192445 00000 n 
-0004192636 00000 n 
-0004192765 00000 n 
-0004192909 00000 n 
-0004193040 00000 n 
-0004193185 00000 n 
-0004193329 00000 n 
-0004193504 00000 n 
-0004193633 00000 n 
-0004193771 00000 n 
-0004193912 00000 n 
-0004194051 00000 n 
-0004194191 00000 n 
-0004194325 00000 n 
-0004194453 00000 n 
-0004194604 00000 n 
-0004194760 00000 n 
-0004194890 00000 n 
-0004195011 00000 n 
-0004195191 00000 n 
-0004195293 00000 n 
-0004195465 00000 n 
-0004195614 00000 n 
-0004195759 00000 n 
-0004195974 00000 n 
-0004196094 00000 n 
-0004196235 00000 n 
-0004196364 00000 n 
-0004196498 00000 n 
-0004196614 00000 n 
-0004196798 00000 n 
-0004196919 00000 n 
-0004197109 00000 n 
-0004197248 00000 n 
-0004197376 00000 n 
-0004197557 00000 n 
-0004197674 00000 n 
-0004197840 00000 n 
-0004197959 00000 n 
-0004198086 00000 n 
-0004198243 00000 n 
-0004198368 00000 n 
-0004198489 00000 n 
-0004198634 00000 n 
-0004198780 00000 n 
-0004198912 00000 n 
-0004199077 00000 n 
-0004199209 00000 n 
-0004199334 00000 n 
-0004199477 00000 n 
-0004199624 00000 n 
+0000063053 00000 n 
+0000063208 00000 n 
+0000066931 00000 n 
+0000067059 00000 n 
+0000074431 00000 n 
+0000074586 00000 n 
+0000078448 00000 n 
+0000078576 00000 n 
+0000085023 00000 n 
+0000085178 00000 n 
+0000088716 00000 n 
+0000088871 00000 n 
+0000091805 00000 n 
+0000091933 00000 n 
+0000096805 00000 n 
+0000096960 00000 n 
+0000099449 00000 n 
+0000099604 00000 n 
+0000102656 00000 n 
+0000102811 00000 n 
+0000105950 00000 n 
+0000106078 00000 n 
+0000109949 00000 n 
+0000110104 00000 n 
+0000113634 00000 n 
+0000113762 00000 n 
+0000120963 00000 n 
+0000121118 00000 n 
+0000122659 00000 n 
+0000122814 00000 n 
+0000126303 00000 n 
+0000126431 00000 n 
+0000130128 00000 n 
+0000130283 00000 n 
+0000133333 00000 n 
+0000133461 00000 n 
+0000140437 00000 n 
+0000140592 00000 n 
+0000142767 00000 n 
+0000142922 00000 n 
+0000144934 00000 n 
+0000145090 00000 n 
+0000148535 00000 n 
+0000249609 00000 n 
+0000352002 00000 n 
+0000618818 00000 n 
+0000788698 00000 n 
+0000996269 00000 n 
+0001148077 00000 n 
+0001351909 00000 n 
+0001557742 00000 n 
+0001752075 00000 n 
+0001876251 00000 n 
+0002092088 00000 n 
+0002352413 00000 n 
+0002594005 00000 n 
+0002676751 00000 n 
+0002794409 00000 n 
+0003004843 00000 n 
+0003206165 00000 n 
+0003462733 00000 n 
+0003728971 00000 n 
+0003825948 00000 n 
+0003928030 00000 n 
+0003990902 00000 n 
+0004066635 00000 n 
+0004134719 00000 n 
+0004189031 00000 n 
+0004189109 00000 n 
+0004189258 00000 n 
+0004189382 00000 n 
+0004189524 00000 n 
+0004189640 00000 n 
+0004189810 00000 n 
+0004189951 00000 n 
+0004190089 00000 n 
+0004190249 00000 n 
+0004190409 00000 n 
+0004190568 00000 n 
+0004190702 00000 n 
+0004190844 00000 n 
+0004190979 00000 n 
+0004191107 00000 n 
+0004191247 00000 n 
+0004191389 00000 n 
+0004191517 00000 n 
+0004191663 00000 n 
+0004191792 00000 n 
+0004191909 00000 n 
+0004192035 00000 n 
+0004192212 00000 n 
+0004192365 00000 n 
+0004192525 00000 n 
+0004192655 00000 n 
+0004192846 00000 n 
+0004192975 00000 n 
+0004193119 00000 n 
+0004193250 00000 n 
+0004193395 00000 n 
+0004193539 00000 n 
+0004193714 00000 n 
+0004193843 00000 n 
+0004193981 00000 n 
+0004194122 00000 n 
+0004194261 00000 n 
+0004194401 00000 n 
+0004194535 00000 n 
+0004194663 00000 n 
+0004194814 00000 n 
+0004194970 00000 n 
+0004195100 00000 n 
+0004195221 00000 n 
+0004195401 00000 n 
+0004195503 00000 n 
+0004195675 00000 n 
+0004195824 00000 n 
+0004195969 00000 n 
+0004196184 00000 n 
+0004196304 00000 n 
+0004196445 00000 n 
+0004196574 00000 n 
+0004196708 00000 n 
+0004196824 00000 n 
+0004197008 00000 n 
+0004197129 00000 n 
+0004197319 00000 n 
+0004197458 00000 n 
+0004197586 00000 n 
+0004197767 00000 n 
+0004197884 00000 n 
+0004198050 00000 n 
+0004198169 00000 n 
+0004198296 00000 n 
+0004198453 00000 n 
+0004198578 00000 n 
+0004198699 00000 n 
+0004198844 00000 n 
+0004198990 00000 n 
+0004199122 00000 n 
+0004199287 00000 n 
+0004199419 00000 n 
+0004199544 00000 n 
+0004199687 00000 n 
+0004199834 00000 n 
 trailer
 << /Size 178 /Root 1 0 R >>
 startxref
-4199756
+4199966
 %%EOF

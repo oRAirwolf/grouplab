@@ -9,17 +9,16 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-17, entry 437 (before it: entries 440 and 436, entry 435, entries 432 to 434).
+**Last rewritten:** 2026-10-17, entry 438 (before it: entries 437, 440 and 436, entry 435).
 
 ---
 
 ## In flight
 
-- **Entry 437 (2026-10-17)**: the user guide shows 26 pictures; 15 carry numbered markings that name controls from each screen's
-  positions file (`<screen>-bounds.json`, written by the render walk), and the site build holds every name. Compare loads has no
-  positions file until the weekly screenshot job retakes it with the test data.
-- **Entry 440 (2026-10-17)**: concept B, the new home page, is built at grouplab.org/testpage/ for Alan to approve: noindex, not in the
-  sitemap, linked from nowhere (a build check). **The home page at / is unchanged** until Alan approves and an entry swaps it in.
+- **Entry 438 (2026-10-17)**: Statistics for shooters, a fourth guide at /guides/statistics-primer/, every number from Core's
+  `PrimerNumbers` (held by `PrimerTests`), its figures stepping through them, a one-page summary in Letter and A4.
+- **Entries 437 and 440 (2026-10-17)**: the guide shows 26 pictures, 15 with markings named from each screen's `-bounds.json`
+  (Compare loads waits for the weekly job); concept B is at /testpage/ for Alan, and **the home page is unchanged** until he approves.
 - **Entries 418 and 421 to 436 are done**: the guide's subsections and links (436); CI fails on a guide PDF behind its guide (435);
   the iOS self-test is green (432); the selected shot is ringed in magenta (430, question 100); #31 to #34 are closed.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
@@ -46,7 +45,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entries 438 (a statistics primer) and 439 (a guided demo in the application).
+1. Entry 439 (a guided demo in the application).
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 
@@ -83,7 +82,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entries 438 and 439.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 439.
 
 ## Things that would surprise somebody who was not here yesterday
 

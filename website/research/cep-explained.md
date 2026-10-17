@@ -90,3 +90,5 @@ GroupLab can draw CEP 99 as well, and a circle for any percent you type under Ad
 **So pick one and stay with it.** Switching between them between sessions makes your own numbers incomparable for no benefit.
 
 **Where it stops being true is the part to remember.** Those fixed multiples assume a round group. Stretch the group to twice as wide as it is tall and the CEP 50 circle holds 54 percent rather than 50. That is a small error, and it is the first thing that goes wrong when a group is not round, which is a good reason to look at the shape before quoting any of the three.
+
+If these ideas are new to you, [Statistics for shooters, from the beginning](https://grouplab.org/guides/statistics-primer/) covers them in plain words from the start.

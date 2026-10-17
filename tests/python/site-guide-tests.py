@@ -72,7 +72,8 @@ def main() -> int:
         def problems(user: str, testing: str | None = None) -> list[str]:
             out = tmp / "out"
             shutil.rmtree(out, ignore_errors=True)
-            for key, text in (("user-guide", user), ("testing-guide", testing or page(["a"], [(2, "a")]))):
+            others = [(g[0], page(["a"], [(2, "a")])) for g in build.GUIDES if g[0] not in ("user-guide", "testing-guide")]
+            for key, text in [("user-guide", user), ("testing-guide", testing or page(["a"], [(2, "a")]))] + others:
                 (out / "guides" / key).mkdir(parents=True)
                 (out / "guides" / key / "index.html").write_text(text, encoding="utf-8")
             return build.guide_problems(out)
@@ -120,7 +121,7 @@ def main() -> int:
             body, found = marked("Find holes | Accept and analyze | Find holes | Accept and analyze", "1 a, 2 b, 3 c, 4 d", "(1)")
             check("more than three markings on a picture fails", any("three at most" in p for p in found), str(found))
             out = tmp / "out2"
-            for key in ("user-guide", "testing-guide"):
+            for key in [g[0] for g in build.GUIDES]:
                 (out / "guides" / key).mkdir(parents=True)
                 (out / "guides" / key / "index.html").write_text(good if key == "user-guide" else page(["a"], [(2, "a")]), encoding="utf-8")
             check("those problems reach the page checks",
@@ -128,6 +129,20 @@ def main() -> int:
         finally:
             build.SCREENS = real_screens
             build.GUIDE_FIGURE_PROBLEMS.clear()
+
+        # Entry 438: the statistics primer's figures are drawn from GroupLab's numbers, its math is folded, and its links into the user
+        # guide go to the site's page and are checked there.
+        _, primer, _ = build.render_guide(REPO / "docs" / "STATISTICS-PRIMER.md", links=True)
+        markers = re.findall(r"<!-- figure: ([a-z-]+) -->", (REPO / "docs" / "STATISTICS-PRIMER.md").read_text(encoding="utf-8"))
+        check("every figure the primer names is drawn", primer.count('class="guide-fig primer-fig"') == len(markers) > 0 and "<!-- figure" not in primer)
+        check("the primer's math is folded", "math-fold" in primer and "<!-- math -->" not in primer)
+        check("a link into the user guide goes to its page on the site", 'href="/guides/user-guide/#six-figures-stay-in-view"' in primer)
+        bad = page(["a"], [(2, "a")], '<a href="/guides/user-guide/#no-such-part">x</a>')
+        out = tmp / "out3"
+        for key in [g[0] for g in build.GUIDES]:
+            (out / "guides" / key).mkdir(parents=True)
+            (out / "guides" / key / "index.html").write_text(bad if key == "statistics-primer" else page(["a"], [(2, "a")]), encoding="utf-8")
+        check("a link into another guide with no such heading fails", any("/guides/user-guide/#no-such-part" in p for p in build.guide_problems(out)))
 
         # features.json: a guide link to a subsection is accepted, one to nothing is not.
         anchors = set(ids)

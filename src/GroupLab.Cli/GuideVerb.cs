@@ -15,7 +15,7 @@ public static partial class GuideVerb
     public const string Usage = "grouplab user-guide [<docs directory>]";
 
     /// <summary>The documents that ship as a PDF beside their Markdown.</summary>
-    public static IReadOnlyList<string> Guides { get; } = ["USER-GUIDE", "TESTING-GUIDE"];
+    public static IReadOnlyList<string> Guides { get; } = ["USER-GUIDE", "TESTING-GUIDE", "STATISTICS-PRIMER"];
 
     /// <summary>Pages printed and taken to the range, made the same way, one page each: entry 235's plan for the hole size test.</summary>
     public static IReadOnlyList<string> Printables { get; } = ["RANGE-PLAN-HOLE-SIZE"];
@@ -46,6 +46,15 @@ public static partial class GuideVerb
             string target = Path.Combine(docs, guide + ".pdf");
             File.WriteAllBytes(target, pdf);
             output.WriteLine($"Wrote {target}, {pdf.Length / 1024} KB.");
+            if (guide == "STATISTICS-PRIMER")
+            {
+                foreach (var (paper, a4) in new[] { ("LETTER", false), ("A4", true) })
+                {
+                    string summary = Path.Combine(docs, $"STATISTICS-PRIMER-SUMMARY-{paper}.pdf");
+                    File.WriteAllBytes(summary, DocumentPdf.Write(Summary(markdown), _ => null, a4));
+                    output.WriteLine($"Wrote {summary}.");
+                }
+            }
         }
 
         return 0;
@@ -60,6 +69,43 @@ public static partial class GuideVerb
         ArgumentNullException.ThrowIfNull(markdown);
         return MarksLine().Matches(markdown.Replace("\r\n", "\n", StringComparison.Ordinal))
             .ToDictionary(m => m.Groups["path"].Value, m => (IReadOnlyList<string>)[.. m.Groups["names"].Value.Split('|').Select(n => n.Trim()).Where(n => n.Length > 0)]);
+    }
+
+    /// <summary>
+    /// Entry 438 section 4.1: the statistics primer's one-page summary, made from the guide itself: each paragraph marked
+    /// "&lt;!-- summary --&gt;" under its section's heading, numbered, with where the whole guide is.
+    /// </summary>
+    public static string Summary(string markdown)
+    {
+        ArgumentNullException.ThrowIfNull(markdown);
+        var lines = markdown.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
+        var items = new List<string>();
+        string heading = "";
+        for (int i = 0; i < lines.Length; i++)
+        {
+            if (lines[i].StartsWith("## ", StringComparison.Ordinal))
+            {
+                heading = lines[i][3..].Trim();
+            }
+            else if (lines[i].Trim() == "<!-- summary -->")
+            {
+                var paragraph = lines.Skip(i + 1).TakeWhile(l => l.Trim().Length > 0).Select(l => l.Trim());
+                string stop = heading.EndsWith('?') || heading.EndsWith('!') ? "" : ".";
+                string item = $"{items.Count + 1}. **{heading}{stop}** {string.Join(" ", paragraph)}";
+                // What to do about it: the section's own "At the range" advice, beneath the point.
+                var section = lines.Skip(i + 1).TakeWhile(l => !l.StartsWith("## ", StringComparison.Ordinal)).ToList();
+                int advice = section.FindIndex(l => l.StartsWith("**At the range.**", StringComparison.Ordinal));
+                if (advice >= 0)
+                {
+                    item += "\n  - " + string.Join(" ", section.Skip(advice).TakeWhile(l => l.Trim().Length > 0).Select(l => l.Trim()));
+                }
+
+                items.Add(item);
+            }
+        }
+
+        return "# Statistics for shooters: five things to know\n\n" + string.Join("\n\n", items)
+            + "\n\nThe whole guide, with pictures and the numbers behind every sentence: grouplab.org/guides/statistics-primer/\n";
     }
 
     /// <summary>A render as a JPEG no wider than 1400 pixels and no taller than 1100, with the controls it marks outlined and numbered as the site draws them.</summary>

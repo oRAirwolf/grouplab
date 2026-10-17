@@ -104,6 +104,24 @@ public class UserGuideTests
         Assert.DoesNotContain("marks:", text, StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Entry 438 section 4.1: the statistics primer's summary is its five marked points, on one page of Letter and one of A4, and both are
+    /// committed beside the guide.
+    /// </summary>
+    [Fact]
+    public void ThePrimerSummaryIsFivePointsOnOnePageInBothSizes()
+    {
+        string summary = GroupLab.Cli.GuideVerb.Summary(File.ReadAllText(Repo.PathTo("docs", "STATISTICS-PRIMER.md")));
+        Assert.Equal(5, System.Text.RegularExpressions.Regex.Matches(summary, @"^\d\. ", System.Text.RegularExpressions.RegexOptions.Multiline).Count);
+        Assert.Single(DocumentPdf.Pages(summary, _ => null));
+        Assert.Single(DocumentPdf.Pages(summary, _ => null, a4: true));
+        Assert.Equal(4200, DocumentPdf.Pages(summary, _ => null, a4: true)[0].Width);
+        foreach (string paper in new[] { "LETTER", "A4" })
+        {
+            Assert.True(File.Exists(Repo.PathTo("docs", $"STATISTICS-PRIMER-SUMMARY-{paper}.pdf")), $"the {paper} summary is not committed: run `grouplab user-guide`");
+        }
+    }
+
     /// <summary>Every other PDF GroupLab writes, sheets above all, is byte for byte what it was without bookmarks.</summary>
     [Fact]
     public void APdfWithNoBookmarksIsUnchanged()

@@ -84,3 +84,5 @@ This is the table that load development by three-shot groups runs into. A genuin
 **So do not change a load on the strength of one group.** A load that groups 20 percent tighter than another needs about 81 shots of each to be told apart with confidence. A 9 percent difference needs 434. If those numbers are more ammunition than you want to spend, that is a real answer, and it means the honest conclusion is that you do not know.
 
 **What to do instead of shooting 81 rounds:** accept a wider conclusion. "These two are not obviously different" is true, useful, and free.
+
+If these ideas are new to you, [Statistics for shooters, from the beginning](https://grouplab.org/guides/statistics-primer/) covers them in plain words from the start.

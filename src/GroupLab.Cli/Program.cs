@@ -91,6 +91,8 @@ return args switch
     ["scale-test-pages", var outDir, "--preview"] => GroupLab.Cli.ScaleTestVerb.Run(outDir, true, Console.Out, Console.Error),
     ["user-guide"] => GroupLab.Cli.GuideVerb.Run("docs", Console.Out, Console.Error),
     ["user-guide", var docs] => GroupLab.Cli.GuideVerb.Run(docs, Console.Out, Console.Error),
+    ["primer"] => GroupLab.Cli.PrimerVerb.Run("docs", Console.Out),
+    ["primer", var docs] => GroupLab.Cli.PrimerVerb.Run(docs, Console.Out),
     ["donor-pack"] => GroupLab.Cli.DonorPackVerb.Run(".", Console.Out),
     ["donor-pack", var repository] => GroupLab.Cli.DonorPackVerb.Run(repository, Console.Out),
     ["trajectory", .. var rest] => GroupLab.Cli.TrajectoryVerb.Run(rest, Console.Out, Console.Error),
@@ -557,6 +559,7 @@ static int Usage()
         grouplab store-fingerprints build <blanks> <out> | recognize <picture>...
         grouplab target-reference make <photo> ... | check <file.glref> <photo> | add <file.glref> | library <out.gllib> --key <file>
         grouplab user-guide [<docs directory>]
+        grouplab primer [<docs directory>]
         grouplab glossary [<docs directory>]
         grouplab sample <output-image> [--target <file.gltd.json>] [--dpi <d>] [--seed <n>]
         grouplab learn score <submission folder>... | check --rows <rows.jsonl> --baseline <baseline.jsonl> | tune <folder>

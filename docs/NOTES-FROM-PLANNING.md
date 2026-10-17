@@ -25,6 +25,100 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-17, entry 438: a statistics primer for shooters, from nothing to judging a group
+
+**Status: actioned 2026-10-17; every section done. Section 3.2 gives no outside typical figures, because no source that could be backed was found, and the page says so.**
+
+From the planning session, 2026-10-17 10:40 UTC. Take it after entries 436 and 437 (it uses 436's contents list and subsection links,
+and 437's markings if it shows a screen). Alan, 2026-10-17:
+
+"I think we should have a page that teaches the basics of statistics as related to shooting and grouplab. Something that explains
+standard deviation/sigma, mean radius, confidence and p values, CEP, etc, and why they matter for shooting and how they apply to
+shooting. It should be like a 'statistics for dummies' where it breaks it down into the simplest terms and then builds from there.
+People should be able to go to that page that have never taken a statistics class or were bad at math and come away with a good
+understanding of the subjects and how to apply them to shooting, judge what is good and bad, what they should strive for or find
+acceptable, and spread the word to others."
+
+Nothing here needs Alan. "For dummies" is his shorthand for the reading level; it is a trademark, so it never appears in the title
+or the text.
+
+## What exists already (read only, checked 2026-10-17)
+
+- `docs/STATISTICS.md` (780 lines): the specification, for developers. Not for this reader, but the source of truth for every
+  statement the primer makes.
+- `docs/GLOSSARY.md`: one entry per word, with a plain line and a "Precisely" line.
+- Published research articles that go deeper on single topics: `cep-explained`, `how-many-shots`, `mean-radius-or-extreme-spread`,
+  `moa-mils-inches`, `pooling-groups`. The primer links to them for depth and does not repeat them; where it says the same thing,
+  the wording agrees with them.
+
+## 1. Where it lives and what it is called
+
+1. A new guide, `docs/STATISTICS-PRIMER.md`, shown as a fourth tab beside User guide, Trying GroupLab and Glossary, with the same
+   contents list and section links as entry 436 and its own PDF. Title in the site's voice, for example "Statistics for shooters,
+   from the beginning". Linked from the home page, the analysis section of the user guide, the Glossary's head, and the five
+   articles above.
+2. Each concept gets its own section with its own link, so somebody can send a friend straight to "What sigma is" or "Why five shots
+   tell you little".
+
+## 2. How it teaches
+
+1. **Start from a target, not a formula.** The opening is a real group on a real sheet (a consented scan from `samples/PROVENANCE.md`)
+   and the question every shooter asks: how good is this? Every idea after it is introduced as the answer to a question that group
+   raises.
+2. **One idea at a time, each built only on ones already explained.** Suggested order, which Code may improve: the center of a group;
+   spread, and why the biggest gap (extreme spread) is the shakiest measure; average distance from center (mean radius); standard
+   deviation and sigma, as "the typical miss" before any formula; angles (MOA and mil) so a group means the same at any distance;
+   CEP, as "the circle half your shots land in"; why a small sample lies (luck), shown before it is named; confidence intervals as
+   "the range the truth is probably in"; comparing two loads, and what a p-value does and does not say; how many shots are enough;
+   flyers; velocity spread (SD of muzzle velocity) and how it shows up as vertical at distance; hit probability on a real target.
+3. **Every section has the same four parts:** the idea in one sentence a twelve year old would follow; a picture or a small
+   interactive figure; what it means at the range ("so if your five-shot group is one inch, ..."); and where it is in GroupLab (the
+   figure's name on screen, linked to the user guide subsection from entry 436). The formula, where there is one, comes last, folded
+   in a "The math, if you want it" part that the reader can skip without losing the thread.
+4. **No assumed math.** No symbol is used before it is explained in words. Every unit is said out loud. Reading level is checked
+   with a script (a standard readability score, recorded in PHASE1-RESULTS.md), aiming at what a general newspaper reader manages;
+   the folded math parts are exempt.
+5. **Interactive figures that teach luck.** At least: a "shoot five more" button that draws a new five-shot group from the same rifle
+   and shows how much the group size jumps around; the same with ten and twenty shots, so the reader sees for themselves why more
+   shots settle it; and two loads that are really the same, compared over and over, to show how often one "wins" by chance. Drawn by
+   the page, with no library, still and fully explained when scripts are off or `prefers-reduced-motion` is set. **The numbers they
+   show come from GroupLab's own statistics**: either precomputed by `GroupLab.Core` at build time, or the page's own small
+   calculation held to Core's results on fixed seeds by a test. The page never teaches a figure GroupLab would compute differently.
+
+## 3. Judging what is good
+
+Alan asked that a reader can "judge what is good and bad, what they should strive for or find acceptable". Do it honestly:
+
+1. **Good is defined by the job, not by bragging.** The main tool is hit probability: what share of shots land on a deer's vital
+   zone, a steel plate or a 10 ring at a given distance, for a given sigma, using GroupLab's own hit probability. A short table for a
+   few common jobs and distances, generated from Core, lets a reader read off what precision their job needs.
+2. **Typical figures from outside GroupLab** (what a factory hunting rifle, a match rifle or a benchrest rifle usually groups;
+   what velocity spread handloaders aim for) may be given only with a source each in `claims-backing.json`, and labeled as what
+   shooters commonly report, not as a standard. Where no reliable source exists, say so rather than give a number.
+3. **Judging a claim someone else makes:** a short section on reading a "half-MOA rifle" claim (one group or many, how many shots,
+   extreme spread or something steadier), so a reader can ask the right question at the counter or online.
+4. **The honest limits:** what no number of shots will tell you, and that a small group from five shots is a hint, not a verdict.
+
+## 4. Easy to pass on
+
+1. A one-page printable summary ("the five things to know"), Letter and A4, linked at the top and bottom, made from the page itself.
+2. Each section's link is short and the section's opening sentence stands alone, so a pasted link previews well. The page has its own
+   description and social preview image.
+
+## 5. The rules it must meet
+
+Every checkable sentence backed in `docs/claims-backing.json`; figures regenerated by script and the simulations rerunnable; no
+pseudoscience; the developer not named; American spelling; no em dashes; the glossary's words used the same way. It is a guide, so it
+is published when it meets these (entry 393's rule for ready articles applies the same way), and the report says so.
+
+## Helpers
+
+The explanations, the figures, the interactive code and every number stay on the main model (statistics, CLAUDE.md). docs-sonnet does
+one plain-language pass afterward for reading level and consistency with the glossary and the five articles, and may not change a
+number or a claim.
+
+---
+
 ## 2026-10-17, entry 437: more screenshots in the user guide, and markings on them that stay right
 
 **Status: actioned 2026-10-17; every section done. 1.3 lists the screens still without a render, and Compare loads keeps its picture without markings until the weekly job retakes it.**

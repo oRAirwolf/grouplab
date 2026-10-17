@@ -1205,6 +1205,46 @@ site build pass.
    each sentence that only gained a number was carried over, and each new caption is backed by its picture and positions file
    (5322 claims, all backed).
 
+## Entry 438: a statistics primer for shooters, from nothing to judging a group (2026-10-17)
+
+1. **Where it lives.** `docs/STATISTICS-PRIMER.md`, "Statistics for shooters, from the beginning", is the fourth tab beside User guide,
+   Trying GroupLab and Glossary, with entry 436's contents list and a link on every section and the guides index, sitemap and README
+   naming it. It has its own PDF (111 KB, bookmarked) and its own link preview picture. Linked from the home page, the analysis section
+   of the user guide, the glossary's head and the five articles (cep-explained, how-many-shots, mean-radius-or-extreme-spread,
+   moa-mils-inches, pooling-groups). Published, since it meets section 5 (below).
+2. **How it teaches.** It opens on a real 25-shot group read on the phone (a consented scan, already published) and builds 18
+   sections in order: the center, extreme spread, mean radius, angles, sigma, CEP, luck, intervals, comparing loads and p-values, how
+   many shots, flyers, velocity SD, hit probability, what is good enough, reading a claim, what no number can tell you. Each has the
+   idea in one sentence, a picture or a figure where one helps, "At the range", and "In GroupLab" linking to the user guide's
+   subsection (a link into another guide goes to its page on the site, and the site build checks the heading exists). The formula comes
+   last, folded under "The math, if you want it", and labeled the same in the PDF. Angles come before sigma so no unit is used before
+   it is explained.
+3. **The numbers are GroupLab's.** `PrimerNumbers` in Core works out every figure on a fixed seed (40 groups each of 5, 10 and 20
+   shots with their figures; how far extreme spread and mean radius wander over 4000 groups at 3 to 30 shots; two identical loads
+   compared 2000 times; the hit table; shots needed), `grouplab primer` writes `docs/figures/primer/primer-data.json`, and
+   `PrimerTests` fails if the committed file is not what Core computes, and holds four figures to the published articles (0.68 to
+   1.92 from five shots, 81 shots for 20 percent tighter, CEP 50 and mean radius as 1.18 and 1.25 sigma, the test calling identical
+   loads different about one time in twenty). The page does no statistics: the build draws each figure as an SVG from the file, and
+   `primer.js` only steps through more of the same groups.
+4. **Figures that teach luck**: six five-shot groups with **Shoot five more** and a choice of 5, 10 or 20 shots; the spread of extreme
+   spread by shot count; two identical loads with **Compare again**, keeping a tally of how often one "won". Also the center, mean
+   radius and CEP 50 and 90 drawn on groups GroupLab simulated. With scripts off, or reduced motion, each is a still picture whose caption
+   says what it shows (checked: all six drawn, every button hidden).
+5. **Judging what is good** is by job: a hit table from precision alone for 4 and 8 inch circles at 100 to 800 yards, with what it
+   leaves out said plainly. **No outside typical figures are given** (factory, match or benchrest groups, velocity SDs): no measured
+   source was found that could be backed, and the page says so rather than quote one. Reading a "half-MOA rifle" claim and the honest
+   limits have their own sections.
+6. **Reading level** (`scripts/readability.py`, Flesch-Kincaid grade, leaving out the folded math, tables, pictures and links): the
+   whole page grade 5.1, no section above 6.1 after docs-sonnet's plain-language pass (5.2 before it); a general newspaper aims at
+   about 8 to 9. The pass changed no number, claim, link, heading or math part.
+7. **Easy to pass on**: a one-page summary, "five things to know", made from the guide itself (the five points marked in it, each with
+   its section's "At the range" advice), in Letter and A4 (`DocumentPdf` now sets A4 and tables), linked at the top and bottom of the
+   page. Each section's opening sentence stands alone.
+8. **Section 5's rules**: every checkable sentence backed (one rule for the primer's surfaces naming the data file, `PrimerTests` and
+   STATISTICS.md, 5403 claims backed); no pseudoscience; the developer not named; American spelling (0 British forms); no em dashes;
+   the glossary's words used its way. On a phone the six-column hit table scrolls inside itself (all guides' tables do now below 860
+   px), and the page is 390 px wide at 390.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

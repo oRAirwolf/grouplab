@@ -78,3 +78,5 @@ GroupLab shows sizes on the paper in inches, centimeters or millimeters and angl
 **Where it does not matter:** comparing two groups shot at the same distance in the same unit. The error cancels.
 
 **Where it does matter:** anything crossing a distance or a unit. Converting a group at 300 yards to MOA, working out a correction in clicks, or comparing your figures with somebody else's. Use the real number; GroupLab does.
+
+If these ideas are new to you, [Statistics for shooters, from the beginning](https://grouplab.org/guides/statistics-primer/) covers them in plain words from the start.

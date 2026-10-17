@@ -81,3 +81,5 @@ A single five-shot extreme spread tells you less than it seems to, and comparing
 **Extreme spread is not wrong; it is expensive.** It is also what almost everybody else quotes, so keep reporting it if you want to compare with other people. Just do not make decisions on it.
 
 **And the gap gets worse, not better, as you shoot more.** Mean radius settles down as the shot count grows; extreme spread does not, because a larger sample gives the two worst shots more chances to be extreme.
+
+If these ideas are new to you, [Statistics for shooters, from the beginning](https://grouplab.org/guides/statistics-primer/) covers them in plain words from the start.

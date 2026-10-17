@@ -72,7 +72,7 @@ def guide_pdfs() -> list[str]:
     served it. It now asks git whether the Markdown has a commit after the PDF's last one, which a rebase cannot reorder, and CI runs it
     with --guides, which fails."""
     found = []
-    for md in ("USER-GUIDE.md", "TESTING-GUIDE.md"):
+    for md in ("USER-GUIDE.md", "TESTING-GUIDE.md", "STATISTICS-PRIMER.md"):
         pdf = md.replace(".md", ".pdf")
         last = subprocess.run(["git", "log", "-1", "--format=%H", "--", f"docs/{pdf}"], cwd=REPO, capture_output=True, text=True).stdout.strip()
         if not last:

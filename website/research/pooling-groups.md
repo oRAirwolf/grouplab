@@ -87,3 +87,5 @@ The recommendation on the table is **C, with B as the headline**: a person pooli
 **The difference between the two is the finding, not an inconvenience.** If they are close, nothing moved between sheets. If they are far apart, something did, and that is worth knowing before you draw any conclusion about the load.
 
 **Do not let software choose for you here, including this one.** GroupLab reports both and names the difference on purpose. A program that silently picked one would be answering a question about your intentions that it cannot know the answer to.
+
+If these ideas are new to you, [Statistics for shooters, from the beginning](https://grouplab.org/guides/statistics-primer/) covers them in plain words from the start.

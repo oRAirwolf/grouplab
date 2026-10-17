@@ -531,6 +531,7 @@ data. Linux and macOS are held correct continuously so that neither turns into a
 |---|---|
 | [docs/USER-GUIDE.md](docs/USER-GUIDE.md) | Using the Windows application, from printing a sheet to comparing loads, with [a PDF](docs/USER-GUIDE.pdf) |
 | [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) | One page for somebody trying GroupLab for the first time, with [a PDF](docs/TESTING-GUIDE.pdf) |
+| [docs/STATISTICS-PRIMER.md](docs/STATISTICS-PRIMER.md) | Statistics for shooters, from the beginning: what group size, sigma, CEP and p-values mean at the range, with [a PDF](docs/STATISTICS-PRIMER.pdf) and a one-page summary |
 | [docs/PHASE0-BRIEF.md](docs/PHASE0-BRIEF.md) | The brief for Phases 0a and 0 |
 | [docs/FIDUCIAL-DECISION.md](docs/FIDUCIAL-DECISION.md) | Why the markers are AprilTag `tag36h11`, and the measurements behind it |
 | [docs/DETECTION-PIPELINE.md](docs/DETECTION-PIPELINE.md) | The eleven-stage analysis pipeline |

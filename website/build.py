@@ -258,6 +258,23 @@ def build_images() -> None:
     crop = img.crop((0, 0, w, int(w * 630 / 1200)))
     crop.resize((1200, 630), Image.LANCZOS).save(OUT / "assets" / "img" / "og.png", optimize=True)
 
+    # Entry 438 section 4.2: the statistics primer's own link preview, its title beside one of its groups, in the site's dark theme.
+    from PIL import ImageDraw, ImageFont
+    card = Image.new("RGB", (1200, 630), "#131417")
+    draw = ImageDraw.Draw(card)
+    fonts = REPO / "src" / "GroupLab.App" / "Assets" / "Fonts"
+    big, small = ImageFont.truetype(str(need(fonts / "IBMPlexSans-Bold.ttf")), 64), ImageFont.truetype(str(need(fonts / "IBMPlexSans-Regular.ttf")), 30)
+    for i, text in enumerate(("Statistics for", "shooters, from", "the beginning")):
+        draw.text((70, 150 + i * 80), text, font=big, fill="#e6e8ea")
+    draw.text((70, 430), "Group size, sigma, CEP and p-values, in plain words.", font=small, fill="#9aa1a9")
+    draw.text((70, 520), "GROUPLAB", font=small, fill="#e0912f")
+    shots = primer()["groups"]["20"][0]["shots"]
+    for r in (60, 120, 180):
+        draw.ellipse((930 - r, 315 - r, 930 + r, 315 + r), outline="#3a3f47", width=2)
+    for x, y in shots:
+        draw.ellipse((930 + x * 120 - 8, 315 - y * 120 - 8, 930 + x * 120 + 8, 315 - y * 120 + 8), fill="#e0912f")
+    card.save(OUT / "assets" / "img" / "og-primer.png", optimize=True)
+
 
 def build_downloads() -> None:
     # Entry 264: one PDF a sheet, each the sheet and its page of instructions, made by `grouplab donor-pack` from the library
@@ -274,6 +291,11 @@ def build_downloads() -> None:
             pack.writestr(info, (DONOR / pdf).read_bytes())
     copy(need(REPO / "docs" / "USER-GUIDE.pdf"), "guides/user-guide.pdf")
     copy(need(REPO / "docs" / "TESTING-GUIDE.pdf"), "guides/testing-guide.pdf")
+    copy(need(REPO / "docs" / "STATISTICS-PRIMER.pdf"), "guides/statistics-primer.pdf")
+    for _, source, published in PRIMER_SUMMARIES:
+        copy(need(REPO / "docs" / source), f"guides/{published}")
+    # The primer's page fetches its numbers from beside itself, so "Shoot five more" can show groups GroupLab drew.
+    copy(need(PRIMER_DATA), "guides/statistics-primer/primer-data.json")
 
 
 # ---------------------------------------------------------------- page shell
@@ -424,7 +446,8 @@ def page_glossary() -> str:
 <p class="eyebrow">Glossary</p>
 <h1>What the words mean</h1>
 <p class="lead">Every figure GroupLab shows, and every word a shooter may not know, in plain words. The application says the same thing
-beside the same word, because both are written from one list.</p>
+beside the same word, because both are written from one list. To learn the ideas in order, from the beginning, read
+<a href="/guides/statistics-primer/">Statistics for shooters</a>.</p>
 </section>
 <section class="wrap prose glossary last">
 {"".join(entries)}
@@ -481,7 +504,7 @@ def term_problems() -> list[str]:
 NAV_MORE = {"Community", "Release notes", "Support"}
 
 
-def shell(path: str, title: str, description: str, body: str, active: str = "") -> str:
+def shell(path: str, title: str, description: str, body: str, active: str = "", image: str = "og.png") -> str:
     full_title = "GroupLab" if not title else f"{title} | GroupLab"
     links = []
     menu_links = []
@@ -512,7 +535,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "") 
 <meta property="og:title" content="{esc(full_title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{SITE_URL}{path}">
-<meta property="og:image" content="{SITE_URL}/assets/img/og.png">
+<meta property="og:image" content="{SITE_URL}/assets/img/{image}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -699,6 +722,7 @@ def page_home() -> str:
 <h2>Five shots measured three quarters. What does the rifle actually shoot?</h2>
 <p>A shooter fires five rounds, measures the two widest holes, changes one thing, fires five more and concludes the change worked. It almost certainly did not. Two loads that differ by 20 percent on five-shot groups cannot be told apart.</p>
 <p>GroupLab measures far more carefully, and then tells you what the number is worth. It also aims to help shooters think in mean radius and confidence rather than in the extreme spread of a few shots.</p>
+<p><a href="/guides/statistics-primer/">Statistics for shooters, from the beginning</a> explains each of these ideas in plain words, with what it means at the range.</p>
 </div>
 <div class="panel figure-panel">
 <div class="figure-top">
@@ -1447,7 +1471,15 @@ GUIDES = [
      "The GroupLab user guide: one sheet from the printer to the analysis, with renders of the current build."),
     ("testing-guide", "TESTING-GUIDE.md", "testing-guide.pdf", "Trying GroupLab",
      "Trying GroupLab for the first time: getting the test build, the first minute with no rifle, and what is not done yet."),
+    # Entry 438: the statistics primer, for a reader who has never taken a statistics class.
+    ("statistics-primer", "STATISTICS-PRIMER.md", "statistics-primer.pdf", "Statistics for shooters",
+     "Statistics for shooters, from the beginning: group size, sigma, CEP, confidence and p-values in plain words, with what each "
+     "means at the range and how to judge what is good enough."),
 ]
+PRIMER_DATA = REPO / "docs" / "figures" / "primer" / "primer-data.json"
+# Entry 438 section 4.1: the primer's one-page summary, made from the guide by `grouplab user-guide`, in both paper sizes.
+PRIMER_SUMMARIES = [("Letter", "STATISTICS-PRIMER-SUMMARY-LETTER.pdf", "statistics-primer-summary-letter.pdf"),
+                    ("A4", "STATISTICS-PRIMER-SUMMARY-A4.pdf", "statistics-primer-summary-a4.pdf")]
 
 
 def slug(text: str) -> str:
@@ -1537,17 +1569,140 @@ def render_guide(md_file: Path, links: bool = False) -> tuple[str, str, list[tup
         href = m.group(1)
         if href.startswith(("http://", "https://", "#", "mailto:")):
             return m.group(0)
+        # Entry 438: a link into another guide goes to that guide's page on the site, to the same heading.
+        md_name, _, fragment = href.partition("#")
+        if md_name in GUIDE_KEYS:
+            return f'href="/guides/{GUIDE_KEYS[md_name]}/{"#" + fragment if fragment else ""}"'
         return f'href="{GITHUB}/blob/main/docs/{href}"'
 
     body = re.sub(r'href="([^"]+)"', link, body)
+    # Entry 438 section 2.3: the math comes last in a section, folded, and a reader can skip it without losing the thread.
+    body = re.sub(r"<!-- math -->\s*(.*?)\s*<!-- /math -->",
+                  lambda m: f'<details class="dl-fold math-fold"><summary>The math, if you want it</summary><div class="dl-fold-body">{m.group(1)}</div></details>',
+                  body, flags=re.S)
+    body = re.sub(r"<!-- figure: ([a-z-]+) -->", lambda m: primer_figure(m.group(1)), body)
+    body = body.replace("<!-- summary -->", "")
     return title, body, toc
 
 
 # Entry 437: which built page each guide becomes, so a marking's problem names the page it holds back; and the problems found while
 # rendering, read by guide_problems.
 GUIDE_PAGES = {g[1]: f"guides/{g[0]}/index.html" for g in GUIDES}
+GUIDE_KEYS = {g[1]: g[0] for g in GUIDES}
 GUIDE_FIGURE_PROBLEMS: set[str] = set()
 BADGE = 22  # half a badge's width, in a 1400 pixel picture's own pixels, at the width the guide shows it
+
+
+def primer() -> dict:
+    return json.loads(need(PRIMER_DATA).read_text(encoding="utf-8"))
+
+
+def svg_group(shots: list, x0: float, y0: float, half: float, scale: float, extra: str = "") -> str:
+    """One group drawn in an SVG at (x0, y0), its aim point at the middle of a square half wide, in MOA times scale pixels."""
+    rings = "".join(f'<circle class="pf-ring" cx="{x0}" cy="{y0}" r="{r * scale:.1f}"/>' for r in (0.5, 1.0, 1.5) if r * scale < half)
+    dots = "".join(f'<circle class="pf-shot" cx="{x0 + x * scale:.1f}" cy="{y0 - y * scale:.1f}" r="3.2"/>' for x, y in shots)
+    return f'<rect class="pf-frame" x="{x0 - half}" y="{y0 - half}" width="{2 * half}" height="{2 * half}" rx="6"/>{rings}{extra}{dots}'
+
+
+def farthest(shots: list) -> tuple:
+    best = (0.0, 0, 0)
+    for i in range(len(shots)):
+        for j in range(i + 1, len(shots)):
+            d = ((shots[i][0] - shots[j][0]) ** 2 + (shots[i][1] - shots[j][1]) ** 2) ** 0.5
+            best = max(best, (d, i, j))
+    return best
+
+
+def centre_of(shots: list) -> tuple:
+    return sum(x for x, _ in shots) / len(shots), sum(y for _, y in shots) / len(shots)
+
+
+def primer_figure(name: str) -> str:
+    """Entry 438 section 2.5: each of the primer's figures, drawn here from GroupLab's own numbers (docs/figures/primer/primer-data.json),
+    so the page is complete and still with scripts off; primer.js adds the buttons that step through more of the same numbers."""
+    d = primer()
+    caption, svg, controls = "", "", ""
+    if name in ("centre", "mean-radius", "cep"):
+        shots = d["groups"]["10" if name != "cep" else "20"][0]
+        cx, cy = centre_of(shots["shots"])
+        scale, half = 110.0, 180.0
+        extra = ""
+        if name == "centre":
+            extra = (f'<path class="pf-centre" d="M{180 + cx * scale - 10:.1f} {180 - cy * scale:.1f}h20M{180 + cx * scale:.1f} {180 - cy * scale - 10:.1f}v20"/>')
+            caption = "Ten shots from one rifle, and their center, the amber cross: the average place they landed. The rings are half an MOA apart, around the aim."
+        elif name == "mean-radius":
+            spokes = "".join(f'<path class="pf-spoke" d="M{180 + cx * scale:.1f} {180 - cy * scale:.1f}L{180 + x * scale:.1f} {180 - y * scale:.1f}"/>' for x, y in shots["shots"])
+            extra = spokes + f'<circle class="pf-centre-ring" cx="{180 + cx * scale:.1f}" cy="{180 - cy * scale:.1f}" r="{shots["mr"] * scale:.1f}"/>'
+            caption = (f"The same kind of group with a line from its center to every shot. Their average length is the mean radius, here "
+                       f"{shots['mr']:.2f} MOA, drawn as the amber circle.")
+        else:
+            c50, c90 = shots["sigma"] * d["cep50Factor"], shots["sigma"] * 2.146
+            extra = (f'<circle class="pf-centre-ring" cx="{180 + cx * scale:.1f}" cy="{180 - cy * scale:.1f}" r="{c50 * scale:.1f}"/>'
+                     f'<circle class="pf-centre-ring pf-dashed" cx="{180 + cx * scale:.1f}" cy="{180 - cy * scale:.1f}" r="{c90 * scale:.1f}"/>')
+            caption = (f"Twenty shots with GroupLab's CEP 50, the solid amber circle ({c50:.2f} MOA), which should hold about half of a "
+                       f"rifle's shots, and CEP 90, the dashed one ({c90:.2f} MOA), about nine in ten.")
+        svg = f'<svg class="pf" viewBox="0 0 360 360" role="img" aria-label="{esc(caption)}">{svg_group(shots["shots"], 180, 180, half, scale, extra)}</svg>'
+    elif name == "five-more":
+        svg = primer_groups_svg(d["groups"]["5"][:6])
+        caption = ("Six groups from the same rifle, which never changes. The line joins the two shots farthest apart, and the "
+                   "number is that extreme spread in MOA.")
+        controls = ('<div class="pf-controls" hidden><button type="button" class="btn btn-secondary" data-act="more">Shoot five more</button>'
+                    '<span class="pf-sizes" role="group" aria-label="Shots in each group">'
+                    + "".join(f'<button type="button" class="pf-size" data-n="{n}" aria-pressed="{str(n == 5).lower()}">{n} shots</button>' for n in (5, 10, 20))
+                    + '</span><p class="pf-said small" aria-live="polite"></p></div>')
+    elif name == "luck":
+        rows = d["spread"]
+        width, left, top, gap = 640, 230, 20, 46
+        x = lambda v: left + v / 2.5 * (width - left - 30)
+        bars = []
+        for i, r in enumerate(rows):
+            y = top + i * gap
+            bars.append(f'<text class="pf-label" x="16" y="{y + 14}">{r["n"]} shots</text>'
+                        f'<text class="pf-label" x="{left - 14}" y="{y + 14}" text-anchor="end">{r["esLow"]:.1f} to {r["esHigh"]:.1f}</text>'
+                        f'<rect class="pf-bar" x="{x(r["esLow"]):.1f}" y="{y}" width="{x(r["esHigh"]) - x(r["esLow"]):.1f}" height="20" rx="4"/>'
+                        f'<path class="pf-mid" d="M{x(r["esMid"]):.1f} {y - 3}v26"/>')
+        axis_y = top + len(rows) * gap
+        ticks = "".join(f'<path class="pf-tick" d="M{x(v):.1f} {axis_y}v6"/><text class="pf-label" x="{x(v):.1f}" y="{axis_y + 22}" text-anchor="middle">{v:g}</text>' for v in (0, 0.5, 1, 1.5, 2, 2.5))
+        svg = (f'<svg class="pf" viewBox="0 0 {width} {axis_y + 36}" role="img" aria-label="Extreme spread, the middle nine groups in ten, by shots in a group">'
+               f'{"".join(bars)}<path class="pf-tick" d="M{left} {axis_y}H{width - 30}"/>{ticks}</svg>')
+        caption = ("How far one rifle's extreme spread wanders, in MOA: each bar holds the middle nine groups in ten of 4000, and the mark is "
+                   "the middle one. The rifle is the same in every row; only the number of shots changes.")
+    elif name == "same-loads":
+        five = next(s for s in d["sameLoads"] if s["n"] == 5)
+        ex = five["examples"][0]
+        svg = primer_pair_svg(ex)
+        caption = (f"Two loads that are exactly the same, five shots each. Compared {five['trials']} times, one looked at least 20 percent "
+                   f"tighter by extreme spread {round(five['looksClearlyBetter'] * 100)} times in 100, and the test called them different "
+                   f"{round(five['testSaysDifferent'] * 100)} times in 100.")
+        controls = ('<div class="pf-controls" hidden><button type="button" class="btn btn-secondary" data-act="again">Compare again</button>'
+                    '<p class="pf-said small" aria-live="polite"></p></div>')
+    else:
+        sys.exit(f"build: the primer names a figure that is not drawn: {name}")
+    return f'<figure class="guide-fig primer-fig" data-primer="{name}">{svg}{controls}<figcaption class="mono faint small">{esc(caption)}</figcaption></figure>'
+
+
+def primer_groups_svg(groups: list) -> str:
+    """Six groups in two rows of three, each with its farthest pair joined and its extreme spread written beneath."""
+    cells = []
+    for i, g in enumerate(groups):
+        x0, y0 = 105 + (i % 3) * 215, 105 + (i // 3) * 240
+        _, a, b = farthest(g["shots"])
+        (ax, ay), (bx, by) = g["shots"][a], g["shots"][b]
+        line = f'<path class="pf-es" d="M{x0 + ax * 70:.1f} {y0 - ay * 70:.1f}L{x0 + bx * 70:.1f} {y0 - by * 70:.1f}"/>'
+        cells.append(svg_group(g["shots"], x0, y0, 95, 70, line) + f'<text class="pf-label" x="{x0}" y="{y0 + 122}" text-anchor="middle">{g["es"]:.2f} MOA</text>')
+    return f'<svg class="pf" viewBox="0 0 640 475" role="img" aria-label="Six groups from the same rifle with their extreme spreads">{"".join(cells)}</svg>'
+
+
+def primer_pair_svg(ex: dict) -> str:
+    cells = []
+    for i, (key, es) in enumerate((("a", ex["esA"]), ("b", ex["esB"]))):
+        x0 = 160 + i * 320
+        _, a, b = farthest(ex[key])
+        (ax, ay), (bx, by) = ex[key][a], ex[key][b]
+        line = f'<path class="pf-es" d="M{x0 + ax * 65:.1f} {130 - ay * 65:.1f}L{x0 + bx * 65:.1f} {130 - by * 65:.1f}"/>'
+        cells.append(svg_group(ex[key], x0, 130, 120, 65, line)
+                     + f'<text class="pf-label" x="{x0}" y="{280}" text-anchor="middle">Load {key.upper()}: {es:.2f} MOA</text>')
+    return f'<svg class="pf" viewBox="0 0 640 300" role="img" aria-label="Two identical loads, five shots each, side by side">{"".join(cells)}</svg>'
 
 
 def mark_overlay(name: str, names: list[str], fig: str, page: str) -> str:
@@ -1653,6 +1808,10 @@ def guide_problems(out: Path = OUT) -> list[str]:
         listed = re.findall(r'href="#([^"]+)"', side.group(1)) if side else []
         if listed != re.findall(r'<h[23] id="([^"]+)"', page):
             found.append(f"{rel}: the contents list does not name every heading, in order, in the page as built")
+        for other, target in sorted(set(re.findall(r'href="/guides/([a-z-]+)/#([^"]+)"', page))):
+            built = out / "guides" / other / "index.html"
+            if built.exists() and target not in guide_ids(built.read_text(encoding="utf-8")):
+                found.append(f"{rel}: a link to /guides/{other}/#{target} has no heading with that id")
         if key == "user-guide" and "<h3 id=" not in page:
             found.append(f"{rel}: the user guide has no subsections (entry 436 section 1)")
     return found
@@ -1707,7 +1866,14 @@ def page_guide(key: str, md: str, pdf: str, label: str, desc: str) -> str:
 </article>
 </section>
 <script src="/assets/js/guide-toc.js" defer></script>
+{'<script src="/assets/js/primer.js" defer></script>' if key == "statistics-primer" else ""}
 """
+    if key == "statistics-primer":
+        # Entry 438 section 4.1: the one-page summary, linked at the top and at the bottom.
+        summary = ('<p class="primer-summary small">Five things to know, on one page to print or pass on: '
+                   + " or ".join(f'<a href="/guides/{published}">{paper}</a>' for paper, _, published in PRIMER_SUMMARIES) + ".</p>")
+        body = body.replace("<h1>", summary + "\n<h1>", 1).replace("</article>", summary + "\n</article>", 1)
+        return shell(f"/guides/{key}/", label, desc, body, "Guides", image="og-primer.png")
     return shell(f"/guides/{key}/", label, desc, body, "Guides")
 
 
@@ -2423,13 +2589,13 @@ def page_guides_index() -> str:
 <section class="wrap page-head">
 <p class="eyebrow">Guides</p>
 <h1>Guides</h1>
-<p class="lead">Both guides describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone. They are published from the repository, so they change when it does.</p>
+<p class="lead">The user guide and Trying GroupLab describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone. Statistics for shooters explains, from the beginning, what the figures GroupLab gives you mean. All three are published from the repository, so they change when it does.</p>
 </section>
 <section class="wrap grid-2 last">
 {''.join(cards)}
 </section>
 """
-    return shell("/guides/", "Guides", "The GroupLab user guide and the guide to trying the test build for the first time.", body, "Guides")
+    return shell("/guides/", "Guides", "The GroupLab user guide, the guide to trying the test build for the first time, and statistics for shooters from the beginning.", body, "Guides")
 
 
 # ---------------------------------------------------------------- the tour, entry 146
@@ -3196,6 +3362,95 @@ TERMS_JS = """// NOTES-FROM-PLANNING.md entry 154: a glossary word explains itse
 })();
 """
 
+PRIMER_JS = """// NOTES-FROM-PLANNING.md entry 438 section 2.5: the statistics primer's figures that teach luck. Every group and every comparison here
+// was drawn and measured by GroupLab's own statistics (docs/figures/primer/primer-data.json); this script only steps through them. Without
+// it, each figure is the same picture, still, with its caption saying what it shows.
+(() => {
+  const figures = document.querySelectorAll(".primer-fig[data-primer]");
+  if (!figures.length || !window.fetch) return;
+  const ns = "http://www.w3.org/2000/svg";
+  const f = (v) => v.toFixed(1);
+  const farthest = (shots) => {
+    let best = [0, 0, 0];
+    for (let i = 0; i < shots.length; i++) for (let j = i + 1; j < shots.length; j++) {
+      const d = Math.hypot(shots[i][0] - shots[j][0], shots[i][1] - shots[j][1]);
+      if (d > best[0]) best = [d, i, j];
+    }
+    return best;
+  };
+  // The same drawing as the build's svg_group, so a stepped group looks exactly like the still one.
+  const group = (shots, x0, y0, half, scale, extra) => {
+    let out = `<rect class="pf-frame" x="${x0 - half}" y="${y0 - half}" width="${2 * half}" height="${2 * half}" rx="6"/>`;
+    for (const r of [0.5, 1.0, 1.5]) if (r * scale < half) out += `<circle class="pf-ring" cx="${x0}" cy="${y0}" r="${f(r * scale)}"/>`;
+    out += extra;
+    for (const [x, y] of shots) out += `<circle class="pf-shot" cx="${f(x0 + x * scale)}" cy="${f(y0 - y * scale)}" r="3.2"/>`;
+    return out;
+  };
+  const line = (shots, x0, y0, scale) => {
+    const [, a, b] = farthest(shots);
+    return `<path class="pf-es" d="M${f(x0 + shots[a][0] * scale)} ${f(y0 - shots[a][1] * scale)}L${f(x0 + shots[b][0] * scale)} ${f(y0 - shots[b][1] * scale)}"/>`;
+  };
+  const paint = (svg, inner) => { svg.innerHTML = inner; };
+  fetch("/guides/statistics-primer/primer-data.json").then((r) => r.ok ? r.json() : null).then((data) => {
+    if (!data) return;
+    for (const fig of figures) {
+      const controls = fig.querySelector(".pf-controls");
+      const svg = fig.querySelector("svg");
+      const said = fig.querySelector(".pf-said");
+      if (!controls || !svg) continue;
+      controls.hidden = false;
+      if (fig.dataset.primer === "five-more") {
+        let n = "5", start = 0;
+        const more = controls.querySelector('[data-act="more"]');
+        const show = () => {
+          const list = data.groups[n];
+          let inner = "";
+          const six = [];
+          for (let i = 0; i < 6; i++) six.push(list[(start + i) % list.length]);
+          six.forEach((g, i) => {
+            const x0 = 105 + (i % 3) * 215, y0 = 105 + Math.floor(i / 3) * 240;
+            inner += group(g.shots, x0, y0, 95, 70, line(g.shots, x0, y0, 70));
+            inner += `<text class="pf-label" x="${x0}" y="${y0 + 122}" text-anchor="middle">${g.es.toFixed(2)} MOA</text>`;
+          });
+          paint(svg, inner);
+          const sizes = six.map((g) => g.es);
+          more.textContent = `Shoot ${({ 5: "five", 10: "ten", 20: "twenty" })[n]} more`;
+          said.textContent = `The newest group, top left: ${six[0].es.toFixed(2)} MOA. These six ${n}-shot groups run from ` +
+            `${Math.min(...sizes).toFixed(2)} to ${Math.max(...sizes).toFixed(2)} MOA, from a rifle that never changed.`;
+        };
+        more.addEventListener("click", () => { start = (start - 1 + data.groups[n].length) % data.groups[n].length; show(); });
+        for (const b of controls.querySelectorAll(".pf-size")) b.addEventListener("click", () => {
+          n = b.dataset.n; start = 0;
+          for (const o of controls.querySelectorAll(".pf-size")) o.setAttribute("aria-pressed", String(o === b));
+          show();
+        });
+      } else if (fig.dataset.primer === "same-loads") {
+        const five = data.sameLoads.find((s) => s.n === 5);
+        let i = 0, shown = 1, looked = 0;
+        const clearly = (e) => Math.min(e.esA, e.esB) <= 0.8 * Math.max(e.esA, e.esB);
+        looked += clearly(five.examples[0]) ? 1 : 0;
+        controls.querySelector('[data-act="again"]').addEventListener("click", () => {
+          i = (i + 1) % five.examples.length;
+          shown += 1;
+          const e = five.examples[i];
+          looked += clearly(e) ? 1 : 0;
+          let inner = "";
+          [["a", e.esA], ["b", e.esB]].forEach(([k, es], j) => {
+            const x0 = 160 + j * 320;
+            inner += group(e[k], x0, 130, 120, 65, line(e[k], x0, 130, 65));
+            inner += `<text class="pf-label" x="${x0}" y="280" text-anchor="middle">Load ${k.toUpperCase()}: ${es.toFixed(2)} MOA</text>`;
+          });
+          paint(svg, inner);
+          const better = e.esA < e.esB ? "A" : "B";
+          said.textContent = `Load ${better} looks tighter this time${clearly(e) ? ", by 20 percent or more" : ""}. In the ${shown} ` +
+            `comparisons so far, one looked at least 20 percent tighter ${looked} times, though the loads are the same.`;
+        });
+      }
+    }
+  }).catch(() => {});
+})();
+"""
+
 GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list opens the section being read and folds the rest, marks where the reader
 // is, and the address bar follows without adding to the history; a heading's link mark copies its address. Without this script the list
 // is whole and every mark is a plain link, which is the mechanism; this is the enhancement.
@@ -3887,6 +4142,26 @@ p.text,.text p,.text{color:var(--text)}
 .mark-badge{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--amber);color:var(--on-amber);
 font:600 13px/22px "IBM Plex Sans",sans-serif;text-align:center;box-shadow:0 0 0 1px var(--bg)}
 .mark-ref{color:var(--amber);font-weight:600;cursor:default;border-radius:3px}
+.primer-fig .pf{width:100%;height:auto;display:block;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.pf-frame{fill:none}
+.pf-ring{fill:none;stroke:var(--line2);stroke-width:1}
+.pf-shot{fill:var(--text)}
+.pf-centre{stroke:var(--amber);stroke-width:3;fill:none}
+.pf-centre-ring{fill:none;stroke:var(--amber);stroke-width:2}
+.pf-dashed{stroke-dasharray:6 5}
+.pf-spoke{stroke:var(--faint);stroke-width:1}
+.pf-es{stroke:var(--amber);stroke-width:2}
+.pf-label{fill:var(--dim);font:13px "IBM Plex Mono",monospace}
+.pf-bar{fill:var(--amber-tint-b)}
+.pf-mid{stroke:var(--amber);stroke-width:3}
+.pf-tick{stroke:var(--line2);stroke-width:1}
+.pf-controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.pf-sizes{display:flex;gap:6px}
+.pf-size{min-height:40px;padding:0 12px;border-radius:6px;border:1px solid var(--line2);background:transparent;color:var(--dim);font:inherit;cursor:pointer}
+.pf-size[aria-pressed="true"]{color:var(--text);border-color:var(--amber)}
+.pf-said{margin:0;flex-basis:100%;color:var(--dim)}
+.math-fold summary{font-size:16px}
+.primer-summary{margin:0}
 .mark-ref:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){.mark-box{transition:none}}
 a.plain{color:var(--text)}
@@ -4027,6 +4302,7 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 .pdf-row{flex-wrap:wrap}
 .guide-bar{flex-wrap:wrap}
 .pdf-link{margin-left:0}
+.prose table{display:block;overflow-x:auto;max-width:100%}
 .btn-big{width:100%}
 }
 @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto !important}}
@@ -4475,6 +4751,7 @@ def main() -> None:
     write("assets/js/theme.js", JS)
     write("assets/js/terms.js", TERMS_JS)
     write("assets/js/guide-toc.js", GUIDE_TOC_JS)
+    write("assets/js/primer.js", PRIMER_JS)
     write("assets/css/testpage.css", TESTPAGE_CSS.strip() + "\n")
     write("assets/js/testpage.js", TESTPAGE_JS)
 
@@ -4530,7 +4807,7 @@ def main() -> None:
     write("assets/js/download.js", DOWNLOAD_JS + "\n")
     write("404.html", page_404())
 
-    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", GLOSSARY_PATH, "/releases/", "/support/", SURVEY_PATH, FEATURES_PATH]
+    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/guides/statistics-primer/", GLOSSARY_PATH, "/releases/", "/support/", SURVEY_PATH, FEATURES_PATH]
     pages += [f"/tour/{key}/" for key in tour()["order"]]
     today = datetime.date.today().isoformat()
     urls = "".join(f"<url><loc>{SITE_URL}{p}</loc><lastmod>{today}</lastmod></url>" for p in pages)
