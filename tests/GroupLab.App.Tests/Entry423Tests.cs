@@ -31,7 +31,7 @@ public class Entry423Tests
         GltdJsonReader.ReadFile(Path.Combine(Repository(), "targets", "GL-CF9-T.gltd.json")).Definition!;
 
     /// <summary>One sheet of a set as a 300 dpi scan with a hole near each scoring bull, the seed telling two pictures of a sheet apart.</summary>
-    private static string Sheet(TargetDefinition set, string folder, int sheet, string? name = null, int seed = 0)
+    internal static string Sheet(TargetDefinition set, string folder, int sheet, string? name = null, int seed = 0)
     {
         var render = SceneRasterizer.Rasterize(SceneBuilder.Build(set).Pages[sheet], Dpi);
         var random = new Random(423 + sheet + (100 * seed));
@@ -81,7 +81,7 @@ public class Entry423Tests
         return path;
     }
 
-    private static (MainWindow Window, string Folder) Window(bool detect)
+    internal static (MainWindow Window, string Folder) Window(bool detect)
     {
         string folder = Path.Combine(Path.GetTempPath(), $"grouplab-423-{Guid.NewGuid():N}");
         Directory.CreateDirectory(folder);
@@ -93,7 +93,7 @@ public class Entry423Tests
     }
 
     /// <summary>Pumps the window until the drop has finished or <paramref name="until"/> holds, three minutes at most.</summary>
-    private static async Task Settle(MainWindow window, Func<bool>? until = null)
+    internal static async Task Settle(MainWindow window, Func<bool>? until = null)
     {
         var clock = System.Diagnostics.Stopwatch.StartNew();
         while (!window.Dropping.IsCompleted && until?.Invoke() != true && clock.Elapsed < TimeSpan.FromMinutes(3))

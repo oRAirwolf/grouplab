@@ -32,7 +32,7 @@ public sealed partial class MainWindow
     private void BuildFigureExtras(StackPanel shotsColumn, StackPanel figures)
     {
         thumbnail.ShotsClicked += (_, ids) => PickShots(ids);
-        ToolTip.SetTip(thumbnail, "The sheet from its definition, with every shot. Click a bull to select its shots.");
+        ToolTip.SetTip(thumbnail, "The sheet from its definition, with every shot; a pooled set's sheets lie over one another, each in its own color. Click a bull to select the shots given to it, or a shot wide of every bull to select it.");
         shotsColumn.Children.Insert(0, thumbnail);
         fullFiguresPanel.Content = fullFigures;
         fullFiguresPanel.IsExpanded = WhyOpen(FullFiguresItem);
@@ -74,10 +74,18 @@ public sealed partial class MainWindow
         var outer = definition.RingSets.ToDictionary(r => r.Key, r => r.Discs.Count > 0 ? r.Discs.Max(d => d.Diameter) / 508.0 : 0.2);
         thumbnail.Bulls = [.. definition.Bulls.Select((b, i) => new ThumbnailBull(i, new PointD(b.X / 254.0, b.Y / 254.0), outer.TryGetValue(b.RingSet, out double r) ? r : 0.2))];
 
-        var shots = state.Shots.Where(s => s.IsShot && s.Bull is { } b && b < definition.Bulls.Count).ToList();
+        // Issue 35: a pooled set's bulls are numbered sheet by sheet (SetPool.Composite), so each shot is placed on its own bull of the one
+        // sheet; reading the number as the sheet's own left out every sheet after the first.
+        var shots = state.Shots.Where(s => s.IsShot && s.Bull is { } b && SetPool.BullOnSheet(b) < definition.Bulls.Count).ToList();
         var offsets = GroupAnalysis.CompositeOffsets(state, shots);
         thumbnail.Shots = offsets.Count == shots.Count
-            ? [.. shots.Select((s, i) => new ThumbnailShot(s.Id, new PointD((definition.Bulls[s.Bull!.Value].X / 254.0) + offsets[i].X, (definition.Bulls[s.Bull.Value].Y / 254.0) + offsets[i].Y), s.Exclusion is not null))]
+            ? [.. shots.Select((s, i) =>
+            {
+                int own = SetPool.BullOnSheet(s.Bull!.Value);
+                var centre = definition.Bulls[own];
+                return new ThumbnailShot(s.Id, new PointD((centre.X / 254.0) + offsets[i].X, (centre.Y / 254.0) + offsets[i].Y), s.Exclusion is not null,
+                    own, SetPool.SheetOf(s.Bull.Value));
+            })]
             : [];
         thumbnail.Selected = plotSelection;
         thumbnail.InvalidateVisual();

@@ -7,6 +7,12 @@ overwritten by either:** since nightly 113 a newly opened picture always starts 
 you saved it (only builds before nightly 113 could save a new picture over the record before it). From nightly 193 a drop never replaces
 a tab holding a target: it opens beside it.
 
+**For Quack** (issue 35, not a request; pass on whenever suits): thank you for the report about the small sheet at the top left of a
+pooled set. Both faults are fixed in the next nightly after 0.2.0-nightly.196. Every sheet's shots now show on the small sheet, laid
+over the one page, each sheet in the same color it has on the plot. A click on a bull picks the shots fired at that bull, one from each
+sheet, so a wide shot such as your 1.5 landing by bull 1.2 is no longer picked with bull 1.2's. Picking several shots at once is meant
+to happen there, because a bull holds one shot from each sheet. A click on a shot that is wide of every bull picks that shot alone.
+
 **For Quack** (entry 423, not a request; pass on whenever suits): from nightly 193, dropping the scans of a set onto GroupLab together
 opens them in one tab named for the set, reads them one after another and shows them pooled, with no button to press; Check one sheet
 opens any sheet alone to check and fix it, and a missing sheet dropped on the tab later joins the set. Thank you for asking for it.

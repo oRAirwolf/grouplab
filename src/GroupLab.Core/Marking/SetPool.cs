@@ -120,6 +120,9 @@ public static class SetPool
     /// <summary>Entry 420: which sheet of the set a bull of <see cref="Composite"/>'s marking is on, from its index, counting from 0.</summary>
     public static int SheetOf(int bullIndex) => bullIndex / BullsASheet;
 
+    /// <summary>Issue 35: which bull of its own sheet a bull of <see cref="Composite"/>'s marking is, the definition's index; a sheet's own bull is itself.</summary>
+    public static int BullOnSheet(int bullIndex) => bullIndex % BullsASheet;
+
     private const int BullsASheet = 10_000;
 
     private static int Index(int sheet, int bull) => (sheet * BullsASheet) + bull;
