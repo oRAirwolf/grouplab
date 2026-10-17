@@ -90,7 +90,10 @@ public class Issue35Tests
             {
                 var at = thumbnail.Drawn(shot.At);
                 int i = (((int)at.Y * width) + (int)at.X) * 4;
-                var drawn = Color.FromRgb(bgra[i + 2], bgra[i + 1], bgra[i]);
+                // The bitmap's own byte order: BGRA on Windows and Linux, RGBA on macOS.
+                var drawn = bitmap.Format == Avalonia.Platform.PixelFormat.Rgba8888
+                    ? Color.FromRgb(bgra[i], bgra[i + 1], bgra[i + 2])
+                    : Color.FromRgb(bgra[i + 2], bgra[i + 1], bgra[i]);
                 Assert.True(Near(drawn, colours[sheet]), $"sheet {sheet + 1}'s shot is drawn {drawn}, not its sheet's {colours[sheet]}");
             }
         }
