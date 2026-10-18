@@ -157,8 +157,7 @@ at the Fold's cover screen with Android's text size at 2.0, on Targets, `fold-ta
 is the Features entry's own picture.
 
 **Walk me through a demo on the phone** (entry 446) is pictured by the emulator at its second step, the sample read and its plot outlined
-with the step's card. `fold-demo-light.png` waits for the emulator's first run, and `fold-demo-dark.png` waits for the emulator's first run;
-the Features entry's Mobile side says so until then.
+with the step's card, `fold-demo`, taken on the emulator (first after nightly 201); it is the Features entry's Mobile picture.
 
 ## Not published
 

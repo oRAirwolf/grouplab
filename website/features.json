@@ -845,7 +845,7 @@
       ],
       "guide": "walk-me-through-a-demo",
       "mobile": {
-        "noPicture": "the phone's tour is pictured on the emulator after the next nightly"
+        "shot": "fold-demo"
       }
     },
     {
