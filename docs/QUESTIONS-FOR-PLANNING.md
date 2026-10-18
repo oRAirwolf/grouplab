@@ -14,32 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 43 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 44 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 99, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
-
----
-
-## 2026-10-17, question 101: the demo's sample is not the file entry 439 names, so GroupLab makes its own
-
-**Status: open. Nothing waits on it; built as the second option below.**
-
-Entry 439's "What exists already" says: "Both packages ship `samples/sample-25-shots.png`, a GroupLab sheet with 25 shots made by
-GroupLab itself, so it is nobody's target (TESTING-GUIDE.md, 'The first minute, with no rifle')." The code says otherwise:
-
-- No `sample-25-shots.png` exists in the repository or any package. `scripts/package-windows.ps1` (lines 76 to 81) puts
-  `samples/gl-cf25-ltr-d-25-shots-600-dpi.png` and `gl-cf25-ltr-300-dpi.png` in the **Windows zip only**; the installer, the Store
-  package, macOS and Linux carry no samples folder.
-- That file is not made by GroupLab: it is a real sheet, shot and scanned at 600 dpi and published with its shooter's consent
-  (`samples/PROVENANCE.md`). The testing guide's sentence was stale; entry 439's commit corrects it.
-
-The options for the demo: (1) ship the real scan inside the application (17.6 MB in every package, and the demo would analyse a real
-person's group, which the entry wanted to avoid); (2) **have GroupLab make the sample when the demo starts**, the way the tests make
-their synthetic sheet (`SyntheticSheet` in Core: the 25-bull Letter sheet as it prints, one simulated hole a bull), written into the
-application's own folder and removed when the demo ends. Built as (2): nobody's target, on every platform, nothing shipped, and
-`Entry439Tests` walks it. **The question:** is (2) what was meant, and should the testing guide's "first minute" keep pointing at
-the Windows zip's real sample as a second option, or drop it now the demo exists?
+> 101, 99, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
 

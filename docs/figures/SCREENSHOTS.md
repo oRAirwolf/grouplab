@@ -156,6 +156,10 @@ targets sheet is `fold-open-targets`, taken on the emulator (entry 388).
 at the Fold's cover screen with Android's text size at 2.0, on Targets, `fold-targets-largest-text` (first taken after nightly 188), and
 is the Features entry's own picture.
 
+**Walk me through a demo on the phone** (entry 446) is pictured by the emulator at its second step, the sample read and its plot outlined
+with the step's card. `fold-demo-light.png` waits for the emulator's first run, and `fold-demo-dark.png` waits for the emulator's first run;
+the Features entry's Mobile side says so until then.
+
 ## Not published
 
 `docs/figures/screens/*.png` (2026-09-14), `before/` and `after/` (entry 247's comparison for Alan) are the record of their day. No

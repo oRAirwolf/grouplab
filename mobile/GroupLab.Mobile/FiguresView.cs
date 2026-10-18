@@ -136,7 +136,7 @@ internal sealed class FiguresView : UserControl
         {
             column.Children.Add(pill);
         }
-        column.Children.Add(Screens.Tiles(tiles.Select(t => (t.Label, t.Value, t.Beneath ?? "", t.Headline))));
+        column.Children.Add(Screens.Tiles(tiles.Select(t => (t.Label, t.Value, t.Beneath ?? "", t.Headline))).Id("result-figures"));
         if (state.ShotDistanceInches is null)
         {
             column.Children.Add(Screens.Dim("Enter the distance on Capture to see the angles."));

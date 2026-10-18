@@ -59,6 +59,9 @@ public sealed class Shell : UserControl
     /// <summary>Entry 294: Settings changed a unit, so every open screen shows its figures again.</summary>
     internal static void Units() => UnitsChanged?.Invoke();
 
+    /// <summary>Entry 446: the guided demo on the phone's own screens.</summary>
+    internal PhoneDemo Demo { get; }
+
     /// <summary>The capture page is kept, so going to Settings and back does not lose a result on screen.</summary>
     private CapturePage? capture;
 
@@ -127,7 +130,9 @@ public sealed class Shell : UserControl
             Margin = new Thickness(16, 0, 16, 20),
             Classes = { PhoneStyles.Card },
         };
-        frame.Children.Add(new Grid { Children = { page, toast, notice } });
+        // Entry 446: the guided demo's outline and card, over the page and under nothing.
+        Demo = new PhoneDemo(this);
+        frame.Children.Add(new Grid { Children = { page, toast, notice, Demo.Layer } });
 
         // Entry 273: tap a number to switch units, the same setting everywhere, remembered.
         UnitTap.Current = () => Phone.Settings.LoadUnits();
@@ -172,6 +177,7 @@ public sealed class Shell : UserControl
             {
                 Content = frame;
                 Show(Place.Capture);
+                Demo.OfferIfDue();
             });
         }
         else
@@ -187,6 +193,7 @@ public sealed class Shell : UserControl
     /// </summary>
     internal void Restart()
     {
+        Demo.End(keep: false);
         capture?.CloseCamera();
         capture = null;
         Targets.Clear();
@@ -516,6 +523,19 @@ public sealed class Shell : UserControl
     /// <summary>Back returns to Capture from anywhere else, and is left to Android on Capture itself.</summary>
     internal bool Back()
     {
+        // Entry 446 section 1: the phone's Back ends the guided demo, as its close button does, and closes its offer.
+        if (Demo.Running)
+        {
+            Demo.End(keep: false);
+            return true;
+        }
+
+        if (Demo.OfferShown)
+        {
+            Demo.Layer.IsVisible = false;
+            return true;
+        }
+
         if (BackOverride is { } page && page())
         {
             return true;

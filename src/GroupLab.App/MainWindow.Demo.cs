@@ -20,29 +20,6 @@ namespace GroupLab.App;
 /// </summary>
 internal sealed record DemoStep(Destination Screen, string Control, string Title, string Says, Func<MainWindow, Task>? Do = null);
 
-/// <summary>The demo's words, in one place.</summary>
-internal static class DemoWords
-{
-    public const string TabName = "Demo: sample sheet";
-    public const string Offer = "Walk me through a demo (about five minutes)";
-    public const string OfferSays = "GroupLab can show you how it works on a sample sheet it makes for the tour, nobody's target: reading it, the analysis, " +
-        "printing, ballistics and where to get help. Nothing the demo makes is kept unless you ask.";
-    public const string NotNow = "Not now";
-    public const string SettingsRow = "Walk me through a demo";
-    public const string SettingsSays = "A guided tour of GroupLab on a sample sheet, about five minutes. You can end it at any step.";
-    public const string Back = "Back";
-    public const string Next = "Next";
-    public const string Finish = "Finish";
-    public const string End = "End the tour";
-    public const string Keep = "Keep this demo in Sessions";
-    public const string Ended = "The demo has ended, and what it made has been removed.";
-    public const string Kept = "The demo has ended. Its session is kept in Session records.";
-
-    public static string Of(int step, int count) => $"{step} of {count}";
-
-    public static string CarryOn(int step, int count) => $"Carry on from step {step} of {count}";
-}
-
 public sealed partial class MainWindow
 {
     /// <summary>
@@ -87,7 +64,7 @@ public sealed partial class MainWindow
             "The user guide and glossary are on grouplab.org, and Report a problem sends the developer what went wrong. You can take this tour again from Settings."),
     ];
 
-    private const string DemoSheetFile = "GL-CF25-LTR.gltd.json";
+    private const string DemoSheetFile = DemoSample.SheetFile;
 
     private readonly Canvas demoLayer = new() { IsVisible = false };
     private readonly Border demoSpot = new() { IsHitTestVisible = false, Classes = { AppStyles.DemoHalo } };
@@ -480,24 +457,13 @@ public sealed partial class MainWindow
         demoCarryOn.Content = DemoWords.CarryOn(at + 1, DemoSteps.Count);
     }
 
-    /// <summary>
-    /// Entry 439: the sample is made here, by GroupLab, as the tests make theirs: the 25-bull Letter sheet as it prints, with one hole a bull
-    /// drawn the way a scanner sees one. So it is nobody's target, every platform has it, and no file has to be shipped.
-    /// </summary>
+    /// <summary>Entry 439: the sample, made by GroupLab from <see cref="DemoSample"/>, the same sheet the phones make (entry 446).</summary>
     private string WriteDemoSheet()
     {
-        var definition = targetsPanel.Sheets.First(s => s.File == DemoSheetFile).Definition;
-        const double Dpi = 300;
-        var render = SceneRasterizer.Rasterize(SceneBuilder.Build(definition).Pages[0], Dpi);
-        double s = 254 / Dpi;
-        var truth = new HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1]));
-        var random = new Random(439);
-        var holes = definition.Bulls.Where(b => b.Scoring)
-            .Select(b => SyntheticSheet.SampleHole(random, b.X + random.Next(-45, 46), b.Y + random.Next(-45, 46), onInk: false, HoleBacking.ScannerLid, 0.871)).ToList();
-        var image = SyntheticSheet.Compose(render, Dpi, truth, render.Width, render.Height, holes, [], random);
+        var image = DemoSample.Make(targetsPanel.Sheets.First(s => s.File == DemoSheetFile).Definition);
         string folder = Path.Combine(Path.GetDirectoryName(settingsStore.Path) ?? Path.GetTempPath(), "demo");
         Directory.CreateDirectory(folder);
-        string path = Path.Combine(folder, "grouplab-demo-sample-sheet.png");
+        string path = Path.Combine(folder, DemoSample.FileName);
         using var mat = OpenCvSharp.Mat.FromPixelData(image.Height, image.Width, OpenCvSharp.MatType.CV_8UC1, image.Pixels);
         OpenCvSharp.Cv2.ImWrite(path, mat);
         return path;

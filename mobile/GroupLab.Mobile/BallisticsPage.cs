@@ -115,7 +115,7 @@ internal sealed class BallisticsPage : UserControl
         column.Children.Add(chips);
         form.Content = open switch { "rifle" => RifleForm(), "load" => LoadForm(), "air" => AirForm(), _ => null };
         column.Children.Add(form);
-        var tabs = new WrapPanel();
+        var tabs = new WrapPanel().Id("ballistics-tabs");
         foreach (string name in new[] { "Dope", "Trajectory", "Hit chance" })
         {
             tabs.Children.Add(Chip(name, tab == name, () =>

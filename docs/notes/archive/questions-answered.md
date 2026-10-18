@@ -5,6 +5,28 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-17, question 101: the demo's sample is not the file entry 439 names, so GroupLab makes its own
+
+**Status: answered 2026-10-18 by entry 446: (2) accepted, GroupLab makes its own sample; the phones make the same sheet from `DemoSample` in Core.**
+
+Entry 439's "What exists already" says: "Both packages ship `samples/sample-25-shots.png`, a GroupLab sheet with 25 shots made by
+GroupLab itself, so it is nobody's target (TESTING-GUIDE.md, 'The first minute, with no rifle')." The code says otherwise:
+
+- No `sample-25-shots.png` exists in the repository or any package. `scripts/package-windows.ps1` (lines 76 to 81) puts
+  `samples/gl-cf25-ltr-d-25-shots-600-dpi.png` and `gl-cf25-ltr-300-dpi.png` in the **Windows zip only**; the installer, the Store
+  package, macOS and Linux carry no samples folder.
+- That file is not made by GroupLab: it is a real sheet, shot and scanned at 600 dpi and published with its shooter's consent
+  (`samples/PROVENANCE.md`). The testing guide's sentence was stale; entry 439's commit corrects it.
+
+The options for the demo: (1) ship the real scan inside the application (17.6 MB in every package, and the demo would analyse a real
+person's group, which the entry wanted to avoid); (2) **have GroupLab make the sample when the demo starts**, the way the tests make
+their synthetic sheet (`SyntheticSheet` in Core: the 25-bull Letter sheet as it prints, one simulated hole a bull), written into the
+application's own folder and removed when the demo ends. Built as (2): nobody's target, on every platform, nothing shipped, and
+`Entry439Tests` walks it. **The question:** is (2) what was meant, and should the testing guide's "first minute" keep pointing at
+the Windows zip's real sample as a second option, or drop it now the demo exists?
+
+---
+
 ## 2026-10-15, question 99: the selection's white and black are already two of the marks' own inks
 
 **Status: answered 2026-10-15 by entry 430: (b), the magenta; Alan chose it from the three drawn as concepts. Question 100 follows from it.**

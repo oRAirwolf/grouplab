@@ -1437,6 +1437,33 @@ site build pass.
    stopped). A backslash now only matches as an escape; the whole check takes a second. Paired rightly, it found two style names
    spelled "centre" in the builder, now "center"; nothing a reader sees changed.
 
+## Entry 446: the phone's "Walk me through a demo" (2026-10-18)
+
+1. **The tour on the phone.** `PhoneDemo` (`mobile/GroupLab.Mobile/PhoneDemo.cs`), shared by Android and the iPhone: thirteen steps as
+   data (`PhoneDemo.Steps`), each naming its place, the control it outlines by automation id, its words and what Next does. The sample
+   opens as a chosen picture from GroupLab's own files (never the camera), then the plot, the figures, Fix holes, Shots and its table, Zero
+   from this group, Share a picture and its page, Sessions, Ballistics, Targets' Made for your optic, and Settings. Each step draws the
+   desktop's amber outline and numbered badge around the real control and a card under it, over it, or in the larger room left, where it
+   scrolls. Offered once after the first run's questions (`Shell.Begin`); Settings has a **Guided demo** card with **Walk me through a
+   demo** and **Carry on from step N of 13**. Next does a step; **End the tour** or the phone's Back ends it (`Shell.Back`). The card's
+   words are the desktop's, now in `src/GroupLab.App/DemoWords.cs`, linked into the phones.
+2. **One sample.** `DemoSample` in Core makes the 25-bull Letter sheet at 300 dpi with one hole a bull, from a fixed seed; the desktop's
+   `WriteDemoSheet` and the phones both call it, so all three make the same pixels (`DemoSampleTests`). Question 101 archived as answered.
+3. **Nothing kept unless chosen.** Ending removes the demo's target with nothing asked, its session, the session's picture folder and the
+   sample; ticking **Keep this demo in Sessions** on the last step keeps them. The caliber the demo names (.308 Winchester, as on the
+   desktop) goes back to what was typed. Text goes through the phone's styles and so `TextSize.Of`, the iPhone's Dynamic Type included;
+   the badge grows with the text; a screen reader hears each card as "N of 13: title. words" and again on Next, which takes the focus.
+4. **Walked in CI.** A scenario step, `demo`, walks every step and fails on a control not on its screen or on anything left behind; it is
+   the last step of `phone-sweep.json`, which the iOS simulator run (ios-app.yml) and the Android emulator run both play, and headless in
+   `PhoneSweepScenarioTests`. `Entry446Tests` (6): the walk, keeping, ending part way by Back, Settings' carry-on, the card inside the
+   screen and named at Android's largest text, the offer once. The phone screens walk pictures step 2 as `fold-demo`, waiting for the
+   emulator's first run (SCREENSHOTS.md); the Features entry's Mobile side says so until then.
+5. **Also found.** The card's first placement measured its own words on every layout pass, against its scroll's own measuring, and
+   the screen under it was never laid out again; placement now reads the size the last layout found and sets a value only when it
+   changes. The screen quality check now treats the card's words over the page as an overlay, as a sheet is.
+6. **Same change:** the user guide's demo section, the Features entry (Android, iPhone and iPad), the parity table, the release note.
+   No look question: the outline, badge and card are the desktop's styles.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -77,7 +77,7 @@ public sealed class SessionsPage : UserControl
 
         if (rows.Children.Count > 0)
         {
-            column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
+            column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } }.Id("sessions-list"));
         }
 
         // Entry 259 screen 4: two or more sessions compared, one figure at a time.

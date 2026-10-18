@@ -370,8 +370,12 @@ public sealed class SettingsView : UserControl
         }));
         column.Children.Add(layoutSaid);
 
+        // Entry 446 section 1: the guided demo, any time, from the start or where it was left.
+        column.Children.Add(Screens.Heading("Guided demo"));
+        column.Children.Add(PhoneDemo.SettingsCard(Shell.Current));
+
         column.Children.Add(Screens.Heading("About"));
-        var about = Screens.Card(Screens.Line($"GroupLab {AppInfo.ShortVersion}"));
+        var about =Screens.Card(Screens.Line($"GroupLab {AppInfo.ShortVersion}"));
         column.Children.Add(about);
         // Entry 288: the updater's version, its train's newest, Update now and the automatic switch, in a build that has one.
         if (Phone.Platform.UpdateCard() is { } updates)

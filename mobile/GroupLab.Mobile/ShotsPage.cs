@@ -76,7 +76,7 @@ internal sealed class ShotsPage : UserControl
                 }
             }
 
-            column.Children.Add(new Border { Child = table, Classes = { PhoneStyles.Card } });
+            column.Children.Add(new Border { Child = table, Classes = { PhoneStyles.Card } }.Id("shots-table"));
         }
 
         var shared = Screens.Line("");

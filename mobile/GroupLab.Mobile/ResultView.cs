@@ -102,7 +102,7 @@ public sealed class ResultView : UserControl, IOpenTarget
     private readonly MarkingSession session;
     private readonly TargetDefinition? definition;
     private UnitSettings units;
-    private readonly CompositePlot plot = new() { Height = 360, HorizontalAlignment = HorizontalAlignment.Stretch };
+    private readonly CompositePlot plot = new CompositePlot { Height = 360, HorizontalAlignment = HorizontalAlignment.Stretch }.Id("result-plot");
 
     /// <summary>The plot, for the headless tests (entry 420: a pooled set's sheets in their shades).</summary>
     internal CompositePlot Plot => plot;

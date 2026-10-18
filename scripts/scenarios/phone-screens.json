@@ -59,4 +59,5 @@
     { "do": "screenshot", "name": "open-targets" },
     { "do": "open", "place": "sessions" },
     { "do": "sleep", "seconds": 2 },
-    { "do": "screenshot", "name": "sessions" } ] }
+    { "do": "screenshot", "name": "sessions" },
+    { "do": "demo", "screenshotAt": 2, "name": "demo" } ] }

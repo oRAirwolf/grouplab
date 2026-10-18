@@ -73,7 +73,7 @@ public sealed class TargetsPage : UserControl
             Screens.Dim("Bull shape"),
             Pair(disc, diamond),
             Screens.Primary("Make the sheet", Generate),
-            Screens.Detach(said)));
+            Screens.Detach(said)).Id("targets-optic"));
 
         column.Children.Add(Screens.Heading("The library"));
         IReadOnlyList<LibrarySheet> sheets;

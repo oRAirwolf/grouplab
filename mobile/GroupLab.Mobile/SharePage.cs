@@ -85,7 +85,7 @@ internal sealed class SharePage : UserControl
 
         choices.Children.Add(Screens.Choice("Done", () => choices.IsVisible = false));
         ShowLines();
-        column.Children.Add(new Border { Child = picture, Classes = { PhoneStyles.Card } });
+        column.Children.Add(new Border { Child = picture, Classes = { PhoneStyles.Card } }.Id("share-picture"));
         column.Children.Add(Screens.Dim("Drag the box anywhere; pinch it or drag its corner to resize it; tap it to choose its lines."));
         column.Children.Add(choices);
         column.Children.Add(chips);

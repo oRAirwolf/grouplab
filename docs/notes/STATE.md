@@ -9,17 +9,18 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 445 (before it: entries 444, 443, 442 and 441).
+**Last rewritten:** 2026-10-18, entry 446 (before it: entries 445, 444, 443 and 442).
 
 ---
 
 ## In flight
 
-- **Entry 445 (2026-10-18)**: the guides' "On this page" list on every long page from one function (`with_contents`,
-  `CONTENTS_PAGES`); entry 444's numbered index is gone where the list is; `guide_problems` checks every page with it.
+- **Entry 446 (2026-10-18)**: the phone's guided demo, `PhoneDemo` (13 steps as data), the sample from Core's `DemoSample`;
+  walked by the `demo` scenario step in phone-sweep.json (emulator, iOS simulator, headless). `fold-demo` waits for the emulator.
+- **Entry 445 (2026-10-18)**: the guides' "On this page" on every long page (`with_contents`, `CONTENTS_PAGES`, `guide_problems`).
 - **Entries 441, 443 and 444 (2026-10-18)**: concept B is the home page (the one before is `page_home` at b216ce56); every page has
   its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
-  pages (`LONG_PAGES`) have the ruler and a numbered section index (`page.js`). `heading_problems` and `site-home-tests.py` hold it.
+  pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` and `site-home-tests.py` hold it.
   Alan's look question (titles in capitals?) is a DESIGN NEEDED line in for-alan.md.
 - **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),
   the shot table's own keys (`OnShotKey`), the caliber line's ".568.96 cm" fixed in `UnitSwitch`; `Entry442Tests`. Phones not in it.
@@ -46,8 +47,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 446, the phone's guided demo (question 101 accepted), then entry 447's overnight queue: the marking picture's arrows,
-   a keyboard and screen reader pass, the iOS Real taps flake, then tests and speed (its own limit, 50% of the week).
+1. Entry 447's overnight queue: the marking picture's arrows, a keyboard and screen reader pass, the iOS Real taps flake, then
+   tests and speed (its own limit, 50% of the week).
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 
@@ -63,8 +64,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (99 answered by entry 430 and archived 2026-10-15):
-- **101** the guided demo's sample: GroupLab makes it, where entry 439 named a shipped file that does not exist (entry 439)
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (101 answered by entry 446 and archived 2026-10-18):
 - **100** the selection's magenta is near the light theme's fourth sheet and two bull marks (entry 430)
 - **98** several pictures of one single-page design dropped together: a tab each meanwhile (entry 423)
 - **67** the printer check page as grid style 4 (with Alan)

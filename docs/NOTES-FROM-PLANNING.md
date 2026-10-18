@@ -25,6 +25,30 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-18, entry 446: the phone's "Walk me through a demo" (entry 439 section 5)
+
+**Status: actioned 2026-10-18; sections 1 to 5 done. The Features page's phone picture of the tour waits for the emulator's first run
+after this build (named in SCREENSHOTS.md). The iOS simulator's walk is proved by dispatching ios-app.yml.**
+
+
+From the planning session, 2026-10-18 10:30 UTC. Application work, so the main model. Take it after entry 445. Alan, 2026-10-18: "Yes
+build the demo tour for phones."
+
+1. Build entry 439 section 5 on Android and iPhone: the same offer on first launch (once, after the first run's questions) and any time
+   from Settings (from the start or where it was left), steps for the phone's own screens (Capture with the sample chosen from the
+   app's own files rather than the camera, the result, Shots, Share a picture, Sessions, Ballistics, Targets), each outlining the real
+   control with a numbered badge and a card, as on the desktop. Next does a step for whoever would rather not; Back or a close button ends it.
+2. Question 101 is accepted (Alan through planning, 2026-10-18): GroupLab makes its own sample, as the desktop does. Use the same sample
+   code (Core) so both make the same sheet; archive the question.
+3. Nothing the tour makes is kept unless chosen. Text sizes go through `TextSize.Of`, the iPhone follows Dynamic Type, and the cards fit
+   at the largest text size (entry 411's rule). Screen readers read each card and its step number.
+4. Steps kept as data, like `MainWindow.DemoSteps`, and walked headless on both phones in CI (Android emulator and the iOS self-test); a
+   step whose control is missing fails the walk.
+5. Same change: the user guide's phone section, the features list (Mobile view), the parity table, the release notes and site
+   screenshots (entry 267 rule). Nothing here needs Alan; a real look question goes to for-alan.md as DESIGN NEEDED while the rest is built.
+
+---
+
 ## 2026-10-18, entry 445: the guides' "On this page" contents on the other long pages
 
 **Status: actioned 2026-10-18; sections 1 to 5 done. The download page, the tour's index and how it works are left without the list,

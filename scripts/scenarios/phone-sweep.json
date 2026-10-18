@@ -68,4 +68,5 @@
     { "do": "screenshot", "name": "14-how-shot" },
     { "do": "tree", "name": "14-how-shot" },
     { "do": "press", "name": "bulls-done" },
+    { "do": "demo", "screenshotAt": 2, "name": "15-demo" },
     { "do": "log", "lines": 200 } ] }

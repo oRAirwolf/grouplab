@@ -405,6 +405,8 @@ internal static class Scenario
                 return await Expect(step, TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 5), 0, 600)));
             case "close":
                 return await Close(TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 15), 1, 120)));
+            case "demo":
+                return await Demo(TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 20), 1, 600)), (int)step.Number("screenshotAt", 0), Name(step.Text("name"), "demo"));
             case "log":
                 int lines = (int)Math.Clamp(step.Number("lines", 200), 1, 100_000);
                 string file = Path.Combine(Results, Name(step.Text("name"), "log") + ".txt");
@@ -422,6 +424,53 @@ internal static class Scenario
     }
 
     internal static Task<T> OnUi<T>(Func<T> function) => Dispatcher.UIThread.InvokeAsync(function).GetTask();
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 446 section 4: the guided demo walked from its first step to its end by Next, failing on a step whose
+    /// control is not on its screen within <paramref name="most"/>, and on anything the demo leaves behind: a session, its target or the sample.
+    /// Where <paramref name="shotAt"/> names a step, the screen is pictured there, card and all, as <paramref name="shotName"/>.
+    /// </summary>
+    private static async Task<(bool, string)> Demo(TimeSpan most, int shotAt, string shotName)
+    {
+        if (Shell.Current is not { } shell)
+        {
+            return (false, "no screen to run the demo on");
+        }
+
+        int sessions = await OnUi(() => PhoneAnalysis.Store().List().Count);
+        int targets = await OnUi(() => shell.Targets.Count);
+        await Dispatcher.UIThread.InvokeAsync(() => shell.Demo.Start());
+        var missing = new List<string>();
+        for (int i = 0; i < PhoneDemo.Steps.Count; i++)
+        {
+            var clock = Stopwatch.StartNew();
+            bool found = false;
+            while (clock.Elapsed < most && !(found = await OnUi(() => shell.Demo.Running && shell.Demo.Spotlit is not null)))
+            {
+                await Task.Delay(250);
+            }
+
+            if (!found || await OnUi(() => shell.Demo.At) != i)
+            {
+                missing.Add($"{i + 1} {PhoneDemo.Steps[i].Control}");
+            }
+
+            if (i + 1 == shotAt)
+            {
+                await Task.Delay(500);
+                await OnUi(() => Screenshot(shotName));
+            }
+
+            DiagnosticLog.Info("scenario.demo", ("step", i + 1), ("found", found));
+            await Dispatcher.UIThread.InvokeAsync(() => shell.Demo.Next());
+        }
+
+        var (left, sample) = await OnUi(() => (PhoneAnalysis.Store().List().Count - sessions + shell.Targets.Count - targets, shell.Demo.SamplePath));
+        bool ended = !await OnUi(() => shell.Demo.Running);
+        string said = (missing.Count == 0 ? "every step's control found" : "not found: " + string.Join(", ", missing))
+            + (ended ? "" : "; still running") + (left == 0 && sample is null ? "; nothing left behind" : $"; {left} left behind");
+        return (missing.Count == 0 && ended && left == 0 && sample is null, said);
+    }
 
     /// <summary>What is on screen now, laid out first so a page just opened is there to be found.</summary>
     private static IEnumerable<Visual> Showing()
@@ -837,6 +886,7 @@ internal static class Scenario
 
         // Drawn at all: a switch keeps its On and Off words both in the tree and hides one by its opacity.
         bool Drawn(Visual v) => v.Opacity * v.GetVisualAncestors().Aggregate(1.0, (o, a) => o * a.Opacity) > 0.01;
+        bool OnTop(Visual v) => Shell.Current?.Demo.Layer.IsVisualAncestorOf(v) == true;
         bool SideScrolls(Visual v) => v.GetVisualAncestors().OfType<ScrollViewer>().Any(s => s.Extent.Width > s.Viewport.Width + 1);
         void Add(string kind, Control c, Rect box, string? detail = null) => findings.Add(new JsonObject
         {
@@ -895,7 +945,8 @@ internal static class Scenario
                 var (a, boxA) = texts[i];
                 var (b, boxB) = texts[j];
                 var both = boxA.Intersect(boxB);
-                if (both.Width > 2 && both.Height > 2 && !a.IsVisualAncestorOf(b) && !b.IsVisualAncestorOf(a))
+                // Entry 446: the guided demo's card is drawn over the page on purpose, as a sheet is, so its words over the page's are not a fault.
+                if (both.Width > 2 && both.Height > 2 && !a.IsVisualAncestorOf(b) && !b.IsVisualAncestorOf(a) && OnTop(a) == OnTop(b))
                 {
                     Add("overlap", a, boxA, "over " + (b.Text is { Length: > 40 } t ? t[..40] : b.Text));
                 }
