@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.199
+
+**2026-10-18**, commit `04e1af4`. Nightly.
+
+**What you will notice**
+
+- On the computer the arrow keys now work: in the shot table Up and Down choose the shot before and after and Left and Right go to the same bull on the next sheet of a set, and elsewhere they move between buttons in a row, as Quack asked.
+- Choosing a shot in the shot table with Space no longer sends the next Tab back to the top of the window: the focus stays on the row you chose, thanks to Quack's report.
+- The caliber line under Load no longer turns into a garbled figure such as .568.96 cm after its size was switched to centimeters, which Quack spotted; it always shows inches and millimeters.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.199)
+
+---
+
 ## 0.2.0-nightly.198
 
 **2026-10-17**, commit `15815b9`. Nightly.
