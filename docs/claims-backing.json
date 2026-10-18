@@ -5,6 +5,12 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "What it is, in three sentences GroupLab measures how accurately a rifle shoots, from a photograph or a scan of a target you have shot.": {"kind": "decided", "where": "what GroupLab is, DESIGN.md section 1"},
+  "GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.": {"kind": "decided", "where": "what GroupLab is, DESIGN.md section 1"},
+  "A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.": {"kind": "decided", "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"},
+  "Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.": {"kind": "decided", "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"},
+  "What GroupLab can measure, and what the scale comes from .": {"kind": "decided", "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"},
+  "NOTES-FROM-PLANNING.md entries 152, 161 and 171.": {"kind": "decided", "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"},
   "&#8592; The map Apps GroupLab.Core Imaging · OpenCV Checks Online Deep dive · Imaging How GroupLab uses OpenCV OpenCV is a widely used open-source computer vision library.": {
    "kind": "decided",
    "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"

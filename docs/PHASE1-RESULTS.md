@@ -1406,6 +1406,37 @@ site build pass.
    notes, at 1400 by 900 and at 390 on a phone, dark and light. Also looked at with scripts off and with reduced motion (complete and
    still), and no sideways scroll at 390.
 
+## Entry 445: the guides' "On this page" on the other long pages (2026-10-18)
+
+1. **One function.** `with_contents` in `website/build.py` puts the guides' contents on every page `CONTENTS_PAGES` names, and the
+   guides now take theirs from it too: `contents` reads a page's h2 and h3 headings (a small HTML reader, `_Headings`), gives an
+   address to any heading without one and a link mark to each, and `contents_navs` writes the side list and the same list folded at the
+   top below 1100 pixels. A page laid out as a guide gets the list beside its article; any other gets it beside everything after its top
+   band. `guide-toc.js` now follows the list's own entries rather than a guide's headings, so it works on every page, and passes over an
+   entry the Desktop | Mobile switch hides.
+2. **Pages.** The guides, features, every tour screen (the list follows the view where a screen's sections differ by side; on the
+   features page both sides have the same sections), every research article and the research index, release notes, support, what can be
+   measured, shoot a target and the community page. **Not given one:** the download page (one section a device, behind its own picker),
+   the tour's index (its headings are links to the screens, not sections) and how it works (its map links each part already). The
+   release notes are now grouped: "The newest builds", the ten newest each named in the list, then "Older builds" as one entry; a
+   build's own headings sit a level below its name.
+3. **One list, not two.** Entry 444's numbered section index is gone from every page that had it (all of them now have the list); the
+   home page keeps its own. The ruler down the edge stays.
+4. **Checks.** `guide_problems` runs on every page with the list: every id once, every link lands, the list names every heading in
+   order in the HTML as built, so it is whole with scripts off. `tests/python/site-guide-tests.py` 56 checks (26 new),
+   `site-home-tests.py` 49. `scripts/claims.py` cuts the lists out like the header; six sentences that used to run on from a list are
+   backed as the same words as before.
+5. **Weight** (HTML, stylesheets, scripts, preloaded fonts and first images, as entry 443 measured): features 239,843 to 260,369 bytes
+   (73 entries listed twice), a tour screen 284,419 to 291,851, a research article 152,319 to 158,991, release notes 314,918 to 320,794,
+   support 145,907 to 152,246; the user guide 313,911 to 312,438 and the primer 201,537 to 199,610 are lighter (the numbered index gone).
+6. **Pictures.** Features, release notes, support, a research article and a tour screen at 1400 pixels and at a phone's 390, both
+   themes, in `docs/figures/site/entry-445/` (headless Edge). Nothing on the site or in the README pictures the website's own pages, so
+   nothing there to retake.
+7. **Also found.** `scripts/american-spelling.py` let a backslash in a quoted string match two ways, so where it paired a quote wrongly it
+   tried every split of every backslash after it: with this entry's builder it ran for hours (the spelling test ten minutes before it was
+   stopped). A backslash now only matches as an escape; the whole check takes a second. Paired rightly, it found two style names
+   spelled "centre" in the builder, now "center"; nothing a reader sees changed.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

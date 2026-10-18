@@ -22,6 +22,7 @@ from __future__ import annotations
 import datetime
 import hashlib
 import html
+from html.parser import HTMLParser
 import json
 import math
 import os
@@ -544,40 +545,11 @@ PAGE_RINGS = ('<div class="tp-rings" aria-hidden="true"><svg width="1600" height
 LONG_PAGES = re.compile(r"^/(?:guides/(?!glossary/)[^/]+|research/[^/]+|releases|features|support)/$")
 
 
-def section_index(body: str) -> tuple[str, str]:
-    """Entry 444 section 1: the home page's section index, for a long page: one link to each of its sections (an h2, or a release on the
-    release notes), the h2s given an address where they had none. Returns the body with the addresses and the index."""
-    found, used = [], set(re.findall(r'\bid="([^"]+)"', body))
-
-    def name(m: re.Match) -> str:
-        attrs, inner = m.group(1), m.group(2)
-        label = html.unescape(re.sub(r"<[^>]+>", "", re.sub(r'<a class="hlink".*?</a>', "", inner))).strip()
-        hid = re.search(r'\bid="([^"]+)"', attrs)
-        if hid:
-            key = hid.group(1)
-        else:
-            key = base = slug(label) or "section"
-            n = 2
-            while key in used:
-                key, n = f"{base}-{n}", n + 1
-            used.add(key)
-            attrs += f' id="{key}"'
-        found.append((key, label))
-        return f"<h2{attrs}>{inner}</h2>"
-
-    body = re.sub(r"<h2([^>]*)>(.*?)</h2>", name, body, flags=re.S)
-    if not found:
-        found = [(key, label) for key, label in re.findall(r'<details class="panel pad release" id="([^"]+)"[^>]*><summary><span class="h3">([^<]+)</span>', body)][:12]
-    links = "".join(f'<a href="#{key}"><span>{i:02d}</span> <span class="tp-label">{esc(label)}</span></a>' for i, (key, label) in enumerate(found, 1))
-    return body, f'<nav class="tp-index mono" aria-label="Sections of this page" data-terms="off">{links}</nav>' if len(found) > 1 else ""
-
-
 def shell(path: str, title: str, description: str, body: str, active: str = "", image: str = "og.png", css: tuple[str, ...] = ()) -> str:
     full_title = "GroupLab" if not title else f"{title} | GroupLab"
     long = bool(LONG_PAGES.match(path))
-    index = ""
-    if long:
-        body, index = section_index(body)
+    if CONTENTS_PAGES.match(path):
+        body = with_contents(body)
     styles = "".join(f'\n<link rel="stylesheet" href="/assets/css/{name}.css">' for name in css)
     return f"""<!doctype html>
 <html lang="en">
@@ -615,7 +587,7 @@ def shell(path: str, title: str, description: str, body: str, active: str = "", 
 <main id="main">
 {body if path == GLOSSARY_PATH else explain(body)}
 </main>
-{index}{site_footer()}
+{site_footer()}
 </body>
 </html>
 """
@@ -1525,17 +1497,17 @@ def primer_figure(name: str) -> str:
         scale, half = 110.0, 180.0
         extra = ""
         if name == "centre":
-            extra = (f'<path class="pf-centre" d="M{180 + cx * scale - 10:.1f} {180 - cy * scale:.1f}h20M{180 + cx * scale:.1f} {180 - cy * scale - 10:.1f}v20"/>')
+            extra = (f'<path class="pf-center" d="M{180 + cx * scale - 10:.1f} {180 - cy * scale:.1f}h20M{180 + cx * scale:.1f} {180 - cy * scale - 10:.1f}v20"/>')
             caption = "Ten shots from one rifle, and their center, the amber cross: the average place they landed. The rings are half an MOA apart, around the aim."
         elif name == "mean-radius":
             spokes = "".join(f'<path class="pf-spoke" d="M{180 + cx * scale:.1f} {180 - cy * scale:.1f}L{180 + x * scale:.1f} {180 - y * scale:.1f}"/>' for x, y in shots["shots"])
-            extra = spokes + f'<circle class="pf-centre-ring" cx="{180 + cx * scale:.1f}" cy="{180 - cy * scale:.1f}" r="{shots["mr"] * scale:.1f}"/>'
+            extra = spokes + f'<circle class="pf-center-ring" cx="{180 + cx * scale:.1f}" cy="{180 - cy * scale:.1f}" r="{shots["mr"] * scale:.1f}"/>'
             caption = (f"The same kind of group with a line from its center to every shot. Their average length is the mean radius, here "
                        f"{shots['mr']:.2f} MOA, drawn as the amber circle.")
         else:
             c50, c90 = shots["sigma"] * d["cep50Factor"], shots["sigma"] * 2.146
-            extra = (f'<circle class="pf-centre-ring" cx="{180 + cx * scale:.1f}" cy="{180 - cy * scale:.1f}" r="{c50 * scale:.1f}"/>'
-                     f'<circle class="pf-centre-ring pf-dashed" cx="{180 + cx * scale:.1f}" cy="{180 - cy * scale:.1f}" r="{c90 * scale:.1f}"/>')
+            extra = (f'<circle class="pf-center-ring" cx="{180 + cx * scale:.1f}" cy="{180 - cy * scale:.1f}" r="{c50 * scale:.1f}"/>'
+                     f'<circle class="pf-center-ring pf-dashed" cx="{180 + cx * scale:.1f}" cy="{180 - cy * scale:.1f}" r="{c90 * scale:.1f}"/>')
             caption = (f"Twenty shots with GroupLab's CEP 50, the solid amber circle ({c50:.2f} MOA), which should hold about half of a "
                        f"rifle's shots, and CEP 90, the dashed one ({c90:.2f} MOA), about nine in ten.")
         svg = f'<svg class="pf" viewBox="0 0 360 360" role="img" aria-label="{esc(caption)}">{svg_group(shots["shots"], 180, 180, half, scale, extra)}</svg>'
@@ -1690,11 +1662,16 @@ def guide_ids(page: str) -> list[str]:
 
 
 def guide_problems(out: Path = OUT) -> list[str]:
-    """Entry 436 sections 3.1 and 4.5, the guides' own page checks: every id once, every link to a part of the page has its target, and
-    the side list names every heading in order in the HTML as built, so it is whole with scripts off. The user guide has subsections."""
+    """Entry 436 sections 3.1 and 4.5, the guides' own page checks, and from entry 445 every page with the guides' contents: every id once,
+    every link to a part of the page has its target, and the side list names every heading in order in the HTML as built, so it is whole
+    with scripts off. The user guide has subsections, and a link into another guide lands on a heading there."""
     found = sorted(GUIDE_FIGURE_PROBLEMS)
-    for key, *_ in GUIDES:
-        rel = f"guides/{key}/index.html"
+    guides = {f"guides/{key}/index.html" for key, *_ in GUIDES}
+    pages = sorted(guides | {rel for rel in (p.relative_to(out).as_posix() for p in out.rglob("index.html"))
+                             if CONTENTS_PAGES.match("/" + rel[: -len("index.html")])})
+    for rel in pages:
+        if not (out / rel).exists():
+            continue
         page = (out / rel).read_text(encoding="utf-8")
         ids = guide_ids(page)
         for dup in sorted({i for i in ids if ids.count(i) > 1}):
@@ -1702,14 +1679,17 @@ def guide_problems(out: Path = OUT) -> list[str]:
         for target in sorted(set(re.findall(r'href="#([^"]+)"', page)) - set(ids)):
             found.append(f"{rel}: a link to #{target} has no heading or element with that id")
         side = re.search(r'<nav class="toc"[^>]*>(.*?)</nav>', page, re.S)
+        if not side and rel not in guides:
+            continue
         listed = re.findall(r'href="#([^"]+)"', side.group(1)) if side else []
-        if listed != re.findall(r'<h[23] id="([^"]+)"', page):
+        main = re.search(r"<main\b.*</main>", page, re.S)
+        if listed != [h["target"] for h in headings(main.group(0) if main else page)]:
             found.append(f"{rel}: the contents list does not name every heading, in order, in the page as built")
         for other, target in sorted(set(re.findall(r'href="/guides/([a-z-]+)/#([^"]+)"', page))):
             built = out / "guides" / other / "index.html"
             if built.exists() and target not in guide_ids(built.read_text(encoding="utf-8")):
                 found.append(f"{rel}: a link to /guides/{other}/#{target} has no heading with that id")
-        if key == "user-guide" and "<h3 id=" not in page:
+        if rel == "guides/user-guide/index.html" and "<h3 id=" not in page:
             found.append(f"{rel}: the user guide has no subsections (entry 436 section 1)")
     return found
 
@@ -1724,45 +1704,161 @@ def guide_tabs(current: str) -> str:
     return "".join(tabs)
 
 
-def toc_list(toc: list[tuple[str, str, list[tuple[str, str]]]]) -> str:
-    """Entry 436 section 2.1: every section with its subsections under it, all in the HTML, so the list is whole with scripts off."""
-    def a(hid: str, text: str) -> str:
-        return f'<a href="#{hid}">{esc(html.unescape(text))}</a>'
+def toc_list(toc: list[tuple[str, str, list[tuple[str, str]]]], views: dict[str, str] | None = None) -> str:
+    """Entry 436 section 2.1: every section with its subsections under it, all in the HTML, so the list is whole with scripts off. An entry
+    for a heading only one side of the Desktop | Mobile switch shows carries that side, so the list follows the view (entry 445)."""
+    views = views or {}
+
+    def li(hid: str, text: str) -> str:
+        view = f' data-show="{views[hid]}"' if hid in views else ""
+        return f'<li{view}><a href="#{hid}">{esc(html.unescape(text))}</a>'
     items = []
     for hid, text, subs in toc:
-        inner = "".join(f"<li>{a(s, t)}</li>" for s, t in subs)
-        items.append(f"<li>{a(hid, text)}" + (f"<ol>{inner}</ol>" if subs else "") + "</li>")
+        inner = "".join(f"{li(s, t)}</li>" for s, t in subs)
+        items.append(li(hid, text) + (f"<ol>{inner}</ol>" if subs else "") + "</li>")
     return "<ol>\n" + "\n".join(items) + "\n</ol>"
 
 
+class _Headings(HTMLParser):
+    """Every h2 and h3 of a part of a page, with where it starts, its words, the address its contents link goes to and the side of the
+    switch it is on. A heading inside a link is a card pointing somewhere else, not a section; a card's title (in an article or a
+    folded block with an address, a feature or a release) goes to the card, so its picture is in view."""
+    VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.stack: list[tuple[str, dict]] = []
+        self.found: list[dict] = []
+        self.cur: dict | None = None
+        self.mark = 0
+
+    def handle_starttag(self, tag: str, attrs: list) -> None:
+        a = {k: v or "" for k, v in attrs}
+        if tag in ("h2", "h3") and self.cur is None:
+            inside = [t for t, _ in self.stack]
+            card = next((x["id"] for t, x in reversed(self.stack) if t in ("article", "details") and x.get("id")), None)
+            self.cur = {"level": int(tag[1]), "id": a.get("id"), "pos": self.getpos(), "words": [],
+                        "skip": "a" in inside or "nav" in inside, "summary": "summary" in inside, "mark": False,
+                        "target": a.get("id") or card, "view": next((x["data-show"] for _, x in reversed(self.stack) if x.get("data-show")), None)}
+        if self.cur is not None and tag == "a":
+            if "hlink" in a.get("class", "").split():
+                self.cur["mark"] = True
+                self.mark += 1
+        if tag not in self.VOID:
+            self.stack.append((tag, a))
+
+    def handle_endtag(self, tag: str) -> None:
+        for i in range(len(self.stack) - 1, -1, -1):
+            if self.stack[i][0] == tag:
+                del self.stack[i:]
+                break
+        if tag == "a" and self.mark:
+            self.mark -= 1
+        if self.cur is not None and tag == f"h{self.cur['level']}":
+            self.cur["text"] = " ".join("".join(self.cur.pop("words")).split())
+            if not self.cur["skip"]:
+                self.found.append(self.cur)
+            self.cur = None
+
+    def handle_data(self, data: str) -> None:
+        if self.cur is not None and not self.mark:
+            self.cur["words"].append(data)
+
+
+def headings(part: str) -> list[dict]:
+    reader = _Headings()
+    reader.feed(part)
+    reader.close()
+    return reader.found
+
+
+def contents(part: str, used: set[str]) -> tuple[str, list[tuple[str, str, list[tuple[str, str]]]], dict[str, str]]:
+    """Entry 445: the guides' contents for any part of a page. A heading with no address gets one from its words, and each heading that is
+    its own section gets its link mark. Returns the part, the list as toc_list takes it, and which side of the switch each entry is on."""
+    starts = [0] + [i + 1 for i, c in enumerate(part) if c == chr(10)]
+    edits, toc, views = [], [], {}
+    for h in headings(part):
+        at = starts[h["pos"][0] - 1] + h["pos"][1]
+        target = h["target"]
+        if not target:
+            target = base = slug(h["text"]) or "section"
+            n = 2
+            while target in used:
+                target, n = f"{base}-{n}", n + 1
+            used.add(target)
+            edits.append((at + 3, f' id="{target}"'))
+        if not h["mark"] and not h["summary"]:
+            close = part.index(f"</h{h['level']}>", at)
+            edits.append((close, f'<a class="hlink" href="#{target}" aria-label="Link to {esc(h["text"])}">#</a>'))
+        if h["view"]:
+            views[target] = h["view"]
+        if h["level"] == 2 or not toc:
+            toc.append((target, esc(h["text"]), []))
+        else:
+            toc[-1][2].append((target, esc(h["text"])))
+    for at, text in sorted(edits, reverse=True):
+        part = part[:at] + text + part[at:]
+    return part, toc, views
+
+
+def contents_navs(toc: list, views: dict[str, str]) -> tuple[str, str]:
+    """The side list and, for below 1100 px where the side list is hidden, the same list folded at the top (entry 436 section 2.4)."""
+    items = toc_list(toc, views)
+    side = f'<nav class="toc" aria-label="On this page">\n<p class="mono faint small caps">On this page</p>\n{items}\n</nav>\n'
+    mini = (f'<details class="dl-fold toc-mini">\n<summary>On this page</summary>\n<div class="dl-fold-body">\n'
+            f'<nav aria-label="On this page, short">\n{items}\n</nav>\n</div>\n</details>\n')
+    return side, mini
+
+
+# Entry 445: the pages with the guides' "On this page": the guides, the tour's screens, every research article and its index, the release
+# notes, the features, support, what can be measured, shooting a target and the community. Not the download page (one section a device,
+# behind its own picker), the tour's index (its headings are links to the screens) or how it works (its map is its contents).
+CONTENTS_PAGES = re.compile(r"^/(?:guides/(?!glossary/)[^/]+|tour/(?!how-it-works/)[^/]+|research(?:/[^/]+)?|releases|features|support"
+                            r"|what-can-be-measured|shoot-a-target|discord)/$")
+
+
+def with_contents(body: str) -> str:
+    """Entry 445: one function puts the guides' contents on every page that has them. On a page laid out as a guide the side list sits
+    beside the article and the folded list under its title; on any other the list sits beside everything after the top band. A page
+    with fewer than three entries is left as it was."""
+    used = set(re.findall(r'\bid="([^"]+)"', body))
+    guide = re.search(r'<section class="wrap guide">\s*(<article class="prose)', body)
+    if guide:
+        start, end = guide.start(1), body.rindex("</article>")
+        part, toc, views = contents(body[start:end], used)
+        if sum(1 + len(subs) for _, _, subs in toc) < 3:
+            return body
+        side, mini = contents_navs(toc, views)
+        part = part.replace("<article ", "<article data-contents ", 1)
+        if "</h1>" in part:
+            part = part.replace("</h1>", "</h1>\n" + mini, 1)
+        body = body[:start] + side + part + body[end:]
+    else:
+        top = re.search(r'<section class="wrap[^"]*\bpage-(?:head|top)\b.*?</section>', body, re.S)
+        cut = top.end() if top else 0
+        part, toc, views = contents(body[cut:], used)
+        if sum(1 + len(subs) for _, _, subs in toc) < 3:
+            return body
+        side, mini = contents_navs(toc, views)
+        body = (body[:cut] + f'\n<section class="wrap guide toc-page">\n{side}<div class="toc-scope" data-contents>\n{mini}{part}</div>\n'
+                '</section>\n')
+    return body + '<script src="/assets/js/guide-toc.js" defer></script>\n'
+
+
 def page_guide(key: str, md: str, pdf: str, label: str, desc: str) -> str:
-    title, content, toc = render_guide(need(REPO / "docs" / md), links=True)
-    toc_html = toc_list(toc)
-    # Entry 436 section 2.4: below 1100 px the side list is hidden, so the same list opens from the top of the guide.
+    title, content, _ = render_guide(need(REPO / "docs" / md), links=True)
+    # Entry 436 section 2: the contents beside the guide and folded under its title are with_contents's, as on every long page (entry 445).
     body = f"""
 <section class="wrap guide-bar">
 <nav class="tabs" aria-label="Guides">{guide_tabs(key)}</nav>
 <a class="pdf-link" href="/guides/{pdf}">Download as PDF</a>
 </section>
 <section class="wrap guide">
-<nav class="toc" aria-label="On this page">
-<p class="mono faint small caps">On this page</p>
-{toc_html}
-</nav>
 <article class="prose">
 <h1>{esc(title)}</h1>
-<details class="dl-fold toc-mini">
-<summary>On this page</summary>
-<div class="dl-fold-body">
-<nav aria-label="On this page, short">
-{toc_html}
-</nav>
-</div>
-</details>
 {content}
 </article>
 </section>
-<script src="/assets/js/guide-toc.js" defer></script>
 {'<script src="/assets/js/primer.js" defer></script>' if key == "statistics-primer" else ""}
 """
     if key == "statistics-primer":
@@ -1785,14 +1881,9 @@ def page_what_can_be_measured() -> str:
     So there is one source and everything else points at it: the tour pages, the research articles and the README.
     A page that states its own version of this is the fault coming back.
     """
-    title, content, toc = render_guide(need(REPO / "docs" / "WHAT-CAN-BE-MEASURED.md"))
-    toc_html = "\n".join(f'<a href="#{hid}">{esc(html.unescape(text))}</a>' for hid, text, _ in toc)
+    title, content, _ = render_guide(need(REPO / "docs" / "WHAT-CAN-BE-MEASURED.md"))
     body = f"""
 <section class="wrap guide">
-<nav class="toc" aria-label="On this page">
-<p class="mono faint small caps">On this page</p>
-{toc_html}
-</nav>
 <article class="prose">
 <h1>{esc(title)}</h1>
 {content}
@@ -2535,15 +2626,21 @@ def page_research_article(meta: dict) -> str:
     return shell(f"/research/{meta['slug']}/", meta["title"], meta["description"], body, "Research")
 
 
+NEWEST_RELEASES = 10
+HEAD4 = '<h4 class="h3">'
+
+
 def page_releases() -> str:
     blocks = []
     for i, (anchor, version, notes) in enumerate(releases()):
-        # The newest is open, the rest closed, so the page opens on what somebody almost always came for.
+        # The newest is open, the rest closed, so the page opens on what somebody almost always came for. Entry 445: the newest ten are
+        # headings the contents list names, the older ones are under one entry, and a build's own headings sit a level below its name.
         open_attr = " open" if i == 0 else ""
+        tag = "h3" if i < NEWEST_RELEASES else "span"
         blocks.append(
             f'<details class="panel pad release" id="{anchor}"{open_attr}>'
-            f'<summary><span class="h3">{esc(version)}</span></summary>'
-            f'<div class="prose tight">{notes}</div>'
+            f'<summary><{tag} class="h3">{esc(version)}</{tag}></summary>'
+            f'<div class="prose tight">{notes.replace("<h3>", HEAD4).replace("</h3>", "</h4>")}</div>'
             "</details>"
         )
 
@@ -2554,9 +2651,14 @@ def page_releases() -> str:
 <p class="lead">Every build of GroupLab anyone could download, newest first. GroupLab is unreleased, so every one of these is a pre-release.</p>
 <p class="small faint">Nightly builds are produced on the nights the application changed, so a gap in the numbers means nothing shipped that night. Work on the website, the documentation or these notes does not make a new build. Numbers below 92 were the run that built them rather than the build itself, and a run that was canceled or skipped still took its number, which is why the older gaps are wider.</p>
 </section>
-<section class="wrap last">
+<section class="wrap last stack">
+<h2 id="newest">The newest builds</h2>
 <div class="stack tight releases">
-{"".join(blocks)}
+{"".join(blocks[:NEWEST_RELEASES])}
+</div>
+<h2 id="older">Older builds</h2>
+<div class="stack tight releases">
+{"".join(blocks[NEWEST_RELEASES:])}
 </div>
 </section>
 """
@@ -3441,21 +3543,26 @@ PRIMER_JS = """// NOTES-FROM-PLANNING.md entry 438 section 2.5: the statistics p
 GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list opens the section being read and folds the rest, marks where the reader
 // is, and the address bar follows without adding to the history; a heading's link mark copies its address. Without this script the list
 // is whole and every mark is a plain link, which is the mechanism; this is the enhancement.
+// Entry 445: the same script on every page with the list, so what it follows is the list's own entries, each a heading or the card a
+// heading names, and an entry the Desktop | Mobile switch hides is passed over.
 (() => {
-  const article = document.querySelector("article.prose");
+  const article = document.querySelector("[data-contents]");
   if (!article) return;
   const toc = document.querySelector("nav.toc");
-  const heads = [...article.querySelectorAll("h2[id], h3[id]")];
   const still = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const links = new Map();
+  const links = new Map(), owner = new Map();
+  const idOf = (a) => decodeURIComponent(a.hash.slice(1));
   if (toc) {
     toc.classList.add("js");
-    for (const a of toc.querySelectorAll("a[href^='#']")) links.set(decodeURIComponent(a.hash.slice(1)), a);
+    for (const li of toc.querySelectorAll(":scope > ol > li")) {
+      const top = li.querySelector(":scope > a");
+      links.set(idOf(top), top);
+      for (const a of li.querySelectorAll(":scope > ol a")) { links.set(idOf(a), a); owner.set(idOf(a), idOf(top)); }
+    }
   }
-  const sectionOf = (h) => {
-    for (let i = heads.indexOf(h); i >= 0; i--) if (heads[i].tagName === "H2") return heads[i];
-    return null;
-  };
+  const heads = [...links.keys()].map((id) => document.getElementById(id)).filter(Boolean);
+  const seen = (h) => h.getClientRects().length > 0;
+  const sectionOf = (h) => owner.has(h.id) ? document.getElementById(owner.get(h.id)) : h;
   const fold = (li, open) => {
     const sub = li.querySelector(":scope > ol");
     li.classList.toggle("open", open);
@@ -3490,7 +3597,7 @@ GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list
   const reading = () => {
     const line = Math.min(window.innerHeight * 0.3, 260);
     let found = null;
-    for (const h of heads) { if (h.getBoundingClientRect().top <= line) found = h; else break; }
+    for (const h of heads) { if (!seen(h)) continue; if (h.getBoundingClientRect().top <= line) found = h; else break; }
     return found;
   };
   let moved = false, addressed, pinned = null;
@@ -3525,7 +3632,7 @@ GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list
   };
   if (target()) pin(target()); else update();
   window.addEventListener("hashchange", () => { if (target()) pin(target()); });
-  const mini = article.querySelector("details.toc-mini");
+  const mini = document.querySelector("details.toc-mini");
   document.addEventListener("click", (e) => {
     const a = e.target instanceof Element ? e.target.closest("a[href^='#']") : null;
     if (!a) return;
@@ -3555,7 +3662,8 @@ GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list
     const a = e.target instanceof Element ? e.target.closest("a.hlink") : null;
     if (!a) return;
     e.preventDefault();
-    const h = a.parentElement;
+    const h = document.getElementById(idOf(a));
+    if (!h) return;
     const url = location.origin + location.pathname + location.search + "#" + h.id;
     history.replaceState(history.state, "", "#" + h.id);
     pin(h);
@@ -4063,13 +4171,7 @@ font-size:12px;letter-spacing:.1em;line-height:1.7;padding:8px 10px;border-radiu
 .tp-index a{color:var(--faint)}
 .tp-index a:hover{color:var(--text);text-decoration:none}
 .tp-index a.tp-here{color:var(--text)}
-/* On a long page the index is its numbers, at the content's edge, and its names open on hover or focus, so it never covers the words. */
-.tp-long .tp-index{right:calc(var(--rule) + 6px);align-items:stretch;max-width:280px;max-height:min(60vh,460px);overflow:auto;padding:6px 8px;
-border:1px solid var(--line);text-transform:uppercase;letter-spacing:.06em;font-size:11px;line-height:1.9}
-.tp-long .tp-index a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tp-long .tp-index a.tp-here span:first-child{color:var(--text);box-shadow:inset 0 -2px var(--amber)}
 .tp-index a span:first-child{color:var(--amber)}
-.tp-long .tp-index:not(:hover):not(:focus-within) .tp-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .panel .h3,.panel h3,.panel .h4{font-size:21px;font-weight:600}
 :where(.features,.research-grid,.grid-3,.donor-sheets):not(.wrap):has(>.panel){gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
 :where(.features,.research-grid,.grid-3,.donor-sheets):not(.wrap)>.panel{border-width:0 1px 1px 0}
@@ -4238,8 +4340,16 @@ pre code{background:none;padding:0;font-size:inherit}
 .toc-mini a{display:block;padding:5px 0;color:var(--text)}
 .dl-fold.toc-mini ol ol a{color:var(--dim)}
 .prose h2,.prose h3{scroll-margin-top:16px}
+/* Entry 445: the guides' contents beside any long page: the top band stays full width, everything after it moves beside the list. */
+.toc-page{padding-top:0}
+.toc-scope{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
+.toc-scope>.wrap{max-width:none;margin:0;padding-left:0;padding-right:0}
+.toc-scope [id]{scroll-margin-top:16px}
+.toc-scope>.toc-mini{margin-bottom:24px}
+.release summary h3{display:inline}
+.prose h4.h3{margin-top:12px}
 .hlink{margin-left:.4em;font-weight:400;color:var(--faint);opacity:0}
-.prose h2:hover .hlink,.prose h3:hover .hlink,.hlink:focus-visible{opacity:1}
+h2:hover>.hlink,h3:hover>.hlink,.hlink:focus-visible{opacity:1}
 .hlink:hover{color:var(--amber);text-decoration:none}
 .link-note{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:6;margin:0;padding:8px 14px;font-size:14px;color:var(--text);background:var(--panel2);border:1px solid var(--line2);border-radius:6px;opacity:0;pointer-events:none;transition:opacity .15s}
 .link-note.on{opacity:1}
@@ -4267,8 +4377,8 @@ font:600 13px/22px "IBM Plex Sans",sans-serif;text-align:center;box-shadow:0 0 0
 .pf-frame{fill:none}
 .pf-ring{fill:none;stroke:var(--line2);stroke-width:1}
 .pf-shot{fill:var(--text)}
-.pf-centre{stroke:var(--amber);stroke-width:3;fill:none}
-.pf-centre-ring{fill:none;stroke:var(--amber);stroke-width:2}
+.pf-center{stroke:var(--amber);stroke-width:3;fill:none}
+.pf-center-ring{fill:none;stroke:var(--amber);stroke-width:2}
 .pf-dashed{stroke-dasharray:6 5}
 .pf-spoke{stroke:var(--faint);stroke-width:1}
 .pf-es{stroke:var(--amber);stroke-width:2}

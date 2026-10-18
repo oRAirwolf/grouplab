@@ -41,7 +41,7 @@ Working from the terminal, 18 October: entries 441, 442 and 443 taken; nothing i
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
-**This week, by itself** (not a request): backed up on 11 October (2044 MB, backup-2026-10-11); **the restore test failed on 11 October**: the bundle's head ac0c1ff is not on GitHub; 1 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: archive 10, learn 1; the server's own backup is from 2026-10-10; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
+**This week, by itself** (not a request): backed up on 18 October (2493 MB, backup-2026-10-18); the restore test passed on 18 October; 1 archived submissions copied here; cleanup freed 0 MB and put 3 files in the trash; on the server, workers deleted or archived: archive 24; the server's own backup is from 2026-10-17; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
 <!-- /automation-week -->
 **About that restore test** (Code, 11 October): the bundle's head ac0c1ff was entry 409's commit as first made on this computer; it was rebased onto the screenshot job's commit before it was pushed, and is on GitHub as e740a25a. Nothing is missing; the next weekly run tests a pushed head.
 

@@ -282,7 +282,9 @@ def targets() -> list[tuple[Path, str]]:
 def python_strings(source: str, fix: bool) -> tuple[str, list[tuple[int, str]]]:
     """The site builder's string literals that hold a space, comments and f-string holes left alone."""
     out, found = [], []
-    pattern = re.compile(r'(?P<prefix>[rbfuRBFU]{0,2})(?P<q>"""|\'\'\'|"|\')(?P<body>(?:\\.|(?!(?P=q)).)*?)(?P=q)', re.S)
+    # A backslash is only ever an escape with the character after it. Letting it also match alone made a quote paired wrongly try every
+    # split of every backslash after it, which on entry 445's site builder ran for hours instead of a fraction of a second.
+    pattern = re.compile(r'(?P<prefix>[rbfuRBFU]{0,2})(?P<q>"""|\'\'\'|"|\')(?P<body>(?:\\.|(?!(?P=q))[^\\])*?)(?P=q)', re.S)
     last = 0
     for m in pattern.finditer(source):
         # Skip matches that start inside a comment.

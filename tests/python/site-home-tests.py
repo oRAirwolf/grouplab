@@ -127,9 +127,11 @@ def main() -> int:
     check("the bar shows every link from 1280 pixels, with More only from 981 to 1279",
           "@media (max-width:1279px) and (min-width:981px){" in build.CSS and "max-width:1499px) and (min-width:981px)" not in build.CSS)
     check("the home page's header is not see-through over the orbit", "backdrop-filter:blur" in build.HOME_CSS and "background:transparent" not in build.HOME_CSS)
-    long = build.shell("/guides/user-guide/", "Guide", "A page.", "<h2>One</h2><p>a</p><h2 id=\"two\">Two</h2>", "Guides")
-    check("a long page has the ruler and a section index with one link a section",
-          "tp-ruler" in long and 'href="#one"' in long and 'href="#two"' in long and 'id="one"' in long and "page.js" in long)
+    long = build.shell("/guides/user-guide/", "Guide", "A page.", "<h2>One</h2><p>a</p><h2 id=\"two\">Two</h2><h2>Three</h2>", "Guides")
+    # Entry 445 section 3: where a page has the guides' contents, that is its only list of sections; the ruler stays.
+    check("a long page has the ruler and the guides' contents instead of the numbered index",
+          "tp-ruler" in long and 'href="#one"' in long and 'href="#two"' in long and 'id="one"' in long and "page.js" in long
+          and '<nav class="toc"' in long and "tp-index" not in long)
     short = build.shell("/survey/", "Survey", "A page.", "<h2>One</h2><h2>Two</h2>")
     check("a short page has neither", "tp-ruler" not in short and "tp-index" not in short and "page.js" not in short)
     for path in ("/research/how-many-shots/", "/releases/", "/features/", "/support/", "/guides/testing-guide/"):

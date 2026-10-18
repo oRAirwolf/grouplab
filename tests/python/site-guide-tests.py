@@ -144,6 +144,47 @@ def main() -> int:
             (out / "guides" / key / "index.html").write_text(bad if key == "statistics-primer" else page(["a"], [(2, "a")]), encoding="utf-8")
         check("a link into another guide with no such heading fails", any("/guides/user-guide/#no-such-part" in p for p in build.guide_problems(out)))
 
+        # Entry 445: the guides' contents on the other long pages, from the one function.
+        head = '<section class="wrap page-head"><h1>T</h1></section>'
+        cards = ('<section class="wrap"><h2>Group</h2><article class="panel" id="card-one"><img src="x"><h3>Card one</h3></article>'
+                 '<a class="panel" href="/elsewhere/"><h3>A link card</h3></a></section>'
+                 '<section class="wrap"><h2 id="kept">Kept &amp; named</h2><div data-show="mobile"><h3>Phone only</h3></div></section>')
+        built = build.with_contents(head + cards)
+        side = re.search(r'<nav class="toc"[^>]*>(.*?)</nav>', built, re.S).group(1)
+        check("a page with a top band keeps it above the list and puts the rest beside it",
+              built.startswith(head) and '<div class="toc-scope" data-contents>' in built and "guide-toc.js" in built)
+        check("a heading with no address gets one, and an address it had is kept",
+              '<h2 id="group">' in built and re.findall(r'href="#([^"]+)"', side) == ["group", "card-one", "kept", "phone-only"])
+        check("a card's title goes to the card, so its picture is in view", '<h3>Card one<a class="hlink" href="#card-one"' in built)
+        check("a heading inside a link is not a section", "A link card" not in side)
+        check("an entry for one side of the switch follows the view", '<li data-show="mobile"><a href="#phone-only">' in side)
+        check("the words are escaped once", ">Kept &amp; named</a>" in side)
+        check("the same list is folded at the top for narrow windows", built.count(side.strip()) == 1 and "toc-mini" in built
+              and re.findall(r'href="#([^"]+)"', built.split('class="dl-fold toc-mini"', 1)[1].split("</details>", 1)[0]) == ["group", "card-one", "kept", "phone-only"])
+        check("a page with fewer than three entries is left as it was", build.with_contents(head + "<h2>A</h2><h2>B</h2>") == head + "<h2>A</h2><h2>B</h2>")
+        article = '<section class="wrap guide">\n<article class="prose">\n<h1>T</h1>\n<h2>A</h2><h2>B</h2><h3>B one</h3>\n</article>\n</section>\n'
+        built = build.with_contents(article)
+        check("a page laid out as a guide gets the list beside its article and folded under its title",
+              built.index('<nav class="toc"') < built.index("<article data-contents") and built.index("</h1>") < built.index("toc-mini"))
+        for path in ("/features/", "/tour/analysis/", "/research/", "/research/wrong-bull/", "/releases/", "/support/",
+                     "/what-can-be-measured/", "/shoot-a-target/", "/discord/", "/guides/user-guide/"):
+            check(f"{path} has the contents", bool(build.CONTENTS_PAGES.match(path)))
+        for path in ("/download/", "/tour/", "/tour/how-it-works/", "/guides/glossary/", "/"):
+            check(f"{path} does not", not build.CONTENTS_PAGES.match(path))
+        out = tmp / "out4"
+        for key in [g[0] for g in build.GUIDES]:
+            (out / "guides" / key).mkdir(parents=True)
+            (out / "guides" / key / "index.html").write_text(good if key == "user-guide" else page(["a"], [(2, "a")]), encoding="utf-8")
+        (out / "support").mkdir()
+        (out / "support" / "index.html").write_text(page(["a"], [(2, "a"), (2, "b")]), encoding="utf-8")
+        check("the check runs on every page with the list, not only the guides",
+              any(p.startswith("support/index.html: the contents list") for p in build.guide_problems(out)))
+        releases = build.page_releases()
+        newest = releases.split('id="newest"', 1)[1].split('id="older"', 1)[0]
+        check("the release notes list the newest ten builds and the older ones under one entry",
+              newest.count('<details class="panel pad release"') == build.NEWEST_RELEASES and "<summary><h3" in newest
+              and "<summary><h3" not in releases.split('id="older"', 1)[1] and "<h3>" not in releases.split("<main", 1)[1])
+
         # features.json: a guide link to a subsection is accepted, one to nothing is not.
         anchors = set(ids)
         links = [f["guide"] for f in build.features()["features"] if f.get("guide")]

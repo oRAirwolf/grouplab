@@ -25,6 +25,29 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-18, entry 445: the guides' "On this page" contents on the other long pages
+
+**Status: actioned 2026-10-18; sections 1 to 5 done. The download page, the tour's index and how it works are left without the list,
+with the reason in PHASE1-RESULTS.md; release notes list the newest ten builds and "Older builds".**
+
+From the planning session, 2026-10-18 10:30 UTC. Site work. Take it before entry 446 (it is small). Alan, 2026-10-18: "Can you add the
+same table of contents that is in the guide to pages like features, tour, research, etc?"
+
+1. The same contents as the guides (entry 436, `toc_list` and the `<nav class="toc">` side list in `page_guide`): "On this page", every
+   section with its subsections, the current section marked as the reader scrolls, every heading with its own link, and below 1100 px
+   the same list folded at the top of the page (`toc-mini`). Same look, same code, not a copy: one shared function for all of them.
+2. Pages: features (both the Desktop and Mobile views, so the list follows the view shown), tour, every research article and the
+   research index if it has sections, release notes (one item per nightly would be too long: group by month, or list only the newest
+   ten plus "older", your call), support, download (if it has enough sections to need it), what can be measured, shoot a target, discord.
+   Skip a page with fewer than three sections.
+3. Where entry 444's numbered section index (01, 02, ...) sits on a page that gets this list, keep only one of the two; the guide's list
+   wins, since that is what Alan asked for. The ruler down the edge stays.
+4. The existing guide check (contents name every h2 and h3, in order, every link lands) runs on every page that has the list.
+5. Scripts off: the list is whole and every link works. Page weight: say before and after. Site screenshots updated (entry 267 rule).
+   Nothing here needs Alan.
+
+---
+
 ## 2026-10-18, entry 444: the other pages really take the home page's look (entry 443 went only part of the way), and the header shows every link
 
 **Status: actioned 2026-10-18; sections 1, 2 and 3 done. One look question for Alan (page titles in capitals or as written) is a DESIGN NEEDED line in for-alan.md, built as written meanwhile. On a long page the section index shows its numbers and opens its names on hover or focus, so it never covers the words at 1400 pixels.**
