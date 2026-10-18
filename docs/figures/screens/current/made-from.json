@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 198,
+  "afterNightly": 199,
   "screens": {
     "analysis": "e90644d84bb0d1be17763146b9f918da97d60a49c40fc547442ccb14a7f7a472",
     "analysis-open": "f1d9f94ace2fe31f31104ab29d624e37ef3a9f13e002bb6caa4f3747a9b722f7",
@@ -8,7 +8,7 @@
     "ballistics-hit": "0ac2d4e18ac7c0e3203167febdc2d2eba87e7c61d4d612f5a851ea6ea9ee3c24",
     "bull-lines": "1d58f5c07226552cd8e2d71854f63838501eeca81df39a1961cdfae1efb6b958",
     "compare": "e8c4ae586478daefced58a7fd21e6287df36d444af47a0ffdf659b123cb3582d",
-    "demo-tour": "a23288fb3d7042aa133fb4e6124c808ca57a2411558a80be186387b8fd77fa15",
+    "demo-tour": "6a22a34b4515cff7cfd7675f24ad6510b9d262480e2ebdffc44945250bb8ac53",
     "equipment": "e249f59f41b7b912dfb2ffefb44a0299131f7c39e7458607b9b54270ee0788f2",
     "fingerprint": "ed4650fe171f026719a118bc8d1e22c28f3a457f47aa11a7055d2ce718a81bb4",
     "firstrun": "6d01d50076c9007030e5b8a3f89d0dbb4150f27c229251174fe609af9aab2b28",
