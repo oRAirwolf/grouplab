@@ -89,7 +89,8 @@ def sentences(text: str) -> list[str]:
 # Entry 443: every page carries the one header and the one footer website/build.py writes. They are read once, as a surface of their own
 # taken from the home page, and cut out of each page with a sentence break, so a page's first and last sentences are its own words and
 # not the header's run on into them.
-SHARED = re.compile(r'<header class="tp-header.*?</header>|<footer class="tp-footer">.*?</footer>', re.S)
+# Entry 444: a long page's section index repeats its own headings, so it is cut out the same way.
+SHARED = re.compile(r'<header class="tp-header.*?</header>|<footer class="tp-footer">.*?</footer>|<nav class="tp-index[^"]*"[^>]*>.*?</nav>', re.S)
 SHARED_NAME = "site:the header and footer of every page"
 
 

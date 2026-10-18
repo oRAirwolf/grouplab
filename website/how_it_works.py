@@ -251,7 +251,7 @@ def problems(published: set[str], exists) -> list[str]:
 CSS = r"""
 /* Entry 284: Behind the curtain. */
 .hiw [hidden]{display:none !important}
-.hiw h1{font-size:clamp(34px,5vw,52px);line-height:1.08;max-width:900px}
+.hiw h1{max-width:900px}
 .hiw-kicker{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin:0 0 6px}
 .hiw-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
 .hiw-toggle{display:inline-flex;border:1px solid var(--line2);border-radius:4px;overflow:hidden}
@@ -312,7 +312,6 @@ CSS = r"""
 .hiw-date{font-family:"IBM Plex Mono",monospace;color:var(--amber);margin:0}.hiw-timeline h3{margin:0 0 6px;font-size:17px}
 .hiw-record{background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:14px;overflow-x:auto;font-size:12.5px;line-height:1.5}
 .hiw-links{display:flex;flex-wrap:wrap;gap:8px 20px;border-top:1px solid var(--line2);padding-top:16px;margin-top:56px}
-.hiw-tour-card{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
 @media (max-width:900px){
 .hiw-grid.hiw-live{grid-template-columns:minmax(0,1fr)}
 .hiw-aside{position:static;max-height:none}

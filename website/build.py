@@ -535,8 +535,50 @@ def site_footer() -> str:
 </footer>"""
 
 
-def shell(path: str, title: str, description: str, body: str, active: str = "", image: str = "og.png") -> str:
+# Entry 444 section 1: a still, faint copy of the home page's target rings behind every other page's top band, drawn in the theme's own line
+# colors so it follows dark and light with no second picture.
+PAGE_RINGS = ('<div class="tp-rings" aria-hidden="true"><svg width="1600" height="1600" viewBox="-800 -800 1600 1600">'
+              '<circle r="130"/><circle r="330"/><circle r="560"/><circle class="tp-dash" r="780"/></svg></div>')
+# The pages long enough for entry 444's ruler down the right edge and section index: the guides, the research articles, the release notes,
+# the features and support.
+LONG_PAGES = re.compile(r"^/(?:guides/(?!glossary/)[^/]+|research/[^/]+|releases|features|support)/$")
+
+
+def section_index(body: str) -> tuple[str, str]:
+    """Entry 444 section 1: the home page's section index, for a long page: one link to each of its sections (an h2, or a release on the
+    release notes), the h2s given an address where they had none. Returns the body with the addresses and the index."""
+    found, used = [], set(re.findall(r'\bid="([^"]+)"', body))
+
+    def name(m: re.Match) -> str:
+        attrs, inner = m.group(1), m.group(2)
+        label = html.unescape(re.sub(r"<[^>]+>", "", re.sub(r'<a class="hlink".*?</a>', "", inner))).strip()
+        hid = re.search(r'\bid="([^"]+)"', attrs)
+        if hid:
+            key = hid.group(1)
+        else:
+            key = base = slug(label) or "section"
+            n = 2
+            while key in used:
+                key, n = f"{base}-{n}", n + 1
+            used.add(key)
+            attrs += f' id="{key}"'
+        found.append((key, label))
+        return f"<h2{attrs}>{inner}</h2>"
+
+    body = re.sub(r"<h2([^>]*)>(.*?)</h2>", name, body, flags=re.S)
+    if not found:
+        found = [(key, label) for key, label in re.findall(r'<details class="panel pad release" id="([^"]+)"[^>]*><summary><span class="h3">([^<]+)</span>', body)][:12]
+    links = "".join(f'<a href="#{key}"><span>{i:02d}</span> <span class="tp-label">{esc(label)}</span></a>' for i, (key, label) in enumerate(found, 1))
+    return body, f'<nav class="tp-index mono" aria-label="Sections of this page" data-terms="off">{links}</nav>' if len(found) > 1 else ""
+
+
+def shell(path: str, title: str, description: str, body: str, active: str = "", image: str = "og.png", css: tuple[str, ...] = ()) -> str:
     full_title = "GroupLab" if not title else f"{title} | GroupLab"
+    long = bool(LONG_PAGES.match(path))
+    index = ""
+    if long:
+        body, index = section_index(body)
+    styles = "".join(f'\n<link rel="stylesheet" href="/assets/css/{name}.css">' for name in css)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -561,17 +603,19 @@ def shell(path: str, title: str, description: str, body: str, active: str = "", 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/plex-sans-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css">{styles}
 <script src="/assets/js/theme.js"></script>
-<script src="/assets/js/terms.js" defer></script>
+<script src="/assets/js/terms.js" defer></script>{'''
+<script src="/assets/js/page.js" defer></script>''' if long else ""}
 </head>
-<body class="tp">
+<body class="tp{' tp-long' if long else ''}">
 <a class="skip" href="#main">Skip to content</a>
+{PAGE_RINGS}{'<div class="tp-ruler" aria-hidden="true"><span class="tp-ruler-mark"></span></div>' if long else ""}
 {site_header(active)}
 <main id="main">
 {body if path == GLOSSARY_PATH else explain(body)}
 </main>
-{site_footer()}
+{index}{site_footer()}
 </body>
 </html>
 """
@@ -994,7 +1038,7 @@ def page_download() -> str:
 <a href="{GITHUB}/releases">Every build on GitHub</a>
 </section>
 """
-    return shell("/download/", "Download", "Download GroupLab for Windows, Mac, iPhone and iPad, Android or Linux: the newest build, and the copy a store keeps up to date.", body, "Download")
+    return shell("/download/", "Download", "Download GroupLab for Windows, Mac, iPhone and iPad, Android or Linux: the newest build, and the copy a store keeps up to date.", body, "Download", css=("download",))
 
 
 def donor() -> dict:
@@ -1968,6 +2012,52 @@ def header_problems(out: Path = OUT) -> list[str]:
     return found
 
 
+DISPLAY_FACE = "IBM Plex Sans Condensed"
+
+
+def css_rules(css: str) -> list[tuple[str, str]]:
+    """Every rule in a stylesheet as (selector list, declarations), those inside @media and @supports included, in order."""
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    return [(m.group(1).strip(), m.group(2)) for m in re.finditer(r"([^{}@]+)\{([^{}]*)\}", css)]
+
+
+def heading_problems(out: Path = OUT) -> list[str]:
+    """Entry 444 section 3: every page's h1 is the home page's display face, IBM Plex Sans Condensed bold. Read from the stylesheets each
+    page links, at every width: the page's body is .tp, which gives its h1 the display face, and no rule that can reach an h1, through the
+    element or a class it carries, gives it another face or weight. An h1 with its own style attribute fails too."""
+    found, sheets = [], {}
+    for page in sorted(out.rglob("*.html")):
+        text = page.read_text(encoding="utf-8", errors="replace")
+        where = page.relative_to(out).as_posix()
+        h1s = re.findall(r"<h1([^>]*)>", text)
+        if not h1s:
+            continue
+        rules = []
+        for href in re.findall(r'<link rel="stylesheet" href="(/assets/css/[^"?]+)', text):
+            if href not in sheets:
+                f = out / href.lstrip("/")
+                sheets[href] = css_rules(f.read_text(encoding="utf-8")) if f.is_file() else []
+            rules += sheets[href]
+        body = re.search(r'<body class="([^"]*)"', text)
+        if not body or "tp" not in body.group(1).split():
+            found.append(f"{where}: its body is not .tp, so its h1 does not take the display face")
+        if not any(sel == ".tp h1,.tp h2" and DISPLAY_FACE in decl and "font-weight:700" in decl for sel, decl in rules):
+            found.append(f"{where}: no stylesheet it links gives .tp h1 the display face, {DISPLAY_FACE} bold")
+        for attrs in h1s:
+            if "style=" in attrs:
+                found.append(f"{where}: its h1 carries its own style")
+            classes = (re.search(r'class="([^"]*)"', attrs) or re.search("()", "")).group(1).split()
+            last = re.compile(r"(?:^|[\s>+~])(?:h1|[\w-]*(?:" + "|".join(r"\." + re.escape(c) for c in classes or ["\0"]) + r"))(?![\w-])[^\s>+~]*$")
+            for sel, decl in rules:
+                hits = [one.strip() for one in sel.split(",") if last.search(one.strip())]
+                face = re.search(r"font-family:\s*([^;]+)", decl)
+                weight = re.search(r"font-weight:\s*([^;]+)", decl)
+                if hits and (re.search(r"(?:^|;)\s*font:", decl) or (face and not face.group(1).strip().strip('"').startswith(DISPLAY_FACE))
+                             or (weight and weight.group(1).strip() != "700")):
+                    found.append(f"{where}: {hits[0]} gives its h1 a face or weight other than {DISPLAY_FACE} bold")
+    return sorted(set(found))
+
+
 def page_testpage_moved() -> str:
     """Entry 441 section 3: the address entry 440 used for the preview, now a page with one link to the home page (no meta refresh, which
     entry 151 bans), so nobody holding the old link meets a second copy of the home page."""
@@ -2390,10 +2480,13 @@ def page_research_index() -> str:
             groups.append(f'<h2 class="h2">{esc(group)}</h2><div class="research-grid">{"".join(cards)}</div>')
 
     body = f"""
-<section class="wrap stack">
+<section class="wrap page-head">
+<p class="eyebrow">Research</p>
 <h1>Research</h1>
 <p class="lead">What we have measured, on real targets, with the numbers and the data behind every claim.</p>
 <p class="small faint">Every figure says how many shots it rests on. Nothing here is called proven that the shots cannot prove, and where we do not know, it says so.</p>
+</section>
+<section class="wrap stack last">
 {"".join(groups) if groups else '<p>The first articles are being written.</p>'}
 </section>
 """
@@ -2428,7 +2521,7 @@ def page_research_article(meta: dict) -> str:
     body = f"""
 <section class="wrap guide">
 <article class="prose research-article">
-<p class="small faint"><a class="plain" href="/research/">Research</a> &rsaquo; {esc(meta.get("group", ""))}</p>
+<p class="eyebrow"><a class="plain" href="/research/">Research</a> &rsaquo; {esc(meta.get("group", ""))}</p>
 <h1>{esc(meta["title"])}</h1>
 <p class="small faint">{BYLINE} Written {esc(str(meta["written"]))}; the data is from {esc(str(meta["data_date"]))}.</p>
 {draft}
@@ -2455,10 +2548,13 @@ def page_releases() -> str:
         )
 
     body = f"""
-<section class="wrap stack">
+<section class="wrap page-head">
+<p class="eyebrow">Release notes</p>
 <h1>Release notes</h1>
 <p class="lead">Every build of GroupLab anyone could download, newest first. GroupLab is unreleased, so every one of these is a pre-release.</p>
 <p class="small faint">Nightly builds are produced on the nights the application changed, so a gap in the numbers means nothing shipped that night. Work on the website, the documentation or these notes does not make a new build. Numbers below 92 were the run that built them rather than the build itself, and a run that was canceled or skipped still took its number, which is why the older gaps are wider.</p>
+</section>
+<section class="wrap last">
 <div class="stack tight releases">
 {"".join(blocks)}
 </div>
@@ -2610,6 +2706,7 @@ def page_tour_index() -> str:
 
     body = f"""
 <section class="wrap stack page-top">
+<p class="eyebrow">Tour</p>
 <h1>A tour of GroupLab</h1>
 <p class="small"><a href="/tour/how-it-works/">Behind the curtain: how GroupLab works &#8594;</a></p>
 <p class="lead">Every screen, what it is for, and what you would do on it. {count_words('tour-screens', capital=True)} pages, one per screen, so you can see what using GroupLab is like before you download it.</p>
@@ -2671,7 +2768,7 @@ def page_tour_screen(key: str) -> str:
     body = f"""
 <section class="wrap guide">
 <article class="prose">
-<p class="small faint"><a class="plain" href="/tour/">Tour</a> &rsaquo; {esc(item["name"])}</p>
+<p class="eyebrow"><a class="plain" href="/tour/">Tour</a> &rsaquo; {esc(item["name"])}</p>
 <h1>{esc(item["name"])}</h1>
 <p class="lead">{esc(item["blurb"])}</p>
 {f'<p class="note note-teal">{esc(item["merged"])}</p>' if item.get("merged") else ""}
@@ -3473,20 +3570,71 @@ GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list
 })();
 """
 
+DOWNLOAD_CSS = r"""
+/* Entry 338: the download page, concept A. With scripts off :root has no data-device, the buttons are hidden and every device's
+   section shows in order; with them on, only the chosen device's section shows, and its parts join the stage so the file list can
+   sit under its Not sure? line on the desktop. */
+.dl-head{padding-bottom:28px}
+.dl-picks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:8px}
+:root:not([data-device]) .dl-picks{display:none}
+.dl-pick{font:inherit;font-size:17px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2);border-radius:0;padding:16px 18px;min-height:76px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;text-align:left;cursor:pointer}
+.dl-pick:hover{border-color:var(--dim)}
+.dl-pick[aria-pressed="true"]{background:var(--amber-tint);border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+.dl-this{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+.dl-this:empty{display:none}
+.dl-stage{display:flex;flex-direction:column;gap:20px}
+.dl-sec{display:flex;flex-direction:column;gap:20px;padding-top:32px;border-top:1px solid var(--line)}
+.dl-sec:first-child{border-top:0;padding-top:0}
+:root[data-device] .dl-sec{display:none}
+:root[data-device="windows"] .dl-sec[data-for="windows"],:root[data-device="mac"] .dl-sec[data-for="mac"],:root[data-device="iphone"] .dl-sec[data-for="iphone"],:root[data-device="android"] .dl-sec[data-for="android"],:root[data-device="linux"] .dl-sec[data-for="linux"]{display:contents}
+:root[data-device] .dl-sec-title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.dl-sec-title{order:0;font-size:22px}
+.dl-cards{order:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.dl-keep{order:1;color:var(--text)}
+.dl-unsure{order:2;color:var(--text);font-size:15px}
+.dl-files-wide{order:3}
+.dl-help{order:4}
+.badge-teal{background:var(--teal-tint);border-color:var(--teal-tint-b);color:var(--teal)}
+.dl-file{overflow-wrap:anywhere}
+.dl-none{border-style:dashed;align-self:start}
+.dl-else>summary{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-size:26px;font-weight:700}
+.dl-table{overflow-x:auto}
+.dl-table table{border-collapse:collapse;width:100%;border-top:1px solid var(--line2)}
+.dl-table th,.dl-table td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;color:var(--text)}
+.dl-table th{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);border-bottom-color:var(--line2)}
+.dl-table code{overflow-wrap:anywhere}
+.dl-files-narrow{display:none}
+@media (max-width:860px){
+.dl-picks{display:flex;flex-wrap:wrap;gap:8px}
+.dl-pick{flex-direction:row;align-items:center;min-height:44px;padding:8px 16px;border-radius:999px;font-size:15px;gap:8px}
+.dl-this{font-size:11px}
+.dl-cards{grid-template-columns:minmax(0,1fr)}
+.dl-files-wide{display:none}
+.dl-files-narrow{display:block}
+}
+
+"""
+
 HOME_CSS = r"""
 /* Entry 440: the concept B home page, the home page since entry 441. The site's tokens and fonts; the layout is the canvas's. */
-.tp-landing{--rule:46px;overflow-x:hidden}
+.tp-landing{overflow-x:hidden}
 .tp-landing main,.tp-landing .tp-footer,.tp-landing .tp-band{margin-right:var(--rule)}
-.tp-ruler{position:fixed;top:0;right:0;bottom:0;width:var(--rule);border-left:1px solid var(--line);z-index:3;overflow:hidden;
-background-image:linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px),linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px);
-background-size:9px 40px,18px 200px;background-repeat:repeat-y;background-position:right 0 top 20px,right 0 top 20px}
-.tp-tick-n{position:absolute;right:22px;font-size:10px;color:var(--faint)}
-.tp-ruler-mark{position:absolute;right:0;top:0;width:var(--rule);height:2px;background:var(--amber);transform:translateY(0)}
-/* Entry 443: the header is every page's; on the home page it floats over the orbit until the wordmark has docked. */
-.tp-home{position:fixed;left:0;right:var(--rule);background:transparent;border-bottom-color:transparent;transition:background-color .2s,border-color .2s}
+/* Entry 443: the header is every page's; on the home page it floats over the orbit. Entry 444 section 2: the orbiting screens passed under
+   its links and made them hard to read, so it is blurred and tinted from the start, and solid once the wordmark has docked. The docking
+   wordmark flies above it while it moves. */
+.tp-home{position:fixed;left:0;right:var(--rule);background:var(--bg);border-bottom-color:transparent;transition:background-color .2s,border-color .2s}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+.tp-home{background:color-mix(in srgb,var(--bg) 70%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}}
+html.tp-js:not(.tp-still) .tp-hero h1{position:relative;z-index:7}
 .tp-home.tp-solid{background:var(--bg);border-bottom-color:var(--line)}
 .tp-motion-icon{display:none}
 html:not(.tp-js) .tp-motion{display:none}
+/* Entry 444 section 2: from 1280 to 1499 pixels all ten links share the bar with Pause motion, which shows its icon there, as on a phone. */
+@media (min-width:1280px) and (max-width:1499px){
+.tp-motion{width:36px;padding:0;color:var(--text)}
+.tp-motion-word{display:none}
+.tp-motion-icon{display:block}
+}
 .tp-hero{position:relative;height:940px;overflow:hidden;background:var(--sunk)}
 .tp-orbits{position:absolute;left:50%;top:470px;width:0;height:0}
 .tp-circle,.tp-ring{position:absolute;border-radius:50%}
@@ -3506,7 +3654,7 @@ html.tp-js:not(.tp-still) .tp-inner .tp-up{animation:tp-spin-back 120s linear in
 html.tp-js:not(.tp-still) .tp-outer{animation:tp-spin-back 200s linear infinite}
 html.tp-js:not(.tp-still) .tp-outer .tp-up{animation:tp-spin 200s linear infinite}
 .tp-ring,.tp-up,.tp-ticker{will-change:transform}
-.tp-hero-text{position:absolute;left:0;right:0;top:300px;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 40px;z-index:2}
+.tp-hero-text{position:absolute;left:0;right:0;top:300px;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 40px}
 .tp-hero h1{display:inline-block;margin:0;font-size:136px;line-height:.9;letter-spacing:.01em;transform-origin:0 0}
 .tp-tagline{margin:22px 0 6px;font-size:30px;font-weight:600;color:var(--text)}
 .tp-tagline em{font-weight:400}
@@ -3520,11 +3668,6 @@ background:var(--bg);color:var(--text);font-size:13px;letter-spacing:.08em}
 .tp-platforms{margin:22px 0 0;font-size:11px;letter-spacing:.1em;color:var(--faint)}
 .tp-hero-phone{display:none}
 .tp-narrow{display:none}
-.tp-index{position:fixed;right:calc(var(--rule) + 24px);bottom:24px;z-index:4;display:flex;flex-direction:column;align-items:flex-end;
-font-size:12px;letter-spacing:.1em;line-height:1.7;padding:8px 10px;border-radius:6px;background:var(--bg)}
-.tp-index a{color:var(--faint)}
-.tp-index a:hover{color:var(--text);text-decoration:none}
-.tp-index a.tp-here{color:var(--text)}
 .tp-band{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:14px 0;background:var(--bg)}
 .tp-ticker{display:flex;width:max-content;font-size:12px;letter-spacing:.1em;color:var(--dim)}
 .tp-tags{display:flex;gap:40px;padding-right:40px}
@@ -3572,8 +3715,7 @@ html:not(.tp-js) .tp-tags,.tp-still .tp-tags{flex-wrap:wrap;row-gap:8px;padding-
 html.tp-js:not(.tp-still) .tp-ease{transition:opacity .7s ease,transform .7s ease}
 html.tp-js:not(.tp-still) .tp-ease:not(.tp-in){opacity:0;transform:translateY(18px)}
 @media (max-width:860px){
-.tp-landing{--rule:0px}
-.tp-ruler,.tp-index,.tp-wide{display:none}
+.tp-wide{display:none}
 .tp-narrow{display:inline}
 .tp-home{position:sticky;background:var(--bg);border-bottom-color:var(--line)}
 .tp-motion{width:44px;padding:0;color:var(--text)}
@@ -3715,6 +3857,53 @@ HOME_JS = """// NOTES-FROM-PLANNING.md entry 440: the concept B home page's moti
 """
 
 
+PAGE_JS = """// NOTES-FROM-PLANNING.md entry 444: the long pages' ruler and section index, the home page's, following the scroll. Nothing moves on its
+// own, so reduced motion changes nothing here; without this script the ruler has no numbers and the index marks nothing, and the page is complete.
+(() => {
+  const ruler = document.querySelector(".tp-ruler"), mark = document.querySelector(".tp-ruler-mark");
+  const nav = document.querySelector(".tp-index"), index = nav ? [...nav.querySelectorAll("a")] : [];
+  if (ruler) for (let i = 0; i < 12; i++) {
+    const n = document.createElement("span");
+    n.className = "tp-tick-n mono"; n.style.top = (i * 200 + 12) + "px"; n.textContent = i;
+    ruler.appendChild(n);
+  }
+  // The section in view is the last whose heading has passed a third of the way down; a long index keeps it in sight without moving the page.
+  const heads = index.map((a) => document.getElementById(a.hash.slice(1)));
+  let current = null;
+  const here = () => {
+    let at = 0;
+    heads.forEach((h, i) => { if (h && h.getBoundingClientRect().top < window.innerHeight / 3) at = i; });
+    const a = index[at];
+    if (!a || a === current) return;
+    if (current) current.classList.remove("tp-here");
+    current = a; a.classList.add("tp-here");
+    if (a.offsetTop < nav.scrollTop || a.offsetTop + a.offsetHeight > nav.scrollTop + nav.clientHeight) nav.scrollTop = a.offsetTop - nav.clientHeight / 2;
+  };
+  let queued = false;
+  const frame = () => {
+    queued = false;
+    if (index.length) here();
+    if (!mark) return;
+    const room = document.documentElement.scrollHeight - window.innerHeight;
+    const p = room > 0 ? Math.min(1, window.scrollY / room) : 0;
+    mark.style.transform = "translateY(" + Math.round(p * (window.innerHeight - 2)) + "px)";
+  };
+  const later = () => { if (!queued) { queued = true; requestAnimationFrame(frame); } };
+  window.addEventListener("scroll", later, { passive: true });
+  window.addEventListener("resize", later);
+  later();
+})();
+"""
+
+
+def served_js(js: str) -> str:
+    """Entry 444: a script as it is served, without its whole-line comments and indentation, as served_css does for a stylesheet. Only
+    for scripts with no template literal, whose lines a stripped indent could change."""
+    assert "`" not in js
+    js = re.sub(r"^\s*/\*.*?\*/\s*$", "", js, flags=re.S | re.M)
+    return "\n".join(line.strip() for line in js.splitlines() if line.strip() and not line.strip().startswith("//")) + "\n"
+
+
 def served_css(css: str) -> str:
     """Entry 443: a stylesheet as it is served, without the comments that explain it here, and without blank lines. Every page loads it,
     so what only a reader of this file needs is not sent to every visitor."""
@@ -3751,7 +3940,6 @@ CSS = r"""
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .only-light{display:block !important}:root:not([data-theme="dark"]) .only-dark{display:none !important}}
 :root[data-theme="light"] .only-light{display:block !important}
 :root[data-theme="light"] .only-dark{display:none !important}
-img.logo.only-light,img.logo.only-dark{display:inline-block}
 
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:88px}
@@ -3769,9 +3957,9 @@ a.term:hover{text-decoration:underline dotted}
 .term-pop-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .term-pop button{background:none;border:1px solid var(--line2);color:var(--dim);border-radius:4px;padding:2px 10px;font:inherit;cursor:pointer}
 .glossary-entry{scroll-margin-top:80px;border-bottom:1px solid var(--line);padding:6px 0 10px}
-h1,h2{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700;letter-spacing:-.01em;line-height:1.08;margin:0;color:var(--text)}
-h1{font-size:clamp(36px,5vw,52px)}
-h2{font-size:clamp(28px,3.4vw,40px);line-height:1.1}
+h1,h2{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700;letter-spacing:0;line-height:1.08;margin:0;color:var(--text)}
+h1{font-size:clamp(44px,5.6vw,80px);line-height:1}
+h2{font-size:clamp(30px,3.4vw,46px);line-height:1.05}
 h3,.h3{font-family:"IBM Plex Sans",sans-serif;font-size:19px;font-weight:600;letter-spacing:0;line-height:1.3;margin:0}
 p{margin:0;color:var(--dim)}
 p.text,.text p,.text{color:var(--text)}
@@ -3781,7 +3969,7 @@ p.text,.text p,.text{color:var(--text)}
 .skip{position:absolute;left:-9999px;top:8px;background:var(--amber);color:var(--on-amber);padding:10px 14px;border-radius:4px;z-index:10}
 .skip:focus{left:16px}
 
-.page-top{padding-top:72px}
+.page-top{padding-top:96px}
 .note.note-figure{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;row-gap:16px}
 .note-figure>*{min-width:0}
 .note-figure .shot-link{grid-column:1 / -1}
@@ -3795,7 +3983,10 @@ p.text,.text p,.text{color:var(--text)}
 .tp{--ring:#6b727b}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .tp{--ring:#8f8b83}}
 :root[data-theme="light"] .tp{--ring:#8f8b83}
-.tp h1,.tp h2,.tp h3{font-family:"IBM Plex Sans",system-ui,sans-serif;letter-spacing:normal;text-transform:none;font-weight:600}
+/* Entry 444: every heading but an h3 is the home page's display face, IBM Plex Sans Condensed bold; the home page's own section headings
+   keep the plain face they were designed in. heading_problems fails the build on a page whose h1 is not the display face. */
+.tp h1,.tp h2{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700}
+.tp h3,.tp .h3,.tp-landing h2{font-family:"IBM Plex Sans",system-ui,sans-serif;letter-spacing:normal;text-transform:none;font-weight:600}
 .tp a{font-weight:400}
 .tp .cond{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700}
 .tp-amber{color:var(--amber)}
@@ -3827,7 +4018,9 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
 .tp-footer-links a{color:var(--dim)}
 .tp-footer-links a:hover{color:var(--text)}
 .tp-copy{flex-basis:100%;font-size:13px}
-@media (max-width:1499px) and (min-width:981px){
+/* Entry 444 section 2: all ten links in the bar from 1280 pixels, tighter below 1500 so they fit; More only from 981 to 1279. */
+@media (max-width:1499px){.tp-header{gap:18px;padding:16px 28px}.tp-nav{gap:15px;font-size:11px;letter-spacing:.05em}}
+@media (max-width:1279px) and (min-width:981px){
 .tp-nav .nav-more{display:none}
 .tp-menu{display:block}
 .tp-menu summary{width:auto;padding:0 12px}
@@ -3846,18 +4039,70 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
 .tp-footer-links{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
 }
 
+/* Entry 444 section 1: the home page's identity on every other page. Its rings, still and faint, behind the top band; the band in the
+   hero's order (mono label, condensed title, lead, buttons); the ruler and section index on the long pages; cards in its hairline grid. */
+.tp-rings{position:absolute;top:0;left:0;right:var(--rule,0px);height:760px;z-index:-1;overflow:hidden;pointer-events:none;background:var(--sunk);
+-webkit-mask-image:linear-gradient(#000 40%,transparent);mask-image:linear-gradient(#000 40%,transparent)}
+.tp-rings svg{position:absolute;left:calc(88% - 800px);top:-500px}
+.tp-rings circle{fill:none;stroke:var(--line);stroke-width:1}
+.tp-rings .tp-dash{stroke-dasharray:6 6;opacity:.7}
+.page-head .eyebrow{font-size:12px;color:var(--faint)}
+:is(.page-head,.page-top,.prose)>.eyebrow:first-child::before,.page-head>div>.eyebrow:first-child::before{content:"";display:inline-block;width:18px;height:2px;margin-right:12px;vertical-align:middle;background:var(--amber)}
+.page-head h1,.page-top h1{max-width:1040px}
+main>.guide:first-child{padding-top:88px}
+.page-head .lead{max-width:640px}
+.tp-landing,.tp-long{--rule:46px}
+.tp-long main,.tp-long .tp-footer,.tp-long .tp-header{margin-right:var(--rule)}
+.tp-ruler{position:fixed;top:0;right:0;bottom:0;width:var(--rule);border-left:1px solid var(--line);z-index:3;overflow:hidden;
+background-image:linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px),linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px);
+background-size:9px 40px,18px 200px;background-repeat:repeat-y;background-position:right 0 top 20px,right 0 top 20px}
+.tp-tick-n{position:absolute;right:22px;font-size:10px;color:var(--faint)}
+.tp-ruler-mark{position:absolute;right:0;top:0;width:var(--rule);height:2px;background:var(--amber);transform:translateY(0)}
+.tp-index{position:fixed;right:calc(var(--rule) + 24px);bottom:24px;z-index:4;display:flex;flex-direction:column;align-items:flex-end;
+font-size:12px;letter-spacing:.1em;line-height:1.7;padding:8px 10px;border-radius:6px;background:var(--bg)}
+.tp-index a{color:var(--faint)}
+.tp-index a:hover{color:var(--text);text-decoration:none}
+.tp-index a.tp-here{color:var(--text)}
+/* On a long page the index is its numbers, at the content's edge, and its names open on hover or focus, so it never covers the words. */
+.tp-long .tp-index{right:calc(var(--rule) + 6px);align-items:stretch;max-width:280px;max-height:min(60vh,460px);overflow:auto;padding:6px 8px;
+border:1px solid var(--line);text-transform:uppercase;letter-spacing:.06em;font-size:11px;line-height:1.9}
+.tp-long .tp-index a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tp-long .tp-index a.tp-here span:first-child{color:var(--text);box-shadow:inset 0 -2px var(--amber)}
+.tp-index a span:first-child{color:var(--amber)}
+.tp-long .tp-index:not(:hover):not(:focus-within) .tp-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.panel .h3,.panel h3,.panel .h4{font-size:21px;font-weight:600}
+:where(.features,.research-grid,.grid-3,.donor-sheets):not(.wrap):has(>.panel){gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+:where(.features,.research-grid,.grid-3,.donor-sheets):not(.wrap)>.panel{border-width:0 1px 1px 0}
+a.panel:hover,.research-card:hover{border-color:var(--line);background:var(--panel2);text-decoration:none}
+.research-card{padding:0;gap:0}
+.research-card>.research-thumb,.research-card>.research-plate,.research-card>picture img{margin:0;border:0;border-radius:0}
+.research-card>h3,.research-card>p{padding:0 22px}
+.research-card>h3{padding-top:20px;margin-bottom:8px}
+.research-card>p{padding-bottom:24px}
+.prose ul>li::marker{color:var(--amber)}
+.prose ol>li::marker{color:var(--amber);font-family:"IBM Plex Mono",monospace;font-size:.9em}
+pre{margin:0;padding:16px 18px;background:var(--sunk);border:1px solid var(--line);border-left:2px solid var(--amber);overflow-x:auto;font-size:14px;line-height:1.55}
+pre code{background:none;padding:0;font-size:inherit}
+.prose>.eyebrow{font-size:12px;line-height:1.6;color:var(--faint)}
+.hiw-tour-card{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+@media (max-width:860px){
+.tp-landing,.tp-long{--rule:0px}
+.tp-ruler,.tp-index{display:none}
+.tp-rings{height:560px}
+.tp-rings svg{left:calc(70% - 800px);top:-620px}
+}
+
 /* type blocks */
 .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:400}
 .eyebrow.amber{color:var(--amber)}
 .lead{font-size:clamp(17px,1.6vw,20px);line-height:1.6;max-width:780px}
-.fine{font-size:13px;color:var(--faint)}
 .stack{display:flex;flex-direction:column;gap:20px}
 .stack.tight{gap:12px}
 
 /* buttons */
 .actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
 .actions.col{flex-direction:column;align-items:flex-start}
-.btn{display:inline-flex;flex-direction:column;justify-content:center;gap:4px;min-height:44px;padding:12px 20px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;line-height:1.3}
+.btn{display:inline-flex;flex-direction:column;justify-content:center;gap:4px;min-height:48px;padding:14px 22px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;line-height:1.3}
 .btn:hover{text-decoration:none}
 .btn-big{padding:14px 22px;font-size:13px}
 .btn-primary{background:var(--amber);border-color:var(--amber);color:var(--on-amber)}
@@ -3882,7 +4127,7 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
 .section{padding-top:120px;display:flex;flex-direction:column;gap:40px}
 .section-sm{padding-top:40px}
 .last{padding-bottom:120px}
-.page-head{padding-top:72px;padding-bottom:40px;display:flex;flex-direction:column;gap:20px}
+.page-head{padding-top:96px;padding-bottom:48px;display:flex;flex-direction:column;gap:20px}
 .two-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:80px;row-gap:40px;align-items:start}
 .two-col.bottom{align-items:end}
 .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
@@ -3890,18 +4135,8 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
 .row-between{display:flex;justify-content:space-between;align-items:center;gap:24px}
 .row-between a{flex-shrink:0}
 
-/* home */
-.hero{padding-top:88px;display:flex;flex-direction:column;gap:48px}
+/* screenshots */
 .shot{display:block;width:100%;border:1px solid var(--line2);border-radius:6px;box-shadow:var(--shadow)}
-.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.steps li{padding:24px;display:flex;flex-direction:column;gap:12px}
-.steps .num{font-size:13px;color:var(--amber)}
-.steps h3{font-size:18px}
-.steps p{font-size:15px}
-.fig{margin:0;display:flex;flex-direction:column;gap:16px}
-.fig figcaption{display:flex;flex-direction:column;gap:6px}
-.fig figcaption strong{font-size:16px;font-weight:600;color:var(--text)}
-.fig figcaption span{font-size:15px;color:var(--dim)}
 .status{padding:32px;display:flex;flex-direction:column;gap:16px;align-self:start}
 .status p{font-size:15px}
 
@@ -3910,7 +4145,7 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
 .card-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .card-head .h3{font-size:20px}
 .card p{font-size:15px}
-.badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border-radius:3px;background:var(--amber-tint);border:1px solid var(--amber-tint-b);color:var(--amber)}
+.badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border-radius:0;background:var(--amber-tint);border:1px solid var(--amber-tint-b);color:var(--amber)}
 .small-list{margin:0;padding-left:18px;font-size:14px;line-height:1.5}
 .small-list li{margin-bottom:6px}
 .panel ol{margin:0;padding-left:20px;font-size:15px}
@@ -3937,7 +4172,7 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
 /* guides */
 .guide-bar{padding-top:56px;display:flex;align-items:center;gap:12px}
 .tabs{display:flex;gap:8px;flex-wrap:wrap}
-.tab{font-size:14px;padding:8px 14px;border-radius:4px;color:var(--dim)}
+.tab{font-size:14px;padding:8px 14px;border-radius:0;color:var(--dim)}
 .tab[aria-current="page"]{background:var(--panel2);color:var(--text);font-weight:600}
 .tab:hover{text-decoration:none;color:var(--text)}
 .pdf-link{margin-left:auto;font-size:14px}
@@ -3945,7 +4180,6 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
    thumbnail is the article's lead chart, so the index reads as a contents page rather than a list. */
 .research-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:12px 0 32px}
 .research-card{display:block;transition:border-color .15s ease}
-.research-card:hover{border-color:var(--accent)}
 /* Entry 143 section 1.1: every card's lead is the same shape, whether it is a chart or a plate, so the row is
    even. Without this the one card with a real figure set the height of the whole row. */
 .research-thumb{width:100%;aspect-ratio:320/200;object-fit:cover;border-radius:4px;background:var(--sunk);margin-bottom:8px}
@@ -3955,7 +4189,7 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
 .research-plate{aspect-ratio:320/200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--sunk);border:1px solid var(--line);color:var(--faint)}
 .plate-rule{width:42px;height:2px;background:var(--amber);opacity:.8}
 .plate-number{font-size:30px;color:var(--dim);line-height:1}
-.research-box{border-left:3px solid var(--accent);margin:20px 0 28px}
+.research-box{border-left:3px solid var(--amber);margin:20px 0 28px}
 
 /* Entry 129: the send form. Plain, wide fields, and a honeypot nobody sees. */
 .send-form{max-width:720px}
@@ -4011,15 +4245,15 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
 .link-note.on{opacity:1}
 @media (prefers-reduced-motion: reduce){.toc.js ol ol,.toc.js li.open>ol,.link-note{transition:none}}
 .prose{flex-grow:1;min-width:0;max-width:780px;display:flex;flex-direction:column;gap:18px}
-.prose h1{font-size:clamp(32px,4vw,44px);margin-bottom:6px}
-.prose h2{font-size:28px;margin-top:28px}
+.prose h1{font-size:clamp(40px,4.6vw,60px);margin-bottom:6px}
+.prose h2{font-size:34px;margin-top:28px}
 .prose h3{margin-top:12px}
 .prose p,.prose li{color:var(--text);font-size:17px;line-height:1.7}
 .prose ul,.prose ol{margin:0;padding-left:24px}
 .prose li{margin-bottom:6px}
-.prose table{border-collapse:collapse;width:100%;font-size:15px}
+.prose table{border-collapse:collapse;width:100%;font-size:15px;border-top:1px solid var(--line2)}
 .prose th,.prose td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
-.prose th{color:var(--dim);font-weight:600}
+.prose th{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);border-bottom-color:var(--line2)}
 .guide-fig{margin:8px 0;display:flex;flex-direction:column;gap:10px}
 .guide-fig img.phone-shot{width:auto;max-width:100%;max-height:560px;margin:0 auto;border-radius:14px}
 .fig-marks{position:relative}
@@ -4086,33 +4320,8 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 .survey-stages .num{text-align:right}
 @media (max-width:900px){.grid-3{grid-template-columns:1fr}}
 
-/* Entry 338: the download page, concept A. With scripts off :root has no data-device, the buttons are hidden and every device's
-   section shows in order; with them on, only the chosen device's section shows, and its parts join the stage so the file list can
-   sit under its Not sure? line on the desktop. */
-.dl-head{padding-bottom:28px}
-.dl-picks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:8px}
-:root:not([data-device]) .dl-picks{display:none}
-.dl-pick{font:inherit;font-size:17px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2);border-radius:6px;padding:16px 18px;min-height:76px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;text-align:left;cursor:pointer}
-.dl-pick:hover{border-color:var(--dim)}
-.dl-pick[aria-pressed="true"]{background:var(--amber-tint);border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
-.dl-this{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
-.dl-this:empty{display:none}
-.dl-stage{display:flex;flex-direction:column;gap:20px}
-.dl-sec{display:flex;flex-direction:column;gap:20px;padding-top:32px;border-top:1px solid var(--line)}
-.dl-sec:first-child{border-top:0;padding-top:0}
-:root[data-device] .dl-sec{display:none}
-:root[data-device="windows"] .dl-sec[data-for="windows"],:root[data-device="mac"] .dl-sec[data-for="mac"],:root[data-device="iphone"] .dl-sec[data-for="iphone"],:root[data-device="android"] .dl-sec[data-for="android"],:root[data-device="linux"] .dl-sec[data-for="linux"]{display:contents}
-:root[data-device] .dl-sec-title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.dl-sec-title{order:0;font-size:22px}
-.dl-cards{order:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
-.dl-keep{order:1;color:var(--text)}
-.dl-unsure{order:2;color:var(--text);font-size:15px}
-.dl-files-wide{order:3}
-.dl-help{order:4}
-.badge-teal{background:var(--teal-tint);border-color:var(--teal-tint-b);color:var(--teal)}
-.dl-file{overflow-wrap:anywhere}
-.dl-none{border-style:dashed;align-self:start}
-.dl-fold{background:var(--panel);border:1px solid var(--line);border-radius:6px}
+/* Entry 338: the download page's folds, which the guides' contents lists use too; the rest of its styles are DOWNLOAD_CSS. */
+.dl-fold{background:var(--panel);border:1px solid var(--line);border-radius:0}
 .dl-fold>summary{display:flex;align-items:center;gap:12px;min-height:48px;padding:12px 18px;cursor:pointer;list-style:none;font-weight:600;color:var(--text)}
 .dl-fold>summary::-webkit-details-marker{display:none}
 .dl-fold>summary::before{content:"";flex-shrink:0;width:8px;height:8px;border-right:2px solid var(--dim);border-bottom:2px solid var(--dim);transform:rotate(-45deg)}
@@ -4120,23 +4329,9 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 .dl-fold-body{padding:4px 18px 20px;display:flex;flex-direction:column;gap:14px}
 .dl-fold-body p{font-size:15px}
 .dl-fold ol{margin:0;padding-left:20px;font-size:15px}
-.dl-else>summary{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-size:26px;font-weight:700}
-.dl-table{overflow-x:auto}
-.dl-table table{border-collapse:collapse;width:100%}
-.dl-table th,.dl-table td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;color:var(--text)}
-.dl-table th{color:var(--dim);font-weight:600}
-.dl-table code{overflow-wrap:anywhere}
-.dl-files-narrow{display:none}
 @media (max-width:860px){
-.dl-picks{display:flex;flex-wrap:wrap;gap:8px}
-.dl-pick{flex-direction:row;align-items:center;min-height:44px;padding:8px 16px;border-radius:999px;font-size:15px;gap:8px}
-.dl-this{font-size:11px}
-.dl-cards{grid-template-columns:minmax(0,1fr)}
-.dl-files-wide{display:none}
-.dl-files-narrow{display:block}
 .dl-fold-body{padding:4px 14px 16px}
 }
-
 .pdf-row .btn{white-space:nowrap;flex-shrink:0}
 .small-callout h2{font-family:"IBM Plex Sans",sans-serif;font-size:19px;letter-spacing:0}
 .two-col.bottom{align-items:center}
@@ -4144,22 +4339,19 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 /* narrower screens */
 @media (max-width:1100px){
 .wrap{padding-left:40px;padding-right:40px}
-.steps{grid-template-columns:repeat(2,minmax(0,1fr))}
 .grid-3{grid-template-columns:repeat(1,minmax(0,1fr))}
 .toc{display:none}
 .toc-mini{display:block}
 }
 @media (max-width:860px){
 .wrap{padding-left:16px;padding-right:16px}
-.hero{padding-top:40px;gap:32px}
 .section{padding-top:72px}
 .last{padding-bottom:72px}
-.page-head{padding-top:40px}
-.page-top{padding-top:40px}
+.page-head{padding-top:48px}
+.page-top{padding-top:48px}
 .note.note-figure{grid-template-columns:minmax(0,1fr)}
 .two-col,.grid-2,.callout{grid-template-columns:repeat(1,minmax(0,1fr))}
 .callout{padding:28px 24px}
-.steps{grid-template-columns:repeat(1,minmax(0,1fr))}
 .row-between{flex-direction:column;align-items:flex-start}
 .pdf-row{flex-wrap:wrap}
 .guide-bar{flex-wrap:wrap}
@@ -4608,14 +4800,18 @@ def main() -> None:
     build_fonts()
     build_images()
     build_downloads()
-    write("assets/css/site.css", served_css(CSS + "\n" + _how_it_works.CSS))
+    write("assets/css/site.css", served_css(CSS))
+    # Entry 444: the how-it-works pages' own styles go only to those four pages, and the page weight saved pays for the new look.
+    write("assets/css/how-it-works.css", served_css(_how_it_works.CSS))
+    write("assets/js/page.js", served_js(PAGE_JS))
     write("assets/js/how-it-works.js", _how_it_works.JS.strip() + "\n")
-    write("assets/js/theme.js", JS)
-    write("assets/js/terms.js", TERMS_JS)
-    write("assets/js/guide-toc.js", GUIDE_TOC_JS)
+    write("assets/js/theme.js", served_js(JS))
+    write("assets/js/terms.js", served_js(TERMS_JS))
+    write("assets/js/guide-toc.js", served_js(GUIDE_TOC_JS))
     write("assets/js/primer.js", PRIMER_JS)
     write("assets/css/home.css", served_css(HOME_CSS))
-    write("assets/js/home.js", HOME_JS)
+    write("assets/css/download.css", served_css(DOWNLOAD_CSS))
+    write("assets/js/home.js", served_js(HOME_JS))
 
     write("index.html", page_home())
     # Entry 440: concept B, out of sight until Alan approves it; the home page above is unchanged.
@@ -4657,7 +4853,7 @@ def main() -> None:
                 copy(extra, f"research/{meta['slug']}/{extra.relative_to(figures).as_posix()}")
     write("tour/index.html", page_tour_index())
     for path, title, description, body in _how_it_works.pages():
-        write(path.strip("/") + "/index.html", shell(path, title, description, body, "Tour"))
+        write(path.strip("/") + "/index.html", shell(path, title, description, body, "Tour", css=("how-it-works",)))
     for key in tour()["order"]:
         write(f"tour/{key}/index.html", page_tour_screen(key))
     for old in TOUR_MOVED:
@@ -4665,8 +4861,8 @@ def main() -> None:
     write("discord/index.html", page_discord())
     write("survey/index.html", page_survey())
     write("features/index.html", page_features())
-    write("assets/js/survey.js", SURVEY_JS)
-    write("assets/js/download.js", DOWNLOAD_JS + "\n")
+    write("assets/js/survey.js", served_js(SURVEY_JS))
+    write("assets/js/download.js", served_js(DOWNLOAD_JS))
     write("404.html", page_404())
 
     pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/guides/statistics-primer/", GLOSSARY_PATH, "/releases/", "/support/", SURVEY_PATH, FEATURES_PATH]
@@ -4699,6 +4895,7 @@ def main() -> None:
     problems += link_problems()
     problems += home_problems()
     problems += header_problems()
+    problems += heading_problems()
     problems += raw_table_problems()
     problems += php_problems()
     problems += send_problems()

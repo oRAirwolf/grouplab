@@ -94,6 +94,11 @@ Send back: the scans and photos into the same folder, and one line on anything t
 - **Fixed**: panning a zoomed target no longer drags the screen; the "updated" note hides by itself; a selected shot says how far it is
   from its own bull. **Paper and "what was behind it" do not help detection**: they are recorded only, so hole sizes can later be compared
   by paper and backing. Whether to keep them on the setup screen is in the list below.
+- **DESIGN NEEDED** (entry 444): **page titles in capitals or as written?** Every page's title is now the home page's condensed bold
+  face, as written ("Everything GroupLab does"). The home page's own big words are in capitals (GROUPLAB, START MEASURING.). Capitals
+  would match it more closely but make long titles, such as a research article's, hard to read. Built for now: as written. Pictures of
+  both themes on the computer and a phone are in docs/figures/site/entry-444/. A good answer: "as written" or "capitals", and whether
+  research articles and guides should follow it.
 - **DESIGN NEEDED** (entry 423 section 2): **how to reach one sheet inside a set's tab.** Built for now: tapping a sheet in the plot's key
   shows it alone (as before), and a **Check one sheet** menu on the analysis screen lists every sheet (with its file and shots) and opens
   one alone to check and fix, with **Back to the set** to return. The alternative to judge by looking: a row of sheet switches above the

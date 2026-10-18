@@ -1369,6 +1369,43 @@ site build pass.
 7. **Pictures of the site.** None exists in the README or `docs/figures`, so none to retake. The user guide's PDF, behind since entry
    442, is regenerated.
 
+## Entry 444: the home page's look really on every page, and every link in the bar from 1280 pixels (2026-10-18)
+
+1. **Headings.** Every page's h1 and h2 are the home page's display face, IBM Plex Sans Condensed bold (entry 443 had set them in Plex
+   Sans 600). The h1 runs from 44 to 80 pixels with the window (it was 52 at most), a guide's or article's from 40 to 60, an h2 from 30
+   to 46. The home page's own section headings keep the face they were designed in. Titles are as written, not in capitals: the look
+   question is a DESIGN NEEDED line in `docs/notes/for-alan.md`.
+2. **The top band.** Every page's top is in the hero's order: the mono label with a short amber rule before it, the condensed title, the
+   lead, and the page's buttons, which were already the home page's (now 48 pixels tall, as "Download free"). Research, Release notes
+   and Tour gained the label their neighbours had; an article's and a tour screen's breadcrumb is set as the label. Behind every top
+   band but the home page's, the home page's rings, still: an inline drawing (`PAGE_RINGS`) in the theme's own line color on the sunk
+   background, fading into the page, so it is right in both themes with no picture to load.
+3. **Ruler and section index** on the guides, research articles, release notes, features and support (`LONG_PAGES`): the ruler down the
+   right edge as on the home page, its amber line following the scroll, and the section index, one link to each h2 (on the release
+   notes, the twelve newest builds), the headings given an address where they had none. At 1400 pixels the home page's index would
+   cover the content's right edge, so on a long page it shows its numbers and opens the names on hover or focus. `page.js` adds the
+   ruler's numbers and marks the section being read; nothing moves by itself, and with scripts off both are there, unmarked.
+4. **Cards, tables, code.** Research cards, feature cards and the Newest cards sit in the home page's hairline grid, a picture edge to
+   edge on a research card; corners square on folds, picks, tabs and badges; list markers amber; table headings in mono capitals; code
+   blocks on the sunk background with an amber edge.
+5. **The header.** All ten links show from 1280 pixels (measured: nothing overflows at 1280, 1300 or 1500 on the home page, support or
+   the user guide), tighter type and spacing below 1500; More from 981 to 1279; the menu below. On the home page from 1280 to 1499 Pause
+   motion shows its icon, as on a phone. The home page's header is blurred and tinted from the start, so the orbiting screens no
+   longer show through its links, and solid once the wordmark has docked; the wordmark flies above it while it docks.
+6. **Weight.** Same measure as entry 443, over all 76 pages: every page is lighter, by 452 to 9,900 bytes; the home page 114,179 to
+   104,279, features 245,790 to 240,043, download 238,531 to 232,035, the user guide 320,341 to 314,111, support 151,389 to 146,107,
+   release notes 320,303 to 315,118. Paid for by serving the how-it-works pages' and the download page's own styles only to them
+   (`how-it-works.css`, `download.css`), 15 unused rules removed, and scripts served without their comment lines (`served_js`).
+   `site.css` is 28,250 bytes.
+7. **Checks.** `heading_problems` fails the build when a page's h1 is not the display face: it reads the stylesheets each page links,
+   at every width, and fails on a rule reaching an h1 (by element or by one of its classes) with another face or weight, on an h1 with
+   its own style, and when nothing gives `.tp h1` the display face. `tests/python/site-home-tests.py` holds it and the rest (49 checks).
+   `scripts/claims.py` cuts the section index out of each page as it does the header, since it repeats the page's headings; the tour's
+   opening, now with its label, is backed as the same words.
+8. **Proof.** Twenty-four pictures in `docs/figures/site/entry-444/`: home, features, download, the user guide, support and release
+   notes, at 1400 by 900 and at 390 on a phone, dark and light. Also looked at with scripts off and with reduced motion (complete and
+   still), and no sideways scroll at 390.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -25,6 +25,48 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-18, entry 444: the other pages really take the home page's look (entry 443 went only part of the way), and the header shows every link
+
+**Status: actioned 2026-10-18; sections 1, 2 and 3 done. One look question for Alan (page titles in capitals or as written) is a DESIGN NEEDED line in for-alan.md, built as written meanwhile. On a long page the section index shows its numbers and opens its names on hover or focus, so it never covers the words at 1400 pixels.**
+
+From the planning session, 2026-10-18 07:45 UTC. Site work. Alan, 2026-10-18, after entry 443 went live: "I thought every page was
+supposed to follow the home page's theme now."
+
+What the planning session saw on the live site (1400 x 900, dark theme): the other pages have the shared header and footer, the colors,
+the body type and square panels, but they still read as the old site with a new header. The home page's identity is missing:
+- Headings: the home page uses IBM Plex Sans Condensed, bold 700, large; every other page's h1 is IBM Plex Sans 600 at 52 px.
+- No trace of the target rings, the ruler down the edge or the section index; plain flat backgrounds.
+- The header: at 1400 px wide (an ordinary laptop) Community, Release notes, Support and GitHub are still hidden under More. Alan asked
+  for them back at the top.
+
+## 1. The look, on every page except the home page
+
+- Headings in the home page's display face: IBM Plex Sans Condensed, bold, with the same scale steps the home page uses (smaller than
+  the home hero, clearly larger and heavier than now). The orange accent used as the home page uses it.
+- Each page's top band in the home page's hero style: the uppercase mono label, the condensed title, the lead sentence, and the
+  page's main button(s) styled like "Download free" and "View the source".
+- A still, faint version of the home page's target rings behind each page's top band (no motion, no screenshots orbiting; an SVG or
+  CSS background, light enough not to hurt reading, correct in both themes).
+- The ruler down the right edge and the section index (as on the home page) on the long pages: guides, research articles, release
+  notes, features, support. Static apart from following the scroll, and gone with reduced motion only if it moves.
+- Cards, panels, lists, tables and code blocks restyled to match the home page's feature cards and three points.
+- Keep: no orbit, no docking animation, words and addresses unchanged, pause motion, reduced motion and scripts off leave every page
+  complete, page weight not above today's (say before and after), both themes checked.
+
+## 2. The header
+
+Show all ten links (Download, Tour, Features, Send a target, Guides, Research, Community, Release notes, Support, GitHub) in the bar
+at widths of 1280 px and wider, tightening the spacing or type if needed. Between 981 and 1279 px the More menu is fine; below that,
+the menu. The home page's header follows the same rule. Check the home page's header at 1400 px: the orbiting screens pass under the
+links and the Pause motion button, which makes them hard to read; give the header a solid or blurred background once anything moves
+under it.
+
+## 3. Proof
+
+Screenshots of home, features, download, guides (one guide), support and release notes at 1400 px and on a phone, both themes, in the
+commit's site screenshots, so the planning session can compare them with the home page. Update the build check so a page whose h1 is
+not the display face fails. If a real look question comes up, post it as DESIGN NEEDED in for-alan.md and build the rest.
+
 ## 2026-10-18, entry 443: the Orbit home page gets the full header back, and every other page takes the home page's look (no orbit)
 
 **Status: actioned 2026-10-18; sections 1 and 2 done. No ruler or section index on the long pages (planning left it to Code): calm pages, and no page heavier. No look question needed Alan. Found, not caused: 22 research and guide pages scroll sideways at 360 pixels, the same before and after, from wide tables and figures; not fixed here, since it changes their layout.**

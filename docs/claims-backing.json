@@ -37,6 +37,10 @@
    "kind": "decided",
    "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
   },
+  "Tour A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.": {
+   "kind": "decided",
+   "where": "the tour page's heading and opening, the same words as before with entry 444's mono label (Tour) above the title, as every other page's top band has; website/build.py page_tour_index"
+  },
   "Features Everything GroupLab does Every feature, grouped, with where it is explained.": {
    "kind": "decided",
    "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"

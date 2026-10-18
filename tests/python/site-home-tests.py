@@ -86,6 +86,27 @@ def main() -> int:
         check("a header without its GitHub link fails", any("support/index.html" in p and build.GITHUB in p for p in build.header_problems(out)))
         (out / "support" / "index.html").write_text("<html><body><header class=\"site-header\"></header></body></html>", encoding="utf-8")
         check("a page with the old header fails", any("shared header" in p for p in build.header_problems(out)))
+
+        # Entry 444 section 3: a page whose h1 is not the home page's display face fails the build.
+        out = tmp / "headings"
+        shutil.rmtree(out, ignore_errors=True)
+        (out / "support").mkdir(parents=True)
+        (out / "assets" / "css").mkdir(parents=True)
+        site_css = build.served_css(build.CSS)
+        (out / "assets" / "css" / "site.css").write_text(site_css, encoding="utf-8")
+        page = build.shell("/support/", "Support", "A page.", "<section class=\"wrap page-head\"><h1>Title</h1></section>", "Support")
+        (out / "support" / "index.html").write_text(page, encoding="utf-8")
+        check("a page as built has its h1 in the display face", build.heading_problems(out) == [], str(build.heading_problems(out)))
+        (out / "assets" / "css" / "site.css").write_text(site_css + ".page-head h1{font-family:\"IBM Plex Sans\",sans-serif}\n", encoding="utf-8")
+        check("a rule giving the h1 the plain face fails", any(".page-head h1" in p for p in build.heading_problems(out)))
+        (out / "assets" / "css" / "site.css").write_text(site_css + "@media (max-width:860px){.wrap h1{font-weight:600}}\n", encoding="utf-8")
+        check("a rule at one width giving the h1 another weight fails", any(".wrap h1" in p for p in build.heading_problems(out)))
+        (out / "assets" / "css" / "site.css").write_text(site_css + ".odd{font-family:serif}\n", encoding="utf-8")
+        (out / "support" / "index.html").write_text(page.replace("<h1>", '<h1 class="odd">'), encoding="utf-8")
+        check("a class on the h1 that changes its face fails", any(".odd" in p for p in build.heading_problems(out)))
+        (out / "assets" / "css" / "site.css").write_text(site_css.replace(".tp h1,.tp h2{", ".tp h4{"), encoding="utf-8")
+        (out / "support" / "index.html").write_text(page, encoding="utf-8")
+        check("a stylesheet that no longer gives .tp h1 the display face fails", any("no stylesheet" in p for p in build.heading_problems(out)))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -99,6 +120,21 @@ def main() -> int:
           and build.site_footer() in home and build.site_footer() in plain)
     check("a plain page has no orbit and no motion script", "tp-orbits" not in plain and "home.js" not in plain and "tp-motion" not in plain)
     check("a plain page marks where the reader is", '<a href="/support/" aria-current="page" class="nav-more">Support</a>' in plain)
+
+    # Entry 444 sections 1 and 2.
+    check("every page but the home page has the still rings behind its top band", build.PAGE_RINGS in plain and build.PAGE_RINGS not in home)
+    check("the rings do not move", "tp-rings" not in build.HOME_CSS and "animation" not in build.CSS.split(".tp-rings{", 1)[1].split("\n.page-head", 1)[0])
+    check("the bar shows every link from 1280 pixels, with More only from 981 to 1279",
+          "@media (max-width:1279px) and (min-width:981px){" in build.CSS and "max-width:1499px) and (min-width:981px)" not in build.CSS)
+    check("the home page's header is not see-through over the orbit", "backdrop-filter:blur" in build.HOME_CSS and "background:transparent" not in build.HOME_CSS)
+    long = build.shell("/guides/user-guide/", "Guide", "A page.", "<h2>One</h2><p>a</p><h2 id=\"two\">Two</h2>", "Guides")
+    check("a long page has the ruler and a section index with one link a section",
+          "tp-ruler" in long and 'href="#one"' in long and 'href="#two"' in long and 'id="one"' in long and "page.js" in long)
+    short = build.shell("/survey/", "Survey", "A page.", "<h2>One</h2><h2>Two</h2>")
+    check("a short page has neither", "tp-ruler" not in short and "tp-index" not in short and "page.js" not in short)
+    for path in ("/research/how-many-shots/", "/releases/", "/features/", "/support/", "/guides/testing-guide/"):
+        check(f"{path} is a long page", bool(build.LONG_PAGES.match(path)))
+    check("the glossary and the download page are not long pages", not build.LONG_PAGES.match("/guides/glossary/") and not build.LONG_PAGES.match("/download/"))
 
     print(f"{passed} passed, {len(failed)} failed")
     return 1 if failed else 0

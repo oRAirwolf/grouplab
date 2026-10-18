@@ -9,18 +9,19 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 443 (before it: entries 442, 441, 439 and 438).
+**Last rewritten:** 2026-10-18, entry 444 (before it: entries 443, 442, 441 and 439).
 
 ---
 
 ## In flight
 
-- **Entries 441 and 443 (2026-10-18)**: concept B is the home page (the one before is `page_home` at b216ce56) and every page has its
-  look, one header (`site_header`, every link back) and one footer (`site_footer`); `header_problems` and `site-home-tests.py` hold it.
+- **Entries 441, 443 and 444 (2026-10-18)**: concept B is the home page (the one before is `page_home` at b216ce56); every page has
+  its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
+  pages (`LONG_PAGES`) have the ruler and a numbered section index (`page.js`). `heading_problems` and `site-home-tests.py` hold it.
+  Alan's look question (titles in capitals?) is a DESIGN NEEDED line in for-alan.md.
 - **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),
   the shot table's own keys (`OnShotKey`), the caliber line's ".568.96 cm" fixed in `UnitSwitch`; `Entry442Tests`. Phones not in it.
-- **Entries 418 and 421 to 440 are done**: the desktop demo (439, the phone's next); the statistics primer (438); guide markings (437); concept B built (440);
-  guide subsections and links (436); magenta selection (430, question 100); #31 to #34 closed.
+- **Entries 418 and 421 to 440 are done**: the desktop demo (439, the phone's next); the primer (438); guide markings (437); concept B (440).
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests, 31 met; the rest name their material (entry 414).
 - **Waiting on Alan:** requests 83, 70, 72, 74 to 77; 86 later.
@@ -63,7 +64,6 @@ steps; then 33, 9, 16 and 20).
 
 Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (99 answered by entry 430 and archived 2026-10-15):
 - **101** the guided demo's sample: GroupLab makes it, where entry 439 named a shipped file that does not exist (entry 439)
-
 - **100** the selection's magenta is near the light theme's fourth sheet and two bull marks (entry 430)
 - **98** several pictures of one single-page design dropped together: a tab each meanwhile (entry 423)
 - **67** the printer check page as grid style 4 (with Alan)
