@@ -9,19 +9,19 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-17, entry 439 (before it: entries 438, 437, 440 and 436).
+**Last rewritten:** 2026-10-18, entry 441 (before it: entries 439, 438, 437 and 440).
 
 ---
 
 ## In flight
 
+- **Entry 441 (2026-10-18)**: concept B is grouplab.org's home page, indexed and in the sitemap; /testpage/ is one link to /; the
+  page before it is `page_home` at b216ce56. `home_problems` and `tests/python/site-home-tests.py` hold it.
 - **Entry 439 (2026-10-17)**: Walk me through a demo on the desktop: offered once after the first run, in Settings and the menu; 13
   steps as data (`MainWindow.DemoSteps`) walked headless by `Entry439Tests`; GroupLab makes the sample (question 101). **The phone
   tour is the next entry's work.**
-- **Entry 438 (2026-10-17)**: Statistics for shooters, a fourth guide at /guides/statistics-primer/, every number from Core's
-  `PrimerNumbers` (held by `PrimerTests`), its figures stepping through them, a one-page summary in Letter and A4.
-- **Entries 418 and 421 to 437 and 440 are done**: guide markings (437); concept B at /testpage/ for Alan, home page unchanged
-  (440); guide subsections and links (436); magenta selection (430, question 100); #31 to #34 closed.
+- **Entries 418 and 421 to 438 and 440 are done**: the statistics primer (438); guide markings (437); concept B built (440);
+  guide subsections and links (436); magenta selection (430, question 100); #31 to #34 closed.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests, 31 met; the rest name their material (entry 414).
 - **Waiting on Alan:** requests 83, 70, 72, 74 to 77; 86 later.

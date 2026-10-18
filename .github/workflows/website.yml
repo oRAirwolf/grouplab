@@ -90,8 +90,8 @@ jobs:
       - name: The guides' contents list, ids and links hold (entry 436)
         run: python tests/python/site-guide-tests.py
 
-      - name: The concept B page stays out of sight until it is approved (entry 440)
-        run: python tests/python/site-testpage-tests.py
+      - name: The concept B home page is indexed and the preview address points to it (entries 440 and 441)
+        run: python tests/python/site-home-tests.py
 
       - name: Build the site
         # Entry 387: a page a check holds back keeps the copy grouplab.org serves now; every held page is listed in the summary.

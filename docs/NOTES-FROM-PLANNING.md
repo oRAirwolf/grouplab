@@ -25,6 +25,24 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-18, entry 441: concept B ("Orbit") becomes the grouplab.org home page
+
+**Status: actioned 2026-10-18; every section done. No look question came up, so nothing went to for-alan.md as DESIGN NEEDED.**
+
+From the planning session, 2026-10-18 04:15 UTC. Alan, 2026-10-18: "Yes on the new home page design." This approves the page entry 440
+built at /testpage/.
+
+1. Make concept B the home page at grouplab.org/. Keep everything entry 440 promised: pause motion, reduced motion and scripts off all
+   leave it complete and still.
+2. Before replacing it, keep the current home page restorable (it stays in git history; name the last commit that has it in the entry's
+   commit message so it can be brought back in one step).
+3. Remove the noindex, add it to the sitemap, and turn entry 440's build check around: the check should now make sure the home page is
+   indexed and in the sitemap. /testpage/ should send visitors to / (or be removed) so there are not two copies of the home page.
+4. Anything on the old home page that B leaves out and that a visitor still needs (download links, support, Discord, the guides, the
+   honest limits) must stay reachable from B or from the header and footer.
+5. In the same change: README, screenshots of the site, and anything else that describes or pictures the home page (entry 267 rule).
+6. Nothing here needs Alan. If a real look question comes up, post it as DESIGN NEEDED in for-alan.md and build the rest.
+
 ## 2026-10-17, entry 439: "Walk me through a demo", a guided tour of GroupLab on a sample target
 
 **Status: actioned 2026-10-17; sections 1 to 4 and 6 done for the desktop. Section 5, the phone tour, is the next entry's work (the desktop tour filled this one). The sample differs from the entry: GroupLab makes it (question 101).**

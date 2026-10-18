@@ -204,13 +204,6 @@ def build_images() -> None:
     icon = Image.open(need(ASSETS / "icons" / "linux" / "grouplab-256.png")).convert("RGBA")
     icon.resize((180, 180), Image.LANCZOS).save(OUT / "apple-touch-icon.png", optimize=True)
 
-    # Entry 287: the README's product picture, both themes, as WebP for the home page's top.
-    for theme in ("dark", "light"):
-        img = Image.open(need(REPO / "docs" / "figures" / "readme" / f"product-{theme}.png")).convert("RGB")
-        dst = OUT / "assets" / "img" / f"product-{theme}.webp"
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        img.save(dst, "WEBP", quality=90, method=6)
-
     # Every screen in both themes at 1400 by 900, as WebP. Entry 300 section 5: lossless, so nothing is softened, which on these flat
     # screens is also smaller than quality 90 was: about 73 KB a screen against 132 KB, measured 2026-09-30 on twelve of them.
     for png in sorted(SCREENS.glob("*-1400x900.png")):
@@ -240,7 +233,7 @@ def build_images() -> None:
 
     # Entry 440 section 3.1: the test page's orbit and cards carry smaller copies than the 1400 pixel screens, sized to how large they are
     # shown, so the page weighs less than the home page it may replace.
-    for name, width, folder in [(n, 360, "small") for n in sorted(set(TESTPAGE_INNER + TESTPAGE_OUTER))] + [(c[3], 560, "card") for c in TESTPAGE_CARDS]:
+    for name, width, folder in [(n, 360, "small") for n in sorted(set(HOME_INNER + HOME_OUTER))] + [(c[3], 560, "card") for c in HOME_CARDS]:
         for theme in ("dark", "light"):
             src = PHONE_SCREENS / f"{name}-{theme}.png" if name.startswith("fold-") else SCREENS / f"{name}-{theme}-1400x900.png"
             img = Image.open(need(src)).convert("RGB")
@@ -591,33 +584,6 @@ def shell(path: str, title: str, description: str, body: str, active: str = "", 
 """
 
 
-# Entry 287: the home page's top picture is the README's product picture, from the same source, with the README's own alt text and its three
-# numbered lines, so a regenerated picture or a reworded line changes both.
-README_FILE = REPO / "README.md"
-
-
-def product_alt() -> str:
-    m = re.search(r'<img src="docs/figures/readme/product-light\.png" alt="([^"]+)"', README_FILE.read_text(encoding="utf-8"))
-    if m is None:
-        raise SystemExit("README.md: the product picture's img and alt text were not found")
-    return html.unescape(m.group(1))
-
-
-def product_steps() -> list[str]:
-    text = README_FILE.read_text(encoding="utf-8")
-    start = text.index("docs/figures/readme/product-light.png")
-    steps = re.findall(r"^\d\. (.+)$", text[start:start + 2000], re.M)[:3]
-    if len(steps) != 3:
-        raise SystemExit("README.md: the three numbered lines under the product picture were not found")
-    return steps
-
-
-def product_picture() -> str:
-    alt = esc(product_alt())
-    return (f'<img class="shot only-dark" src="/assets/img/product-dark.webp" alt="{alt}" width="1600" height="900" fetchpriority="high" decoding="async">'
-            f'<img class="shot only-light" src="/assets/img/product-light.webp" alt="{alt}" width="1600" height="900" loading="lazy" decoding="async">')
-
-
 def screen(name: str, alt: str, eager: bool = False, cls: str = "shot") -> str:
     """A screenshot in both themes; CSS shows the one that matches the page."""
     base = name.replace("-dark", "").replace("-light", "")
@@ -683,112 +649,6 @@ def btn(label: str, href: str, primary: bool = False, sub: str | None = None, bi
 
 
 # ---------------------------------------------------------------- pages
-
-
-def page_home() -> str:
-    body = f"""
-<section class="wrap hero">
-<div class="hero-text">
-<p class="eyebrow">Free &#183; open source &#183; GPL-3.0 &#183; test builds for Windows, macOS, Linux and Android, and an iPhone and iPad public beta</p>
-<h1 class="display">Measure how accurately your rifle shoots, and how little a small group can tell you.</h1>
-<p class="lead">Photograph any target, and GroupLab measures the group and tells you honestly what its size is worth. Print a GroupLab sheet, and it does all of it by itself. Every figure comes with the range it could really be, and the software says plainly when the evidence does not support a conclusion.</p>
-<div class="actions">
-{btn("Download for Windows", NIGHTLY + "grouplab-setup-win-x64.exe", True, "Latest test build · installer · no admin rights", True)}
-{btn("View the source on GitHub", GITHUB, big=True)}
-</div>
-<p class="fine mono">Unsigned and rebuilt after every change that passes its tests. It may be broken. <a href="/download/">Other downloads and what to expect</a></p>
-</div>
-<figure class="hero-shot">
-{product_picture()}
-<figcaption><ol class="hero-steps">{"".join(f"<li>{esc(s)}</li>" for s in product_steps())}</ol></figcaption>
-</figure>
-</section>
-
-{spotlight_section("New in GroupLab")}
-
-<section class="wrap section two-col">
-<div class="stack">
-<p class="eyebrow">Your own targets</p>
-<h2>Any target you already shoot.</h2>
-<p>Photograph or scan whatever you shot on. Set the scale once, from a length you know or the four corners of the paper, and mark the holes by hand: the same statistics run, with the same honest ranges. Several bulls on one sheet can be placed and kept as a template for the next sheet of that target. Marking by hand is on the computer and, under a crosshair, on the phone.</p>
-<p>Finding the holes by itself on any target is the goal: on the computer, Find holes (Experimental) already proposes them for you to check. On a GroupLab sheet every hole is found by itself, which makes the sheet the fast lane, not a requirement.</p>
-</div>
-<figure class="fig">{screen("marking-other", "A plain sample target with four ring bulls, its scale drawn across one ring and each bull's shots marked by hand in its own color")}<figcaption><strong>A sample, marked by hand</strong><span>A plain target GroupLab drew for this picture, with no markers or codes: the scale set from a ring's known width, then the bulls and the shots placed by hand.</span></figcaption></figure>
-</section>
-
-<section class="wrap section two-col">
-<div class="stack">
-<p class="eyebrow">The problem</p>
-<h2>Five shots measured three quarters. What does the rifle actually shoot?</h2>
-<p>A shooter fires five rounds, measures the two widest holes, changes one thing, fires five more and concludes the change worked. It almost certainly did not. Two loads that differ by 20 percent on five-shot groups cannot be told apart.</p>
-<p>GroupLab measures far more carefully, and then tells you what the number is worth. It also aims to help shooters think in mean radius and confidence rather than in the extreme spread of a few shots.</p>
-<p><a href="/guides/statistics-primer/">Statistics for shooters, from the beginning</a> explains each of these ideas in plain words, with what it means at the range.</p>
-</div>
-<div class="panel figure-panel">
-<div class="figure-top">
-<p class="mono dim small">From five shots, the true spread lies between</p>
-<p class="mono big-figure">0.68 <span class="faint">and</span> 1.92 &#215;</p>
-<p class="mono dim small">what was measured, a factor of 2.8</p>
-</div>
-<dl class="figure-list">
-<div><dt class="mono">&lt; 5</dt><dd>Refuses to quote a group size at all, and says why.</dd></div>
-<div><dt class="mono">5 to 20</dt><dd>Prints each figure with its interval's real coverage, not a comfortable 95 percent.</dd></div>
-<div><dt class="mono">compare</dt><dd>Tells you when two loads cannot be separated, and how many rounds it would take to know.</dd></div>
-</dl>
-</div>
-</section>
-
-<section class="wrap section">
-<div class="stack narrow">
-<p class="eyebrow">The fast lane: a GroupLab sheet</p>
-<h2>One shot per bull, twenty-five bulls, one honest group.</h2>
-<p>Each hole is measured against its own aiming point, so holes never overlap, and the offsets are pooled into one group far larger than you could shoot into a single bullseye.</p>
-</div>
-<ol class="steps">
-<li class="panel"><span class="mono num">01</span><h3>Print a GroupLab sheet</h3><p>{count_words('sheets', True)} built-in sheets, printed at actual size. Registration markers and QR codes carry the sheet's full definition.</p></li>
-<li class="panel"><span class="mono num">02</span><h3>Shoot it</h3><p>One shot per bull, in order. Write your load in the block at the bottom, or print it filled in.</p></li>
-<li class="panel"><span class="mono num">03</span><h3>Scan or photograph it</h3><p>A flat 600 dpi scan is best. A photograph works too, even with the sheet still stapled to the board.</p></li>
-<li class="panel"><span class="mono num">04</span><h3>Read the analysis</h3><p>Mean radius, extreme spread, CEP and the zero correction in your scope's unit, mil or MOA, each with its interval, and the reasoning one click away.</p></li>
-</ol>
-</section>
-
-<section class="wrap section">
-<div class="stack">
-<p class="eyebrow">The application</p>
-<h2>It shows its work.</h2>
-<p>Every figure has its reasoning one click away, and anything GroupLab is unsure of is raised for you to settle rather than guessed at quietly.</p>
-</div>
-<div class="grid-2">
-<div class="panel status">
-<h3>Marking and review</h3>
-<p>Every hole is numbered to its bull. Anything the software is unsure of is raised for you to settle, with the keys to do it, and every figure's reasoning is one click away. The tour shows every screen.</p>
-<a href="/tour/marking/">See the marking screen explained</a>
-</div>
-<div class="panel status">
-<h3>What it is today</h3>
-<p>Test builds for Windows, macOS, Linux and Android, an iPhone and iPad public beta through TestFlight, and a Windows copy in the Microsoft Store that follows the nightlies. Printing, marking, detection, the statistics, session records and reports all work. Much of it is built but not yet proven against a large body of real targets, which is why the project asks for them.</p>
-<p class="mono dim small">Not built yet</p>
-<p class="text">Hole detection on plain paper &#183; synchronization between devices</p>
-<a href="{GITHUB}#planned">The full status, phase by phase, on GitHub</a>
-</div>
-</div>
-<div class="note note-teal"><span class="mono">Every screen</span><p>The <a href="/tour/">tour</a> has a page for each of the {count_words('tour-screens')} screens: what it is for, what you are looking at, and what you would do there. It is the quickest way to see whether GroupLab suits you before you download it.</p></div>
-</section>
-
-<section class="wrap section last">
-<div class="callout">
-<div class="stack">
-<p class="eyebrow amber">Help prove it</p>
-<h2>Shoot a target for GroupLab.</h2>
-<p class="text">GroupLab needs real targets, shot by real people with real rifles, to prove it measures correctly. Print a sheet, shoot it, photograph it before you take it down: about ten minutes on top of the shooting. {"Sending them takes no account, no email address and no follow up." if limits().get("open") else "The page for sending them is built and waiting on one install on the server; keep the files meanwhile."}</p>
-</div>
-<div class="actions col">
-{btn("Get the donor pack", "/shoot-a-target/", True, "One sheet of each, with instructions · PDF")}
-</div>
-</div>
-</section>
-"""
-    return shell("/", "", "GroupLab measures how accurately a rifle shoots from a photograph or scan of a target, and is honest about how little a small group tells you. Free and open source.", body)
 
 
 # NOTES-FROM-PLANNING.md entry 147 section 3.2: the platform statement appears on this page, in README.md and on every
@@ -1907,20 +1767,20 @@ def page_what_can_be_measured() -> str:
                  body, "Tour")
 
 
-# ---------------------------------------------------------------- the new home page, concept B, at /testpage/
+# ---------------------------------------------------------------- the home page, concept B ("Orbit")
 
-# Entry 440: Alan chose concept B ("Orbit") from the planning session's canvas, and asked to see it built before it replaces the home page:
-# "show me the final result but dont publish it to the home page until I approve it". So it lives at /testpage/, kept out of sight
-# (noindex, not in the sitemap, linked from nowhere; testpage_problems holds all four), and the home page at / is unchanged.
+# Entry 440 built concept B at /testpage/ for Alan to approve, and entry 441 made it the home page (Alan, 2026-10-18: "Yes on the new
+# home page design"). The page before it is in git history at b216ce56, page_home in website/build.py. /testpage/ is now a page with one
+# link to /, so there are never two copies of the home page; home_problems holds the home page indexed and in the sitemap.
 TESTPAGE_PATH = "/testpage/"
 # The orbit's screens, as drawn: the inner ring, then the outer. A name with "fold-" is a phone screen.
-TESTPAGE_INNER = ["analysis-open", "compare", "marking", "ballistics-hit"]
-TESTPAGE_OUTER = ["groups", "fold-result", "sessions", "analysis-open", "fold-capture", "marking"]
-TESTPAGE_TAGS = ["Finds the holes", "Mean radius", "CEP 50 and 90", "Every figure with its range", "Load comparison",
+HOME_INNER = ["analysis-open", "compare", "marking", "ballistics-hit"]
+HOME_OUTER = ["groups", "fold-result", "sessions", "analysis-open", "fold-capture", "marking"]
+HOME_TAGS = ["Finds the holes", "Mean radius", "CEP 50 and 90", "Every figure with its range", "Load comparison",
                  "Zero correction in clicks", "Dope table", "Hit probability", "Phone capture", "Store-bought targets", "Pooled sets",
                  "One-page report"]
 # (label, number, feature key, picture, title, words), the feature key being the Features page entry the card opens.
-TESTPAGE_CARDS = [
+HOME_CARDS = [
     ("Marking", "01", "every-hole", "marking", "Finds the holes",
      "It reads the sheet, finds each hole and gives it to its bull. You check only the few it is unsure of."),
     ("Analysis", "02", "six-figures", "analysis-open", "Every figure with its range",
@@ -1934,39 +1794,40 @@ TESTPAGE_CARDS = [
     ("Sessions", "06", "one-page-report", "sessions", "Sessions and a one-page report",
      "Every result kept by load, date and time, and one dated page to print or share."),
 ]
-TESTPAGE_POINTS = [
+HOME_POINTS = [
     ("A", "Free and open source", "GPL-3.0. Every line of how a figure is worked out can be read, checked and built yourself."),
     ("B", "The range, not just the number", "A figure without its range invites a story. GroupLab shows how big each one could really be."),
     ("C", "On what you already own", "Windows, macOS, Linux and Android, with iPhone and iPad in a public beta."),
 ]
-TESTPAGE_SECTIONS = [("measure", "Measure"), ("honest", "Honest"), ("phone", "Phone"), ("start", "Get started")]
+HOME_DESCRIPTION = "Photograph any target. GroupLab measures the group and gives every figure with the range it could really be."
+HOME_SECTIONS = [("measure", "Measure"), ("honest", "Honest"), ("phone", "Phone"), ("start", "Get started")]
 
-TESTPAGE_MARK = ('<svg class="tp-logo" width="26" height="26" viewBox="0 0 100 100" aria-hidden="true">'
+HOME_MARK = ('<svg class="tp-logo" width="26" height="26" viewBox="0 0 100 100" aria-hidden="true">'
                  '<circle cx="50" cy="50" r="40" class="tp-ring-line"/><circle cx="50" cy="50" r="21" class="tp-ring-line"/>'
                  '<circle cx="61.94" cy="32.75" r="11" class="tp-hit"/><circle cx="52.75" cy="41.94" r="11" class="tp-hit"/>'
                  '<circle cx="65.31" cy="45.31" r="11" class="tp-hit"/></svg>')
 ICON_PAUSE = '<svg class="ico tp-motion-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 5v14M16 5v14"/></svg>'
 
 
-def testpage_small(name: str, theme: str) -> str:
+def home_small(name: str, theme: str) -> str:
     """The orbit's copy of a screen, 360 pixels across, made by build_images (entry 440 section 3.1)."""
     return f"/assets/screens/small/{name}-{theme}.webp"
 
 
-def testpage_slots(names: list[str], radius: int, w: int, h: int, start: float) -> str:
+def home_slots(names: list[str], radius: int, w: int, h: int, start: float) -> str:
     """Pictures spaced round a ring of the given radius, as the canvas placed them; each turns back as its ring turns, so it stays upright."""
     out = []
     for i, name in enumerate(names):
         a = start + i * 2 * math.pi / len(names)
         left, top = radius + radius * math.cos(a) - w / 2, radius + radius * math.sin(a) - h / 2
-        imgs = "".join(f'<img class="only-{t}" src="{testpage_small(name, t)}" alt="" width="{w}" height="{h}" loading="lazy" decoding="async">'
+        imgs = "".join(f'<img class="only-{t}" src="{home_small(name, t)}" alt="" width="{w}" height="{h}" loading="lazy" decoding="async">'
                        for t in ("dark", "light"))
         out.append(f'<div class="tp-slot" style="left:{left:.1f}px;top:{top:.1f}px;width:{w}px;height:{h}px">'
                    f'<div class="tp-up"><div class="tp-shot">{imgs}</div></div></div>')
     return "".join(out)
 
 
-def testpage_phone(name: str, alt: str, cls: str = "") -> str:
+def home_phone(name: str, alt: str, cls: str = "") -> str:
     """A phone screen in its dark frame; a name with a theme is that picture alone, as drawn, and one without is the theme's own."""
     files = [name] if name.endswith(("-dark", "-light")) else phone_themes(name)
     w, h = Image.open(need(PHONE_SCREENS / f"{files[-1]}.png")).size
@@ -1975,34 +1836,34 @@ def testpage_phone(name: str, alt: str, cls: str = "") -> str:
         f'alt="{esc(alt)}" width="{w // 2}" height="{h // 2}" loading="lazy" decoding="async">' for stem in files)
 
 
-def testpage_card_picture(name: str, alt: str) -> str:
+def home_card_picture(name: str, alt: str) -> str:
     """A card's screen in both themes, from the 560 pixel copies build_images makes; only the theme shown is fetched."""
     return "".join(f'<img class="tp-card-img only-{t}" src="/assets/screens/card/{name}-{t}.webp" alt="{esc(alt)}" width="560" height="360" '
                    f'loading="lazy" decoding="async">' for t in ("dark", "light"))
 
 
-def page_testpage() -> str:
+def page_home() -> str:
     year = datetime.date.today().year
     bar = "".join(f'<a href="{href}">{esc(label.upper())}</a>' for label, href in nav() if label not in NAV_MORE)
     menu = "".join(f'<a href="{href}">{esc(label)}</a>' for label, href in nav()) + f'<a href="{GITHUB}">GitHub</a>'
     ticks = "".join(f'<span class="tp-tick-n mono" style="top:{i * 200 + 12}px">{i}</span>' for i in range(12))
-    tags = "".join(f'<span><span class="tp-dot">&#183;</span> {esc(t.upper())}</span>' for t in TESTPAGE_TAGS)
+    tags = "".join(f'<span><span class="tp-dot">&#183;</span> {esc(t.upper())}</span>' for t in HOME_TAGS)
     cards = "".join(
         f'<a class="tp-card tp-ease" href="{FEATURES_PATH}#{key}"><div class="tp-strip-label mono" data-terms="off"><span>{esc(tag.upper())}</span><span>{n}</span></div>'
-        f'<div class="tp-card-pic">{testpage_card_picture(pic, title)}</div>'
+        f'<div class="tp-card-pic">{home_card_picture(pic, title)}</div>'
         f'<div class="tp-card-text"><h3>{esc(title)}</h3><p>{esc(words)}</p></div></a>'
-        for tag, n, key, pic, title, words in TESTPAGE_CARDS)
+        for tag, n, key, pic, title, words in HOME_CARDS)
     points = "".join(f'<div class="tp-point tp-ease"><p class="tp-letter mono">{l}</p><h3>{esc(t)}</h3><p>{esc(words)}</p></div>'
-                     for l, t, words in TESTPAGE_POINTS)
-    index = "".join(f'<a href="#{key}">{esc(label.upper())}</a>' for key, label in TESTPAGE_SECTIONS)
-    phones = (testpage_phone("fold-capture", "Capture on the phone", "tp-low") + testpage_phone("fold-result-dark", "A result on the phone")
-              + testpage_phone("fold-result-light", "A result in the light theme", "tp-low tp-third"))
+                     for l, t, words in HOME_POINTS)
+    index = "".join(f'<a href="#{key}">{esc(label.upper())}</a>' for key, label in HOME_SECTIONS)
+    phones = (home_phone("fold-capture", "Capture on the phone", "tp-low") + home_phone("fold-result-dark", "A result on the phone")
+              + home_phone("fold-result-light", "A result in the light theme", "tp-low tp-third"))
     main = f"""
 <section class="tp-hero" id="top">
 <div class="tp-orbits" aria-hidden="true">
 <div class="tp-circle tp-core"></div>
-<div class="tp-ring tp-inner">{testpage_slots(TESTPAGE_INNER, 330, 210, 135, -0.5)}</div>
-<div class="tp-ring tp-outer">{testpage_slots(TESTPAGE_OUTER, 560, 230, 148, 0.2)}</div>
+<div class="tp-ring tp-inner">{home_slots(HOME_INNER, 330, 210, 135, -0.5)}</div>
+<div class="tp-ring tp-outer">{home_slots(HOME_OUTER, 560, 230, 148, 0.2)}</div>
 <div class="tp-circle tp-dashed"></div>
 </div>
 <div class="tp-hero-text">
@@ -2037,6 +1898,9 @@ def page_testpage() -> str:
 <div class="tp-strip-label mono tp-head" data-terms="off"><span>02 / HONEST</span><span class="tp-wide">FREE AND OPEN SOURCE</span></div>
 <div class="tp-intro tp-ease"><h2>No bragging numbers.</h2></div>
 <div class="tp-points">{points}</div>
+<p class="tp-today">Today GroupLab is test builds, unsigned and rebuilt after every change that passes its tests, so one may be broken.
+Not built yet: hole detection on plain paper, and synchronization between devices. <a href="/download/">What to expect</a>, and
+<a href="{GITHUB}#planned">the full status on GitHub</a>.</p>
 </section>
 
 <section class="tp-section" id="phone">
@@ -2062,26 +1926,34 @@ def page_testpage() -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GroupLab</title>
-<meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Photograph any target. GroupLab measures the group and gives every figure with the range it could really be.">
+<meta name="description" content="{esc(HOME_DESCRIPTION)}">
+<link rel="canonical" href="{SITE_URL}/">
 <meta name="grouplab-site-build" content="{COMMIT}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GroupLab">
+<meta property="og:title" content="GroupLab">
+<meta property="og:description" content="{esc(HOME_DESCRIPTION)}">
+<meta property="og:url" content="{SITE_URL}/">
+<meta property="og:image" content="{SITE_URL}/assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#131417" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f4f3f0" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/plex-sans-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">
-<link rel="stylesheet" href="/assets/css/testpage.css">
+<link rel="stylesheet" href="/assets/css/home.css">
 <script src="/assets/js/theme.js"></script>
 <script src="/assets/js/terms.js" defer></script>
-<script src="/assets/js/testpage.js" defer></script>
+<script src="/assets/js/home.js" defer></script>
 </head>
 <body class="tp">
 <a class="skip" href="#main">Skip to content</a>
 <div class="tp-ruler" aria-hidden="true"><span class="tp-ruler-mark"></span>{ticks}</div>
 <header class="tp-header">
-<a class="tp-brand cond" href="/" aria-label="GroupLab home">{TESTPAGE_MARK}<span class="tp-word">GROUP<span class="tp-amber">LAB</span></span></a>
+<a class="tp-brand cond" href="/" aria-label="GroupLab home">{HOME_MARK}<span class="tp-word">GROUP<span class="tp-amber">LAB</span></span></a>
 <nav class="tp-nav mono" aria-label="Main">{bar}</nav>
 <button type="button" class="tp-motion tp-button mono" aria-pressed="false" aria-label="Pause motion">{ICON_PAUSE}<span class="tp-motion-word">PAUSE MOTION</span></button>
 <button type="button" class="theme-toggle tp-button tp-square" aria-label="Switch between dark and light">{ICON_THEME}</button>
@@ -2093,30 +1965,52 @@ def page_testpage() -> str:
 </header>
 <main id="main">{explain(main)}</main>
 <footer class="tp-footer"><span>GroupLab is free and open source under the GPL-3.0.</span>
-<nav class="tp-footer-links" aria-label="Footer"><a href="/support/">Support</a><a href="/releases/">Release notes</a><a href="{GITHUB}">GitHub</a><a href="{DISCORD}">Discord</a></nav>
+<nav class="tp-footer-links" aria-label="Footer"><a href="/guides/">Guides</a><a href="/shoot-a-target/">Shoot a target</a><a href="/support/">Support</a><a href="/releases/">Release notes</a><a href="{GITHUB}">GitHub</a><a href="{DISCORD}">Discord</a><a href="/survey/">Hardware survey</a></nav>
 <span class="tp-copy">&#169; {year} the GroupLab contributors.</span></footer>
 </body>
 </html>
 """
 
 
-def testpage_problems(out: Path = OUT) -> list[str]:
-    """Entry 440 section 1.2: the test page stays out of sight until Alan approves it: noindex, not in the sitemap, in no navigation and
-    linked from no other page. A whole-site check: a page meant to be hidden that is found is not something to publish."""
+def page_testpage_moved() -> str:
+    """Entry 441 section 3: the address entry 440 used for the preview, now a page with one link to the home page (no meta refresh, which
+    entry 151 bans), so nobody holding the old link meets a second copy of the home page."""
+    body = f"""
+<section class="wrap page-head stack last">
+<p class="eyebrow">GroupLab</p>
+<h1>This page is the home page now.</h1>
+<p class="lead">The design previewed here became grouplab.org's home page on 18 October 2026.</p>
+<div class="actions">{btn("Go to the home page", "/", True)}</div>
+</section>
+"""
+    return shell(TESTPAGE_PATH, "Moved", "The design previewed here is grouplab.org's home page now.", body)
+
+
+def home_problems(out: Path = OUT) -> list[str]:
+    """Entry 441 section 3, entry 440's check turned around: the home page is indexed and in the sitemap, the preview's address answers
+    with a link to it rather than a copy, and nothing in the navigation still names the preview. A whole-site check."""
     found = []
-    page = out / "testpage" / "index.html"
-    if not page.exists():
-        return ["testpage/index.html: the page was not built"]
-    if '<meta name="robots" content="noindex, nofollow">' not in page.read_text(encoding="utf-8"):
-        found.append("testpage/index.html: it has no noindex, nofollow robots tag")
+    home = out / "index.html"
+    if not home.exists():
+        return ["index.html: the home page was not built"]
+    text = home.read_text(encoding="utf-8")
+    if re.search(r'<meta name="robots"[^>]*noindex', text):
+        found.append("index.html: it asks not to be indexed")
+    if "tp-hero" not in text:
+        found.append("index.html: it is not the concept B home page")
     sitemap = out / "sitemap.xml"
-    if sitemap.exists() and TESTPAGE_PATH in sitemap.read_text(encoding="utf-8"):
-        found.append("sitemap.xml: it lists the test page")
+    listed = sitemap.read_text(encoding="utf-8") if sitemap.exists() else ""
+    if f"<loc>{SITE_URL}/</loc>" not in listed:
+        found.append("sitemap.xml: it does not list the home page")
+    if TESTPAGE_PATH in listed:
+        found.append("sitemap.xml: it lists the preview's old address")
+    old = out / "testpage" / "index.html"
+    if old.exists():
+        moved = old.read_text(encoding="utf-8")
+        if "tp-hero" in moved or 'href="/"' not in moved:
+            found.append("testpage/index.html: it is a second copy of the home page, not a link to it")
     if any(href == TESTPAGE_PATH for _, href in NAV + nav()):
-        found.append("website/build.py: the navigation names the test page")
-    for other in sorted(out.rglob("*.html")):
-        if other != page and re.search(r'href="(?:https://grouplab\.org)?/testpage/?["#?]', other.read_text(encoding="utf-8", errors="replace")):
-            found.append(f"{other.relative_to(out).as_posix()}: it links to the test page")
+        found.append("website/build.py: the navigation names the preview's old address")
     return found
 
 
@@ -3583,8 +3477,8 @@ GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list
 })();
 """
 
-TESTPAGE_CSS = r"""
-/* Entry 440: the concept B home page, at /testpage/ until Alan approves it. The site's tokens and fonts; the layout is the canvas's. */
+HOME_CSS = r"""
+/* Entry 440: the concept B home page, the home page since entry 441. The site's tokens and fonts; the layout is the canvas's. */
 .tp{--ring:#6b727b;--rule:46px;overflow-x:hidden}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .tp{--ring:#8f8b83}}
 :root[data-theme="light"] .tp{--ring:#8f8b83}
@@ -3701,6 +3595,7 @@ html:not(.tp-js) .tp-tags,.tp-still .tp-tags{flex-wrap:wrap;row-gap:8px;padding-
 .tp-close{background:var(--sunk);padding:110px 40px;text-align:center}
 .tp-close h2{margin:0 0 26px;font-size:96px;line-height:.95}
 .tp .tp-free{margin:18px 0 0;font-size:12px;color:var(--faint)}
+.tp .tp-today{margin:0;padding:28px 40px 0;max-width:860px;font-size:15px;line-height:1.6;color:var(--faint)}
 .tp-footer{border-top:1px solid var(--line);padding:36px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:14px;color:var(--faint)}
 .tp-footer-links{display:flex;gap:20px;flex-wrap:wrap}
 .tp-copy{flex-basis:100%;font-size:13px}
@@ -3758,6 +3653,7 @@ html.tp-js:not(.tp-still) .tp-ease:not(.tp-in){opacity:0;transform:translateY(18
 .tp-close h2{font-size:52px;margin-bottom:20px}
 .tp-close .tp-btn{width:100%;padding:15px}
 .tp-footer{padding:26px 16px}
+.tp .tp-today{padding:20px 16px 0}
 }
 @media (prefers-reduced-motion: reduce){
 .tp-card-img,.tp-header{transition:none}
@@ -3765,7 +3661,7 @@ html.tp-js .tp-ease{transition:none}
 }
 """
 
-TESTPAGE_JS = """// NOTES-FROM-PLANNING.md entry 440: the concept B home page's motion. Without this script the page is complete and still: nothing turns,
+HOME_JS = """// NOTES-FROM-PLANNING.md entry 440: the concept B home page's motion. Without this script the page is complete and still: nothing turns,
 // the strip of features wraps instead of scrolling, and every section is shown. Pause motion, or prefers-reduced-motion, gives the same.
 (() => {
   const root = document.documentElement;
@@ -4752,12 +4648,12 @@ def main() -> None:
     write("assets/js/terms.js", TERMS_JS)
     write("assets/js/guide-toc.js", GUIDE_TOC_JS)
     write("assets/js/primer.js", PRIMER_JS)
-    write("assets/css/testpage.css", TESTPAGE_CSS.strip() + "\n")
-    write("assets/js/testpage.js", TESTPAGE_JS)
+    write("assets/css/home.css", HOME_CSS.strip() + "\n")
+    write("assets/js/home.js", HOME_JS)
 
     write("index.html", page_home())
     # Entry 440: concept B, out of sight until Alan approves it; the home page above is unchanged.
-    write("testpage/index.html", page_testpage())
+    write("testpage/index.html", page_testpage_moved())
     write("download/index.html", page_download())
     write("shoot-a-target/index.html", page_shoot())
     # Entry 129: the page and the receiver go up together or not at all. A form posting to a path the server does
@@ -4835,7 +4731,7 @@ def main() -> None:
     # (their last published copy is kept where it can be fetched); a picture that is only old publishes and is reported.
     problems += figure_problems + limit_problems()
     problems += link_problems()
-    problems += testpage_problems()
+    problems += home_problems()
     problems += raw_table_problems()
     problems += php_problems()
     problems += send_problems()

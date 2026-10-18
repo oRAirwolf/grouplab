@@ -7055,7 +7055,7 @@
   },
   "GroupLab Skip to content 0 1 2 3 4 5 6 7 8 9 10 11 GROUP LAB DOWNLOAD TOUR FEATURES SEND A TARGET GUIDES RESEARCH PAUSE MOTION DOWNLOAD Download Tour Features Send a target Guides Research Community Release notes Support GitHub GROUP LAB Know what your rifle really shoots.": {
    "kind": "decided",
-   "where": "the test page's header, ruler and navigation, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+   "where": "the test page's header, ruler and navigation, website/build.py page_home (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
   },
   "GroupLab measures the group and gives every figure with the range it could really be.": {
    "kind": "code",
@@ -7087,7 +7087,7 @@
   },
   "02 / HONEST FREE AND OPEN SOURCE No bragging numbers.": {
    "kind": "decided",
-   "where": "the section's heading, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+   "where": "the section's heading, website/build.py page_home (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
   },
   "A Free and open source GPL-3.0.": {
    "kind": "code",
@@ -7101,9 +7101,17 @@
    "kind": "decided",
    "where": "the section's heading; the phone applications are in docs/PLATFORM-SUPPORT.md (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
   },
-  "Support Release notes GitHub Discord &#169; 2026 the GroupLab contributors.": {
+  "Today GroupLab is test builds, unsigned and rebuilt after every change that passes its tests, so one may be broken.": {
    "kind": "decided",
-   "where": "the test page's footer, website/build.py page_testpage (entry 440, Alan's choice of concept B for the home page, 2026-10-17)"
+   "where": "the home page's limits, carried over from the page before it (entry 441 section 4); the nightly workflow .github/workflows/nightly.yml builds on every change that passes, and docs/RELEASE-PLAN.md says no build is signed or stable yet"
+  },
+  "The design previewed here became grouplab.org's home page on 18 October 2026.": {
+   "kind": "decided",
+   "where": "entry 441, Alan, 2026-10-18: \"Yes on the new home page design\"; website/build.py page_testpage_moved"
+  },
+  "Guides Shoot a target Support Release notes GitHub Discord Hardware survey &#169; 2026 the GroupLab contributors.": {
+   "kind": "decided",
+   "where": "the home page's footer, website/build.py page_home (entries 440 and 441, Alan's choice of concept B for the home page, 2026-10-17)"
   },
   "The first question GroupLab asks: Mil, MOA, Both Each rifle keeps its own A rifle's record has its scope unit and one click : 0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA, or any other value you type.": {
    "kind": "code",

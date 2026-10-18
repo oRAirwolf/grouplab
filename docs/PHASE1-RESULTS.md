@@ -1286,6 +1286,29 @@ site build pass.
    and steps for their own screens (Capture with the sample chosen from the app's files, the result, Shots, Share a picture, Sessions,
    Ballistics, Targets), and their own headless walk.
 
+## Entry 441: concept B ("Orbit") is the grouplab.org home page (2026-10-18)
+
+1. **The home page is concept B.** `page_home` in `website/build.py` is entry 440's page, renamed from `page_testpage`, with its
+   stylesheet and script now `assets/css/home.css` and `assets/js/home.js`. Nothing about its motion changed, so pause motion, reduced
+   motion and scripts off still leave it complete and still.
+2. **The page before it is restorable in one step**: it is `page_home` in `website/build.py` at b216ce56, named in the commit message
+   and in the comment above the new page. The helpers only it used (the README's product picture, its alt text and its three lines,
+   and the two product WebP files) went with it; they are in the same commit.
+3. **Indexed and in the sitemap.** The noindex is gone, and the page now carries a canonical address and the same sharing tags as every
+   other page. `/` was already in the sitemap. Entry 440's check is turned around as `home_problems`: the home page is concept B, does
+   not ask to stay out of search, is in the sitemap; the old preview address is not in the sitemap and is a page with one link to `/`
+   (no meta refresh, which entry 151 bans), never a second copy; the navigation does not name it. `tests/python/site-home-tests.py`
+   (renamed from `site-testpage-tests.py`) holds it with 22 checks, run by website.yml before the build.
+4. **What the page before carried and a visitor still needs**: downloads, the guides, Shoot a target and Research are in the header;
+   support, release notes, GitHub and Discord were in the footer, which now adds the guides, Shoot a target and the hardware survey
+   (the survey was reachable only from the old footer). The honest limits are one paragraph under the three points: test builds,
+   unsigned and rebuilt after every change that passes, so one may be broken; not built yet, hole detection on plain paper and
+   synchronization; links to the download page's expectations and the full status. Not carried over: the "New in GroupLab"
+   spotlight (the Features page has its own, "Newest"), and the tour and statistics primer paragraphs (the header reaches both).
+5. **Everything that describes the home page**: the README describes no part of it and pictures none; no screenshot of the site
+   exists in `docs/figures`; `docs/WEBSITE.md` names only the live check, which reads the build tag the page still carries.
+   `scripts/consistency.py`: 0 findings. Claims: three new sentences backed, 5408 claims all backed.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
