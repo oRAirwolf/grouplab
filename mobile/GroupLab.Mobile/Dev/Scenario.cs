@@ -302,6 +302,7 @@ internal static class Scenario
         {
             results["name"] = scenario.Name;
             DiagnosticLog.Info("scenario.start", ("steps", scenario.Steps.Count));
+            await OnUi(() => Presses(true));
             for (int i = 0; i < scenario.Steps.Count; i++)
             {
                 var step = scenario.Steps[i];
@@ -337,11 +338,50 @@ internal static class Scenario
 
         results["ok"] = ok;
         results["finished"] = DateTimeOffset.UtcNow.ToString("O", CultureInfo.InvariantCulture);
+        await OnUi(() => Presses(false));
         DiagnosticLog.Info("scenario.done", ("ok", ok));
         CopyLog(Path.Combine(Results, "log.txt"), lines: null);
         await File.WriteAllTextAsync(Path.Combine(Results, "results.json"), results.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
         await File.WriteAllTextAsync(Path.Combine(Results, "status"), "done");
         return results;
+    }
+
+    private static TopLevel? listening;
+
+    /// <summary>
+    /// Entry 447 section 3: while a scenario runs, every press and release the window receives is logged with where it landed and what it
+    /// landed on. The simulator's Real taps lost a tap twice where GroupLab's own test said it would reach its button; whether the touch
+    /// reached Avalonia at all, or reached something else, is what separates a fault in the application from one before it.
+    /// </summary>
+    private static bool Presses(bool on)
+    {
+        if (listening is { } before)
+        {
+            before.RemoveHandler(InputElement.PointerPressedEvent, Pressed);
+            before.RemoveHandler(InputElement.PointerReleasedEvent, Released);
+            listening = null;
+        }
+
+        if (on && Shell.Current is { } shell && TopLevel.GetTopLevel(shell) is { } top)
+        {
+            top.AddHandler(InputElement.PointerPressedEvent, Pressed, RoutingStrategies.Tunnel, handledEventsToo: true);
+            top.AddHandler(InputElement.PointerReleasedEvent, Released, RoutingStrategies.Tunnel, handledEventsToo: true);
+            listening = top;
+        }
+
+        return on;
+    }
+
+    private static void Pressed(object? sender, PointerPressedEventArgs e) => Said("pressed", e, sender);
+
+    private static void Released(object? sender, PointerReleasedEventArgs e) => Said("released", e, sender);
+
+    private static void Said(string what, PointerEventArgs e, object? sender)
+    {
+        var at = sender is Visual top ? e.GetPosition(top) : default;
+        var on = e.Source as Control;
+        DiagnosticLog.Info("scenario.pointer", ("what", what), ("x", Math.Round(at.X)), ("y", Math.Round(at.Y)), ("on", on?.GetType().Name),
+            ("id", on is null ? null : AutomationProperties.GetAutomationId(on) ?? on.GetVisualAncestors().OfType<Control>().Select(AutomationProperties.GetAutomationId).FirstOrDefault(i => i is not null)));
     }
 
     internal static async Task<(bool, string)> Do(Step step)
