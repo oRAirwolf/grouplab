@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 447 part 4.2 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-18, entry 447 part 4.3 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
-- **Entry 447 (2026-10-18)**: parts 1, 2, 4.1 (counts record) and 4.2 (rows 12, 18) done; 3 is 20 iOS runs in a row; 4.3 under way.
+- **Entry 447 (2026-10-18)**: parts 1, 2 and 4 done (4.3: holes about a sixth sooner); 3 is 20 iOS runs in a row, its cause not yet named.
   Left from part 2: CSV mapping, store target, Fudd buster, group tools, print and figures windows untested; phone pages two presses
   deep; no real Narrator, VoiceOver or TalkBack run yet.
 - **Entries 445 and 446 (2026-10-18)**: "On this page" on every long page (`with_contents`); the phone's guided demo (`PhoneDemo`,

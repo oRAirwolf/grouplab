@@ -1674,7 +1674,7 @@ public static partial class RenderDifferenceHoleDetector
     /// per edge, so the pixels it accepts on a row are one run: found from the two ends, they are exactly the pixels testing every one gave,
     /// in the same order, at a fraction of the tests. A hull of fewer than three points is tested pixel by pixel as before.
     /// </summary>
-    private static (int From, int To) RowInside(ImageBlob blob, int y)
+    internal static (int From, int To) RowInside(ImageBlob blob, int y)
     {
         int first = blob.Left, last = blob.Left + blob.Width - 1;
         if (blob.Hull.Count < 3)
@@ -1682,6 +1682,81 @@ public static partial class RenderDifferenceHoleDetector
             return (first, last) is var all && Enumerable.Range(first, blob.Width).All(x => Inside(blob.Hull, x, y)) ? all : NotAHullRow(blob, y);
         }
 
+        // Entry 447 section 4.3: a pixel is inside where no edge of the hull puts it on the other side, and each edge's test, as it is
+        // computed, changes side at most once along a row, so the pixels inside a row are one run. From one pixel known to be inside, the
+        // run's two ends are found by halving rather than by testing every pixel from each end of the box, which on a large mark with a
+        // long hull was most of the time spent on its moments. The ends are the same pixels; a row where no inside pixel is found where
+        // the hull's edges cross it is walked as before.
+        if (InsideOnRow(blob.Hull, y, first, last) is { } inside)
+        {
+            int low = first, high = inside;
+            while (low < high)
+            {
+                int middle = low + ((high - low) / 2);
+                if (Inside(blob.Hull, middle, y))
+                {
+                    high = middle;
+                }
+                else
+                {
+                    low = middle + 1;
+                }
+            }
+
+            int from = low;
+            low = inside;
+            high = last;
+            while (low < high)
+            {
+                int middle = low + ((high - low + 1) / 2);
+                if (Inside(blob.Hull, middle, y))
+                {
+                    low = middle;
+                }
+                else
+                {
+                    high = middle - 1;
+                }
+            }
+
+            return (from, low);
+        }
+
+        return RowInsideWalked(blob, y);
+    }
+
+    /// <summary>A pixel of row <paramref name="y"/> inside the hull, between where its edges cross the row, or null where that one is not inside.</summary>
+    private static int? InsideOnRow(IReadOnlyList<PointD> hull, int y, int first, int last)
+    {
+        double low = double.PositiveInfinity, high = double.NegativeInfinity;
+        for (int i = 0; i < hull.Count; i++)
+        {
+            var a = hull[i];
+            var b = hull[(i + 1) % hull.Count];
+            if ((a.Y > y || y > b.Y) && (b.Y > y || y > a.Y))
+            {
+                continue;
+            }
+
+            double x0 = a.Y == b.Y ? Math.Min(a.X, b.X) : a.X + ((y - a.Y) * (b.X - a.X) / (b.Y - a.Y));
+            double x1 = a.Y == b.Y ? Math.Max(a.X, b.X) : x0;
+            low = Math.Min(low, x0);
+            high = Math.Max(high, x1);
+        }
+
+        if (!(low <= high))
+        {
+            return null;
+        }
+
+        int middle = (int)Math.Clamp(Math.Round((low + high) / 2), first, last);
+        return Inside(hull, middle, y) ? middle : null;
+    }
+
+    /// <summary>The row's run found pixel by pixel from each end of the box, as it always was.</summary>
+    internal static (int From, int To) RowInsideWalked(ImageBlob blob, int y)
+    {
+        int first = blob.Left, last = blob.Left + blob.Width - 1;
         while (first <= last && !Inside(blob.Hull, first, y))
         {
             first++;

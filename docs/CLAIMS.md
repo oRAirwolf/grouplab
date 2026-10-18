@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1715 |
-| measured | 2252 |
+| measured | 2257 |
 | decided | 1447 |
 | unbacked | 0 |
-| **total** | **5414** |
+| **total** | **5419** |
 
-**1554** of them were read one sentence at a time and their backing written against the sentence. The other **3860** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1554** of them were read one sentence at a time and their backing written against the sentence. The other **3865** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1608,6 +1608,11 @@ one that matters.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): **What the gate was planned to cover, and still does:** - **The times a person actually waits:** start-up to a usable window, opening an image, a full analysis of a 600 dpi Letter scan, a full analysis of a phone photograph, the analysis screen after Accept, and a batch of ten sheets.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): - **Per platform**, because the answer differs: this desktop today, and a mid-range Android phone when Phase 6 exists.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): ## Entry 447 section 4.3: a mark's rows found by halving, finding the holes about a sixth sooner on photographs **Measured first** (`grouplab bench --runs 5`, Release, this desktop): the slowest single steps left in reading were finding the holes on the 600 dpi scan (483 ms) and reading a phone photograph's codes (448 ms).
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): In the codes, the 445 ms are 70 ms finding eight places and about 375 ms reading them: a place with a code reads in about 12 ms, one without in 50 to 70, because the second detector runs only when the first finds nothing.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Stopping once every code of the sheet is read was tried and taken back: the bench's photograph is a frozen sheet printing four codes of which two are in the picture, and the identify sweep's 148 s did not move.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): What the timing beside them did show is where a mark's moments go: on load-sheet-close, 470 of its 1,006 ms.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): On every row of every mark in the 19 local corpus pictures, and on 1,500 random hulls with flat edges and whole-pixel corners (`RowInsideTests`), the ends are the walk's.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Every pixel is the answer the whole row gave before: `BinaryMorphologyTests` compares it with OpenCV's own close on ten pictures and six more with marks inside a wide picture, and a stretch cut too short fails 16 of the 18.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): On the 600 dpi sample the close went from 202 ms to 102 and finding the holes from about 1238 to 1133; on a photograph, whose residual has set pixels across most rows, the median close went from 44 to 42 and the slowest from 437 to 322.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): `grouplab bench --runs 5` hardly moves (its 600 dpi scan has no holes, so its close was already cheap: 474 to 472 ms; the generated sheet 193 to 179; the phone photograph 173 to 169).

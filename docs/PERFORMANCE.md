@@ -48,6 +48,36 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 447 section 4.3: a mark's rows found by halving, finding the holes about a sixth sooner on photographs
+
+**Measured first** (`grouplab bench --runs 5`, Release, this desktop): the slowest single steps left in reading were finding the holes
+on the 600 dpi scan (483 ms) and reading a phone photograph's codes (448 ms). In the codes, the 445 ms are 70 ms finding eight places
+and about 375 ms reading them: a place with a code reads in about 12 ms, one without in 50 to 70, because the second detector runs only
+when the first finds nothing. Stopping once every code of the sheet is read was tried and taken back: the bench's photograph is a
+frozen sheet printing four codes of which two are in the picture, and the identify sweep's 148 s did not move. Working a mark's
+moments as whole numbers with a table for its ink was tried and taken back too: timed beside the old moments on the same marks, the
+two took the same time. What the timing beside them did show is where a mark's moments go: on load-sheet-close, 470 of its 1,006 ms.
+
+**The cause, and the change.** The moments, the split and every other walk over a mark visit its pixels row by row inside its convex
+hull, and each row's two ends were found by testing pixels from each end of the mark's box against the hull, every test costing one step
+per hull corner: on a large mark with a long hull, millions of tests. A pixel is inside where no edge of the hull puts it on the other
+side, and each edge's test as computed changes side at most once along a row, so a row's inside pixels are one run; from one pixel found
+inside where the hull's edges cross the row, `RowInside` now finds the run's two ends by halving. A row where that pixel is not inside is
+walked as before (`RowInsideWalked`). On every row of every mark in the 19 local corpus pictures, and on 1,500 random hulls with flat
+edges and whole-pixel corners (`RowInsideTests`), the ends are the walk's.
+
+| | before | after |
+|---|---|---|
+| finding the holes, 15 local corpus photographs, median of three each, summed | 13,260 ms | 11,044 ms |
+| the same, median picture | 655 ms | 565 ms |
+| the same, load-sheet-close (its moments 470 to 15 ms) | 1,055 ms | 702 ms |
+| bench, a phone photograph: S5-S8.holes | 172 ms | 140 ms |
+| bench, the generated sheet: S5-S8.holes | 222 ms | 189 ms |
+| bench, a 600 dpi scan (no holes): S5-S8.holes | 481 ms | 477 ms |
+
+**Nothing moved:** the four local corpus scoreboards, `scoreboard --synthetic`, `corpus counts` and `identify sweep` are line for line
+the same before and after but for their time columns. Nothing reads QR codes on several threads.
+
 ## Entry 433: finding the holes, measured again, and a cheaper close
 
 **Measured first, from one Release build** (timers put into `RenderDifferenceHoleDetector.Detect` for this measurement and taken out

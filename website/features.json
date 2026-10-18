@@ -388,7 +388,8 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.28",
-      "note": ["You can now click a hole to edit it", "On a crinkled sheet, GroupLab no longer marks a hole", "On a flatbed scan, GroupLab now finds the holes that show the scanner"],
+      "note": ["You can now click a hole to edit it", "On a crinkled sheet, GroupLab no longer marks a hole", "On a flatbed scan, GroupLab now finds the holes that show the scanner",
+        "Finding the holes in a photograph is about a sixth quicker"],
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue",
       "article": "one-hole-or-two",

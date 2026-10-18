@@ -1496,6 +1496,12 @@ site build pass.
    support page and `OutsideWorldTests.TheSupportButtonAsksForTheSupportPageAndOpensNothing` meet: its README row is now Done, and
    row 12's README line says what it reads, its state left to planning since its gate is only proposed. Every other row still names
    material from Alan, a detection change or an unwritten gate.
+   4.3, **speed** (docs/PERFORMANCE.md, "Entry 447 section 4.3"): measured first; the slowest step left in reading a photograph is
+   finding its holes, and inside it a large mark's rows were found by testing every pixel from each end against the mark's hull. They
+   are now found by halving, with the same ends on every row (`RowInsideTests`): finding the holes on 15 local corpus photographs
+   13,260 to 11,044 ms in all, load-sheet-close 1,055 to 702, the bench's phone photograph 172 to 140. Every scoreboard, the counts and
+   the identify sweep are the same but for time. Two other tries (stopping the code reading early, whole-number moments) measured
+   nothing and were taken back.
 
 ## Decision log
 
