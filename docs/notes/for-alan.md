@@ -8,7 +8,7 @@ you saved it (only builds before nightly 113 could save a new picture over the r
 a tab holding a target: it opens beside it.
 
 **For Quack** (entry 442, not a request; pass on whenever suits): thank you for the keyboard report and the marked-up screenshot.
-From the next nightly after 0.2.0-nightly.198, on the computer: choosing a shot in the table with Space, Enter or a click keeps the focus
+In 0.2.0-nightly.199, out now, on the computer: choosing a shot in the table with Space, Enter or a click keeps the focus
 on that row, so the next Tab carries on from there instead of starting again at the top; the same holds for the tabs and every other
 list that redraws when something in it is chosen. The arrow keys work: in the shot table Up and Down choose the shot before and after,
 Home and End the first and last, Esc clears the choice, and in a pooled set Left and Right go to the same bull on the sheet before and
@@ -37,7 +37,7 @@ pool them. On Android and iPhone the photo pickers now take several at once, and
 **For Quack** (entry 418, not a request; pass on whenever suits): the Send a target page now shows a progress bar and the megabytes sent, takes a whole set of up to 30 photos and 400 MB in one go (it splits it by itself and it arrives as one submission), says plainly what went wrong if a send fails and whether it arrived, and recognises photos it already has, so sending again is safe. Your .50 AE set did arrive the first time; the second copy was removed. Live on grouplab.org now.
 **For Quack** (entry 417, not a request; pass on whenever suits): thank you for the report. On your flatbed scans each hole shows the scanner's white lid, so GroupLab saw only its rim and missed about half the holes; it now finds them and centres them, the Impact tool snaps to a hole's middle instead of the shadowed side of its rim, and holes can be dragged with Select again after a bull has been clicked. It is in the next nightly after 0.2.0-nightly.190.
 **THE NEXT RANGE KIT IS READY, whenever you next go; nothing to answer** (entry 414): print from `C:\Dev\grouplab-local\range-next\`, starting with `CHECKLIST.pdf`; 5 pages for about an hour of shooting (requests 57 and 58, a load sheet shot in order with the Xero, two shots through one hole), and the aim point cards of request 86 if there is time.
-Working from the terminal, 17 October, at 12% of the week (the usage guard's reading): entries 436, 440, 437, 438 and 439 taken; nothing in them needs you. Concept B is at grouplab.org/testpage/ for you to look at with the planning session, and the next nightly brings Walk me through a demo to the computer (the phone's comes next).
+Working from the terminal, 18 October: entries 441, 442 and 443 taken; nothing in them needs you. The new home page is live, every page of grouplab.org now has its look and the full header back, and the next nightly brings Quack's keyboard requests to the computer.
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->

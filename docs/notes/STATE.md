@@ -72,7 +72,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (99 answered by entry 430 and archi
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.198 (2026-10-17 14:38 UTC, from 3d26d3b2): entries 436 to 439, the guided demo and the PDF bookmarks. 197 carried issue 35.
+- **Last nightly:** 0.2.0-nightly.199 (2026-10-18 06:23 UTC, from 04e1af44): entry 442, Quack's keyboard requests and the caliber line. 198 carried the guided demo.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
 - Crash reports open: none. **#35** (Quack: a pooled set's small sheet showed sheet 1 only, a bull click picked by nearness) fixed and closed 2026-10-16, in nightly 197.
 
