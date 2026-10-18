@@ -503,7 +503,7 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 - On the phone, panning a zoomed target moves the picture instead of the whole screen, and the Updated note closes by itself after a few seconds.
 - A selected shot now says how far it is from its own bull, right or left and high or low, in your unit and in MOA, instead of its place on the sheet.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.171)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
