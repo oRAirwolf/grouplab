@@ -162,6 +162,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `demo-tour-light-1400x900.png` | sheet made by the generator |
 | `demo-tour-light-1920x1080.png` | sheet made by the generator |
 | `demo-tour-light-2560x1440.png` | sheet made by the generator |
+| `keyboard-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `keyboard-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `keyboard-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `keyboard-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `keyboard-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `keyboard-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `keyboard-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `keyboard-light-2560x1440.png` | Entry109Tests synthetic sheet |
 | `optic-dark-1280x720.png` | sheet made by the generator |
 | `optic-dark-1400x900.png` | sheet made by the generator |
 | `optic-dark-1920x1080.png` | sheet made by the generator |

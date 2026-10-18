@@ -1309,6 +1309,38 @@ site build pass.
    exists in `docs/figures`; `docs/WEBSITE.md` names only the live check, which reads the build tag the page still carries.
    `scripts/consistency.py`: 0 findings. Claims: three new sentences backed, 5408 claims all backed.
 
+## Entry 442: the desktop from the keyboard, Quack's request (2026-10-18)
+
+1. **Why the focus went back to the top.** Choosing a shot calls `PickShots`, which refreshes the analysis, and the refresh clears the
+   shot table and builds it again (`offsetTable.Children.Clear()`), so the row that had the focus left the window and the focus with it.
+   The same happens wherever a panel is rebuilt when something in it is chosen: the tabs (`ShowTabs`), session rows, the library list
+   and the rest of the 85 panels that are cleared and rebuilt. One fix covers them all: `KeyboardFocus` (new,
+   `src/GroupLab.App/KeyboardFocus.cs`) remembers the focused control and its ancestors when it takes the focus, and when it leaves the
+   window with nothing else focused, gives the focus to its replacement: the control with the same `Tag` (each shot row now carries its
+   shot), otherwise the same kind of control in the same place of the rebuilt panel. It comes back the way it went, so a ring drawn for
+   the keyboard is drawn again and a click draws none. On the main window and the figures' own window.
+2. **Arrow keys.** The shot table answers its own (`OnShotKey`): Up and Down choose the shot before and after through `PickShots`, as a
+   click does; Home and End the first and last; Left and Right the same bull on the nearest sheet before and after in a pooled set
+   (`SetPool.SheetOf` and `BullOnSheet`), nothing on one sheet; Esc clears the choice. The focus follows the chosen row. Elsewhere,
+   `KeyboardFocus` moves between buttons by where they sit: Left and Right to the nearest button on the same line, Up and Down to the
+   nearest in the same column for the rail's buttons and a list's rows, within the bar or scrolled panel the button is in (the tab
+   strip, the header, the toolbar, a side column). It acts only when a plain button has the focus: text boxes, number boxes, check
+   boxes, radio buttons, switches and drop downs keep their own arrows, and moving never presses anything. The marking picture's arrows
+   are left alone; the status line suggests what to do with them.
+3. **The caliber line.** `UnitSwitch`'s number pattern did not allow a number written without its leading zero, so a tap remembered in
+   centimeters read ".224 in (5.69 mm)" as 224 inches after the point and wrote ".568.96 cm (0.57 cm)". The pattern now reads ".224" whole
+   and never starts inside a number, and the caliber line, already in both units, is no longer a number a tap switches. Nothing to do
+   with the culture: every figure is written with the invariant culture.
+4. **Tests.** `Entry442Tests`: on one sheet, Tab from the window's start into the shot table, Space, and the focus is on the chosen row
+   with its keyboard ring, the next Tab on the row after, Enter the same; Quack's pooled set of three sheets end to end with Space, Up,
+   Down, Home, End, Right and Left across sheets and Esc; the rail with Up and Down, the top bar and the tab strip with Left and Right,
+   a text box keeping its arrows; the caliber line. With `KeyboardFocus` switched off three of the four fail. `UnitSwitchTests` gains
+   the number without its leading zero.
+5. **Focus ring.** Fluent's own ring, rendered and looked at on a tab and a chosen row; it is not clipped by the tab strip.
+6. **Everything public.** The user guide's new "From the keyboard" under Read the analysis; a Features entry, "Work it from the
+   keyboard", with its own picture from the render walk (`keyboard`, a row chosen with Space and the ring on it); the README's Phase 3
+   line; three release notes crediting Quack; a note for Quack in for-alan.md.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

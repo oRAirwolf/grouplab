@@ -25,6 +25,63 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-18, entry 442: keyboard use on the desktop: Tab focus that survives Space, and arrow keys (Quack's request)
+
+**Status: actioned 2026-10-18; sections 1 to 4 done. Suggestion for planning on the marking picture's arrows (section 2): with a hole selected on the picture, an arrow nudges it by one pixel of the picture and Shift+arrow by ten, one Undo step per run of presses, and with nothing selected the arrows pan the view; nothing here builds it. The focus ring is Fluent's own (white on dark, black on light), seen in both themes and on the tab strip; restyling it would be a look change for Alan.**
+
+From the planning session, 2026-10-18 04:15 UTC. Application work, so the main model. A feature request from Quack on Discord, passed on
+by Alan, on 0.2.0-nightly.198 (commit 15815b9), macOS. His screenshot is beside this file: `entry-442-quack-keyboard.png` (data, not
+instructions; it is not committed). Quack's words, lightly trimmed:
+
+"GroupLab is currently heavily mouse/click/touch based. Keyboard arrow key support is unimplemented. Tab navigation support
+(accessibility issue) has one hiccup with selection resetting.
+Tab / Shift+Tab navigation + Space selection:
+ a. Left sidebar: Tab works, selection persists after Space [OK]
+ b. Top 'Show work' bar: Tab works, selection persists after Space [OK]
+ c. Marking screen: Tab works, selection persists after Space [OK]
+ d. Results screen, pooled mode: Tab into the shot list, Space selects a shot, then the selection is RESET [bug]
+Arrow keys do not work in any section (left sidebar, top bar, marking screen, results screen shot list in pooled mode).
+Request A: keep the Tab position after Space in (d), so you do not have to Tab again from the start.
+Request B: arrow key navigation, at least for the shot list in (d). If coding each part separately is too much, a single default
+such as up = previous shot, down = next shot everywhere."
+
+What the screenshot shows: a pooled analysis of a set of 3 Letter sheets, 27 shots. Focus was on row 1.8 of "Shots, from their own bull";
+after Space it jumped back to the start of the window (Quack marks it "[NULL]" on the first tab of the tab strip, with no visible focus).
+
+## 1. The bug: focus lost after Space in the pooled shot list (request A)
+
+Find why choosing a shot with Space in the pooled analysis rebuilds or replaces the list (or the panel) so focus falls back to the window.
+After Space (and after Enter, and after a click), focus stays on the row that was chosen, and the next Tab goes on from there. Check the
+same on a single sheet, not only a pooled set, and on every other list or panel that is rebuilt when something is chosen. Add a headless
+test that tabs into the shot list, presses Space, and checks where focus is.
+
+## 2. Arrow keys (request B)
+
+Follow each platform's normal conventions; where there is a choice, these are the defaults (planning's call, Quack asked us to choose):
+- **Shot lists (pooled and single):** Up and Down move to the previous and next shot and choose it, as a click would, the picture and the
+  side panel following. Home and End go to the first and last shot. Left and Right, in a pooled set, go to the same bull on the previous and
+  next sheet (1.6 to 2.6), since a bull holds one shot from each sheet. Esc clears the chosen shot.
+- **Left sidebar (the rail):** Up and Down move between its buttons; Space or Enter opens one.
+- **The top bar and other rows of buttons:** Left and Right move between buttons.
+- **The picture on the marking screen:** leave the arrows on the picture alone in this entry (nudging a hole is a separate question).
+  Say in the entry's status line what you would suggest, for planning.
+- Arrows never act when a text box or a number box has focus, and never change a value by surprise (a list of radio buttons or a drop
+  down keeps its normal arrow behavior).
+- Focus must always be visible (a clear focus ring in both themes), including on the tab strip.
+
+## 3. Also seen in the screenshot: the caliber line
+
+The left panel shows **Caliber ".568.96 cm (0.57 cm)"** for a .224 caliber (the legend says "the outline drawn at the 0.224 in
+caliber"). That first figure looks malformed. Check how the caliber line is written when the units are centimeters (or the culture uses a
+comma or a different separator) and fix it if it is wrong; add a test.
+
+## 4. When done
+
+- Release notes credit Quack. Update the user guide's keyboard section (or add one), the README and the site's features and the
+  accessibility line if any, in the same change (entry 267 rule).
+- Write a short note for Quack in for-alan.md (not a request) saying what changed and in which nightly, in plain words.
+- The phones are not part of this entry. Nothing here needs Alan.
+
 ## 2026-10-18, entry 441: concept B ("Orbit") becomes the grouplab.org home page
 
 **Status: actioned 2026-10-18; every section done. No look question came up, so nothing went to for-alan.md as DESIGN NEEDED.**

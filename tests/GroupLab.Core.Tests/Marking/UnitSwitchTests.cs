@@ -56,4 +56,20 @@ public class UnitSwitchTests
         Assert.Equal("MOA", UnitSwitch.Next(UnitKind.Angle, "SMOA"));
         Assert.Equal("in", UnitSwitch.SymbolIn("0.42 MOA  ·  0.442 in", UnitKind.Length));
     }
+
+    /// <summary>
+    /// Entry 442 section 3, from Quack's screenshot: the caliber line ".224 in (5.69 mm)" switched to centimeters read ".568.96 cm (0.57 cm)",
+    /// because a number written without its leading zero was read from after its point. It is read whole, and never from its middle.
+    /// </summary>
+    [Fact]
+    public void ANumberWithoutItsLeadingZeroIsReadWhole()
+    {
+        Assert.Equal("0.57 cm (0.57 cm)", UnitSwitch.Convert(".224 in (5.69 mm)", UnitKind.Length, "cm"));
+        Assert.Equal("0.57 cm", UnitSwitch.Convert(".224 in", UnitKind.Length, "cm"));
+        Assert.Equal("-0.57 cm", UnitSwitch.Convert("-.224 in", UnitKind.Length, "cm"));
+        Assert.Equal("0.28 to 0.42 cm", UnitSwitch.Convert(".110 to .166 in", UnitKind.Length, "cm"));
+        Assert.Equal("in", UnitSwitch.SymbolIn(".308 in (7.82 mm)", UnitKind.Length));
+        // Read whole wherever it sits in a sentence.
+        Assert.DoesNotContain("568", UnitSwitch.Convert("caliber .224 in", UnitKind.Length, "cm"), StringComparison.Ordinal);
+    }
 }

@@ -107,7 +107,9 @@ public static partial class UnitSwitch
         _ => "0",
     }, CultureInfo.InvariantCulture);
 
-    [GeneratedRegex(@"(?:(?<a>-?\d+(?:\.\d+)?)(?<to> to |–))?(?<n>-?\d+(?:\.\d+)?)(?<s>\s?)(?<u>NATO mil|SMOA|MOA|mil|in|cm|mm|yd|m)(?![A-Za-z])")]
+    // Entry 442 section 3: a number may be written without its leading zero, ".224 in", and is never read from its middle. Before, ".224 in"
+    // was read as 224 inches after the point and switched to ".568.96 cm".
+    [GeneratedRegex(@"(?<![\d.])(?:(?<a>-?(?:\d+(?:\.\d+)?|\.\d+))(?<to> to |–))?(?<n>-?(?:\d+(?:\.\d+)?|\.\d+))(?<s>\s?)(?<u>NATO mil|SMOA|MOA|mil|in|cm|mm|yd|m)(?![A-Za-z])")]
     private static partial Regex Numbers();
 
     /// <summary>The settings after one tap on a value of <paramref name="kind"/>.</summary>

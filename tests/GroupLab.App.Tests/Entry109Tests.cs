@@ -558,6 +558,16 @@ public class Entry109Tests
                         window.PickShots([]);
                         window.SetEveryWhy(null);
 
+                        // Entry 442: the shot table worked from the keyboard, a row chosen with Space and the focus ring kept on it.
+                        var keyRow = window.OffsetRows[Math.Min(4, window.OffsetRows.Count - 1)];
+                        keyRow.Focus(Avalonia.Input.NavigationMethod.Tab);
+                        window.KeyPress(Avalonia.Input.Key.Space, Avalonia.Input.RawInputModifiers.None, Avalonia.Input.PhysicalKey.Space, " ");
+                        window.KeyRelease(Avalonia.Input.Key.Space, Avalonia.Input.RawInputModifiers.None, Avalonia.Input.PhysicalKey.Space, " ");
+                        Dispatcher.UIThread.RunJobs();
+                        Save(window, $"keyboard-{name}-{size}");
+                        window.PickShots([]);
+                        window.Focus();
+
                         // Entry 407 section 7: no readings yet, and the speeds typed on the analysis itself.
                         window.OpenReadingsHere("2705 2711 2698 2716 2702");
                         window.BringVelocityIntoView();

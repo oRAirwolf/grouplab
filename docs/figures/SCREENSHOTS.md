@@ -29,6 +29,7 @@ Store listing uses 1920x1080.
 |---|---|---|---|
 | `analysis` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /, /features/, /guides/testing-guide/, /tour/, /tour/analysis/, README.md, docs/TESTING-GUIDE.md, docs/store/LISTING.md | Entry109Tests synthetic sheet |
 | `analysis-open` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/analysis-open/, docs/USER-GUIDE.md | Entry109Tests synthetic sheet |
+| `keyboard` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests synthetic sheet, a row of the shot table chosen with Space |
 | `ballistics` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /guides/user-guide/, /tour/, /tour/ballistics/, docs/USER-GUIDE.md, docs/store/LISTING.md | Entry109Tests synthetic sheet |
 | `ballistics-hit` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/ballistics/ | Entry109Tests synthetic sheet |
 | `compare` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/compare/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |

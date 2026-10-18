@@ -49,6 +49,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Ballistics and hit chances | `ballistics` | on the phone | entry 259 screen 5, its own tab; printing the dope card is still to come | on iOS |
 | Fudd buster mode | `fudd-buster` | on the phone | entry 279 section 3 and entry 281 section 2, page A: the same three sections as the desktop's window | on iOS |
 | Walk me through a demo | `demo-tour` | coming | entry 439 section 5: the same offer and steps for the phone's own screens (Capture with the sample chosen from the app's files, the result, Shots, Share a picture, Sessions, Ballistics, Targets), the next entry's work | not yet |
+| Work it from the keyboard | `keyboard` | left out | entry 442 says the phones are not part of it: a phone is worked by touch, and a hardware keyboard on a phone or tablet is not yet asked for | left out |
 | Shots in and out as CSV | `csv` | on the phone | out through Android's share sheet since entry 258; in under Sessions since entry 278, CSV B: the group as it will be read and GroupLab's guesses, each tapped to change | on iOS |
 | The Targets screen | `targets` | on the phone | the phone's Targets screen (entry 243) | on iOS |
 | Made for your optic | `optic` | on the phone | on the phone's Targets screen | on iOS |

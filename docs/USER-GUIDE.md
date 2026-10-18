@@ -306,6 +306,20 @@ included. A figure's name still explains it when you tap it; only the number swi
 
 ![The analysis, with every "why" open](figures/screens/current/analysis-open-light-1400x900.png)
 
+### From the keyboard
+
+Tab and Shift+Tab move through every button, box and list, Space or Enter presses what has the focus, and a ring shows where the focus
+is. Choosing a shot in the shot table with Space, Enter or a click leaves the focus on its row, so the next Tab carries on from there.
+The arrow keys:
+- **The shot table:** Up and Down choose the shot before and after, as a click would, and the picture and the panels follow. Home and
+  End choose the first and the last, and Esc clears the choice. In a pooled set, Left and Right go to the same bull on the sheet before
+  and after, from 1.6 to 2.6, since a bull holds one shot from each sheet.
+- **The bar down the left:** Up and Down move between its buttons, and Space or Enter opens one.
+- **The tabs, the bar along the top and other rows of buttons:** Left and Right move between the buttons.
+
+The arrows never act in a text box or a number box, radio buttons and drop downs keep their own arrows, and moving the focus never
+presses a button. The marking screen's own keys are listed in the line above the picture.
+
 ### Click a hole to edit it
 
 A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:

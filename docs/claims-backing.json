@@ -5,6 +5,14 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) ### From the keyboard Tab and Shift+Tab move through every button, box and list, Space or Enter presses what has the focus, and a ring shows where the focus is.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs OnShotKey and SameBullOnSheet, src/GroupLab.App/KeyboardFocus.cs Beside and Keeper; tests Entry442Tests (entry 442 sections 1 and 2)"
+  },
+  "In a pooled set, Left and Right go to the same bull on the sheet before and after, from 1.6 to 2.6, since a bull holds one shot from each sheet.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.cs OnShotKey and SameBullOnSheet, src/GroupLab.App/KeyboardFocus.cs Beside and Keeper; tests Entry442Tests (entry 442 sections 1 and 2)"
+  },
   "Entry 413 (Alan chose B): when any one of the bottom bar's names, measured at the size followed, would be wider than its fifth of the bar, the bar shows the five icons alone at 26 px in a 60 by 40 pill (`NavBar`), each tab keeping its name for TalkBack and as a tip on a long press; the sweep's largest-text pass expects icons alone and its plain pass the names.": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/NavBar.cs and Entry413Tests; scripts/phone-sweep-check.py --larger; entry 413"
@@ -1269,7 +1277,7 @@
    "kind": "code",
    "where": "AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking"
   },
-  "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page.": {
+   "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page.": {
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
   },
@@ -7001,7 +7009,7 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/PrinterProfile.cs PrinterProfile, RulerSpan; AutomaticMarking.Run printer; MainWindow.Printer.cs; android PrinterCard.cs (entry 271)"
   },
-  "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) ### Click a hole to edit it A small editor opens beside it, not a dialog over the page.": {
+   "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) ### Click a hole to edit it A small editor opens beside it, not a dialog over the page.": {
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
   },

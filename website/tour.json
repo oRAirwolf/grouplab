@@ -359,6 +359,11 @@
      "readings-here",
      "Velocity and the vertical with no readings yet: Import a file, Type them in, a place to drop a file, and speeds typed in its box",
      "With no chronograph readings, Velocity and the vertical says what they add and takes them right here: Import a file, Type them in, or drop your chronograph's file on it. Typed speeds are counted against the shots, and Match to shots pairs them as Ballistics would and keeps them."
+    ],
+    [
+     "keyboard",
+     "The shot table worked from the keyboard: row 5 chosen with Space, its row marked and the focus ring still around it",
+     "The shot table from the keyboard. Tab into it and press Space or Enter to choose a shot, and the focus stays on that row. Up and Down choose the shot before and after, Home and End the first and last, Esc clears the choice, and in a pooled set Left and Right go to the same bull on the sheet before and after."
     ]
    ],
    "mobile": {

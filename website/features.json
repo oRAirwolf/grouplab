@@ -192,7 +192,8 @@
     "Find holes (Experimental)",
     "the camera's level works upright",
     "result comes up about a tenth sooner",
-    "adding a hole in Fix holes now shows the bulls to choose from"
+    "adding a hole in Fix holes now shows the bulls to choose from",
+    "The caliber line under Load no longer turns into a garbled figure"
   ],
   "features": [
     {
@@ -838,6 +839,24 @@
         "The guided demo's printing step now works on macOS and Linux"
       ],
       "guide": "walk-me-through-a-demo"
+    },
+    {
+      "key": "keyboard",
+      "group": "Reading a target",
+      "name": "Work it from the keyboard",
+      "sentence": "Tab reaches every button and box and the focus stays where you chose, the arrow keys choose the shot before or after in the shot table and the same bull on the next sheet of a set, and they move along the rail and between buttons in a row.",
+      "shot": "keyboard",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "since": "next",
+      "note": [
+        "On the computer the arrow keys now work",
+        "the focus stays on the row you chose"
+      ],
+      "guide": "from-the-keyboard"
     },
     {
       "key": "csv",

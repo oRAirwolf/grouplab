@@ -28,6 +28,7 @@
     "settings": ["src/GroupLab.App/AppSettings.cs"],
     "settings-data": ["src/GroupLab.App/AppSettings.cs", "src/GroupLab.App/MainWindow.DataFile.cs"],
     "demo-tour": ["src/GroupLab.App/MainWindow.Demo.cs", "src/GroupLab.App/ControlNames.cs"],
+    "keyboard": ["src/GroupLab.App/KeyboardFocus.cs"],
     "set-tab": ["src/GroupLab.App/MainWindow.SetTab.cs", "src/GroupLab.App/SetTab.cs", "src/GroupLab.App/MainWindow.Compare.cs", "src/GroupLab.App/CompositePlot.cs"],
     "sessions": ["src/GroupLab.App/MainWindow.SessionFiles.cs", "src/GroupLab.App/SessionsOverTime.cs", "src/GroupLab.App/SheetThumbnail.cs"],
     "targets": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs", "src/GroupLab.App/SheetThumbnail.cs"],

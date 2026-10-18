@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 441 (before it: entries 439, 438, 437 and 440).
+**Last rewritten:** 2026-10-18, entry 442 (before it: entries 441, 439, 438 and 437).
 
 ---
 
@@ -17,10 +17,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entry 441 (2026-10-18)**: concept B is grouplab.org's home page, indexed and in the sitemap; /testpage/ is one link to /; the
   page before it is `page_home` at b216ce56. `home_problems` and `tests/python/site-home-tests.py` hold it.
-- **Entry 439 (2026-10-17)**: Walk me through a demo on the desktop: offered once after the first run, in Settings and the menu; 13
-  steps as data (`MainWindow.DemoSteps`) walked headless by `Entry439Tests`; GroupLab makes the sample (question 101). **The phone
-  tour is the next entry's work.**
-- **Entries 418 and 421 to 438 and 440 are done**: the statistics primer (438); guide markings (437); concept B built (440);
+- **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),
+  the shot table's own keys (`OnShotKey`), the caliber line's ".568.96 cm" fixed in `UnitSwitch`; `Entry442Tests`. Phones not in it.
+- **Entries 418 and 421 to 440 are done**: the desktop demo (439, the phone's next); the statistics primer (438); guide markings (437); concept B built (440);
   guide subsections and links (436); magenta selection (430, question 100); #31 to #34 closed.
 - **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
 - **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests, 31 met; the rest name their material (entry 414).
@@ -45,7 +44,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. The phone's guided demo (entry 439 section 5), when planning sends it; question 101 on the demo's sample.
+1. The phone's guided demo (entry 439 section 5), when planning sends it; question 101 on the demo's sample. Then the marking
+   picture's arrows, suggested in entry 442's status line.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 

@@ -7,6 +7,16 @@ overwritten by either:** since nightly 113 a newly opened picture always starts 
 you saved it (only builds before nightly 113 could save a new picture over the record before it). From nightly 193 a drop never replaces
 a tab holding a target: it opens beside it.
 
+**For Quack** (entry 442, not a request; pass on whenever suits): thank you for the keyboard report and the marked-up screenshot.
+From the next nightly after 0.2.0-nightly.198, on the computer: choosing a shot in the table with Space, Enter or a click keeps the focus
+on that row, so the next Tab carries on from there instead of starting again at the top; the same holds for the tabs and every other
+list that redraws when something in it is chosen. The arrow keys work: in the shot table Up and Down choose the shot before and after,
+Home and End the first and last, Esc clears the choice, and in a pooled set Left and Right go to the same bull on the sheet before and
+after (1.6 to 2.6). Up and Down move along the bar down the left, and Left and Right move between buttons in a row, such as the tabs and
+Show work, Report and Export. Text boxes, number boxes and drop downs keep their own arrows. The caliber line that read ".568.96 cm"
+was a fault in switching a size written without its leading zero; it now always shows inches and millimeters. The user guide has a new
+part, From the keyboard, under Read the analysis.
+
 **For Quack** (issue 35, not a request; pass on whenever suits): thank you for the report about the small sheet at the top left of a
 pooled set. Both faults are fixed in the next nightly after 0.2.0-nightly.196. Every sheet's shots now show on the small sheet, laid
 over the one page, each sheet in the same color it has on the plot. A click on a bull picks the shots fired at that bull, one from each

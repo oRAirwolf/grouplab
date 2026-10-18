@@ -406,6 +406,7 @@ public sealed partial class MainWindow : Window
 
         var column = figureBorder;
         var window = new Window { Title = "GroupLab figures", Width = 480, Height = 820 };
+        KeyboardFocus.Attach(window);
         var here = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
         here.Children.Add(new TextBlock { Text = "The figures are in their own window.", TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
         here.Children.Add(Link("Bring them back", window.Close));
@@ -620,6 +621,10 @@ public sealed partial class MainWindow : Window
     {
         settingsStore = settings;
         NameTheFields();
+        // Entry 442: the focus kept when a panel is rebuilt under it, and the arrows between buttons; the shot table answers its own.
+        KeyboardFocus.Attach(this);
+        KeyboardFocus.SetOwnsArrows(offsetTable, true);
+        offsetTable.AddHandler(KeyDownEvent, OnShotKey);
 
         // Entry 273: a tap on any number with a unit switches that kind of unit, here as on the phone.
         UnitTap.Current = () => units ?? UnitSettings.Imperial;
@@ -3298,8 +3303,10 @@ public sealed partial class MainWindow : Window
         loadLines.Children.Add(Readout("Barrel", state.Barrel ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));
         loadLines.Children.Add(Readout("Load", state.Load ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));
         // Entry 104 section 4: a calibre set after detection ran without one would otherwise sit beside a status line saying there was none.
+        // Entry 442 section 3: the caliber is written in both units, ".224 in (5.69 mm)", so it is not a number a tap switches; switched, it
+        // read ".568.96 cm (0.57 cm)" for Quack.
         loadLines.Children.Add(Readout("Caliber", state.Calibre is null ? "not set"
-            : state.Detection is { Calibre: null } ? $"{state.Calibre.Name}, set after detection" : state.Calibre.Name, Tokens.SecondarySize, labelAtTop: true));
+            : state.Detection is { Calibre: null } ? $"{state.Calibre.Name}, set after detection" : state.Calibre.Name, Tokens.SecondarySize, labelAtTop: true, tappable: false));
 
         ShowSetSheetsButton();
 
@@ -3374,6 +3381,7 @@ public sealed partial class MainWindow : Window
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 HorizontalContentAlignment = HorizontalAlignment.Stretch,
                 Classes = { AppStyles.TableRow },
+                Tag = shot.Id,
             };
             if (index++ % 2 == 1)
             {
@@ -3444,6 +3452,76 @@ public sealed partial class MainWindow : Window
             : ids.Count == 1 ? $"{ShotName(ids[0])}." : status.Text;
         Refresh();
     }
+
+    /// <summary>
+    /// Entry 442 section 2, the shot table from the keyboard: Up and Down choose the shot before and after, as a click would, the picture and
+    /// the panels following; Home and End the first and last; Left and Right, in a pooled set, the same bull on the sheet before and after
+    /// (1.6 to 2.6), since a bull holds one shot from each sheet; Esc clears the choice. The focus stays on the chosen row.
+    /// </summary>
+    private void OnShotKey(object? sender, KeyEventArgs e)
+    {
+        if (e.Handled || e.KeyModifiers != KeyModifiers.None || e.Source is not Control source || Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<Button>(source, includeSelf: true) is not { Tag: int id } row
+            || !offsetTable.Children.Contains(row))
+        {
+            return;
+        }
+
+        var ids = OffsetRows.Select(r => r.Tag).OfType<int>().ToList();
+        int at = ids.IndexOf(id);
+        if (e.Key == Key.Escape)
+        {
+            PickShots([]);
+            FocusShotRow(id);
+            e.Handled = true;
+            return;
+        }
+
+        int? to = e.Key switch
+        {
+            Key.Up => at > 0 ? ids[at - 1] : null,
+            Key.Down => at < ids.Count - 1 ? ids[at + 1] : null,
+            Key.Home => ids[0],
+            Key.End => ids[^1],
+            Key.Left => SameBullOnSheet(id, -1, ids),
+            Key.Right => SameBullOnSheet(id, 1, ids),
+            _ => null,
+        };
+        // Up, Down, Home and End are the table's even at its ends, so they never scroll the column away from the chosen row.
+        if (e.Key is Key.Up or Key.Down or Key.Home or Key.End)
+        {
+            e.Handled = true;
+        }
+
+        if (to is { } next)
+        {
+            e.Handled = true;
+            if (next != id || !plotSelection.SetEquals([id]))
+            {
+                PickShots([next]);
+            }
+
+            FocusShotRow(next);
+        }
+    }
+
+    /// <summary>The shot on the same bull of the nearest sheet before (<paramref name="step"/> -1) or after (1) in a pooled set; null on one sheet.</summary>
+    private int? SameBullOnSheet(int id, int step, IReadOnlyList<int> ids)
+    {
+        var state = session.State;
+        if (state.Find(id)?.Bull is not int bull)
+        {
+            return null;
+        }
+
+        int sheet = SetPool.SheetOf(bull), on = SetPool.BullOnSheet(bull);
+        return ids.Select(k => (Id: k, Bull: state.Find(k)?.Bull))
+            .Where(s => s.Bull is int b && SetPool.BullOnSheet(b) == on && Math.Sign(SetPool.SheetOf(b) - sheet) == step)
+            .OrderBy(s => Math.Abs(SetPool.SheetOf(s.Bull!.Value) - sheet))
+            .Select(s => (int?)s.Id).FirstOrDefault();
+    }
+
+    private void FocusShotRow(int id) =>
+        OffsetRows.FirstOrDefault(r => r.Tag is int k && k == id)?.Focus(NavigationMethod.Directional);
 
     /// <summary>
     /// Accept and analyse: the analysis state, whatever is still open, which the amber line then names.
@@ -5580,7 +5658,7 @@ public sealed partial class MainWindow : Window
     /// the concept's selected-detection panel has it. Three headline figures with two lines of interval each was nine lines of prose before
     /// a reader reached anything else.
     /// </summary>
-    private static Control Readout(string label, string value, double size = Tokens.BodySize, FontWeight weight = FontWeight.Normal, bool subordinate = false, bool labelAtTop = false, bool headline = false)
+    private static Control Readout(string label, string value, double size = Tokens.BodySize, FontWeight weight = FontWeight.Normal, bool subordinate = false, bool labelAtTop = false, bool headline = false, bool tappable = true)
     {
         // Entry 111 section 3: where a value can wrap, its label sits at the top of the row, beside the value's first line, not under its last.
         var name = new TextBlock { Text = label, VerticalAlignment = labelAtTop ? VerticalAlignment.Top : VerticalAlignment.Bottom, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { AppStyles.Label } };
@@ -5608,7 +5686,10 @@ public sealed partial class MainWindow : Window
         }
 
         // Entry 273: a value with a unit switches when tapped; its label still explains it. Entry 280: just this one, remembered for it.
-        UnitTap.Attach(figure, label);
+        if (tappable)
+        {
+            UnitTap.Attach(figure, label);
+        }
 
         var row = new DockPanel();
         DockPanel.SetDock(name, Dock.Left);
