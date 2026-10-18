@@ -1484,6 +1484,11 @@ site build pass.
    desktop's two round trips and the phones' names and order. The focus ring is Fluent's own, unchanged. **Left** (in STATE): the
    dialogs not opened by the tests (CSV mapping, store-bought target choice, Fudd buster, group tools, print, the figures window), the
    phones' pages two presses away (Fix holes, velocity, fingerprint), and a run with a real screen reader on each system.
+4. **Tests and speed.** 4.1, **the corpus counts record rewritten** (`scans/phase1/measurements/detection-counts.json`, with
+   `grouplab corpus counts --write`), approved by planning: 29 of 55 images changed, every one listed old and new in the commit. No
+   image lost a real hole: on all 27 punched scans the punched holes found rose or held (by 0 to 5), never above the number punched. On
+   the unpunched photographs, where every hole found is spurious, over the six whose count changed the spurious holes fell from 36 to
+   16; two rose by 2 (ultrawide3, telephoto2) and four fell, telephoto3 from 17 to 3. The changes are entries 415 and 417's.
 
 ## Decision log
 
