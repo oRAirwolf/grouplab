@@ -9,24 +9,25 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 447 part 1 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-18, entry 447 part 2 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
-- **Entry 447 (2026-10-18)**: part 1 done (the marking picture's arrows, `NudgeShot`); parts 2 to 4 under way, the queue's limit 50%.
-- **Entry 446 (2026-10-18)**: the phone's guided demo, `PhoneDemo` (13 steps as data), the sample from Core's `DemoSample`;
-  walked by the `demo` scenario step in phone-sweep.json (emulator, iOS simulator, headless). `fold-demo` waits for the emulator.
-- **Entry 445 (2026-10-18)**: the guides' "On this page" on every long page (`with_contents`, `CONTENTS_PAGES`, `guide_problems`).
+- **Entry 447 (2026-10-18)**: parts 1 (arrows nudge a hole) and 2 (keyboard and screen readers) done; 3 and 4 under way, limit 50%.
+  Left from part 2: CSV mapping, store target, Fudd buster, group tools, print and figures windows untested; phone pages two presses
+  deep; no real Narrator, VoiceOver or TalkBack run yet.
+- **Entries 445 and 446 (2026-10-18)**: "On this page" on every long page (`with_contents`); the phone's guided demo (`PhoneDemo`,
+  the `demo` scenario step in phone-sweep.json, sample from Core's `DemoSample`); `fold-demo` waits for the emulator.
 - **Entries 441, 443 and 444 (2026-10-18)**: concept B is the home page (the one before is `page_home` at b216ce56); every page has
   its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
   pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` and `site-home-tests.py` hold it.
   Alan's look question (titles in capitals?) is a DESIGN NEEDED line in for-alan.md.
 - **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),
   the shot table's own keys (`OnShotKey`), the caliber line's ".568.96 cm" fixed in `UnitSwitch`; `Entry442Tests`. Phones not in it.
-- **The usage guard** stops at 85% of the week, 88% to finish a block; this block's own limit is 70% (Alan, 2026-10-13).
-- **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21 and 23 proven by tests, 31 met; the rest name their material (entry 414).
+- **The usage guard** stops at 85% of the week (88% to finish a block). **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21, 23
+  proven by tests, 31 met; the rest name their material (entry 414).
 - **Waiting on Alan:** requests 83, 70, 72, 74 to 77; 86 later.
 
 ## The next three
@@ -48,7 +49,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 447's parts 2 to 4: a keyboard and screen reader pass, the iOS Real taps flake, then tests and speed (its limit 50%).
+1. Entry 447's parts 3 and 4: the iOS Real taps flake, then tests and speed (its limit 50%).
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 

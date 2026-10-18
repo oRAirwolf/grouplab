@@ -44,6 +44,23 @@ internal static class CaliberBoxes
         }, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
     }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 447 section 2: the box's name for a screen reader, on the box and on the text field inside it, which is
+    /// what takes the focus, so Narrator, VoiceOver and TalkBack say what the box is for rather than only its example.
+    /// </summary>
+    public static void Named(AutoCompleteBox box, string name)
+    {
+        ArgumentNullException.ThrowIfNull(box);
+        Avalonia.Automation.AutomationProperties.SetName(box, name);
+        box.TemplateApplied += (_, e) =>
+        {
+            if (e.NameScope.Find<TextBox>("PART_TextBox") is { } field)
+            {
+                Avalonia.Automation.AutomationProperties.SetName(field, name);
+            }
+        };
+    }
+
     /// <summary>All of the box's text, selected, where it has a text field inside it.</summary>
     public static void SelectAll(AutoCompleteBox box)
     {

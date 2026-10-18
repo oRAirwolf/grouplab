@@ -147,6 +147,8 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     {
         ClipToBounds = true;
         Focusable = true;
+        // Entry 447 section 2: what a screen reader says when Tab reaches the picture.
+        Avalonia.Automation.AutomationProperties.SetName(this, "The picture. With a hole selected the arrow keys move it, and otherwise they move the view");
         ActualThemeVariantChanged += (_, _) => InvalidateVisual();
 
         // Entry 166 section 3: a Mac trackpad's pinch, and a touch screen's two finger pinch.

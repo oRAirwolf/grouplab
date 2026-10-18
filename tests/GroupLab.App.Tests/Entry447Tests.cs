@@ -1,3 +1,5 @@
+using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -90,6 +92,102 @@ public class Entry447Tests
             Dispatcher.UIThread.RunJobs();
             Press(window, Key.Left, PhysicalKey.ArrowLeft);
             Assert.Equal(shot.Image, window.Session.State.Find(shot.Id)!.Image);
+        }
+        finally
+        {
+            window.Close();
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>Every stop Tab reaches in <paramref name="top"/>, round to the first again, and the ones a screen reader would find no name for.</summary>
+    internal static (List<Control> Stops, List<string> Unnamed, bool Lost) TabRound(Window top)
+    {
+        top.Focus();
+        var stops = new List<Control>();
+        var unnamed = new List<string>();
+        for (int i = 0; i < 800; i++)
+        {
+            Press(top, Key.Tab, PhysicalKey.Tab);
+            if (top.FocusManager?.GetFocusedElement() is not Control c)
+            {
+                return (stops, unnamed, true);
+            }
+
+            if (stops.Contains(c))
+            {
+                break;
+            }
+
+            stops.Add(c);
+            if (string.IsNullOrWhiteSpace(ControlAutomationPeer.CreatePeerForElement(c).GetName()))
+            {
+                unnamed.Add($"{c.GetType().Name} {AutomationProperties.GetAutomationId(c)} {c.Name}");
+            }
+        }
+
+        return (stops, unnamed, false);
+    }
+
+    /// <summary>
+    /// Entry 447 section 2: each screen tabbed all the way round: the focus never lost, never held inside one panel (the round reaches the
+    /// bar down the left), and every stop named for Narrator and VoiceOver.
+    /// </summary>
+    [AvaloniaFact]
+    public void EveryScreenTabsRoundWithEveryStopNamed()
+    {
+        var (window, path) = AnalysisStateTests.Marked();
+        try
+        {
+            window.CalibreAnswered();
+            foreach (string place in new[] { "marking", "analysis", "Sessions", "Library", "Ballistics", "Compare", "Equipment", "Settings" })
+            {
+                if (place == "analysis")
+                {
+                    window.Analyse();
+                }
+                else if (place != "marking")
+                {
+                    window.Go(Enum.Parse<Destination>(place));
+                }
+
+                Dispatcher.UIThread.RunJobs();
+                var (stops, unnamed, lost) = TabRound(window);
+                Assert.False(lost, place + ": the focus was lost");
+                Assert.True(stops.Count > 5 && stops.Count < 800, $"{place}: {stops.Count} stops");
+                Assert.Contains(stops, s => s.Classes.Contains(GroupLab.App.Theme.AppStyles.RailButton));
+                Assert.True(unnamed.Count == 0, place + ": " + string.Join("; ", unnamed));
+            }
+        }
+        finally
+        {
+            window.Close();
+            File.Delete(path);
+        }
+    }
+
+    /// <summary>Entry 447 section 2: the windows GroupLab opens over itself, the report and the printer check, tabbed round the same way.</summary>
+    [AvaloniaFact]
+    public void ItsOwnWindowsTabRoundWithEveryStopNamed()
+    {
+        var (window, path) = AnalysisStateTests.Marked();
+        try
+        {
+            window.OpenPrinterCheck();
+            window.Go(Destination.Settings);
+            Dispatcher.UIThread.RunJobs();
+            window.GetVisualDescendants().OfType<Button>().First(b => b.Content is string words && words.StartsWith("Report a problem", StringComparison.Ordinal))
+                .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(window.OwnedWindows.Count >= 2, "the printer check and the report did not both open");
+            foreach (var owned in window.OwnedWindows.ToList())
+            {
+                var (stops, unnamed, lost) = TabRound(owned);
+                Assert.False(lost, owned.Title + ": the focus was lost");
+                Assert.True(stops.Count > 1, owned.Title + ": nothing takes the focus");
+                Assert.True(unnamed.Count == 0, owned.Title + ": " + string.Join("; ", unnamed));
+                owned.Close();
+            }
         }
         finally
         {

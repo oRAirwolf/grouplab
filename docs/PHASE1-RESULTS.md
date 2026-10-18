@@ -1472,6 +1472,18 @@ site build pass.
    (`MarkingCanvas.NudgeRun`), is one step Undo takes back (`MarkingSession.NudgeShot`). With nothing selected the arrows move the view,
    40 pixels a press and 200 with Shift. A text or number box with the focus keeps its arrows. `Entry447Tests` (4); the user guide's
    From the keyboard section has the bullet.
+2. **Keyboard and screen reader pass.** Desktop: every screen (marking, analysis, Sessions, Targets, Ballistics, Compare, Equipment,
+   Settings) and the report and printer check windows tabbed all the way round headless: the focus never lost, the round reaching the
+   bar down the left (so nothing holds it inside a panel), every stop named as a screen reader reads it (its automation peer's name).
+   About 380 stops; 14 had no name and now do: the column grips ("Column width: the left and right arrows widen or narrow it"), the
+   caliber box (named on its inner field too, `CaliberBoxes.Named`, the phone's as well), the marking picture, and the printer check's
+   name, across, down and unit boxes (by the words beside them). The user guide's tool keys gained B, O, Ctrl+N, Ctrl+V, Delete on a
+   placed bull and the arrows. Phones, at Android's largest text: every place along the bottom, the result and the five pages one press
+   from it, every control named (none was missing); the one fault was that TalkBack and VoiceOver read the bar along the bottom before
+   every screen, so the frame now holds the page first (`Shell`, a grid in place of the dock). Tests: `Entry447Tests` on both, the
+   desktop's two round trips and the phones' names and order. The focus ring is Fluent's own, unchanged. **Left** (in STATE): the
+   dialogs not opened by the tests (CSV mapping, store-bought target choice, Fudd buster, group tools, print, the figures window), the
+   phones' pages two presses away (Fix holes, velocity, fingerprint), and a run with a real screen reader on each system.
 
 ## Decision log
 

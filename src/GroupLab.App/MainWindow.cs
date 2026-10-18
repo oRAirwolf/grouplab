@@ -818,6 +818,7 @@ public sealed partial class MainWindow : Window
         // text, which threw the choice away before the box took it. They are made again only for text a person typed.
         // Entry 312 section 5: the box selects all of its text when it takes the focus, and a clear button inside it empties it.
         CaliberBoxes.SelectAllOnFocus(calibreBox);
+        CaliberBoxes.Named(calibreBox, "Caliber");
         CaliberBoxes.Clear(calibreBox, 24);
         calibreBox.TextChanged += (_, _) =>
         {
@@ -5795,7 +5796,7 @@ public sealed partial class MainWindow : Window
     internal void ShowSessions(bool on = true) => Go(on ? Destination.Sessions : Destination.Analyse);
 
     /// <summary>Goes to one of the rail's destinations.</summary>
-    private void Go(Destination to)
+    internal void Go(Destination to)
     {
         destination = to;
         DiagnosticLog.Info("destination.show", ("destination", to.ToString()));

@@ -30,6 +30,8 @@ public sealed partial class MainWindow
             Cursor = new Cursor(StandardCursorType.SizeWestEast),
         };
         ToolTip.SetTip(splitter, "Drag to widen or narrow this column. Settings, Reset layout puts every column back.");
+        // Entry 447 section 2: the grip takes the focus on Tab, and a screen reader says what it is; the left and right arrows move it.
+        Avalonia.Automation.AutomationProperties.SetName(splitter, "Column width: the left and right arrows widen or narrow it");
         return splitter;
     }
 

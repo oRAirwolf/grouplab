@@ -271,9 +271,12 @@ The queue works from the keyboard:
 - **N** marks the selected mark as not a shot.
 
 The tools have keys too:
-- C or P pan, V select, I impact, A aim, L length and R rectangle;
+- C or P pan, V select, I impact, A aim, L length, R rectangle, B place bulls and O lasso shots onto a bull;
 - the square brackets turn the view;
-- Delete removes the selected mark;
+- Delete removes the selected mark, or with Place bulls the bull chosen;
+- the arrow keys nudge the selected mark, or move the view (see From the keyboard, under the analysis);
+- Ctrl+N starts a new target, clearing this one with a way back from the note it shows, and Ctrl+V pastes a picture, Command N and
+  Command V on a Mac;
 - Ctrl+Z and Ctrl+Y undo and redo, and on a Mac Command Z and Shift Command Z. The undo button's tooltip says what it will undo.
 
 To move around the sheet, a mouse wheel zooms about the pointer, and a touchpad's two finger drag moves the sheet. A pinch zooms, on a touchpad or a touch screen, and so does Ctrl, or Command on a Mac, with any scroll. On a Mac any plain scroll moves the sheet, as it does in other Mac applications.

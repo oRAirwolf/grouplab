@@ -39,6 +39,7 @@ internal sealed class CaliberBox : StackPanel
             Box.PopulateComplete();
         };
         CaliberBoxes.SelectAllOnFocus(Box);
+        CaliberBoxes.Named(Box, "Caliber");
         CaliberBoxes.Clear(Box, Screens.Touch);
         Box.TextChanged += (_, _) => Explain();
         Explain();

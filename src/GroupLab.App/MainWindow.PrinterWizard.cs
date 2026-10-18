@@ -119,8 +119,11 @@ public sealed partial class MainWindow
     {
         var page = WizardPage(1, "Check your printer");
         page.Children.Add(Line("Printers often print a little small. Check once, and every photo of a GroupLab sheet from this printer measures in real inches."));
-        page.Children.Add(FieldLabel("Name this printer"));
+        var namedLabel = FieldLabel("Name this printer");
+        page.Children.Add(namedLabel);
         var named = new TextBox { Text = name, MinWidth = 260, HorizontalAlignment = HorizontalAlignment.Left };
+        // Entry 447 section 2: a screen reader names each box by the words beside it.
+        Avalonia.Automation.AutomationProperties.SetLabeledBy(named, namedLabel);
         page.Children.Add(named);
         page.Children.Add(Row(Button("Print the check page", () =>
         {
@@ -233,9 +236,16 @@ public sealed partial class MainWindow
             var unit = new ComboBox { ItemsSource = new[] { "mm", "in" }, SelectedIndex = 0, MinWidth = 90 };
             var across = new TextBox { Width = 120, PlaceholderText = caliper ? "150.00" : "190.0" };
             var down = new TextBox { Width = 120, PlaceholderText = caliper ? "150.00" : "250.0" };
-            page.Children.Add(Row(new TextBlock { Text = "Across", Width = 70, VerticalAlignment = VerticalAlignment.Center }, across));
-            page.Children.Add(Row(new TextBlock { Text = "Down", Width = 70, VerticalAlignment = VerticalAlignment.Center }, down));
-            page.Children.Add(Row(new TextBlock { Text = "Unit", Width = 70, VerticalAlignment = VerticalAlignment.Center }, unit));
+            TextBlock Labelled(string words, Control field)
+            {
+                var label = new TextBlock { Text = words, Width = 70, VerticalAlignment = VerticalAlignment.Center };
+                Avalonia.Automation.AutomationProperties.SetLabeledBy(field, label);
+                return label;
+            }
+
+            page.Children.Add(Row(Labelled("Across", across), across));
+            page.Children.Add(Row(Labelled("Down", down), down));
+            page.Children.Add(Row(Labelled("Unit", unit), unit));
             page.Children.Add(Row(Button("Work it out", () =>
             {
                 double per = unit.SelectedIndex == 1 ? 1 : 1 / 25.4;

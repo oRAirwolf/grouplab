@@ -43,7 +43,11 @@ public sealed class Shell : UserControl
     private readonly ContentControl page = new();
     private readonly Dictionary<Place, Button> tabs = [];
     private readonly NavBar bar = new();
-    private readonly DockPanel frame = new();
+    /// <summary>
+    /// The page above and the bar along the bottom beneath it. Entry 447 section 2: the page comes first among the frame's children, so
+    /// TalkBack and VoiceOver read a screen before the five places, as they do in the phone's own applications.
+    /// </summary>
+    private readonly Grid frame = new() { RowDefinitions = new RowDefinitions("*,Auto") };
 
     /// <summary>Entry 273: the note that says what a tap on a number switched, at the bottom, for a few seconds.</summary>
     private readonly TextBlock toastWords = new() { TextWrapping = TextWrapping.Wrap };
@@ -120,8 +124,7 @@ public sealed class Shell : UserControl
         }
 
         nav = new Border { Child = bar, Classes = { PhoneStyles.Nav } };
-        DockPanel.SetDock(nav, Dock.Bottom);
-        frame.Children.Add(nav);
+        Grid.SetRow(nav, 1);
         toast = new Border
         {
             Child = toastWords,
@@ -133,6 +136,7 @@ public sealed class Shell : UserControl
         // Entry 446: the guided demo's outline and card, over the page and under nothing.
         Demo = new PhoneDemo(this);
         frame.Children.Add(new Grid { Children = { page, toast, notice, Demo.Layer } });
+        frame.Children.Add(nav);
 
         // Entry 273: tap a number to switch units, the same setting everywhere, remembered.
         UnitTap.Current = () => Phone.Settings.LoadUnits();

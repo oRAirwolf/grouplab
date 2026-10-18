@@ -861,7 +861,8 @@
       "note": [
         "On the computer the arrow keys now work",
         "the focus stays on the row you chose",
-        "the arrow keys now nudge the selected hole"
+        "the arrow keys now nudge the selected hole",
+        "Screen readers now name every control"
       ],
       "guide": "from-the-keyboard"
     },
