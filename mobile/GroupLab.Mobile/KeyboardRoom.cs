@@ -57,6 +57,11 @@ internal sealed class KeyboardRoom
     private bool closedWhileDown;
     private readonly DispatcherTimer watch = new() { Interval = TimeSpan.FromMilliseconds(400) };
 
+    /// <summary>When the finger now down touched the screen, as the system stamped it, and the field whose menu a hold opened since.</summary>
+    private ulong pressedAt;
+
+    private Control? menuFrom;
+
     /// <summary>
     /// Asks the system itself to put the keyboard away, where taking the focus alone may not: the iOS head sets it to end editing in every
     /// window (entry 350). Null elsewhere.
@@ -104,6 +109,7 @@ internal sealed class KeyboardRoom
         level = TopLevel.GetTopLevel(shell);
         level?.AddHandler(InputElement.PointerPressedEvent, OutsidePressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         level?.AddHandler(InputElement.PointerReleasedEvent, OutsideReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
+        level?.AddHandler(InputElement.ContextRequestedEvent, MenuRequested, RoutingStrategies.Bubble, handledEventsToo: true);
         pane = level?.InputPane;
         if (pane is not null)
         {
@@ -115,6 +121,7 @@ internal sealed class KeyboardRoom
     {
         level?.RemoveHandler(InputElement.PointerPressedEvent, OutsidePressed);
         level?.RemoveHandler(InputElement.PointerReleasedEvent, OutsideReleased);
+        level?.RemoveHandler(InputElement.ContextRequestedEvent, MenuRequested);
         level = null;
         if (pane is not null)
         {
@@ -296,6 +303,8 @@ internal sealed class KeyboardRoom
     private void OutsidePressed(object? sender, PointerPressedEventArgs e)
     {
         down = true;
+        pressedAt = e.Timestamp;
+        menuFrom = null;
         // Entry 350: a field with the focus is enough; the keyboard may be up without the system having said so.
         if ((KeyboardTop is null && !barShown && !Typing) || e.Source is not Visual source)
         {
@@ -320,8 +329,43 @@ internal sealed class KeyboardRoom
         pressedOutside = true;
     }
 
+    /// <summary>A field's menu asked for while a finger is down: what a hold on a field does (Cut, Copy and Paste).</summary>
+    private void MenuRequested(object? sender, ContextRequestedEventArgs e)
+    {
+        if (down && e.Source is Visual source && (source as TextBox ?? source.GetVisualAncestors().OfType<TextBox>().FirstOrDefault()) is { } field)
+        {
+            menuFrom = field;
+        }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 447 section 3, the iOS self-test's lost first Next: a tap that puts the focus in a field raises the
+    /// keyboard, and the first time it comes up the screen's thread is held while it does. The tap's release is then handled late, after the
+    /// wait that decides a finger is being held has already run out, so the field opened its Cut, Copy and Paste menu for a tap; that menu
+    /// closes at the next tap anywhere and takes that tap with it, and the next tap was Next. The system stamps a press and its release with
+    /// when they happened, so a menu a hold opened for a finger that was down for less than the hold's wait was opened for a tap, and is
+    /// closed as the release is handled.
+    /// </summary>
+    private void TapNotHold(PointerReleasedEventArgs e)
+    {
+        if (menuFrom is not { } field)
+        {
+            return;
+        }
+
+        menuFrom = null;
+        var wait = Avalonia.Application.Current?.PlatformSettings?.HoldWaitDuration ?? TimeSpan.FromMilliseconds(300);
+        ulong held = e.Timestamp - pressedAt;
+        if (e.Timestamp >= pressedAt && held < (ulong)wait.TotalMilliseconds && field.ContextFlyout is { IsOpen: true } menu)
+        {
+            menu.Hide();
+            DiagnosticLog.Info("keyboard.menu", ("closed", true), ("heldMs", held), ("waitMs", (int)wait.TotalMilliseconds));
+        }
+    }
+
     private void OutsideReleased(object? sender, PointerReleasedEventArgs e)
     {
+        TapNotHold(e);
         if (barShown && e.Source is Visual released && (released == bar || released.GetVisualAncestors().Contains(bar)))
         {
             DiagnosticLog.Info("keyboard.bar", ("pointer", "released"), ("on", released.GetType().Name), ("pressed", next.IsPressed));

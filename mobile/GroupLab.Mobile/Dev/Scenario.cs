@@ -1315,6 +1315,13 @@ internal static class Scenario
                 ? overlay.InputHitTest(inLayer) as Visual
                 : top.InputHitTest(middle) as Visual;
             bool reached = under is not null && (under == target || target.IsVisualAncestorOf(under));
+            // Entry 447 section 3: an open menu lays a layer over the whole window that takes the next tap to close it; a tap is not said to
+            // reach its control while one is up, whatever lies under it.
+            if (reached && top.InputHitTest(middle) is Visual first && first.GetType().Name == "LightDismissOverlayLayer")
+            {
+                reached = false;
+                under = first;
+            }
             said["reached"] = reached && (covered is null || middle.Y < covered);
             said["under"] = under?.GetType().Name;
             if (!reached)

@@ -1484,6 +1484,18 @@ site build pass.
    desktop's two round trips and the phones' names and order. The focus ring is Fluent's own, unchanged. **Left** (in STATE): the
    dialogs not opened by the tests (CSV mapping, store-bought target choice, Fudd buster, group tools, print, the figures window), the
    phones' pages two presses away (Fix holes, velocity, fingerprint), and a run with a real screen reader on each system.
+3. **The iOS Real taps flake, found and fixed at its cause.** The red runs share one thing: a tap lost just after a field took the
+   focus and the keyboard came up for the first time. Two records were added to find it: what the drawing held when GroupLab's own
+   check could not reach a control, and every press and release the window receives while a scenario runs (`scenario.pointer`). The
+   loop of runs then caught it (run 39142559271): the tap on the distance box reached the app 0.7 s late and its release 1.8 s after the
+   press, while the keyboard first came up and held the screen's thread; by then the wait that decides a finger is being held had run
+   out, so the box opened its Cut, Copy and Paste menu, and the first tap on Next landed on that menu's dismissing layer
+   (`LightDismissOverlayLayer`), closing it and nothing else; every later Next worked, one field behind. A person meets the same when
+   the keyboard is slow to come up. **The fix** (`KeyboardRoom.TapNotHold`): the system stamps a press and its release with when they
+   happened, so a menu a hold opened for a finger down less than the hold's wait (`HoldWaitDuration`) was opened for a tap, and is
+   closed as its release is handled; a real hold keeps its menu (`Entry447HoldTests`). No sleep or retry was added. The scripted taps'
+   check now also refuses a tap while a menu's layer would take it, naming it. The proof is 20 runs of ios-app.yml in a row on the
+   fixed build, recorded below as they finish.
 4. **Tests and speed.** 4.1, **the corpus counts record rewritten** (`scans/phase1/measurements/detection-counts.json`, with
    `grouplab corpus counts --write`), approved by planning: 29 of 55 images changed, every one listed old and new in the commit. No
    image lost a real hole: on all 27 punched scans the punched holes found rose or held (by 0 to 5), never above the number punched. On

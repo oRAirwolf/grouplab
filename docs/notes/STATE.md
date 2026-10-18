@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 447 part 4.3 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-18, entry 447 part 3 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
-- **Entry 447 (2026-10-18)**: parts 1, 2 and 4 done (4.3: holes about a sixth sooner); 3 is 20 iOS runs in a row, its cause not yet named.
+- **Entry 447 (2026-10-18)**: parts 1, 2 and 4 done; 3's cause found (a field's menu opened for a tap while the keyboard first came up) and fixed; 20 iOS runs to prove.
   Left from part 2: CSV mapping, store target, Fudd buster, group tools, print and figures windows untested; phone pages two presses
   deep; no real Narrator, VoiceOver or TalkBack run yet.
 - **Entries 445 and 446 (2026-10-18)**: "On this page" on every long page (`with_contents`); the phone's guided demo (`PhoneDemo`,
@@ -98,8 +98,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
-- **ios-app.yml is green again** (run 38883488382, a2a0345a) after red from 2026-10-06: the self-test waited on the caliber question.
-  "Real taps" can still lose the first Next on Targets (5 of 18 red runs); `keyboard.bar` and `keyboard.next` say where.
+- **ios-app.yml's "Real taps" lost a first tap** (about 1 run in 4) because a field's Cut, Copy and Paste menu opened for a tap handled
+  late while the keyboard first came up; `KeyboardRoom.TapNotHold` closes such a menu (entry 447 section 3).
 - **The database is schema version 3** (entry 407 section 5): a new build's first open copies `grouplab.db` to `grouplab.pre-v2.db`.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
