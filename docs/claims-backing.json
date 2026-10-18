@@ -5,6 +5,7 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "On Alan's own scan and Fold 7 photograph of one sheet it reads both (a test on the test-data release); whether that proves it is planning's call.": {"kind": "code", "where": "OutsideWorldTests.TheSupportButtonAsksForTheSupportPageAndOpensNothing and PhotoComparisonTests.OnAlansOwnScanAndPhotographItReadsBothGates; docs/PROOF-CHECKLIST.md rows 12 and 18 (entry 447 section 4.2)"},
   "It is offered once after the first questions, and any time from Settings, **Guided demo**, **Walk me through a demo**, which also says **Carry on from step N of 13** when you left one part way.": {"kind": "code", "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"},
   "It is offered once after the first questions, and any time from Settings, Guided demo , Walk me through a demo , which also says Carry on from step N of 13 when you left one part way.": {"kind": "code", "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"},
   "Newest Coming in the next build Walk me through a demo A guided tour of thirteen steps on a sample sheet GroupLab makes itself, offered once after the first run&#x27;s questions and any time from Settings, that you can do yourself or let GroupLab do with Next, and that nothing you make in it is kept unless you choose.": {"kind": "code", "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"},

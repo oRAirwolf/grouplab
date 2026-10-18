@@ -9,13 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 447 part 4.1 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-18, entry 447 part 4.2 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
-- **Entry 447 (2026-10-18)**: parts 1, 2 and 4.1 (the counts record) done; 3 is 20 iOS runs in a row; 4.2 and 4.3 under way.
+- **Entry 447 (2026-10-18)**: parts 1, 2, 4.1 (counts record) and 4.2 (rows 12, 18) done; 3 is 20 iOS runs in a row; 4.3 under way.
   Left from part 2: CSV mapping, store target, Fudd buster, group tools, print and figures windows untested; phone pages two presses
   deep; no real Narrator, VoiceOver or TalkBack run yet.
 - **Entries 445 and 446 (2026-10-18)**: "On this page" on every long page (`with_contents`); the phone's guided demo (`PhoneDemo`,
@@ -26,8 +26,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   Alan's look question (titles in capitals?) is a DESIGN NEEDED line in for-alan.md.
 - **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),
   the shot table's own keys (`OnShotKey`), the caliber line's ".568.96 cm" fixed in `UnitSwitch`; `Entry442Tests`. Phones not in it.
-- **The usage guard** stops at 85% of the week (88% to finish a block). **The proof checklist**: rows 6, 8, 11, 13, 15, 16, 21, 23
-  proven by tests, 31 met; the rest name their material (entry 414).
+- **The usage guard** stops at 85% of the week (88% to finish a block). **The proof checklist**: rows 6, 8, 11, 12, 13, 15, 16, 21,
+  23 proven by tests, 18 and 31 met; the rest name their material (entries 414 and 447).
 - **Waiting on Alan:** requests 83, 70, 72, 74 to 77; 86 later.
 
 ## The next three

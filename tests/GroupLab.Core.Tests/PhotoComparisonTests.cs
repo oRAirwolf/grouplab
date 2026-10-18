@@ -41,6 +41,39 @@ public class PhotoComparisonTests
         Cv2.ImWrite(path, mat);
     }
 
+    /// <summary>
+    /// docs/PROOF-CHECKLIST.md row 12, its proposed gate (entry 447 section 4.2): the command reads gates 1 and 2 on real pictures. Alan's
+    /// own pair from the test-data release, his 2026-09-26 6 ARC sheet scanned and photographed with the Fold 7 on a kitchen counter
+    /// (entry 171's standing consent): every bull's center and every hole is measured against the scan and set beside the gates'
+    /// thresholds. What it reads does not meet gate 1 (0.0057 in against 0.005 when this was written); reading it is what this row proves.
+    /// Without the test data the test says so and passes, as every test on these files does.
+    /// </summary>
+    [Fact]
+    public void OnAlansOwnScanAndPhotographItReadsBothGates()
+    {
+        string? folder = Environment.GetEnvironmentVariable("GROUPLAB_TEST_DATA");
+        string scan = Path.Combine(folder ?? "", "load-sheet-6arc-dominus-k-2026-09-26.png");
+        string photo = Path.Combine(folder ?? "", "photo-6arc-dominus-k-2026-09-26.jpg");
+        if (folder is not { Length: > 0 } || !File.Exists(scan) || !File.Exists(photo))
+        {
+            Console.WriteLine("Row 12's real pair is not here (GROUPLAB_TEST_DATA): not run.");
+            return;
+        }
+
+        var output = new StringWriter();
+        Assert.Equal(0, PhotoVerb.Run([scan, photo, "--library", Repo.PathTo("targets")], output, new StringWriter()));
+        string text = output.ToString();
+        var row = text.Split(Environment.NewLine).Single(l => l.StartsWith("photo-6arc-dominus-k", StringComparison.Ordinal));
+        // From the right: bulls, bull worst, bull median, truth, found, missed, false, then the three hole figures.
+        var cells = row.Split(' ', StringSplitOptions.RemoveEmptyEntries)[^10..];
+        double Number(int i) => double.Parse(cells[i], System.Globalization.CultureInfo.InvariantCulture);
+        Assert.Equal(25, Number(0));
+        Assert.InRange(Number(1), 0.0001, 0.05);
+        Assert.Equal((25, 25, 0, 0), ((int)Number(3), (int)Number(4), (int)Number(5), (int)Number(6)));
+        Assert.InRange(Number(9), 0, 0.15);
+        Assert.Contains("0.005 in for bull centers and 0.15 in for hole matching", text, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void ThePhotographsAreMeasuredAgainstTheScanAndItSaysWhichTruth()
     {

@@ -1489,6 +1489,13 @@ site build pass.
    image lost a real hole: on all 27 punched scans the punched holes found rose or held (by 0 to 5), never above the number punched. On
    the unpunched photographs, where every hole found is spurious, over the six whose count changed the spurious holes fell from 36 to
    16; two rose by 2 (ultrawide3, telephoto2) and four fell, telephoto3 from 17 to 3. The changes are entries 415 and 417's.
+   4.2, **the proof checklist.** Two rows the repository's own material could prove: row 12, `grouplab compare-photos`, against its
+   proposed gate (it reads gates 1 and 2 on real pictures), by `PhotoComparisonTests.OnAlansOwnScanAndPhotographItReadsBothGates` on
+   Alan's 6 ARC dominus-k scan and its Fold 7 photograph from the test-data release (worst bull 0.0057 in, 25 of 25 holes, none false;
+   it reads, it does not meet); and row 18, the support link, whose written gate (one browser launch once a page exists) the live
+   support page and `OutsideWorldTests.TheSupportButtonAsksForTheSupportPageAndOpensNothing` meet: its README row is now Done, and
+   row 12's README line says what it reads, its state left to planning since its gate is only proposed. Every other row still names
+   material from Alan, a detection change or an unwritten gate.
 
 ## Decision log
 
