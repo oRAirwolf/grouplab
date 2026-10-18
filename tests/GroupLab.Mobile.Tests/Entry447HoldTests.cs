@@ -13,8 +13,7 @@ namespace GroupLab.Mobile.Tests;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 447 section 3: the iOS self-test's lost first Next. The tap that put the focus in the distance box was
 /// handled late, while the keyboard first came up, so the wait for a hold ran out before its release and the box opened its Cut, Copy and
-/// Paste menu, which took the next tap. A menu a hold opened for a finger the system says was down for less than the hold's wait is
-/// closed as the release is handled; a real hold keeps its menu.
+/// Paste menu, which took the next tap. The press that first puts the focus in a field cannot be taken for a hold; on a field that already has the focus a hold is a hold.
 /// </summary>
 public class Entry447HoldTests
 {
@@ -47,23 +46,41 @@ public class Entry447HoldTests
     }
 
     [AvaloniaFact]
-    public void AMenuOpenedForATapIsClosedWhenItsReleaseComes()
+    public void ThePressThatFocusesABoxCannotBecomeAHold()
     {
         var (window, box) = Shown();
         try
         {
-            Assert.NotNull(box.ContextFlyout);
             var at = Middle(window, box);
+            Assert.False(box.IsFocused);
             window.MouseDown(at, MouseButton.Left);
-            HoldFires(box);
-            Assert.True(box.ContextFlyout!.IsOpen, "the hold did not open the box's menu, so this test proves nothing");
+            Assert.False(box.GetValue(InputElement.IsHoldingEnabledProperty), "holding is on during the press that focuses the box");
             window.MouseUp(at, MouseButton.Left);
             Dispatcher.UIThread.RunJobs();
-            Assert.False(box.ContextFlyout.IsOpen);
+            Assert.True(box.GetValue(InputElement.IsHoldingEnabledProperty), "holding did not come back after the release");
         }
         finally
         {
-            box.ContextFlyout?.Hide();
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void ABoxThatHasTheFocusKeepsItsHold()
+    {
+        var (window, box) = Shown();
+        try
+        {
+            box.Focus();
+            Dispatcher.UIThread.RunJobs();
+            var at = Middle(window, box);
+            window.MouseDown(at, MouseButton.Left);
+            Assert.True(box.GetValue(InputElement.IsHoldingEnabledProperty));
+            window.MouseUp(at, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+        }
+        finally
+        {
             window.Close();
         }
     }
@@ -90,24 +107,4 @@ public class Entry447HoldTests
         }
     }
 
-    [AvaloniaFact]
-    public async Task ARealHoldKeepsItsMenu()
-    {
-        var (window, box) = Shown();
-        try
-        {
-            var at = Middle(window, box);
-            window.MouseDown(at, MouseButton.Left);
-            await Task.Delay((int)(Avalonia.Application.Current!.PlatformSettings!.HoldWaitDuration.TotalMilliseconds * 2) + 100);
-            HoldFires(box);
-            window.MouseUp(at, MouseButton.Left);
-            Dispatcher.UIThread.RunJobs();
-            Assert.True(box.ContextFlyout!.IsOpen);
-        }
-        finally
-        {
-            box.ContextFlyout?.Hide();
-            window.Close();
-        }
-    }
 }

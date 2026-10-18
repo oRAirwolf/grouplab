@@ -57,10 +57,8 @@ internal sealed class KeyboardRoom
     private bool closedWhileDown;
     private readonly DispatcherTimer watch = new() { Interval = TimeSpan.FromMilliseconds(400) };
 
-    /// <summary>When the finger now down touched the screen, as the system stamped it, and the field whose menu a hold opened since.</summary>
-    private ulong pressedAt;
-
-    private Control? menuFrom;
+    /// <summary>The field a press is putting the focus into, whose hold is off until that press is released (entry 447 section 3).</summary>
+    private TextBox? holdOff;
 
     /// <summary>
     /// Asks the system itself to put the keyboard away, where taking the focus alone may not: the iOS head sets it to end editing in every
@@ -109,7 +107,6 @@ internal sealed class KeyboardRoom
         level = TopLevel.GetTopLevel(shell);
         level?.AddHandler(InputElement.PointerPressedEvent, OutsidePressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         level?.AddHandler(InputElement.PointerReleasedEvent, OutsideReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
-        level?.AddHandler(InputElement.ContextRequestedEvent, MenuRequested, RoutingStrategies.Bubble, handledEventsToo: true);
         pane = level?.InputPane;
         if (pane is not null)
         {
@@ -121,7 +118,6 @@ internal sealed class KeyboardRoom
     {
         level?.RemoveHandler(InputElement.PointerPressedEvent, OutsidePressed);
         level?.RemoveHandler(InputElement.PointerReleasedEvent, OutsideReleased);
-        level?.RemoveHandler(InputElement.ContextRequestedEvent, MenuRequested);
         level = null;
         if (pane is not null)
         {
@@ -303,8 +299,7 @@ internal sealed class KeyboardRoom
     private void OutsidePressed(object? sender, PointerPressedEventArgs e)
     {
         down = true;
-        pressedAt = e.Timestamp;
-        menuFrom = null;
+        HoldOffForAFocusingPress(e);
         // Entry 350: a field with the focus is enough; the keyboard may be up without the system having said so.
         if ((KeyboardTop is null && !barShown && !Typing) || e.Source is not Visual source)
         {
@@ -329,43 +324,45 @@ internal sealed class KeyboardRoom
         pressedOutside = true;
     }
 
-    /// <summary>A field's menu asked for while a finger is down: what a hold on a field does (Cut, Copy and Paste).</summary>
-    private void MenuRequested(object? sender, ContextRequestedEventArgs e)
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 447 section 3, the iOS self-test's lost first Next. A press that puts the focus in a field raises the
+    /// keyboard, and the first time it comes up the screen's thread is held while it does; the press's release is then handled late, after
+    /// the wait that decides a finger is being held has run out, so the field took the tap for a hold: it opened its Cut, Copy and Paste
+    /// menu, which closes at the next tap anywhere and takes that tap with it, and the next tap was Next. The press that first puts the focus
+    /// in a field is a tap to place the caret and bring up the keyboard, so the field's hold is off while that press is down and comes back
+    /// once its release has been handled; a long press on a field that already has the focus opens its menu as before.
+    /// </summary>
+    private void HoldOffForAFocusingPress(PointerPressedEventArgs e)
     {
-        if (down && e.Source is Visual source && (source as TextBox ?? source.GetVisualAncestors().OfType<TextBox>().FirstOrDefault()) is { } field)
+        HoldBackOn();
+        if (e.Source is Visual source && (source as TextBox ?? source.GetVisualAncestors().OfType<TextBox>().FirstOrDefault()) is { IsFocused: false } field
+            && field.GetValue(InputElement.IsHoldingEnabledProperty))
         {
-            menuFrom = field;
+            field.SetValue(InputElement.IsHoldingEnabledProperty, false);
+            holdOff = field;
         }
     }
 
-    /// <summary>
-    /// NOTES-FROM-PLANNING.md entry 447 section 3, the iOS self-test's lost first Next: a tap that puts the focus in a field raises the
-    /// keyboard, and the first time it comes up the screen's thread is held while it does. The tap's release is then handled late, after the
-    /// wait that decides a finger is being held has already run out, so the field opened its Cut, Copy and Paste menu for a tap; that menu
-    /// closes at the next tap anywhere and takes that tap with it, and the next tap was Next. The system stamps a press and its release with
-    /// when they happened, so a menu a hold opened for a finger that was down for less than the hold's wait was opened for a tap, and is
-    /// closed as the release is handled.
-    /// </summary>
-    private void TapNotHold(PointerReleasedEventArgs e)
+    private void HoldBackOn()
     {
-        if (menuFrom is not { } field)
+        if (holdOff is { } field)
         {
-            return;
-        }
-
-        menuFrom = null;
-        var wait = Avalonia.Application.Current?.PlatformSettings?.HoldWaitDuration ?? TimeSpan.FromMilliseconds(300);
-        ulong held = e.Timestamp - pressedAt;
-        if (e.Timestamp >= pressedAt && held < (ulong)wait.TotalMilliseconds && field.ContextFlyout is { IsOpen: true } menu)
-        {
-            menu.Hide();
-            DiagnosticLog.Info("keyboard.menu", ("closed", true), ("heldMs", held), ("waitMs", (int)wait.TotalMilliseconds));
+            field.ClearValue(InputElement.IsHoldingEnabledProperty);
+            holdOff = null;
         }
     }
 
     private void OutsideReleased(object? sender, PointerReleasedEventArgs e)
     {
-        TapNotHold(e);
+        // After the release has been handled, so no wait for a hold still running can find the hold back on.
+        var off = holdOff;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (ReferenceEquals(holdOff, off))
+            {
+                HoldBackOn();
+            }
+        }, DispatcherPriority.Background);
         if (barShown && e.Source is Visual released && (released == bar || released.GetVisualAncestors().Contains(bar)))
         {
             DiagnosticLog.Info("keyboard.bar", ("pointer", "released"), ("on", released.GetType().Name), ("pressed", next.IsPressed));

@@ -1491,11 +1491,14 @@ site build pass.
    press, while the keyboard first came up and held the screen's thread; by then the wait that decides a finger is being held had run
    out, so the box opened its Cut, Copy and Paste menu, and the first tap on Next landed on that menu's dismissing layer
    (`LightDismissOverlayLayer`), closing it and nothing else; every later Next worked, one field behind. A person meets the same when
-   the keyboard is slow to come up. **The fix** (`KeyboardRoom.TapNotHold`): the system stamps a press and its release with when they
-   happened, so a menu a hold opened for a finger down less than the hold's wait (`HoldWaitDuration`) was opened for a tap, and is
-   closed as its release is handled; a real hold keeps its menu (`Entry447HoldTests`). No sleep or retry was added. The scripted taps'
-   check now also refuses a tap while a menu's layer would take it, naming it. The proof is 20 runs of ios-app.yml in a row on the
-   fixed build, recorded below as they finish.
+   the keyboard is slow to come up. **The first fix** (nightly 201) closed such a menu when the late release showed the finger had been
+   down less than the hold's wait; 12 runs in a row were green, and the 13th (39172455366) showed it closing the menu while a
+   dismissing layer stayed over the window, because the field's hold does more than open the menu (it selects a word and shows
+   handles). **The fix at the cause** (`KeyboardRoom.HoldOffForAFocusingPress`): the press that first puts the focus in a field is a
+   tap to place the caret and bring up the keyboard, so the field's hold is off while that press is down and comes back once its
+   release has been handled; a long press on a field that already has the focus opens its menu as before (`Entry447HoldTests`). No
+   sleep or retry. The scripted taps' check also refuses a tap a menu's layer would take, and says so. The proof is 20 runs of
+   ios-app.yml in a row on this build, recorded below as they finish.
 4. **Tests and speed.** 4.1, **the corpus counts record rewritten** (`scans/phase1/measurements/detection-counts.json`, with
    `grouplab corpus counts --write`), approved by planning: 29 of 55 images changed, every one listed old and new in the commit. No
    image lost a real hole: on all 27 punched scans the punched holes found rose or held (by 0 to 5), never above the number punched. On
