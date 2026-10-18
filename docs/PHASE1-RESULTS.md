@@ -1341,6 +1341,34 @@ site build pass.
    keyboard", with its own picture from the render walk (`keyboard`, a row chosen with Space and the ring on it); the README's Phase 3
    line; three release notes crediting Quack; a note for Quack in for-alan.md.
 
+## Entry 443: one header, one footer and the home page's look on every page (2026-10-18)
+
+1. **The header.** `site_header` in `website/build.py` writes the one header every page carries, the home page's, with every link it
+   had before entry 441: Download, Tour, Features, Shoot a target (Send a target while the upload page is open), Guides, Research,
+   Community, Release notes, Support and GitHub. As entry 304 had it, from 981 to 1499 pixels the last four move into More, and below
+   981 every link is in the menu. The page being read is underlined in amber. The link words are written as before and set in capitals
+   by the stylesheet, so no word changed. Only the home page has Pause motion and the docking wordmark, since only it moves.
+2. **The footer.** `site_footer` writes the one footer, in the home page's look with the site footer's words and all ten links (the
+   home page's footer had four).
+3. **One look.** Every other page takes the home page's header and footer, its type (headings in Plex Sans 600, labels in mono
+   capitals), its buttons (mono capitals, an 8 pixel corner, a hairline border, amber for the main one), square-cornered panels, notes
+   and callouts, and 40 pixel gutters; colors and both themes were already the same tokens. No orbit, no docking and no motion off the
+   home page, and no script added, so with scripts off or reduced motion every page is complete and still. No ruler or section index
+   on the long pages: they would add weight and motion for little help. No page's words or addresses changed.
+4. **Weight.** Measured over all 76 pages (HTML, stylesheets, scripts, preloaded fonts and the images a page loads first): every page
+   is lighter, by 2.2 to 9.5 KB; the home page 116,407 to 114,171 bytes, the download page 221,526 to 212,011. The stylesheets are served
+   without their comments (`served_css`), and the old header and footer rules and seven rules only the page before concept B used are
+   gone; `site.css` is 35,144 bytes, `home.css` 9,461.
+5. **Checks.** `header_problems` fails the build when a page lacks the shared header or footer, or its header lacks one of the links;
+   `tests/python/site-home-tests.py` holds it (32 checks), and that the home page and a plain page take their header and footer from
+   the same two functions. `scripts/claims.py` now reads the shared header and footer once, as a surface of its own, instead of running
+   them into each page's first and last sentences; the 20 page sentences this split out are backed as the same words as before.
+6. **Looked at** in headless Chrome at 1600, 1400 and 1200 pixels and at the narrowest Chrome allows (512): the header, the More menu,
+   the footer, the download, support, release notes and user guide pages. At 360 pixels 22 pages scroll sideways, the same 22 before
+   this entry (wide tables and figures in research articles and two guides): recorded, not fixed here.
+7. **Pictures of the site.** None exists in the README or `docs/figures`, so none to retake. The user guide's PDF, behind since entry
+   442, is regenerated.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

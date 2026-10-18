@@ -25,6 +25,38 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-18, entry 443: the Orbit home page gets the full header back, and every other page takes the home page's look (no orbit)
+
+**Status: actioned 2026-10-18; sections 1 and 2 done. No ruler or section index on the long pages (planning left it to Code): calm pages, and no page heavier. No look question needed Alan. Found, not caused: 22 research and guide pages scroll sideways at 360 pixels, the same before and after, from wide tables and figures; not fixed here, since it changes their layout.**
+
+From the planning session, 2026-10-18 05:00 UTC. Take it after entry 442 (keyboard). Site work. Alan, 2026-10-18, after seeing entry
+441 live:
+
+"I see that the homepage no longer has links at the top for community, release notes, support, or github. Can these be added back? Can
+the rest of the pages be changed to match the style of the home page? It does not need the orbiting motion."
+
+## 1. The home page header
+
+Bring back every link the header had before entry 441 (the `NAV` list and the GitHub link in `website/build.py` at b216ce56): the main
+pages plus Community (the /discord page), Release notes (/releases/), Support (/support/) and GitHub. Keep the old behavior on narrow
+screens (the less used links go into the menu panel, the GitHub icon stays reachable) unless the Orbit header already has a better
+equivalent. The docking wordmark stays.
+
+## 2. One look for the whole site
+
+Every other page (download, features, guides and their tabs, releases, support, discord, research, targets, tour, shoot a target, survey,
+what can be measured, donor, 404, and the /testpage/ pointer) takes the home page's style: its header and footer (one shared header and
+footer for every page, so the links can never drift apart again), its type, colors, spacing, cards, buttons and both themes.
+- **No orbiting screens and no docking animation off the home page.** Calm pages: content first. The ruler that follows the reader and
+  the section index can be used on long pages (guides, research, release notes) only where they help reading; your call.
+- Pause motion, reduced motion and scripts off leave every page complete and still, as entry 440 promised for the home page.
+- Do not change any page's words or facts in this entry, except where the new layout forces it. Keep every address the same.
+- Page weight: no page heavier on first load than it is now; say the before and after in the commit message.
+- Build checks: every page has the shared header and footer with all the links in section 1 (a test), and the existing site checks pass.
+- Same change: site screenshots and the README pictures of the site (entry 267 rule).
+- If a real look question comes up (for example a page whose content does not fit the cards), post it as DESIGN NEEDED in for-alan.md
+  and build the rest. Nothing else here needs Alan.
+
 ## 2026-10-18, entry 442: keyboard use on the desktop: Tab focus that survives Space, and arrow keys (Quack's request)
 
 **Status: actioned 2026-10-18; sections 1 to 4 done. Suggestion for planning on the marking picture's arrows (section 2): with a hole selected on the picture, an arrow nudges it by one pixel of the picture and Shift+arrow by ten, one Undo step per run of presses, and with nothing selected the arrows pan the view; nothing here builds it. The focus ring is Fluent's own (white on dark, black on light), seen in both themes and on the tab strip; restyling it would be a look change for Alan.**

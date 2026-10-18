@@ -5,6 +5,86 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "&#8592; The map Apps GroupLab.Core Imaging · OpenCV Checks Online Deep dive · Imaging How GroupLab uses OpenCV OpenCV is a widely used open-source computer vision library.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "&#8592; The map Apps GroupLab.Core · Hole detection Imaging Checks Online Deep dive · Hole detection How the hole detector was built GroupLab&#x27;s detector was not trained, and it was not guessed.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "&#8592; The map Follow a target S0 decode S1 scale S2 markers S3 register S4 verify S5 render S6 difference S7 candidates S8 classify S9 assign S10 pool Deep dive · The pipeline Follow one target, stage by stage Eight steps a shooter would name, eleven stages in the pipeline&#x27;s specification.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "&#8594; Choosing the markers &#8594; How GroupLab reads a target &#8594; The imaging interface on GitHub &#8594; The Android OpenCV build script &#8594; How the hole detector was built &#8594; Follow one target, stage by stage &#8594; Every feature .": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "&#8594; Curled, angled and wrinkled paper &#8594; The detector on GitHub &#8594; The full pipeline specification &#8594; How GroupLab uses OpenCV &#8594; Follow one target, stage by stage &#8594; Every feature .": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "&#8594; Pooling groups &#8594; The sample on GitHub &#8594; The pipeline specification &#8594; How the hole detector was built &#8594; How GroupLab uses OpenCV &#8594; Every feature .": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "404 That page is not here.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "Features Everything GroupLab does Every feature, grouped, with where it is explained.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "GROUP LAB Free and open source under GPL-3.0.": {
+   "kind": "decided",
+   "where": "the shared footer, website/build.py site_footer (entry 443); the licence is LICENSE, GPL-3.0"
+  },
+  "GroupLab Skip to content 0 1 2 3 4 5 6 7 8 9 10 11 .": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "Guides Guides The user guide and Trying GroupLab describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "On this page Every measurement rests on a scale, and there are four ways to get one Any target can be measured once the scale is set A sheet printed at the wrong size is read correctly, and a scan measures it in real inches So why print at actual size What genuinely cannot be recovered What GroupLab can measure, and what the scale comes from NOTES-FROM-PLANNING.md entries 152, 161 and 171.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "Shoot a target Help prove that GroupLab measures correctly.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "Tour &#8250; Behind the curtain How GroupLab works Click any part for a technical summary, then open its full explanation.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "Tour &rsaquo; Add a store-bought target Add a store-bought target A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "Tour &rsaquo; Made for your optic Made for your optic Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "User guide Trying GroupLab Statistics for shooters Glossary Download as PDF On this page Mil or MOA Each rifle keeps its own Everything aiming follows it Getting GroupLab 1.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "What GroupLab can measure | GroupLab Skip to content .": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "mean radius, CEP, extreme spread, each with how sure it is Every stage in full &#8595; &#8594; How GroupLab uses OpenCV &#8594; How the hole detector was built &#8594; Follow one target, stage by stage &#8594; Back to the tour &#8594; Every feature &#8594; The code on GitHub .": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
   "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) ### From the keyboard Tab and Shift+Tab move through every button, box and list, Space or Enter presses what has the focus, and a ring shows where the focus is.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.cs OnShotKey and SameBullOnSheet, src/GroupLab.App/KeyboardFocus.cs Beside and Keeper; tests Entry442Tests (entry 442 sections 1 and 2)"

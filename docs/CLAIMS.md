@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1728 |
-| measured | 2245 |
-| decided | 1437 |
+| code | 1714 |
+| measured | 2249 |
+| decided | 1446 |
 | unbacked | 0 |
-| **total** | **5410** |
+| **total** | **5409** |
 
-**1567** of them were read one sentence at a time and their backing written against the sentence. The other **3843** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1557** of them were read one sentence at a time and their backing written against the sentence. The other **3852** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3977,15 +3977,13 @@ one that matters.
 
 ### site:404.html
 
-- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Page not found | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub 404 That page is not here.
-- *code* (website/build.py shell(): the footer; LICENSE): &#169; 2026 the GroupLab contributors.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): 404 That page is not here.
 
 ### site:discord/index.html
 
 - *decided* (website/links.json, the server's channels and rules, entry 171 section 3): What is in there The server is grouped like this, so you can see what you are joining before you join.
 - *decided* (website/links.json, the server's channels and rules, entry 171 section 3): general · load-development · optics-and-gear · range-reports Development How GroupLab is built and why, what is being measured, and what is coming next.
 - *decided* (website/links.json, the server's channels and rules, entry 171 section 3): Nothing said on the server is legal advice, and no part of GroupLab is.
-- *code* (LICENSE, and the footer in website/build.py shell()): Free and open source under GPL-3.0.
 
 ### site:download/index.html
 
@@ -4049,11 +4047,10 @@ one that matters.
 - *code* (UpdateAssets.CanInstallItself in src/GroupLab.App/MainWindow.Updates.cs): The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you.
 - *code* (UpdateRun.DownloadAsync's refusal in src/GroupLab.Core/Updates/UpdateRun.cs, shown on Settings): There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.
 - *code* (AppSettingsStore.Default in src/GroupLab.App/AppSettings.cs: Environment.SpecialFolder.ApplicationData): Your data Kept in %APPDATA%\GroupLab on Windows, and under your home folder elsewhere.
-- *code* (LICENSE, and the footer in website/build.py shell()): What changed in each build Every build on GitHub Free and open source under GPL-3.0.
 
 ### site:features/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Features | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Features Everything GroupLab does Every feature, grouped, with where it is explained.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): Features Everything GroupLab does Every feature, grouped, with where it is explained.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); a feature's newest part is dated by website/build.py changed(), held by tests/python/site-feature-dates-tests.py (entry 421); the build's name is read from the notes, so it changes when a nightly publishes): New in nightly.198 Walk me through a demo A guided tour of thirteen steps on a sample sheet GroupLab makes itself, offered once after the first run&#x27;s questions and any time from Settings, that you can do yourself or let GroupLab do with Next, and that nothing you make in it is kept unless you choose.
 - *code* (website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems, which fails the build otherwise (entry 242); a feature's newest part is dated by website/build.py changed(), held by tests/python/site-feature-dates-tests.py (entry 421); the build's name is read from the notes, so it changes when a nightly publishes): Changed in nightly.196 Pictures from any photo app Choose a photograph from Android&#x27;s photo picker, cloud-only photos included, with no permission to your storage, or from any app that offers pictures, listed by name: Google Photos, Samsung Gallery, the maker&#x27;s own gallery on Xiaomi, OPPO, vivo, Honor and other phones, Drive, OneDrive, Dropbox and Files.
 - *measured* (PLATFORM-SUPPORT.md line 59 and NOTES-FROM-PLANNING entry 306 section 4: nightly 135 is the first macOS build signed with a Developer ID, notarized and stapled; the corrected wording is entry 345 finding 6): Windows · macOS · Linux · Android · iPhone and iPad.
@@ -4118,6 +4115,10 @@ one that matters.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): The research article on it Within 1 click Landing on the closest click or on one click either side of it, on both windage and elevation.
 - *decided* (entry 131 section 2: a flyer is the shooter's call): It says whether one shot was unusual for this group rather than whether it was a flyer, which is a judgment only you can make.
 - *decided* (src/GroupLab.Core/Marking/glossary.json, the one list of what GroupLab's words mean (entries 131 and 154)): A rifle zeroed at 100 yards lands low beyond it and slightly high before it.
+
+### site:guides/index.html
+
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): Guides Guides The user guide and Trying GroupLab describe the Windows application as it is built today, and every picture in them is a render of the build; the user guide's last section is the phone.
 
 ### site:guides/statistics-primer/index.html
 
@@ -4195,7 +4196,7 @@ one that matters.
 
 ### site:guides/user-guide/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): User guide | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub User guide Trying GroupLab Statistics for shooters Glossary Download as PDF On this page Mil or MOA Each rifle keeps its own Everything aiming follows it Getting GroupLab 1.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): User guide Trying GroupLab Statistics for shooters Glossary Download as PDF On this page Mil or MOA Each rifle keeps its own Everything aiming follows it Getting GroupLab 1.
 - *code* (website/build.py: the guide's contents, generated from its headings): Mark it and settle the review queue Several targets open at once When a picture names no sheet Change an answer Name the caliber if you know it Holes between bulls, and marks off the grid 5.
 - *code* (website/build.py: the guide's contents, generated from its headings): Sessions and the report One-page report 7.
 - *code* (website/build.py: the guide's contents, generated from its headings): Comparing loads The loads are never ranked by their figures alone Each session is named by what tells it apart 8.
@@ -4311,7 +4312,7 @@ one that matters.
 
 ### site:index.html
 
-- *decided* (the test page's header, ruler and navigation, website/build.py page_home (entry 440, Alan's choice of concept B for the home page, 2026-10-17)): GroupLab Skip to content 0 1 2 3 4 5 6 7 8 9 10 11 GROUP LAB DOWNLOAD TOUR FEATURES SEND A TARGET GUIDES RESEARCH PAUSE MOTION DOWNLOAD Download Tour Features Send a target Guides Research Community Release notes Support GitHub GROUP LAB Know what your rifle really shoots.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): GroupLab Skip to content 0 1 2 3 4 5 6 7 8 9 10 11 .
 - *code* (every figure on the analysis carries its interval: src/GroupLab.Core/Statistics, docs/STATISTICS.md, held by the statistics tests; the same promise as the home page's lead (entries 130 and 145)): GroupLab measures the group and gives every figure with the range it could really be.
 - *code* (website/features.json every-hole, as published on the Features page with its own backing, and the review queue in docs/USER-GUIDE.md section 4; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)): MARKING 01 Finds the holes It reads the sheet, finds each hole and gives it to its bull.
 - *code* (website/features.json six-figures and why, as published on the Features page with its own backing; the card links to it (website/build.py TESTPAGE_CARDS, entry 440, Alan's choice of concept B for the home page, 2026-10-17)): ANALYSIS 02 Every figure with its range Mean radius, CEP, sigma and the rest, each with how big it could really be, and why.
@@ -4324,7 +4325,6 @@ one that matters.
 - *decided* (docs/PLATFORM-SUPPORT.md, the one platform statement (iPhone and iPad through TestFlight's public beta)): C On what you already own Windows, macOS, Linux and Android, with iPhone and iPad in a public beta.
 - *decided* (the home page's limits, carried over from the page before it (entry 441 section 4); the nightly workflow .github/workflows/nightly.yml builds on every change that passes, and docs/RELEASE-PLAN.md says no build is signed or stable yet): Today GroupLab is test builds, unsigned and rebuilt after every change that passes its tests, so one may be broken.
 - *decided* (the section's heading; the phone applications are in docs/PLATFORM-SUPPORT.md (entry 440, Alan's choice of concept B for the home page, 2026-10-17)): 03 / PHONE ANDROID, IPHONE AND IPAD Measure it at the bench.
-- *decided* (the home page's footer, website/build.py page_home (entries 440 and 441, Alan's choice of concept B for the home page, 2026-10-17)): Guides Shoot a target Support Release notes GitHub Discord Hardware survey &#169; 2026 the GroupLab contributors.
 
 ### site:releases/index.html
 
@@ -4604,7 +4604,8 @@ one that matters.
 
 ### site:research/aim-points-by-optic-class/index.html
 
-- *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Aim points for 1x to high power optics | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Aim points for 1x to high power optics GroupLab project.
+- *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Aim points for 1x to high power optics | GroupLab Skip to content .
+- *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Research &rsaquo; Range tests Aim points for 1x to high power optics GroupLab project.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): Written 2026-09-22; the data is from Planned; results pending.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): 1x optics: centering a dot A red dot has a fixed angular size.
 - *measured* (the article's own evidence: 3 sources and its data files, data from Planned; results pending): A 2 MOA dot covers about 0.5 inch at 25 yards, 1 inch at 50 and 2 inches at 100.
@@ -4623,7 +4624,7 @@ one that matters.
 
 ### site:research/bent-sheet-registration/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)): Registering a sheet whose far margin has lifted | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Registering a sheet whose far margin has lifted GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)): Research &rsaquo; How GroupLab is built Registering a sheet whose far margin has lifted GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)): Written 2026-10-10; the data is from Built 2026-10-01 on pictures of the 2026-09-29 sitting; measured again 2026-10-10 on that sitting, two pictures of 2026-09-26 and seven mounted frames.
 - *measured* (the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)): What we found The far column&#x27;s worst error fell from 0.080 to 0.009 in at 9 degrees and from 0.083 to 0.016 in at 15, with the holes found and the false marks unchanged.
 - *measured* (the article's own evidence: 2 sources, data from 2026-10-01 and 2026-10-10; every number checked against docs/notes/archive/results-301-325.md entry 324 section 1, src/GroupLab.Core/Registration/BentSheetMapping.cs and docs/PHASE1-RESULTS.md entry 399 (entry 402)): The correction does not reach a margin past the last row of codes, or a curl that leaves several codes unread; on seven mounted frames the worst bulls were still 0.051 to 0.117 in out.
@@ -4669,7 +4670,7 @@ one that matters.
 
 ### site:research/can-you-see-the-bull/index.html
 
-- *decided* (the article's title and the site's navigation, website/build.py): Aim points and optics at 100 yards | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Range tests Can you see the bull?
+- *measured* (the article's own evidence: 4 sources and its data files, data from 2026-09-20 observations; test results 2026-09-23 (pending)): Aim points and optics at 100 yards | GroupLab Skip to content .
 - *decided* (the article's title and the site's navigation, website/build.py): Aim points and optics at 100 yards GroupLab project.
 - *measured* (the article's front matter; the 2026-09-20 observations (docs/notes/archive/notes-2026-09.md entry 120) and the test of 2026-09-26): Written 2026-09-22; the data is from 2026-09-20 observations; the test shot 2026-09-26.
 - *measured* (website/research/can-you-see-the-bull/data/scores-2026-09-26.csv (207 scores, both sheets transcribed twice, entry 238's record), against the center sizes in website/research/can-you-see-the-bull/figures/make_figures.py; apparent size = 0.955 x inches x magnification at 100 yd): What we found at 10x nobody could center on GroupLab&#x27;s original bull through any of three high power scopes, while the designs whose center subtends about 3.4 arcminutes or more, a black diamond, a black square with a white center and a 2 inch bull, could.
@@ -4717,7 +4718,8 @@ one that matters.
 
 ### site:research/cep-explained/index.html
 
-- *decided* (the article's title and the site's navigation, website/build.py): CEP 50 and 90 explained | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups CEP 50 and 90 explained GroupLab project.
+- *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): CEP 50 and 90 explained | GroupLab Skip to content .
+- *measured* (the article's own evidence: 4 sources and its data files, data from Simulation, seed 2026): Research &rsaquo; Measuring groups CEP 50 and 90 explained GroupLab project.
 - *measured* (the article's front matter; website/research/cep-explained/figures/make_figures.py, numpy default_rng(2026), N = 400000 shots per shape, rerun byte-identical 2026-10-09 (entry 392)): Written 2026-09-22; the data is from Simulation, seed 2026.
 - *measured* (closed form under the circular normal: CEP 50 = sqrt(2 ln 2) = 1.1774, mean radius = sqrt(pi/2) = 1.2533, CEP 90 = sqrt(2 ln 10) = 2.1460; docs/STATISTICS.md section 3.4): What we found for a round group, CEP 50, mean radius and CEP 90 are fixed multiples of the same underlying spread: 1.18, 1.25 and 2.15 sigma.
 - *measured* (website/research/cep-explained/data/coverage-by-shape.csv: at width to height 2, 54.35 percent inside the CEP 50 circle and 89.11 inside CEP 90; seed 2026): When a group stretches to twice as wide as it is tall, the round-group CEP 50 circle holds about 54 percent of shots instead of 50, and the CEP 90 circle about 89 percent instead of 90.
@@ -4743,11 +4745,10 @@ one that matters.
 - *measured* (closed form under the circular normal: CEP 50 = sqrt(2 ln 2) = 1.1774, mean radius = sqrt(pi/2) = 1.2533, CEP 90 = sqrt(2 ln 10) = 2.1460; docs/STATISTICS.md section 3.4): For a round group they are the same number in three costumes: 1.18, 1.25 and 2.15 times the same spread.
 - *measured* (website/research/cep-explained/data/coverage-by-shape.csv: at width to height 2, 54.35 percent inside the CEP 50 circle and 89.11 inside CEP 90; seed 2026): Stretch the group to twice as wide as it is tall and the CEP 50 circle holds 54 percent rather than 50.
 - *measured* (docs/STATISTICS.md sections 3.4 and 4): Sources GroupLab statistics reference, sections 3.4 and 4 (docs/STATISTICS.md).
-- *decided* (the site footer; the licence is LICENSE, GPL-3.0): https://en.wikipedia.org/wiki/Rayleigh_distribution Free and open source under GPL-3.0.
 
 ### site:research/choosing-the-markers/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Choosing the markers | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Choosing the markers GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Research &rsaquo; How GroupLab is built Choosing the markers GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Written 2026-09-22; the data is from 2026-09-22.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What we found Dictionaries with a minimum Hamming distance of 4 or less produced false marker detections on ordinary target artwork.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Every dictionary at Hamming 11 or above produced none.
@@ -4793,7 +4794,8 @@ one that matters.
 
 ### site:research/designing-a-readable-target/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Designing a target GroupLab can read | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Designing a target GroupLab can read GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Designing a target GroupLab can read | GroupLab Skip to content .
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Research &rsaquo; How GroupLab is built Designing a target GroupLab can read GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Any detector good enough to find a .22 hole in a printed ring will find all of those too.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): They need a quiet zone around them, 1.0 mm on a 4.0 mm marker.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That is why the sheets come in families rather than one size: rimfire at 50 yards wants something different from a centerfire at 300, and the built-in library is forty-seven sheets rather than one because those are genuinely different problems.
@@ -4846,7 +4848,8 @@ one that matters.
 
 ### site:research/how-grouplab-reads-a-target/index.html
 
-- *measured* (the article's own evidence: 3 sources, data from 2026-09-20): How GroupLab reads a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Reading targets How GroupLab reads a target GroupLab project.
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-20): How GroupLab reads a target | GroupLab Skip to content .
+- *measured* (the article's own evidence: 3 sources, data from 2026-09-20): Research &rsaquo; Reading targets How GroupLab reads a target GroupLab project.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): GroupLab prints the ruler on the target , and everything below follows from that.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): Work out where the page is Knowing the number and the position of each marker, and knowing where those markers were printed, GroupLab can work out the exact mapping between the photograph and the page.
 - *measured* (the article's own evidence: 3 sources, data from 2026-09-20): On the 2026-09-20 scans it was 0.0023 to 0.0026 in.
@@ -4880,7 +4883,6 @@ one that matters.
 - *measured* (website/research/how-many-shots/data/shots-to-compare.csv, exact F test search at 80 percent power and 5 percent two-sided (exact_n in make_figures.py): ratio 1.25 needs 81, 1.10 needs 434; 2 x 434 = 868): A 9 percent difference needs 434.
 - *measured* (website/research/how-many-shots/data/shots-to-compare.csv, exact F test search at 80 percent power and 5 percent two-sided (exact_n in make_figures.py): ratio 1.25 needs 81, 1.10 needs 434; 2 x 434 = 868): What to do instead of shooting 81 rounds: accept a wider conclusion.
 - *measured* (docs/STATISTICS.md section 9): Sources GroupLab statistics reference, section 9 (docs/STATISTICS.md), which also checks the approximation against an exact search.
-- *decided* (the site footer; the licence is LICENSE, GPL-3.0): https://www.itl.nist.gov/div898/handbook/eda/section3/eda359.htm Free and open source under GPL-3.0.
 
 ### site:research/index.html
 
@@ -4956,11 +4958,10 @@ one that matters.
 - *code* (src/GroupLab.Core/Statistics/Angular.cs: the true minute, angle = k atan(x / 2d), docs/STATISTICS.md sections 12.5 and 13): Converting a group at 300 yards to MOA, working out a correction in clicks, or comparing your figures with somebody else's.
 - *code* (src/GroupLab.Core/Statistics/Angular.cs: the true minute, angle = k atan(x / 2d), docs/STATISTICS.md sections 12.5 and 13): Use the real number; GroupLab does.
 - *measured* (docs/STATISTICS.md sections 12.5 and 13 and src/GroupLab.Core/Statistics/Angular.cs): Sources GroupLab statistics reference, sections 12.5 and 13 (docs/STATISTICS.md), and src/GroupLab.Core/Statistics/Angular.cs.
-- *decided* (the site footer; the licence is LICENSE, GPL-3.0): https://en.wikipedia.org/wiki/Milliradian Free and open source under GPL-3.0.
 
 ### site:research/nightly-builds/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Nightly builds, from commit to installer | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Nightly builds, from commit to installer GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Research &rsaquo; How GroupLab is built Nightly builds, from commit to installer GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Tests run on Windows, macOS and Linux.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): If they all pass, a nightly build starts: it packages a Windows installer, signs a manifest saying what is in it, tags the commit, and publishes a release.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That produced entries like: Entry 130 item 3.3: doubt travels with the number That is written for the project's own log.
@@ -4982,7 +4983,7 @@ one that matters.
 
 ### site:research/phomemo-m834-print-commands/index.html
 
-- *measured* (the article's own evidence: 3 sources, data from one recording of 2026-10-05 and three check prints of 2026-10-07, 2026-10-08 and 2026-10-10; every number checked against docs/PHASE1-RESULTS.md, request 73 and entries 389 and 391, and requests 84, 85 and 88 (entry 402)): What a thermal printer is sent: the Phomemo M834, decoded | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built What a thermal printer is sent: the Phomemo M834, decoded GroupLab project.
+- *measured* (the article's own evidence: 3 sources, data from one recording of 2026-10-05 and three check prints of 2026-10-07, 2026-10-08 and 2026-10-10; every number checked against docs/PHASE1-RESULTS.md, request 73 and entries 389 and 391, and requests 84, 85 and 88 (entry 402)): Research &rsaquo; How GroupLab is built What a thermal printer is sent: the Phomemo M834, decoded GroupLab project.
 - *measured* (the article's own evidence: 3 sources, data from one recording of 2026-10-05 and three check prints of 2026-10-07, 2026-10-08 and 2026-10-10; every number checked against docs/PHASE1-RESULTS.md, request 73 and entries 389 and 391, and requests 84, 85 and 88 (entry 402)): Written 2026-10-10; the data is from One recording of the Phomemo app&#x27;s print, 2026-10-05; three check prints on one M834, 2026-10-07, 2026-10-08 and 2026-10-10.
 - *measured* (the article's own evidence: 3 sources, data from one recording of 2026-10-05 and three check prints of 2026-10-07, 2026-10-08 and 2026-10-10; every number checked against docs/PHASE1-RESULTS.md, request 73 and entries 389 and 391, and requests 84, 85 and 88 (entry 402)): No figure: The findings are a recording&#x27;s bytes and lengths read with a caliper and rulers; they are in the article as tables, and a picture of a thermal page would not show a 0.7 percent difference.
 - *measured* (the article's own evidence: 3 sources, data from one recording of 2026-10-05 and three check prints of 2026-10-07, 2026-10-08 and 2026-10-10; every number checked against docs/PHASE1-RESULTS.md, request 73 and entries 389 and 391, and requests 84, 85 and 88 (entry 402)): What we found The Phomemo app, given a Letter sheet, printed it at 94.7 percent of its size and cut the last line in half.
@@ -5218,7 +5219,7 @@ one that matters.
 
 ### site:research/safe-updates/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): How GroupLab updates itself safely | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built How GroupLab updates itself safely GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Research &rsaquo; How GroupLab is built How GroupLab updates itself safely GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Each build publishes a small file saying what the newest version is, and for every file its name, size and SHA-256.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That file carries a signature, and GroupLab refuses a manifest whose signature does not verify.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): A file whose SHA-256 does not match the manifest is refused, whatever the manifest said.
@@ -5275,7 +5276,6 @@ one that matters.
 - *measured* (the sources named, in this repository): Sources GroupLab notes on the developer's second range day, entry 120, section 4 (docs/NOTES-FROM-PLANNING.md).
 - *measured* (the sources named, in this repository): GroupLab measurements for question 38 (docs/QUESTIONS-FOR-PLANNING.md).
 - *measured* (the sources named, in this repository): GroupLab Phase 0 results, print-scale detection (docs/PHASE0-RESULTS.md).
-- *decided* (the site footer; the licence is LICENSE, GPL-3.0): https://en.wikipedia.org/wiki/Image_scanner Free and open source under GPL-3.0.
 
 ### site:research/scans-against-photos/index.html
 
@@ -5306,11 +5306,11 @@ one that matters.
 - *measured* (src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)): For the 1 MOA rifle above that is an error over about 0.7 MOA, three quarter-MOA clicks.
 - *measured* (src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)): It takes the group you analyzed and your scope's click value, from the rifle record or chosen there, and gives the shots for 90, 95 and 99 percent on both goals, each axis alone, and the curve against shots.
 - *measured* (src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)): Sources GroupLab statistics reference, sections 2 and 8.2 on group centres (docs/STATISTICS.md).
-- *measured* (src/GroupLab.Core/Statistics/ShotsToZero.cs, worked out 2026-09-28 by its closed form and 4,000 stratified sigma draws; held by tests/GroupLab.Core.Tests/Statistics/ShotsToZeroTests.cs against a numerical integration and a 200,000 session shot-by-shot simulation (entry 252)): https://en.wikipedia.org/wiki/Standard_error Free and open source under GPL-3.0.
 
 ### site:research/smaller-installer/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Cutting the installer from 97 MB to 81 MB | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Cutting the installer from 97 MB to 81 MB GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Cutting the installer from 97 MB to 81 MB | GroupLab Skip to content .
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Research &rsaquo; How GroupLab is built Cutting the installer from 97 MB to 81 MB GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What we found 100.7 MB of a 332.6 MB install was debug symbols, 100 MB of it in two files.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Removing them took the install to 204.3 MB, a 39 percent cut, and made the self-contained build smaller than the framework-dependent one had been.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): And in the middle of the table was something nobody had asked about: 100.7 MB of the 332.6 MB install was debug symbols.
@@ -5356,7 +5356,7 @@ one that matters.
 
 ### site:research/uploads-rebuilt-from-pixels/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Every upload is rebuilt from pixels | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built Every upload is rebuilt from pixels GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Research &rsaquo; How GroupLab is built Every upload is rebuilt from pixels GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What GroupLab does with it Before a photograph is published, the metadata is thrown away and rebuilt .
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): The keep list, in full Kept, because they describe the camera and the exposure and are what makes a photograph useful as evidence about photographs: Make, Model, Orientation Exposure time, f-number, ISO Focal length and its 35 mm equivalent Pixel dimensions Digital zoom ratio Lens model Removed, which is everything else: Every GPS field.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Separately from all of the above, no part of GroupLab reads GPS or location values from any photograph at any point, including the diagnostic log, which has its own whitelist following the same rule.
@@ -5364,7 +5364,8 @@ one that matters.
 
 ### site:research/velocity-sd-small-samples/index.html
 
-- *decided* (the article's title and the site's navigation, website/build.py): Velocity SD from 5, 10 and 20 shots | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; Measuring groups Velocity SD from 5, 10 and 20 shots GroupLab project.
+- *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): Velocity SD from 5, 10 and 20 shots | GroupLab Skip to content .
+- *measured* (the article's own evidence: 3 sources and its data files, data from Closed-form statistics and simulation, seed 2026): Research &rsaquo; Measuring groups Velocity SD from 5, 10 and 20 shots GroupLab project.
 - *measured* (website/research/velocity-sd-small-samples/data/sd-interval-by-shots.csv, sqrt(df / chi2) with df = n - 1 at 2.5 and 97.5 percent (NIST/SEMATECH e-Handbook 1.3.5.8)): What we found if you chronograph five shots and measure an SD of 10 ft/s, the true SD of that ammunition is, with 95 percent confidence, somewhere between 6.0 and 28.7 ft/s.
 - *measured* (website/research/velocity-sd-small-samples/data/sd-interval-by-shots.csv, sqrt(df / chi2) with df = n - 1 at 2.5 and 97.5 percent (NIST/SEMATECH e-Handbook 1.3.5.8)): With 20 shots the same reading narrows to 7.6 to 14.6.
 - *measured* (website/research/velocity-sd-small-samples/data/sd-interval-by-shots.csv, sqrt(df / chi2) with df = n - 1 at 2.5 and 97.5 percent (NIST/SEMATECH e-Handbook 1.3.5.8)): The interval, string by string Suppose your chronograph says SD 10 ft/s.
@@ -5383,7 +5384,7 @@ one that matters.
 
 ### site:research/what-grouplab-sends/index.html
 
-- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): What GroupLab sends from your computer or phone | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Research &rsaquo; How GroupLab is built What GroupLab sends from your computer or phone GroupLab project.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Research &rsaquo; How GroupLab is built What GroupLab sends from your computer or phone GroupLab project.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Written 2026-09-22; the data is from 2026-10-07.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): There is no analytics, no usage reporting, no license check and no phoning home.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): It does not send your machine name, your account, your screen, your Windows version or a unique identifier of any kind.
@@ -5410,7 +5411,6 @@ one that matters.
 - *code* (src/GroupLab.Core/Marking/ZeroCorrection.cs, an axis is dialled only where its interval excludes zero (ZeroAxis.Distinguishable, Clicks); the zero block in src/GroupLab.App/MainWindow.cs (ZeroFor)): It gives the group center's distance from the aim across and up or down, and says to dial an axis, in clicks when it knows the rifle's scope, only when that axis's offset is larger than its 95 percent uncertainty.
 - *measured* (0.1 mrad x 3600 in = 0.36 in; 0.25 x 1.047 in = 0.26 in, src/GroupLab.Core/Statistics/Angular.cs): A 0.1 mil click is 0.36 inch at 100 yards and a 1/4 MOA click is 0.26 inch.
 - *measured* (closed form, mean of a Rayleigh with sigma / sqrt(n): sqrt(pi/2) / sqrt(n) = 0.72, 0.56 and 0.40 at 3, 5 and 10 shots; website/research/when-to-adjust-zero/data/error-after-adjusting.csv from 200,000 simulated sessions, seed 2026; 0.25 x 1.2533 = 0.31 and 0.25 x 0.72 = 0.18): The center of a three-shot group is itself uncertain by about 0.72 sigma, so a full correction based on it leaves you that far out on average, whatever you started from.
-- *decided* (the site footer; the licence is LICENSE, GPL-3.0): https://cran.r-project.org/package=shotGroups Free and open source under GPL-3.0.
 
 ### site:research/wind-or-rifle/index.html
 
@@ -5451,7 +5451,7 @@ one that matters.
 
 ### site:shoot-a-target/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Shoot a target | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Shoot a target Help prove that GroupLab measures correctly.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): Shoot a target Help prove that GroupLab measures correctly.
 - *decided* (Entry 368's range kit and the photographs of 4 October in docs/PHASE1-RESULTS.md, entry 374; the consistency audit of 2026-10-07, finding 6): grouplab-donor-pack.zip &#183; 9 PDFs Download all Most useful right now: The C3 zeroing grids, which GroupLab has no real photographs of yet, and the E and C bulls, which it has seen from one range day only.
 - *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): One sheet of each The E bull, 5x5 The everyday sheet for load development through a scope: a black disc with a white center and a small dot, 25 bulls and three sighters.
 - *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Letter PDF A4 PDF The C bull, 5x5 The same sheet with a diamond standing on its point, whose points sit on a crosshair&#x27;s lines.
@@ -5468,7 +5468,6 @@ one that matters.
 - *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): 4 Photograph it before you take it down In GroupLab on your phone, Take a picture: Guided takes it when everything is right, Manual when you press, and the torch helps in dim light.
 - *code* (website/donor/sheets.json and src/GroupLab.Cli/DonorPackVerb.cs, each PDF the sheet and VolunteerPack.Filled's page, held by DonorPackTests; website/build.py page_shoot and donor_card (entry 264)): Without GroupLab, two photographs on the main camera at 1x.
 - *measured* (research/scanner-traps and research/scans-against-photos): 5 Send them as they came off the camera A 600 dpi flatbed scan too, if you have one.
-- *code* (LICENSE, and the footer in website/build.py shell()): Send your target photos JPEG, PNG, HEIC or TIFF Free and open source under GPL-3.0.
 
 ### site:support/index.html
 
@@ -5479,7 +5478,6 @@ one that matters.
 - *code* (the Report a problem window, src/GroupLab.App (entry 164); website/build.py page_support()): 03 Send it Open an issue on GitHub, attach the zip, and add a line about what you were doing.
 - *code* (mobile/GroupLab.Mobile/SettingsView.cs settings-send-to-grouplab, src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync, DiagnosticsPackage.Send; entry 386 section 4): support@grouplab.org On a phone On Android, iPhone and iPad, open Settings, then About: Send to GroupLab sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; Send diagnostics puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email.
 - *decided* (docs/TESTING-GUIDE.md: everything lives in %APPDATA%\GroupLab, which no installer or uninstaller touches (entry 134); the Windows wording is entry 345's): If a new build will not start On Windows, nothing of yours is at risk: settings, sessions, your own sheets and the log live in %APPDATA%\GroupLab , which no installer or uninstaller touches.
-- *code* (LICENSE, and the footer in website/build.py shell()): Shoot a target Free and open source under GPL-3.0.
 
 ### site:survey/index.html
 
@@ -5501,11 +5499,15 @@ one that matters.
 - *decided* (entry 129 section 5: every question optional; the numbers before it are the page's choice of how many sheets a set has (entry 418)): 1 2 3 4 5 About the target Answer what you can be bothered to answer and leave the rest.
 - *decided* (entry 129: the upload form asks for the diameter): The diameter, not the cartridge name, because that is what measures a hole: a 6.5 Creedmoor and a 6.5x55 both put a 0.264 in bullet through the paper.
 - *decided* (entry 165 section 2: the publishable consent level, in website/api/limits.json consentTexts): GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab&#x27;s public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use.
-- *code* (LICENSE, and the footer in website/build.py shell()): Send the photos Free and open source under GPL-3.0.
 
 ### site:testpage/index.html
 
 - *decided* (entry 441, Alan, 2026-10-18: "Yes on the new home page design"; website/build.py page_testpage_moved): The design previewed here became grouplab.org's home page on 18 October 2026.
+
+### site:the header and footer of every page
+
+- *decided* (the shared footer, website/build.py site_footer (entry 443); the licence is LICENSE, GPL-3.0): GROUP LAB Free and open source under GPL-3.0.
+- *code* (website/build.py shell(): the footer; LICENSE): &#169; 2026 the GroupLab contributors.
 
 ### site:tour/analysis-open/index.html
 
@@ -5530,16 +5532,11 @@ one that matters.
 - *code* (src/GroupLab.App/MainWindow.Ballistics.cs the dope table's columns; tests/GroupLab.App.Tests/Entry112Tests.cs the heading): Drop, elevation and clicks, the drift of a 10 mph wind, velocity and energy at every step.
 - *code* (src/GroupLab.App/MainWindow.Hit.cs ShowHit, the cost bars; src/GroupLab.Core/Ballistics/HitProbability.cs costs sorted largest first): Every error source by the hits it takes away, largest first with a bar for each, so you can see whether the wind call, the load or the range estimate is what to work on.
 
-### site:tour/capture/index.html
-
-- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): &lsaquo; Add a store-bought target All screens Marking and review &rsaquo; Free and open source under GPL-3.0.
-
 ### site:tour/compare/index.html
 
 - *decided* (NOTES-FROM-PLANNING.md entry 275 sections 1 and 2; docs/PHONE-PARITY.md rows why, compare and ballistics; RELEASE-NOTES.md nightly 119): On the phone since nightly 119: in Sessions, tick two or more and compare them one figure at a time, with the range each could really be.
 - *code* (tests/GroupLab.App.Tests/Entry109Tests.cs AnalyzeScan and SuppressorScans; docs/figures/screens/current/SOURCES.md (entry 243 section 1.3)): Here they are the developer's own two 6 ARC sheets of 2026-09-26, one shot through each of two suppressors; the article linked below says what they show about the point of impact.
 - *code* (the Compare screen, src/GroupLab.App/MainWindow.Compare.cs): Sigma, mean radius and extreme spread, each with its 95 percent interval.
-- *decided* (website/tour.json, the link to the suppressor-shift article, entry 226 section 2.1): Two real sheets compared &lsaquo; Session records All screens Equipment &rsaquo; Free and open source under GPL-3.0.
 
 ### site:tour/equipment/index.html
 
@@ -5547,12 +5544,13 @@ one that matters.
 
 ### site:tour/fingerprint/index.html
 
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): Tour &rsaquo; Add a store-bought target Add a store-bought target A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.
 - *code* (website/tour.json fingerprint mobile block and docs/figures/screens/phone/fold-fingerprint-light.png (the picture shows step 2 of 5 with 12 by 18 in typed); entry 405): Step 2 of 5, How big is this target?, with a 12 by 18 in poster and its size typed.
 - *decided* (NOTES-FROM-PLANNING.md entries 340 and 344 (recognition from a fingerprint; only Alan's files are added to the library, checked by hand); src/GroupLab.Core/StoreTargets/StoreTargetLibrary.cs All; entry 348's steps in src/GroupLab.App/FingerprintStepsView.cs and mobile/GroupLab.Mobile/FingerprintPage.cs): Where it fits Before you shoot a target GroupLab does not know.
-- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): &lsaquo; Made for your optic All screens Capture &rsaquo; Free and open source under GPL-3.0.
 
 ### site:tour/how-it-works/hole-detection/index.html
 
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): &#8592; The map Apps GroupLab.Core · Hole detection Imaging Checks Online Deep dive · Hole detection How the hole detector was built GroupLab&#x27;s detector was not trained, and it was not guessed.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): It was measured into existence: 343 real hole measurements first, a written test it had to pass second, synthetic sheets to practice on third, and then every miss on real paper turned into a rule with its reason written beside it.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): Step 1 · By 13 September · Measure first 343 holes, and five findings that changed the design Before a line of GroupLab&#x27;s detector was written, seventeen scanned files of fourteen commercial targets were measured by a Python and OpenCV harness: 343 hole measurements on 15 of them.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): Measured, the center is on average darker than paper, and a quarter of holes have a center within 5 gray levels of the paper around them.
@@ -5617,11 +5615,11 @@ one that matters.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): NOT YET Photographs Flat photographs nearly pass the 0.005 in gate; mounted ones do not yet, and wait on photographs of mounted GroupLab sheets.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): On eight photographs of a commercial grid target shot in tight five-shot groups, the detector built from the scans, for sheets GroupLab did not print, found 54 of 400 shots as marks of their own.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): &#8594; How GroupLab reads a target &#8594; A bullet hole is not the bullet &#8594; One hole or two?
-- *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): &#8594; Curled, angled and wrinkled paper &#8594; The detector on GitHub &#8594; The full pipeline specification &#8594; How GroupLab uses OpenCV &#8594; Follow one target, stage by stage &#8594; Every feature Free and open source under GPL-3.0.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): &#8594; Curled, angled and wrinkled paper &#8594; The detector on GitHub &#8594; The full pipeline specification &#8594; How GroupLab uses OpenCV &#8594; Follow one target, stage by stage &#8594; Every feature .
 
 ### site:tour/how-it-works/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): How GroupLab works: the map | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub Tour &#8250; Behind the curtain How GroupLab works Click any part for a technical summary, then open its full explanation.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): Tour &#8250; Behind the curtain How GroupLab works Click any part for a technical summary, then open its full explanation.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): Key numbers 1 to 4 s to analyze a 300 dpi Letter scan on a desktop, naming the sheet included Built from .NET 10 Avalonia OpenCvSharp 4.13 Where it lives src/GroupLab.App Apps you run Android app The same Core on the phone, with OpenCV built from source for arm64.
 - *code* (src/GroupLab.Core/Capture/AutoShutter.cs (SteadyMs, LeastFrames), used by android/GroupLab.Android/CameraView.cs and ios/GroupLab.iOS/Camera/CameraSession.cs, held by AutoShutterTests (entry 311 section 1); website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): The camera screen analyzes a 1920 × 1440 stream live (CameraX&#x27;s default is 640 by 480, where a QR module is about one pixel), gives one instruction at a time, and in Guided mode fires once every frame for 0.6 seconds has been judged ready.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): Built from .NET 10 Avalonia OpenCV for iOS Where it lives docs/IOS-PLAN.md Apps you run Command line The engine with no windows.
@@ -5644,10 +5642,11 @@ one that matters.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): size for the caliber, position, splits, flags Every stage in full &#8595; bull 1 bull 2 Step 6 of 8 &#183; S9 Assign Shots are matched to bulls.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): globally optimal one-to-one matching; never forced when shots outnumber bulls; margins under 0.15 in flagged Every stage in full &#8595; sheet 1 sheet 2 one load, ten shots Step 7 of 8 &#183; S10 Combine Sheets of one load, or tiles of one big target, are pooled.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): each tile registers itself, so tile alignment adds nothing; a missing tile is reported, not dropped Every stage in full &#8595; mean radius how sure it is Step 8 of 8 &#183; after S10 Report Figures with intervals, checked against R shotGroups.
-- *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): mean radius, CEP, extreme spread, each with how sure it is Every stage in full &#8595; &#8594; How GroupLab uses OpenCV &#8594; How the hole detector was built &#8594; Follow one target, stage by stage &#8594; Back to the tour &#8594; Every feature &#8594; The code on GitHub Free and open source under GPL-3.0.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): mean radius, CEP, extreme spread, each with how sure it is Every stage in full &#8595; &#8594; How GroupLab uses OpenCV &#8594; How the hole detector was built &#8594; Follow one target, stage by stage &#8594; Back to the tour &#8594; Every feature &#8594; The code on GitHub .
 
 ### site:tour/how-it-works/opencv/index.html
 
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): &#8592; The map Apps GroupLab.Core Imaging · OpenCV Checks Online Deep dive · Imaging How GroupLab uses OpenCV OpenCV is a widely used open-source computer vision library.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): 4.13.0 the OpenCV release on every platform, built for each 7 operations the Core may ask for, and no others 10 OpenCV modules compiled into the Android build 4 floating-point steps moved into GroupLab&#x27;s own code 1 · Where OpenCV sits Four layers between the Core and the pixels GroupLab.Core has no reference to OpenCV at all.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): ↓ calls IImagingBackend DetectMarkers · FindHomography · WarpPerspective · Morphology · FilledBlobs · PhaseCorrelate · ReadCodes src/GroupLab.Core/Imaging ↓ implemented with OpenCvSharp A thin C# layer over OpenCV&#x27;s C++ API, under the Apache-2.0 license.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): ↓ calls native code Desktop and command line OpenCvSharp&#x27;s published native runtimes at 4.13.0, for Windows, Linux x64 and macOS, Intel and Apple silicon.
@@ -5686,10 +5685,11 @@ one that matters.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): The four steps, in GroupLab&#x27;s code Perspective warp · sub-pixel corner refinement · the homography&#x27;s final refinement · contour refinement src/GroupLab.Core/Imaging/PortableImaging.cs 7 · Reading the QR codes Two detectors, because neither is enough OpenCV&#x27;s plain QR detector missed the codes on a 600 dpi scan, a tile and a photograph.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): The WeChat detector, used without its neural network models, found all three, but hands back text through UTF-8, so every byte above 0x7F in the binary frame became a replacement character and no frame passed its CRC.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): src/GroupLab.Cli/Imaging/OpenCvSharpBackend.cs 8 · What OpenCV does not do The parts that are GroupLab&#x27;s own Drawing the target The sheet you print, and the expected image it is compared with.
-- *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): &#8594; Choosing the markers &#8594; How GroupLab reads a target &#8594; The imaging interface on GitHub &#8594; The Android OpenCV build script &#8594; How the hole detector was built &#8594; Follow one target, stage by stage &#8594; Every feature Free and open source under GPL-3.0.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): &#8594; Choosing the markers &#8594; How GroupLab reads a target &#8594; The imaging interface on GitHub &#8594; The Android OpenCV build script &#8594; How the hole detector was built &#8594; Follow one target, stage by stage &#8594; Every feature .
 
 ### site:tour/how-it-works/pipeline/index.html
 
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): &#8592; The map Follow a target S0 decode S1 scale S2 markers S3 register S4 verify S5 render S6 difference S7 candidates S8 classify S9 assign S10 pool Deep dive · The pipeline Follow one target, stage by stage Eight steps a shooter would name, eleven stages in the pipeline&#x27;s specification.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): 8 steps a shooter would name 11 stages in the pipeline&#x27;s specification 25 of 25 shots found and assigned in the real run at the foot of this page 0.232 in that group&#x27;s mean radius Step 1 · before S0 Print The sheet is born from a GLTD definition, and everything GroupLab will later need to read it is printed on it.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): true size markers QR code Step 1: print.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): 38 markers on GL-CF25-LTR, on the corners of its cell lattice 6.0 mm per marker with its quiet zone GLTD The definition Bulls, rings, markers and QR codes, all in page units.
@@ -5737,11 +5737,11 @@ one that matters.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): The rejections are the interesting half: they turn &quot;no shot here&quot; into &quot;a mark 0.058 in across, under the 0.150 in floor&quot;.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): Below is a real run of grouplab analyze on a sample in the repository, a 600 dpi scan of GL-CF25-LTR-D with 25 shots.
 - *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): &#8594; Designing a target GroupLab can read &#8594; A bullet hole is not the bullet &#8594; Scans against phone photos &#8594; Choosing the markers &#8594; Curled, angled and wrinkled paper &#8594; How GroupLab reads a target &#8594; One hole or two?
-- *measured* (website/how-it-works.json: every figure on these pages is in its figures, each with the document or command it comes from; entry 284 section 3's fact check of every claim against the repository, 2026-09-29 (the corrections are listed in docs/PHASE1-RESULTS.md, entry 284)): &#8594; Pooling groups &#8594; The sample on GitHub &#8594; The pipeline specification &#8594; How the hole detector was built &#8594; How GroupLab uses OpenCV &#8594; Every feature Free and open source under GPL-3.0.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): &#8594; Pooling groups &#8594; The sample on GitHub &#8594; The pipeline specification &#8594; How the hole detector was built &#8594; How GroupLab uses OpenCV &#8594; Every feature .
 
 ### site:tour/index.html
 
-- *code* (website/build.py shell(): the page frame and navigation, with More (entry 304)): Tour | GroupLab Skip to content Download Tour Features Send a target Guides Research Community Release notes Support GitHub More Download Tour Features Send a target Guides Research Community Release notes Support GitHub A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): A tour of GroupLab Behind the curtain: how GroupLab works &#8594; Every screen, what it is for, and what you would do on it.
 - *code* (website/tour.json order, counted by scripts/counts.py tour-screens): Thirteen pages, one per screen, so you can see what using GroupLab is like before you download it.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Made for your optic Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.
 - *code* (website/tour.json fingerprint mobile block and docs/figures/screens/phone/fold-fingerprint-light.png (the picture shows step 2 of 5 with 12 by 18 in typed); entry 405): Add a store-bought target A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.
@@ -5754,6 +5754,7 @@ one that matters.
 
 ### site:tour/optic/index.html
 
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): Tour &rsaquo; Made for your optic Made for your optic Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Through 4x the same 25 shots need a bigger bull, so they take a set of sheets.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): What this screen is for A bull you cannot see the middle of is a bull you cannot aim at the same way twice, and that is what spreads a group before the rifle does.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): The aim point test of 2026-09-26 found that a feature needs about 3.5 arcminutes at the lowest magnification a sheet is shot at before it can be centered on.
@@ -5764,7 +5765,6 @@ one that matters.
 - *code* (mobile/GroupLab.Mobile/TargetsPage.cs, Made for your optic; TargetGenerator (entry 242)): How far, and the lowest power you will shoot at: 1 for a red dot.
 - *code* (mobile/GroupLab.Mobile/TargetsPage.cs, the red dot field; TargetGenerator (entry 242)): Only at 1x: the dot's size in MOA, so the bull is one you can center on.
 - *code* (website/tour.json optic, its numbers from docs/figures/screens/current/optic-numbers.json written by Entry109Tests from TargetGenerator.Generate (entry 242)): Where the 3.5 arcminute rule comes from is Can you see the bull?
-- *code* (the tour's links between stops in website/build.py page_tour_screen, from website/tour.json order; LICENSE, and the footer in shell()): The aim point test The Targets screen &lsaquo; Targets All screens Add a store-bought target &rsaquo; Free and open source under GPL-3.0.
 
 ### site:tour/sessions/index.html
 
@@ -5789,6 +5789,8 @@ one that matters.
 
 ### site:what-can-be-measured/index.html
 
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): What GroupLab can measure | GroupLab Skip to content .
+- *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): On this page Every measurement rests on a scale, and there are four ways to get one Any target can be measured once the scale is set A sheet printed at the wrong size is read correctly, and a scan measures it in real inches So why print at actual size What genuinely cannot be recovered What GroupLab can measure, and what the scale comes from NOTES-FROM-PLANNING.md entries 152, 161 and 171.
 - *decided* (entries 152, 161 and 171): Two published statements said GroupLab can only measure a sheet it printed, and that a sheet printed at the wrong size cannot be recovered.
 - *decided* (entries 152, 161 and 171): The second was half true, and entry 152 got the other half wrong in this file : it said a shrunk sheet measures correctly, and entry 161 read the code and found that it does not.
 - *decided* (entries 152, 161 and 171): The corrected statement is below, and the entry 152 version is quoted in the log rather than left standing here.

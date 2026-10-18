@@ -341,13 +341,6 @@ ICON_MENU = '<svg class="ico" width="22" height="22" viewBox="0 0 24 24" aria-hi
 ICON_PDF = '<svg class="ico pdf" width="28" height="34" viewBox="0 0 28 34" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 2h16l8 8v22H2z"/><path d="M18 2v8h8"/><path d="M7 19h14M7 24h14M7 14h6"/></svg>'
 
 
-def logo(cls: str = "logo") -> str:
-    return (
-        f'<img class="{cls} only-dark" src="/assets/img/grouplab-lockup.svg" alt="GroupLab" width="143" height="30">'
-        f'<img class="{cls} only-light" src="/assets/img/grouplab-lockup-light.svg" alt="GroupLab" width="143" height="30">'
-    )
-
-
 
 # ---------------------------------------------------------------- glossary
 
@@ -497,20 +490,53 @@ def term_problems() -> list[str]:
 NAV_MORE = {"Community", "Release notes", "Support"}
 
 
-def shell(path: str, title: str, description: str, body: str, active: str = "", image: str = "og.png") -> str:
-    full_title = "GroupLab" if not title else f"{title} | GroupLab"
-    links = []
-    menu_links = []
+def site_header(active: str = "", home: bool = False) -> str:
+    """Entry 443: the one header every page carries, the home page's, with every link the header had before entry 441: the main pages,
+    Community, Release notes, Support and GitHub. Between 981 and 1499 pixels the less used ones move into More, as entry 304 had it,
+    and below that every link is in the menu. Only the home page has motion, so only it has Pause motion and the docking wordmark."""
+    bar, menu = [], []
     for label, href in nav():
         cur = ' aria-current="page"' if label == active else ""
         more = label in NAV_MORE
-        bar_class = ' class="nav-more"' if more else ""
-        menu_class = "" if more else ' class="menu-main"'
-        links.append(f'<a href="{href}"{cur}{bar_class}>{esc(label)}</a>')
-        menu_links.append(f'<a href="{href}"{cur}{menu_class}>{esc(label)}</a>')
-    nav_links = "\n".join(links)
-    menu = "\n".join(menu_links)
+        bar.append(f'<a href="{href}"{cur}{' class="nav-more"' if more else ""}>{esc(label)}</a>')
+        menu.append(f'<a href="{href}"{cur}{"" if more else ' class="menu-main"'}>{esc(label)}</a>')
+    bar.append(f'<a href="{GITHUB}" class="nav-more tp-gh">{ICON_GITHUB}<span>GitHub</span></a>')
+    menu.append(f'<a href="{GITHUB}">GitHub</a>')
+    motion = (f'<button type="button" class="tp-motion tp-button mono" aria-pressed="false" aria-label="Pause motion">{ICON_PAUSE}'
+              '<span class="tp-motion-word">PAUSE MOTION</span></button>' if home else "")
+    return f"""<header class="tp-header{' tp-home' if home else ''}">
+<a class="tp-brand cond" href="/" aria-label="GroupLab home">{HOME_MARK}<span class="tp-word">GROUP<span class="tp-amber">LAB</span></span></a>
+<nav class="tp-nav mono" aria-label="Main">{"".join(bar)}</nav>
+{motion}<button type="button" class="theme-toggle tp-button tp-square" aria-label="Switch between dark and light">{ICON_THEME}</button>
+<a class="tp-dl mono" href="/download/">DOWNLOAD</a>
+<details class="tp-menu">
+<summary class="tp-button tp-square" aria-label="Menu">{ICON_MENU}<span class="menu-word mono">More</span></summary>
+<nav class="menu-panel" aria-label="Main">{"".join(menu)}</nav>
+</details>
+</header>"""
+
+
+def site_footer() -> str:
+    """Entry 443: the one footer every page carries, in the home page's look, with the words and links the site's footer had."""
     year = datetime.date.today().year
+    return f"""<footer class="tp-footer">
+<div class="tp-footer-about">
+<a class="tp-brand cond" href="/" aria-label="GroupLab home">{HOME_MARK}<span>GROUP<span class="tp-amber">LAB</span></span></a>
+<p>Free and open source under GPL-3.0. No account, no ads, no paid tier. The application keeps everything on your own computer and sends nothing you have not agreed to: targets, error reports and the survey each ask first.</p>
+</div>
+<nav class="tp-footer-links" aria-label="Footer">
+<a href="/download/">Download</a><a href="{GITHUB}">Source on GitHub</a>
+<a href="/shoot-a-target/">Shoot a target</a><a href="{GITHUB}/blob/main/LICENSE">License, GPL-3.0</a>
+<a href="/guides/">Guides</a><a href="/releases/">Release notes</a><a href="{GITHUB}/releases">All builds</a>
+<a href="/support/">Support</a><a href="{DISCORD}">Community</a>
+<a href="/survey/">Hardware survey</a>
+</nav>
+<span class="tp-copy">GroupLab is a working name and may change. &#169; {year} the GroupLab contributors.</span>
+</footer>"""
+
+
+def shell(path: str, title: str, description: str, body: str, active: str = "", image: str = "og.png") -> str:
+    full_title = "GroupLab" if not title else f"{title} | GroupLab"
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -539,46 +565,13 @@ def shell(path: str, title: str, description: str, body: str, active: str = "", 
 <script src="/assets/js/theme.js"></script>
 <script src="/assets/js/terms.js" defer></script>
 </head>
-<body>
+<body class="tp">
 <a class="skip" href="#main">Skip to content</a>
-<header class="site-header">
-<div class="wrap header-row">
-<a class="brand" href="/" aria-label="GroupLab home">{logo()}</a>
-<nav class="nav" aria-label="Main">
-{nav_links}
-<a href="{GITHUB}" class="gh nav-more">{ICON_GITHUB}<span>GitHub</span></a>
-</nav>
-<div class="header-tools">
-<button type="button" class="theme-toggle" aria-label="Switch between dark and light">{ICON_THEME}</button>
-<details class="menu">
-<summary aria-label="Menu">{ICON_MENU}<span class="menu-word">More</span></summary>
-<nav class="menu-panel" aria-label="Main">
-{menu}
-<a href="{GITHUB}">GitHub</a>
-</nav>
-</details>
-</div>
-</div>
-</header>
+{site_header(active)}
 <main id="main">
 {body if path == GLOSSARY_PATH else explain(body)}
 </main>
-<footer class="site-footer">
-<div class="wrap footer-row">
-<div class="footer-about">
-<a href="/" aria-label="GroupLab home">{logo("logo small")}</a>
-<p>Free and open source under GPL-3.0. No account, no ads, no paid tier. The application keeps everything on your own computer and sends nothing you have not agreed to: targets, error reports and the survey each ask first.</p>
-</div>
-<nav class="footer-links" aria-label="Footer">
-<a href="/download/">Download</a><a href="{GITHUB}">Source on GitHub</a>
-<a href="/shoot-a-target/">Shoot a target</a><a href="{GITHUB}/blob/main/LICENSE">License, GPL-3.0</a>
-<a href="/guides/">Guides</a><a href="/releases/">Release notes</a><a href="{GITHUB}/releases">All builds</a>
-<a href="/support/">Support</a><a href="{DISCORD}">Community</a>
-<a href="/survey/">Hardware survey</a>
-</nav>
-</div>
-<div class="wrap footer-base">GroupLab is a working name and may change. &#169; {year} the GroupLab contributors.</div>
-</footer>
+{site_footer()}
 </body>
 </html>
 """
@@ -1843,9 +1836,6 @@ def home_card_picture(name: str, alt: str) -> str:
 
 
 def page_home() -> str:
-    year = datetime.date.today().year
-    bar = "".join(f'<a href="{href}">{esc(label.upper())}</a>' for label, href in nav() if label not in NAV_MORE)
-    menu = "".join(f'<a href="{href}">{esc(label)}</a>' for label, href in nav()) + f'<a href="{GITHUB}">GitHub</a>'
     ticks = "".join(f'<span class="tp-tick-n mono" style="top:{i * 200 + 12}px">{i}</span>' for i in range(12))
     tags = "".join(f'<span><span class="tp-dot">&#183;</span> {esc(t.upper())}</span>' for t in HOME_TAGS)
     cards = "".join(
@@ -1949,27 +1939,33 @@ Not built yet: hole detection on plain paper, and synchronization between device
 <script src="/assets/js/terms.js" defer></script>
 <script src="/assets/js/home.js" defer></script>
 </head>
-<body class="tp">
+<body class="tp tp-landing">
 <a class="skip" href="#main">Skip to content</a>
 <div class="tp-ruler" aria-hidden="true"><span class="tp-ruler-mark"></span>{ticks}</div>
-<header class="tp-header">
-<a class="tp-brand cond" href="/" aria-label="GroupLab home">{HOME_MARK}<span class="tp-word">GROUP<span class="tp-amber">LAB</span></span></a>
-<nav class="tp-nav mono" aria-label="Main">{bar}</nav>
-<button type="button" class="tp-motion tp-button mono" aria-pressed="false" aria-label="Pause motion">{ICON_PAUSE}<span class="tp-motion-word">PAUSE MOTION</span></button>
-<button type="button" class="theme-toggle tp-button tp-square" aria-label="Switch between dark and light">{ICON_THEME}</button>
-<a class="tp-dl mono" href="/download/">DOWNLOAD</a>
-<details class="tp-menu">
-<summary class="tp-button tp-square" aria-label="Menu">{ICON_MENU}</summary>
-<nav class="menu-panel" aria-label="Main">{menu}</nav>
-</details>
-</header>
+{site_header(home=True)}
 <main id="main">{explain(main)}</main>
-<footer class="tp-footer"><span>GroupLab is free and open source under the GPL-3.0.</span>
-<nav class="tp-footer-links" aria-label="Footer"><a href="/guides/">Guides</a><a href="/shoot-a-target/">Shoot a target</a><a href="/support/">Support</a><a href="/releases/">Release notes</a><a href="{GITHUB}">GitHub</a><a href="{DISCORD}">Discord</a><a href="/survey/">Hardware survey</a></nav>
-<span class="tp-copy">&#169; {year} the GroupLab contributors.</span></footer>
+{site_footer()}
 </body>
 </html>
 """
+
+
+def header_problems(out: Path = OUT) -> list[str]:
+    """Entry 443 section 2: every page carries the one header and the one footer, the header with every link entry 441 had dropped and
+    Alan asked back (the main pages, Community, Release notes, Support and GitHub), so the links can never drift apart again."""
+    wanted = [href for _, href in nav()] + [GITHUB]
+    found = []
+    for page in sorted(out.rglob("*.html")):
+        text = page.read_text(encoding="utf-8", errors="replace")
+        where = page.relative_to(out).as_posix()
+        if '<header class="tp-header' not in text or '<footer class="tp-footer">' not in text:
+            found.append(f"{where}: it does not carry the shared header and footer")
+            continue
+        header = text[text.index('<header class="tp-header'):text.index("</header>")]
+        missing = [href for href in wanted if f'href="{href}"' not in header]
+        if missing:
+            found.append(f"{where}: its header has no link to {', '.join(missing)}")
+    return found
 
 
 def page_testpage_moved() -> str:
@@ -3479,41 +3475,18 @@ GUIDE_TOC_JS = """// NOTES-FROM-PLANNING.md entry 436: the guide's contents list
 
 HOME_CSS = r"""
 /* Entry 440: the concept B home page, the home page since entry 441. The site's tokens and fonts; the layout is the canvas's. */
-.tp{--ring:#6b727b;--rule:46px;overflow-x:hidden}
-@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .tp{--ring:#8f8b83}}
-:root[data-theme="light"] .tp{--ring:#8f8b83}
-/* The canvas sets headings and links in plain Plex Sans at their own weights, so the page needs four font files, not six. */
-.tp h1,.tp h2,.tp h3{font-family:"IBM Plex Sans",system-ui,sans-serif;letter-spacing:normal;text-transform:none}
-.tp a{font-weight:400}
-.tp .cond{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700}
-.tp-amber{color:var(--amber)}
-.tp-ring-line{fill:none;stroke:var(--ring);stroke-width:6}
-.tp-hit{fill:var(--amber)}
-.tp main,.tp-footer,.tp-band{margin-right:var(--rule)}
+.tp-landing{--rule:46px;overflow-x:hidden}
+.tp-landing main,.tp-landing .tp-footer,.tp-landing .tp-band{margin-right:var(--rule)}
 .tp-ruler{position:fixed;top:0;right:0;bottom:0;width:var(--rule);border-left:1px solid var(--line);z-index:3;overflow:hidden;
 background-image:linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px),linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px);
 background-size:9px 40px,18px 200px;background-repeat:repeat-y;background-position:right 0 top 20px,right 0 top 20px}
 .tp-tick-n{position:absolute;right:22px;font-size:10px;color:var(--faint)}
 .tp-ruler-mark{position:absolute;right:0;top:0;width:var(--rule);height:2px;background:var(--amber);transform:translateY(0)}
-.tp-header{position:fixed;top:0;left:0;right:var(--rule);z-index:6;display:flex;align-items:center;gap:28px;padding:16px 40px;
-border-bottom:1px solid transparent;transition:background-color .2s,border-color .2s}
-.tp-header.tp-solid{background:var(--bg);border-bottom-color:var(--line)}
-.tp-brand{display:flex;align-items:center;gap:10px;font-size:18px;letter-spacing:.04em;color:var(--text)}
-.tp-brand:hover{text-decoration:none}
-.tp-word{display:inline-block;transform-origin:0 0}
-.tp-nav{display:flex;gap:22px;flex-wrap:wrap;margin-left:auto;font-size:12px;letter-spacing:.08em}
-.tp-nav a{color:var(--dim)}
-.tp-nav a:hover{color:var(--text);text-decoration:none}
-.tp-button{height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--dim);font-size:11px;
-letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-.tp-square{width:36px;padding:0;color:var(--text)}
+/* Entry 443: the header is every page's; on the home page it floats over the orbit until the wordmark has docked. */
+.tp-home{position:fixed;left:0;right:var(--rule);background:transparent;border-bottom-color:transparent;transition:background-color .2s,border-color .2s}
+.tp-home.tp-solid{background:var(--bg);border-bottom-color:var(--line)}
 .tp-motion-icon{display:none}
 html:not(.tp-js) .tp-motion{display:none}
-.tp-dl{height:36px;display:flex;align-items:center;padding:0 16px;border-radius:8px;background:var(--text);color:var(--bg);font-size:12px;letter-spacing:.08em}
-.tp-dl:hover{text-decoration:none;opacity:.9}
-.tp-menu{display:none;position:relative}
-.tp-menu summary{list-style:none}
-.tp-menu summary::-webkit-details-marker{display:none}
 .tp-hero{position:relative;height:940px;overflow:hidden;background:var(--sunk)}
 .tp-orbits{position:absolute;left:50%;top:470px;width:0;height:0}
 .tp-circle,.tp-ring{position:absolute;border-radius:50%}
@@ -3596,27 +3569,16 @@ html:not(.tp-js) .tp-tags,.tp-still .tp-tags{flex-wrap:wrap;row-gap:8px;padding-
 .tp-close h2{margin:0 0 26px;font-size:96px;line-height:.95}
 .tp .tp-free{margin:18px 0 0;font-size:12px;color:var(--faint)}
 .tp .tp-today{margin:0;padding:28px 40px 0;max-width:860px;font-size:15px;line-height:1.6;color:var(--faint)}
-.tp-footer{border-top:1px solid var(--line);padding:36px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:14px;color:var(--faint)}
-.tp-footer-links{display:flex;gap:20px;flex-wrap:wrap}
-.tp-copy{flex-basis:100%;font-size:13px}
 html.tp-js:not(.tp-still) .tp-ease{transition:opacity .7s ease,transform .7s ease}
 html.tp-js:not(.tp-still) .tp-ease:not(.tp-in){opacity:0;transform:translateY(18px)}
-@media (max-width:1100px){
-.tp-header{gap:16px;padding:14px 24px}
-.tp-nav{gap:16px}
-}
-@media (max-width:980px){.tp-nav{display:none}.tp-menu{display:block;margin-left:auto}}
 @media (max-width:860px){
-.tp{--rule:0px}
+.tp-landing{--rule:0px}
 .tp-ruler,.tp-index,.tp-wide{display:none}
 .tp-narrow{display:inline}
-.tp-header{position:sticky;background:var(--bg);border-bottom-color:var(--line);padding:10px 16px;gap:8px}
-.tp-brand{font-size:17px}
+.tp-home{position:sticky;background:var(--bg);border-bottom-color:var(--line)}
 .tp-motion{width:44px;padding:0;color:var(--text)}
-.tp-motion-word,.tp-dl{display:none}
+.tp-motion-word{display:none}
 .tp-motion-icon{display:block}
-.tp-square,.tp-menu summary{width:44px;height:44px}
-.tp-menu .menu-panel{top:52px}
 .tp-hero{height:700px}
 .tp-orbits{top:300px;transform:scale(.5)}
 .tp-hero-text{top:240px;padding:0 16px}
@@ -3652,11 +3614,10 @@ html.tp-js:not(.tp-still) .tp-ease:not(.tp-in){opacity:0;transform:translateY(18
 .tp-close{padding:60px 16px}
 .tp-close h2{font-size:52px;margin-bottom:20px}
 .tp-close .tp-btn{width:100%;padding:15px}
-.tp-footer{padding:26px 16px}
 .tp .tp-today{padding:20px 16px 0}
 }
 @media (prefers-reduced-motion: reduce){
-.tp-card-img,.tp-header{transition:none}
+.tp-card-img,.tp-home{transition:none}
 html.tp-js .tp-ease{transition:none}
 }
 """
@@ -3754,6 +3715,13 @@ HOME_JS = """// NOTES-FROM-PLANNING.md entry 440: the concept B home page's moti
 """
 
 
+def served_css(css: str) -> str:
+    """Entry 443: a stylesheet as it is served, without the comments that explain it here, and without blank lines. Every page loads it,
+    so what only a reader of this file needs is not sent to every visitor."""
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    return "\n".join(line for line in css.splitlines() if line.strip()) + "\n"
+
+
 CSS = r"""
 @font-face{font-family:"IBM Plex Sans";font-weight:400;font-style:normal;font-display:swap;src:url(/assets/fonts/plex-sans-400.woff2) format("woff2")}
 @font-face{font-family:"IBM Plex Sans";font-weight:500;font-style:normal;font-display:swap;src:url(/assets/fonts/plex-sans-500.woff2) format("woff2")}
@@ -3801,78 +3769,112 @@ a.term:hover{text-decoration:underline dotted}
 .term-pop-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .term-pop button{background:none;border:1px solid var(--line2);color:var(--dim);border-radius:4px;padding:2px 10px;font:inherit;cursor:pointer}
 .glossary-entry{scroll-margin-top:80px;border-bottom:1px solid var(--line);padding:6px 0 10px}
-h1,h2,.display{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700;letter-spacing:-.01em;line-height:1.08;margin:0;color:var(--text)}
+h1,h2{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700;letter-spacing:-.01em;line-height:1.08;margin:0;color:var(--text)}
 h1{font-size:clamp(36px,5vw,52px)}
-.display{font-size:clamp(38px,6vw,64px);line-height:1.04}
 h2{font-size:clamp(28px,3.4vw,40px);line-height:1.1}
 h3,.h3{font-family:"IBM Plex Sans",sans-serif;font-size:19px;font-weight:600;letter-spacing:0;line-height:1.3;margin:0}
 p{margin:0;color:var(--dim)}
 p.text,.text p,.text{color:var(--text)}
 .dim{color:var(--dim)}.faint{color:var(--faint)}.teal{color:var(--teal)}.amber{color:var(--amber)}
 .small{font-size:13px}.caps{letter-spacing:.1em;text-transform:uppercase}
-.wrap{max-width:1280px;margin:0 auto;padding-left:80px;padding-right:80px}
+.wrap{max-width:1280px;margin:0 auto;padding-left:40px;padding-right:40px}
 .skip{position:absolute;left:-9999px;top:8px;background:var(--amber);color:var(--on-amber);padding:10px 14px;border-radius:4px;z-index:10}
 .skip:focus{left:16px}
 
-/* header */
-.site-header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
-.header-row{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.brand{display:flex;align-items:center}
-.logo{height:30px;width:auto;display:block}
-.logo.small{height:22px}
-.nav{display:flex;align-items:center;gap:32px;margin-left:auto}
-.nav a{color:var(--dim);font-size:15px;padding:10px 0;border-bottom:2px solid transparent;white-space:nowrap}
-.site-header .wrap{max-width:1440px}
-.menu-word{display:none;margin-left:6px;font-size:15px}
 .page-top{padding-top:72px}
 .note.note-figure{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;row-gap:16px}
 .note-figure>*{min-width:0}
 .note-figure .shot-link{grid-column:1 / -1}
 .note-figure .shot-link img{max-width:100%}
-.nav a:hover{color:var(--text);text-decoration:none}
-.nav a[aria-current="page"]{color:var(--text);border-bottom-color:var(--amber)}
-.nav .gh{display:flex;align-items:center;gap:8px}
-.header-tools{display:flex;align-items:center;gap:8px}
-.theme-toggle{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--line2);border-radius:4px;color:var(--dim);cursor:pointer}
-.theme-toggle:hover{color:var(--text);border-color:var(--dim)}
-.menu{display:none;position:relative}
-.menu summary{list-style:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);border:1px solid var(--line2);border-radius:4px}
-.menu summary::-webkit-details-marker{display:none}
 .menu-panel{position:absolute;right:0;top:52px;min-width:220px;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line2);border-radius:6px;padding:8px;box-shadow:var(--shadow)}
 .menu-panel a{padding:12px 14px;color:var(--text);border-radius:4px}
 .menu-panel a:hover{background:var(--panel2);text-decoration:none}
 .menu-panel a[aria-current="page"]{color:var(--amber)}
 
+/* Entry 443: one look for the whole site, the home page's. The header and footer every page shares, its type and its buttons. */
+.tp{--ring:#6b727b}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .tp{--ring:#8f8b83}}
+:root[data-theme="light"] .tp{--ring:#8f8b83}
+.tp h1,.tp h2,.tp h3{font-family:"IBM Plex Sans",system-ui,sans-serif;letter-spacing:normal;text-transform:none;font-weight:600}
+.tp a{font-weight:400}
+.tp .cond{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;font-weight:700}
+.tp-amber{color:var(--amber)}
+.tp-ring-line{fill:none;stroke:var(--ring);stroke-width:6}
+.tp-hit{fill:var(--amber)}
+.tp-header{position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:28px;padding:16px 40px;background:var(--bg);border-bottom:1px solid var(--line)}
+.tp-brand{display:flex;align-items:center;gap:10px;font-size:18px;letter-spacing:.04em;color:var(--text)}
+.tp-brand:hover{text-decoration:none}
+.tp-word{display:inline-block;transform-origin:0 0}
+.tp-nav{display:flex;align-items:center;gap:22px;margin-left:auto;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.tp-nav a{color:var(--dim);white-space:nowrap;padding:6px 0;border-bottom:2px solid transparent}
+.tp-nav a:hover{color:var(--text);text-decoration:none}
+.tp-nav a[aria-current="page"]{color:var(--text);border-bottom-color:var(--amber)}
+.tp-gh{display:flex;align-items:center;gap:8px}
+.tp-button{height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--dim);font-size:11px;
+letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.tp-button:hover{color:var(--text);border-color:var(--dim)}
+.tp-square{width:36px;padding:0;color:var(--text)}
+.tp-dl{height:36px;display:flex;align-items:center;padding:0 16px;border-radius:8px;background:var(--text);color:var(--bg);font-size:12px;letter-spacing:.08em}
+.tp-dl:hover{text-decoration:none;opacity:.9}
+.tp-menu{display:none;position:relative}
+.tp-menu summary{list-style:none}
+.tp-menu summary::-webkit-details-marker{display:none}
+.menu-word{display:none;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.tp-footer{border-top:1px solid var(--line);margin-top:96px;padding:36px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px 48px;font-size:14px;color:var(--faint)}
+.tp-footer-about{display:flex;flex-direction:column;gap:12px;max-width:440px}
+.tp-footer-about p{margin:0;font-size:14px;color:var(--faint)}
+.tp-footer-links{display:grid;grid-template-columns:repeat(2,minmax(0,auto));column-gap:48px;row-gap:8px;align-content:start}
+.tp-footer-links a{color:var(--dim)}
+.tp-footer-links a:hover{color:var(--text)}
+.tp-copy{flex-basis:100%;font-size:13px}
+@media (max-width:1499px) and (min-width:981px){
+.tp-nav .nav-more{display:none}
+.tp-menu{display:block}
+.tp-menu summary{width:auto;padding:0 12px}
+.menu-word{display:inline}
+.menu-panel .menu-main{display:none}
+}
+@media (max-width:1100px){.tp-header{gap:16px;padding:14px 24px}.tp-nav{gap:16px}}
+@media (max-width:980px){.tp-nav{display:none}.tp-menu{display:block;margin-left:auto}}
+@media (max-width:860px){
+.tp-header{padding:10px 16px;gap:8px}
+.tp-brand{font-size:17px}
+.tp-dl{display:none}
+.tp-square,.tp-menu summary{width:44px;height:44px}
+.tp-menu .menu-panel{top:52px}
+.tp-footer{padding:26px 16px;margin-top:64px}
+.tp-footer-links{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
+}
+
 /* type blocks */
-.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);font-weight:400}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:400}
 .eyebrow.amber{color:var(--amber)}
 .lead{font-size:clamp(17px,1.6vw,20px);line-height:1.6;max-width:780px}
 .fine{font-size:13px;color:var(--faint)}
 .stack{display:flex;flex-direction:column;gap:20px}
 .stack.tight{gap:12px}
-.narrow{max-width:760px}
 
 /* buttons */
 .actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
 .actions.col{flex-direction:column;align-items:flex-start}
-.btn{display:inline-flex;flex-direction:column;justify-content:center;gap:2px;min-height:44px;padding:11px 18px;border-radius:4px;font-size:15px;font-weight:600;line-height:1.3}
+.btn{display:inline-flex;flex-direction:column;justify-content:center;gap:4px;min-height:44px;padding:12px 20px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;line-height:1.3}
 .btn:hover{text-decoration:none}
-.btn-big{padding:16px 24px;font-size:17px}
-.btn-primary{background:var(--amber);color:var(--on-amber)}
-.btn-primary:hover{filter:brightness(1.08)}
-.btn-secondary{border:1px solid var(--line2);color:var(--text);font-weight:500}
-.btn-secondary:hover{border-color:var(--dim)}
-.btn-sub{font-size:12px;font-weight:400;opacity:.85}
+.btn-big{padding:14px 22px;font-size:13px}
+.btn-primary{background:var(--amber);border-color:var(--amber);color:var(--on-amber)}
+.btn-primary:hover{opacity:.92}
+.btn-secondary{color:var(--text)}
+.btn-secondary:hover{border-color:var(--text)}
+.btn-sub{font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:400;letter-spacing:normal;text-transform:none;opacity:.85}
 
 /* panels */
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:0}
 .pad{padding:28px}
 .card-rec{border-color:var(--amber)}
-.note{display:flex;gap:16px;align-items:baseline;padding:18px 24px;border-radius:6px}
+.note{display:flex;gap:16px;align-items:baseline;padding:18px 24px;border-radius:0}
 .note-teal{background:var(--teal-tint);border:1px solid var(--teal-tint-b)}
 .note-teal .mono{color:var(--teal);font-size:13px;flex-shrink:0}
 .note p{color:var(--text);font-size:15px}
-.callout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px;row-gap:24px;align-items:center;padding:48px 56px;background:var(--amber-tint);border:1px solid var(--amber-tint-b);border-radius:8px}
+.callout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px;row-gap:24px;align-items:center;padding:48px 56px;background:var(--amber-tint);border:1px solid var(--amber-tint-b);border-radius:0}
 .callout h2{font-size:clamp(26px,3vw,36px)}
 .small-callout{display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding:28px}
 
@@ -3890,16 +3892,7 @@ p.text,.text p,.text{color:var(--text)}
 
 /* home */
 .hero{padding-top:88px;display:flex;flex-direction:column;gap:48px}
-.hero-text{display:flex;flex-direction:column;gap:24px;max-width:880px}
-.hero-shot{margin:0;display:flex;flex-direction:column;gap:14px}
 .shot{display:block;width:100%;border:1px solid var(--line2);border-radius:6px;box-shadow:var(--shadow)}
-.figure-panel{display:flex;flex-direction:column}
-.figure-top{padding:32px 32px 28px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
-.big-figure{font-size:clamp(34px,4vw,48px);font-weight:500;letter-spacing:-.02em;color:var(--text);margin:0}
-.figure-list{margin:0;padding:24px 32px;display:flex;flex-direction:column;gap:18px}
-.figure-list div{display:flex;gap:16px}
-.figure-list dt{font-size:13px;color:var(--amber);width:72px;flex-shrink:0;padding-top:2px}
-.figure-list dd{margin:0;font-size:15px;color:var(--text)}
 .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .steps li{padding:24px;display:flex;flex-direction:column;gap:12px}
 .steps .num{font-size:13px;color:var(--amber)}
@@ -3917,7 +3910,6 @@ p.text,.text p,.text{color:var(--text)}
 .card-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .card-head .h3{font-size:20px}
 .card p{font-size:15px}
-.card-foot{margin-top:auto;padding-top:8px}
 .badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:4px 8px;border-radius:3px;background:var(--amber-tint);border:1px solid var(--amber-tint-b);color:var(--amber)}
 .small-list{margin:0;padding-left:18px;font-size:14px;line-height:1.5}
 .small-list li{margin-bottom:6px}
@@ -3938,7 +3930,6 @@ p.text,.text p,.text{color:var(--text)}
 .pdf-text span{font-size:14px;color:var(--dim)}
 .step-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .step{display:flex;gap:24px;padding:24px 0;border-top:1px solid var(--line)}
-.hero-steps{margin:12px 0 0;padding-left:1.4em;font-size:15px;line-height:1.5;color:var(--dim)}.hero-steps li{margin:2px 0}
 .step-n{font-size:28px;color:var(--amber);width:48px;flex-shrink:0;line-height:1}
 .step div{display:flex;flex-direction:column;gap:8px}
 .two-col.top{align-items:start}
@@ -4146,33 +4137,13 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 .dl-fold-body{padding:4px 14px 16px}
 }
 
-/* footer */
-.site-footer{border-top:1px solid var(--line);padding:40px 0 48px}
-.footer-row{display:flex;justify-content:space-between;align-items:flex-start;gap:48px}
-.footer-about{display:flex;flex-direction:column;gap:14px;max-width:440px}
-.footer-about p{font-size:14px}
-.footer-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px;row-gap:10px}
-.footer-links a{color:var(--dim);font-size:14px;font-weight:400}
-.footer-links a:hover{color:var(--text)}
-.footer-base{margin-top:32px;font-size:13px;color:var(--faint)}
-
 .pdf-row .btn{white-space:nowrap;flex-shrink:0}
 .small-callout h2{font-family:"IBM Plex Sans",sans-serif;font-size:19px;letter-spacing:0}
 .two-col.bottom{align-items:center}
 
-/* Entry 304 section 3: below the width that holds every item on one line, the last few move into More rather than wrap. */
-@media (max-width:1499px) and (min-width:861px){
-.nav .nav-more{display:none}
-.menu{display:block}
-.menu summary{width:auto;padding:0 12px}
-.menu-word{display:inline}
-.menu-panel .menu-main{display:none}
-}
-
 /* narrower screens */
 @media (max-width:1100px){
 .wrap{padding-left:40px;padding-right:40px}
-.nav{gap:22px}
 .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
 .grid-3{grid-template-columns:repeat(1,minmax(0,1fr))}
 .toc{display:none}
@@ -4180,10 +4151,6 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 }
 @media (max-width:860px){
 .wrap{padding-left:16px;padding-right:16px}
-.nav{display:none}
-.menu{display:block}
-.header-row{height:60px}
-.logo{height:24px}
 .hero{padding-top:40px;gap:32px}
 .section{padding-top:72px}
 .last{padding-bottom:72px}
@@ -4193,7 +4160,6 @@ a.spot:hover{border-color:var(--amber);text-decoration:none}
 .two-col,.grid-2,.callout{grid-template-columns:repeat(1,minmax(0,1fr))}
 .callout{padding:28px 24px}
 .steps{grid-template-columns:repeat(1,minmax(0,1fr))}
-.footer-row{flex-direction:column}
 .row-between{flex-direction:column;align-items:flex-start}
 .pdf-row{flex-wrap:wrap}
 .guide-bar{flex-wrap:wrap}
@@ -4642,13 +4608,13 @@ def main() -> None:
     build_fonts()
     build_images()
     build_downloads()
-    write("assets/css/site.css", CSS.strip() + "\n" + _how_it_works.CSS.strip() + "\n")
+    write("assets/css/site.css", served_css(CSS + "\n" + _how_it_works.CSS))
     write("assets/js/how-it-works.js", _how_it_works.JS.strip() + "\n")
     write("assets/js/theme.js", JS)
     write("assets/js/terms.js", TERMS_JS)
     write("assets/js/guide-toc.js", GUIDE_TOC_JS)
     write("assets/js/primer.js", PRIMER_JS)
-    write("assets/css/home.css", HOME_CSS.strip() + "\n")
+    write("assets/css/home.css", served_css(HOME_CSS))
     write("assets/js/home.js", HOME_JS)
 
     write("index.html", page_home())
@@ -4732,6 +4698,7 @@ def main() -> None:
     problems += figure_problems + limit_problems()
     problems += link_problems()
     problems += home_problems()
+    problems += header_problems()
     problems += raw_table_problems()
     problems += php_problems()
     problems += send_problems()

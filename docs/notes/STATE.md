@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 442 (before it: entries 441, 439, 438 and 437).
+**Last rewritten:** 2026-10-18, entry 443 (before it: entries 442, 441, 439 and 438).
 
 ---
 
 ## In flight
 
-- **Entry 441 (2026-10-18)**: concept B is grouplab.org's home page, indexed and in the sitemap; /testpage/ is one link to /; the
-  page before it is `page_home` at b216ce56. `home_problems` and `tests/python/site-home-tests.py` hold it.
+- **Entries 441 and 443 (2026-10-18)**: concept B is the home page (the one before is `page_home` at b216ce56) and every page has its
+  look, one header (`site_header`, every link back) and one footer (`site_footer`); `header_problems` and `site-home-tests.py` hold it.
 - **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),
   the shot table's own keys (`OnShotKey`), the caliber line's ".568.96 cm" fixed in `UnitSwitch`; `Entry442Tests`. Phones not in it.
 - **Entries 418 and 421 to 440 are done**: the desktop demo (439, the phone's next); the statistics primer (438); guide markings (437); concept B built (440);

@@ -86,10 +86,19 @@ def sentences(text: str) -> list[str]:
     return [s.strip() for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
 
 
+# Entry 443: every page carries the one header and the one footer website/build.py writes. They are read once, as a surface of their own
+# taken from the home page, and cut out of each page with a sentence break, so a page's first and last sentences are its own words and
+# not the header's run on into them.
+SHARED = re.compile(r'<header class="tp-header.*?</header>|<footer class="tp-footer">.*?</footer>', re.S)
+SHARED_NAME = "site:the header and footer of every page"
+
+
 def surfaces() -> list[tuple[str, Path]]:
     """Every file a reader's words come out of, with the name to record it under."""
     out: list[tuple[str, Path]] = []
     if SITE.exists():
+        if (SITE / "index.html").exists():
+            out.append((SHARED_NAME, SITE / "index.html"))
         for page in sorted(SITE.rglob("*.html")):
             out.append((f"site:{page.relative_to(SITE).as_posix()}", page))
     out.append(("README.md", REPO / "README.md"))
@@ -121,6 +130,10 @@ def claims() -> list[tuple[str, int, str]]:
             continue
         if name == "README.md":
             text = without_copies(text)
+        elif name == SHARED_NAME:
+            text = " . ".join(m.group(0) for m in SHARED.finditer(text))
+        elif name.startswith("site:"):
+            text = SHARED.sub(" . ", text)
         for i, s in enumerate(sentences(text), start=1):
             if len(s) < 25 or len(s) > 400 or NOT_A_CLAIM.match(s):
                 continue

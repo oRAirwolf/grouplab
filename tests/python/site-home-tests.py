@@ -71,8 +71,34 @@ def main() -> int:
         check("a second copy of the home page at the old address fails", any(p.startswith("testpage/") for p in problems(home, old=home)))
         check("the page before concept B at / fails", any("concept B" in p for p in problems("<html><body>old</body></html>")))
         check("a home page not built at all fails", build.home_problems(tmp / "nowhere") != [])
+
+        # Entry 443 section 2: one header and one footer on every page, with every link Alan asked back.
+        out = tmp / "headers"
+        shutil.rmtree(out, ignore_errors=True)
+        (out / "support").mkdir(parents=True)
+        (out / "index.html").write_text(home, encoding="utf-8")
+        plain = build.shell("/support/", "Support", "A page.", "<p>words</p>", "Support")
+        (out / "support" / "index.html").write_text(plain, encoding="utf-8")
+        check("the home page and a plain page carry the header and footer with every link", build.header_problems(out) == [],
+              str(build.header_problems(out)))
+        top, rest = plain.split("</header>", 1)
+        (out / "support" / "index.html").write_text(top.replace(f'href="{build.GITHUB}"', 'href="#"') + "</header>" + rest, encoding="utf-8")
+        check("a header without its GitHub link fails", any("support/index.html" in p and build.GITHUB in p for p in build.header_problems(out)))
+        (out / "support" / "index.html").write_text("<html><body><header class=\"site-header\"></header></body></html>", encoding="utf-8")
+        check("a page with the old header fails", any("shared header" in p for p in build.header_problems(out)))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+    # Entry 443 section 1: the home page's header has every link the header had before entry 441.
+    head = home[home.index('<header class="tp-header'):home.index("</header>")]
+    for label in ("Community", "Release notes", "Support", "GitHub"):
+        check(f"the home page's header names {label}", f">{label}<" in head)
+    plain = build.shell("/support/", "Support", "A page.", "<p>words</p>", "Support")
+    check("the home page and a plain page take their header and footer from the one place",
+          build.site_header(home=True) in home and build.site_header("Support") in plain
+          and build.site_footer() in home and build.site_footer() in plain)
+    check("a plain page has no orbit and no motion script", "tp-orbits" not in plain and "home.js" not in plain and "tp-motion" not in plain)
+    check("a plain page marks where the reader is", '<a href="/support/" aria-current="page" class="nav-more">Support</a>' in plain)
 
     print(f"{passed} passed, {len(failed)} failed")
     return 1 if failed else 0
