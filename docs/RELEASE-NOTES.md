@@ -12,6 +12,26 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.200
+
+**2026-10-18**, commit `ad0d43e`. Nightly.
+
+**What you will notice**
+
+- On the computer's marking screen the arrow keys now nudge the selected hole one pixel of the picture, ten with Shift held, with one Undo for a run of presses, and move the view when no hole is selected.
+- On Android, iPhone and iPad, Walk me through a demo now takes you round the phone's own screens on a sample sheet GroupLab makes itself, offered once after the first questions and any time from Settings, and nothing it makes is kept unless you choose.
+- Screen readers now name every control GroupLab's screens tab to on the computer, among them the column grips, the caliber box and the picture, and on the phone they read each screen before the bar along the bottom.
+- Finding the holes in a photograph is about a sixth quicker, and up to a third on a sheet with large marks, with every result unchanged.
+
+**Under the hood**
+
+- The development build's scripted test logs every press it receives, to find out where a rare lost tap goes on the iPhone simulator.
+- The development build's tap test on the iPhone simulator now records why a tap could not reach its button, to find a rare lost first tap on the keyboard's Next.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.200)
+
+---
+
 ## 0.2.0-nightly.199
 
 **2026-10-18**, commit `04e1af4`. Nightly.
