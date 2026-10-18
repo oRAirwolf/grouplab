@@ -236,6 +236,11 @@ public class PhoneTouchScenarioTests
             // here the dispatcher draws before the step can look, where on the simulator the screenshot before it held the thread.
             var behind = Scenario.HoldFor("capture-ask-continue");
             Assert.False(behind["reached"]!.GetValue<bool>());
+            // Entry 447 section 3: an unreached control says what the drawing holds for it and its holders, and what the window finds.
+            var drawn = behind["drawn"]!.AsArray();
+            Assert.Equal("Button", drawn[0]!["type"]!.GetValue<string>());
+            Assert.True(drawn.Count >= 2 && drawn.All(d => d!["layout"] is not null));
+            Assert.True(behind.ContainsKey("windowUnder"));
             int looks = 0;
             Scenario.Look = tap => looks++ == 0 ? behind.DeepClone().AsObject() : Scenario.HoldFor(tap);
 

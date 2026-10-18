@@ -42,7 +42,9 @@ def tap_point(hold):
     if not control.get("enabled"):
         return None, f"{tap} is not enabled"
     if hold.get("reached") is False:
-        return None, f"{tap} is covered at its middle by {hold.get('under')}"
+        # Entry 447 section 3: what the drawing held for the control and its holders, and what the window's own test found there.
+        drawn = "; ".join(f"{d.get('type')} laid out {d.get('layout')}, drawn {d.get('drawn')} shown {d.get('shown')}" for d in hold.get("drawn") or [])
+        return None, f"{tap} is covered at its middle by {hold.get('under')}" + (f" (the window finds {hold.get('windowUnder')}; {drawn})" if drawn else "")
     screen = control["screen"]
     x = screen["x"] + screen["width"] / 2
     y = screen["y"] + screen["height"] / 2

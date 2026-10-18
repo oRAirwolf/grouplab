@@ -1230,6 +1230,20 @@ internal static class Scenario
     private static string? Where(JsonObject said, string tap) =>
         said["controls"]?.AsArray().OfType<JsonObject>().FirstOrDefault(c => c["id"]?.GetValue<string>() == tap)?["screen"]?.ToJsonString();
 
+    /// <summary>A visual as the last drawing has it: shown or not, its opacity, where it sits in its holder and its size, beside its layout.</summary>
+    private static JsonNode Drawn(Visual visual)
+    {
+        var drawn = Avalonia.Rendering.Composition.ElementComposition.GetElementVisual(visual);
+        return new JsonObject
+        {
+            ["type"] = visual.GetType().Name,
+            ["layout"] = $"{visual.Bounds.X:0},{visual.Bounds.Y:0} {visual.Bounds.Width:0}x{visual.Bounds.Height:0}",
+            ["drawn"] = drawn is null ? null : $"{drawn.Offset.X:0},{drawn.Offset.Y:0} {drawn.Size.X:0}x{drawn.Size.Y:0}",
+            ["shown"] = drawn?.Visible,
+            ["opacity"] = drawn is null ? null : Math.Round(drawn.Opacity, 2),
+        };
+    }
+
     /// <summary>What a hold says to the script that taps: see <see cref="Hold"/>.</summary>
     internal static JsonObject HoldFor(string tap)
     {
@@ -1263,6 +1277,15 @@ internal static class Scenario
             bool reached = under is not null && (under == target || target.IsVisualAncestorOf(under));
             said["reached"] = reached && (covered is null || middle.Y < covered);
             said["under"] = under?.GetType().Name;
+            if (!reached)
+            {
+                // Entry 447 section 3: the iOS self-test twice lost the first press on the keyboard bar's Next while the bar was laid out in its
+                // place; once a press there reached nothing for five seconds. What a press reaches is judged against what was last drawn, so
+                // where the control is not reached, what the drawing holds for it and its holders is said, beside what the window's own test finds.
+                said["drawn"] = new JsonArray([.. new[] { target }.Concat(target.GetVisualAncestors().Take(4)).Select(Drawn)]);
+                said["windowUnder"] = (top.InputHitTest(middle) as Visual)?.GetType().Name;
+                DiagnosticLog.Info("scenario.unreached", ("tap", tap), ("under", under?.GetType().Name), ("drawn", said["drawn"]!.ToJsonString()));
+            }
         }
 
         said["controls"] = controls;
