@@ -491,7 +491,7 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 This build has no change to the application; it behaves exactly as nightly 168 does.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.169)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
