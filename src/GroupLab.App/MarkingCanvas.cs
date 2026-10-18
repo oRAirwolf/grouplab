@@ -101,6 +101,11 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     private (int Bull, int Shot)? pickTap;
     private PointD dragAt;
 
+    /// <summary>The shot the arrow keys are moving in a run of presses, and when the last press was: entry 447 section 1.</summary>
+    private int? nudging;
+
+    private DateTime nudgedAt;
+
     // Entry 228: a bull being dragged, and a lasso being drawn.
     private int? draggingBull;
     private PointD bullDragAt;
@@ -1027,6 +1032,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             e.PreventGestureRecognition();
         }
 
+        nudging = null;
         Focus();
         if (bitmap is null || Session is not { } session)
         {
@@ -1450,6 +1456,56 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
         return action;
     }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 447 section 1: with a hole selected, an arrow key nudges it one pixel of the picture, Shift and an arrow ten,
+    /// in the direction it points on the screen however the view is turned; a run of presses is one step Undo takes back. With nothing
+    /// selected the arrows pan the view. Only while the picture has the focus, so never while a text or number box has it.
+    /// </summary>
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+        if (e.Handled || e.Key is not (Key.Left or Key.Right or Key.Up or Key.Down) || (e.KeyModifiers & ~KeyModifiers.Shift) != KeyModifiers.None)
+        {
+            nudging = null;
+            return;
+        }
+
+        var toward = e.Key switch
+        {
+            Key.Left => new Vector(-1, 0),
+            Key.Right => new Vector(1, 0),
+            Key.Up => new Vector(0, -1),
+            _ => new Vector(0, 1),
+        };
+        bool far = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        if (Session is { } session && Selected is { } id && session.State.Find(id) is { NotAShot: false } shot && bitmap is not null)
+        {
+            // The screen's direction in the picture's own pixels: a turned view turns the arrows with it.
+            var at = ToControl(shot.Image);
+            PointD from = ToImage(at), to = ToImage(at + toward);
+            double dx = to.X - from.X, dy = to.Y - from.Y, length = Math.Sqrt((dx * dx) + (dy * dy));
+            if (length > 0)
+            {
+                int pixels = far ? 10 : 1;
+                bool join = nudging == id && DateTime.UtcNow - nudgedAt < NudgeRun;
+                session.NudgeShot(id, new PointD(Math.Round(dx / length) * pixels, Math.Round(dy / length) * pixels), join);
+                nudging = id;
+                nudgedAt = DateTime.UtcNow;
+                InvalidateVisual();
+            }
+        }
+        else
+        {
+            nudging = null;
+            PanBy(-toward * (far ? 200 : 40));
+        }
+
+        e.Handled = true;
+    }
+
+    /// <summary>How long a pause ends a run of arrow presses, so the next press is an Undo step of its own.</summary>
+    internal static readonly TimeSpan NudgeRun = TimeSpan.FromSeconds(2);
 
     /// <summary>Moves the sheet by a distance on screen, the way the content of any scrolled view follows the fingers.</summary>
     public void PanBy(Vector by)

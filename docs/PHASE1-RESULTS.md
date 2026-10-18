@@ -1464,6 +1464,15 @@ site build pass.
 6. **Same change:** the user guide's demo section, the Features entry (Android, iPhone and iPad), the parity table, the release note.
    No look question: the outline, badge and card are the desktop's styles.
 
+## Entry 447: an overnight queue, its four parts (2026-10-18)
+
+1. **The marking picture's arrow keys.** With a hole selected and the picture holding the focus, an arrow nudges the hole one pixel of
+   the picture and Shift and an arrow ten, in the direction the arrow points on the screen however the view is turned
+   (`MarkingCanvas.OnKeyDown`); a run of presses, ended by any other key, a press on the picture or a pause of two seconds
+   (`MarkingCanvas.NudgeRun`), is one step Undo takes back (`MarkingSession.NudgeShot`). With nothing selected the arrows move the view,
+   40 pixels a press and 200 with Shift. A text or number box with the focus keeps its arrows. `Entry447Tests` (4); the user guide's
+   From the keyboard section has the bullet.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

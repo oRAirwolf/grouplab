@@ -860,7 +860,8 @@
       "since": "next",
       "note": [
         "On the computer the arrow keys now work",
-        "the focus stays on the row you chose"
+        "the focus stays on the row you chose",
+        "the arrow keys now nudge the selected hole"
       ],
       "guide": "from-the-keyboard"
     },

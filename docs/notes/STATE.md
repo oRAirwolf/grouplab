@@ -9,12 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 446 (before it: entries 445, 444, 443 and 442).
+**Last rewritten:** 2026-10-18, entry 447 part 1 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
+- **Entry 447 (2026-10-18)**: part 1 done (the marking picture's arrows, `NudgeShot`); parts 2 to 4 under way, the queue's limit 50%.
 - **Entry 446 (2026-10-18)**: the phone's guided demo, `PhoneDemo` (13 steps as data), the sample from Core's `DemoSample`;
   walked by the `demo` scenario step in phone-sweep.json (emulator, iOS simulator, headless). `fold-demo` waits for the emulator.
 - **Entry 445 (2026-10-18)**: the guides' "On this page" on every long page (`with_contents`, `CONTENTS_PAGES`, `guide_problems`).
@@ -47,8 +48,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 447's overnight queue: the marking picture's arrows, a keyboard and screen reader pass, the iOS Real taps flake, then
-   tests and speed (its own limit, 50% of the week).
+1. Entry 447's parts 2 to 4: a keyboard and screen reader pass, the iOS Real taps flake, then tests and speed (its limit 50%).
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 

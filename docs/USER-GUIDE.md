@@ -316,6 +316,9 @@ The arrow keys:
   and after, from 1.6 to 2.6, since a bull holds one shot from each sheet.
 - **The bar down the left:** Up and Down move between its buttons, and Space or Enter opens one.
 - **The tabs, the bar along the top and other rows of buttons:** Left and Right move between the buttons.
+- **The marking picture:** with a hole selected, the arrows nudge it one pixel of the picture, ten with Shift held, in the direction
+  they point on the screen however the view is turned, and a run of presses is one step Undo takes back. With nothing selected they
+  move the view. They act only while the picture has the focus: click it, or Tab to it.
 
 The arrows never act in a text box or a number box, radio buttons and drop downs keep their own arrows, and moving the focus never
 presses a button. The marking screen's own keys are listed in the line above the picture.

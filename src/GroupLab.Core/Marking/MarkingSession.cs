@@ -427,6 +427,26 @@ public sealed class MarkingSession
         Provenance = Touched(s.Provenance),
     });
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 447 section 1: a shot moved by <paramref name="by"/> image pixels from the keyboard, as <see cref="MoveShot"/>
+    /// moves it. The first press of a run is a step Undo takes back; with <paramref name="joinRun"/> a later press joins that step, so one
+    /// Undo takes back the whole run however many presses it had.
+    /// </summary>
+    public void NudgeShot(int id, PointD by, bool joinRun)
+    {
+        if (State.Find(id) is not { } shot)
+        {
+            return;
+        }
+
+        int steps = undo.Count;
+        MoveShot(id, new PointD(shot.Image.X + by.X, shot.Image.Y + by.Y));
+        if (joinRun && steps > 0 && undo.Count == steps + 1)
+        {
+            undo.Pop();
+        }
+    }
+
     /// <summary>The bull a shot at this image point is nearest to, <see cref="NearestBull(MarkingState, PointD)"/>.</summary>
     public int? NearestBull(PointD image) => NearestBull(State, image);
 
