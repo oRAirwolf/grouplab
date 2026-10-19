@@ -500,7 +500,7 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 - Corner brackets no longer need a neat cut or to touch the target: their printed codes give the scale, and GroupLab finds the target's corners from its own edges.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.172)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
