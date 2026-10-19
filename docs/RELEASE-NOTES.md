@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.208
+
+**2026-10-19**, commit `3d934df`. Nightly.
+
+**Under the hood**
+
+- The development build's scripted test now records, when a tap cannot reach its button, everything that decides whether it could, to find a rare miss on the iPhone simulator.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.208)
+
+---
+
 ## 0.2.0-nightly.207
 
 **2026-10-19**, commit `1bf4da2`. Nightly.
