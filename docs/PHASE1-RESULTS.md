@@ -1587,6 +1587,36 @@ here as d1c07ea7; section 5's proofs were run here.
 3. **Pictures** in `docs/figures/site/entry-451/`: download, tour, tour/how-it-works, targets and the guides index at 1400 px, light and
    dark, and targets at 390 px with the ruler hidden. Live check: below, once published.
 
+## Entry 454: a phone updates to the newest nightly that has an Android file (2026-10-19)
+
+1. **Nightly 203 repaired.** Its signed Android files were still on run 39206788728 (until 2026-10-20 06:00 UTC). The Android job's
+   gathering, signing and uploading is now one script, `scripts/nightly-android-files.sh`, run by nightly.yml and by a new dispatchable
+   `android-files.yml` that takes a nightly run and its version (26be6361). Run 39223723577 added the APKs, the AAB and the symbols to
+   `v0.2.0-nightly.203` and the moving release and signed the manifest again: both formats now list `apk-dev` and `apk` for 203. A phone
+   on 202 or earlier is offered 0.2.0-nightly.203. Rerun once this change is on main, so 203's manifest also carries the new per-platform
+   list that 204 carries forward.
+2. **Each platform follows its own newest build.** The second-format manifest gains `platforms`: per platform, the newest build with a
+   file for it, its commit and date, and its files on that build's own numbered release. `scripts/nightly-manifest.sh` passes this
+   build's numbered files (`--own`) and the manifest before it (`--carry`, this build's own when the Android job signs again, the moving
+   release's when the publish job signs first); a platform this build has no file for keeps the earlier entry when it is an older build,
+   and a manifest before that does not verify with the key carries nothing. The first format is unchanged (`Legacy()` strips the list
+   and the command line refuses to sign it there).
+3. **Both updaters compare with their platform's build**: `UpdateManifest.OnPlatform`, used by `UpdatePolicy.Decide`, `UpdateRun` (the
+   desktop passes its platform) and `AndroidUpdates.CheckAsync`. Equal or older is never offered.
+4. **Older builds:** they ignore the new field (the second format is verified over the bytes as written), and the top of the manifest
+   lists an Android file only when it belongs to the top build, so an older phone is never handed an older APK under a newer number and
+   cannot loop; it waits, as before, for a nightly with its Android file. `NewestForEachPlatformTests` (8): no Android file, a late one,
+   a phone on the build before, one on the newest Android build, a manifest with no Android build at all, an older build's record
+   reading the new manifest, the desktop for its own platform, and the carrying rules. Core suite 3040 passed.
+5. **Words:** "You have the newest GroupLab Dev for Android, 0.2.0-nightly.202." (`AndroidUpdates.Newest`), shown by the phone for
+   nothing newer and for a manifest that names no Android build; no other platform's number.
+6. docs/UPDATES.md, docs/ANDROID.md, the nightly-builds article and the download page say so (written by the docs helper, reviewed);
+   the Android updates feature claims the note.
+7. **Proof, a dry run** with a throwaway key and stand-in files through the real command line: 203 signed with Android, then 204 with
+   the Android build failed: 204's Android entry stayed on 203 (`v0.2.0-nightly.203`'s own file), `update-check --as android
+   0.2.0-nightly.202` was offered 203, a copy on 203 nothing, Windows on 203 was offered 204, and the first format carried no new field.
+   Alan's tablet should now reach **0.2.0-nightly.203**; the first real nightly after this change is the live proof.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

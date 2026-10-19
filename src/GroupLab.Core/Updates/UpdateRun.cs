@@ -55,7 +55,9 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
     /// <summary>
     /// Looks for a newer build on the train the person follows and says what it found. It reads one small public file and nothing else.
     /// </summary>
-    public async Task<(UpdateState State, UpdateDecision? Decision)> CheckAsync(UpdatePreferences preferences, string? publicKey, CancellationToken token)
+    /// <param name="platform">The manifest's word for this platform, so the second format's newest build for it is the one compared and
+    /// offered (entry 454); null reads the manifest's own version, as the first format always does.</param>
+    public async Task<(UpdateState State, UpdateDecision? Decision)> CheckAsync(UpdatePreferences preferences, string? publicKey, CancellationToken token, string? platform = null)
     {
         ArgumentNullException.ThrowIfNull(preferences);
         if (_build.IsDevelopment)
@@ -81,8 +83,8 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
             reached = true;
             if (PublishedManifest.Read(sealedJson) is { } published)
             {
-                decision = UpdatePolicy.Decide(_build, preferences, published, publicKey);
-                manifest = published.Body;
+                decision = UpdatePolicy.Decide(_build, preferences, published, publicKey, platform);
+                manifest = published.Body?.OnPlatform(platform);
                 format = 2;
             }
         }

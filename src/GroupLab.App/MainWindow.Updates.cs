@@ -138,7 +138,7 @@ public partial class MainWindow
         Show(new UpdateState(UpdateStage.Checking, UpdateStateText), byHand);
 
         var run = new UpdateRun(TheOutsideWorld.Current, ThisBuild, UpdateFolder);
-        var (state, decision) = await run.CheckAsync(updates, TrustedKey, token).ConfigureAwait(true);
+        var (state, decision) = await run.CheckAsync(updates, TrustedKey, token, UpdateAssets.Platform).ConfigureAwait(true);
         updateRun = state.Stage == UpdateStage.Offered ? run : null;
         Found(state.Says);
         DiagnosticLog.Info("update.check", ("result", state.Stage.ToString()), ("refusal", decision?.Refusal.ToString() ?? "none"));

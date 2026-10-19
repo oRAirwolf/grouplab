@@ -17,7 +17,7 @@ public static class UpdateVerbs
     public const string KeyUsage = "grouplab update-key";
 
     public const string ManifestUsage =
-        "grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json> [--versions <file>] [--asset <platform> <kind> <file> <url>]...";
+        "grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json> [--versions <file>] [--asset <platform> <kind> <file> <url>]... [--own <platform> <kind> <file> <url>]... [--carry <update-manifest-2.json>]";
 
     /// <summary>Makes a key pair and says exactly what to do with each half. It prints; it writes nothing and sends nothing.</summary>
     public static int Key(TextWriter output)
@@ -48,8 +48,12 @@ public static class UpdateVerbs
         ArgumentNullException.ThrowIfNull(args);
         ArgumentNullException.ThrowIfNull(output);
         ArgumentNullException.ThrowIfNull(error);
-        string? version = null, train = null, commit = null, notesFile = null, into = null, versionsFile = null;
+        string? version = null, train = null, commit = null, notesFile = null, into = null, versionsFile = null, carryFile = null;
         var assets = new List<UpdateAsset>();
+
+        // Entry 454: this build's files on its own numbered release, for each platform's newest build, and the manifest before this one,
+        // whose entries are carried for a platform this build has no file for.
+        var own = new List<UpdateAsset>();
 
         for (int i = 0; i < args.Length; i++)
         {
@@ -73,8 +77,12 @@ public static class UpdateVerbs
                 case "--versions" when i + 1 < args.Length:
                     versionsFile = args[++i];
                     break;
-                case "--asset" when i + 4 < args.Length:
+                case "--carry" when i + 1 < args.Length:
+                    carryFile = args[++i];
+                    break;
+                case "--asset" or "--own" when i + 4 < args.Length:
                     string platform = args[i + 1], kind = args[i + 2], file = args[i + 3], url = args[i + 4];
+                    var list = args[i] == "--own" ? own : assets;
                     i += 4;
                     if (!File.Exists(file))
                     {
@@ -83,7 +91,7 @@ public static class UpdateVerbs
                     }
 
                     byte[] bytes = File.ReadAllBytes(file);
-                    assets.Add(new UpdateAsset(platform, kind, Path.GetFileName(file), bytes.LongLength, UpdateSignature.Sha256(bytes), url));
+                    list.Add(new UpdateAsset(platform, kind, Path.GetFileName(file), bytes.LongLength, UpdateSignature.Sha256(bytes), url));
                     break;
                 default:
                     error.WriteLine($"update-manifest: unknown or incomplete option {args[i]}");
@@ -134,11 +142,6 @@ public static class UpdateVerbs
             }
         }
 
-        var manifest = new UpdateManifest(
-            UpdateManifest.Current, version, train, commit,
-            DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture),
-            notes, assets, versions is { Count: > 0 } ? versions : null);
-
         // Entry 119 section 3.2: no key, no manifest. A build that published an unsigned one would be asking the application to trust it.
         string? key = Environment.GetEnvironmentVariable(UpdateKeys.SecretName);
         if (string.IsNullOrWhiteSpace(key))
@@ -149,6 +152,12 @@ public static class UpdateVerbs
             error.WriteLine("Run `grouplab update-key` once to make the pair, and see docs/UPDATES.md.");
             return 1;
         }
+
+        string now = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
+        var platforms = own.Count > 0 || carryFile is not null ? Platforms(version, commit, now, own, carryFile, key, error) : [];
+        var manifest = new UpdateManifest(
+            UpdateManifest.Current, version, train, commit, now,
+            notes, assets, versions is { Count: > 0 } ? versions : null, platforms.Count > 0 ? platforms : null);
 
         SignedManifest signed;
         PublishedManifest published;
@@ -183,7 +192,7 @@ public static class UpdateVerbs
             }
 
             // Entry 139 section 2: the first format must carry nothing it did not carry before, or every installed build stops updating.
-            if (signed.Payload.Versions is not null)
+            if (signed.Payload.Versions is not null || signed.Payload.Platforms is not null)
             {
                 error.WriteLine("update-manifest: the first format was given a field it cannot carry. Nothing was written.");
                 return 1;
@@ -201,7 +210,60 @@ public static class UpdateVerbs
             output.WriteLine($"  {asset.Platform} {asset.Kind}: {asset.Name}, {asset.Bytes / 1024 / 1024} MB, sha256 {asset.Sha256}");
         }
 
+        foreach (var build in platforms)
+        {
+            output.WriteLine($"  newest for {build.Platform}: {build.Version}{(build.Version == version ? "" : ", carried from the manifest before")}, {build.Assets.Count} files");
+        }
+
         return 0;
+    }
+
+    /// <summary>
+    /// Each platform's newest build, entry 454: this build where it has a file for the platform, and otherwise the entry the manifest before
+    /// it named, carried as it was so long as it is an older build. A manifest to carry from that does not verify with the key's own public
+    /// half carries nothing, and says so: a forged entry must never be signed into a new manifest.
+    /// </summary>
+    public static IReadOnlyList<PlatformBuild> Platforms(string version, string commit, string publishedUtc, IReadOnlyList<UpdateAsset> own,
+        string? carryFile, string privateKeyBase64, TextWriter error)
+    {
+        ArgumentNullException.ThrowIfNull(own);
+        ArgumentNullException.ThrowIfNull(privateKeyBase64);
+        ArgumentNullException.ThrowIfNull(error);
+        var builds = own.GroupBy(a => a.Platform, StringComparer.OrdinalIgnoreCase)
+            .Select(g => new PlatformBuild(g.Key, version, commit, publishedUtc, [.. g]))
+            .ToList();
+        if (carryFile is null || !File.Exists(carryFile))
+        {
+            return builds;
+        }
+
+        string publicKey;
+        using (var keys = System.Security.Cryptography.ECDsa.Create())
+        {
+            keys.ImportPkcs8PrivateKey(Convert.FromBase64String(privateKeyBase64.Trim()), out _);
+            publicKey = Convert.ToBase64String(keys.ExportSubjectPublicKeyInfo());
+        }
+
+        var before = PublishedManifest.Read(File.ReadAllText(carryFile));
+        if (UpdateSignature.Verify(before, publicKey) != UpdateSignature.Refusal.None || before!.Body is not { } previous)
+        {
+            error.WriteLine($"update-manifest: {carryFile} does not verify, so no platform's earlier build is carried from it.");
+            return builds;
+        }
+
+        var ours = SemanticVersion.Parse(version);
+        foreach (var earlier in previous.Platforms ?? [])
+        {
+            if (builds.Any(b => string.Equals(b.Platform, earlier.Platform, StringComparison.OrdinalIgnoreCase))
+                || ours is null || SemanticVersion.Parse(earlier.Version) is not { } theirs || !UpdateOrder.IsNewer(theirs, ours))
+            {
+                continue;
+            }
+
+            builds.Add(earlier);
+        }
+
+        return builds;
     }
 
     /// <summary>Where the second format goes, beside the first: entry 139 section 1's <c>update-manifest-2.json</c>.</summary>
@@ -216,7 +278,9 @@ public static class UpdateVerbs
     private static readonly System.Text.Json.JsonSerializerOptions VersionsJson = new() { PropertyNameCaseInsensitive = true };
 
     /// <summary>Reads a signed manifest and says whether it verifies against a public key, for the proof step and for a person checking by hand.</summary>
-    public static int Check(string path, string? publicKey, TextWriter output, TextWriter error)
+    /// <param name="asInstalled">Entry 454: a platform and an installed version, to say what that copy would be offered, for the proof and for
+    /// a person asking why a phone did or did not update.</param>
+    public static int Check(string path, string? publicKey, TextWriter output, TextWriter error, (string Platform, string Version)? asInstalled = null)
     {
         ArgumentNullException.ThrowIfNull(output);
         ArgumentNullException.ThrowIfNull(error);
@@ -259,6 +323,23 @@ public static class UpdateVerbs
         if (manifest?.Versions is { Count: > 0 } versions)
         {
             output.WriteLine($"  and the notes of {versions.Count} builds, newest first: {string.Join(", ", versions.Select(v => v.Version))}");
+        }
+
+        foreach (var build in manifest?.Platforms ?? [])
+        {
+            output.WriteLine($"  newest for {build.Platform}: {build.Version}, commit {build.Commit}, {string.Join(", ", build.Assets.Select(a => a.Url))}");
+        }
+
+        if (asInstalled is { } copy && manifest is not null && refusal == UpdateSignature.Refusal.None)
+        {
+            var installed = BuildIdentity.Read(copy.Version, manifest.Train);
+            var decision = format == 2
+                ? UpdatePolicy.Decide(installed, UpdatePreferences.Default(installed.Train), PublishedManifest.Read(text), key, copy.Platform)
+                : UpdatePolicy.Decide(installed, UpdatePreferences.Default(installed.Train), SignedManifest.Read(text), key);
+            var seen = format == 2 ? manifest.OnPlatform(copy.Platform) : manifest;
+            output.WriteLine(decision.Offer
+                ? $"The {copy.Platform} copy on {installed.Version.Number} is offered {decision.Version!.Number}: {string.Join(", ", seen.Assets.Where(a => string.Equals(a.Platform, copy.Platform, StringComparison.OrdinalIgnoreCase)).Select(a => a.Kind + " " + a.Url))}"
+                : $"The {copy.Platform} copy on {installed.Version.Number} is offered nothing: {decision.Reason}");
         }
 
         return refusal == UpdateSignature.Refusal.None ? 0 : 1;

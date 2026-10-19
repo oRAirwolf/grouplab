@@ -25,6 +25,51 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 454: a phone always updates to the newest nightly that has a phone build
+
+**Status: actioned 2026-10-19; every section done. Section 7's live proof is the first real nightly after this change, and Alan's tablet updating to 0.2.0-nightly.203 is for the planning session to confirm with him.**
+
+From the planning session, 2026-10-19 08:50 UTC. **Take this before going on with entry 447 part 3's runs, and before 452 and 453.**
+Nothing here needs Alan unless section 1 cannot be done from CI.
+
+Alan, 2026-10-19 02:30 Denver: "I tried updating my android tablet to the latest nightly and it said it couldnt find one for 202 (i
+believe) so it wouldn't update. It should update to the latest nightly, even if it doesnt match the windows nightly."
+
+## The cause, as far as the planning session can see (read only)
+
+0.2.0-nightly.203 published the desktop files and its Android job then lost its files (fixed for later nightlies in 37326a5c), so the
+rolling manifest names 203 with no Android download. Since entry 450 every nightly also has a window where the manifest lists no
+Android file yet. The phone reads one version per manifest, finds no APK for it (`ApkRefusal.NoApk`) and stops. It never falls back
+to the newest build that does have one, so a missing or late Android build leaves every phone where it is.
+
+## What to do
+
+1. **Now: get the phones a working update.** If 203's signed Android artifacts from run 39206788728 still exist, add them to
+   `v0.2.0-nightly.203` and the rolling release and re-sign the manifest (the step 37326a5c fixed), by dispatch rather than by hand. If
+   they are gone, say so in STATE and make sure the next application commit produces a nightly with its Android files promptly. Record
+   which happened. Do not commit an empty change just to force a build without saying so in STATE.
+2. **For good: each platform follows the newest build that has its file.** The manifest (the second format, `update-manifest-2.json`;
+   the first format is frozen and must not change) carries, per platform, the newest version that has a download for that platform,
+   with that file's own version, URL on its own `v<version>` release (not the rolling name, which may already hold a newer build's
+   file or none), size and SHA-256. When nightly N has no Android file, or has not got it yet, the Android entry stays on the newest
+   earlier nightly that had one. Windows, Linux and Android may then name different versions, and that is correct.
+3. The phone's updater (and the desktop's, for the same reason) compares its own version with **its platform's** version, not the
+   manifest's top version, and installs that. It must never offer or install a build equal to or older than the installed one.
+4. **Older installed builds must not be harmed by the new manifest:** no update loop (an old phone told "203" and handed a 202 APK must
+   not reinstall 202 forever), no signature refusal, no crash on an unknown field. Check against the oldest build still reading
+   `update-manifest-2.json` and the Android builds of the last two weeks; if an old build would misbehave, find a shape it reads
+   safely. Tests for every case: a nightly with no Android file, one whose Android file arrives late, a phone on N-1, a phone already on
+   the newest Android build, an old build reading the new manifest.
+5. The phone's message when there is truly nothing newer for it says that in plain words ("You have the newest GroupLab Dev for
+   Android, 0.2.0-nightly.202"), never a missing file or another platform's number.
+6. Update docs/UPDATES.md ("On Android"), docs/ANDROID.md, the nightly-builds article and the download page in the same change
+   (entry 267).
+7. Proof: one nightly where the Android build is made to fail on a throwaway branch or dry run (never the real stores) leaves the
+   Android entry on the previous build and a phone on an older build still updates to it; and Alan's tablet updating from the real
+   release (say in STATE which version it should reach, so the planning session can tell him).
+
+---
+
 ## 2026-10-19, entry 451: the home page's ruler (the scroll bar down the right edge) on every page of the site
 
 **Status: actioned 2026-10-19; every section done (section 7: no document names which pages have the ruler).**

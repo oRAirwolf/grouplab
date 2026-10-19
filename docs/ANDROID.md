@@ -316,7 +316,8 @@ An unsigned debug APK is never published as a nightly. The nightly's `android` j
 upload key, which Alan generated and keeps outside the repository (entry 198 section 3.3) and which the job reads from the repository's
 secrets; without them it builds nothing and the rest of the nightly publishes. Since entry 450 the desktop builds do not wait for it:
 they are published as soon as they are packaged, and the `android-files` job adds the APKs, the AAB and the symbols to the same two
-releases when the Android build finishes, with the update manifest signed again so it lists the Android downloads. Section 12 says what
+releases when the Android build finishes, with the update manifest signed again so it lists the Android downloads. The manifest also names, for each platform, the newest build that has a file for it (entry 454), so
+a phone checking before the Android files arrive is offered the newest earlier build that has one. Section 12 says what
 Play does with the AAB.
 
 ## 10. Running the spike on the phone

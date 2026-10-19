@@ -90,7 +90,7 @@ public static class UpdatePolicy
     /// The same decision about a manifest in the second format, entry 139 section 3. The rules are the same rules; what differs is that the
     /// signature was checked over the bytes as they arrived, so the manifest may carry fields this build has never heard of.
     /// </summary>
-    public static UpdateDecision Decide(BuildIdentity build, UpdatePreferences preferences, PublishedManifest? published, string? publicKey)
+    public static UpdateDecision Decide(BuildIdentity build, UpdatePreferences preferences, PublishedManifest? published, string? publicKey, string? platform = null)
     {
         ArgumentNullException.ThrowIfNull(build);
         ArgumentNullException.ThrowIfNull(preferences);
@@ -99,7 +99,8 @@ public static class UpdatePolicy
             return new UpdateDecision(false, null, "This is a development build, so it does not update itself.");
         }
 
-        return Decided(build, preferences, UpdateSignature.Verify(published, publicKey), published?.Body);
+        // Entry 454: against the newest build that has this platform's file, not the newest build, which may have none for it yet.
+        return Decided(build, preferences, UpdateSignature.Verify(published, publicKey), published?.Body?.OnPlatform(platform));
     }
 
     private static UpdateDecision Decided(BuildIdentity build, UpdatePreferences preferences, UpdateSignature.Refusal refusal, UpdateManifest? manifest)

@@ -216,13 +216,15 @@ internal static class SelfUpdate
             else
             {
                 var edit = Prefs.Edit()!.PutLong("checkedUtc", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
-                edit!.PutString("newest", offer.Version?.Number ?? Build.Version.Number)!.Apply();
+                // Entry 454: a manifest with no Android build at all names another platform's number, which is not this phone's newest.
+                edit!.PutString("newest", offer.Refusal == ApkRefusal.NoApk ? Build.Version.Number : offer.Version?.Number ?? Build.Version.Number)!.Apply();
             }
 
             if (!offer.Offered)
             {
                 // Entry 288: offline is silent; the settings page says so if somebody looks, and nothing else does.
-                Say(offer.Refusal == ApkRefusal.NotNewer ? "GroupLab is up to date." : offer.Refusal.Words());
+                // Entry 454 section 5: nothing newer is said with this phone's own build, "You have the newest GroupLab Dev for Android, ...".
+                Say(offer.Refusal is ApkRefusal.NotNewer or ApkRefusal.NoApk ? offer.Says : offer.Refusal.Words());
                 return true;
             }
 

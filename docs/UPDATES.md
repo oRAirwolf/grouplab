@@ -181,9 +181,18 @@ the copy from Google Play, comes later. The copy from Google Play never has any 
 same User-Agent and nothing else. The nightly lists GroupLab Dev's APK in it as platform `android`, kind `apk-dev`, with its size and
 SHA-256, at a fixed address beside the desktop files. The signature is verified over the bytes as they arrived before anything reads them.
 Since entry 450 the desktop files are published first and the Android ones join them when the Android build finishes, so for those
-minutes the manifest lists no Android download, and a phone that checks finds the new version with no Android file yet and
-downloads nothing (`ApkRefusal.NoApk`); the manifest is then written again with the APKs in it,
-signed with the same key, and replaces the first.
+minutes the newest nightly has no Android download. Entry 454: the second manifest therefore also lists, for each platform, the
+newest build that has a file for that platform, with the file on that build's own numbered release (`v0.2.0-nightly.N`), its size and
+SHA-256. While nightly N has no Android file, Android's entry stays on the newest earlier nightly that had one, so Windows, Linux and
+Android may name different versions, and that is correct. The phone compares its own version with its own platform's entry, not the
+newest build overall, installs that one, and never offers a build equal to or older than the one installed. When nothing is newer it
+says so in its own words, for example "You have the newest GroupLab Dev for Android, 0.2.0-nightly.202.", and never names another
+platform's number or a missing file. When the Android files arrive the manifest is written again with them, signed with the same key,
+and replaces the first. The first manifest, `update-manifest.json`, is frozen and unchanged: copies installed before this change ignore
+the new list, the top of the manifest names the newest build's Android file only when it belongs to that build (so an older phone is
+never handed an older APK under a newer number), and those copies wait for a nightly that has its Android file, as before. A nightly
+whose Android files were not added can have them added from its own run with `gh workflow run android-files.yml -f run=<nightly run id>
+-f version=<version>`; the run's files last a day. Nightly 203's were added this way on 2026-10-19.
 Offline is silent, as on the desktop: a line in the log and nothing on screen.
 
 **How it downloads.** On Wi-Fi only by default (an unmetered network, which is what Android calls it), in the background, through

@@ -22,6 +22,18 @@ public sealed record UpdateAsset(string Platform, string Kind, string Name, long
 /// </summary>
 public sealed record VersionNotes(string Version, string Notes);
 
+/// <summary>
+/// The newest build on the train that has a file for one platform, NOTES-FROM-PLANNING.md entry 454: when a nightly has no Android file, or
+/// has not got it yet, the phones follow the newest earlier nightly that had one. Its files are named on that build's own numbered release,
+/// never on the moving one, which may already hold a newer build's file or none. Carried in the second format only.
+/// </summary>
+public sealed record PlatformBuild(
+    [property: JsonPropertyName("platform")] string Platform,
+    [property: JsonPropertyName("version")] string Version,
+    [property: JsonPropertyName("commit")] string Commit,
+    [property: JsonPropertyName("publishedUtc")] string PublishedUtc,
+    [property: JsonPropertyName("assets")] IReadOnlyList<UpdateAsset> Assets);
+
 public sealed record UpdateManifest(
     [property: JsonPropertyName("manifest")] int Manifest,
     [property: JsonPropertyName("version")] string Version,
@@ -30,7 +42,8 @@ public sealed record UpdateManifest(
     [property: JsonPropertyName("publishedUtc")] string PublishedUtc,
     [property: JsonPropertyName("notes")] string Notes,
     [property: JsonPropertyName("assets")] IReadOnlyList<UpdateAsset> Assets,
-    [property: JsonPropertyName("versions")] IReadOnlyList<VersionNotes>? Versions = null)
+    [property: JsonPropertyName("versions")] IReadOnlyList<VersionNotes>? Versions = null,
+    [property: JsonPropertyName("platforms")] IReadOnlyList<PlatformBuild>? Platforms = null)
 {
     // NOTES-FROM-PLANNING.md entry 138 section 5 wanted a list of each recent version's own notes here, and it could not go here. Entry 139
     // gave it somewhere safe: PublishedManifest, whose signature covers the bytes as written, so a build that does not know a field ignores
@@ -90,6 +103,25 @@ public sealed record UpdateManifest(
         Assets?.FirstOrDefault(a => string.Equals(a.Platform, platform, StringComparison.OrdinalIgnoreCase) && string.Equals(a.Kind, kind, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
+    /// This manifest as one platform sees it, entry 454: where it names that platform's newest build, that build's version, commit, files
+    /// and own notes, so an updater compares itself with the build it would actually install; otherwise the manifest as it is. A phone on
+    /// nightly 202 reading a manifest for 204 whose Android entry is 203 is offered 203, and a phone already on 203 is offered nothing.
+    /// </summary>
+    public UpdateManifest OnPlatform(string? platform)
+    {
+        if (platform is null || Platforms?.FirstOrDefault(p => string.Equals(p.Platform, platform, StringComparison.OrdinalIgnoreCase)) is not { } own
+            || SemanticVersion.Parse(own.Version) is null)
+        {
+            return this;
+        }
+
+        // Its files always, even when it is the newest build: they are on its own numbered release, which never moves.
+        string notes = string.Equals(own.Version, Version, StringComparison.Ordinal) ? Notes
+            : Versions?.FirstOrDefault(v => string.Equals(v.Version, own.Version, StringComparison.Ordinal))?.Notes ?? "";
+        return this with { Version = own.Version, Commit = own.Commit, PublishedUtc = own.PublishedUtc, Notes = notes, Assets = own.Assets, Platforms = null };
+    }
+
+    /// <summary>
     /// The bytes that are signed: the manifest as compact JSON with no signature in it, so signing and verifying cannot disagree about what
     /// was signed, whatever machine each of them runs on. See <see cref="Signing"/> for why compact rather than indented.
     /// </summary>
@@ -103,7 +135,7 @@ public sealed record UpdateManifest(
     /// Passing everything through here on the way to <see cref="UpdateSignature.Sign"/> makes that impossible to forget.
     /// </para>
     /// </summary>
-    public UpdateManifest Legacy() => Versions is null ? this : this with { Versions = null };
+    public UpdateManifest Legacy() => Versions is null && Platforms is null ? this : this with { Versions = null, Platforms = null };
 
     public string ToJson() => JsonSerializer.Serialize(this, Options);
 

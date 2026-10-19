@@ -81,6 +81,8 @@ return args switch
     ["update-manifest", .. var rest] => GroupLab.Cli.UpdateVerbs.Manifest(rest, Console.Out, Console.Error),
     ["update-check", var manifest] => GroupLab.Cli.UpdateVerbs.Check(manifest, null, Console.Out, Console.Error),
     ["update-check", var manifest, var publicKey] => GroupLab.Cli.UpdateVerbs.Check(manifest, publicKey, Console.Out, Console.Error),
+    ["update-check", var manifest, "--as", var platform, var installed] => GroupLab.Cli.UpdateVerbs.Check(manifest, null, Console.Out, Console.Error, (platform, installed)),
+    ["update-check", var manifest, var publicKey, "--as", var platform, var installed] => GroupLab.Cli.UpdateVerbs.Check(manifest, publicKey, Console.Out, Console.Error, (platform, installed)),
     ["build-stamp", var assembly] => GroupLab.Cli.BuildStampVerb.Run(assembly, null, Console.Out, Console.Error),
     ["build-stamp", var assembly, "--expect", var train] => GroupLab.Cli.BuildStampVerb.Run(assembly, train, Console.Out, Console.Error),
     ["glossary"] => GroupLab.Cli.GlossaryVerb.Run("docs", Console.Out, Console.Error),
@@ -566,8 +568,9 @@ static int Usage()
         grouplab bench [--runs <n>] [--area <name>]... [--root <directory>] [-o <record.md>] [--record <document.md>] [--commit <sha>] [--gate <baseline.json>] [--baseline <baseline.json>]
         grouplab update-key
         grouplab update-manifest --version <v> --train <name> --commit <sha> --notes <file> --out <manifest.json>
-                                 [--asset <platform> <kind> <file> <url>]...
-        grouplab update-check <manifest.json> [<public key>]
+                                 [--asset <platform> <kind> <file> <url>]... [--own <platform> <kind> <file> <url>]...
+                                 [--carry <the manifest before, update-manifest-2.json>]
+        grouplab update-check <manifest.json> [<public key>] [--as <platform> <installed version>]
         grouplab build-stamp <assembly.dll> [--expect <train>]
         grouplab corpus counts [--local <manifest.json>] [--write]
         grouplab holes ink-proximity [--local <manifest.json>] [-v]

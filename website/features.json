@@ -1326,7 +1326,7 @@
       "key": "android-updates",
       "group": "Updates and platforms",
       "name": "GroupLab updates itself on Android",
-      "sentence": "GroupLab Dev and the plain APK, the Android builds installed from an APK, check for a newer nightly, download it on Wi-Fi, check its signature and its signing key, and install it when you leave the application, never in the middle of work; the copy from Google Play is updated by Google Play.",
+      "sentence": "GroupLab Dev and the plain APK, the Android builds installed from an APK, check for the newest nightly that has an Android file, download it on Wi-Fi, check its signature and its signing key, and install it when you leave the application, never in the middle of work; the copy from Google Play is updated by Google Play.",
       "shot": null,
       "platforms": [
         "Android"
@@ -1336,7 +1336,8 @@
       "note": [
         "GroupLab Dev now updates itself",
         "Testers who installed GroupLab from Google Play now receive every nightly",
-        "The plain Android APK from the download page now keeps itself up to date"
+        "The plain Android APK from the download page now keeps itself up to date",
+        "A phone now updates to the newest nightly that has an Android file"
       ],
       "mobile": {
         "noPicture": "the Updates card in Settings is photographed at the next sitting with the phone, once a nightly with it is installed"

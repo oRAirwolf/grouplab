@@ -864,7 +864,7 @@ def page_download() -> str:
 </section>"""
 
     files_rows = "".join(f'<tr><td><a href="{NIGHTLY}{f}"><code>{f}</code></a></td><td>{what}</td></tr>' for f, what in NIGHTLY_FILES)
-    files_inner = f"""<p class="small">The moving release on GitHub always carries the newest build under these names, so a link to one of them never goes stale. The Android files join it when their own build finishes, usually some minutes after the others. Nightly {n["number"]}, built {n["date"]} from commit {commit_link}.</p>
+    files_inner = f"""<p class="small">The moving release on GitHub always carries the newest build under these names, so a link to one of them never goes stale. The Android files join it when their own build finishes, usually some minutes after the others; until then a phone is offered the newest earlier build that has an Android file. Nightly {n["number"]}, built {n["date"]} from commit {commit_link}.</p>
 <div class="dl-table"><table class="small"><thead><tr><th>File</th><th>What it is</th></tr></thead><tbody>{files_rows}</tbody></table></div>
 <p class="small">The same build with its number in every file name, and the notes it was published with: <a href="{GITHUB}/releases/tag/v{n["version"]}">GroupLab {n["version"]} on GitHub</a>. What changed in it: <a href="/releases/#{n["anchor"]}">its release notes</a>.</p>"""
     files_title = f"Every file in nightly {n['number']}, on GitHub"

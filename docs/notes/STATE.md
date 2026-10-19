@@ -9,23 +9,23 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 451 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 454 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
+- **Entry 454 (2026-10-19)**: 203's Android files added (run 39223723577); Alan's tablet should reach **0.2.0-nightly.203**. Each
+  platform now follows its newest build with a file (`platforms` in the second manifest); the next real nightly is the live proof.
 - **Entry 450 (2026-10-19)**: failed tests retried once in CI (flakes in `docs/notes/flaky-tests.md`, run `scripts/flaky-tests.py`);
   desktop publish no longer waits for Android. **32** nightlies lost to a non-phone failure since 2026-09-28: the split is planning's.
 - **Entry 447 (2026-10-18)**: parts 1, 2, 4 done; 3: a focusing press's hold is off (ff9f61c1), one red since; popups now logged.
   Left from part 2: CSV mapping, store target, Fudd buster, group tools, print and figures windows untested; phone pages two presses
   deep; no real Narrator, VoiceOver or TalkBack run yet.
-- **Entries 445 and 446 (2026-10-18)**: "On this page" on long pages (`with_contents`); the phone's demo (`PhoneDemo`, `DemoSample`).
 - **Entries 441, 443, 444, 448, 449 and 451**: the ruler on every page (`RULER`), home menu tappable (`tests/site/taps.mjs`); concept B is the home page (the one before is `page_home` at b216ce56); every page has
   its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
   pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` holds it, titles as written (Alan, entry 449).
-- **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),
-  the shot table's own keys (`OnShotKey`), the caliber line's ".568.96 cm" fixed in `UnitSwitch`; `Entry442Tests`. Phones not in it.
+- **Entries 442, 445, 446**: keyboard focus kept (`KeyboardFocus`, `Entry442Tests`); "On this page" (`with_contents`); phone demo (`PhoneDemo`).
 - **The usage guard** stops at 85% of the week (88% to finish a block). **The proof checklist**: rows 6, 8, 11, 12, 13, 15, 16, 21,
   23 proven by tests, 18 and 31 met; the rest name their material (entries 414 and 447).
 - **Waiting on Alan:** requests 83, 70, 72, 74 to 77; 86 later.

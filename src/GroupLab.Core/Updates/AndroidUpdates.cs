@@ -159,8 +159,15 @@ public static class AndroidUpdates
             return new ApkOffer(ApkRefusal.Offline, "GroupLab could not reach the update page. Nothing has changed.");
         }
 
+        // Entry 454: against the newest build that has an Android file, which may be older than the newest build, never against a build
+        // whose Android file is missing or not there yet.
         var published = PublishedManifest.Read(json);
-        var decision = UpdatePolicy.Decide(build, UpdatePreferences.Default(build.Train), published, publicKey);
+        var decision = UpdatePolicy.Decide(build, UpdatePreferences.Default(build.Train), published, publicKey, Platform);
+        if (decision.Refusal == UpdateSignature.Refusal.NotNewer)
+        {
+            return new ApkOffer(ApkRefusal.NotNewer, Newest(build, kind), decision.Version);
+        }
+
         if (!decision.Offer)
         {
             var refusal = decision.Refusal switch
@@ -173,15 +180,26 @@ public static class AndroidUpdates
             return new ApkOffer(refusal, decision.Reason, decision.Version);
         }
 
-        var manifest = published!.Body!;
+        var manifest = published!.Body!.OnPlatform(Platform);
         if (manifest.For(Platform, kind) is not { } asset)
         {
-            return new ApkOffer(ApkRefusal.NoApk, string.Create(CultureInfo.InvariantCulture,
-                $"GroupLab {manifest.Version} is out, and has no Android file of this kind yet. Nothing was downloaded."), decision.Version);
+            // Only a manifest that names no Android build at all comes here; what is installed is then the newest there is for Android.
+            return new ApkOffer(ApkRefusal.NoApk, Newest(build, kind), decision.Version);
         }
 
         return new ApkOffer(ApkRefusal.None, decision.Reason, decision.Version, asset,
             SkippedVersions.Combined(manifest.Versions, build.Version.Number, manifest.Version, manifest.Notes), manifest.PublishedUtc);
+    }
+
+    /// <summary>
+    /// What a phone with nothing newer to install is told, entry 454 section 5: its own build in plain words, never another platform's
+    /// number or a file that is missing. "You have the newest GroupLab Dev for Android, 0.2.0-nightly.202."
+    /// </summary>
+    public static string Newest(BuildIdentity build, string kind)
+    {
+        ArgumentNullException.ThrowIfNull(build);
+        string name = string.Equals(kind, DevKind, StringComparison.OrdinalIgnoreCase) ? "GroupLab Dev" : "GroupLab";
+        return string.Create(CultureInfo.InvariantCulture, $"You have the newest {name} for Android, {build.Version.Number}.");
     }
 
     /// <summary>
@@ -286,7 +304,7 @@ public static class AndroidUpdates
         ApkRefusal.UnknownManifest => UpdateSignature.Refusal.UnknownManifest.Words(),
         ApkRefusal.WrongTrain => UpdateSignature.Refusal.WrongTrain.Words(),
         ApkRefusal.NotNewer => UpdateSignature.Refusal.NotNewer.Words(),
-        ApkRefusal.NoApk => "The newest build has no Android file of this kind yet. Nothing was downloaded.",
+        ApkRefusal.NoApk => "You have the newest build there is for Android. Nothing was downloaded.",
         ApkRefusal.WrongHash => "The update GroupLab downloaded is not the file its signed information describes, so it was deleted and nothing was installed.",
         ApkRefusal.DifferentCertificate => "The update GroupLab downloaded is not signed by the same key as the copy you have, so it was deleted and nothing was installed.",
         ApkRefusal.NotDownloaded => "The update has not finished downloading. It carries on from where it stopped next time GroupLab is on Wi-Fi.",
