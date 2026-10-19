@@ -74,9 +74,9 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (101 answered by entry 446 and arch
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.204 (2026-10-19 09:44 UTC, from c9389b37): entry 454, phones follow their own newest build.
+- **Last nightly:** 0.2.0-nightly.207 (2026-10-19): Equipment pages open at their top; 206 had entries 456 to 458 and the first reports total.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
-- Crash reports: 9, 36 and 37 fixed in 0af39fc2, closing when the next nightly ships it; assessed in `docs/notes/error-reports.md`.
+- Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox
 
