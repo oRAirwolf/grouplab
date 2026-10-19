@@ -25,6 +25,55 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-18, entry 448: the home page's menu opens under the GROUPLAB wordmark on phones
+
+**Status: actioned 2026-10-19; sections 1 and 2 done, taken while entry 447's iOS proof ran (Alan asked to action what could be). Section 3, the live check, is recorded with entry 449.**
+
+From the planning session, 2026-10-18 13:10 UTC. Take it after entry 447. Nothing here needs Alan. Website only, no application note.
+
+Alan, 2026-10-18, with a screenshot from his phone (Firefox and Chrome both): "when I click on the menu on the homepage, the group lab
+logo is superimposed over the menu. The menu should render over it." In the screenshot the open menu panel's links (Guides, Research,
+Community) sit under the hero's big GROUPLAB wordmark, which is drawn on top of them.
+
+## The cause (read only, checked 2026-10-18)
+
+`HOME_CSS` in `website/build.py`: `html.tp-js:not(.tp-still) .tp-hero h1{position:relative;z-index:7}` puts the wordmark above the header
+(`.tp-header` and `.tp-home` are `z-index:6`), so that it can fly over the header while it docks (entry 444 section 2). The menu panel
+(`.tp-menu .menu-panel`) opens inside the header's stacking context, so the wordmark is above the open menu too. The same is true of
+anything else that opens from the header at any width (the "More" menu between 981 and 1499 px, if it is the same element).
+
+**Measured on the live page, 2026-10-18 13:15 UTC** (the planning session, a 375 px wide browser, `document.elementFromPoint` at the
+left, middle and right of each link with the menu open and the page at the top): Download, Tour, Features, Send a target, Community,
+Release notes, Support and GitHub are on top; **Guides and Research are not: the H1 wordmark (`H1.cond`, and its `SPAN.tp-amber`) is
+the element hit at all three points**, so they cannot be tapped. Alan, 2026-10-18, a minute later: "I noticed that I can also not click
+on text that is below the group lab logo. Make sure it fixes this as well." That is this: the menu items under the wordmark cannot be
+tapped. With the menu closed, no link, button or paragraph anywhere on the page was covered at scroll positions 0, 150, 300, 450, 700 and
+1000 px. The fix below must make all ten menu items tappable, and the check of section 2 must cover tapping, not only drawing.
+
+## 1. The fix
+
+1. **Anything open in the header is above everything on the page.** While the menu (or any other panel the header opens) is open, the
+   header's layer is above the wordmark: for example `.tp-home:has(.tp-menu[open])` raised above 7, with the same class set by the
+   menu's own toggle event as a fallback for a browser without `:has`. Keep the docking flight over the header when no menu is open.
+2. While the menu is open, the docking wordmark does not move (it waits until the menu closes), so nothing flies over an open panel.
+3. Check that the menu also closes on Escape, on a tap outside it and on choosing a link; fix any that do not.
+
+## 2. A check that holds it
+
+A site test that renders the home page at 390 px wide (and at 1280 px if the "More" menu is the same element), opens the menu with the
+wordmark undocked, and for each link in the panel checks that the element at the link's left edge, center and right edge is the link itself
+(`document.elementFromPoint`), so a link that shows but cannot be tapped fails. The same test also checks, with the menu closed, that
+every link and button on the home page is the top element at its center at scroll positions 0, 150, 300, 450, 700 and 1000 px, at 390
+and 1440 px wide, so a decorative layer (the wordmark, the orbit, the rings, the ruler, the section index) can never cover something a
+person needs to tap. If the site's tests cannot render a page, use the browser the screenshot job already runs, and say which.
+
+## 3. After it publishes
+
+Confirm the commit is live in `grouplab-site-build`, then repeat the check of section 2 on https://grouplab.org/ at 390 px in light and
+dark, and put one screenshot of the open menu into the report's results.
+
+---
+
 ## 2026-10-18, entry 446: the phone's "Walk me through a demo" (entry 439 section 5)
 
 **Status: actioned 2026-10-18; sections 1 to 5 done. The Features page's phone picture of the tour waits for the emulator's first run

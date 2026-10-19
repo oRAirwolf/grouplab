@@ -1518,6 +1518,21 @@ site build pass.
    the identify sweep are the same but for time. Two other tries (stopping the code reading early, whole-number moments) measured
    nothing and were taken back.
 
+## Entry 448: the home page's menu above the wordmark, and everything on it tappable (2026-10-19)
+
+1. **The fix.** While the header's menu is open the header is raised above the docking wordmark (`.tp-home:has(.tp-menu[open])`, and a
+   `tp-menu-open` class the menu's own toggle sets for a browser without `:has`), and the wordmark waits where it is until the menu
+   closes. The menu now closes on Escape (the focus back on its button), on a tap outside it and on choosing a link (the site script).
+   **Also found by the check:** once docked, the big wordmark is invisible but was still on top of the header's small GroupLab link, so
+   after scrolling that link could not be tapped at any width; the wordmark now takes no taps (`pointer-events:none`).
+2. **The check** (`tests/site/taps.mjs`, run in website.yml before anything publishes, in the runner's own Chrome; Edge here): the built
+   site served locally and the home page driven headless at 390, 1440 and 1280 px. With the menu open and the wordmark undocked, every link
+   is the element at its left edge, middle and right edge; the menu closes again on its button, Escape, a tap outside and a link; with it
+   closed, every link, button and summary on screen is the element at its own middle at scroll 0, 150, 300, 450, 700 and 1000. Before the
+   fix it named Guides and Research under `H1.cond` at 390 px, as planning measured, and the header's GroupLab link under it at scroll 300,
+   450 and 700 at all three widths: 11 faults. After: none.
+3. **Live:** see entry 449's results (checked once this published).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

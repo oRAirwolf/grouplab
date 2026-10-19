@@ -102,6 +102,15 @@ jobs:
           python website/build.py | tee build.out
           grep -E '^(held back|published with a stale part): ' build.out | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY" || true
 
+      # Entry 448: what a person can tap on the home page, in a real browser (the runner's own Chrome): every link of the open menu, and
+      # every control on screen at six scroll positions, at a phone's width and two desktops'. A covered control publishes nothing.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Every control on the home page can be tapped (entry 448)
+        run: node tests/site/taps.mjs website/_site
+
       # Entry 347: grouplab.org keeps a copy of the newest signed store-bought fingerprint library, which the application reads only when
       # GitHub cannot be reached and trusts only by its own signature. A nightly from before the library existed carries none, and that is
       # said rather than failed.

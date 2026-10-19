@@ -3733,7 +3733,10 @@ HOME_CSS = r"""
 .tp-home{position:fixed;left:0;right:var(--rule);background:var(--bg);border-bottom-color:transparent;transition:background-color .2s,border-color .2s}
 @supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
 .tp-home{background:color-mix(in srgb,var(--bg) 70%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}}
-html.tp-js:not(.tp-still) .tp-hero h1{position:relative;z-index:7}
+html.tp-js:not(.tp-still) .tp-hero h1{position:relative;z-index:7;pointer-events:none}
+/* Entry 448: a menu open in the header is above the docking wordmark, and the wordmark never takes a tap: docked, it is invisible over
+   the header's own small one, which then could not be tapped. */
+.tp-home:has(.tp-menu[open]),.tp-home.tp-menu-open{z-index:8}
 .tp-home.tp-solid{background:var(--bg);border-bottom-color:var(--line)}
 .tp-motion-icon{display:none}
 html:not(.tp-js) .tp-motion{display:none}
@@ -3897,6 +3900,8 @@ HOME_JS = """// NOTES-FROM-PLANNING.md entry 440: the concept B home page's moti
   };
   const dock = () => {
     if (!h1 || !word) return;
+    // Entry 448: while the menu is open the wordmark waits where it is, so nothing flies over the open panel.
+    if (header && header.classList.contains("tp-menu-open")) return;
     const y = window.scrollY;
     if (still()) {
       h1.style.transform = ""; h1.style.opacity = ""; word.style.opacity = "";
@@ -3925,6 +3930,7 @@ HOME_JS = """// NOTES-FROM-PLANNING.md entry 440: the concept B home page's moti
   const later = () => { if (!queued) { queued = true; requestAnimationFrame(frame); } };
   window.addEventListener("scroll", later, { passive: true });
   window.addEventListener("resize", () => { from = null; later(); });
+  for (const menu of document.querySelectorAll("details.tp-menu")) menu.addEventListener("toggle", later);
 
   const apply = () => {
     root.classList.toggle("tp-still", still());
@@ -4486,6 +4492,20 @@ JS = r"""/* GroupLab theme: follows the system unless the visitor has chosen, an
     return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   }
   document.addEventListener("DOMContentLoaded", function () {
+    /* Entry 448: the header's menu says it is open on the header, for browsers without :has, and closes on Escape, on a tap outside it
+       and on choosing a link. */
+    var menus = document.querySelectorAll("details.tp-menu");
+    for (var m = 0; m < menus.length; m++) {
+      (function (menu) {
+        var header = menu.closest(".tp-header");
+        menu.addEventListener("toggle", function () { if (header) header.classList.toggle("tp-menu-open", menu.open); });
+        menu.addEventListener("click", function (e) { if (e.target.closest && e.target.closest(".menu-panel a")) menu.open = false; });
+        document.addEventListener("click", function (e) { if (menu.open && !menu.contains(e.target)) menu.open = false; });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && menu.open) { menu.open = false; menu.querySelector("summary").focus(); }
+        });
+      })(menus[m]);
+    }
     var buttons = document.querySelectorAll(".theme-toggle");
     for (var i = 0; i < buttons.length; i++) {
       buttons[i].addEventListener("click", function () {

@@ -9,17 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-18, entry 447 part 3 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 448 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
+- **Entry 448 (2026-10-19)**: the home menu above the wordmark, the wordmark takes no taps; `tests/site/taps.mjs` in website.yml.
 - **Entry 447 (2026-10-18)**: parts 1, 2 and 4 done; 3's cause found (a field's menu opened for a tap while the keyboard first came up) and fixed; 20 iOS runs to prove.
   Left from part 2: CSV mapping, store target, Fudd buster, group tools, print and figures windows untested; phone pages two presses
   deep; no real Narrator, VoiceOver or TalkBack run yet.
-- **Entries 445 and 446 (2026-10-18)**: "On this page" on every long page (`with_contents`); the phone's guided demo (`PhoneDemo`,
-  the `demo` scenario step in phone-sweep.json, sample from Core's `DemoSample`); `fold-demo` waits for the emulator.
+- **Entries 445 and 446 (2026-10-18)**: "On this page" on long pages (`with_contents`); the phone's demo (`PhoneDemo`, `DemoSample`).
 - **Entries 441, 443 and 444 (2026-10-18)**: concept B is the home page (the one before is `page_home` at b216ce56); every page has
   its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
   pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` and `site-home-tests.py` hold it.
