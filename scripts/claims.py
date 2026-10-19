@@ -92,7 +92,10 @@ def sentences(text: str) -> list[str]:
 # Entry 444: a long page's section index repeats its own headings, so it is cut out the same way, and so is entry 445's contents list,
 # beside the page and folded at its top.
 SHARED = re.compile(r'<header class="tp-header.*?</header>|<footer class="tp-footer">.*?</footer>|<nav class="tp-index[^"]*"[^>]*>.*?</nav>'
-                    r'|<nav class="toc"[^>]*>.*?</nav>|<details class="dl-fold toc-mini">.*?</details>', re.S)
+                    r'|<nav class="toc"[^>]*>.*?</nav>|<details class="dl-fold toc-mini">.*?</details>'
+, re.S)
+# Entry 451: the ruler's numbered ticks, on every page, are marks on an edge and not words, so they are cut from every page and read nowhere.
+RULER = re.compile(r'<div class="tp-ruler"[^>]*>.*?</div>', re.S)
 SHARED_NAME = "site:the header and footer of every page"
 
 
@@ -134,9 +137,9 @@ def claims() -> list[tuple[str, int, str]]:
         if name == "README.md":
             text = without_copies(text)
         elif name == SHARED_NAME:
-            text = " . ".join(m.group(0) for m in SHARED.finditer(text))
+            text = " . ".join(m.group(0) for m in SHARED.finditer(RULER.sub(" ", text)))
         elif name.startswith("site:"):
-            text = SHARED.sub(" . ", text)
+            text = SHARED.sub(" . ", RULER.sub(" ", text))
         for i, s in enumerate(sentences(text), start=1):
             if len(s) < 25 or len(s) > 400 or NOT_A_CLAIM.match(s):
                 continue

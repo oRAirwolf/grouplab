@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 450 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 451 (before it: entries 446, 445, 444 and 443).
 
 ---
 
@@ -21,7 +21,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   Left from part 2: CSV mapping, store target, Fudd buster, group tools, print and figures windows untested; phone pages two presses
   deep; no real Narrator, VoiceOver or TalkBack run yet.
 - **Entries 445 and 446 (2026-10-18)**: "On this page" on long pages (`with_contents`); the phone's demo (`PhoneDemo`, `DemoSample`).
-- **Entries 441, 443, 444, 448 and 449**: home menu tappable (`tests/site/taps.mjs`), titles as written; concept B is the home page (the one before is `page_home` at b216ce56); every page has
+- **Entries 441, 443, 444, 448, 449 and 451**: the ruler on every page (`RULER`), home menu tappable (`tests/site/taps.mjs`); concept B is the home page (the one before is `page_home` at b216ce56); every page has
   its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
   pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` holds it, titles as written (Alan, entry 449).
 - **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),
@@ -74,7 +74,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (101 answered by entry 446 and arc
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.199 (2026-10-18 06:23 UTC, from 04e1af44): entry 442, Quack's keyboard requests and the caliber line. 198 carried the guided demo.
+- **Last nightly:** 0.2.0-nightly.203 (2026-10-19 06:00 UTC, from d1c07ea7): desktop only, its Android files lost to a step order fixed in 37326a5c.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
 - Crash reports open: none. **#35** (Quack: a pooled set's small sheet showed sheet 1 only, a bull click picked by nearness) fixed and closed 2026-10-16, in nightly 197.
 

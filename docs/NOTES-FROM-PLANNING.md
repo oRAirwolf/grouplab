@@ -25,6 +25,43 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 451: the home page's ruler (the scroll bar down the right edge) on every page of the site
+
+**Status: actioned 2026-10-19; every section done (section 7: no document names which pages have the ruler).**
+
+From the planning session, 2026-10-19 05:55 UTC. Take it after entries 447 and 450. Nothing here needs Alan. Website only, no
+application note.
+
+Alan, 2026-10-18 23:50 Denver: "Can you add a job to make the scroll bar on the home page the same on every page on the site?"
+
+The "scroll bar" is the ruler down the right edge (`.tp-ruler`, its numbered ticks and the amber `.tp-ruler-mark` that moves with the
+scroll); the site has no styled native scrollbar. Today it is on the home page (ticks written by the build, moved by `home.js`) and on the
+`LONG_PAGES` (`tp-long`, ticks and mark from `page.js`).
+
+## Pages without it (read from website/_site on 2026-10-19)
+
+discord, download, guides (the index), guides/glossary, research (the index), shoot-a-target, shoot-a-target/send, survey, targets,
+tour and every page under tour/ (including tour/how-it-works and its three pages), what-can-be-measured, and 404. Leave testpage alone.
+
+## What to do
+
+1. Every page gets the same ruler as the home page: same position, width, tick spacing and numbers, the same amber mark moving from
+   top to bottom over the whole scroll, and the same hiding rule at narrow widths. One source for it, so the home page and every other
+   page cannot drift: if the home page's build-written ticks and `page.js`'s twelve generated ticks differ in any way a person can see,
+   make them one. The ruler on the home page itself does not change.
+2. Pages too short to scroll still show the ruler, with the mark resting at the top.
+3. The right margin the ruler needs (`--rule`, now applied through `tp-long`) applies wherever the ruler is, without changing anything
+   else that `tp-long` does on pages that are not long (for example the "On this page" list stays only on long pages). Check the tour
+   pages and how-it-works, which carry their own CSS, so nothing ends up under or behind the ruler.
+4. The section index beside the home page's ruler (`.tp-index`, MEASURE, HONEST, PHONE, GET STARTED) stays on the home page only.
+5. Hold it: extend `heading_problems` or `site-home-tests.py` so a built page without the ruler fails the website build (testpage
+   excepted).
+6. Proof: screenshots of download, tour, tour/how-it-works, targets and the guides index at 1440 px, light and dark, plus one at phone
+   width showing the ruler hidden as on the home page; confirm on the live site after the deploy.
+7. Update SCREENSHOTS.md or the site's notes if they describe which pages have the ruler (entry 267).
+
+---
+
 ## 2026-10-19, entry 450: a flaky test or a stuck phone build should not hold back the other platforms' nightly
 
 **Status: actioned 2026-10-19; sections 1 to 4 done, section 5's two branch proofs done; its real-nightly proof waits for the next commit that ships. Section 3's count is 32, more than two: for planning.**

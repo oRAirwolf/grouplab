@@ -1570,8 +1570,22 @@ here as d1c07ea7; section 5's proofs were run here.
 4. **Proofs** on a throwaway branch (`proof/entry-450`, deleted): with a test that always fails and one that fails only on its first
    attempt (run 39202156149), every leg retried both, the second passed and was recorded (warning and `flaky-tests-<leg>` artifact on all
    three), the first failed twice and the leg failed; with only the second (run 39206563079) every leg passed on its retry and recorded
-   it. The real nightly (desktop first, Android files added after) waits for the next commit that ships; d1c07ea7 shipped nothing and its
-   nightly was skipped.
+   it. The real nightly: 0.2.0-nightly.203 (run 39206788728, from d1c07ea7) published the desktop files on its own, and the new Android
+   job then failed, because it checked the repository out after downloading the signed files and the checkout emptied them away; no
+   Android file reached either release. Fixed in 37326a5c (checkout first, held by
+   `NightlyNeverWaitsTests.ALateJobChecksOutBeforeItDownloadsAnything`); the next nightly is the proof that the Android files join.
+
+## Entry 451: the home page's ruler on every page (2026-10-19)
+
+1. **One ruler.** `RULER` in `website/build.py` is the home page's ruler, its twelve numbered ticks written by the build, and both the
+   home page and `shell()` use it, so they cannot drift; `page.js` no longer makes ticks of its own and only moves the amber mark, over
+   the whole scroll (at the top on a page too short to scroll). It is on every page (`tp-ruled`, which carries the `--rule` margin on
+   the header, main and footer), and hidden below 861 px as on the home page. `tp-long` keeps only what long pages do; the numbered section
+   index stays the home page's. Nothing is fixed to the right edge in the tour's, how it works' or the download page's own styles.
+2. **Held:** `header_problems` fails the build for a page without the ruler; `site-home-tests.py` (50) holds that a short page has it
+   and no section index; the tap check (`tests/site/taps.mjs`) still finds nothing covered.
+3. **Pictures** in `docs/figures/site/entry-451/`: download, tour, tour/how-it-works, targets and the guides index at 1400 px, light and
+   dark, and targets at 390 px with the ruler hidden. Live check: below, once published.
 
 ## Decision log
 

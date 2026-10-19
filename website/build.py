@@ -540,6 +540,10 @@ def site_footer() -> str:
 # colors so it follows dark and light with no second picture.
 PAGE_RINGS = ('<div class="tp-rings" aria-hidden="true"><svg width="1600" height="1600" viewBox="-800 -800 1600 1600">'
               '<circle r="130"/><circle r="330"/><circle r="560"/><circle class="tp-dash" r="780"/></svg></div>')
+# Entry 451: the home page's ruler down the right edge, numbered ticks and all, on every page, written once here so the home page and the
+# rest cannot drift apart; page.js (home.js on the home page) moves its amber mark with the scroll.
+RULER = ('<div class="tp-ruler" aria-hidden="true"><span class="tp-ruler-mark"></span>'
+         + "".join(f'<span class="tp-tick-n mono" style="top:{i * 200 + 12}px">{i}</span>' for i in range(12)) + "</div>")
 # The pages long enough for entry 444's ruler down the right edge and section index: the guides, the research articles, the release notes,
 # the features and support.
 LONG_PAGES = re.compile(r"^/(?:guides/(?!glossary/)[^/]+|research/[^/]+|releases|features|support)/$")
@@ -577,12 +581,12 @@ def shell(path: str, title: str, description: str, body: str, active: str = "", 
 <link rel="preload" href="/assets/fonts/plex-sans-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/site.css">{styles}
 <script src="/assets/js/theme.js"></script>
-<script src="/assets/js/terms.js" defer></script>{'''
-<script src="/assets/js/page.js" defer></script>''' if long else ""}
+<script src="/assets/js/terms.js" defer></script>
+<script src="/assets/js/page.js" defer></script>
 </head>
-<body class="tp{' tp-long' if long else ''}">
+<body class="tp tp-ruled{' tp-long' if long else ''}">
 <a class="skip" href="#main">Skip to content</a>
-{PAGE_RINGS}{'<div class="tp-ruler" aria-hidden="true"><span class="tp-ruler-mark"></span></div>' if long else ""}
+{PAGE_RINGS}{RULER}
 {site_header(active)}
 <main id="main">
 {body if path == GLOSSARY_PATH else explain(body)}
@@ -1972,7 +1976,6 @@ def home_card_picture(name: str, alt: str) -> str:
 
 
 def page_home() -> str:
-    ticks = "".join(f'<span class="tp-tick-n mono" style="top:{i * 200 + 12}px">{i}</span>' for i in range(12))
     tags = "".join(f'<span><span class="tp-dot">&#183;</span> {esc(t.upper())}</span>' for t in HOME_TAGS)
     cards = "".join(
         f'<a class="tp-card tp-ease" href="{FEATURES_PATH}#{key}"><div class="tp-strip-label mono" data-terms="off"><span>{esc(tag.upper())}</span><span>{n}</span></div>'
@@ -2077,7 +2080,7 @@ Not built yet: hole detection on plain paper, and synchronization between device
 </head>
 <body class="tp tp-landing">
 <a class="skip" href="#main">Skip to content</a>
-<div class="tp-ruler" aria-hidden="true"><span class="tp-ruler-mark"></span>{ticks}</div>
+{RULER}
 {site_header(home=True)}
 <main id="main">{explain(main)}</main>
 {site_footer()}
@@ -2097,6 +2100,9 @@ def header_problems(out: Path = OUT) -> list[str]:
         if '<header class="tp-header' not in text or '<footer class="tp-footer">' not in text:
             found.append(f"{where}: it does not carry the shared header and footer")
             continue
+        # Entry 451: every page carries the home page's ruler.
+        if RULER not in text:
+            found.append(f"{where}: it does not carry the home page's ruler down the right edge")
         header = text[text.index('<header class="tp-header'):text.index("</header>")]
         missing = [href for href in wanted if f'href="{href}"' not in header]
         if missing:
@@ -3981,11 +3987,6 @@ PAGE_JS = """// NOTES-FROM-PLANNING.md entry 444: the long pages' ruler and sect
 (() => {
   const ruler = document.querySelector(".tp-ruler"), mark = document.querySelector(".tp-ruler-mark");
   const nav = document.querySelector(".tp-index"), index = nav ? [...nav.querySelectorAll("a")] : [];
-  if (ruler) for (let i = 0; i < 12; i++) {
-    const n = document.createElement("span");
-    n.className = "tp-tick-n mono"; n.style.top = (i * 200 + 12) + "px"; n.textContent = i;
-    ruler.appendChild(n);
-  }
   // The section in view is the last whose heading has passed a third of the way down; a long index keeps it in sight without moving the page.
   const heads = index.map((a) => document.getElementById(a.hash.slice(1)));
   let current = null;
@@ -4170,8 +4171,8 @@ letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;justify-cont
 .page-head h1,.page-top h1{max-width:1040px}
 main>.guide:first-child{padding-top:88px}
 .page-head .lead{max-width:640px}
-.tp-landing,.tp-long{--rule:46px}
-.tp-long main,.tp-long .tp-footer,.tp-long .tp-header{margin-right:var(--rule)}
+.tp-landing,.tp-ruled{--rule:46px}
+.tp-ruled main,.tp-ruled .tp-footer,.tp-ruled .tp-header{margin-right:var(--rule)}
 .tp-ruler{position:fixed;top:0;right:0;bottom:0;width:var(--rule);border-left:1px solid var(--line);z-index:3;overflow:hidden;
 background-image:linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px),linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px);
 background-size:9px 40px,18px 200px;background-repeat:repeat-y;background-position:right 0 top 20px,right 0 top 20px}
@@ -4199,7 +4200,7 @@ pre code{background:none;padding:0;font-size:inherit}
 .prose>.eyebrow{font-size:12px;line-height:1.6;color:var(--faint)}
 .hiw-tour-card{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
 @media (max-width:860px){
-.tp-landing,.tp-long{--rule:0px}
+.tp-landing,.tp-ruled{--rule:0px}
 .tp-ruler,.tp-index{display:none}
 .tp-rings{height:560px}
 .tp-rings svg{left:calc(70% - 800px);top:-620px}

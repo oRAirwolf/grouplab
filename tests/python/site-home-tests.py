@@ -137,7 +137,9 @@ def main() -> int:
           "tp-ruler" in long and 'href="#one"' in long and 'href="#two"' in long and 'id="one"' in long and "page.js" in long
           and '<nav class="toc"' in long and "tp-index" not in long)
     short = build.shell("/survey/", "Survey", "A page.", "<h2>One</h2><h2>Two</h2>")
-    check("a short page has neither", "tp-ruler" not in short and "tp-index" not in short and "page.js" not in short)
+    # Entry 451: every page has the home page's ruler, the same one; the numbered section index stays the home page's own.
+    check("a short page has the home page's ruler and no section index", build.RULER in short and build.RULER in home and "tp-index" not in short
+          and "page.js" in short and "tp-ruled" in short)
     for path in ("/research/how-many-shots/", "/releases/", "/features/", "/support/", "/guides/testing-guide/"):
         check(f"{path} is a long page", bool(build.LONG_PAGES.match(path)))
     check("the glossary and the download page are not long pages", not build.LONG_PAGES.match("/guides/glossary/") and not build.LONG_PAGES.match("/download/"))
