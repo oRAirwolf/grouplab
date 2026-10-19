@@ -104,6 +104,10 @@ def main() -> int:
         (out / "assets" / "css" / "site.css").write_text(site_css + ".odd{font-family:serif}\n", encoding="utf-8")
         (out / "support" / "index.html").write_text(page.replace("<h1>", '<h1 class="odd">'), encoding="utf-8")
         check("a class on the h1 that changes its face fails", any(".odd" in p for p in build.heading_problems(out)))
+        # Entry 449: page titles are as written; a stylesheet turning one to capitals fails, outside the home page.
+        (out / "support" / "index.html").write_text(page, encoding="utf-8")
+        (out / "assets" / "css" / "site.css").write_text(site_css + ".page-head h1{text-transform:uppercase}\n", encoding="utf-8")
+        check("a rule setting a page title in capitals fails", any("capitals" in p for p in build.heading_problems(out)))
         (out / "assets" / "css" / "site.css").write_text(site_css.replace(".tp h1,.tp h2{", ".tp h4{"), encoding="utf-8")
         (out / "support" / "index.html").write_text(page, encoding="utf-8")
         check("a stylesheet that no longer gives .tp h1 the display face fails", any("no stylesheet" in p for p in build.heading_problems(out)))

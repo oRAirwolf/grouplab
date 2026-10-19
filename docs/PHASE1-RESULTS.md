@@ -1533,6 +1533,13 @@ site build pass.
    450 and 700 at all three widths: 11 faults. After: none.
 3. **Live:** see entry 449's results (checked once this published).
 
+## Entry 449: page titles stay as written (2026-10-19)
+
+1. Alan chose A: every page title as written in the condensed bold face, as built in entry 444; the home page keeps GROUPLAB and START
+   MEASURING. in capitals. Nothing on the site changed. The DESIGN NEEDED line is marked answered in for-alan.md and gone from STATE.
+2. `heading_problems` now also fails a page, other than the home page, whose title a stylesheet turns to capitals (three lines);
+   `site-home-tests.py` holds it (50 checks).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

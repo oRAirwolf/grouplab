@@ -25,6 +25,31 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 449: entry 444's look question answered, page titles stay as written
+
+**Status: actioned 2026-10-19; every section done, the capitals check included.**
+
+From the planning session, 2026-10-19 02:10 UTC. Take it after entries 447 and 448. Nothing here needs Alan. Website only, no
+application note.
+
+Alan, 2026-10-18 20:08 Denver, after seeing a Claude Design canvas with three options (claude.ai/artifact/8XE1SVRR3mBJVp58fenTA1:
+A as written everywhere, B capitals everywhere, C capitals on the main pages with research articles and guides as written):
+"A is good".
+
+## What to do
+
+1. Keep every page title (`h1`) on the site as written, in the condensed bold face, exactly as built in entry 444. This covers the main
+   pages, research articles and guides alike. No capitals and no `text-transform` on page titles.
+2. The home page is unchanged: GROUPLAB and START MEASURING. stay in capitals, its other headings as written.
+3. Close the DESIGN NEEDED line for entry 444 in `docs/notes/for-alan.md` (answered 2026-10-18: A, as written everywhere) and remove it
+   from the waiting list in STATE.
+4. If `heading_problems` or `site-home-tests.py` can hold it cheaply, add a check that no page title outside the home page is set in
+   capitals by CSS. Skip this if it is more than a few lines.
+
+No commit is needed for the decision alone beyond the for-alan.md and STATE changes.
+
+---
+
 ## 2026-10-18, entry 448: the home page's menu opens under the GROUPLAB wordmark on phones
 
 **Status: actioned 2026-10-19; sections 1 and 2 done, taken while entry 447's iOS proof ran (Alan asked to action what could be). Section 3, the live check, is recorded with entry 449.**

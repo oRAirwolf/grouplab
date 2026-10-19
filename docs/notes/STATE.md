@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 448 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 449 (before it: entries 446, 445, 444 and 443).
 
 ---
 
@@ -22,8 +22,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entries 445 and 446 (2026-10-18)**: "On this page" on long pages (`with_contents`); the phone's demo (`PhoneDemo`, `DemoSample`).
 - **Entries 441, 443 and 444 (2026-10-18)**: concept B is the home page (the one before is `page_home` at b216ce56); every page has
   its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
-  pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` and `site-home-tests.py` hold it.
-  Alan's look question (titles in capitals?) is a DESIGN NEEDED line in for-alan.md.
+  pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` holds it, titles as written (Alan, entry 449).
 - **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),
   the shot table's own keys (`OnShotKey`), the caliber line's ".568.96 cm" fixed in `UnitSwitch`; `Entry442Tests`. Phones not in it.
 - **The usage guard** stops at 85% of the week (88% to finish a block). **The proof checklist**: rows 6, 8, 11, 12, 13, 15, 16, 21,

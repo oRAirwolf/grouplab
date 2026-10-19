@@ -2113,7 +2113,8 @@ def css_rules(css: str) -> list[tuple[str, str]]:
 
 
 def heading_problems(out: Path = OUT) -> list[str]:
-    """Entry 444 section 3: every page's h1 is the home page's display face, IBM Plex Sans Condensed bold. Read from the stylesheets each
+    """Entry 444 section 3: every page's h1 is the home page's display face, IBM Plex Sans Condensed bold, and entry 449: as written, never
+    turned to capitals by a stylesheet, outside the home page. Read from the stylesheets each
     page links, at every width: the page's body is .tp, which gives its h1 the display face, and no rule that can reach an h1, through the
     element or a class it carries, gives it another face or weight. An h1 with its own style attribute fails too."""
     found, sheets = [], {}
@@ -2146,6 +2147,9 @@ def heading_problems(out: Path = OUT) -> list[str]:
                 if hits and (re.search(r"(?:^|;)\s*font:", decl) or (face and not face.group(1).strip().strip('"').startswith(DISPLAY_FACE))
                              or (weight and weight.group(1).strip() != "700")):
                     found.append(f"{where}: {hits[0]} gives its h1 a face or weight other than {DISPLAY_FACE} bold")
+                # Entry 449, Alan's answer A: every page's title as written; only the home page's own words are in capitals.
+                if hits and where != "index.html" and re.search(r"text-transform:\s*uppercase", decl):
+                    found.append(f"{where}: {hits[0]} sets its h1 in capitals, and page titles are as written (entry 449)")
     return sorted(set(found))
 
 
