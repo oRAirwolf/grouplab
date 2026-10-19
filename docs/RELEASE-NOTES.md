@@ -476,7 +476,7 @@ From your reports and targets in this build: 1 fix from 5 error reports.
 
 - A scope set in NATO mil is now named in NATO mil where the zero correction says what a click is, instead of being called MOA. (Proof checklist, 2026-10-08).
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.178)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
