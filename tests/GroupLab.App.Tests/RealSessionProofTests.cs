@@ -109,7 +109,14 @@ public class RealSessionProofTests(ITestOutputHelper output)
             Assert.True(window.Analysing);
             Assert.Equal(shown, Screen(window));
 
-            // Exported, and imported on another computer, where it opens with no image and says the same.
+            // Exported, and imported on another computer, where it opens with no image and says the same. The generated sheet the window
+            // went on to may or may not have been saved by then, by the save that follows a change, as it was once on macOS (CI run of
+            // ff9f61c1, entry 447); only Alan's session is what this proves, so it is the one exported.
+            foreach (var extra in window.Sessions!.List().Where(s => s.Id != id).ToList())
+            {
+                window.Sessions.Delete(extra.Id);
+            }
+
             Assert.True(window.ExportAll(file));
             other = AnotherComputer();
             Assert.Single(other.PlanImport(file)!.NewSessions);
