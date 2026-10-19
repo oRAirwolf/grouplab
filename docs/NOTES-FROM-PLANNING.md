@@ -25,6 +25,54 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 450: a flaky test or a stuck phone build should not hold back the other platforms' nightly
+
+**Status: actioned 2026-10-19; sections 1 to 4 done, section 5's two branch proofs done; its real-nightly proof waits for the next commit that ships. Section 3's count is 32, more than two: for planning.**
+
+From the planning session, 2026-10-19 03:05 UTC. Take it after entries 447, 448 and 449. Nothing here needs Alan. Alan, 2026-10-18 21:00
+Denver, asked whether a stalled or failed build for one platform can be kept from stopping another from publishing, and on the options
+below said: "Do whatever you think is best". This entry is the planning session's choice.
+
+## What the planning session found (read only, 2026-10-19)
+
+- Inside `nightly.yml` the platforms are already split: android, both iOS jobs, cli-arm64, the simulator and emulator starts are
+  `continue-on-error`, and the Mac packages are `optional` in `package.yml`. Only the Windows and linux-x64 packages must pass.
+- Coupling 1, the test gate: the nightly starts only on a successful "build and test" (`ci.yml`, windows, ubuntu and macos legs). One
+  flaky test on one leg stops every platform's nightly, phones included (as 6120ce4c's macOS save, export and import test did on
+  2026-10-18).
+- Coupling 2: `publish` needs `[name-it, package, android, cli-arm64]`, so a hung Android build (timeout 120 minutes) holds the desktop
+  publish back for up to two hours, though it never stops it.
+- Coupling 3: Play upload, TestFlight and the Store follow the nightly's success, so a failed Windows or linux-x64 package also stops the
+  phones. How often this has happened is not known.
+
+## What to do
+
+1. **One automatic retry of failed tests in `ci.yml`, on every leg.** When the test step fails, rerun only the tests that failed, once, in
+   the same job. If they pass, the leg passes and the nightly goes ahead; if any fails again, the leg fails as today. A real fault fails
+   twice and still stops everything, so "publish only what passed" holds. A rerun of the whole workflow is not wanted.
+   - Never hide a flake: each test that passed only on its retry is written to the run summary as a warning annotation, and to one place
+     the planning session reads (a line in STATE or a small `docs/notes/flaky-tests.md`, your choice, kept short, newest first, with test
+     name, leg, run id and date). A test that needs its retry three times in a fortnight becomes its own inbox-style item in STATE to fix.
+   - The retry does not apply to build failures, only to test failures.
+2. **The desktop publish stops waiting for the slow optional jobs.** Take `android` and `cli-arm64` out of `publish`'s `needs`. Each
+   adds its own files to that build's `v<version>` release and the rolling `nightly` release when it finishes (a small job that needs
+   `publish` and its own build job, or the same steps at the end of the build job, your choice). The release notes and README for the
+   nightly must still say which files are in it: either they are written so a later file does not make them wrong, or the late job
+   updates them. Play upload must still start only once the Android files exist (check what it triggers on today and keep that true).
+3. **Measure before splitting the phones from the desktop.** Look back over the nightly runs of the last 60 days (gh run list on
+   `nightly.yml` and `ci.yml`) and count the times a Windows or linux-x64 package failure, or a failed "build and test", meant no nightly
+   while the Android or iOS builds of that commit would have been fine. Write the count and the run ids in STATE. Do not build the split
+   now; if the count is more than two, say so in STATE and the planning session will decide.
+4. Update the README, the site's nightly and release notes pages, the research article on nightly builds (`nightly-builds`) and RESTORE or
+   CONTRIBUTING wherever they describe when a nightly publishes, in the same change (entry 267).
+5. Proof: a deliberately failing test on a throwaway branch fails twice and stops; a test made to fail only on its first attempt passes
+   on its retry and is recorded; one real nightly publishes the desktop files before the Android files arrive and then has all of them.
+   Remove the throwaway test and branch afterwards.
+
+Keep within the usual usage guard. Nothing here touches the server.
+
+---
+
 ## 2026-10-19, entry 449: entry 444's look question answered, page titles stay as written
 
 **Status: actioned 2026-10-19; every section done, the capitals check included.**

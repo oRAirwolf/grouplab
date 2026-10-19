@@ -9,18 +9,19 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 449 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 450 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
-- **Entry 448 (2026-10-19)**: the home menu above the wordmark, the wordmark takes no taps; `tests/site/taps.mjs` in website.yml.
-- **Entry 447 (2026-10-18)**: parts 1, 2 and 4 done; 3's cause found (a field's menu opened for a tap while the keyboard first came up) and fixed; 20 iOS runs to prove.
+- **Entry 450 (2026-10-19)**: failed tests retried once in CI (flakes in `docs/notes/flaky-tests.md`, run `scripts/flaky-tests.py`);
+  desktop publish no longer waits for Android. **32** nightlies lost to a non-phone failure since 2026-09-28: the split is planning's.
+- **Entry 447 (2026-10-18)**: parts 1, 2, 4 done; 3: a focusing press's hold is off (ff9f61c1), one red since; popups now logged.
   Left from part 2: CSV mapping, store target, Fudd buster, group tools, print and figures windows untested; phone pages two presses
   deep; no real Narrator, VoiceOver or TalkBack run yet.
 - **Entries 445 and 446 (2026-10-18)**: "On this page" on long pages (`with_contents`); the phone's demo (`PhoneDemo`, `DemoSample`).
-- **Entries 441, 443 and 444 (2026-10-18)**: concept B is the home page (the one before is `page_home` at b216ce56); every page has
+- **Entries 441, 443, 444, 448 and 449**: home menu tappable (`tests/site/taps.mjs`), titles as written; concept B is the home page (the one before is `page_home` at b216ce56); every page has
   its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
   pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` holds it, titles as written (Alan, entry 449).
 - **Entry 442 (2026-10-18)**: Quack's keyboard request: focus kept through a rebuild and arrows between buttons (`KeyboardFocus`),

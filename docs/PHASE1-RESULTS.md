@@ -1543,6 +1543,36 @@ site build pass.
    wordmark undocked: all ten links are the element at their left edge, middle and right edge, and the panel is drawn over the
    wordmark (`docs/figures/site/entry-448/menu-open-390-light.webp` and `-dark`). The tap check passed in CI on its first run there.
 
+## Entry 450: a flaky test or a slow phone build no longer holds back the other platforms' nightly (2026-10-19)
+
+Sections 1, 2 and 4 were built by a helper in its own worktree (Alan asked for the inbox to be worked in parallel), reviewed and pushed
+here as d1c07ea7; section 5's proofs were run here.
+
+1. **One retry of failed tests** (`ci.yml`, all three legs): the test step writes TRX results; when it fails, `scripts/test-retry.py`
+   reruns only the tests that failed, once, in the same job, and the leg passes only if every one passes. A crash, a hang, a project
+   with no results or more than 30 failures is not retried, and a build failure never reaches it. A test that passed only on its retry
+   is a warning on the run, a line in the leg's summary and a row in a `flaky-tests-<leg>` artifact; `scripts/flaky-tests.py` (main's
+   runs only) gathers them into `docs/notes/flaky-tests.md`, with a "To fix" list for any test retried three times in a fortnight.
+2. **The desktop publish no longer waits** for Android or the arm64 command line: `publish` needs only the naming and the packages; a
+   late `android-files` job re-signs the update manifest with the Android downloads and adds the APKs, the AAB and the symbols to the
+   build's release and the rolling `nightly` release, and `server-command-line` does the same for the arm64 tarball. Play upload, TestFlight
+   and the Store still start only when the whole nightly run has ended, so after the Android files exist. The notes and the release body
+   never list files, so a later file does not make them wrong; README, docs/ANDROID.md, docs/UPDATES.md, the download page and the
+   `nightly-builds` article say the Android files join when their build finishes. `NightlyNeverWaitsTests` (5) hold it.
+3. **Measured** (GitHub keeps runs from 2026-09-15; counted from 2026-09-28, when the signed Android build first ran in the nightly):
+   **32 times** a failed "build and test" meant no nightly while the phone builds would have been fine: 20 failed on one or two of the
+   three legs (36667907420, 36749517180, 36827714330, 37008809245, 37722546938, 37830239736, 37907966181, 38208601401, 38367496105,
+   38391812817, 38398018198, 38526570152, 38686202750, 38694447563, 38998534625, 36369536300, 37002640014, 37199873957, 38136708283,
+   38386382784) and 12 only in a job no phone uses (the website job 11 times, the linux tarball's ships check once). No Windows or
+   linux-x64 package failed in a nightly. More than two, so said in STATE for planning; the split itself is not built. Also seen: 7
+   nightlies failed at "Write the notes" with the Android build fine (36372334414, 36434428741, 36515160656, 36648108371, 37426892451,
+   38409950467, 38449280753), and ci.yml's website job gates every platform's nightly and is not helped by the retry.
+4. **Proofs** on a throwaway branch (`proof/entry-450`, deleted): with a test that always fails and one that fails only on its first
+   attempt (run 39202156149), every leg retried both, the second passed and was recorded (warning and `flaky-tests-<leg>` artifact on all
+   three), the first failed twice and the leg failed; with only the second (run 39206563079) every leg passed on its retry and recorded
+   it. The real nightly (desktop first, Android files added after) waits for the next commit that ships; d1c07ea7 shipped nothing and its
+   nightly was skipped.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

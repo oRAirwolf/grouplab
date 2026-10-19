@@ -42,7 +42,8 @@ def from_ci() -> set[tuple[str, str, str, str]]:
     for leg in LEGS:
         listing = json.loads(gh("api", f"repos/{REPO}/actions/artifacts?name=flaky-tests-{leg}&per_page=100"))
         for artifact in listing.get("artifacts", []):
-            if artifact.get("expired"):
+            # Only main's runs: a branch's tests are not yet the project's, and entry 450's own proof ran a deliberate flake on one.
+            if artifact.get("expired") or (artifact.get("workflow_run") or {}).get("head_branch") != "main":
                 continue
             with zipfile.ZipFile(io.BytesIO(gh("api", f"repos/{REPO}/actions/artifacts/{artifact['id']}/zip"))) as z:
                 for name in z.namelist():
