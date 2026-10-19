@@ -283,7 +283,7 @@ print, on the computer and in GroupLab Dev; and a mark much bigger than your bul
 
 **Why:** Ballistics is getting a third view, Point blank, which can print a 50 by 30 mm card for the rifle: the rifle, bullet, velocity
 and BC, the dead-on distances, the zone and the certainty, and how far high to zero at 100 yards with the clicks. No real label has been
-printed from it yet. GroupLab will say here which nightly has it.
+printed from it yet. It is in 0.2.0-nightly.205 and later (2026-10-19).
 **Steps:** in Ballistics, Point blank, with your rifle and load chosen, press Print a card and print it on the M220, from the computer or
 the phone. Put a photo of the label in `C:\Dev\grouplab-local\point-blank-card\`.
 **A good answer:** the photo, and whether every line is readable and nothing is cut off at the edges.

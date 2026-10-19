@@ -21,6 +21,40 @@ public class ScenarioTests
     /// Entry 447 section 3: while a scenario runs, a real press and release on the window are logged with where they landed and the control
     /// they landed on, so a lost tap on the simulator says whether it reached the application at all.
     /// </summary>
+    /// <summary>Entry 447 section 3: while a scenario runs, a UI thread held for more than a second is logged as a stall, with its layout passes.</summary>
+    [AvaloniaFact]
+    public async Task AStallDuringAScenarioIsLogged()
+    {
+        if (Phone.Platform is null)
+        {
+            Phone.Start(new TestPhone(), Avalonia.Application.Current!, () => "US", null);
+        }
+
+        Scenario.AnswerFirstRun(Phone.Settings);
+        var shell = new Shell();
+        var window = new Window { Width = 412, Height = 915, Content = shell };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            var running = Scenario.Run("""{ "name": "stall", "steps": [ { "do": "sleep", "seconds": 3 }, { "do": "log", "lines": 50 } ] }""");
+            await Task.Delay(600);
+            Dispatcher.UIThread.RunJobs();
+
+            // The UI thread held for a second and a half, as run 39243232233's log suggests it was for thirty five.
+            Thread.Sleep(1500);
+            Dispatcher.UIThread.RunJobs();
+            await running;
+            string log = File.ReadAllText(Path.Combine(Scenario.Results, "log.txt"));
+            Assert.True(log.Contains("scenario.stall", StringComparison.Ordinal), log[^Math.Min(log.Length, 1500)..]);
+            Assert.Contains("layouts=", log, StringComparison.Ordinal);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public async Task APressDuringAScenarioIsLoggedWithWhereItLanded()
     {

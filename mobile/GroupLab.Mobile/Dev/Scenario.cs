@@ -368,8 +368,10 @@ internal static class Scenario
 
         popups?.Dispose();
         popups = null;
+        Watch(null);
         if (on && Shell.Current is { } shell && TopLevel.GetTopLevel(shell) is { } top)
         {
+            Watch(top);
             top.AddHandler(InputElement.PointerPressedEvent, Pressed, RoutingStrategies.Tunnel, handledEventsToo: true);
             top.AddHandler(InputElement.PointerReleasedEvent, Released, RoutingStrategies.Tunnel, handledEventsToo: true);
             top.AddHandler(InputElement.TappedEvent, Gesture, RoutingStrategies.Bubble, handledEventsToo: true);
@@ -387,6 +389,60 @@ internal static class Scenario
 
         return on;
     }
+
+    private static Timer? beat;
+
+    private static TopLevel? watched;
+
+    private static readonly Stopwatch Since = Stopwatch.StartNew();
+
+    private static int layouts;
+
+    private static bool stalled;
+
+    /// <summary>
+    /// Entry 447 section 3: run 39243232233's log was silent for 35 seconds with the keyboard up before a tap that then never released, so
+    /// while a scenario runs the UI thread is asked to answer four times a second at the highest priority, and an answer that took more than
+    /// a second is logged with how long it took and how many layout passes ran meanwhile: a stall, and whether it was a layout loop.
+    /// </summary>
+    private static void Watch(TopLevel? top)
+    {
+        beat?.Dispose();
+        beat = null;
+        if (watched is { } before)
+        {
+            before.LayoutUpdated -= Laid;
+            watched = null;
+        }
+
+        if (top is null)
+        {
+            return;
+        }
+
+        watched = top;
+        top.LayoutUpdated += Laid;
+        beat = new Timer(_ =>
+        {
+            long asked = Since.ElapsedMilliseconds;
+            int passes = Volatile.Read(ref layouts);
+            Dispatcher.UIThread.Post(() =>
+            {
+                long gap = Since.ElapsedMilliseconds - asked;
+                if (gap > 1000 && !stalled)
+                {
+                    stalled = true;
+                    DiagnosticLog.Info("scenario.stall", ("ms", gap), ("layouts", Volatile.Read(ref layouts) - passes));
+                }
+                else if (gap < 300)
+                {
+                    stalled = false;
+                }
+            }, DispatcherPriority.Send);
+        }, null, 250, 250);
+    }
+
+    private static void Laid(object? sender, EventArgs e) => Interlocked.Increment(ref layouts);
 
     private static void Gesture(object? sender, RoutedEventArgs e)
     {
