@@ -124,7 +124,8 @@ public class Entry156Tests
             Assert.Contains("The precision was typed, so its own uncertainty is not known and is left out of the interval.", text);
 
             window.WorkOutHit("600", 2, "18", "30", from: 2, precision: "0.5");
-            Assert.Contains(window.HitShown, t => t.StartsWith("First round on an IPSC outline 18.000 by 30.000 in at 600 yd: ", StringComparison.Ordinal));
+            // Entry 455: the IPSC shape is the A zone at the rules' own size, whatever was typed.
+            Assert.Contains(window.HitShown, t => t.StartsWith("First round on an IPSC target's A zone, 15 by 32.5 cm at 600 yd: ", StringComparison.Ordinal));
 
             // Section 1: a target's size may be an angle, turned into a length at the distance. Two MOA at 600 yd is 12.566 in.
             window.WorkOutHit("600", 0, "2", "2", from: 2, precision: "0.5", sizeUnit: 1);

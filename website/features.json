@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On a small phone, the heading that opens the tracking test",
     "Release notes now say which fixes came from",
     "Next unsure hole, and saving while",
     "The notes for this build could not be written in time",

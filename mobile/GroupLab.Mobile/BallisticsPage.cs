@@ -700,7 +700,7 @@ internal sealed class BallisticsPage : UserControl
             Labeled("Sight scale factor, 1.000 tracks true", factor),
             Labeled("Weight as fired, lb", weight),
             mount,
-            new Expander { Header = new TextBlock { Text = "Work it out from a tracking test" }, Content = tracking, MinHeight = Screens.Touch, HorizontalAlignment = HorizontalAlignment.Stretch },
+            new Expander { Header = new TextBlock { Text = "Work it out from a tracking test", TextWrapping = TextWrapping.Wrap }, Content = tracking, MinHeight = Screens.Touch, HorizontalAlignment = HorizontalAlignment.Stretch },
             Screens.Primary("Keep this rifle", () =>
             {
                 var rifle = (r ?? new Rifle(name.Text ?? "My rifle", usual.Item1, usual.Item2)) with
