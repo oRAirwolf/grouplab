@@ -326,3 +326,38 @@ A tester is thanked by name only on Alan's word, and the word is kept here.
 
 - **Quack** (a Discord name), for the report in entry 409. Alan, 2026-10-11 02:15 Denver: "Yes Quack can be thanked by name". Nothing
   else about them is written anywhere.
+
+# Entry 453: the Research index's small pictures, cropped from Alan's own scans and photographs
+
+Fourteen articles with no chart show a crop of a real target on their card on the Research index (entry 453 section 8). Each is a
+640 by 400 WebP, `website/research/<article>/thumb.webp`, made from the pixels alone: the original was opened, turned upright by its
+orientation flag and nothing else read from its metadata, cropped, and written as a new image with no metadata of any kind (no EXIF,
+no XMP, no colour profile). The build checks every one for those chunks. No crop shows a name, an address, a serial number or a QR
+code, and none comes from a tester's submission, a Discord upload or the 2026-09-16 friend scan. The originals stay where they are,
+outside the repository.
+
+| | |
+|---|---|
+| **Whose** | Alan's own scans and photographs: the 2026-09-20 range day, the 2026-09-26 aim point card, the 2026-10-04 corner bracket photograph and the 2026-10-08 Phomemo M834 check print |
+| **Consent** | Alan's standing consent for his own photographs and scans (entry 171 section 6) |
+| **Licence** | GPL-3.0 |
+
+| Article | Bytes | SHA-256 | From | What it shows |
+|---|---|---|---|---|
+| `one-hole-or-two` | 5,566 | `1915b0a031d0fb7bbf929cdca122a5d44038f1ac6d75e3778f77fc3d44fefd90` | `aim test09262026.png`, the aim point card, 600 dpi scan | Two shots that merged into one ragged hole beside a third, above the E square |
+| `hole-is-not-the-bullet` | 7,844 | `ef69f05cd2b6e5598218c8360cff4aa31007de853604fce6a25c11f8bbb3a72e` | `3-600-dpi09202026.png`, 6.5 Creedmoor, 600 dpi scan | A torn hole that cut the ring, with the bullet's own 0.264 in circle dashed over it |
+| `blank-sheet-zero` | 9,628 | `9100d82b3c961b21a9567f48cc116effb362b3037dc08b7a52bf31ef9700ffc3` | `2-600-dpi09202026.png`, the blank sheet, 600 dpi scan | The hand-drawn cross and the shots through it |
+| `scale-markers-beside-a-target` | 13,056 | `4c49b0897ae55a7b414153113a85c2815e9edb1d2680bef57016b77287c1af0e` | `table-eze-scorer-grid-brackets.jpg`, kitchen table, 2026-10-04 | A GroupLab corner bracket laid beside a store-bought target's corner; no maker's name or logo in the crop |
+| `how-far-off-square` | 15,258 | `e1838e20be6112c8062d11563564036160eafefb68228a964e38fe0224232ad6` | `20260920_141458.jpg`, range photograph | A sheet on the board photographed at an angle |
+| `how-grouplab-reads-a-target` | 14,212 | `8e4547b8503af847f7c2f6b22403814dff19782f3c3f60261a7f1359fcb23ac9` | `20260920_153325.jpg`, range photograph | A shot sheet on the board: markers, bulls, holes, and the board's own holes beside it |
+| `wrong-bull` | 16,016 | `b4fe96f467d883bbffc6ed4eea427a4108b42f74f47f6c8d0ff44b069c4d3852` | `5-600-dpi09202026.png`, 6 ARC, 600 dpi scan | Shots landing between bulls, nearer ones they were not aimed at |
+| `scans-against-photos` | 10,528 | `e39c525337ffbb76012fd10cee8c99ed03941bf9de9ba57a61e18520cce28159` | `20260920_165624.jpg` and `1-600-dpi09202026.png`, the same 6.5 Creedmoor sheet | The same bull in the range photograph and in the scan, side by side |
+| `pooling-groups` | 16,698 | `fd40d3786adad71bc8edb4d060fd50327adb1b7f40f137db4648fdca24b80cf4` | `1-600-dpi09202026.png` and `3-600-dpi09202026.png`, two sheets of one 6.5 Creedmoor load | The same bulls on the two sheets, side by side |
+| `wind-or-rifle` | 15,090 | `b426eb61316f77a9ac548e8e19d40130fafce1f19f9e11fe3cd9cc0fa7aa6226` | `4-600-dpi09202026.png`, the windy .22 LR sheet, 600 dpi scan | Shots pushed sideways off their bulls |
+| `primer-comparison` | 21,078 | `b00431899ee8d32fda1395cf0c116cf4724ffefb67136f6daf3b7e792c9e16b8` | `6-600-dpi09202026.png`, 6mm Creedmoor, 600 dpi scan | Rows 1 to 3: one primer's shots on row 1, the other's a whole row low on row 3 |
+| `choosing-the-markers` | 7,814 | `0c91eace6b09232b2a2cb2a7da34cbd6aa180edc663277ef24f06704f93aab08` | `4-600-dpi09202026.png`, 600 dpi scan | One marker square between two bulls, a hole beside it |
+| `designing-a-readable-target` | 10,928 | `5574d7e01aac3cfecace58c0e5b36349d70747e79772811e6cc949cc97159ff2` | `1-600-dpi09202026.png`, 600 dpi scan | Holes torn through the printed dot and ring, ink and hole together |
+| `phomemo-m834-print-commands` | 3,560 | `a61c9fbad713c1ff1b582a2b91f9fc81a47c821871a34893ba76cd2e88014ae1` | `check-print-2-600dpi.png`, an M834 check print scanned at 600 dpi | The printed crosshair and a marker on the thermal paper |
+
+The other seven articles with no chart (safe-updates, nightly-builds, smaller-installer, what-grouplab-sends,
+uploads-rebuilt-from-pixels, shots-to-zero, bent-sheet-registration) show a drawn mark, `thumb.svg`, with no picture behind it.

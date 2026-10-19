@@ -7,7 +7,7 @@ written: 2026-10-10
 data_date: "Range photographs of 2026-09-20; a sitting of 2026-09-29; nineteen angled photographs of 2026-09-27; measured again 2026-10-10"
 samples: "31 registered range photographs of 59, 12 of them fully framed and measured against their scans; nineteen photographs of one scanned sheet from straight down to 66 degrees; four phone pictures of one sitting and two of 2026-09-26, against their scans"
 state: published
-no_figure: "The photographs behind it show personal papers in the background and are kept off the site; the angles and errors are in the article as tables."
+no_figure: "Some of the photographs behind it show personal papers in the background and are kept off the site; the small picture on the Research index is one of the range photographs, which do not. The angles and errors are in the article as tables."
 found: "Up to 36 degrees off square, nineteen photographs of one sheet found every shot and placed them as well as one taken straight down. From 38.5 degrees marks that are not shots began to appear, and GroupLab refuses a photograph past 37 degrees. On the range photographs the holes kept their error as the angle grew to 32 degrees, while the bulls' centres drifted. What is left on a photograph held flat is the paper's own small relief between the printed codes, seen through a wide lens."
 sure: "one sheet for the angle sweep, one phone, and a few photographs for the rest. No one has yet measured whether a narrower lens from farther away does better, so nothing here says it does."
 sources:

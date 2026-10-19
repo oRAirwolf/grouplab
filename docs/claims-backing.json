@@ -583,7 +583,7 @@
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
-  "Reading targets 2 A bullet hole is not the bullet A .308 bullet does not leave a .308 hole.": {
+  "A bullet hole is not the bullet A .308 bullet does not leave a .308 hole.": {
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
@@ -591,11 +591,11 @@
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
-  "Reading targets 5 How GroupLab reads a target From a photograph to a group size, in six steps, with what each one can get wrong and how you would know.": {
+  "How GroupLab reads a target From a photograph to a group size, in six steps, with what each one can get wrong and how you would know.": {
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
-  "Reading targets 6 When shots land on the wrong bull On a 25 bull sheet, a rifle that is not zeroed puts every shot nearer a bull it was not aimed at.": {
+  "When shots land on the wrong bull On a 25 bull sheet, a rifle that is not zeroed puts every shot nearer a bull it was not aimed at.": {
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
@@ -623,7 +623,7 @@
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
-  "How GroupLab is built How GroupLab is built 10 How GroupLab updates itself safely An updater that can be tricked into installing someone else&#x27;s file is worse than no updater.": {
+  "How GroupLab is built How GroupLab updates itself safely An updater that can be tricked into installing someone else&#x27;s file is worse than no updater.": {
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
@@ -631,11 +631,11 @@
    "kind": "measured",
    "where": "the article it summarizes, with that article's data and sources"
   },
-  "How GroupLab is built 24 Choosing the markers The little black squares on a GroupLab target are AprilTag 36h11.": {
+  "Choosing the markers The little black squares on a GroupLab target are AprilTag 36h11.": {
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
-  "How GroupLab is built 25 Designing a target GroupLab can read Everything printed on a target sheet is something a hole detector might mistake for a hole.": {
+  "Designing a target GroupLab can read Everything printed on a target sheet is something a hole detector might mistake for a hole.": {
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
@@ -643,11 +643,11 @@
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
-  "How GroupLab is built 27 Nightly builds, from commit to installer Every change that passes its tests becomes an installer you can download within about half an hour.": {
+  "Nightly builds, from commit to installer Every change that passes its tests becomes an installer you can download within about half an hour.": {
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
-  "How GroupLab is built 28 Cutting the installer from 97 MB to 81 MB A third of what GroupLab shipped was debug symbols for two libraries that nothing would ever read.": {
+  "Cutting the installer from 97 MB to 81 MB A third of what GroupLab shipped was debug symbols for two libraries that nothing would ever read.": {
    "kind": "measured",
    "where": "each card is its article's own title and description, backed by that article's evidence"
   },
@@ -6891,7 +6891,7 @@
    "kind": "measured",
    "where": "the description of /research/how-far-off-square/; the article's own evidence: 3 sources, data from 2026-09-20, 2026-09-27, 2026-09-29 and 2026-10-10; every number checked against docs/notes/archive/results-151-175.md entry 157, the published curled-angled-paper article, src/GroupLab.Core/Capture/CaptureQuality.cs OffAxisLimit and docs/PHASE1-RESULTS.md entry 399 (entry 402)"
   },
-  "How GroupLab is built 34 What a thermal printer is sent: the Phomemo M834, decoded The Phomemo app printed a Letter sheet 5.3 percent small and cut its last line in half.": {
+  "What a thermal printer is sent: the Phomemo M834, decoded The Phomemo app printed a Letter sheet 5.3 percent small and cut its last line in half.": {
    "kind": "measured",
    "where": "the description of /research/phomemo-m834-print-commands/; the article's own evidence: 3 sources, data from one recording of 2026-10-05 and three check prints of 2026-10-07, 2026-10-08 and 2026-10-10; every number checked against docs/PHASE1-RESULTS.md, request 73 and entries 389 and 391, and requests 84, 85 and 88 (entry 402)"
   },

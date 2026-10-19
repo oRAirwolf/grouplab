@@ -7,7 +7,7 @@ written: 2026-09-22
 data_date: 2026-09-20
 samples: 5 shots with one primer and 4 with the other
 state: published
-no_figure: "The two groups are on one sheet, and the sheet is a real range target rather than a render. It has not been photographed for publication under a consent record yet, so the article gives the coordinates instead of the picture."
+no_figure: "The two groups are on one sheet, and the sheet is a real range target rather than a render. A crop of its scan is the small picture on the Research index, under the developer's standing consent; at that size the shift is visible and the sizes are not, so the article gives the coordinates instead."
 found: Changing the primer moved where the shots landed, by about a whole row of bulls, and that shift is about as certain as anything in this article. Whether it changed how tightly the rifle grouped, nine shots cannot say, and GroupLab refuses to say it.
 sure: Nine shots in total, one rifle, one sitting. This is a worked example of how to read a small comparison, not a finding about primers.
 sources:

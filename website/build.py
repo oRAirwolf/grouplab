@@ -2360,29 +2360,100 @@ def research_figure(meta: dict) -> str | None:
     return None
 
 
+THUMB_CLASSES = {"ln", "dm", "am", "ds", "fl", "ho", "af", "lf"}
+
+
+def research_thumb(meta: dict) -> Path | None:
+    """The article's own thumbnail, for an article with no lead figure: a picture or a drawn mark, beside the article.
+
+    Entry 453: Alan, 2026-10-19, "Can you make thumbnails for all of the research articles?", and his choice of concept C:
+    keep the charts, and give every other article its own picture. ``thumb.webp`` is a real photograph or scan of his that
+    shows the article's idea, cropped 16:10 at 640 by 400 with no metadata; ``thumb.svg`` is a drawn mark, used where no
+    real picture shows the idea. ``samples/PROVENANCE.md`` says where each picture came from.
+    """
+    folder = REPO / "website" / "research" / meta["slug"]
+    for name in ("thumb.webp", "thumb.svg"):
+        if (folder / name).is_file():
+            return folder / name
+    return None
+
+
+def research_mark(path: Path) -> str:
+    """A drawn mark, inline so it takes the reader's theme through the site's own colors and needs no second image."""
+    text = path.read_text(encoding="utf-8").strip()
+    inner = re.sub(r"^<svg[^>]*>|</svg>$", "", text).strip()
+    return (f'<svg class="research-thumb research-mark" viewBox="0 0 320 200" aria-hidden="true" focusable="false">'
+            f"{inner}</svg>")
+
+
 def research_lead(meta: dict) -> str:
     """The picture at the top of an index card, and never a gap.
 
-    Entry 143 section 1.1: "Every card on the index needs a lead image, or none of them do." One card in four had a
-    thumbnail, so the row stood as tall as its tallest card with large blanks in the rest of it.
-
-    **On the live site it was worse than that.** Every article with a chart was still a draft, so seventeen of the
-    eighteen published articles had no lead at all. The entry's own fallback is what fits: where an article has no
-    natural chart, a plain titled panel in the site's own style is better than a gap. The panel is built from the
-    article's own group and number, in the site's colors, at the same shape as a thumbnail, so it follows the
-    reader's theme for nothing and there is no image to go stale.
+    Entry 143 section 1.1: "Every card on the index needs a lead image, or none of them do." Until entry 453 an article with
+    no chart had a numbered panel in the site's colors; now each has its own picture or drawn mark, and an article with
+    neither stops the build, because a card with nothing of its own is exactly what that entry asked to be rid of.
     """
     figure = research_figure(meta)
     if figure:
         return themed_image(figure, "", "research-thumb", width=320, height=200)
 
-    return (
-        f'<div class="research-thumb research-plate" aria-hidden="true">'
-        f'<span class="mono small caps">{esc(str(meta.get("group", "")))}</span>'
-        f'<span class="plate-rule"></span>'
-        f'<span class="mono plate-number">{esc(str(meta.get("number", "")))}</span>'
-        "</div>"
-    )
+    thumb = research_thumb(meta)
+    if thumb is None:
+        raise SystemExit(
+            f"research/{meta['slug']}: no lead figure and no thumbnail. Entry 453: put thumb.webp (a real picture, 640 by 400) "
+            f"or thumb.svg (a drawn mark) in website/research/{meta['slug']}/")
+    if thumb.suffix == ".svg":
+        return research_mark(thumb)
+    return (f'<img class="research-thumb" src="/research/{meta["slug"]}/{thumb.name}" alt="" width="320" height="200" '
+            'loading="lazy" decoding="async">')
+
+
+def thumb_problems() -> list[str]:
+    """Entry 453 section 2: every article has its lead figure or its own thumbnail, and each thumbnail keeps the rules.
+
+    A drawn mark is the 320 by 200 box, colored only through the eight classes so it follows the theme, with no words or
+    numbers, and one solid amber element at most carries the point (a dashed amber outline, such as the cut top of the
+    installer's bar on the planning session's canvas, is a guide rather than the point). A picture is 640 by 400 WebP and
+    carries no metadata at all. A broken thumbnail is a fault in the index card, so the message names the index page and it
+    is held back; a published article with no thumbnail at all stops the build in research_lead. A draft with none is named
+    here, against its own page, so it is found before the day it is published.
+    """
+    problems = []
+    for meta in research_articles():
+        slug = meta["slug"]
+        card = f"research/index.html: the card for {slug}"
+        thumb = research_thumb(meta)
+        if research_figure(meta):
+            if thumb is not None:
+                problems.append(f"research/{slug}/{thumb.name}: the article has a lead figure, so the card shows that "
+                                "and this is unused")
+            continue
+        if thumb is None:
+            problems.append(f"research/{slug}: no lead figure and no thumbnail, so its card would be empty once it is published. "
+                            "Entry 453: add thumb.webp or thumb.svg beside the article")
+            continue
+        if thumb.suffix == ".svg":
+            text = thumb.read_text(encoding="utf-8")
+            if 'viewBox="0 0 320 200"' not in text:
+                problems.append(f"{card}: thumb.svg's viewBox is not 0 0 320 200")
+            if re.search(r"<text|<image|<style|<script|\b(?:fill|stroke|style|color)=", text):
+                problems.append(f"{card}: thumb.svg has words, an image, a style or a fixed color; only the eight classes color it")
+            found = re.findall(r'class="([^"]*)"', text)
+            used = {c for classes in found for c in classes.split()}
+            if used - THUMB_CLASSES:
+                problems.append(f"{card}: thumb.svg uses classes {sorted(used - THUMB_CLASSES)}, which are not the mark's own")
+            solid = sum(1 for classes in found if {"am", "af"} & set(classes.split()) and "ds" not in classes.split())
+            if solid > 1:
+                problems.append(f"{card}: thumb.svg has {solid} solid amber elements, and one at most carries the point")
+        else:
+            with Image.open(thumb) as im:
+                if im.format != "WEBP" or im.size != (640, 400):
+                    problems.append(f"{card}: {thumb.name} is {im.format} {im.size[0]} by {im.size[1]}, not WebP 640 by 400")
+            raw = thumb.read_bytes()
+            for chunk in (b"EXIF", b"XMP ", b"ICCP"):
+                if chunk in raw[12:]:
+                    problems.append(f"{card}: {thumb.name} carries a {chunk.decode().strip()} chunk; write it from pixels alone")
+    return problems
 
 
 def themed_image(src: str, alt: str, cls: str, width: int = 0, height: int = 0) -> str:
@@ -4189,7 +4260,7 @@ font-size:12px;letter-spacing:.1em;line-height:1.7;padding:8px 10px;border-radiu
 :where(.features,.research-grid,.grid-3,.donor-sheets):not(.wrap)>.panel{border-width:0 1px 1px 0}
 a.panel:hover,.research-card:hover{border-color:var(--line);background:var(--panel2);text-decoration:none}
 .research-card{padding:0;gap:0}
-.research-card>.research-thumb,.research-card>.research-plate,.research-card>picture img{margin:0;border:0;border-radius:0}
+.research-card>.research-thumb,.research-card>picture img{margin:0;border:0;border-radius:0}
 .research-card>h3,.research-card>p{padding:0 22px}
 .research-card>h3{padding-top:20px;margin-bottom:8px}
 .research-card>p{padding-bottom:24px}
@@ -4294,15 +4365,21 @@ pre code{background:none;padding:0;font-size:inherit}
    thumbnail is the article's lead chart, so the index reads as a contents page rather than a list. */
 .research-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:12px 0 32px}
 .research-card{display:block;transition:border-color .15s ease}
-/* Entry 143 section 1.1: every card's lead is the same shape, whether it is a chart or a plate, so the row is
+/* Entry 143 section 1.1: every card's lead is the same shape, whether it is a chart, a picture or a drawn mark, so the row is
    even. Without this the one card with a real figure set the height of the whole row. */
 .research-thumb{width:100%;aspect-ratio:320/200;object-fit:cover;border-radius:4px;background:var(--sunk);margin-bottom:8px}
 .research-fig{max-width:100%;height:auto;border-radius:4px}
-/* Entry 143 section 1.1: the lead for an article with no chart. Same shape as a thumbnail so the row is even,
-   and drawn in the site's own colors so it follows the theme with no second image to keep in step. */
-.research-plate{aspect-ratio:320/200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--sunk);border:1px solid var(--line);color:var(--faint)}
-.plate-rule{width:42px;height:2px;background:var(--amber);opacity:.8}
-.plate-number{font-size:30px;color:var(--dim);line-height:1}
+/* Entry 453: a drawn mark for an article with no chart and no real picture. Colored only through these classes, so it
+   follows the reader's theme with no second image to keep in step. */
+.research-mark{display:block;height:auto}
+.research-mark .ln{fill:none;stroke:var(--line2);stroke-width:1.5}
+.research-mark .dm{fill:none;stroke:var(--dim);stroke-width:2}
+.research-mark .am{fill:none;stroke:var(--amber);stroke-width:2.5}
+.research-mark .ds{stroke-dasharray:5 5}
+.research-mark .fl{fill:var(--dim)}
+.research-mark .ho{fill:var(--text)}
+.research-mark .af{fill:var(--amber)}
+.research-mark .lf{fill:var(--line2)}
 .research-box{border-left:3px solid var(--amber);margin:20px 0 28px}
 
 /* Entry 129: the send form. Plain, wide fields, and a honeypot nobody sees. */
@@ -4985,7 +5062,8 @@ def main() -> None:
         write(f"research/{meta['slug']}/index.html", page_research_article(meta))
         figures = REPO / "website" / "research" / meta["slug"]
         for extra in sorted(figures.rglob("*")) if figures.is_dir() else []:
-            if extra.is_file() and extra.suffix.lower() in {".png", ".svg", ".csv"}:
+            # A drawn thumbnail is inlined into the index card, so only the picture kind is served as a file.
+            if extra.is_file() and extra.suffix.lower() in {".png", ".svg", ".csv", ".webp"} and extra.name != "thumb.svg":
                 copy(extra, f"research/{meta['slug']}/{extra.relative_to(figures).as_posix()}")
     write("tour/index.html", page_tour_index())
     for path, title, description, body in _how_it_works.pages():
@@ -5038,7 +5116,7 @@ def main() -> None:
     problems += device_problems()
     problems += download_problems()
     problems += _how_it_works.problems(published_articles(), lambda rel: (REPO / rel).exists())
-    paged = research_problems() + figure_theme_problems() + tour_problems() + feature_problems() + term_problems() + parity_problems()
+    paged = research_problems() + thumb_problems() + figure_theme_problems() + tour_problems() + feature_problems() + term_problems() + parity_problems()
     paged += guide_problems()
     stale = _screens_stamp.problems() + _readme_images.problems()
     stop, report = settle(problems, paged, stale, OUT, os.environ.get("GROUPLAB_LIVE_SITE"))
