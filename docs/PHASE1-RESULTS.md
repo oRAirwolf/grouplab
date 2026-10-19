@@ -1644,6 +1644,37 @@ here as d1c07ea7; section 5's proofs were run here.
 6. **The first nightly after 37326a5c**, 0.2.0-nightly.204 (run 39231460564): the desktop files were published at 09:44:37 UTC with
    Android's entry carried from 203, and the Android files joined both releases at 09:47:36, Android's entry moving to 204.
 
+## Entry 453: a thumbnail for every research article (2026-10-19)
+
+Alan chose concept C: keep the charts, give every other article its own picture. Built by a helper in its own worktree (Alan asked for
+the inbox to be worked in parallel), reviewed here picture by picture and taken as 7e4b1719. Website only.
+
+1. The 15 lead figures are unchanged. The build agreed with the entry's list of 21 plates.
+2. Every plate is gone. Each of the 21 has `website/research/<slug>/thumb.webp` (a real picture) or `thumb.svg` (a drawn mark),
+   inlined on `var(--sunk)` in the 320 by 200 box, aria-hidden, colored only through the entry's eight classes. `research_lead` stops
+   the build on a published article with neither a lead figure nor a thumbnail; `thumb_problems` checks every thumbnail (the box, the
+   classes, no words or fixed colors, one solid amber element at most, a picture WebP 640 by 400 with no EXIF, XMP or ICC).
+3. Of the four canvas marks, smaller-installer is used as given; real pictures replaced one-hole-or-two, hole-is-not-the-bullet and
+   wrong-bull, as section 8 allows. The canvas marks carry dashed amber guides, so the rule counts solid amber elements only.
+4. Drawn marks (7): safe-updates, what-grouplab-sends, nightly-builds, smaller-installer, uploads-rebuilt-from-pixels, shots-to-zero (a
+   calculation with no sheet behind it) and bent-sheet-registration (its own pictures are kept off the site).
+5. `research-plate` and its CSS are removed.
+6. Proof screenshots of the whole Research page at 1440 px light and dark and at 390 px are in `C:\Dev\grouplab-local\research-thumbs\`,
+   with `which-is-which.txt`. Live check: below.
+7. SCREENSHOTS.md and the site notes never described the plates. Nine card keys in docs/claims-backing.json were renamed with the
+   card text.
+8. Real pictures (14), crops of Alan's own scans and photographs from the 2026-09-20 range trip, the 2026-09-26 aim point card, the
+   2026-10-04 corner bracket photograph and the 2026-10-08 M834 check print, each turned upright and rebuilt from pixels with no
+   metadata; sources, sizes and SHA-256 in samples/PROVENANCE.md, "Entry 453". Checked here: nothing in any crop shows a name, an
+   address, a serial or a QR code; nothing is a tester's, from Discord or the 2026-09-16 friend scan. Two no_figure lines the pictures
+   made untrue were corrected (primer-comparison, how-far-off-square).
+9. Real pictures: one-hole-or-two, hole-is-not-the-bullet, blank-sheet-zero, scale-markers-beside-a-target, how-far-off-square,
+   how-grouplab-reads-a-target, wrong-bull, scans-against-photos, pooling-groups, wind-or-rifle, primer-comparison, choosing-the-markers,
+   designing-a-readable-target, phomemo-m834-print-commands. Drawn: the seven in section 4. Lead charts: the other fifteen.
+
+Checks: the site build, the four site suites, the tap check, claims (all backed), readme and consistency pass. Worth an article? No: a
+presentation change with no measurement in it.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -25,6 +25,98 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 453: a drawn thumbnail for every research article that has no chart
+
+**Status: actioned 2026-10-19; every section done.**
+
+From the planning session, 2026-10-19 08:35 UTC. Take it after entries 447 and 452. Nothing here needs Alan. Website only, no
+application note.
+
+Alan, 2026-10-19 02:09 Denver: "Can you make thumbnails for all of the research articles?" The planning session showed three
+concepts on a Claude Design canvas (claude.ai/artifact/KGc5D35TZ2nj6eDZWuRbFi): A a drawn mark for every article, B the article's
+headline number, C keep the charts and draw a mark where there is none. Alan, 02:26: **"c"**.
+
+## What is there now (read from website/_site/research/index.html, 2026-10-19)
+
+36 cards. 15 use the article's lead figure (`figures/lead.svg` or `lead.png`, some with a `lead-dark.png` pair). 21 show the numbered
+plate (`research-plate`): one-hole-or-two, hole-is-not-the-bullet, blank-sheet-zero, scale-markers-beside-a-target, how-far-off-square,
+how-grouplab-reads-a-target, wrong-bull, scans-against-photos, pooling-groups, shots-to-zero, wind-or-rifle, primer-comparison,
+safe-updates, choosing-the-markers, designing-a-readable-target, what-grouplab-sends, nightly-builds, smaller-installer,
+phomemo-m834-print-commands, bent-sheet-registration, uploads-rebuilt-from-pixels (check the count against the build and take
+the build's word if an article has gained a figure since).
+
+## What to do
+
+1. **The 15 lead figures stay exactly as they are.**
+2. **Every plate becomes a drawn mark**, one per article, showing that article's one idea, in this style (from the canvas, concept A):
+   - Inline SVG in the card, `viewBox="0 0 320 200"`, the same 320 by 200 box as `research-thumb`, `aria-hidden="true"`, on
+     `var(--sunk)`. It follows light and dark by itself through classes, never fixed colors:
+     `.ln{fill:none;stroke:var(--line2);stroke-width:1.5}` `.dm{fill:none;stroke:var(--dim);stroke-width:2}`
+     `.am{fill:none;stroke:var(--amber);stroke-width:2.5}` `.ds{stroke-dasharray:5 5}` `.fl{fill:var(--dim)}` `.ho{fill:var(--text)}`
+     `.af{fill:var(--amber)}` `.lf{fill:var(--line2)}`.
+   - No words or numbers in the drawing. One amber element at most carries the point; the rest is line and dim. Holes are `.ho`.
+   - Keep each drawing simple enough to read at 280 px wide and on a phone.
+   - The source of each mark lives with its article (for example `website/research/<slug>/thumb.svg` or a `THUMBS` table in the
+     build, your choice), so a new article without a lead figure must get one: the website build fails on any card that would show a
+     plate.
+3. **Four marks are already drawn on the canvas; use them as they are:**
+
+one-hole-or-two:
+```
+<circle cx="160" cy="100" r="66" class="ln"/><circle cx="151" cy="102" r="20" class="fl"/><circle cx="168" cy="95" r="20" class="fl"/><circle cx="151" cy="102" r="24" class="am ds"/><circle cx="168" cy="95" r="24" class="am ds"/>
+```
+hole-is-not-the-bullet:
+```
+<circle cx="160" cy="100" r="36" class="am ds"/><polygon points="186,100 177,90 173,77 160,80 147,77 143,90 134,100 143,110 147,123 160,120 173,123 177,110" class="ho"/>
+```
+wrong-bull (a 3 by 3 grid of bulls, the aimed one ringed in amber, the group beside another):
+```
+<circle cx="100" cy="50" r="14" class="ln"/><circle cx="160" cy="50" r="14" class="ln"/><circle cx="220" cy="50" r="14" class="ln"/><circle cx="100" cy="100" r="14" class="ln"/><circle cx="160" cy="100" r="14" class="ln"/><circle cx="220" cy="100" r="14" class="ln"/><circle cx="100" cy="150" r="14" class="ln"/><circle cx="160" cy="150" r="14" class="ln"/><circle cx="220" cy="150" r="14" class="ln"/><circle cx="160" cy="100" r="19" class="am ds"/><path d="M174 114 L203 137 M193 136 L203 137 L201 127" class="am"/><circle cx="211" cy="142" r="3.5" class="ho"/><circle cx="217" cy="148" r="3.5" class="ho"/><circle cx="221" cy="140" r="3.5" class="ho"/><circle cx="213" cy="151" r="3.5" class="ho"/>
+```
+smaller-installer (97 with its cut top dashed, beside 81):
+```
+<rect x="112" y="68" width="40" height="97" class="lf"/><rect x="112" y="49" width="40" height="19" class="am ds"/><rect x="172" y="68" width="40" height="97" class="af"/><path d="M92 165 H232" class="dm"/>
+```
+
+4. **Ideas for the rest** (a starting point; read each article and draw what it actually shows if that is better):
+   blank-sheet-zero, a blank sheet with a hand-drawn cross (amber, slightly uneven) and a small group near it; scale-markers-beside-a-
+   target, a ringed target with four small square markers on the paper beside it; how-far-off-square, a sheet seen at an angle (a
+   trapezoid) over the dashed true rectangle; how-grouplab-reads-a-target, three small frames joined by arrows (a sheet, the rings
+   found, the holes marked); scans-against-photos, the same hole pattern on a flat sheet and on a slightly skewed one; pooling-groups,
+   two small groups inside one larger amber circle; shots-to-zero, shots stepping toward a crosshair along an amber path;
+   wind-or-rifle, a group stretched sideways with an amber arrow along it; primer-comparison, two groups side by side, nearly the
+   same size; safe-updates, a package with a check seal and a return arrow; choosing-the-markers, four corner markers on a sheet
+   outline; designing-a-readable-target, a grid of bulls with one under a reticle; what-grouplab-sends, a device outline with one
+   small amber arrow out and dashed items that stay; nightly-builds, commit dots on a line into a package; phomemo-m834-print-
+   commands, a roll of paper feeding out rows of byte ticks; bent-sheet-registration, a sheet whose far edge lifts, its points
+   shifting; uploads-rebuilt-from-pixels, a pixel grid with an amber outline drawn back over it.
+5. Remove `research-plate` and its CSS once nothing uses it.
+6. Proof: one screenshot of the whole Research page at 1440 px in light and in dark, and one at phone width, saved as
+   `C:\Dev\grouplab-local\research-thumbs\` (the folder is created by this entry), and the live page checked after the deploy. Say in
+   STATE where they are; the planning session will look before telling Alan.
+7. Update SCREENSHOTS.md or the site notes if they describe the plates (entry 267).
+
+## Added 2026-10-19 08:40 UTC: real photos and scans count too
+
+Alan, 02:28 Denver: "Dont forget that the research article can use real photos or scans as well".
+
+8. For each of the 21, **first look for a real photo or scan** that shows the article's idea: the article's own figures, the samples
+   in the repository, and the range trip material in `C:\Dev\grouplab-local\` (for example `range-2026-10-04\results\`). A tight crop
+   of a real target usually beats a drawing: a real ragged two-shot hole for one-hole-or-two, a real torn hole beside its bullet's
+   circle for hole-is-not-the-bullet, a real hand-drawn cross for blank-sheet-zero, a real curled or angled sheet, a real scan beside
+   a photo of the same sheet, real scale markers beside a store-bought target, a real M834 print.
+   - Use a drawn mark only where no real picture shows the idea well (likely the "How GroupLab is built" articles: safe-updates,
+     nightly-builds, smaller-installer, what-grouplab-sends, uploads-rebuilt-from-pixels).
+   - The four drawn marks in section 3 are the fallback for their articles, not a requirement: a good real picture replaces them.
+   - Crop to the 320 by 200 box (16:10), saved at twice that (640 by 400) as WebP, with a light and a dark version only if the crop
+     includes page background that would glare in the dark theme; a photo of paper may stay one image in both themes.
+   - Strip all metadata from every image written (no GPS or location, no camera serial, no names; the orientation is applied to the
+     pixels first). Nothing in the picture may show a tester's name, an email address, a serial number or anything personal.
+   - Pictures that are not Alan's own (testers' submissions, Discord uploads) are not used.
+9. The proof screenshots in section 6 should show which cards are real pictures and which are drawn; list them in STATE.
+
+---
+
 ## 2026-10-19, entry 452: the website check and the release notes step stop costing nightlies
 
 **Status: actioned 2026-10-19; every section done.**

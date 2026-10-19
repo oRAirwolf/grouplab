@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 452 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 453 (before it: entries 446, 445, 444 and 443).
 
 ---
 
@@ -22,9 +22,9 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 450 (2026-10-19)**: failed tests retried once in CI (flakes in `docs/notes/flaky-tests.md`, run `scripts/flaky-tests.py`).
 - **Entry 447 (2026-10-18)**: parts 1, 2, 4 done; 3: a focusing press's hold is off (ff9f61c1), one red since; popups now logged.
   Left from part 2: six windows untested (CSV mapping, store target, Fudd buster, group tools, print, figures); no real screen reader.
-- **Entries 441, 443, 444, 448, 449 and 451**: the ruler on every page (`RULER`), home menu tappable (`tests/site/taps.mjs`); concept B is the home page (the one before is `page_home` at b216ce56); every page has
-  its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
-  pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` holds it, titles as written (Alan, entry 449).
+- **Entries 441 to 453 (site)**: research thumbnails, 14 real crops and 7 drawn (`thumb.*`; proof and `which-is-which.txt` in
+  `C:\Dev\grouplab-local\research-thumbs\`); the ruler on every page (`RULER`); home menu tappable (`tests/site/taps.mjs`);
+  concept B is the home page; condensed headings, `PAGE_RINGS`, one header and footer; `heading_problems` holds titles as written.
 - **Entries 442, 445, 446**: keyboard focus kept (`KeyboardFocus`, `Entry442Tests`); "On this page" (`with_contents`); phone demo (`PhoneDemo`).
 - **The usage guard** stops at 85% of the week (88% to finish a block). **The proof checklist**: rows 6, 8, 11, 12, 13, 15, 16, 21,
   23 proven by tests, 18 and 31 met; the rest name their material (entries 414 and 447).
