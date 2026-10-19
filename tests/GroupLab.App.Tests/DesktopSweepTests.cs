@@ -225,7 +225,7 @@ public class DesktopSweepTests
                 tool.Close();
             }
 
-            var report = new ReportWindow(null, null, null, sendUrl: "");
+            var report = new ReportWindow(null, null, null, receiverOpen: true);
             report.Show();
             found.AddRange(Problems(report, "error report"));
             report.Close();

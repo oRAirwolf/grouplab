@@ -1318,28 +1318,41 @@ public sealed partial class MainWindow : Window
             FontWeight = FontWeight.SemiBold,
             Classes = { AppStyles.Alert },
         });
-        crashBanner.Children.Add(Row(
-            Button("Make a report…", () => OpenReport(pending[^1])),
-            Button("Show the record", () => CrashReporter.Reveal(pending[^1])),
-            Button("Dismiss", () =>
-            {
-                foreach (string crash in pending)
-                {
-                    CrashReporter.MarkHandled(crash);
-                }
-
-                ShowPendingCrashes();
-            })));
-
-        // Entry 194 section 2.1: asking each time, the default, is this button: one report of each error, with nothing typed in it.
-        if (ErrorsOpen && settingsStore.LoadErrorChoice() is ErrorReportChoice.Ask or ErrorReportChoice.Unset)
+        var dismiss = Button("Dismiss", () =>
         {
-            crashBanner.Children.Add(Row(Button("Send the error report", async () =>
+            foreach (string crash in pending)
+            {
+                CrashReporter.MarkHandled(crash);
+            }
+
+            ShowPendingCrashes();
+        });
+        var choice = settingsStore.LoadErrorChoice();
+        if (ErrorsOpen && choice == ErrorReportChoice.Always)
+        {
+            // Entry 457 section 2: sent by itself, so the banner says so rather than offering to make a report.
+            crashBanner.Children.Add(Line(pending.All(ErrorReports.IsSent)
+                ? "The error report has gone to GroupLab's maker, as you chose."
+                : "The error report goes to GroupLab's maker within a minute, as you chose."));
+            crashBanner.Children.Add(Row(Button("Show the record", () => CrashReporter.Reveal(pending[^1])), dismiss));
+            return;
+        }
+
+        // Entry 194 section 2.1 and entry 457 section 2: asking each time, the default, is this button first and primary: one report of each
+        // error, with nothing typed in it; making a report to write about it comes after.
+        if (ErrorsOpen && choice is ErrorReportChoice.Ask or ErrorReportChoice.Unset)
+        {
+            crashBanner.Children.Add(Row(Primary("Send the error report", async () =>
             {
                 await SendWaitingErrorsAsync(asked: true);
                 ShowPendingCrashes();
             })));
         }
+
+        crashBanner.Children.Add(Row(
+            Button("Make a report…", () => OpenReport(pending[^1])),
+            Button("Show the record", () => CrashReporter.Reveal(pending[^1])),
+            dismiss));
     }
 
     /// <summary>
@@ -1350,7 +1363,7 @@ public sealed partial class MainWindow : Window
     {
         var (runLog, previousLog) = ReportPackage.LogsFor(DiagnosticLog.Current, crash);
         DiagnosticLog.Info("report.open", ("crash", crash is not null));
-        var report = new ReportWindow(crash, runLog, previousLog, settingsStore.LoadCrashReportUrl());
+        var report = new ReportWindow(crash, runLog, previousLog, ErrorsOpen);
         report.Closed += (_, _) => ShowPendingCrashes();
         report.Show(this);
     }

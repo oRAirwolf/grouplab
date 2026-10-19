@@ -590,7 +590,6 @@ public sealed class AppSettingsStore(string path)
     /// Where a crash report is sent, entry 41 section 7. Empty unless configured, so a fork of GroupLab never posts to anybody's server and
     /// the Send button stays hidden; saving a report to disk works either way.
     /// </summary>
-    public string LoadCrashReportUrl() => Read(file => (string?)file["crashReportUrl"]) ?? "";
 
     /// <summary>
     /// What a person has decided about updating, entry 119 sections 4.2 and 4.5, now kept in the settings file rather than in memory: an

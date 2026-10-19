@@ -25,19 +25,20 @@ public sealed class ReportWindow : Window
     private readonly TextBox contact = new() { [Avalonia.Automation.AutomationProperties.NameProperty] = "Contact", PlaceholderText = "An email address, if you would like a reply. Optional." };
     private readonly TextBlock status = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     private readonly Button reveal = new() { Content = "Show me the file", IsEnabled = false };
-    private readonly Button send = new() { Content = "Send" };
-    private readonly string sendUrl;
+    private readonly Button send = new() { Content = "Send", Classes = { AppStyles.Primary } };
+    private readonly TextBlock fallback = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
+    private readonly bool receiverOpen;
     private string? saved;
 
     /// <param name="crash">The crash record the report is about, or null for a report made without a crash.</param>
-    /// <param name="sendUrl">Where a report is sent. Empty by default, and while it is empty there is no Send button (entry 41 section 7).</param>
-    public ReportWindow(string? crash, string? runLog, string? previousLog, string sendUrl = "")
+    /// <param name="receiverOpen">Entry 457 section 2: whether GroupLab's error receiver is open; while it is, Send sends the report through it,
+    /// as the automatic error reports go, and the email and GitHub sentence is only the fallback.</param>
+    public ReportWindow(string? crash, string? runLog, string? previousLog, bool receiverOpen)
     {
-        ArgumentNullException.ThrowIfNull(sendUrl);
         this.crash = crash;
         this.runLog = runLog;
         this.previousLog = previousLog;
-        this.sendUrl = sendUrl.Trim();
+        this.receiverOpen = receiverOpen;
         Title = "GroupLab: report a problem";
         Width = 560;
         Height = 600;
@@ -67,15 +68,21 @@ public sealed class ReportWindow : Window
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space8 };
         buttons.Children.Add(save);
         buttons.Children.Add(reveal);
-        send.IsVisible = this.sendUrl.Length > 0;
+        send.IsVisible = receiverOpen;
         send.Click += async (_, _) => await Send();
-        buttons.Children.Add(send);
+
+        // Sending first, where it can be; saving is always there beside it.
+        buttons.Children.Insert(0, send);
         panel.Children.Add(buttons);
         panel.Children.Add(status);
 
         // Entry 126 section 1.2: once the package is written, a person has to know where to send it. Both ways the support page names are
         // named here, so nobody has to go and look for them, and the build line is asked for because a report without it names no build.
-        panel.Children.Add(new TextBlock { Text = WhereToSendIt, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        // Entry 457 section 2: only the way round when sending cannot be done, with the reason.
+        fallback.Text = receiverOpen ? "" : NotOpen + " " + WhereToSendIt;
+        fallback.IsVisible = !receiverOpen;
+        panel.Children.Add(new TextBlock { Text = ContactStays, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        panel.Children.Add(fallback);
         Content = new ScrollViewer { Content = panel };
     }
 
@@ -86,6 +93,12 @@ public sealed class ReportWindow : Window
     internal static string WhereToSendIt =>
         "When it is saved, send it either way: open an issue at " + Repository + ", or email it to " + SupportLink.Email
         + ". Either way, include the build line from the settings page, because a test build changes whenever the code does.";
+
+    /// <summary>Why the fallback is shown when sending is closed.</summary>
+    internal const string NotOpen = "Sending reports from GroupLab is not open yet, so save it instead.";
+
+    /// <summary>What happens to a contact typed here.</summary>
+    internal const string ContactStays = "Send carries what you write under What happened, the logs and the error; a contact stays in a saved report only.";
 
     /// <summary>Where issues go. The same address the settings page's link to the project opens.</summary>
     internal const string Repository = "https://github.com/oRAirwolf/grouplab";
@@ -138,8 +151,10 @@ public sealed class ReportWindow : Window
     }
 
     /// <summary>
-    /// Sends the report, entry 41 section 7 and entry 45: the package is saved first, into the log directory when the user has not saved it,
-    /// so the zip is kept whatever happens; a package over the cap is not sent; and there is one attempt, whose reference or error is shown.
+    /// Sends the report, entry 457 section 2: through GroupLab's own receivers, as the automatic error reports go, with what the person
+    /// wrote, the error this report is about and the logs of its run, under the same rules (no picture, no path, nothing about where). The
+    /// package is still saved first, into the log directory when the user has not saved it, so it is kept whatever happens; a failure shows
+    /// the email and GitHub way round, with why.
     /// </summary>
     private async Task Send()
     {
@@ -157,9 +172,18 @@ public sealed class ReportWindow : Window
 
         send.IsEnabled = false;
         status.Text = "Sending…";
-        var outcome = await ReportUploader.SendAsync(sendUrl, path, AppInfo.Version);
-        status.Text = outcome.Message;
-        send.IsEnabled = !outcome.Sent;
+        string said = await ErrorReports.SendDiagnosticsAsync(GroupLab.Core.Updates.TheOutsideWorld.Current, GroupLab.Core.Publication.ReceiverTerms.Current.CrashReceiver,
+            GroupLab.Core.Publication.ReceiverTerms.Current.ErrorReceiver, description.Text, CancellationToken.None, crash);
+        bool sent = said.StartsWith("Sent to GroupLab", StringComparison.Ordinal);
+        status.Text = said;
+        send.IsEnabled = !sent;
+        if (sent && crash is not null)
+        {
+            CrashReporter.MarkHandled(crash);
+        }
+
+        fallback.Text = sent ? "" : "It did not go, so it is saved. " + WhereToSendIt;
+        fallback.IsVisible = !sent;
     }
 
     private async Task SaveDialog()

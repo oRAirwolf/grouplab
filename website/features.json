@@ -1145,7 +1145,7 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.103",
-      "note": "GroupLab can now send a report when it hits an error",
+      "note": ["GroupLab can now send a report when it hits an error", "Make a report now sends from GroupLab"],
       "tour": "settings",
       "guide": "12-settings",
       "article": "what-grouplab-sends",

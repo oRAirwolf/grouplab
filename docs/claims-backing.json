@@ -5,6 +5,8 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+    "What is not done yet 02 Send a report from GroupLab In GroupLab, open the settings from the gear at the bottom left and choose Report a problem under Diagnostics, or Make a report on an error's banner.": {"kind": "code", "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow.Send and NotOpen; src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync (entry 457)"},
+    "03 If it cannot be sent Where sending is not open yet or a send fails, the window says so.": {"kind": "code", "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow.Send and NotOpen; src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync (entry 457)"},
   "The third view, Point blank: how far you can hold dead on and still put your chosen share of shots in the zone, how to set the zero in clicks, and the present zero of your rifle beside it.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.PointBlank.cs FillPointBlank; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport.Work (HowToSet, CurrentZero) (entry 455)"

@@ -1306,8 +1306,8 @@ def page_support() -> str:
 </section>
 <section class="wrap grid-3">
 <div class="panel pad stack tight"><span class="mono amber">01</span><h2 class="h3">Check what is not done yet</h2><p>Some things are known to be missing or unproven. The testing guide lists them in one short section.</p><a href="/guides/testing-guide/#what-is-not-done-yet">What is not done yet</a></div>
-<div class="panel pad stack tight"><span class="mono amber">02</span><h2 class="h3">Make a report package</h2><p>In GroupLab, open the settings from the gear at the bottom left and choose <strong>Report a problem</strong> under Diagnostics. A window lists what the report holds; press <strong>Save only</strong> to write it as a zip with the log and the computer's details: no location data and no photographs.</p></div>
-<div class="panel pad stack tight"><span class="mono amber">03</span><h2 class="h3">Send it</h2><p>Open an issue on GitHub, attach the zip, and add a line about what you were doing. Copy the build line from the top of the settings screen into it.</p><a href="{GITHUB}/issues/new">Open an issue on GitHub</a></div>
+<div class="panel pad stack tight"><span class="mono amber">02</span><h2 class="h3">Send a report from GroupLab</h2><p>In GroupLab, open the settings from the gear at the bottom left and choose <strong>Report a problem</strong> under Diagnostics, or <strong>Make a report</strong> on an error's banner. A window lists what the report holds; write what happened and press <strong>Send</strong>: it goes to the project with the error and the logs, through the same route as the automatic error reports, with no location data and no photographs. <strong>Save only</strong> writes it as a zip instead.</p></div>
+<div class="panel pad stack tight"><span class="mono amber">03</span><h2 class="h3">If it cannot be sent</h2><p>Where sending is not open yet or a send fails, the window says so. Then open an issue on GitHub, attach the saved zip, and add a line about what you were doing, with the build line from the top of the settings screen.</p><a href="{GITHUB}/issues/new">Open an issue on GitHub</a></div>
 </section>
 <section class="wrap section-sm grid-2">
 <div class="panel pad stack tight"><h2 class="h3">No GitHub account?</h2><p>Email the report package instead, with the build line and a line about what you were doing.</p><p><a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a></p></div>
@@ -1335,7 +1335,7 @@ def page_support() -> str:
 </div>
 </section>
 """
-    return shell("/support/", "Support", "How to report a problem with GroupLab: make a report package and send it through GitHub or by email.", body, "Support")
+    return shell("/support/", "Support", "How to report a problem with GroupLab: send it from GroupLab, or save a report package and send it through GitHub or by email.", body, "Support")
 
 
 # ---------------------------------------------------------------- guides

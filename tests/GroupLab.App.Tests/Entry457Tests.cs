@@ -111,4 +111,35 @@ public class Entry457Tests
             window.Close();
         }
     }
+
+    /// <summary>Entry 457 section 2: Send is the report window's first button while the receiver is open; the email and GitHub way is the fallback.</summary>
+    [AvaloniaFact]
+    public void TheReportWindowSendsFirstAndTheWayRoundIsOnlyTheFallback()
+    {
+        foreach (bool open in new[] { true, false })
+        {
+            var report = new GroupLab.App.Diagnostics.ReportWindow(null, null, null, receiverOpen: open);
+            try
+            {
+                report.Show();
+                Settle();
+                var buttons = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(report).OfType<Button>().Where(b => b.IsVisible).Select(b => b.Content as string).ToList();
+                var texts = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(report).OfType<TextBlock>().Where(t => t.IsEffectivelyVisible).Select(t => t.Text ?? "").ToList();
+                if (open)
+                {
+                    Assert.Equal("Send", buttons[0]);
+                    Assert.DoesNotContain(texts, t => t.Contains(GroupLab.App.Diagnostics.ReportWindow.Repository, StringComparison.Ordinal));
+                }
+                else
+                {
+                    Assert.DoesNotContain("Send", buttons);
+                    Assert.Contains(texts, t => t.StartsWith(GroupLab.App.Diagnostics.ReportWindow.NotOpen, StringComparison.Ordinal));
+                }
+            }
+            finally
+            {
+                report.Close();
+            }
+        }
+    }
 }

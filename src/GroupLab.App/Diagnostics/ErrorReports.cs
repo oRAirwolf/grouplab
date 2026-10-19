@@ -307,11 +307,13 @@ internal static class ErrorReports
     /// an issue of its own for it. Nothing about where a picture was taken, no picture and no path is in either. Returns the sentence for the
     /// screen.
     /// </summary>
-    public static async Task<string> SendDiagnosticsAsync(IOutsideWorld outside, string packageAddress, string reportAddress, string? note, CancellationToken token)
+    /// <param name="about">Entry 457 section 2: the error record a report from the report window is about, with the logs of its run; null
+    /// takes the newest waiting record and this run's logs, as Send to GroupLab does.</param>
+    public static async Task<string> SendDiagnosticsAsync(IOutsideWorld outside, string packageAddress, string reportAddress, string? note, CancellationToken token, string? about = null)
     {
         ArgumentNullException.ThrowIfNull(outside);
-        var (runLog, previousLog) = ReportPackage.LogsFor(DiagnosticLog.Current, null);
-        string? crash = CrashReporter.PendingCrashes(DiagnosticLog.Current.Directory).LastOrDefault();
+        var (runLog, previousLog) = ReportPackage.LogsFor(DiagnosticLog.Current, about);
+        string? crash = about ?? CrashReporter.PendingCrashes(DiagnosticLog.Current.Directory).LastOrDefault();
         string? typed = string.IsNullOrWhiteSpace(note) ? null : DiagnosticLog.Scrub(note.Trim());
         if (typed is { Length: > MostNote })
         {

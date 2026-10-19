@@ -9,12 +9,13 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 456 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 457 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
+- **Entry 457 (2026-10-19)**: Next unsure hole's error fixed (0af39fc2); Send on every report (`ReportWindow`); reports triaged as they arrive.
 - **Entries 455 and 456 (2026-10-19)**: Ballistics' Point blank view (`PointBlankModel`, `PointBlankReport`, `PointBlankCard`); the rifle's
   Scope and mount (`ScopeMount`, `ScopeTracking`, `TopGun`), schema 5. Top Gun's comparison waits on request 103. **Later idea**: tracking
   measured from a scanned tracking target (72 in tall at 20 mil and 100 yd: tiled pages or a plotter).
@@ -26,7 +27,6 @@ If something here disagrees with the logs, the logs are right and this file is o
   Left from part 2: six windows untested (CSV mapping, store target, Fudd buster, group tools, print, figures); no real screen reader.
 - **Entries 441 to 453 (site; 442 to 450 the app's keyboard, demo and CI retry)**: research thumbnails, 14 real and 7 drawn (proof and `which-is-which.txt` in `C:\Dev\grouplab-local\research-thumbs\`);
   the ruler on every page (`RULER`); home menu tappable (`tests/site/taps.mjs`); concept B home; `heading_problems` holds the titles.
-- **The usage guard** stops at 85% of the week. **The proof checklist**: rows 6, 8, 11, 12, 13, 15, 16, 21, 23 by tests, 18, 31 met.
 - **Waiting on Alan:** requests 83, 70, 72, 74 to 77, 103, 104; 86 later.
 
 ## The next three
@@ -76,7 +76,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (101 answered by entry 446 and arch
 
 - **Last nightly:** 0.2.0-nightly.204 (2026-10-19 09:44 UTC, from c9389b37): entry 454, phones follow their own newest build.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
-- Crash reports open: none. **#35** (Quack: a pooled set's small sheet showed sheet 1 only, a bull click picked by nearness) fixed and closed 2026-10-16, in nightly 197.
+- Crash reports: 9, 36 and 37 fixed in 0af39fc2, closing when the next nightly ships it; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox
 

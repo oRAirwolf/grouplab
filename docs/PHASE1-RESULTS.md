@@ -1742,6 +1742,28 @@ page, and the other two came back as page text without their scripts; the entry'
    tracking bands, the factor in every click count, Top Gun's arithmetic), `Entry456Tests` on the computer (2) and the phone (1), and
    the equipment form's round trip with every new field.
 
+## Entry 457: the Next unsure hole error, a Send button on every report, and error reports triaged as they arrive (2026-10-19)
+
+1. **The error** (issue 37, nightly 204 on Windows, display scale 1.5, four times in one session; Alan's logs read on this computer):
+   planning's reading was right. The focus keeping (`KeyboardFocus.Keeper`) recorded place -1 for a control whose visual parent is a panel
+   but which is not one of its Children, and `Restore` read `Children[-1]` after Next unsure hole and after the autosave. A place is now
+   recorded only when it is one and read clamped, and `Restore` never throws (one warning in the log). The unobserved-task copies came
+   from Avalonia faulting the posted operation's own task as well as raising the error, so a `Restore` that cannot throw ends both; that
+   is also issue 9's return on nightly 204. Issue 36 (GroupLab Dev on Android, a tap on the result's sheet near nothing) was MinBy over
+   none; it now finds none. Fixed in 0af39fc2, shipping in the nightly after 205; `Entry457Tests` on both reproduce each fault on the
+   code before and pass now (the first version of the desktop test passed on the old code too, and was rewritten until it did not).
+2. **Send on every report**: the report window's first button is Send whenever the error receiver is open; it goes through the same
+   receivers as the automatic error reports (`ErrorReports.SendDiagnosticsAsync`, now with the report's own error and its run's logs),
+   with what the person wrote; a contact stays in a saved report only. The email and GitHub sentence shows only when sending is not open
+   or a send fails, and says why. `crashReportUrl` and its uploader are retired. The crash banner, asked each time, has Send the error
+   report first and primary; sending automatically, it says the report has gone or goes within a minute. The phone, asked each time, puts
+   the same offer in the note along the top. `Entry457Tests.TheReportWindowSendsFirstAndTheWayRoundIsOnlyTheFallback`.
+3. **Triaged as they arrive**: CLAUDE.md now lists the open issues before each inbox entry, before ending a turn and at least hourly
+   while waiting on CI, and assesses each at once. `docs/notes/error-reports.md` holds issues 37, 36 and 9 (37 also Alan's own report);
+   STATE's crash line points to it. The three issues close when the nightly with 0af39fc2 is out.
+4. **Docs**: the guide's Report a problem part, the phone's part, the error reports feature's note and the support page say a report can
+   be sent from GroupLab, with GitHub and email as the fallback.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

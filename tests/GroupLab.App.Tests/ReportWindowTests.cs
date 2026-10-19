@@ -49,7 +49,7 @@ public sealed class ReportWindowTests : IDisposable
         string run = Write("grouplab-20260915-064100-4242.log", "the run that crashed");
         string crash = Write("crash-20260915-064212-4242.json", "{\"schema\":1}");
 
-        var window = new ReportWindow(crash, run, previous);
+        var window = new ReportWindow(crash, run, previous, receiverOpen: false);
         window.Show();
         Dispatcher.UIThread.RunJobs();
         var text = window.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "").ToList();

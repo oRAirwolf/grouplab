@@ -137,12 +137,24 @@ public static class Phone
         return said;
     }
 
-    /// <summary>What is waiting goes when the person chose Always; never a dialog, and a failure waits for the next start.</summary>
+    /// <summary>
+    /// What is waiting goes when the person chose Always; never a dialog, and a failure waits for the next start. Entry 457 section 2: asked
+    /// each time, the note along the top offers it instead, Send the error report first, as the computer's banner does.
+    /// </summary>
     internal static async Task SendWaitingErrorsAsync()
     {
-        if (Errors is { } queue)
+        if (Errors is not { } queue)
         {
-            await queue.SendWaitingAsync(Shell.ErrorsOpen, asked: false, CancellationToken.None);
+            return;
+        }
+
+        await queue.SendWaitingAsync(Shell.ErrorsOpen, asked: false, CancellationToken.None);
+        if (Shell.ErrorsOpen && Settings.LoadErrorChoice() is ErrorReportChoice.Ask or ErrorReportChoice.Unset
+            && ErrorReports.Waiting(DiagnosticLog.Current.Directory, DateTime.UtcNow).Count > 0)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => Shell.Current?.Notice(
+                "GroupLab hit an error and kept going. Send the error report to its maker? It carries the error and what was done just before, never a picture.",
+                "Send the error report", () => _ = queue.SendWaitingAsync(Shell.ErrorsOpen, asked: true, CancellationToken.None)));
         }
     }
 }
