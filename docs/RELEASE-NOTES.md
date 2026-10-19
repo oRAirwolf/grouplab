@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.209
+
+**2026-10-19**, commit `34d259e`. Nightly.
+
+**Under the hood**
+
+- The development build's scripted test on the iPhone simulator no longer gives up on a button the simulator has not yet finished drawing after its first keyboard.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.209)
+
+---
+
 ## 0.2.0-nightly.208
 
 **2026-10-19**, commit `3d934df`. Nightly.
