@@ -146,6 +146,21 @@ public partial class NightlyNeverWaitsTests
         Assert.Contains("name: android-signed", Job(nightly, "android"), StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Entry 459 section 7: the notes and README the nightly pushes used its own token, which starts no workflow, so the site was a nightly
+    /// behind until somebody published it by hand; the publish job now asks for the site after the README, and may.
+    /// </summary>
+    [Fact]
+    public void TheNightlyPublishesTheSiteAfterItsNotes()
+    {
+        string publish = Job(Workflow("nightly.yml"), "publish");
+        Assert.Contains("    permissions:\n      contents: write\n      actions: write\n", publish, StringComparison.Ordinal);
+        string site = Step(publish, "Publish the site for this build");
+        Assert.Contains("gh workflow run website.yml --ref main", site, StringComparison.Ordinal);
+        Assert.True(publish.IndexOf("- name: Bring the README up to date", StringComparison.Ordinal) < publish.IndexOf("- name: Publish the site for this build", StringComparison.Ordinal));
+        Assert.DoesNotContain("paths filter picks it up", publish, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void TheAndroidFilesAndTheCommandLineJoinTheReleaseWhenTheyExist()
     {

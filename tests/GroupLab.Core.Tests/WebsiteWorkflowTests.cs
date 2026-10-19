@@ -75,10 +75,16 @@ public partial class WebsiteWorkflowTests
         Assert.Contains("cancel-in-progress: true", Website, StringComparison.Ordinal);
     }
 
-    /// <summary>Nothing else may start it, which is the other half of the same rule.</summary>
+    /// <summary>
+    /// Nothing else may start it, which is the other half of the same rule, with one exception: entry 459 section 7, the nightly's notes and
+    /// README, which are content the site is built from. Entry 144 meant their push to start it through the paths filter, but a push made
+    /// with a workflow's own token starts no workflow, so the site stayed a nightly behind; the nightly's publish job dispatches it once,
+    /// in the step named here, and still through the same group, so a burst still publishes once.
+    /// </summary>
     [Fact]
     public void NoOtherWorkflowStartsTheWebsiteWorkflow()
     {
+        const string Allowed = "nightly.yml: gh workflow run website.yml";
         var found = new List<string>();
         foreach (string file in OtherWorkflows())
         {
@@ -90,8 +96,9 @@ public partial class WebsiteWorkflowTests
             }
         }
 
-        Assert.True(found.Count == 0,
-            "only a person may publish the website, so no other workflow may start it: " + string.Join(", ", found));
+        Assert.True(found.Count(f => f != Allowed) == 0 && found.Count(f => f == Allowed) <= 1,
+            "only a person, a change to its content, and the nightly's notes may publish the website, so no other workflow may start it: "
+            + string.Join(", ", found));
     }
 
     /// <summary>

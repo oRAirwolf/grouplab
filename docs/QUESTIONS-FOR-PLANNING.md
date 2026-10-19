@@ -21,6 +21,36 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-19, question 105: the consent record ships, so a website consent makes a build
+
+**Status: open.** Entry 459 section 6 asked why entry 453's website note was taken as an application change. The Windows zip carries
+`samples/PROVENANCE.md` beside its sample sheet (`scripts/package-windows.ps1`), so the shipping gate rightly counts it as shipping, and
+entry 453's consent records for the research pictures made nightly 205 a real build whose only note was about the website.
+
+**What was done meanwhile:** nightly 205's entry now says it changed nothing in the application and that only the consent record beside
+the Windows sample is longer, and the commit's note is corrected in `docs/release-note-corrections.json`.
+
+**The question:** should the zip carry only the shipped sample's own consent record (its section, written out at packaging time and held
+to the full record by a test), so the website's consents stop making builds? I would do that.
+
+---
+
+## 2026-10-19, question 104: the simulator's pause in drawing, and whether the Real taps fix counts as at the cause
+
+**Status: open.** Entry 447 section 3 asks for the flake fixed at its cause, with no added sleeps or retries that hide it. Three causes
+were found. Two are fixed in the app or the tapper (a focusing press's hold, and XCTest's wait for the home screen to idle). The third is
+the simulator itself: after its first keyboard it draws nothing for 2 to 6 seconds while GroupLab's thread answers, and a tap is judged
+against the last drawing, so the keyboard bar's Next cannot be reached until drawing resumes (runs 39284329697 and 39292731869).
+
+**What was done meanwhile:** the tap check counts only time in which frames are drawn toward its 5 seconds and waits out a pause in
+drawing up to 30 seconds, saying so. A control that is really covered still fails after 5 seconds of drawing. Nothing in GroupLab
+changed for a person, who cannot tap a bar that has not been drawn.
+
+**The question:** is waiting out a measured pause in drawing an acceptable fix for a pause that is the simulator's, or should the test
+instead open the keyboard once before its first scripted tap? I would keep it as it is, since it says when it happens.
+
+---
+
 ## 2026-10-19, question 103: crediting the calculators without naming the old site
 
 **Status: open.** Entry 456 says: "The guide credits the pissinhot.com calculators as where these came from (Alan's own site)". Alan's

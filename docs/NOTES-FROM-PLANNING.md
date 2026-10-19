@@ -25,6 +25,120 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 459: consistency audit, 2026-10-19
+
+**Status: actioned 2026-10-19; every section done. Questions 105 (the shipped consent record) asked.**
+
+From the planning session's scheduled consistency audit (entry 267 section 2b), 2026-10-19 15:56 UTC. Read only: README.md, the live
+grouplab.org pages (home, download, features, tour, shoot-a-target, guides, releases, support), website/features.json and tour.json,
+docs/RELEASE-NOTES.md, STATE.md, for-alan.md, PLATFORM-SUPPORT.md, PHONE-PARITY.md, ANDROID.md, USER-GUIDE.md, TESTING-GUIDE.md and
+the log to 647a2513. No open `consistency` issue on GitHub. Nothing here needs Alan. One commit for all of it is fine; regenerate any
+guide PDF and generated README block you touch, and add a line to RETIRED-WORDING.json where a sentence is retired.
+
+### 1. Trying GroupLab still says a report has to be sent by hand (entry 457 left it behind)
+
+- Where: docs/TESTING-GUIDE.md line 99, "Telling somebody when it is wrong", and so its PDF and /guides/testing-guide/.
+- Says: "Save only writes it as a zip ... Send it either way: open an issue at GitHub, or email it to support@grouplab.org ... The
+  support page at https://grouplab.org/support/ says the same".
+- Should say what the user guide (docs/USER-GUIDE.md line 707) and the live /support/ page now say: write what happened and press
+  Send, and it goes to the project with the error and the logs; Save only writes a zip; GitHub or email only when sending is not open
+  or a send fails. The "says the same" clause is untrue today.
+- Evidence: nightly 206 notes, first bullet; /support/ section "Send a report from GroupLab".
+
+### 2. The platform statement still says a crash report is sent "on request" to an email address
+
+- Where: docs/PLATFORM-SUPPORT.md line 83, generated into README.md line 249 and /download/ ("Reports from Linux and macOS are
+  welcome").
+- Says: "so is a crash report, which GroupLab can send on request. The address is support@grouplab.org."
+- Should say: Report a problem (or Make a report on an error's banner) sends the report from GroupLab with Send, the Discord
+  bug-reports forum works too, and support@grouplab.org is for anything private.
+
+### 3. The user guide says the phones' error reports never carry the log; the features page and the README say they do
+
+- Where: docs/USER-GUIDE.md line 709: "On the computer a report can also carry GroupLab's log ... on the phones it stays off for now."
+- Against: website/features.json line 1141 (error-reports, "on the computer and the phones a report can carry GroupLab's log"),
+  README.md line 345 ("automatic error reports can carry GroupLab's log" on Android and the iPhone), and the code:
+  mobile/GroupLab.Mobile/SettingsView.cs line 268 offers "Send them with the log" behind `SharingSwitches.FullLogOpen`, the same switch
+  the desktop uses.
+- Should say: the same as the desktop, asked about first, on the phones too. Check the phone's What is sent list says the same.
+
+### 4. The user guide contradicts itself on sending a store-bought target
+
+- Where: docs/USER-GUIDE.md line 120 ends "There is no way to send one in yet."
+- Against: line 133 of the same guide, Add a store-bought target, "Send it to GroupLab's maker; each file is checked by hand before it
+  joins the library", features.json `add-store-target` ("to send so a later build recognizes it") and the tour's page for it.
+- Should say: how a reference file is sent today (the Send a target page, Discord or support@grouplab.org, whichever is true), or drop
+  the sentence. Line 133 should name that same route instead of "GroupLab's maker".
+
+### 5. The home page calls every build unsigned
+
+- Where: https://grouplab.org/ (website/build.py line 2032): "Today GroupLab is test builds, unsigned and rebuilt after every change".
+- Against: the download page and README.md lines 113 and 225 to 231: the macOS builds are signed and notarized since nightly 135, the
+  Microsoft Store copy is signed, the Android APKs are signed, and the iPhone build comes through TestFlight. Only the Windows and Linux
+  direct downloads are unsigned.
+- Should say, for example: "Today GroupLab is test builds, rebuilt after every change that passes its tests, so one may be broken; the
+  Windows and Linux downloads are unsigned."
+
+### 6. The release notes list website changes their own header says are never listed
+
+- Where: docs/RELEASE-NOTES.md line 56 (nightly 205, Under the hood: "The Research page on grouplab.org now shows a small picture for
+  every article") and line 38 (nightly 206, What you will notice: "Release notes now say which fixes came from your error reports ...
+  and keep a running total on the website").
+- Against: the header, line 7: "Changes to this website, the guides and the research are not listed here", and /releases/: "Work on
+  the website, the documentation or these notes does not make a new build."
+- Should say: nightly 205 changed nothing in the application, said in the file's one line form (README's What is new already reads
+  "Nothing you would notice"); the 206 bullet describes only what the application does, if anything (the reports total is the website's).
+  Then check why entry 453's `Release-note:` trailer was taken as an application change, so the next website entry does not repeat it.
+
+### 7. The download and releases pages are one nightly behind
+
+- Where: https://grouplab.org/download/ (every "Nightly 206, built 2026-10-19 from commit 37b93f3") and /releases/ (newest 206), read
+  at 15:56 UTC.
+- Against: README.md line 89 and docs/RELEASE-NOTES.md: 0.2.0-nightly.207 announced at 15:22 UTC (7cff718b). 647a2513 at 15:25 UTC did
+  not rebuild the site either.
+- Should: dispatch website.yml for 207 now, and make the nightly's [notes] push dispatch it by itself (STATE says it is done by hand),
+  or have the website check flag a site older than the newest release.
+
+### 8. The README's not-built lists disagree with the home page
+
+- Where: README.md line 53 ("Not built yet: cloud provider adapters over three-tier storage.", in Every screen, larger) and line 356
+  ("What does not exist yet: synchronization, and a released iOS build").
+- Against: the home page ("Not built yet: hole detection on plain paper, and synchronization between devices") and README.md line 463
+  (Phase 4, hole detection on blank paper, Not started).
+- Should: both README lines name hole detection on plain paper as well, and line 53 use plain words ("synchronization between
+  devices") instead of the design's phrase.
+
+### 9. Two phases read In progress though the README says their gates are met
+
+- Where: README.md lines 403 and 405, Phase 6 Android and Phase 8 iOS, both In progress.
+- Against: the README's own states table ("Done: its gate has been met and recorded"); line 484 says Phase 6's gate "has been met on
+  the Fold 7, as docs/PROOF-CHECKLIST.md records", and Phase 8's gate is "built and signed on CI", which every TestFlight nightly is.
+- Should: either the states follow the definition (DESIGN.md section 21 with them, which ReadmeTests holds), or one sentence under the
+  table says why a phase with its gate met stays In progress (for example, while its other items are built, not proven), as is
+  already done for phases 5 and 9.
+
+### 10. Do the installer and the other downloads carry the two samples?
+
+- Where: README.md line 116 ("It brings two sample sheets") and /download/ ("Samples: Two sample sheets, so there is something to open
+  in the first minute"), written for every download.
+- Against: docs/TESTING-GUIDE.md line 59: "on Windows only: the zip's samples folder ... The installers and the other platforms carry no
+  samples folder." scripts/package-windows.ps1 lines 77 to 82 stage them; packaging/windows/grouplab.iss does not name them.
+- Should: check which downloads really carry them and make all three say the same.
+
+### 11. Smaller ones
+
+- The tour's index blurb for Ballistics (website/tour.json, `ballistics.blurb`) names the trajectory, the dope table and the chance of
+  a hit, not Point blank, the third view since nightly 206 (the Ballistics tour page itself has it).
+- The features card Error reports is marked "Changed in nightly.206" and README's What is new links the 206 bullet "Make a report now
+  sends from GroupLab" to it, but its sentence (features.json line 1141) speaks only of automatic reports. Add the Send in Report a
+  problem and Make a report.
+- README.md line 111 (Before you install, the plain APK) lists what the phone does without Ballistics; the platform statement (line 221)
+  has "gives the dope and the chance of a hit". Make them the same, with Point blank.
+- docs/notes/for-alan.md line 1, internal: "46 waits until Sunday 4 October" and "now that 85 is done" are past; rewrite the line from
+  the open requests (104 and 103 are not in it).
+
+---
+
 ## 2026-10-19, entry 458: release notes say what people's reports and targets changed
 
 **Status: actioned 2026-10-19; every section done. The first build with the counts is the nightly after 0.2.0-nightly.205.**

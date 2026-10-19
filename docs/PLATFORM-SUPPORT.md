@@ -52,7 +52,7 @@ Where the figures come from:
 
 Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
 
-**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes how you shot the sheet, works out Shots Needed to Zero, compares loads, gives the dope and the chance of a hit, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. More macOS testing depends on somebody with a Mac running the signed builds.
+**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes how you shot the sheet, works out Shots Needed to Zero, compares loads, gives the dope, the chance of a hit and Point blank, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. More macOS testing depends on somebody with a Mac running the signed builds.
 
 ## Running the macOS build
 
@@ -80,4 +80,4 @@ Requests go to support@grouplab.org, naming the distribution and the architectur
 
 ## Reports from Linux and macOS are welcome
 
-A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report, which GroupLab can send on request. The address is support@grouplab.org.
+A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report: **Report a problem** in the settings, or **Make a report** on an error's banner, sends it from GroupLab when you press **Send**. The Discord's bug-reports forum works too, and support@grouplab.org is for anything private.

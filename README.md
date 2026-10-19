@@ -50,7 +50,7 @@ Each one, with its picture, its platforms and the build it arrived in, is on the
 <summary><strong>Every screen, larger</strong></summary>
 
 These are the application as it is: the build renders every screen itself, in both themes at every size, every week, and
-`docs/figures/screens/current/` holds them all. The [tour](https://grouplab.org/tour/) walks through them. Not built yet: cloud provider adapters over three-tier storage.
+`docs/figures/screens/current/` holds them all. The [tour](https://grouplab.org/tour/) walks through them. Not built yet: hole detection on blank paper, and synchronization between devices.
 
 ![The analysis screen](docs/figures/screens/current/analysis-dark-1400x900.png)
 
@@ -108,12 +108,12 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 | **[macOS, Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz)** | `grouplab-macos-arm64.tar.gz`, a `.app` bundle for any Mac with Apple silicon (M-series). **Run on two real Macs**, by two testers; the Intel build has not been. |
 | **[macOS, Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz)** | `grouplab-macos-x64.tar.gz`, a `.app` bundle for an Intel Mac. **Untested on a real Mac.** |
 | **[GroupLab Dev](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android-dev.apk)** | `grouplab-android-dev.apk`, the recommended Android download for testing until GroupLab is on the Play Store; see On Android, below. |
-| **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory. Open it on the phone to install it. It photographs or opens a sheet, checks the picture and reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. |
+| **[Android](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk)** | `grouplab-android.apk`, the app for an arm64 phone or tablet with Android 10 or later and 4 GB of memory. Open it on the phone to install it. It photographs or opens a sheet, checks the picture and reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes the bulls you fired at, works out Shots Needed to Zero, compares loads, gives the dope, the chance of a hit and Point blank, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. |
 
 **The Windows and Linux builds here are unsigned**, so Windows will say "Windows protected your PC": click **More info**, then **Run anyway**. That warning is what Windows says about any program nobody has paid to sign; the source of the build is here, at the commit the download names. **The macOS build is signed with a Developer ID and notarized by Apple.**
 
 - **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.
-- **It brings two sample sheets**, so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.
+- **The Windows zip and installer bring two sample sheets** (the macOS and Linux downloads and the phones do not), so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.
 - **Where it keeps things:** `%APPDATA%\GroupLab` on Windows and under your home folder on macOS and Linux, and on a phone in the app's own storage, and nowhere else. It sends nothing you have not agreed to: sending a target, error reports and the hardware survey each ask first, and an update check sends nothing about you; [docs/UPDATES.md](docs/UPDATES.md) says exactly what it does.
 - **Which build you have:** the Settings screen names the version, the train and the commit, which is what a bug report should carry.
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
@@ -213,7 +213,7 @@ Where the figures come from:
 
 Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
 
-**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes how you shot the sheet, works out Shots Needed to Zero, compares loads, gives the dope and the chance of a hit, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. More macOS testing depends on somebody with a Mac running the signed builds.
+**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes how you shot the sheet, works out Shots Needed to Zero, compares loads, gives the dope, the chance of a hit and Point blank, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. More macOS testing depends on somebody with a Mac running the signed builds.
 
 ### Running the macOS build
 
@@ -241,7 +241,7 @@ Requests go to support@grouplab.org, naming the distribution and the architectur
 
 ### Reports from Linux and macOS are welcome
 
-A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report, which GroupLab can send on request. The address is support@grouplab.org.
+A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report: **Report a problem** in the settings, or **Make a report** on an error's banner, sends it from GroupLab when you press **Send**. The Discord's bug-reports forum works too, and support@grouplab.org is for anything private.
 
 <!-- end platform-support -->
 
@@ -348,7 +348,7 @@ Since the phone was brought level with the desktop (entries 258 and 259):
 - On the phone, the camera's level works upright at a sheet left on its backer as well as flat over a table, names which under the
   crosshair, and follows the sheet's own angle once its markers are read; Guided takes the picture in either position.
 
-What does not exist yet: synchronization, and a released iOS build (it is in testing through TestFlight).
+What does not exist yet: hole detection on blank paper, synchronization between devices, and a released iOS build (it is in testing through TestFlight).
 
 #### Before the first beta or stable release
 
@@ -400,7 +400,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 | **8. iOS** | **In progress** | built and signed on CI |
 | **9. Performance** | **In progress** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed |
 
-Phases 5 and 9 are in progress in the nearest honest sense: parts of each are built and not proven, and the rest is not started.
+Phases 5 and 9 are in progress in the nearest honest sense: parts of each are built and not proven, and the rest is not started. Phases 6 and 8 stay in progress although their gates are met (Phase 6's on the Fold 7, Phase 8's on every TestFlight nightly), because the rest of what each holds is built and not yet proven.
 
 #### What each phase holds
 
@@ -483,7 +483,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **Built, not proven.** Marking a target by hand on the phone: the scale, the aim points and the holes placed under a fixed crosshair, on Android and iOS (entry 279, Marking A).
 
 **Phase 7. Synchronization.**
-- **Not started.** Cloud provider adapters over three-tier storage.
+- **Not started.** Synchronization between devices: cloud provider adapters over three-tier storage.
 
 **Phase 8. iOS.**
 - **In progress.** The plan, with sizes, is `docs/IOS-PLAN.md` (entry 278 section 6): the shared phone screens, OpenCV built for iOS, the camera on AVFoundation, and a nightly build signed on GitHub's Mac machines and sent to TestFlight. Submission to the App Store waits for Alan.

@@ -93,7 +93,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 6537 >>
+<< /Length 6461 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -152,13 +152,13 @@ BT /F1 71 Tf 1 0 0 -1 508 4212 Tm (Settle anything the review queue raises in th
 BT /F1 71 Tf 1 0 0 -1 508 4300 Tm (from there, and nothing it makes is kept unless you tick Keep this demo in Sessions at the end.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4402 Tm (A second way, on Windows only: the zip's samples folder holds gl-cf25-ltr-d-25-shots-600-dpi.png, a real 25-shot) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4490 Tm (GroupLab sheet shot and scanned for the project, and published with its shooter's consent. Choose Open image) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4578 Tm (in the header's menu and open it. The installers and the other platforms carry no samples folder.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4701 Tm (Tell it the caliber if you know it. It sets the smallest hole GroupLab will accept and the edge-to-edge figure. On) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4789 Tm (one small-caliber test scan naming it is the difference between nineteen holes found and twenty-four, and on) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4877 Tm (another it is the difference between missing the shot cut by the edge of the scan and finding it. A .22 hole in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4965 Tm (paper is a good deal smaller than the bullet that made it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5088 Tm (Then click a hole. A small editor opens beside it: move it with the arrow keys, give it to another bull, set its size by) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5176 Tm (hand, leave a note, or mark it a sighter, a flyer or not a hole. A flyer is called out and stays in the group; leaving a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4578 Tm (in the header's menu and open it. The installer carries the same folder; the macOS and Linux downloads and the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4666 Tm (phones carry no samples folder.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4789 Tm (Tell it the caliber if you know it. It sets the smallest hole GroupLab will accept and the edge-to-edge figure. On) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4877 Tm (one small-caliber test scan naming it is the difference between nineteen holes found and twenty-four, and on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4965 Tm (another it is the difference between missing the shot cut by the edge of the scan and finding it. A .22 hole in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5053 Tm (paper is a good deal smaller than the bullet that made it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5176 Tm (Then click a hole. A small editor opens beside it: move it with the arrow keys, give it to another bull, set its size by) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 2 of 4) Tj ET
 Q
 endstream
@@ -167,52 +167,52 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 12 0 R >> >> /Contents 9 0 R >>
 endobj
 9 0 obj
-<< /Length 3466 >>
+<< /Length 3545 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (shot out of the figures is a separate, deliberate choice, and it asks no reason. Every hole has a thin line to its bull;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (a dashed orange one with a ? is worth a look, and clicking a bull then holes moves them to it. Everything you do) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (shows a message with Undo on it, and Ctrl+Z, or Command Z on a Mac, works everywhere.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (hand, leave a note, or mark it a sighter, a flyer or not a hole. A flyer is called out and stays in the group; leaving a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (shot out of the figures is a separate, deliberate choice, and it asks no reason. Every hole has a thin line to its bull;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (a dashed orange one with a ? is worth a look, and clicking a bull then holes moves them to it. Everything you do) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 716 Tm (shows a message with Undo on it, and Ctrl+Z, or Command Z on a Mac, works everywhere.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 835 Tm (Reading what it shows you) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 923 Tm (Reading what it shows you) Tj ET
 0.745098 0.745098 0.745098 rg
-381 865 3556 3 re
+381 953 3556 3 re
 f
-q 3556 0 0 -2286 381 3208 cm /Im0 Do Q
+q 3556 0 0 -2286 381 3296 cm /Im0 Do Q
 0.27451 0.27451 0.27451 rg
-BT /F1 56 Tf 1 0 0 -1 381 3264 Tm (The analysis) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3391 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3391 Tm (The plot draws every shot on one bull, each from its own bull's center, with the group's center and its CEP 50) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3479 Tm (and CEP 90 circles.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3581 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3581 Tm (Every figure carries its interval: the range the true value is likely to lie in. That interval is the point of the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3669 Tm (software. A five-shot group's mean radius could easily be half or double what it measures.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3771 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3771 Tm (The zero correction says what to dial, in your scope's clicks, and refuses when the group's center is too close) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3859 Tm (to the aim to tell from chance, saying how many shots would settle it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3961 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3961 Tm (The two cards judge the group's shape and its worst shot, each naming the test it used and what that test) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4049 Tm (could have detected.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4151 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4151 Tm (Every "why" opens the reasoning behind a figure, and there is now a ? beside every single figure giving two) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4239 Tm (or three plain sentences, including what the number of shots does to it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4341 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4341 Tm (The zero correction is given in MOA, mils, inches and centimeters at once, with your scope's own unit leading) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4429 Tm (and the clicks spelled out where the rifle records a click value. The clicks are never guessed.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4531 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4531 Tm (Holes between bulls and off the grid are kept, counted and offered to you rather than dropped. Where) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4619 Tm (GroupLab is unsure which bull a hole belongs to, it says so, and every figure built on that assignment carries) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4707 Tm (the doubt until you settle it.) Tj ET
+BT /F1 56 Tf 1 0 0 -1 381 3352 Tm (The analysis) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3479 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3479 Tm (The plot draws every shot on one bull, each from its own bull's center, with the group's center and its CEP 50) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3567 Tm (and CEP 90 circles.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3669 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3669 Tm (Every figure carries its interval: the range the true value is likely to lie in. That interval is the point of the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3757 Tm (software. A five-shot group's mean radius could easily be half or double what it measures.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3859 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3859 Tm (The zero correction says what to dial, in your scope's clicks, and refuses when the group's center is too close) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3947 Tm (to the aim to tell from chance, saying how many shots would settle it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4049 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4049 Tm (The two cards judge the group's shape and its worst shot, each naming the test it used and what that test) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4137 Tm (could have detected.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4239 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4239 Tm (Every "why" opens the reasoning behind a figure, and there is now a ? beside every single figure giving two) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4327 Tm (or three plain sentences, including what the number of shots does to it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4429 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4429 Tm (The zero correction is given in MOA, mils, inches and centimeters at once, with your scope's own unit leading) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4517 Tm (and the clicks spelled out where the rifle records a click value. The clicks are never guessed.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4619 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4619 Tm (Holes between bulls and off the grid are kept, counted and offered to you rather than dropped. Where) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4707 Tm (GroupLab is unsure which bull a hole belongs to, it says so, and every figure built on that assignment carries) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4795 Tm (the doubt until you settle it.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 4893 Tm (Printing a sheet and shooting it) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 4981 Tm (Printing a sheet and shooting it) Tj ET
 0.745098 0.745098 0.745098 rg
-381 4923 3556 3 re
+381 5011 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 5023 Tm (The rail on the left has Targets, where a sheet is chosen and printed: <!--count:sheets-->forty-seven<!--/count-->) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5111 Tm (built-in sheets, printed at actual size.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5111 Tm (The rail on the left has Targets, where a sheet is chosen and printed: <!--count:sheets-->forty-seven<!--/count-->) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 3 of 4) Tj ET
 Q
 endstream
@@ -221,66 +221,68 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
 endobj
 11 0 obj
-<< /Length 5360 >>
+<< /Length 5647 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 395 452 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 452 Tm (Print with Open to print, and choose Actual size or 100 percent, never Fit to page.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 554 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 554 Tm (Measure bull 1 to bull 5 before you shoot: on the Letter 5x5 sheet it is 5.98 in \(152.0 mm\). If it is not, the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 642 Tm (printer scaled the sheet.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 744 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 744 Tm (Mount it flat, fire one shot per bull in order, and write only in the load block.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 846 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 846 Tm (Photograph it from about 2.5 ft on your phone's main camera with the whole sheet in frame, or scan it flat at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 934 Tm (600 dpi. Do not crop it, and do not send it through a messaging app.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1036 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1036 Tm (Print a volunteer pack, beside the chosen sheet, gives the sheet and a page of these instructions together.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (built-in sheets, printed at actual size.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 575 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 575 Tm (Print with Open to print, and choose Actual size or 100 percent, never Fit to page.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 677 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 677 Tm (Measure bull 1 to bull 5 before you shoot: on the Letter 5x5 sheet it is 5.98 in \(152.0 mm\). If it is not, the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 765 Tm (printer scaled the sheet.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 867 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 867 Tm (Mount it flat, fire one shot per bull in order, and write only in the load block.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 969 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 969 Tm (Photograph it from about 2.5 ft on your phone's main camera with the whole sheet in frame, or scan it flat at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1057 Tm (600 dpi. Do not crop it, and do not send it through a messaging app.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1159 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1159 Tm (Print a volunteer pack, beside the chosen sheet, gives the sheet and a page of these instructions together.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 1222 Tm (What is not done yet) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 1345 Tm (What is not done yet) Tj ET
 0.745098 0.745098 0.745098 rg
-381 1252 3556 3 re
+381 1375 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 1352 Tm (The repository's README is the authority on what works; this is the short version.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1475 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1475 Tm (Printing from inside GroupLab lost every marker and code on one printer, which made those sheets) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1563 Tm (unmeasurable. That is fixed and held by a test on more than one printer driver, but no sheet from the fixed) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1651 Tm (version has been checked on paper yet, so use Open to print.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1753 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1753 Tm (Hole detection on plain paper, with no sheet definition, is not built.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1855 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1855 Tm (Chronograph readings from a file \(a spreadsheet CSV, a Garmin Xero export, and, still experimental, a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1943 Tm (LabRadar report or a BulletSeeker export\) are reconciled with the shots by a proposed pairing you accept;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2031 Tm (that pairing has not yet been checked against a sheet shot with its string recorded in order.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2133 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2133 Tm (Two of the project's own gates have no material yet: no 25-shot editor timing and no blank-paper photograph.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2221 Tm (The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2309 Tm (could not read about half of them; the second range day, 4 October, gave 137 of 145 holes found from) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2397 Tm (GroupLab's own sheets with no false mark, and the gates still wait on more scans and photographs. So) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2485 Tm (GroupLab is careful software that has not yet been proved against a large body of real targets.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2587 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2587 Tm (Linux and macOS are built and tested on every push. Nobody uses Linux day to day, and the Apple silicon) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2675 Tm (Mac build has been run on two Macs with Apple silicon, by two testers; the platform statement on the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2763 Tm (download page says exactly what has been checked.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1475 Tm (The repository's README is the authority on what works; this is the short version.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1598 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1598 Tm (Printing from inside GroupLab lost every marker and code on one printer, which made those sheets) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1686 Tm (unmeasurable. That is fixed and held by a test on more than one printer driver, but no sheet from the fixed) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1774 Tm (version has been checked on paper yet, so use Open to print.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1876 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1876 Tm (Hole detection on plain paper, with no sheet definition, is not built.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1978 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1978 Tm (Chronograph readings from a file \(a spreadsheet CSV, a Garmin Xero export, and, still experimental, a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2066 Tm (LabRadar report or a BulletSeeker export\) are reconciled with the shots by a proposed pairing you accept;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2154 Tm (that pairing has not yet been checked against a sheet shot with its string recorded in order.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2256 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2256 Tm (Two of the project's own gates have no material yet: no 25-shot editor timing and no blank-paper photograph.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2344 Tm (The mounted photograph gate has one day's material, 59 photographs from 2026-09-20, and GroupLab) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2432 Tm (could not read about half of them; the second range day, 4 October, gave 137 of 145 holes found from) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2520 Tm (GroupLab's own sheets with no false mark, and the gates still wait on more scans and photographs. So) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2608 Tm (GroupLab is careful software that has not yet been proved against a large body of real targets.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2710 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2710 Tm (Linux and macOS are built and tested on every push. Nobody uses Linux day to day, and the Apple silicon) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2798 Tm (Mac build has been run on two Macs with Apple silicon, by two testers; the platform statement on the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2886 Tm (download page says exactly what has been checked.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 99 Tf 1 0 0 -1 381 2949 Tm (Telling somebody when it is wrong) Tj ET
+BT /F1 99 Tf 1 0 0 -1 381 3072 Tm (Telling somebody when it is wrong) Tj ET
 0.745098 0.745098 0.745098 rg
-381 2979 3556 3 re
+381 3102 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 3079 Tm (The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3167 Tm (report, because a test build changes whenever the code does. Report a problem there, under Diagnostics, opens) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3255 Tm (a window that lists what the report holds, with a box for what happened and one for a way to reach you. Save) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3343 Tm (only writes it as a zip with the log and the computer's details, carrying no location data and no photographs. Send) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3431 Tm (it either way: open an issue at <https://github.com/oRAirwolf/grouplab/issues>, or email it to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3519 Tm (support@grouplab.org. Either way, add a line about what you were doing. The support page at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3607 Tm (<https://grouplab.org/support/> says the same and is easier to find again.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3730 Tm (GroupLab keeps everything in %APPDATA%\\GroupLab on Windows, and under your home folder on macOS) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3818 Tm (and Linux: settings, your sessions database, any sheet you design, and the log. To remove it, uninstall or delete) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3906 Tm (the folder you unzipped, and delete that folder when you want the data gone.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3202 Tm (The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3290 Tm (report, because a test build changes whenever the code does. Report a problem there, under Diagnostics, opens) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3378 Tm (a window that lists what the report holds, with a box for what happened and one for a way to reach you. Write) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3466 Tm (what happened and press Send: the report goes to the project with the error and the logs of its run, carrying no) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3554 Tm (location data and no photographs. Save only writes it as a zip instead. Only when sending is not open yet, or a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3642 Tm (send fails, does the window say so and suggest sending the saved zip by opening an issue at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3730 Tm (<https://github.com/oRAirwolf/grouplab/issues> or by email to support@grouplab.org, with a line about what you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3818 Tm (were doing. The support page at <https://grouplab.org/support/> explains the same and is easier to find again.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3941 Tm (GroupLab keeps everything in %APPDATA%\\GroupLab on Windows, and under your home folder on macOS) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4029 Tm (and Linux: settings, your sessions database, any sheet you design, and the log. To remove it, uninstall or delete) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4117 Tm (the folder you unzipped, and delete that folder when you want the data gone.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 4 of 4) Tj ET
 Q
 endstream
@@ -1198,16 +1200,16 @@ endobj
 << /Title (The first minute, with no rifle) /Parent 13 0 R /Prev 17 0 R /Next 21 0 R /Dest [6 0 R /XYZ 0 311.244094 null] >>
 endobj
 21 0 obj
-<< /Title (Reading what it shows you) /Parent 13 0 R /Prev 20 0 R /Next 22 0 R /Dest [8 0 R /XYZ 0 687.685039 null] >>
+<< /Title (Reading what it shows you) /Parent 13 0 R /Prev 20 0 R /Next 22 0 R /Dest [8 0 R /XYZ 0 675.212598 null] >>
 endobj
 22 0 obj
-<< /Title (Printing a sheet and shooting it) /Parent 13 0 R /Prev 21 0 R /Next 23 0 R /Dest [8 0 R /XYZ 0 112.535433 null] >>
+<< /Title (Printing a sheet and shooting it) /Parent 13 0 R /Prev 21 0 R /Next 23 0 R /Dest [8 0 R /XYZ 0 100.062992 null] >>
 endobj
 23 0 obj
-<< /Title (What is not done yet) /Parent 13 0 R /Prev 22 0 R /Next 24 0 R /Dest [10 0 R /XYZ 0 632.834646 null] >>
+<< /Title (What is not done yet) /Parent 13 0 R /Prev 22 0 R /Next 24 0 R /Dest [10 0 R /XYZ 0 615.401575 null] >>
 endobj
 24 0 obj
-<< /Title (Telling somebody when it is wrong) /Parent 13 0 R /Prev 23 0 R /Dest [10 0 R /XYZ 0 388.062992 null] >>
+<< /Title (Telling somebody when it is wrong) /Parent 13 0 R /Prev 23 0 R /Dest [10 0 R /XYZ 0 370.629921 null] >>
 endobj
 xref
 0 25
@@ -1219,25 +1221,25 @@ xref
 0000000448 00000 n 
 0000007070 00000 n 
 0000007196 00000 n 
-0000013785 00000 n 
-0000013938 00000 n 
-0000017456 00000 n 
-0000017584 00000 n 
-0000022997 00000 n 
-0000278214 00000 n 
-0000278288 00000 n 
-0000278414 00000 n 
-0000278534 00000 n 
-0000278656 00000 n 
-0000278829 00000 n 
-0000278953 00000 n 
-0000279079 00000 n 
-0000279220 00000 n 
-0000279355 00000 n 
-0000279497 00000 n 
-0000279628 00000 n 
+0000013709 00000 n 
+0000013862 00000 n 
+0000017459 00000 n 
+0000017587 00000 n 
+0000023287 00000 n 
+0000278504 00000 n 
+0000278578 00000 n 
+0000278704 00000 n 
+0000278824 00000 n 
+0000278946 00000 n 
+0000279119 00000 n 
+0000279243 00000 n 
+0000279369 00000 n 
+0000279510 00000 n 
+0000279645 00000 n 
+0000279787 00000 n 
+0000279918 00000 n 
 trailer
 << /Size 25 /Root 1 0 R >>
 startxref
-279759
+280049
 %%EOF

@@ -1784,6 +1784,35 @@ page, and the other two came back as page text without their scripts; the entry'
    `SendEverythingTests.APackageSaysHowItWasSentInOneWord`. CONTRIBUTING.md says how to write the trailers and the nightly-builds article
    mentions the counts (docs helper, reviewed).
 
+## Entry 459: consistency audit of 2026-10-19 (2026-10-19)
+
+Wording by the docs helper (docs-sonnet), reviewed; sections 6, 7 and 11's last bullet on the main model.
+
+1. **Trying GroupLab** (TESTING-GUIDE and its PDF) says to write what happened and press Send; Save only writes a zip; GitHub or email
+   only when sending is not open or fails.
+2. **The platform statement** (PLATFORM-SUPPORT.md, so README and /download/): reports are sent from GroupLab with Send, the Discord
+   bug-reports forum works too, support@grouplab.org for anything private.
+3. **Phones and the log**: the user guide now says what the code does (`SettingsView` offers "Send them with the log" behind the same
+   switch as the computer).
+4. **Store-bought targets**: the user guide names the one route that exists, email to support@grouplab.org (the Send a target page
+   takes images only and the app only saves the file); "no way to send one in yet" retired.
+5. **Home page**: only the Windows and Linux downloads are called unsigned.
+6. **Website notes in the application's notes**: nightly 205's entry now says it changed nothing in the application (only the consent
+   record beside the Windows sample is longer), and 206's bullet says what the application does (a sent target records how it was sent),
+   both also in `docs/release-note-corrections.json`. The cause: `samples/PROVENANCE.md` ships in the Windows zip, so entry 453's
+   consent records for the research pictures made 205 a real build whose only note was the website one. Question 105 proposes shipping
+   only the sample's own record.
+7. **The site a nightly behind**: published by hand for 207 (live at f094544b with 209). The cause: the nightly's notes and README pushes
+   use its own token, which starts no workflow, so the paths filter never saw them. The publish job now dispatches website.yml after the
+   README (`actions: write`); `WebsiteWorkflowTests.NoOtherWorkflowStartsTheWebsiteWorkflow` allows exactly that one step, and
+   `NightlyNeverWaitsTests.TheNightlyPublishesTheSiteAfterItsNotes` holds it.
+8. **Not built yet**: both README lists name hole detection on plain paper, in plain words.
+9. **Phases 6 and 8**: one sentence under README's table says why a phase whose gate is met stays In progress.
+10. **Samples**: the Windows zip and installer carry the two sheets (the installer is built from the same staging folder); macOS, Linux
+    and the phones do not; README, /download/ and TESTING-GUIDE say so.
+11. Tour Ballistics blurb names Point blank; the Error reports card names Send (reworded since 207); the phone lists name Point blank;
+    for-alan.md's first line rewritten from the open requests, and request 104 corrected to nightly 206 (Point blank is not in 205).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

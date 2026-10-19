@@ -923,6 +923,10 @@ jobs:
     if: ${{ !cancelled() && needs.package.result == 'success' && needs.name-it.outputs.fresh == 'yes' && needs.name-it.outputs.application-changed == 'yes' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    # Entry 459 section 7: actions, to start website.yml once the notes are pushed.
+    permissions:
+      contents: write
+      actions: write
     env:
       GH_TOKEN: ${{ github.token }}
       SHA: ${{ needs.name-it.outputs.sha }}
@@ -1141,13 +1145,9 @@ jobs:
       # Entry 144 section 2: the notes write themselves. The generated entry is the floor, not the ceiling; improving its wording later is
       # an ordinary site content commit.
       #
-      # The loop is guarded by the marker in the commit subject, which ci.yml and this workflow both skip on. That push does match
-      # website.yml's paths filter, which is the point: the releases page follows within a couple of minutes without anybody asking.
-      # Entry 144 section 2: the notes write themselves. The generated entry is the floor, not the ceiling; improving its wording later is
-      # an ordinary site content commit.
-      #
-      # The loop is guarded by the marker in the commit subject, which ci.yml and this workflow both skip on. That push does match
-      # website.yml's paths filter, which is the point: the releases page follows within a couple of minutes without anybody asking.
+      # The loop is guarded by the marker in the commit subject, which ci.yml and this workflow both skip on. A push made with this
+      # workflow's own token starts no other workflow, so website.yml's paths filter never saw it (entry 459 section 7: the site was a
+      # nightly behind); the site is started by hand after the README below.
       - name: Write this build's notes into docs/RELEASE-NOTES.md
         run: |
           set -o pipefail
@@ -1204,7 +1204,7 @@ jobs:
           git add docs/RELEASE-NOTES.md
           git commit -m "[notes] $VERSION" -m "Written by the nightly from this build's Release-note trailers, NOTES-FROM-PLANNING.md entry 144 section 2."
           git push origin main
-          echo "appended $VERSION and pushed it; website.yml's paths filter picks it up"
+          echo "appended $VERSION and pushed it"
 
       # NOTES-FROM-PLANNING.md entry 244: the README's generated sections, the newest build, what is new, the feature list and the plan,
       # rewritten from the notes just written and committed as a [notes] commit, only when something changed. The marker in the subject
@@ -1221,6 +1221,12 @@ jobs:
             git commit -m "[notes] README for $VERSION" -m "Its generated sections, rewritten by the nightly, NOTES-FROM-PLANNING.md entry 244."
             git push origin main || { git pull --rebase --quiet origin main && git push origin main; }
           fi
+
+      # NOTES-FROM-PLANNING.md entry 459 section 7: the notes and README just pushed are published on the site. Those pushes used this
+      # workflow's token, which starts no workflow, so the site is asked for in so many words; a dispatch is the one start that token may make.
+      - name: Publish the site for this build
+        continue-on-error: true
+        run: gh workflow run website.yml --ref main -f reason="nightly $VERSION, its notes and README"
 
       # NOTES-FROM-PLANNING.md entry 184: the build announces itself in #builds, only now that it is published, with the same notes as
       # the release body from the same generator, less the platform line. The webhook is a repository secret Alan added; without it the

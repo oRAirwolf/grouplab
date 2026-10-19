@@ -1138,7 +1138,7 @@
       "key": "error-reports",
       "group": "Sharing and privacy",
       "name": "Error reports",
-      "sentence": "When GroupLab hits an error it can send a report so the problem can be fixed, automatically, after asking, or never; on the computer and the phones a report can carry GroupLab's log, anything typed replaced by its length.",
+      "sentence": "When GroupLab hits an error it can send a report so the problem can be fixed, automatically, after asking, or never; on the computer and the phones a report can carry GroupLab's log, anything typed replaced by its length; Report a problem and Make a report send one from GroupLab when you press Send.",
       "shot": "settings",
       "platforms": [
         "Windows",
@@ -1148,6 +1148,7 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.103",
+      "reworded": "0.2.0-nightly.207",
       "note": ["GroupLab can now send a report when it hits an error", "Make a report now sends from GroupLab"],
       "tour": "settings",
       "guide": "12-settings",

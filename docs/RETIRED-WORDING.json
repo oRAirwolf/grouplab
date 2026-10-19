@@ -190,7 +190,7 @@
     },
     {
       "phrase": "Show in folder",
-      "why": "entry 407: the bottom bar no longer has it; the \u00b7\u00b7\u00b7 menu has Open the session's folder",
+      "why": "entry 407: the bottom bar no longer has it; the ··· menu has Open the session's folder",
       "allowedIn": [
         "docs/RETIRED-WORDING.json",
         "docs/RELEASE-NOTES.md",
@@ -205,6 +205,43 @@
       "allowedIn": [
         "docs/RETIRED-WORDING.json",
         "docs/RELEASE-NOTES.md"
+      ]
+    },
+    {
+      "phrase": "on the phones it stays off for now",
+      "why": "entry 459: the phones offer the log the same as the computer",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "There is no way to send one in yet",
+      "why": "entry 459: the guide names the route, email to support@grouplab.org",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "Send it to GroupLab's maker",
+      "why": "entry 459: the guide names the route",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json"
+      ]
+    },
+    {
+      "phrase": "test builds, unsigned and rebuilt",
+      "why": "entry 459: the macOS, Store and Android builds are signed; only the Windows and Linux downloads are not",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/claims-backing.json"
+      ]
+    },
+    {
+      "phrase": "which GroupLab can send on request",
+      "why": "entry 459: Report a problem sends from GroupLab with Send",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/claims-backing.json"
       ]
     }
   ],

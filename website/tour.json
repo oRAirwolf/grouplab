@@ -643,7 +643,7 @@
   },
   "ballistics": {
    "name": "Ballistics",
-   "blurb": "A trajectory for one rifle and load, a dope table at whatever spacing you ask for, and the chance of a hit from your own measured precision.",
+   "blurb": "A trajectory for one rifle and load, a dope table at whatever spacing you ask for, the chance of a hit from your own measured precision, and Point blank, the range you can hold dead on.",
    "purpose": "Everything else in GroupLab measures what your rifle did. This works out what it should do. It takes the rifle and load you have already recorded, asks for the air it will be shot in, and gives you drop, wind drift, velocity and energy out to whatever distance you name, and the chance of a hit there from your own measured precision. Nothing here changes a marking or an analysis.",
    "withoutASheet": "No difference. Nothing here depends on a sheet.",
    "parts": [

@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 458 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 459 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
-- **Entries 457 and 458 (2026-10-19)**: Next unsure hole's error fixed (0af39fc2); Send on every report; reports triaged as they arrive;
-  notes say what reports and targets changed (`Reported-via:`, `From-submissions:`, the total at /releases/#from-you).
+- **Entries 457 to 459 (2026-10-19)**: report Send everywhere; notes count reports and targets; 459's audit fixed; the nightly now
+  publishes the site itself (its token's pushes start nothing). Questions 104 and 105 open.
 - **Entries 455 and 456 (2026-10-19)**: Ballistics' Point blank view (`PointBlankModel`, `PointBlankReport`, `PointBlankCard`); the rifle's
   Scope and mount (`ScopeMount`, `ScopeTracking`, `TopGun`), schema 5. Top Gun's comparison waits on request 103. **Later idea**: tracking
   measured from a scanned tracking target (72 in tall at 20 mil and 100 yd: tiled pages or a plotter).
@@ -74,7 +74,7 @@ Six, all in `docs/QUESTIONS-FOR-PLANNING.md` (101 answered by entry 446 and arch
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.207 (2026-10-19): Equipment pages open at their top; 206 had entries 456 to 458 and the first reports total.
+- **Last nightly:** 0.2.0-nightly.207 (2026-10-19): Equipment pages open at their top; 206 had entries 455 to 458 and the first reports total.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
 - Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
 

@@ -976,7 +976,7 @@ def page_download() -> str:
 <h3 class="h3">What you get</h3>
 <dl class="facts">
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>
-<div><dt class="mono">Samples</dt><dd>Two sample sheets, so there is something to open in the first minute.</dd></div>
+<div><dt class="mono">Samples</dt><dd>The Windows zip and installer carry two sample sheets, so there is something to open in the first minute; the other downloads do not.</dd></div>
 <div><dt class="mono">Your data</dt><dd>Kept in <code>%APPDATA%\\GroupLab</code> on Windows, and under your home folder elsewhere. An update check sends nothing about you.</dd></div>
 <div><dt class="mono">Which build</dt><dd>The Settings screen names the version, the train and the commit. Put that line in any report.</dd></div>
 </dl>"""
@@ -2029,7 +2029,7 @@ def page_home() -> str:
 <div class="tp-strip-label mono tp-head" data-terms="off"><span>02 / HONEST</span><span class="tp-wide">FREE AND OPEN SOURCE</span></div>
 <div class="tp-intro tp-ease"><h2>No bragging numbers.</h2></div>
 <div class="tp-points">{points}</div>
-<p class="tp-today">Today GroupLab is test builds, unsigned and rebuilt after every change that passes its tests, so one may be broken.
+<p class="tp-today">Today GroupLab is test builds, rebuilt after every change that passes its tests, so one may be broken; the Windows and Linux downloads are unsigned.
 Not built yet: hole detection on plain paper, and synchronization between devices. <a href="/download/">What to expect</a>, and
 <a href="{GITHUB}#planned">the full status on GitHub</a>.</p>
 </section>

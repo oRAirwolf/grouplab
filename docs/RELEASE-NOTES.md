@@ -59,10 +59,10 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 - A third Ballistics view, Point blank, shows how far you can hold dead on and still land your chosen share of shots in an animal's vital zone or a target, how to set the zero in clicks, and prints a card for the rifle.
 - On a small phone, the heading that opens the tracking test on the rifle's page now wraps onto a second line instead of being cut off.
 - Next unsure hole, and saving while a rebuilt panel had the focus, no longer raise an error on the computer, and tapping the result sheet on the phone away from every hole no longer does either (found from 5 automatic error reports).
-- Release notes now say which fixes came from your error reports and which detection changes were made with targets people sent, and keep a running total on the website.
 
 **Under the hood**
 
+- A target GroupLab sends now says whether it went by itself or because you pressed Send, one word and nothing personal, so the notes can say where the targets behind a detection change came from. (Entry 458)
 - The development build's scripted test now notes any moment the screen stops answering, to find a rare stall on the iPhone simulator.
 
 From your reports and targets in this build: 1 fix from 5 error reports.
@@ -75,9 +75,7 @@ From your reports and targets in this build: 1 fix from 5 error reports.
 
 **2026-10-19**, commit `d1093d2`. Nightly.
 
-**Under the hood**
-
-- The Research page on grouplab.org now shows a small picture for every article: a crop of a real target where one shows the idea, and a simple drawing where none does.
+This build has no change to the application; it behaves exactly as nightly 204 does. Only the consent record beside the Windows download's sample sheet is longer.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.205)
 

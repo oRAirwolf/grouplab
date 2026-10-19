@@ -115,6 +115,24 @@
           "kind": "new"
         }
       ]
+    },
+    "7e4b1719bf59ab011109888aff74aa26fd925630": {
+      "why": "Entry 459 section 6: the commit changed the website and the consent record that ships beside the Windows sample, and its note spoke of the website, which the notes never list.",
+      "notes": [
+        {
+          "note": "Nothing in GroupLab changes; the consent record beside the Windows download's sample sheet now also covers the research pages' pictures. (Entry 453)",
+          "kind": "internal"
+        }
+      ]
+    },
+    "5d96309d21e648693666f4602c11e0e15a8d4bf5": {
+      "why": "Entry 459 section 6: the note described the notes and the website, not what the application does.",
+      "notes": [
+        {
+          "note": "A target GroupLab sends now says whether it went by itself or because you pressed Send, one word and nothing personal, so the notes can say where the targets behind a detection change came from. (Entry 458)",
+          "kind": "internal"
+        }
+      ]
     }
   }
 }
