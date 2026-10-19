@@ -1539,6 +1539,9 @@ site build pass.
    MEASURING. in capitals. Nothing on the site changed. The DESIGN NEEDED line is marked answered in for-alan.md and gone from STATE.
 2. `heading_problems` now also fails a page, other than the home page, whose title a stylesheet turns to capitals (three lines);
    `site-home-tests.py` holds it (50 checks).
+3. **Entry 448 section 3, on the live site** (c00232ec, 2026-10-19): grouplab.org at 390 px in light and dark, the menu opened with the
+   wordmark undocked: all ten links are the element at their left edge, middle and right edge, and the panel is drawn over the
+   wordmark (`docs/figures/site/entry-448/menu-open-390-light.webp` and `-dark`). The tap check passed in CI on its first run there.
 
 ## Decision log
 
