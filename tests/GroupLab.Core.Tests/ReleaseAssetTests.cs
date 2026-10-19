@@ -121,8 +121,12 @@ public partial class ReleaseAssetTests
 
         // No key, no publishing, and it says so before it builds anything.
         Assert.Contains(GroupLab.Core.Updates.UpdateKeys.SecretName, nightly, StringComparison.Ordinal);
-        Assert.Contains("update-manifest", nightly, StringComparison.Ordinal);
-        Assert.Contains("update-check", nightly, StringComparison.Ordinal);
+        // Entry 450 section 2: the manifest is written and checked by one script, run by the publish job and again by the job that adds
+        // the Android files.
+        string manifest = File.ReadAllText(Repo.PathTo("scripts", "nightly-manifest.sh"));
+        Assert.Contains("bash scripts/nightly-manifest.sh", nightly, StringComparison.Ordinal);
+        Assert.Contains("update-manifest", manifest, StringComparison.Ordinal);
+        Assert.Contains("update-check", manifest, StringComparison.Ordinal);
 
         // It keeps the newest thirty and touches nothing it did not make.
         Assert.Contains("nightlies[30:]", nightly, StringComparison.Ordinal);
@@ -138,9 +142,10 @@ public partial class ReleaseAssetTests
         // Entry 139 sections 1 and 2: both formats go out with every build, to both releases, and both are verified before either is
         // published. Dropping the first one strands every build up to nightly 44; dropping the second undoes the entry.
         Assert.Contains("--versions versions.json", nightly, StringComparison.Ordinal);
-        Assert.Contains("update-check release/update-manifest.json", nightly, StringComparison.Ordinal);
-        Assert.Contains("update-check release/update-manifest-2.json", nightly, StringComparison.Ordinal);
-        Assert.Equal(2, System.Text.RegularExpressions.Regex.Matches(nightly, @"release/update-manifest\.json release/update-manifest-2\.json").Count);
+        Assert.Contains("update-check release/update-manifest.json", manifest, StringComparison.Ordinal);
+        Assert.Contains("update-check release/update-manifest-2.json", manifest, StringComparison.Ordinal);
+        // The two releases the publish job creates, and the pair the android-files job puts back on both once it has signed them again.
+        Assert.Equal(3, System.Text.RegularExpressions.Regex.Matches(nightly, @"release/update-manifest\.json release/update-manifest-2\.json").Count);
     }
 
     /// <summary>The package carries the licence, the notices, a read me and the samples, because a loose executable loses all of them.</summary>

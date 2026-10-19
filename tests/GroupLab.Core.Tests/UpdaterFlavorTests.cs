@@ -86,12 +86,14 @@ public class UpdaterFlavorTests
         Assert.DoesNotContain("GroupLabUpdater", aab.Groups["body"].Value, StringComparison.Ordinal);
 
         Assert.Contains("unzip -p signed/grouplab-android.aab base/manifest/AndroidManifest.xml | grep -aq REQUEST_INSTALL_PACKAGES", nightly, StringComparison.Ordinal);
-        Assert.Contains("--asset android apk-dev release/grouplab-android-dev.apk \"$base/grouplab-android-dev.apk\"", nightly, StringComparison.Ordinal);
+        // Entry 450 section 2: the manifest is written by one script, which the publish job and the job adding the Android files both run.
+        string manifest = File.ReadAllText(Repo.PathTo("scripts", "nightly-manifest.sh"));
+        Assert.Contains("--asset android apk-dev release/grouplab-android-dev.apk \"$base/grouplab-android-dev.apk\"", manifest, StringComparison.Ordinal);
         Assert.Contains("-p:GroupLabTrain=nightly", nightly, StringComparison.Ordinal);
         Assert.Equal(GroupLab.Core.Updates.AndroidUpdates.DevKind, "apk-dev");
 
         // Entry 386: the plain APK too, on the nightly train, and checked to carry the updater.
-        Assert.Contains("--asset android apk release/grouplab-android.apk \"$base/grouplab-android.apk\"", nightly, StringComparison.Ordinal);
+        Assert.Contains("--asset android apk release/grouplab-android.apk \"$base/grouplab-android.apk\"", manifest, StringComparison.Ordinal);
         Assert.Contains("for apk in grouplab-android-dev.apk grouplab-android.apk; do", nightly, StringComparison.Ordinal);
         Assert.Contains("[ \"$format\" = apk ] && train=\"-p:GroupLabTrain=nightly\"", nightly, StringComparison.Ordinal);
         Assert.Equal(GroupLab.Core.Updates.AndroidUpdates.SideloadKind, "apk");

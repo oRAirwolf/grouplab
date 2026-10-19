@@ -13,6 +13,7 @@ sure: This describes the pipeline as it stands. The numbers in it, such as the r
 sources:
   - "The workflow itself, with its reasoning in comments: `.github/workflows/nightly.yml`."
   - "The release-note rule and why it exists: `CLAUDE.md`, \"Release notes: say what changed, to a person who shoots\"."
+  - "The retry of a failed test and the late Android files: `.github/workflows/ci.yml`, `scripts/test-retry.py` and the `android-files` job in `.github/workflows/nightly.yml`, NOTES-FROM-PLANNING.md entry 450."
 ---
 
 ## The shape of it
@@ -61,6 +62,14 @@ Release-note-kind: fixed
 Nothing is guessed from a subject line. A commit with nothing a person would notice, a test, a document, a build change, carries no trailer and appears only in a count at the end.
 
 **And the generator refuses bad notes**, failing the build rather than publishing them. A note is rejected if it is only a reference, begins with "Entry", is shorter than eight words, or uses words that mean nothing to a shooter: folded, gate record, harness, fixture, refactor, and a list of others. That was tested against seven notes, six deliberately bad, and it refused all six for the right reason.
+
+## One platform does not hold up another
+
+The nightly is built for Windows, Linux, macOS, Android and the iPhone, and for a while one of them could hold the others back in two ways.
+
+The first was a flaky test: one that fails now and then on one of the three systems the tests run on, though nothing is wrong with the change. One such failure stopped the whole nightly, the phones included. So a test that fails is now run once more, on its own, in the same job. If it passes the second time the build goes ahead, and the test is named as flaky, in the run and in a list the project reads; a test that needs its second run three times in a fortnight goes on the list of things to fix. A test that fails twice still stops everything, because that is what a real fault looks like.
+
+The second was waiting. The desktop release waited for the Android build, which is allowed two hours, so a stuck Android build could hold the Windows installer back that long, though it could never stop it. Now the desktop files are published as soon as they are packaged, and the Android files join the same release when their own build finishes. The signed manifest is written again with them in it, so the phones' own updater finds them as before, and Google Play is sent the bundle only once it is on the release.
 
 ## The rule that is easiest to get wrong
 

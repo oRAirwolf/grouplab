@@ -688,6 +688,7 @@ def platform_support() -> str:
 DEVICES = [("windows", "Windows"), ("mac", "Mac"), ("iphone", "iPhone and iPad"), ("android", "Android"), ("linux", "Linux")]
 
 # Every file the moving nightly release carries, in the order .github/workflows/nightly.yml publishes them, and what each one is for.
+# The Android ones are added by its android-files job once they exist (entry 450 section 2).
 NIGHTLY_FILES = [
     ("grouplab-setup-win-x64.exe", "Windows, the installer"),
     ("grouplab-win-x64.zip", "Windows, the zip"),
@@ -859,7 +860,7 @@ def page_download() -> str:
 </section>"""
 
     files_rows = "".join(f'<tr><td><a href="{NIGHTLY}{f}"><code>{f}</code></a></td><td>{what}</td></tr>' for f, what in NIGHTLY_FILES)
-    files_inner = f"""<p class="small">The moving release on GitHub always carries the newest build under these names, so a link to one of them never goes stale. Nightly {n["number"]}, built {n["date"]} from commit {commit_link}.</p>
+    files_inner = f"""<p class="small">The moving release on GitHub always carries the newest build under these names, so a link to one of them never goes stale. The Android files join it when their own build finishes, usually some minutes after the others. Nightly {n["number"]}, built {n["date"]} from commit {commit_link}.</p>
 <div class="dl-table"><table class="small"><thead><tr><th>File</th><th>What it is</th></tr></thead><tbody>{files_rows}</tbody></table></div>
 <p class="small">The same build with its number in every file name, and the notes it was published with: <a href="{GITHUB}/releases/tag/v{n["version"]}">GroupLab {n["version"]} on GitHub</a>. What changed in it: <a href="/releases/#{n["anchor"]}">its release notes</a>.</p>"""
     files_title = f"Every file in nightly {n['number']}, on GitHub"

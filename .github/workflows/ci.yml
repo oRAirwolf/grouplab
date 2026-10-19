@@ -98,19 +98,46 @@ jobs:
       - name: What the temporary directory holds before the suite
         run: $(command -v python3 || command -v python) scripts/temp-leak-check.py snapshot
 
+      # Entry 450 section 1: one flaky test on one leg used to stop every platform's nightly, the phones' too. When this step fails on a
+      # failed test, only the tests that failed are run once more, here, in the same job: if each passes the second time the leg passes, and
+      # if any fails again the leg fails as before, so a real fault still stops everything. scripts/test-retry.py decides from the TRX
+      # results; a crash, a hang, a project with no results or more than thirty failures is not retried. A build failure never reaches
+      # this step. A test that passed only on its retry is never hidden: it is a warning on the run, a line in this leg's summary, and a
+      # row in the flaky-tests artifact that scripts/flaky-tests.py gathers into docs/notes/flaky-tests.md.
       - name: Test
         run: |
           set -o pipefail
           status=0
+          failed=""
+          py=$(command -v python3 || command -v python)
           runner_temp="$RUNNER_TEMP/grouplab-dotnet-test"
+          results="$RUNNER_TEMP/test-results"
           mkdir -p "$runner_temp"
           # Entry 400: the Mobile suite hung on macOS for an hour on 2026-10-10 and the job's limit ended it with no test named. A test that
           # runs fifteen minutes is now stopped and named, without a dump, so a hang says where it is.
           for project in tests/GroupLab.Core.Tests tests/GroupLab.App.Tests tests/GroupLab.Mobile.Tests; do
-            TMP="$runner_temp" TEMP="$runner_temp" TMPDIR="$runner_temp" dotnet test "$project" --configuration Release --no-build --blame-hang-timeout 15m --blame-hang-dump-type none 2>&1 | tee -a test-output.txt || status=1
+            TMP="$runner_temp" TEMP="$runner_temp" TMPDIR="$runner_temp" dotnet test "$project" --configuration Release --no-build --blame-hang-timeout 15m --blame-hang-dump-type none --logger trx --results-directory "$results/first/$(basename "$project")" 2>&1 | tee -a test-output.txt || { status=1; failed="$failed $project"; }
           done
-          rm -rf "$runner_temp"
+          if [ "$status" -ne 0 ] && "$py" scripts/test-retry.py plan "$results/first" $failed --out retry-plan.txt; then
+            while IFS=$'\t' read -r -u 3 project filter; do
+              TMP="$runner_temp" TEMP="$runner_temp" TMPDIR="$runner_temp" dotnet test "$project" --configuration Release --no-build --blame-hang-timeout 15m --blame-hang-dump-type none --filter "$filter" --logger trx --results-directory "$results/retry/$(basename "$project")" 2>&1 | tee -a test-retry-output.txt || true
+            done 3< retry-plan.txt
+            if "$py" scripts/test-retry.py verdict "$results/first" "$results/retry" --leg "${{ matrix.os }}" --run "$GITHUB_RUN_ID" --out flaky-tests.tsv; then
+              status=0
+            fi
+          fi
+          rm -rf "$runner_temp" "$results" retry-plan.txt
           exit $status
+
+      - name: Tests that passed only on their retry
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: flaky-tests-${{ matrix.os }}
+          path: flaky-tests.tsv
+          # Written only when a test passed on its retry; on every other run there is nothing, and nothing is uploaded.
+          if-no-files-found: ignore
+          retention-days: 30
 
       - name: The suite left nothing in the temporary directory
         if: always()
@@ -153,6 +180,13 @@ jobs:
               grep -E "Passed!|Failed!" test-output.txt | sed 's/^/- /' || echo "- no test summary was produced"
             else
               echo "- the tests did not run"
+            fi
+            # Entry 450 section 1: the retry's own counts, under the first run's, so neither hides the other.
+            if [ -f test-retry-output.txt ]; then
+              echo
+              echo "The failed tests, run once more:"
+              echo
+              grep -E "Passed!|Failed!" test-retry-output.txt | sed 's/^/- /' || echo "- the retry produced no test summary"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 

@@ -8,7 +8,7 @@ A **train** is a stream of builds you can follow.
 
 | Train | What is on it | Today |
 |---|---|---|
-| **Nightly** | Every commit that passes the tests on Windows, Linux and macOS | The only train with builds on it |
+| **Nightly** | Every commit that passes the tests on Windows, Linux and macOS, where a failed test is run once more and passing then counts (entry 450) | The only train with builds on it |
 | **Beta** | Builds somebody has looked at | Not available yet |
 | **Release** | A numbered version somebody chose to release | Not available yet |
 
@@ -180,6 +180,10 @@ the copy from Google Play, comes later. The copy from Google Play never has any 
 **What it reads.** One plain HTTPS GET of the second manifest, `update-manifest-2.json`, at launch and about every six hours, with the
 same User-Agent and nothing else. The nightly lists GroupLab Dev's APK in it as platform `android`, kind `apk-dev`, with its size and
 SHA-256, at a fixed address beside the desktop files. The signature is verified over the bytes as they arrived before anything reads them.
+Since entry 450 the desktop files are published first and the Android ones join them when the Android build finishes, so for those
+minutes the manifest lists no Android download, and a phone that checks finds the new version with no Android file yet and
+downloads nothing (`ApkRefusal.NoApk`); the manifest is then written again with the APKs in it,
+signed with the same key, and replaces the first.
 Offline is silent, as on the desktop: a line in the log and nothing on screen.
 
 **How it downloads.** On Wi-Fi only by default (an unmetered network, which is what Android calls it), in the background, through

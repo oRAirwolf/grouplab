@@ -314,7 +314,10 @@ This is not part of the first stage; it is built when the application has sessio
 
 An unsigned debug APK is never published as a nightly. The nightly's `android` job signs a release APK and an AAB for Play with the
 upload key, which Alan generated and keeps outside the repository (entry 198 section 3.3) and which the job reads from the repository's
-secrets; without them it builds nothing and the rest of the nightly publishes. Section 12 says what Play does with the AAB.
+secrets; without them it builds nothing and the rest of the nightly publishes. Since entry 450 the desktop builds do not wait for it:
+they are published as soon as they are packaged, and the `android-files` job adds the APKs, the AAB and the symbols to the same two
+releases when the Android build finishes, with the update manifest signed again so it lists the Android downloads. Section 12 says what
+Play does with the AAB.
 
 ## 10. Running the spike on the phone
 
@@ -390,7 +393,7 @@ first.
    under the release's **App bundle explorer**, **Downloads**, **Native debug symbols**.
 
 **Automatic upload (entry 384), working since 2026-10-07.** `.github/workflows/play-upload.yml` runs after every nightly that
-published, and by hand for a given version: it downloads that nightly's AAB and native symbols from its numbered release and sends them
+published, once the whole nightly run has ended, which is after its Android files were added (entry 450), and by hand for a given version: it downloads that nightly's AAB and native symbols from its numbered release and sends them
 to internal testing through the Play Developer API (`scripts/play-upload.py`: an edit, the bundle, the symbols as native code, the
 internal track at status completed, the commit). It does nothing while the repository secret `PLAY_SERVICE_ACCOUNT_JSON` is absent, and
 never holds up a nightly. The secret is a Google Cloud service account with release rights on this app only, invited in the Play
