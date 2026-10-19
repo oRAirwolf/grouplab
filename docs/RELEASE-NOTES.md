@@ -500,7 +500,7 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 - An Android update installing itself is no longer recorded as GroupLab closing unexpectedly, and a camera closing mid-picture is no longer logged as an error.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.173)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
