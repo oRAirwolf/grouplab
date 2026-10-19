@@ -39,6 +39,7 @@
     "optic-4x": ["src/GroupLab.App/MainWindow.Library.cs", "src/GroupLab.App/PrintPanel.cs"],
     "ballistics": ["src/GroupLab.App/MainWindow.Ballistics.cs", "src/GroupLab.App/MainWindow.BallisticsLayout.cs", "src/GroupLab.App/TrajectoryGraph.cs", "src/GroupLab.App/BallisticMeasures.cs"],
     "ballistics-hit": ["src/GroupLab.App/MainWindow.Ballistics.cs", "src/GroupLab.App/MainWindow.BallisticsLayout.cs", "src/GroupLab.App/MainWindow.Hit.cs", "src/GroupLab.App/HitGraphs.cs"],
+    "ballistics-point": ["src/GroupLab.App/MainWindow.Ballistics.cs", "src/GroupLab.App/MainWindow.BallisticsLayout.cs", "src/GroupLab.App/MainWindow.PointBlank.cs", "src/GroupLab.App/PointBlankPieces.cs", "src/GroupLab.Core/Ballistics/PointBlank.cs", "src/GroupLab.Core/Ballistics/PointBlankReport.cs"],
     "equipment": ["src/GroupLab.App/MainWindow.Equipment.cs", "src/GroupLab.App/MainWindow.Loads.cs"],
     "compare": ["src/GroupLab.App/MainWindow.Compare.cs"],
     "sheet-e-bull": ["src/GroupLab.Core/Rendering/SceneBuilder.cs", "src/GroupLab.Core/Rendering/SceneRasterizer.cs", "src/GroupLab.Core/Rendering/SheetGlyphs.cs", "src/GroupLab.Cli/Library/LibraryBuilder.cs", "targets/GL-CF25-LTR-E.gltd.json"],

@@ -510,7 +510,7 @@ Three columns, like the analysis:
 - **On the left:** the settings in sections that fold, **The rifle**, **The load**, **The air** and **The table**. A folded section
   says what it holds in one line, and GroupLab remembers which you left open. A field the solver still needs says "needed" beside it,
   and its section opens.
-- **In the middle:** **Trajectory** (2) or **Hit probability** (3), chosen at the top and remembered. The trajectory is a large chart of drop,
+- **In the middle:** **Trajectory** (2), **Hit probability** (3) or **Point blank**, chosen at the top and remembered. The trajectory is a large chart of drop,
   wind drift, velocity or energy with the zero marked, and the dope table under it.
 - **On the right, At one range:** the elevation for one range in large amber figures, with the clicks and the drop under it, then the
   wind, velocity, energy, time of flight and stability. Clicking a row of the table or a point on the chart sets the range, and its row
@@ -534,7 +534,7 @@ spread nor a crosswind uncertainty given, it is the group scaled by angle and no
 
 ### Hit probability
 
-The middle's second view works out the chance of a hit on a circle, a rectangle or an IPSC outline (1) at a distance. In
+The middle's second view works out the chance of a hit on a circle, a rectangle or the official IPSC target A zone (1) at a distance. In
 it the rifle, the load and the air fold to their one-line summaries, and the left holds **The target**, **What you are unsure of** and
 **The shot and the simulation**. The target's distance and the range on the right are the same, so the hold shown and the chance are
 for the same shot:
@@ -559,6 +559,71 @@ for the same shot:
 A wind call is drawn once for a whole string, never per shot, because every shot you fire on one reading shares its error. When the group
 behind the precision is too small to say anything, the screen says so and how many shots would make it mean something. The same seed gives
 the same answer.
+
+The IPSC choice is the official IPSC target A zone, 15 by 32.5 cm, which replaces an outline GroupLab had drawn itself.
+
+### Point blank range
+
+The middle's third view, **Point blank**, answers one question: if I set my zero once, out to what distance can I hold dead on at
+the animal or target I am shooting at, and be sure of hitting? It uses the rifle, the load and the air already chosen. On the phone it
+is a fourth tab, **Point blank**, beside Dope, Trajectory and Hit chance.
+
+**What you give it:**
+- **Your mean radius**, in MOA, mil or inches at 100 yd. Type it, take it from the group open in the analysis, or, on the computer,
+  take it from a saved session. On the phone you type it or carry the group in. Use a group shot from the position you will shoot from:
+  a bench group is much tighter than one from sticks or a bipod, and a figure from the bench will promise more than the field gives.
+- **Certainty**, the percent of your shots that should land in the zone. It starts at 90, with presets of 90, 95 and 99, and takes
+  anything up to 99.9. 100 is refused, because no shot can be promised.
+- **What you are shooting at**, a list drawn to scale. Game gives the heart and lung zone, and where published sources disagree the
+  smaller figure is used: prairie dog, coyote, pronghorn, whitetail, mule deer, black bear, bighorn sheep, mountain goat, caribou, elk
+  and moose. Five animals have no published size we could find (wild hog, European wild boar, impala, red stag and kudu); their rows say
+  "Estimate, no published size found" and you can edit the size. Practical targets are the IPSC target A zone, the USPSA head A zone,
+  the IDPA body -0 circle and two steel silhouettes (the steel shapes are a vendor's). Or enter your own circle or rectangle.
+- **An energy floor**, a rule of thumb you can change or leave blank: 1000 ft lb for deer-sized game and 1500 for elk-sized.
+- The load's **Least expansion velocity**, a field on the load that comes from the bullet's maker. Blank says it is not entered.
+- **Crosswind**, 10 mph to start, and the **shot angle**.
+
+**Three ways to set the zero**, chosen by the switch at the top:
+- **Longest dead-on hold:** the zero that keeps the chosen share of shots in the zone out to the farthest distance.
+- **My most likely distance:** you say how far you expect to shoot. The group is centered on the zone there, and GroupLab shows the
+  dead-on band around that distance and the holds past it.
+- **A window of distances:** the zero with the best worst-case chance across the window. When even the best zero falls below your
+  certainty, it says so, for example "No single zero keeps 9 in 10 across" the window, and gives the best zero, its worst point and what
+  would help: a narrower window, a larger zone or a hold over.
+
+The rifle's present zero and the band it gives are always shown beside whichever you choose.
+
+**The answer** leads with the band in large figures, such as "Dead on 0 to 263 yd", and the sentence that says what certainty it holds.
+Under it:
+- how to set it, in words and clicks, such as "Zero 2.6 in high at 100 yd: 0.72 mil, 7 clicks up from your 100 yd zero";
+- what ends the band, named: the certainty, the energy floor or the least expansion velocity, whichever comes first;
+- the wind's drift at the far end, with a warning when it is more than half the width of the zone;
+- the rifle's present zero, and the classic figure for reference (the distances over which the path itself stays inside the zone,
+  which says nothing about where your shots land);
+- for hunting targets, a line to check your local law;
+- "Not counted: the wind (shown separately), a moving animal, and a misjudged distance."
+
+A picture of the path shows the zone, with the dead-on stretch shaded.
+
+**Print a card.** A 50 by 30 mm label with the rifle, the bullet, its velocity and ballistic coefficient, the dead-on distances, the zone
+and certainty, the zero at 100 yd with its clicks, and the date. On the computer it is saved as a 203 dpi picture and as a PDF, for the
+M220's app or any printer at 100 percent. On the phone it is shared, or printed straight to the M220 over Bluetooth when 50 by 30 mm
+labels are loaded.
+
+**Keep this zero on the rifle.** Sets the rifle's zero distance to where the chosen path crosses the line of sight again. The old zero is
+kept, and **Put back the 100 yd zero** restores it. Every ballistics figure then follows the new zero.
+
+**From the keyboard.** The three zero buttons and the list of targets are reached with Tab and chosen with Space or Enter. The
+certainty presets work the same way.
+
+**Where the sizes come from:**
+- americanhunter.org, 2017, the article on maximum point blank range;
+- Ron Spomer, understanding maximum point blank range;
+- randywakeman.com, maximum point blank range, with Chuck Hawks's table;
+- HuntWise, on bears;
+- Wikipedia, point-blank range;
+- IPSC rules, January 2024, appendix B2;
+- USPSA rules, appendix B1.
 
 ## 9. Keeping GroupLab up to date
 

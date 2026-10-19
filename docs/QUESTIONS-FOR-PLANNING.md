@@ -21,6 +21,22 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-19, question 102: the IPSC target's whole outline, or only its A zone
+
+**Status: open.** Entry 455 says: "Replace GroupLab's own IPSC outline in `HitTarget` (its comment says it is not official) with the
+real dimensions, so Hit probability uses them too." The entry gives only the A zone, 15 by 32.5 cm (IPSC rules January 2024, appendix
+B2), and a search found no trustworthy source for the rest of the outline (the C and D zones, the head, the overall size), only pages
+that do not cite the rulebook.
+
+**What was done meanwhile:** Hit probability's IPSC choice is now the official A zone, a 15 by 32.5 cm rectangle, and the invented
+outline is gone (`HitTarget.IpscAZone`, `HitProbabilityTests.TheIpscShapeIsTheOfficialAZone`). Nothing official was guessed.
+
+**The question:** should Hit probability offer the whole IPSC target (A, C and D zones, each its own chance) as well? If so, the
+appendix B2 dimensions of each zone, as the rulebook gives them, are what is needed. I would keep the A zone as the default either way,
+since it is what a practical shooter aims to hit.
+
+---
+
 ## 2026-10-15, question 100: the magenta is nearer the light theme's plum sheet and two bull marks than the test's 100
 
 **Status: open. Nothing waits on it; built with Alan's colors, #ff3df5 dark and #b0009f light, as entry 430 says.**

@@ -487,6 +487,7 @@ public sealed partial class MainWindow
                     BaseToOgiveInches = Number(Typed("baseToOgiveInches")),
                     MuzzleVelocityFps = Number(Typed("muzzleVelocityFps")),
                     MuzzleVelocitySdFps = Number(Typed("muzzleVelocitySdFps")),
+                    MinExpansionFps = Number(Typed("minExpansionFps")),
                     Notes = Blank(Typed("notes")),
                 });
                 break;

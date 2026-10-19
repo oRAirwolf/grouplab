@@ -53,6 +53,7 @@
     <Compile Include="..\..\src\GroupLab.App\FingerprintPicture.cs" Link="Shared\FingerprintPicture.cs" />
     <Compile Include="..\..\src\GroupLab.App\SheetGestures.cs" Link="Shared\SheetGestures.cs" />
     <Compile Include="..\..\src\GroupLab.App\BallisticMeasures.cs" Link="Shared\BallisticMeasures.cs" />
+    <Compile Include="..\..\src\GroupLab.App\PointBlankPieces.cs" Link="Shared\PointBlankPieces.cs" />
     <Compile Include="..\..\src\GroupLab.App\ConditionsWords.cs" Link="Shared\ConditionsWords.cs" />
     <Compile Include="..\..\src\GroupLab.App\CommandKey.cs" Link="Shared\CommandKey.cs" />
     <Compile Include="..\..\src\GroupLab.App\AppSettings.cs" Link="Shared\AppSettings.cs" />

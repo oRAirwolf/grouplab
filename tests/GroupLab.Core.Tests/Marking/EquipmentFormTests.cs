@@ -42,6 +42,7 @@ public class EquipmentFormTests
     {
         MuzzleVelocityFps = 2712,
         MuzzleVelocitySdFps = 8.4,
+        MinExpansionFps = 1800,
         MuzzleVelocitySdFrom = "24 readings, 20 September 2026",
         BallisticCoefficient = 0.326,
         DragModel = DragModel.G7,

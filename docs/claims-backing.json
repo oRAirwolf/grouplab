@@ -5,20 +5,64 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
-  "The manifest also names, for each platform, the newest build that has a file for it (entry 454), so a phone checking before the Android files arrive is offered the newest earlier build that has one.": {"kind": "code", "where": "UpdateManifest.OnPlatform in src/GroupLab.Core/Updates/UpdateManifest.cs, AndroidUpdates.Newest, scripts/nightly-manifest.sh; NewestForEachPlatformTests (entry 454)"},
-  "Since entry 450 the desktop builds do not wait for it: they are published as soon as they are packaged, and the `android-files` job adds the APKs, the AAB and the symbols to the same two releases when the Android build finishes, with the update manifest signed again so it lists the Android downloads.": {"kind": "decided", "where": "NOTES-FROM-PLANNING.md entry 450 section 2: the publish and android-files jobs in .github/workflows/nightly.yml, the manifest in scripts/nightly-manifest.sh (NightlyNeverWaitsTests)"},
-  "Every nightly build is published for Windows, Linux and macOS, and for Android as the APK and GroupLab Dev, whose files are added to the same release when the Android build finishes, so a slow phone build never holds back the desktop ones; what each one is, and what is and is not tested on real hardware, is in the platform statement above.": {"kind": "decided", "where": "NOTES-FROM-PLANNING.md entry 450 section 2: publish needs only the packages, and the android-files job adds the Android files to both releases in .github/workflows/nightly.yml (NightlyNeverWaitsTests); entry 275 for the platforms"},
-  "On Alan's own scan and Fold 7 photograph of one sheet it reads both (a test on the test-data release); whether that proves it is planning's call.": {"kind": "code", "where": "OutsideWorldTests.TheSupportButtonAsksForTheSupportPageAndOpensNothing and PhotoComparisonTests.OnAlansOwnScanAndPhotographItReadsBothGates; docs/PROOF-CHECKLIST.md rows 12 and 18 (entry 447 section 4.2)"},
-  "It is offered once after the first questions, and any time from Settings, **Guided demo**, **Walk me through a demo**, which also says **Carry on from step N of 13** when you left one part way.": {"kind": "code", "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"},
-  "It is offered once after the first questions, and any time from Settings, Guided demo , Walk me through a demo , which also says Carry on from step N of 13 when you left one part way.": {"kind": "code", "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"},
-  "Newest Coming in the next build Walk me through a demo A guided tour of thirteen steps on a sample sheet GroupLab makes itself, offered once after the first run&#x27;s questions and any time from Settings, that you can do yourself or let GroupLab do with Next, and that nothing you make in it is kept unless you choose.": {"kind": "code", "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"},
-  "On the tour · In the user guide Walk me through a demo A guided tour of thirteen steps on a sample sheet GroupLab makes itself, offered once after the first run&#x27;s questions and any time from Settings, that you can do yourself or let GroupLab do with Next, and that nothing you make in it is kept unless you choose.": {"kind": "code", "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"},
-  "What it is, in three sentences GroupLab measures how accurately a rifle shoots, from a photograph or a scan of a target you have shot.": {"kind": "decided", "where": "what GroupLab is, DESIGN.md section 1"},
-  "GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.": {"kind": "decided", "where": "what GroupLab is, DESIGN.md section 1"},
-  "A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.": {"kind": "decided", "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"},
-  "Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.": {"kind": "decided", "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"},
-  "What GroupLab can measure, and what the scale comes from .": {"kind": "decided", "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"},
-  "NOTES-FROM-PLANNING.md entries 152, 161 and 171.": {"kind": "decided", "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"},
+    "The third view, Point blank: how far you can hold dead on and still put your chosen share of shots in the zone, how to set the zero in clicks, and the present zero of your rifle beside it.": {"kind": "code", "where": "src/GroupLab.App/MainWindow.PointBlank.cs FillPointBlank; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport.Work (HowToSet, CurrentZero) (entry 455)"},
+    "Five animals have no published size we could find, and are labeled as estimates you can edit.": {"kind": "code", "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankTargets.All, the five PointBlankKind.Estimate rows; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs TheEstimatesSayTheyAreEstimatesAndEverySourcedRowNamesItsSource (entry 455)"},
+  "The manifest also names, for each platform, the newest build that has a file for it (entry 454), so a phone checking before the Android files arrive is offered the newest earlier build that has one.": {
+   "kind": "code",
+   "where": "UpdateManifest.OnPlatform in src/GroupLab.Core/Updates/UpdateManifest.cs, AndroidUpdates.Newest, scripts/nightly-manifest.sh; NewestForEachPlatformTests (entry 454)"
+  },
+  "Since entry 450 the desktop builds do not wait for it: they are published as soon as they are packaged, and the `android-files` job adds the APKs, the AAB and the symbols to the same two releases when the Android build finishes, with the update manifest signed again so it lists the Android downloads.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 450 section 2: the publish and android-files jobs in .github/workflows/nightly.yml, the manifest in scripts/nightly-manifest.sh (NightlyNeverWaitsTests)"
+  },
+  "Every nightly build is published for Windows, Linux and macOS, and for Android as the APK and GroupLab Dev, whose files are added to the same release when the Android build finishes, so a slow phone build never holds back the desktop ones; what each one is, and what is and is not tested on real hardware, is in the platform statement above.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 450 section 2: publish needs only the packages, and the android-files job adds the Android files to both releases in .github/workflows/nightly.yml (NightlyNeverWaitsTests); entry 275 for the platforms"
+  },
+  "On Alan's own scan and Fold 7 photograph of one sheet it reads both (a test on the test-data release); whether that proves it is planning's call.": {
+   "kind": "code",
+   "where": "OutsideWorldTests.TheSupportButtonAsksForTheSupportPageAndOpensNothing and PhotoComparisonTests.OnAlansOwnScanAndPhotographItReadsBothGates; docs/PROOF-CHECKLIST.md rows 12 and 18 (entry 447 section 4.2)"
+  },
+  "It is offered once after the first questions, and any time from Settings, **Guided demo**, **Walk me through a demo**, which also says **Carry on from step N of 13** when you left one part way.": {
+   "kind": "code",
+   "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"
+  },
+  "It is offered once after the first questions, and any time from Settings, Guided demo , Walk me through a demo , which also says Carry on from step N of 13 when you left one part way.": {
+   "kind": "code",
+   "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"
+  },
+  "Newest Coming in the next build Walk me through a demo A guided tour of thirteen steps on a sample sheet GroupLab makes itself, offered once after the first run&#x27;s questions and any time from Settings, that you can do yourself or let GroupLab do with Next, and that nothing you make in it is kept unless you choose.": {
+   "kind": "code",
+   "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"
+  },
+  "On the tour · In the user guide Walk me through a demo A guided tour of thirteen steps on a sample sheet GroupLab makes itself, offered once after the first run&#x27;s questions and any time from Settings, that you can do yourself or let GroupLab do with Next, and that nothing you make in it is kept unless you choose.": {
+   "kind": "code",
+   "where": "PhoneDemo.Steps and Shell.Back in mobile/GroupLab.Mobile; Entry446Tests"
+  },
+  "What it is, in three sentences GroupLab measures how accurately a rifle shoots, from a photograph or a scan of a target you have shot.": {
+   "kind": "decided",
+   "where": "what GroupLab is, DESIGN.md section 1"
+  },
+  "GroupLab measures how accurately a rifle shoots, and tells you how much its figures can be trusted.": {
+   "kind": "decided",
+   "where": "what GroupLab is, DESIGN.md section 1"
+  },
+  "A target GroupLab does not know yet, photographed blank and turned into a small fingerprint file in five steps, one question at a time, to send so a later GroupLab recognizes it.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "Say how far, the lowest magnification you shoot at, or a red dot&#x27;s size, and how many shots, and GroupLab draws a sheet whose bulls you can center on through that optic.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "What GroupLab can measure, and what the scale comes from .": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
+  "NOTES-FROM-PLANNING.md entries 152, 161 and 171.": {
+   "kind": "decided",
+   "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
+  },
   "&#8592; The map Apps GroupLab.Core Imaging · OpenCV Checks Online Deep dive · Imaging How GroupLab uses OpenCV OpenCV is a widely used open-source computer vision library.": {
    "kind": "decided",
    "where": "a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py"
@@ -1375,7 +1419,7 @@
    "kind": "code",
    "where": "AssignmentCertainty and ReviewQueue in src/GroupLab.Core/Marking"
   },
-   "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page.": {
+  "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) **Click a hole to edit it.** A small editor opens beside it, not a dialog over the page.": {
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
   },
@@ -7107,7 +7151,7 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/PrinterProfile.cs PrinterProfile, RulerSpan; AutomaticMarking.Run printer; MainWindow.Printer.cs; android PrinterCard.cs (entry 271)"
   },
-   "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) ### Click a hole to edit it A small editor opens beside it, not a dialog over the page.": {
+  "![The analysis, with every \"why\" open](figures/screens/current/analysis-open-light-1400x900.png) ### Click a hole to edit it A small editor opens beside it, not a dialog over the page.": {
    "kind": "code",
    "where": "the screens they describe, src/GroupLab.App; pictures rendered from the build each week"
   },
@@ -7370,6 +7414,210 @@
   "Each step outlines the real control and you can do it yourself or press **Next** and GroupLab does it.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo, OfferDemoIfDue, DemoSettingsRow, WriteDemoSheet), held by Entry439Tests: every step's control on its screen, nothing kept unless chosen, offered once (entry 439)"
+  },
+  "Newest Coming in the next build Point blank range, honestly A third Ballistics view tells you how far you can hold dead on at a chosen animal or target and still land 9 shots in 10 in its zone, from your own mean radius, and how to set the zero for it.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 455: the Point blank view, src/GroupLab.Core/Ballistics/PointBlank.cs"
+  },
+  "On the tour · In the user guide Point blank range, honestly A third Ballistics view tells you how far you can hold dead on at a chosen animal or target and still land 9 shots in 10 in its zone, from your own mean radius, and how to set the zero for it.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 455: the Point blank view, src/GroupLab.Core/Ballistics/PointBlank.cs"
+  },
+  "The IPSC choice is the official IPSC target A zone, 15 by 32.5 cm, which replaces an outline GroupLab had drawn itself.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "What you give it: Your mean radius , in MOA, mil or inches at 100 yd.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "It starts at 90, with presets of 90, 95 and 99, and takes anything up to 99.9.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "100 is refused, because no shot can be promised.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "Five animals have no published size we could find (wild hog, European wild boar, impala, red stag and kudu); their rows say \"Estimate, no published size found\" and you can edit the size.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "Practical targets are the IPSC target A zone, the USPSA head A zone, the IDPA body -0 circle and two steel silhouettes (the steel shapes are a vendor's).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "An energy floor , a rule of thumb you can change or leave blank: 1000 ft lb for deer-sized game and 1500 for elk-sized.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "Crosswind , 10 mph to start, and the shot angle .": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "When even the best zero falls below your certainty, it says so, for example \"No single zero keeps 9 in 10 across\" the window, and gives the best zero, its worst point and what would help: a narrower window, a larger zone or a hold over.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "The answer leads with the band in large figures, such as \"Dead on 0 to 263 yd\", and the sentence that says what certainty it holds.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "A 50 by 30 mm label with the rifle, the bullet, its velocity and ballistic coefficient, the dead-on distances, the zone and certainty, the zero at 100 yd with its clicks, and the date.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "On the computer it is saved as a 203 dpi picture and as a PDF, for the M220's app or any printer at 100 percent.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "On the phone it is shared, or printed straight to the M220 over Bluetooth when 50 by 30 mm labels are loaded.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "The old zero is kept, and Put back the 100 yd zero restores it.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "Where the sizes come from: americanhunter.org, 2017, the article on maximum point blank range; Ron Spomer, understanding maximum point blank range; randywakeman.com, maximum point blank range, with Chuck Hawks's table; HuntWise, on bears; Wikipedia, point-blank range; IPSC rules, January 2024, appendix B2; USPSA rules, appendix B1.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "Written 2026-10-19; the data is from Worked out 2026-10-19 by GroupLab&#x27;s own ballistic solver, for one load.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 455: the article's inputs, its sources and its limits; the zone sizes in src/GroupLab.Core/Ballistics/PointBlank.cs"
+  },
+  "What we found with the classic zero, 46 percent of shots land in the 8 inch circle at the path&#x27;s peak and 42 percent at its far end.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "Built on the shots instead, a 90 percent band is 0 to 263 yd from a 0.63 MOA mean radius, and 0 to 148 yd from 1.5 MOA.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "Pick the size of the vital zone, say an 8 inch circle for a deer.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 455: the article's inputs, its sources and its limits; the zone sizes in src/GroupLab.Core/Ballistics/PointBlank.cs"
+  },
+  "For the load used here (140 grain, 2710 ft/s, G7 0.326, sight 1.75 in), the classic answer is a zero that starts at once, peaks 4.0 in above the line of sight at 148 yd, crosses it again at 266 yd, and ends at 313 yd.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "At 100 yd the path is 3.4 in high.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "Put the same classic zero in front of a rifle with a 0.63 MOA mean radius, a good bench figure, and ask how many shots land inside the 8 inch circle: 46 percent at the path's peak, 148 yd; 42 percent at its far end, 313 yd; 98 percent at its far zero, 266 yd.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "The band you can promise Turn the question around.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 455: the article's inputs, its sources and its limits; the zone sizes in src/GroupLab.Core/Ballistics/PointBlank.cs"
+  },
+  "For the same load and the same 0.63 MOA mean radius: Certainty Dead on Height at 100 yd 90 percent 0 to 263 yd 2.6 in high 95 percent 0 to 251 yd 99 percent 0 to 228 yd 99.9 percent 0 to 201 yd Asking for more certainty costs distance, and it costs it fast.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "A rifle that is merely zeroed at 100 yd, a common choice, holds 90 percent only to 184 yd, where the classic rule would have said 207.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "GroupLab will not take 100 percent.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "Everything above used 0.63 MOA.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "The same load, the same zone and a 90 percent certainty give: Mean radius Dead on 0.5 MOA 0 to 275 yd 0.63 MOA 0 to 263 yd 1.0 MOA 0 to 221 yd 1.5 MOA 0 to 148 yd 2.0 MOA 0 to 111 yd A group from the bench is much tighter than one from sticks or a bipod.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "With a 1.5 MOA mean radius the classic zero puts 41 percent of shots in the circle at its peak and 27 percent at its far end.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "When you know how far Sometimes the distance is not a mystery: \"this is where I will shoot it from.\" If the likeliest shot is 200 yd, zero there.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "The group sits on the center of the zone at 200 yd, 99.9 percent of shots land in the circle at that distance, the zero is 1.8 in high at 100 yd, and the 90 percent band runs from 0 to 237 yd.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "Take shots anywhere from 150 to 300 yd.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "The best single zero for that window keeps only 59 percent of shots in the circle at its worst point, 300 yd, so no single zero keeps 9 in 10 across it.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "Narrow it to 150 to 250 yd and the best zero keeps 95.5 percent at its worst point, which is enough.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "Some places set a minimum for the cartridge or the bullet, and GroupLab does not know which.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 455: the article's inputs, its sources and its limits; the zone sizes in src/GroupLab.Core/Ballistics/PointBlank.cs"
+  },
+  "What this means If you have been told that a rifle is good \"out to 300 yd\" because the path stays in the vital zone, ask what your own group does there.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "Where the zone sizes come from Game sizes are the heart and lung zone, taking the smaller published figure where sources disagree: americanhunter.org (2017), Ron Spomer, Chuck Hawks's table on randywakeman.com, HuntWise for bears, and Wikipedia for the prairie dog.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 455: the article's inputs, its sources and its limits; the zone sizes in src/GroupLab.Core/Ballistics/PointBlank.cs"
+  },
+  "Five animals have no published size we could find, and are labelled as estimates you can edit.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 455: the article's inputs, its sources and its limits; the zone sizes in src/GroupLab.Core/Ballistics/PointBlank.cs"
+  },
+  "Sources americanhunter.org, 2017, the article on maximum point blank range.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 455: the article's inputs, its sources and its limits; the zone sizes in src/GroupLab.Core/Ballistics/PointBlank.cs"
+  },
+  "IPSC rules, January 2024, appendix B2.": {
+   "kind": "measured",
+   "where": "GroupLab's solver, worked out 2026-10-19 for the Test load (140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle); held by src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs"
+  },
+  "The third view of the middle: from your mean radius and a certainty, how far you can hold dead on at a chosen animal or target, how to set the zero for it in clicks, and a card to print.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "- On the computer and the phone, Ballistics has a Point blank view: how far you can hold dead on at a chosen animal or target and still land your chosen share of shots in its zone, from your own mean radius.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "**What you give it:** - **Your mean radius**, in MOA, mil or inches at 100 yd.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "- **An energy floor**, a rule of thumb you can change or leave blank: 1000 ft lb for deer-sized game and 1500 for elk-sized.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "- **Crosswind**, 10 mph to start, and the **shot angle**.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "**The answer** leads with the band in large figures, such as \"Dead on 0 to 263 yd\", and the sentence that says what certainty it holds.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "**Print a card.** A 50 by 30 mm label with the rifle, the bullet, its velocity and ballistic coefficient, the dead-on distances, the zone and certainty, the zero at 100 yd with its clicks, and the date.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "The old zero is kept, and **Put back the 100 yd zero** restores it.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
+  },
+  "**Where the sizes come from:** - americanhunter.org, 2017, the article on maximum point blank range; - Ron Spomer, understanding maximum point blank range; - randywakeman.com, maximum point blank range, with Chuck Hawks's table; - HuntWise, on bears; - Wikipedia, point-blank range; - IPSC rules, January 2024, appendix B2; - USPSA rules, appendix B1.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs PointBlankModel; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport; tests/GroupLab.Core.Tests/Ballistics/PointBlankTests.cs (entry 455); the view in src/GroupLab.App/MainWindow.PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs"
   }
  },
  "rules": [

@@ -106,6 +106,7 @@ public sealed partial class MainWindow
             SettingRow(FieldLabel("Bullet weight, gr"), bulletWeight),
             SettingRow(Measured("Length", BallisticMeasure.SmallLength), bulletLength),
             SettingRow(Measured("Diameter", BallisticMeasure.SmallLength), bulletDiameter),
+            SettingRow(Measured("Least expansion velocity", BallisticMeasure.Speed), leastExpansion),
             Row(Button("Keep these on the records", KeepBallistics))));
         sharedLeft.Children.Add(Section("air", "The air", false, AirSummary,
             SettingRow(Measured("Temperature", BallisticMeasure.Temperature), airTemperature),
@@ -143,8 +144,11 @@ public sealed partial class MainWindow
         // Entry 156: the chance of a hit, the other view, with its own settings on the left and its answer in the middle.
         BuildHit(hitLeft, hitMiddle);
 
-        var left = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, 0, Tokens.Space12, 0), Children = { sharedLeft, trajectoryLeft, hitLeft } };
-        var middle = new StackPanel { Spacing = Tokens.Space12, Children = { ViewSwitch(), trajectoryMiddle, hitMiddle } };
+        // Entry 455: point blank range, the third view.
+        BuildPointBlank(pointLeft, pointMiddle);
+
+        var left = new StackPanel { Spacing = Tokens.Space12, Margin = new Thickness(0, 0, Tokens.Space12, 0), Children = { sharedLeft, trajectoryLeft, hitLeft, pointLeft } };
+        var middle = new StackPanel { Spacing = Tokens.Space12, Children = { ViewSwitch(), trajectoryMiddle, hitMiddle, pointMiddle } };
         ballisticLeftPane = new Border { Child = new ScrollViewer { Content = left }, Padding = new Thickness(Tokens.Space16, Tokens.Space12), Classes = { AppStyles.Side } };
         ballisticMiddlePane = new ScrollViewer { Content = new StackPanel { Margin = new Thickness(Tokens.Space20, Tokens.Space12), Spacing = Tokens.Space12, Children = { middle } } };
         ballisticRightPane = new Border { Child = AtOneRange(), Padding = new Thickness(Tokens.Space16, Tokens.Space12), Classes = { AppStyles.Side } };
@@ -195,7 +199,8 @@ public sealed partial class MainWindow
             box.TextChanged += (_, _) => ballisticSections.ForEach(s => s.Refresh());
         }
 
-        ShowBallisticView(settingsStore.LoadWhyOpen("ballistics.view.hit") ? BallisticView.Hit : BallisticView.Trajectory);
+        ShowBallisticView(settingsStore.LoadWhyOpen("ballistics.view.point") ? BallisticView.PointBlank
+            : settingsStore.LoadWhyOpen("ballistics.view.hit") ? BallisticView.Hit : BallisticView.Trajectory);
         var screen = new DockPanel { IsVisible = false };
         var top = BallisticBar(toggle);
         DockPanel.SetDock(top, Dock.Top);
@@ -322,6 +327,7 @@ public sealed partial class MainWindow
         bulletWeight.Text = Text(load?.BulletWeightGrains);
         bulletLength.Text = BallisticMeasures.Text(load?.BulletLengthInches, BallisticMeasure.SmallLength, units);
         bulletDiameter.Text = BallisticMeasures.Text(load?.BulletDiameterInches, BallisticMeasure.SmallLength, units);
+        leastExpansion.Text = BallisticMeasures.Text(load?.MinExpansionFps, BallisticMeasure.Speed, units);
         FillDope();
         ShowHitPrecision();
     }
@@ -360,6 +366,7 @@ public sealed partial class MainWindow
                 BulletWeightGrains = Number(bulletWeight),
                 BulletLengthInches = Imperial(bulletLength, BallisticMeasure.SmallLength),
                 BulletDiameterInches = Imperial(bulletDiameter, BallisticMeasure.SmallLength),
+                MinExpansionFps = Imperial(leastExpansion, BallisticMeasure.Speed),
             });
         }
 

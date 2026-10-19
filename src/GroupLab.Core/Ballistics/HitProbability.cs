@@ -14,16 +14,18 @@ public enum HitShape
 
 /// <summary>
 /// A target centered on the aim, in inches: across positive to the right, up positive. A circle's size is its diameter in
-/// <see cref="WidthInches"/>. The IPSC shape is GroupLab's own outline drawn from the width and height given, not an official one: a body
-/// four fifths of the height with its corners cut by a sixth of the width, a head a third of the width on top, and the aim at the body's
-/// center.
+/// <see cref="WidthInches"/>. The IPSC shape is the IPSC target's A zone at its official size, 15 by 32.5 cm (IPSC rules January 2024,
+/// appendix B2), NOTES-FROM-PLANNING.md entry 455; it replaced an outline GroupLab had drawn itself, which was never an official one.
 /// </summary>
 public sealed record HitTarget(HitShape Shape, double WidthInches, double HeightInches)
 {
-    /// <summary>The share of an IPSC outline's height that is its body; the rest is the head.</summary>
-    public const double IpscBodyShare = 0.8;
+    /// <summary>The IPSC target's A zone, width and height in inches.</summary>
+    public const double IpscWidthInches = 15 / 2.54, IpscHeightInches = 32.5 / 2.54;
 
     public static HitTarget Circle(double diameterInches) => new(HitShape.Circle, diameterInches, diameterInches);
+
+    /// <summary>The IPSC target's A zone at its official size.</summary>
+    public static HitTarget IpscAZone { get; } = new(HitShape.Ipsc, IpscWidthInches, IpscHeightInches);
 
     /// <summary>True where a shot at (<paramref name="across"/>, <paramref name="up"/>) from the aim is on the target.</summary>
     public bool Contains(double across, double up)
@@ -34,22 +36,8 @@ public sealed record HitTarget(HitShape Shape, double WidthInches, double Height
             case HitShape.Circle:
                 double r = WidthInches / 2;
                 return (across * across) + (up * up) <= r * r;
-            case HitShape.Rectangle:
-                return x <= WidthInches / 2 && Math.Abs(up) <= HeightInches / 2;
             default:
-                double half = WidthInches / 2, body = HeightInches * IpscBodyShare / 2, cut = WidthInches / 6;
-                if (up > body)
-                {
-                    return up <= body + (HeightInches * (1 - IpscBodyShare)) && x <= WidthInches / 6;
-                }
-
-                double y = Math.Abs(up);
-                if (x > half || y > body)
-                {
-                    return false;
-                }
-
-                return x <= half - cut || y <= body - cut || (x - (half - cut)) + (y - (body - cut)) <= cut;
+                return x <= WidthInches / 2 && Math.Abs(up) <= HeightInches / 2;
         }
     }
 }

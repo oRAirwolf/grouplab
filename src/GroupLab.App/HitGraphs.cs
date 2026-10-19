@@ -69,25 +69,9 @@ internal sealed class HitScatter : Control
             case HitShape.Circle:
                 context.DrawEllipse(null, outline, centre, target.WidthInches / 2 * scale, target.WidthInches / 2 * scale);
                 break;
-            case HitShape.Rectangle:
-                context.DrawRectangle(null, outline, new Rect(At(-target.WidthInches / 2, target.HeightInches / 2), At(target.WidthInches / 2, -target.HeightInches / 2)));
-                break;
             default:
-                double w = target.WidthInches / 2, body = target.HeightInches * HitTarget.IpscBodyShare / 2, cut = target.WidthInches / 6, head = target.WidthInches / 6;
-                double top = body + (target.HeightInches * (1 - HitTarget.IpscBodyShare));
-                var shape = new StreamGeometry();
-                using (var draw = shape.Open())
-                {
-                    draw.BeginFigure(At(-w + cut, -body), false);
-                    foreach (var (x, y) in new[] { (w - cut, -body), (w, -body + cut), (w, body - cut), (w - cut, body), (head, body), (head, top), (-head, top), (-head, body), (-w + cut, body), (-w, body - cut), (-w, -body + cut) })
-                    {
-                        draw.LineTo(At(x, y));
-                    }
-
-                    draw.EndFigure(true);
-                }
-
-                context.DrawGeometry(null, outline, shape);
+                // Entry 455: a rectangle, and the IPSC target's A zone, which is one.
+                context.DrawRectangle(null, outline, new Rect(At(-target.WidthInches / 2, target.HeightInches / 2), At(target.WidthInches / 2, -target.HeightInches / 2)));
                 break;
         }
 

@@ -23,6 +23,9 @@ internal enum BallisticMeasure
 
     /// <summary>A wind speed. Miles an hour, or kilometres an hour.</summary>
     WindSpeed,
+
+    /// <summary>A bullet's energy, entry 455's floor. Foot pounds, or joules.</summary>
+    Energy,
 }
 
 /// <summary>
@@ -61,6 +64,8 @@ internal static class BallisticMeasures
         (BallisticMeasure.Altitude, false) => "ft",
         (BallisticMeasure.Altitude, true) => "m",
         (BallisticMeasure.WindSpeed, false) => "mph",
+        (BallisticMeasure.Energy, false) => "ft lb",
+        (BallisticMeasure.Energy, true) => "J",
         _ => "km/h",
     };
 
@@ -73,6 +78,7 @@ internal static class BallisticMeasures
         (BallisticMeasure.Temperature, _) => (shown * 9 / 5) + 32,
         (BallisticMeasure.Pressure, _) => shown / 33.863886666667,
         (BallisticMeasure.Altitude, _) => shown / 0.3048,
+        (BallisticMeasure.Energy, _) => shown / 1.3558179483,
         _ => shown / 1.609344,
     };
 
@@ -85,6 +91,7 @@ internal static class BallisticMeasures
         (BallisticMeasure.Temperature, _) => (imperial - 32) * 5 / 9,
         (BallisticMeasure.Pressure, _) => imperial * 33.863886666667,
         (BallisticMeasure.Altitude, _) => imperial * 0.3048,
+        (BallisticMeasure.Energy, _) => imperial * 1.3558179483,
         _ => imperial * 1.609344,
     };
 
@@ -93,6 +100,6 @@ internal static class BallisticMeasures
     /// keep the value, so a sight height of 1.5 in reads 38.1 mm rather than 38 mm, and a velocity reads whole.
     /// </summary>
     public static string Text(double? imperial, BallisticMeasure measure, UnitSettings units) => imperial is { } value
-        ? FromImperial(value, measure, units).ToString(measure is BallisticMeasure.Speed or BallisticMeasure.Altitude ? "0.###" : "0.####", CultureInfo.InvariantCulture)
+        ? FromImperial(value, measure, units).ToString(measure is BallisticMeasure.Energy ? "0" : measure is BallisticMeasure.Speed or BallisticMeasure.Altitude ? "0.###" : "0.####", CultureInfo.InvariantCulture)
         : "";
 }

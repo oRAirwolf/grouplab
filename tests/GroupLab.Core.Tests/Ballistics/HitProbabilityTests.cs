@@ -220,18 +220,17 @@ public class HitProbabilityTests
         Assert.Equal(("7.3", "6.9", "7.8"), HitProbability.Percents(new HitChance(0.0734, 0.0699, 0.0771, 0.001, 0.005)));
     }
 
-    /// <summary>The IPSC outline: the body with its corners cut, the head above it, and nothing beside the head.</summary>
+    /// <summary>Entry 455: the IPSC target's A zone at the rules' own size, 15 by 32.5 cm, replacing GroupLab's own outline.</summary>
     [Fact]
-    public void TheIpscOutlineIsABodyAndAHead()
+    public void TheIpscShapeIsTheOfficialAZone()
     {
-        var ipsc = new HitTarget(HitShape.Ipsc, 18, 30);
+        var ipsc = HitTarget.IpscAZone;
+        Assert.Equal(15, ipsc.WidthInches * 2.54, 9);
+        Assert.Equal(32.5, ipsc.HeightInches * 2.54, 9);
         Assert.True(ipsc.Contains(0, 0));
-        Assert.True(ipsc.Contains(8.9, 0));
-        Assert.False(ipsc.Contains(8.9, 11.9), "the body's corner is cut");
-        Assert.True(ipsc.Contains(0, 14));
-        Assert.False(ipsc.Contains(6, 14), "nothing beside the head");
-        Assert.False(ipsc.Contains(0, 18.1));
-        Assert.False(ipsc.Contains(0, -12.1));
+        Assert.True(ipsc.Contains(2.9, 6.3));
+        Assert.False(ipsc.Contains(3.0, 0));
+        Assert.False(ipsc.Contains(0, 6.5));
     }
 
     /// <summary>Section 3 item 4: the curve falls with distance and its band holds it.</summary>

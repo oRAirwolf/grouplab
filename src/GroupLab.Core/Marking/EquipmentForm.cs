@@ -105,6 +105,9 @@ public static class EquipmentForm
         new("baseToOgiveInches", "Base to ogive", FieldKind.Number, "in"),
         new("muzzleVelocityFps", "Velocity", FieldKind.Number, "fps"),
         new("muzzleVelocitySdFps", "Velocity SD", FieldKind.Number, "fps"),
+
+        // Entry 455: from the bullet's maker; the point blank view ends its distances where the bullet falls below it.
+        new("minExpansionFps", "Least expansion velocity", FieldKind.Number, "fps"),
         new("components", "Components", FieldKind.Lines),
         new("notes", "Notes", FieldKind.Lines),
     ];
@@ -230,6 +233,7 @@ public static class EquipmentForm
             "baseToOgiveInches" => Text(load.BaseToOgiveInches),
             "muzzleVelocityFps" => Text(load.MuzzleVelocityFps),
             "muzzleVelocitySdFps" => Text(load.MuzzleVelocitySdFps),
+            "minExpansionFps" => Text(load.MinExpansionFps),
             "components" => Text(load.Components),
             "notes" => Text(load.Notes),
             _ => null,

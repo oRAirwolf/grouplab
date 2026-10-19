@@ -32,6 +32,7 @@ Store listing uses 1920x1080.
 | `keyboard` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests synthetic sheet, a row of the shot table chosen with Space |
 | `ballistics` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /guides/user-guide/, /tour/, /tour/ballistics/, docs/USER-GUIDE.md, docs/store/LISTING.md | Entry109Tests synthetic sheet |
 | `ballistics-hit` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/ballistics/ | Entry109Tests synthetic sheet |
+| `ballistics-point` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/ballistics/ | Entry109Tests synthetic sheet, the Test load, a whitetail at 9 in 10 from a 0.63 MOA mean radius (entry 455) |
 | `compare` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/compare/, README.md, docs/USER-GUIDE.md, docs/store/LISTING.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |
 | `equipment` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/, /tour/equipment/ | no sheet at all: a rifle's page with its two barrels, the one on now chosen (entry 407 section 5) |
 | `bull-lines` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests synthetic sheet: bull 1 chosen and given bull 2's hole, zoomed in, the panel's block with its banner (entry 407 section 1) |

@@ -25,6 +25,108 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 455: maximum point blank range, a third view in Ballistics
+
+**Status: actioned 2026-10-19; every section done. The proof on Alan's M220 is request 104; the IPSC outline beyond its A zone is question 102.**
+
+From the planning session, 2026-10-19 09:20 UTC. Take it after entries 447, 452 and 453. Nothing here
+needs Alan until the proof at the end. Desktop and phones (phone parity).
+
+Alan, 2026-10-19 02:46 to 03:12 Denver, asked for a maximum point blank range (MPBR) calculator: choose the platform, ammunition,
+velocity and BC, then the intended target, with vital zones for popular game and man-sized practical targets. Decisions after the
+canvas (claude.ai/artifact/33wFYZ3VdsWXmMgrmF5DCm, boards Main, Target, Phone, PhoneTarget, Card, Likely):
+
+- "It should be a third view in ballistics": Trajectory, Hit probability, **Point blank**. It uses the rifle, load and air already there.
+- Certainty is an input: "9 in 10 should be the default, but if somebody wants to be close to 100% certain, they should have the option."
+- Precision is the shooter's **mean radius**, "clearly labelled as such".
+- Animals without a published size: "Give the option for estimates or to enter your own."
+- Yes to the printed card and to keeping the result on the rifle as its zero.
+- New mode: "this is the most likely distance I will be shooting x animal at, so here is what I should set my scope to".
+
+## The model (the planning session checked its numbers with its own point-mass G7 solve; it matched the Test load's table to 0.04 in)
+
+1. The zone is a circle (diameter) or a rectangle (width by height), centered on the aim.
+2. **Classic MPBR** (shown for reference): the path stays within half the zone's height above and below the line of sight; the zero puts
+   the peak at the top of the zone. Report near zero, far zero, peak height and its range, the start (not the muzzle when the sight
+   height is more than half the zone: prairie dog starts at about 16 yd with the Test load) and the end.
+3. **The headline is the certainty band**: the distances over which at least the chosen share of shots lands inside the zone, from the
+   shooter's mean radius (converted to a per-axis sigma, MR = sigma times the square root of pi/2), grown with range, plus the load's
+   velocity SD carried through the solver, aimed at the zone's center. Reuse `HitProbability` where it fits; a closed form (circle:
+   integrate the normal over the circle; rectangle: product of two normal intervals) is fine for speed. Default certainty 90 %, the input
+   takes any value up to 99.9 %, with presets 90, 95 and 99; 100 % is refused with a sentence saying no shot can be promised.
+4. **Three ways to set the zero**, a switch at the top of the view: (a) the longest dead-on hold at the chosen certainty; (b) "My most
+   likely distance": the group centered on the zone at that distance (zero at that distance), then the dead-on band around it and the
+   holdover past it; (c) "A window of distances": the zero that gives the best worst-case chance across the window, and when even that
+   is below the chosen certainty, say so plainly ("No single zero keeps 9 in 10 across it") with the best zero, its worst point, and
+   what would help (narrow the window, a larger zone, hold over). A fourth reading is always shown beside them: **the rifle's current
+   zero** and the band it gives.
+5. **What ends it**, whichever comes first, each named: the certainty band; an energy floor (a field, preset per animal from the rules of
+   thumb, 1000 ft lb deer sized and 1500 elk sized, labelled as rules of thumb, editable, blank allowed); the bullet's minimum expansion
+   velocity (a field on the load, per bullet, from the maker; blank says "not entered, the bullet's maker publishes one").
+6. **How to set it**, in words and clicks: "Zero 2.6 in high at 100 yd: 0.7 mil, 7 clicks up from your 100 yd zero", using the rifle's
+   click unit and value, and the distance the rifle is currently zeroed at.
+7. Wind is not part of point blank range: show the drift at the band's end for a crosswind field (default 10 mph full value), and say
+   when it is more than half the zone's width.
+8. Shot angle and the air come from the view's existing air section. Units follow Imperial and Metric, and every number keeps
+   tap-to-switch.
+
+## The inputs
+
+- **Mean radius**, labelled exactly "Your mean radius" with its unit (MOA, mil, or inches at 100 yd), and where it comes from: typed,
+  or the group open in the analysis, or a session picked from Sessions. Under it, one sentence: it should be from the position you
+  will shoot from; a bench group is much tighter than sticks or a bipod. Never per-axis SD in the interface.
+- **Certainty**, percent, default 90, presets 90, 95, 99, typed up to 99.9.
+- **What you are shooting at**: the presets below, an estimate where no published size exists, or your own circle or rectangle.
+
+## The targets (sizes from the research in planning; the row shows the source and, where sources disagree, the range)
+
+Heart and lung zone, the smaller published figure used:
+prairie dog 2 in (Wikipedia, point-blank range); coyote 4 in (Ron Spomer); pronghorn 8.5 in (Chuck Hawks, 8.5 to 9); whitetail deer
+8 in (American Hunter, 6 to 12 published); mule deer 8 in (Spomer, 10 at most); black bear 8 in (HuntWise, 8 to 10); bighorn sheep 12 in
+(Hawks, 12 to 13); mountain goat 13 in (Hawks, 13 to 14.5); caribou 14.5 in (Hawks, 14.5 to 15.5); elk 14.5 in (Hawks 14.5 to 15.5,
+American Hunter 15); moose 18 in (Hawks 18 to 21.5, American Hunter 24).
+**Estimates**, each labelled "Estimate, no published size found" and editable: wild hog, red stag, European wild boar, impala, kudu.
+Choose a conservative figure from body size and say in the row how it was chosen; never present it as sourced.
+Practical targets: IPSC target A zone 15 x 32.5 cm (IPSC rules Jan 2024, appendix B2); USPSA target head A zone 10 x 5 cm (USPSA
+appendix B1); IDPA body -0, 8 in circle; steel silhouettes full 18 x 30 in and 2/3 12 x 20 in (vendor shapes, said so). Each shape drawn
+to scale in the list. **Replace GroupLab's own IPSC outline in `HitTarget`** (its comment says it is not official) with the real
+dimensions, so Hit probability uses them too.
+Sources the planning session used (put them in the guide and the research article, not in the app): americanhunter.org 2017/7/17
+MPBR article; ronspomeroutdoors.com understanding MPBR; randywakeman.com MPBR (Chuck Hawks table); huntwise.com bear; Wikipedia
+point-blank range; ipsc.org rules Jan 2024; rules.uspsa.org appendix B1.
+
+## The two extras Alan said yes to
+
+1. **Print a card**: a 50 x 30 mm label for the M220 (and the same content on the other label and sheet printers): rifle, bullet,
+   velocity, BC, "DEAD ON 0 to 262 yd", zone and certainty, and the zero offset at 100 yd with clicks (canvas board Card).
+2. **Keep it on the rifle**: saves the chosen zero onto the rifle record (the zero distance, or the offset at the current zero distance,
+   whichever the record holds), with the previous zero kept in the rifle's history and one tap to undo. Every other ballistics figure
+   for that rifle then follows the new zero.
+
+## Notes and limits shown in the view
+
+- A "check your local law" line where hunting presets are chosen, never a legal verdict (examples the planning session verified:
+  Germany BJagdG section 19, England and Wales Deer Act 1991 schedule 2, Washington WAC 220-414-020).
+- What it does not cover, in one line: wind (shown separately), a moving animal, a misjudged range.
+
+## Also
+
+- The phone does all of it (boards Phone and PhoneTarget).
+- A research article, "Point blank range, honestly", using the Test load's numbers: the classic band puts half the shots outside at
+  its top and far end; the certainty band; the effect of mean radius from a field position; the window case.
+- User guide, Features page, README and the tour in the same change (entry 267). A short "From the keyboard" note for the new view.
+- Tests: the classic MPBR against a published example (JBM's archived example or the planning numbers below), the certainty band
+  monotone in certainty and mean radius, the window refusal, the sight-height start, rectangle zones, and the card's layout.
+
+## Planning's reference numbers (Test load: 140 gr, 2710 ft/s, SD 10, G7 0.326, sight 1.75 in, ICAO, 8 in circle)
+
+Classic: start 0, near zero 26 yd, peak +4.0 in at 148 yd, far zero 266 yd, end 312 yd, +3.38 in at 100 yd (0.94 mil).
+100 yd zero: 0 to 208 yd. Mean radius 0.63 MOA: 90 % 0 to 262 yd (+2.6 in at 100, 0.72 mil); 95 % 0 to 252; 99 % 0 to 228; 99.9 % 0 to
+200. Most likely distance 200 yd: +1.77 in at 100 (0.49 mil), 99.9 % at 200, 90 % band 0 to 236. Window 150 to 300 yd: best worst case
+56 %. Expect small differences from GroupLab's solver; anything over a few yards is worth a look.
+
+---
+
 ## 2026-10-19, entry 453: a drawn thumbnail for every research article that has no chart
 
 **Status: actioned 2026-10-19; every section done.**

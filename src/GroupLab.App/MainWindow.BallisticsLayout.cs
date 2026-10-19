@@ -17,11 +17,12 @@ namespace GroupLab.App;
 /// </summary>
 public partial class MainWindow
 {
-    /// <summary>Which of the two things the middle shows: the trajectory, or the chance of a hit.</summary>
+    /// <summary>Which of the three things the middle shows: the trajectory, the chance of a hit, or the point blank range (entry 455).</summary>
     internal enum BallisticView
     {
         Trajectory,
         Hit,
+        PointBlank,
     }
 
     private BallisticView ballisticView = BallisticView.Trajectory;
@@ -31,6 +32,8 @@ public partial class MainWindow
     private readonly StackPanel hitLeft = new() { Spacing = Tokens.Space12, IsVisible = false };
     private readonly StackPanel trajectoryMiddle = new() { Spacing = Tokens.Space12 };
     private readonly StackPanel hitMiddle = new() { Spacing = Tokens.Space8, IsVisible = false };
+    private readonly StackPanel pointLeft = new() { Spacing = Tokens.Space12, IsVisible = false };
+    private readonly StackPanel pointMiddle = new() { Spacing = Tokens.Space8, IsVisible = false };
     private readonly TextBox atRange = new() { Width = 80, Text = "300", HorizontalContentAlignment = HorizontalAlignment.Right };
     private readonly StackPanel atRangeLines = new() { Spacing = 0 };
     private readonly TextBlock atRangeUnit = new() { VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Label } };
@@ -244,23 +247,27 @@ public partial class MainWindow
 
         ballisticPrimary.Click += (_, _) =>
         {
-            if (ballisticView == BallisticView.Trajectory)
+            switch (ballisticView)
             {
-                FillDope();
-            }
-            else
-            {
-                FillHit();
+                case BallisticView.Trajectory:
+                    FillDope();
+                    break;
+                case BallisticView.Hit:
+                    FillHit();
+                    break;
+                default:
+                    FillPointBlank();
+                    break;
             }
         };
         return new Border { Child = bar, Padding = new Thickness(Tokens.Space16, Tokens.Space8), Classes = { AppStyles.Bar } };
     }
 
-    /// <summary>The Trajectory and Hit probability switch at the top of the middle.</summary>
+    /// <summary>The Trajectory, Hit probability and Point blank switch at the top of the middle.</summary>
     private Control ViewSwitch()
     {
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 0 };
-        foreach (var (view, words) in new[] { (BallisticView.Trajectory, "Trajectory"), (BallisticView.Hit, "Hit probability") })
+        foreach (var (view, words) in new[] { (BallisticView.Trajectory, "Trajectory"), (BallisticView.Hit, "Hit probability"), (BallisticView.PointBlank, "Point blank") })
         {
             var button = new Button { Content = words, Name = "BallisticView" + view };
             button.Click += (_, _) => ShowBallisticView(view);
@@ -277,7 +284,8 @@ public partial class MainWindow
         ballisticView = view;
         bool trajectoryShown = view == BallisticView.Trajectory;
         trajectoryLeft.IsVisible = trajectoryMiddle.IsVisible = trajectoryShown;
-        hitLeft.IsVisible = hitMiddle.IsVisible = !trajectoryShown;
+        hitLeft.IsVisible = hitMiddle.IsVisible = view == BallisticView.Hit;
+        pointLeft.IsVisible = pointMiddle.IsVisible = view == BallisticView.PointBlank;
 
         // The addition's item 1: in the hit view the rifle, the load and the air fold to their one-line summaries, and back in the trajectory
         // view they open as the shooter last left them.
@@ -286,13 +294,19 @@ public partial class MainWindow
             section.Fold(!trajectoryShown);
         }
 
-        ballisticPrimary.Content = trajectoryShown ? "Work out the table" : "Work out the chance";
+        ballisticPrimary.Content = view switch
+        {
+            BallisticView.Trajectory => "Work out the table",
+            BallisticView.Hit => "Work out the chance",
+            _ => "Work out the point blank range",
+        };
         foreach (var (each, button) in viewButtons)
         {
             button.Classes.Set(AppStyles.Chosen, each == view);
         }
 
-        settingsStore.SaveWhyOpen("ballistics.view.hit", !trajectoryShown);
+        settingsStore.SaveWhyOpen("ballistics.view.hit", view == BallisticView.Hit);
+        settingsStore.SaveWhyOpen("ballistics.view.point", view == BallisticView.PointBlank);
     }
 
     internal BallisticView BallisticViewShown => ballisticView;

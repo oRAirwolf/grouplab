@@ -9,6 +9,7 @@ using GroupLab.App.Theme;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Ballistics;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Printing.Thermal;
 using GroupLab.Core.Records;
 using GroupLab.Core.Statistics;
 
@@ -43,6 +44,20 @@ internal sealed class BallisticsPage : UserControl
     private readonly TextBox wind = Screens.Numeric(Field("10"));
     private readonly TextBox otherSize = Screens.Numeric(Field(""));
     private string target = "10 in plate";
+
+    // Entry 455: the point blank tab's inputs, kept between builds as the other tabs' are.
+    private readonly TextBox pointRadius = Screens.Numeric(Field("0.75"));
+    private readonly TextBox pointCertainty = Screens.Numeric(Field("90"));
+    private readonly TextBox pointWidth = Screens.Numeric(Field("8"));
+    private readonly TextBox pointHeight = Screens.Numeric(Field("8"));
+    private readonly TextBox pointEnergy = Screens.Numeric(Field("1000"));
+    private readonly TextBox pointLikely = Screens.Numeric(Field("200"));
+    private readonly TextBox pointFrom = Screens.Numeric(Field("150"));
+    private readonly TextBox pointTo = Screens.Numeric(Field("300"));
+    private readonly ComboBox pointTarget = new() { MinHeight = Screens.Touch, HorizontalAlignment = HorizontalAlignment.Stretch };
+    private int pointUnit;
+    private bool pointFromGroup;
+    private PointBlankMode pointMode = PointBlankMode.Longest;
     private int preset = 1;
 
     /// <summary>
@@ -116,7 +131,7 @@ internal sealed class BallisticsPage : UserControl
         form.Content = open switch { "rifle" => RifleForm(), "load" => LoadForm(), "air" => AirForm(), _ => null };
         column.Children.Add(form);
         var tabs = new WrapPanel().Id("ballistics-tabs");
-        foreach (string name in new[] { "Dope", "Trajectory", "Hit chance" })
+        foreach (string name in new[] { "Dope", "Trajectory", "Hit chance", "Point blank" })
         {
             tabs.Children.Add(Chip(name, tab == name, () =>
             {
@@ -139,6 +154,7 @@ internal sealed class BallisticsPage : UserControl
         {
             "Trajectory" => Trajectory(input),
             "Hit chance" => Hit(input),
+            "Point blank" => PointBlank(input),
             _ => Dope(input),
         };
     }
@@ -358,6 +374,221 @@ internal sealed class BallisticsPage : UserControl
         }), TaskScheduler.Default);
     }
 
+    /// <summary>
+    /// Entry 455: point blank range on the phone, the computer's view in one column: your mean radius (typed, or the carried group's), the
+    /// certainty, what you are shooting at drawn to scale, how the zero is chosen, then the answer in Core's words, the picture, a card to
+    /// share or print on the M220, and the zero kept on the rifle with one tap to put it back.
+    /// </summary>
+    private Control PointBlank(BallisticInput input)
+    {
+        var panel = new StackPanel { Spacing = 10 };
+        if (pointTarget.ItemsSource is null)
+        {
+            pointTarget.ItemTemplate = PointBlankPieces.Template;
+            pointTarget.ItemsSource = PointBlankPieces.Choices;
+            pointTarget.SelectedIndex = PointBlankTargets.All.ToList().FindIndex(t => t.Name == "Whitetail deer");
+            pointTarget.SelectionChanged += (_, _) => ShowPointTarget(rebuild: true);
+            ShowPointTarget(rebuild: false);
+        }
+
+        var group = carried is { } state ? HitFromGroup.Of(state).Group : null;
+        var from = new WrapPanel { Children = { Chip("Typed", !pointFromGroup, () => { pointFromGroup = false; Build(); }) } };
+        if (group is not null)
+        {
+            from.Children.Add(Chip("The carried group", pointFromGroup, () => { pointFromGroup = true; Build(); }));
+        }
+
+        if (pointFromGroup && group is not null)
+        {
+            double moa = group.Precision.SigmaMrad * Math.Sqrt(Math.PI / 2) / BallisticSolver.MilPerMoa;
+            pointRadius.Text = (pointUnit switch { 1 => moa * BallisticSolver.MilPerMoa, 2 => moa * PointBlankModel.InchesPerMoaPerYard * 100, _ => moa }).ToString("0.00", CultureInfo.InvariantCulture);
+        }
+
+        var unitsRow = new WrapPanel();
+        foreach (var (i, words) in new[] { (0, "MOA"), (1, "mil"), (2, "in at 100 yd") })
+        {
+            unitsRow.Children.Add(Chip(words, pointUnit == i, () => { pointUnit = i; Build(); }));
+        }
+
+        var certainties = new WrapPanel();
+        foreach (string p in new[] { "90", "95", "99" })
+        {
+            certainties.Children.Add(Chip(p + " %", pointCertainty.Text == p, () => { pointCertainty.Text = p; Build(); }));
+        }
+
+        var modes = new WrapPanel();
+        foreach (var (mode, words) in new[] { (PointBlankMode.Longest, "Longest dead-on"), (PointBlankMode.MostLikely, "Most likely distance"), (PointBlankMode.Window, "A window") })
+        {
+            modes.Children.Add(Chip(words, pointMode == mode, () => { pointMode = mode; Build(); }));
+        }
+
+        int index = pointTarget.SelectedIndex;
+        var chosen = index >= 0 && index < PointBlankPieces.Targets.Count ? PointBlankPieces.Targets[index] : null;
+        var setup = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                Screens.Dim("Your mean radius, from"), from,
+                new WrapPanel { Children = { Labeled("Your mean radius", pointRadius) } }, unitsRow,
+                Screens.Dim(PointBlankReport.FromThePosition),
+                Labeled("Certainty, % of shots in the zone", pointCertainty), certainties,
+                Screens.Dim("What you are shooting at"), Screens.Detach(pointTarget),
+                new WrapPanel { Children = { Labeled("Width, in", pointWidth), Labeled("Height, in", pointHeight) } },
+                Screens.Dim(chosen?.Source ?? "Your own size."),
+                Labeled("Energy floor, ft lb, blank for none", pointEnergy),
+                Screens.Dim("The zero"), modes,
+            },
+        };
+        if (chosen is { Kind: not PointBlankKind.Practical })
+        {
+            setup.Children.Add(Screens.Dim(PointBlankTargets.CheckTheLaw));
+        }
+
+        if (pointMode == PointBlankMode.MostLikely)
+        {
+            setup.Children.Add(Labeled("My most likely distance, yd", pointLikely));
+        }
+        else if (pointMode == PointBlankMode.Window)
+        {
+            setup.Children.Add(new WrapPanel { Children = { Labeled("From, yd", pointFrom), Labeled("To, yd", pointTo) } });
+        }
+
+        panel.Children.Add(Screens.Card(setup));
+        var answer = new StackPanel { Spacing = 8 };
+        panel.Children.Add(answer);
+        panel.Children.Add(Screens.Primary("Work out the point blank range", () => WorkPointBlank(input, answer)).Id("ballistics-point-blank"));
+        return panel;
+    }
+
+    private void ShowPointTarget(bool rebuild)
+    {
+        int i = pointTarget.SelectedIndex;
+        var target = i >= 0 && i < PointBlankPieces.Targets.Count ? PointBlankPieces.Targets[i] : null;
+        var zone = target?.Zone ?? (i == PointBlankPieces.OwnCircle ? PointBlankZone.Circle(8) : PointBlankZone.Rectangle(8, 12));
+        pointWidth.Text = zone.WidthInches.ToString("0.#", CultureInfo.InvariantCulture);
+        pointHeight.Text = zone.HeightInches.ToString("0.#", CultureInfo.InvariantCulture);
+        pointWidth.IsReadOnly = pointHeight.IsReadOnly = target is { IsEstimate: false };
+        pointEnergy.Text = target?.EnergyFloorFtLb?.ToString("0", CultureInfo.InvariantCulture) ?? "";
+        if (rebuild && tab == "Point blank")
+        {
+            Build();
+        }
+    }
+
+    private void WorkPointBlank(BallisticInput input, StackPanel answer)
+    {
+        answer.Children.Clear();
+        void Say(string words) => answer.Children.Add(Screens.Line(words));
+        var (share, refusal) = Number(pointCertainty) is { } percent ? PointBlankModel.Certainty(percent) : (null, "Enter a certainty, for example 90.");
+        if (share is not { } certainty || Number(pointRadius) is not { } radius || Number(pointWidth) is not { } w || RifleChosen is not { } rifle || LoadChosen is not { } load)
+        {
+            Say(refusal ?? "Enter your mean radius and the size of what you are shooting at.");
+            return;
+        }
+
+        int index = pointTarget.SelectedIndex;
+        var chosen = index >= 0 && index < PointBlankPieces.Targets.Count ? PointBlankPieces.Targets[index] : null;
+        bool circle = (chosen?.Zone.Shape ?? (index == PointBlankPieces.OwnCircle ? HitShape.Circle : HitShape.Rectangle)) == HitShape.Circle;
+        var zone = circle ? PointBlankZone.Circle(w) : PointBlankZone.Rectangle(w, Number(pointHeight) ?? w);
+        var model = new PointBlankModel(input, PointBlankModel.ToMoa(radius, (PointBlankPrecisionUnit)pointUnit), load.MuzzleVelocitySdFps ?? 0, SolverUse.DopeWindMph);
+        var request = new PointBlankRequest(zone, chosen?.Name ?? (circle ? "Your own circle" : "Your own rectangle"), certainty, pointMode,
+            Number(pointLikely) ?? 200, Number(pointFrom) ?? 150, Number(pointTo) ?? 300, Number(pointEnergy), load.MinExpansionFps);
+        var result = PointBlankReport.Work(model, request, rifle, units);
+        DiagnosticLog.Info("ballistics.pointblank", ("mode", pointMode.ToString()), ("end", result.Ending.EndYards), ("where", "phone"));
+
+        answer.Children.Add(Screens.Card(
+            new TextBlock { Text = result.Headline, FontSize = 26, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { GroupLab.App.Theme.AppStyles.HeadlineFigure } },
+            Screens.Line(result.Certainty + "."),
+            Screens.Line(result.HowToSet)));
+        foreach (string line in new[] { result.WindowSays, result.Ends, result.Expansion }.OfType<string>())
+        {
+            Say(line);
+        }
+
+        foreach (var hold in result.Holds)
+        {
+            Say(hold.Says);
+        }
+
+        Say(result.Wind + (result.WindWarning is { } warning ? " " + warning : ""));
+        Say(result.CurrentZero);
+        Say(result.ClassicLine);
+        Say(PointBlankReport.NotCovered);
+        var graph = new PointBlankGraph { Height = 180 };
+        graph.Show(model, zone, result);
+        answer.Children.Add(graph);
+
+        var said = new TextBlock { TextWrapping = TextWrapping.Wrap };
+        var lines = PointBlankCard.Lines(rifle, load, result, request, units, DateOnly.FromDateTime(DateTime.Now));
+        answer.Children.Add(Screens.Choice("Share the card", () =>
+        {
+            var (_, pdf) = PrinterAppFiles.Make([PointBlankCard.Page(lines)], 203);
+            said.Text = Phone.Platform.SharePdf(pdf, PointBlankCard.FileName(rifle)) ?? "Shared the card. Print it at 100 percent.";
+        }).Id("ballistics-point-card"));
+        answer.Children.Add(Screens.Choice("Print the card on the Phomemo M220 (Bluetooth)", () => _ = PrintCardOnM220(PointBlankCard.Page(lines), said)).Id("ballistics-point-m220"));
+        if (result.FarZeroYards is { } far)
+        {
+            answer.Children.Add(Screens.Choice($"Keep this zero on {rifle.Name}", () =>
+            {
+                Keep(book.With(rifle.WithZero(Math.Round(far), $"point blank, {PointBlankReport.Share(certainty)} in {request.ZoneName}", DateTimeOffset.UtcNow)));
+                Build();
+            }).Id("ballistics-point-keep"));
+        }
+
+        if (rifle.PreviousZeros.FirstOrDefault() is { } previous)
+        {
+            answer.Children.Add(Screens.Choice(previous.ZeroDistanceYards is { } yards ? $"Put back the {PointBlankReport.Whole(yards, units)} zero" : "Put back the zero before", () =>
+            {
+                Keep(book.With(rifle.UndoZero()));
+                Build();
+            }).Id("ballistics-point-undo"));
+        }
+
+        answer.Children.Add(said);
+    }
+
+    /// <summary>The card sent to the M220 over Bluetooth LE as the scale labels are (entry 386), when 50 by 30 mm labels are loaded.</summary>
+    private static async Task PrintCardOnM220(GroupLab.Core.Rendering.Scene page, TextBlock said)
+    {
+        var (w, h) = Phone.Settings.LoadLabelSize();
+        if ((w, h) != (PointBlankCard.WidthMm, PointBlankCard.HeightMm))
+        {
+            said.Text = $"The card is {PointBlankCard.WidthMm} by {PointBlankCard.HeightMm} mm and Settings says {w} by {h} mm labels are loaded. Load the 50 by 30 mm roll and choose it in Settings, or share the card instead.";
+            return;
+        }
+
+        try
+        {
+            var profile = GroupLab.Core.Printing.Labels.PrinterProfiles.All.Single(p => p.Id == "phomemo-m220");
+            int dots = (int)Math.Ceiling(w / 25.4 * profile.DotsPerInch / 8) * 8;
+            var head = new GroupLab.Core.Printing.Thermal.PrintHead(profile.DotsPerInch, dots);
+            var job = GroupLab.Core.Printing.Labels.PrinterEncoders.For(profile).Encode(
+                new GroupLab.Core.Printing.Labels.LabelJob(GroupLab.Core.Printing.Thermal.ThermalRaster.Render(page, head).Image, w, h, Media: "gaps"), profile);
+            said.Text = "Connecting to the M220…";
+            var (link, why) = await Phone.Platform.OpenLePrinterAsync(profile, CancellationToken.None);
+            if (link is null)
+            {
+                said.Text = why ?? "The M220 could not be reached.";
+                return;
+            }
+
+            await using (link)
+            {
+                said.Text = "Sending the card to the M220…";
+                await GroupLab.Core.Printing.Labels.PrinterJob.SendLabelsAsync(link, profile, [job], Task.Delay, (_, _) => { }, _ => { }, CancellationToken.None);
+            }
+
+            DiagnosticLog.Info("print.m220", ("labels", 1), ("what", "point blank card"));
+            said.Text = "Sent the card to the M220.";
+        }
+        catch (Exception e)
+        {
+            DiagnosticLog.Info("print.m220", ("what", "point blank card"), ("error", e.GetType().Name));
+            said.Text = $"The card did not reach the M220 ({e.Message}). Turn the printer off and on, then try again.";
+        }
+    }
+
     private Control RifleForm()
     {
         var r = RifleChosen;
@@ -418,11 +649,13 @@ internal sealed class BallisticsPage : UserControl
         var speed = Screens.Numeric(Field(l?.MuzzleVelocityFps?.ToString("0", CultureInfo.InvariantCulture) ?? ""));
         var sd = Screens.Numeric(Field(l?.MuzzleVelocitySdFps?.ToString("0.#", CultureInfo.InvariantCulture) ?? ""));
         var bc = Screens.Numeric(Field(l?.BallisticCoefficient?.ToString("0.###", CultureInfo.InvariantCulture) ?? ""));
+        var expansion = Screens.Numeric(Field(l?.MinExpansionFps?.ToString("0", CultureInfo.InvariantCulture) ?? ""));
         var weight = Screens.Numeric(Field(l?.BulletWeightGrains?.ToString("0.#", CultureInfo.InvariantCulture) ?? ""));
         var g7 = new CheckBox { Content = "G7 (off: G1)", IsChecked = l?.DragModel == DragModel.G7, MinHeight = Screens.Touch };
         return Screens.Card(Screens.Heading("The load"), Picker(book.Loads.Select(x => x.Name), n => { loadName = n; Build(); }),
             Labeled("Name", name), Labeled("Muzzle velocity, ft/s", speed), Labeled("Velocity SD, ft/s", sd), Labeled("Ballistic coefficient", bc), g7,
             Labeled("Bullet weight, gr", weight),
+            Labeled("Least expansion velocity, ft/s", expansion),
             Screens.Primary("Keep this load", () =>
             {
                 var load = (l ?? new Load(name.Text ?? "My load", null)) with
@@ -433,6 +666,7 @@ internal sealed class BallisticsPage : UserControl
                     BallisticCoefficient = Number(bc),
                     DragModel = g7.IsChecked == true ? DragModel.G7 : DragModel.G1,
                     BulletWeightGrains = Number(weight),
+                    MinExpansionFps = Number(expansion),
                 };
                 Keep(book.With(load));
                 loadName = load.Name;

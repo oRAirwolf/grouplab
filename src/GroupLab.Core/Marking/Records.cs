@@ -59,10 +59,63 @@ public sealed record Rifle(string Name, double ClickValue, AngularUnit ClickUnit
     public string? BarrelOn { get; init; }
 
     /// <summary>
+    /// The zeros this rifle had before, newest first, NOTES-FROM-PLANNING.md entry 455: a zero kept from the point blank view moves
+    /// <see cref="ZeroDistanceYards"/>, and the one it replaced is kept here so a tap puts it back.
+    /// </summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public IReadOnlyList<PreviousZero> PreviousZeros => PreviousZero.FromJson(PreviousZerosJson);
+
+    /// <summary>
+    /// <see cref="PreviousZeros"/> as the database and the export keep it. Held as text so two rifles with the same history are equal, as
+    /// a record's other fields are; a list would compare by reference and make every rifle with a history look changed on import.
+    /// </summary>
+    public string? PreviousZerosJson { get; init; }
+
+    /// <summary>This rifle zeroed at another distance, the zero it had kept as the newest previous one.</summary>
+    public Rifle WithZero(double yards, string why, DateTimeOffset when) => this with
+    {
+        ZeroDistanceYards = yards,
+        PreviousZerosJson = PreviousZero.ToJson([new PreviousZero(ZeroDistanceYards, when.UtcDateTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture), why), .. PreviousZeros]),
+    };
+
+    /// <summary>This rifle with its newest previous zero put back, or as it is where it has none.</summary>
+    public Rifle UndoZero()
+    {
+        var zeros = PreviousZeros;
+        return zeros.Count == 0 ? this : this with { ZeroDistanceYards = zeros[0].ZeroDistanceYards, PreviousZerosJson = PreviousZero.ToJson([.. zeros.Skip(1)]) };
+    }
+
+    /// <summary>
     /// How the click reads to a person: "0.25 MOA a click", "0.1 mil a click", in the unit's own symbol. A NATO mil scope was called MOA here
     /// while the residual beside it said NATO mil (found 2026-10-08 on Alan's 6 ARC session, docs/PROOF-CHECKLIST.md row 16).
     /// </summary>
     public string DescribeClick() => string.Create(CultureInfo.InvariantCulture, $"{ClickValue:0.###} {UnitSettings.Symbol(ClickUnit)} a click");
+}
+
+/// <summary>A zero a rifle had before: its distance (none where it had none), when it was replaced, and why, in words.</summary>
+public sealed record PreviousZero(double? ZeroDistanceYards, string ReplacedUtc, string Why)
+{
+    private static readonly JsonSerializerOptions Options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
+    /// <summary>A rifle's previous zeros as the database keeps them, or null where it has none.</summary>
+    public static string? ToJson(IReadOnlyList<PreviousZero> zeros) => zeros.Count == 0 ? null : JsonSerializer.Serialize(zeros, Options);
+
+    public static IReadOnlyList<PreviousZero> FromJson(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return [];
+        }
+
+        try
+        {
+            return JsonSerializer.Deserialize<List<PreviousZero>>(json, Options) ?? [];
+        }
+        catch (JsonException)
+        {
+            return [];
+        }
+    }
 }
 
 /// <summary>
@@ -145,6 +198,12 @@ public sealed record Load(string Name, string? Components)
     public double? BulletLengthInches { get; init; }
 
     public double? BulletDiameterInches { get; init; }
+
+    /// <summary>
+    /// The least velocity at which the bullet still opens, ft/s, as its maker publishes it, NOTES-FROM-PLANNING.md entry 455. The point
+    /// blank view ends its distances where the bullet falls below it; blank, it ends nothing and says the maker publishes one.
+    /// </summary>
+    public double? MinExpansionFps { get; init; }
 
     // NOTES-FROM-PLANNING.md entry 131 section 7.4: the rest of what a reloader writes on the box. A load is kept apart from a rifle because
     // one load is shot in several rifles, and the fields below are the load's own, not any rifle's.
@@ -281,6 +340,7 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
             r.Stock,
             r.Notes,
             r.BarrelOn,
+            r.PreviousZerosJson,
         }),
         barrels = Barrels.Select(b => new
         {
@@ -306,6 +366,7 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
             l.BulletWeightGrains,
             l.BulletLengthInches,
             l.BulletDiameterInches,
+            l.MinExpansionFps,
             l.BulletName,
             l.BrassManufacturer,
             l.BrassCartridge,
@@ -342,6 +403,7 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
                     Stock = (string?)r["stock"],
                     Notes = (string?)r["notes"],
                     BarrelOn = (string?)r["barrelOn"],
+                    PreviousZerosJson = (string?)r["previousZerosJson"],
                 })],
                 [.. (root["barrels"] as JsonArray ?? []).Select(b => new Barrel((string)b!["name"]!, (string?)b["rifle"], (int?)b["rounds"] ?? 0)
                 {
@@ -362,6 +424,7 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
                     BulletWeightGrains = (double?)l["bulletWeightGrains"],
                     BulletLengthInches = (double?)l["bulletLengthInches"],
                     BulletDiameterInches = (double?)l["bulletDiameterInches"],
+                    MinExpansionFps = (double?)l["minExpansionFps"],
                     BulletName = (string?)l["bulletName"],
                     BrassManufacturer = (string?)l["brassManufacturer"],
                     BrassCartridge = (string?)l["brassCartridge"],

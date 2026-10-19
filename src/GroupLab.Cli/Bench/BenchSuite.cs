@@ -413,6 +413,16 @@ public static class BenchSuite
                 return string.Create(CultureInfo.InvariantCulture, $"{100 * answer.FirstRound.Value:0} percent first round, {answer.Costs.Count} costs, {curve.Count} curve points");
             },
             ["HitProbability", "HitPresets"]);
+
+        yield return new BenchCase("solver", "a point blank range", "Entry 455's answer for the longest dead-on hold at 9 in 10 on an 8 in circle: the flights, the search over zeros, the classic figure and the words.",
+            _ =>
+            {
+                var model = new PointBlankModel(input, 0.63, 10);
+                var request = new PointBlankRequest(PointBlankZone.Circle(8), "Whitetail deer", 0.9);
+                var result = PointBlankReport.Work(model, request, new GroupLab.Core.Marking.Rifle("Bench rifle", 0.1, AngularUnit.Mrad) { ZeroDistanceYards = 100 }, GroupLab.Core.Marking.UnitSettings.Imperial);
+                return result.Headline;
+            },
+            ["PointBlankModel", "PointBlankReport", "PointBlankZone"]);
     }
 
     private static IEnumerable<BenchCase> Storage(BenchMaterial m)

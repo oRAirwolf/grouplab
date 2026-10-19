@@ -805,6 +805,29 @@
       }
     },
     {
+      "key": "point-blank",
+      "group": "The numbers",
+      "name": "Point blank range, honestly",
+      "sentence": "A third Ballistics view tells you how far you can hold dead on at a chosen animal or target and still land 9 shots in 10 in its zone, from your own mean radius, and how to set the zero for it.",
+      "shot": "ballistics-point",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "since": "next",
+      "note": [
+        "A third Ballistics view, Point blank,"
+      ],
+      "tour": "ballistics",
+      "guide": "point-blank-range",
+      "mobile": {
+        "noPicture": "the phone's Point blank tab is photographed at the next sitting with the phone"
+      }
+    },
+    {
       "key": "fudd-buster",
       "group": "The numbers",
       "name": "Fudd buster mode",

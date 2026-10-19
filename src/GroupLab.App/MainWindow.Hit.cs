@@ -32,7 +32,7 @@ public sealed partial class MainWindow
     private readonly TextBox hitPrecision = Field();
     private readonly TextBlock hitFromWords = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     private readonly TextBox hitDistance = Field("600");
-    private readonly ComboBox hitShape = new() { ItemsSource = new[] { "circle, its diameter", "rectangle, width by height", "IPSC outline, width by height" }, SelectedIndex = 0, MinWidth = 200 };
+    private readonly ComboBox hitShape = new() { ItemsSource = new[] { "circle, its diameter", "rectangle, width by height", "IPSC target, A zone" }, SelectedIndex = 0, MinWidth = 200 };
     private readonly TextBox hitWidth = Field("12");
     private readonly TextBox hitHeight = Field("12");
     private readonly ComboBox hitSizeUnit = new() { MinWidth = 90 };
@@ -152,14 +152,10 @@ public sealed partial class MainWindow
         };
         hitShape.SelectionChanged += (_, _) =>
         {
-            hitHeight.IsVisible = hitShape.SelectedIndex > 0;
-            if (hitShape.SelectedIndex == 2)
-            {
-                // GroupLab's IPSC outline at the size its body and head are drawn for.
-                hitSizeUnit.SelectedIndex = 0;
-                hitWidth.Text = Text(UnitSettings.FromInches(18, units.Linear));
-                hitHeight.Text = Text(UnitSettings.FromInches(30, units.Linear));
-            }
+            hitHeight.IsVisible = hitShape.SelectedIndex == 1;
+
+            // Entry 455: the IPSC target's A zone has one size, the rules' own, so its size is not asked for.
+            hitWidth.IsVisible = hitSizeUnit.IsVisible = hitShape.SelectedIndex != 2;
         };
         hitHeight.IsVisible = false;
         ShowSizeUnits();
@@ -486,7 +482,7 @@ public sealed partial class MainWindow
         ulong seed = 0;
         string? refusal = precision is null ? words
             : HitYards is null ? "Enter the distance to work the chance out at."
-            : Number(hitWidth) is null || (hitShape.SelectedIndex > 0 && Number(hitHeight) is null) ? "Enter the target's size."
+            : hitShape.SelectedIndex != 2 && (Number(hitWidth) is null || (hitShape.SelectedIndex == 1 && Number(hitHeight) is null)) ? "Enter the target's size."
             : !int.TryParse(hitShots.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out shots) || shots is < 1 or > 50 ? "Enter the shots in the string, from 1 to 50."
             : !int.TryParse(hitTrials.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out trials) || trials is < 100 or > 1_000_000 ? "Enter the trials, from 100 to a million."
             : !ulong.TryParse(hitSeed.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out seed) ? "Enter the seed as a whole number."
@@ -520,9 +516,18 @@ public sealed partial class MainWindow
             LatitudeDegrees = Signed(hitLatitude),
             AzimuthDegrees = Signed(hitAzimuth) ?? 0,
         };
-        double width = HitSizeInches(hitWidth, yards)!.Value;
-        double height = hitShape.SelectedIndex > 0 ? HitSizeInches(hitHeight, yards)!.Value : width;
-        var target = new HitTarget(hitShape.SelectedIndex switch { 1 => HitShape.Rectangle, 2 => HitShape.Ipsc, _ => HitShape.Circle }, width, height);
+        HitTarget target;
+        if (hitShape.SelectedIndex == 2)
+        {
+            target = HitTarget.IpscAZone;
+        }
+        else
+        {
+            double width = HitSizeInches(hitWidth, yards)!.Value;
+            double height = hitShape.SelectedIndex == 1 ? HitSizeInches(hitHeight, yards)!.Value : width;
+            target = new HitTarget(hitShape.SelectedIndex == 1 ? HitShape.Rectangle : HitShape.Circle, width, height);
+        }
+
         var setup = new HitSetup(believed, yards, target, precision!, errors, shots, trials, seed);
         var answer = HitProbability.Work(setup);
         DiagnosticLog.Info("ballistics.hit", ("from", hitFrom.SelectedIndex), ("shots", shots), ("trials", trials), ("refused", answer.Refusal is not null));
@@ -535,7 +540,7 @@ public sealed partial class MainWindow
         string target = setup.Target.Shape switch
         {
             HitShape.Rectangle => $"a {units.Number(setup.Target.WidthInches)} by {units.Length(setup.Target.HeightInches)} rectangle",
-            HitShape.Ipsc => $"an IPSC outline {units.Number(setup.Target.WidthInches)} by {units.Length(setup.Target.HeightInches)}",
+            HitShape.Ipsc => "an IPSC target's A zone, 15 by 32.5 cm",
             _ => $"a {units.Length(setup.Target.WidthInches)} circle",
         };
         if (answer.Refusal is not null)

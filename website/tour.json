@@ -653,8 +653,8 @@
      "Writes what you have typed back to the rifle and load, so you do not type it again."
     ],
     [
-     "Trajectory or Hit probability",
-     "The two views of the middle, chosen at its top and remembered."
+     "Trajectory, Hit probability or Point blank",
+     "The three views of the middle, chosen at its top and remembered."
     ],
     [
      "Drop, Wind drift, Velocity, Energy",
@@ -679,6 +679,10 @@
     [
      "Hit probability",
      "A card that leads with the first round's chance and its interval, then the second round, corrected from the first, beside the simulated first rounds drawn on the target."
+    ],
+    [
+     "Point blank",
+     "The third view of the middle: from your mean radius and a certainty, how far you can hold dead on at a chosen animal or target, how to set the zero for it in clicks, and a card to print. The rifle, load and air are the ones already chosen."
     ],
     [
      "What costs the most",
@@ -712,6 +716,11 @@
      "ballistics-hit",
      "The Ballistics screen's Hit probability view: the first round's chance on a 30 inch circle at 600 yards",
      "The other view, Hit probability: the first round's chance on a target at a distance, the second round's after a correction, and what costs the most."
+    ],
+    [
+     "ballistics-point",
+     "The Ballistics screen's Point blank view: dead on 0 to 263 yd for a whitetail at 9 shots in 10, with the zero 2.6 in high at 100 yd and the path drawn over the zone",
+     "The third view, Point blank: how far you can hold dead on and still put your chosen share of shots in the zone, how to set the zero in clicks, and the present zero of your rifle beside it."
     ],
     [
      "pairing",

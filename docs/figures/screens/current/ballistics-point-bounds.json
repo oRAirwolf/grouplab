@@ -1,0 +1,211 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "At one range": [
+      1286,
+      136,
+      80,
+      32
+    ],
+    "BallisticUnitsImperial": [
+      1012,
+      85,
+      78,
+      27
+    ],
+    "BallisticUnitsMetric": [
+      1094,
+      85,
+      64,
+      27
+    ],
+    "BallisticViewHit": [
+      447,
+      138,
+      112,
+      27
+    ],
+    "BallisticViewPointBlank": [
+      563,
+      138,
+      94,
+      27
+    ],
+    "BallisticViewTrajectory": [
+      356,
+      138,
+      87,
+      27
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Column width: the left and right arrows widen or narrow it": [
+      328,
+      124,
+      6,
+      752
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
+    ],
+    "Keep this zero on Test rifle": [
+      474,
+      817,
+      184,
+      27
+    ],
+    "Load": [
+      313,
+      83,
+      160,
+      32
+    ],
+    "Mean radius unit": [
+      170,
+      402,
+      120,
+      32
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "PointCertainty90": [
+      72,
+      575,
+      57,
+      27
+    ],
+    "PointCertainty95": [
+      137,
+      575,
+      57,
+      27
+    ],
+    "PointCertainty99": [
+      202,
+      575,
+      57,
+      27
+    ],
+    "PointModeLongest": [
+      356,
+      254,
+      155,
+      27
+    ],
+    "PointModeMostLikely": [
+      515,
+      254,
+      165,
+      27
+    ],
+    "PointModeWindow": [
+      684,
+      254,
+      160,
+      27
+    ],
+    "Print a card…": [
+      356,
+      817,
+      106,
+      27
+    ],
+    "Rifle": [
+      145,
+      83,
+      160,
+      32
+    ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
+    ],
+    "What you are shooting at": [
+      70,
+      694,
+      230,
+      58
+    ],
+    "Work it out": [
+      1117,
+      631,
+      92,
+      27
+    ],
+    "Work out the point blank range": [
+      1170,
+      85,
+      212,
+      27
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ],
+    "▸": [
+      70,
+      136,
+      230,
+      19
+    ],
+    "▾": [
+      70,
+      301,
+      230,
+      19
+    ]
+  }
+}

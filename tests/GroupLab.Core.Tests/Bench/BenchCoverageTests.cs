@@ -43,6 +43,8 @@ public class BenchCoverageTests
     /// </summary>
     private static readonly Dictionary<string, string> NotMeasured = new(StringComparer.Ordinal)
     {
+        ["PointBlankCard"] = "Entry 455's point blank card: six lines of text laid out once when a person prints it; nothing a reading waits on.",
+        ["PointBlankTargets"] = "Entry 455's list of targets and their sizes, a fixed table read when the view opens.",
         ["CaliberChoices"] = "The caliber box's list as one types: a filter over the cartridge table's 605 rows, done once per key press, too small to time against an analysis.",
         ["CartridgeLookup"] = "Loading the 605-row cartridge table once and matching a typed name against it; measured by nothing a reading waits on.",
         ["PrimerNumbers"] = "The website statistics primer's examples, drawn once on a fixed seed by `grouplab primer`; nothing is read from a target, and PrimerTests holds the file to it.",

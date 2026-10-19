@@ -46,3 +46,4 @@ Each line is the slug, then the date it went live, then which batch it came out 
 - scale-markers-beside-a-target  2026-10-10  entry 402, under entry 393's standing rule
 - how-far-off-square  2026-10-10  entry 402, under entry 393's standing rule
 - bent-sheet-registration  2026-10-10  entry 402, under entry 393's standing rule
+- point-blank-range-honestly  2026-10-19  entry 455, under entry 393's standing rule

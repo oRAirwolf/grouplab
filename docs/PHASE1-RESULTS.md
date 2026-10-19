@@ -1675,6 +1675,42 @@ the inbox to be worked in parallel), reviewed here picture by picture and taken 
 Checks: the site build, the four site suites, the tap check, claims (all backed), readme and consistency pass. Worth an article? No: a
 presentation change with no measurement in it.
 
+## Entry 455: maximum point blank range, a third view in Ballistics (2026-10-19)
+
+1. **The model** (`src/GroupLab.Core/Ballistics/PointBlank.cs`): the trajectory flown once from the rifle's zero, every other zero the
+   same flight tilted; the chance of a hit at each distance from the mean radius (per-axis sigma, MR = sigma times the root of pi/2,
+   growing with distance) and the velocity SD carried through the solver as a vertical spread, aimed at the zone's center; a circle by
+   48-point Gauss-Legendre over the part of it the normal has weight in, a rectangle as two intervals. Classic MPBR for reference, the
+   certainty band, the three ways to set the zero (longest dead-on, most likely distance, a window, with the refusal when no zero holds the
+   window) and the rifle's present zero beside them; what ends it (certainty, an energy floor, the bullet's least expansion velocity,
+   each named); 100 % refused in words.
+2. **Against planning's numbers** (Test load, 8 in circle, 0.63 MOA): classic start 0, near zero 25 yd (26), peak +4.00 in at 148 yd,
+   far zero 266 (266), end 313 (312), +3.38 in at 100; 90 % 0 to 263 yd (262) at +2.60 in, 95 % 251 (252), 99 % 228 (228), 99.9 % 201
+   (200); the 100 yd zero 0 to 207 yd by the classic rule (208); most likely 200 yd +1.76 in (1.77), 99.93 % at 200, band 0 to 237 (236);
+   window 150 to 300 best worst case 58.8 % (56). Prairie dog starts at 15.5 yd (about 16). All within 2 yd. `PointBlankTests` (15).
+3. **The words, the same everywhere** (`PointBlankReport`): "Dead on 0 to 263 yd", "9 in 10 shots in an 8 in circle", "Zero 2.6 in high at
+   100 yd: 0.72 mil, 7 clicks up from your 100 yd zero.", the ending, the wind's drift at the far end with a warning past half the zone's
+   width, the present zero, the classic figure, the law line for hunting targets, what is not counted.
+4. **The targets** (`PointBlankTargets`): the eleven sourced game zones (the smaller figure where sources disagree), five estimates
+   labelled as such and editable, the IPSC A zone, the USPSA head A zone, the IDPA body, two steel silhouettes said to be a vendor's
+   shape, your own circle or rectangle; drawn to scale in the list. Energy floors 1000 and 1500 ft lb as rules of thumb.
+5. **The computer** (`MainWindow.PointBlank.cs`): the third view with its settings on the left, the answer card, a picture of the path
+   with the zone and the dead-on stretch, Print a card (a 203 dpi picture and a PDF), Keep this zero on the rifle and Put back.
+   **The phone**: Ballistics' Point blank tab, the same inputs and words, the card shared or printed on the M220 over Bluetooth (when
+   50 by 30 mm labels are loaded), keep and put back. `Entry455Tests` on both (3 and 1).
+6. **The card** (`PointBlankCard`): 50 by 30 mm, six lines, nothing round; `TheCardIsFiftyByThirtyAndEveryLineFits`.
+7. **Records, schema version 4**: a load's least expansion velocity (Equipment, Ballistics' load section, the phone's load form, the
+   export) and a rifle's previous zeros (kept as text so equal histories compare equal), with the upgrade, docs/SESSION-SCHEMA.md and
+   the export accepting versions 2 to 4.
+8. **IPSC in Hit probability** is now the official A zone, 15 by 32.5 cm; GroupLab's own outline is gone. The rest of the outline is
+   question 102.
+9. **Docs** (docs helper, reviewed): the user guide's Point blank range part with From the keyboard and the sources, its PDF, the
+   Features entry with its picture (`ballistics-point`), the tour, README, and the research article "Point blank range, honestly",
+   published under entry 393's rule (every figure held by `PointBlankTests.TheArticlesFiguresHold`). Worth an article? Yes, written:
+   the classic zero keeps 46 % of shots in the circle at its peak and 42 % at its far end.
+10. **Alan's proof**: request 104, the card on his M220 once a nightly carries it. Request 103 (entry 456's Top Gun question) was
+   written at the same time.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

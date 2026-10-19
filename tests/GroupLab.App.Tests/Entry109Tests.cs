@@ -673,6 +673,11 @@ public class Entry109Tests
                         window.ShowBallisticView(MainWindow.BallisticView.Hit);
                         window.WorkOutHit("600", 0, "30", "30");
                         Save(window, $"ballistics-hit-{name}-{size}");
+                        // Entry 455: the third view, point blank range for a whitetail at 9 in 10 from a 0.63 MOA mean radius.
+                        window.ShowBallisticView(MainWindow.BallisticView.PointBlank);
+                        window.SetPointBlank("0.63", "90", "Whitetail deer");
+                        window.FillPointBlank();
+                        Save(window, $"ballistics-point-{name}-{size}");
                         window.ShowBallisticView(MainWindow.BallisticView.Trajectory);
                         window.ShowBallistics(false);
 
