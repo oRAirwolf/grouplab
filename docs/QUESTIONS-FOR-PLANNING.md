@@ -21,6 +21,20 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-19, question 103: crediting the calculators without naming the old site
+
+**Status: open.** Entry 456 says: "The guide credits the pissinhot.com calculators as where these came from (Alan's own site)". Alan's
+instruction of 2026-09-23 says no link to the old site appears anywhere on grouplab.org, and `NoPissinhotOnTheSiteTests` fails the build
+on the name anywhere in the built site; the guide is published there. The research rule also keeps the developer unnamed on the site.
+
+**What was done meanwhile:** the guide and README say "These three began as calculators GroupLab's developer wrote before GroupLab", and
+Top Gun is credited to Bryan Litz by name. The site's name appears only in code comments and the logs.
+
+**The question:** is that credit enough, or should the guide name the site (which needs the test and the 2026-09-23 rule changed, and
+Alan's word)? I would keep it as it is.
+
+---
+
 ## 2026-10-19, question 102: the IPSC target's whole outline, or only its A zone
 
 **Status: open.** Entry 455 says: "Replace GroupLab's own IPSC outline in `HitTarget` (its comment says it is not official) with the

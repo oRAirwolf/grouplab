@@ -35,6 +35,28 @@ each shot's offset, Zero from this group, and group sizes shown as angles. With 
 such as "dial 0.30 mil left, 3 clicks left", with no MOA next to it. The other unit is never far: tap a number to
 switch it, or press and hold it for every unit it can take, and GroupLab remembers that figure's choice.
 
+### Scope and mount
+
+The rifle's page in Equipment has a **Scope and mount** part. Every field in it is optional, and on the phone the same fields are in Ballistics, under Rifle. These three began as calculators GroupLab's developer wrote before GroupLab: scope cant (here rail cant), sight scale factor and Top Gun. Top Gun is Bryan Litz's.
+
+**The fields:**
+- **Elevation travel**, in your scope's unit, with **That travel is** the total travel, or the most up from my zero.
+- **Rail cant**, in your scope's unit: how much the rail the scope sits on slopes down toward the target, from the factory or from shimming. (Alan's page calls it scope cant. GroupLab says rail cant because cant on its own usually means tilting the rifle.)
+- **Sight scale factor**, 1.000 when the scope tracks true.
+- **Weight as fired**, with the optic, the loaded magazine and the bipod, in pounds.
+
+**What the scope and mount allow.** Under the form GroupLab works this out with the load it can use. It shows the elevation your zero uses, half the travel, and the most rail cant that still lets the rifle be zeroed. With your rail's cant entered it shows the elevation left above your zero and the farthest range that elevation reaches with that load. When the rail's cant is more than the most that zeroes, it says the rifle cannot be zeroed with it.
+
+The elevation the zero uses is GroupLab's own: the angle its solver gives the bore, which counts the bullet slowing down. Alan's page adds the sight-height angle to a drop worked out as if the bullet flew at one speed. That is the one deliberate difference. For a 140 gr bullet at 2710 ft/s with a G7 ballistic coefficient of 0.326, a 1.75 in sight height and a 100 yd zero, his page's way gives 4.05 MOA and GroupLab's gives 4.01 MOA.
+
+**Ballistics follows it.** Past the last range the elevation left reaches, the Trajectory table's clicks column says "out of elevation, hold X mil in the reticle" (or MOA), the At one range panel says the same, and the Point blank view says when its zero needs more elevation than the scope has above your present zero. The phone's dope table does too.
+
+**Sight scale factor.** A scope's turret does not always move the reticle by what it is marked. **Work out the sight scale factor from a tracking test** takes the unit, the angle you expected (20.0 mil or 66.0 MOA to start, the lines of a tall tracking target) and the turret reading, and gives the factor, the expected angle divided by the reading. The error is the reading minus the expected, over the expected, as a percent; positive means the scope under-tracks, each click moving less than marked. Under 0.5 percent is essentially perfect, under 2 percent is normal for a quality scope, and 2 percent or more is a significant tracking error. The steps: level the reticle, measure the distance to the target, then dial from the top line to the bottom line and read the turret.
+
+Every click GroupLab gives is corrected by the factor, the turret reading being the true angle divided by it: the Trajectory table, At one range, the analysis's zero corrections, Shots Needed to Zero, the Point blank view and its card, and the phone. Where the factor is not 1.000 the clicks say so once, for example "SSF 0.980 applied".
+
+**Top Gun.** Bryan Litz's trend (Modern Advancements in Long Range Shooting, Volume III, chapter 3, 2022) puts the expected average group, in MOA, at the muzzle energy in foot pounds divided by the rifle's weight as fired in pounds, divided by 200. Muzzle energy is the bullet's weight in grains times the velocity squared, divided by 450240. A 140 gr bullet at 2710 ft/s from an 11 lb rifle comes to about 1.04 MOA. GroupLab shows it as Litz states it, "Top Gun expects about 1.04 MOA average group for this rifle and load (Bryan Litz's trend, not a limit).", on the rifle's page for each of its loads, in the analysis's Advanced figures where the rifle and load are known, and in Compare loads for each load. It is a trend with real rifles scattered on both sides, so it is never a pass or a fail. It is not converted or set beside GroupLab's own figures yet, because how many shots its group is, and whether it is extreme spread, is still being checked.
+
 ### Getting GroupLab
 
 The download page, grouplab.org/download/, has every build. On Windows, the Microsoft Store carries GroupLab too
@@ -350,7 +372,7 @@ Every word you may not know is underlined with dots, a figure's name or a word l
 
 Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and 90. **With the shot distance set, each is an angle first,** in your scope's unit (the session's rifle's, or the one in Settings), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100. Mil and MOA are the two a scope is marked in; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 0.46 mil, 1.59 MOA or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel says an angle needs the distance, with a button to set it. A setting puts the size on the paper first, for a shooter who only shoots one distance. **Every figure carries its interval,** the range the true value is likely to lie in, and the percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.
 
-**Advanced** holds everything else, closed until you open it: sigma, the strips across and up and down, the order the shots were fired in, the two cards below, the full CEP table, the sighters, and carrying the correction to another distance. GroupLab remembers whether you opened it.
+**Advanced** holds everything else, closed until you open it: sigma, the strips across and up and down, the order the shots were fired in, the two cards below, the full CEP table, the sighters, and carrying the correction to another distance. GroupLab remembers whether you opened it. Where the rifle and load are known, Advanced also carries one line from Bryan Litz's Top Gun trend, the average group a rifle of that weight and load tends to shoot, labeled as a trend and not a limit (see Scope and mount).
 
 ### Velocity and the vertical
 
@@ -525,6 +547,8 @@ On a narrow window the side columns shrink, and below that the right column move
 
 The dope table gives drop and the wind of a 10 mph crosswind at each range, in your units and your scope's clicks, with the velocity and energy there, in the air you enter. Aerodynamic jump is not modeled, and the table says so.
 
+With a scope's travel entered on the rifle, a row past the elevation the scope has left says "out of elevation" and what to hold in the reticle instead. A sight scale factor other than 1.000 corrects the clicks, and they say so once. Both are described under Scope and mount, near the top of this guide.
+
 ### At another distance
 
 On the analysis, the zero correction can be carried to a second distance, with its uncertainty carried with it. An offset that could not be told from zero is not carried.
@@ -591,7 +615,7 @@ is a fourth tab, **Point blank**, beside Dope, Trajectory and Hit chance.
   certainty, it says so, for example "No single zero keeps 9 in 10 across" the window, and gives the best zero, its worst point and what
   would help: a narrower window, a larger zone or a hold over.
 
-The rifle's present zero and the band it gives are always shown beside whichever you choose.
+The rifle's present zero and the band it gives are always shown beside whichever you choose. When the zero chosen needs more elevation than the scope has above your present zero, the view says so, and the clicks it gives are corrected by the rifle's sight scale factor (see Scope and mount).
 
 **The answer** leads with the band in large figures, such as "Dead on 0 to 263 yd", and the sentence that says what certainty it holds.
 Under it:
@@ -674,7 +698,7 @@ checklist opens with the pooled group showing; the checklist also has **See the 
 
 Reading other sheets of one load as one group is **not built yet**. It is not a matter of adding the numbers up: separate sheets shot at one
 aim point each have their own center, and what a pooled figure means depends on which center you measure from, which is still being decided.
-Meanwhile **Compare loads** puts the sessions of two or more loads side by side, each with its own figures and intervals.
+Meanwhile **Compare loads** puts the sessions of two or more loads side by side, each with its own figures and intervals, and Bryan Litz's Top Gun trend for each load where the rifle's weight is known.
 
 ## 11. If something goes wrong
 

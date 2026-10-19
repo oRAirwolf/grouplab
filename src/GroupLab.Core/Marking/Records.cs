@@ -71,6 +71,23 @@ public sealed record Rifle(string Name, double ClickValue, AngularUnit ClickUnit
     /// </summary>
     public string? PreviousZerosJson { get; init; }
 
+    // NOTES-FROM-PLANNING.md entry 456: the scope and mount, all optional. Travel and cant are in the scope's own unit, ClickUnit.
+
+    /// <summary>The scope's elevation travel, in the scope unit: the whole of it, or the most up from the zero (<see cref="ScopeTravelKind"/>).</summary>
+    public double? ScopeTravel { get; init; }
+
+    /// <summary>What <see cref="ScopeTravel"/> is; null reads as the whole travel.</summary>
+    public GroupLab.Core.Ballistics.ScopeTravelKind? ScopeTravelKind { get; init; }
+
+    /// <summary>The rail's cant, in the scope unit: the elevation built into the mount, such as a 20 MOA rail.</summary>
+    public double? RailCant { get; init; }
+
+    /// <summary>The sight scale factor from a tracking test, 1 where the scope tracks true; every click GroupLab gives is divided by it.</summary>
+    public double? SightScaleFactor { get; init; }
+
+    /// <summary>The rifle's weight as fired, with its optic, loaded magazine and bipod, in pounds, for Top Gun.</summary>
+    public double? WeightAsFiredLb { get; init; }
+
     /// <summary>This rifle zeroed at another distance, the zero it had kept as the newest previous one.</summary>
     public Rifle WithZero(double yards, string why, DateTimeOffset when) => this with
     {
@@ -341,6 +358,11 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
             r.Notes,
             r.BarrelOn,
             r.PreviousZerosJson,
+            r.ScopeTravel,
+            scopeTravelKind = r.ScopeTravelKind?.ToString(),
+            r.RailCant,
+            r.SightScaleFactor,
+            r.WeightAsFiredLb,
         }),
         barrels = Barrels.Select(b => new
         {
@@ -404,6 +426,11 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
                     Notes = (string?)r["notes"],
                     BarrelOn = (string?)r["barrelOn"],
                     PreviousZerosJson = (string?)r["previousZerosJson"],
+                    ScopeTravel = (double?)r["scopeTravel"],
+                    ScopeTravelKind = (string?)r["scopeTravelKind"] is { } kind && Enum.TryParse<GroupLab.Core.Ballistics.ScopeTravelKind>(kind, out var k) ? k : null,
+                    RailCant = (double?)r["railCant"],
+                    SightScaleFactor = (double?)r["sightScaleFactor"],
+                    WeightAsFiredLb = (double?)r["weightAsFiredLb"],
                 })],
                 [.. (root["barrels"] as JsonArray ?? []).Select(b => new Barrel((string)b!["name"]!, (string?)b["rifle"], (int?)b["rounds"] ?? 0)
                 {
@@ -449,7 +476,7 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
 /// An offset in the scope's clicks, entry 97 section 2 and entry 53 section 2: the whole clicks to dial, which way, and what is left after
 /// rounding, because a turret has no half positions and silently rounding is the kind of confident answer this project refuses.
 /// </summary>
-public sealed record Clicks(int Count, string Direction, double ResidualAngle, AngularUnit Unit)
+public sealed record Clicks(int Count, string Direction, double ResidualAngle, AngularUnit Unit, double ScaleFactor = 1)
 {
     /// <summary>
     /// The clicks for an offset of <paramref name="offsetInches"/> at <paramref name="distanceInches"/>. The angle of an offset is the full
@@ -458,9 +485,11 @@ public sealed record Clicks(int Count, string Direction, double ResidualAngle, A
     public static Clicks For(double offsetInches, double distanceInches, Rifle rifle, string direction)
     {
         ArgumentNullException.ThrowIfNull(rifle);
-        double angle = Angular.Constant(rifle.ClickUnit) / 2 * Math.Atan(Math.Abs(offsetInches) / distanceInches);
+        // Entry 456 section 2: the turret's reading is the true angle over the sight scale factor, so a scope that under-tracks is dialed further.
+        double factor = rifle.SightScaleFactor is > 0 and var f ? f : 1;
+        double angle = Angular.Constant(rifle.ClickUnit) / 2 * Math.Atan(Math.Abs(offsetInches) / distanceInches) / factor;
         int count = (int)Math.Round(angle / rifle.ClickValue, MidpointRounding.AwayFromZero);
-        return new Clicks(count, direction, angle - (count * rifle.ClickValue), rifle.ClickUnit);
+        return new Clicks(count, direction, angle - (count * rifle.ClickValue), rifle.ClickUnit, factor);
     }
 
     /// <summary>"12 clicks right", in the turret's own words.</summary>

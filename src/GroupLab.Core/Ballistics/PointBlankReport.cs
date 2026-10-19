@@ -165,6 +165,13 @@ public static class PointBlankReport
             }
         }
 
+        // Entry 456 section 1: a zero that needs more elevation than the scope has left above the present one cannot be dialed.
+        if (ScopeMount.Figures(rifle, model.LaunchAngleMoa)?.LeftAboveZeroMoa is { } left && band.LaunchDeltaMoa > left)
+        {
+            howToSet += string.Create(CultureInfo.InvariantCulture,
+                $" The scope has only {ScopeMount.FromMoa(left, rifle.ClickUnit):0.0} {(rifle.ClickUnit == AngularUnit.Mrad ? "mil" : "MOA")} left above your zero, so this zero cannot be dialed.");
+        }
+
         double? far = model.FarZero(band.LaunchDeltaMoa);
         string keep = far is { } f
             ? $"Keeping it on {rifle.Name} sets its zero distance to {Distance(f)}, where this path crosses the line of sight again, and keeps the {Distance(zeroYards)} zero to put back."
@@ -192,6 +199,10 @@ public static class PointBlankReport
 
         string direction = inches > 0 ? "up" : "down";
         string clicks = rifle.ClickValue > 0 ? ", " + Clicks.For(inches, zeroYards * 36, rifle, direction).Describe() : "";
+        if (ScopeTracking.Applied(rifle.SightScaleFactor) is { } ssf && clicks.Length > 0)
+        {
+            clicks += " (" + ssf + ")";
+        }
         return $"Zero {Size(units, Math.Abs(inches))} {(inches > 0 ? "high" : "low")} at {at}: {Angle(Math.Abs(deltaMoa), units.Aiming(rifle))}{clicks} from your {at} zero.";
     }
 

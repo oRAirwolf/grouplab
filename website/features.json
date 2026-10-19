@@ -828,6 +828,29 @@
       }
     },
     {
+      "key": "scope-and-mount",
+      "group": "The numbers",
+      "name": "Scope and mount: rail cant, sight scale factor and Top Gun",
+      "sentence": "The rifle's page has a Scope and mount part that shows how much elevation your scope and rail leave, corrects every click for the scope's measured tracking, and sets Bryan Litz's Top Gun group trend beside each load.",
+      "shot": "equipment-scope",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "since": "next",
+      "note": [
+        "The rifle's page has a Scope and mount part"
+      ],
+      "tour": "equipment",
+      "guide": "scope-and-mount",
+      "mobile": {
+        "noPicture": "the phone's rifle form in Ballistics is photographed at the next sitting with the phone"
+      }
+    },
+    {
       "key": "fudd-buster",
       "group": "The numbers",
       "name": "Fudd buster mode",

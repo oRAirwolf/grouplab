@@ -334,7 +334,13 @@ public class Entry109Tests
                     // Entry 112 section 4: a rifle and load carrying what the solver needs, so the Ballistics screen shows its table.
                     // Entry 294 section 2: its scope is in mil, a tenth a click, so the zero, the dope and Shots Needed to Zero are pictured
                     // in mil while Settings says MOA; Compare and Settings stay in MOA, so each unit is shown.
-                    var rifle = new Rifle("Test rifle", 0.1, GroupLab.Core.Statistics.AngularUnit.Mrad) { SightHeightInches = 1.75, ZeroDistanceYards = 100 };
+                    // Entry 456: a scope and mount and a weight, for the rifle page's Scope and mount picture; its scale factor stays 1, so no
+                    // other picture's clicks change.
+                    var rifle = new Rifle("Test rifle", 0.1, GroupLab.Core.Statistics.AngularUnit.Mrad)
+                    {
+                        SightHeightInches = 1.75, ZeroDistanceYards = 100, ScopeTravel = 30, ScopeTravelKind = GroupLab.Core.Ballistics.ScopeTravelKind.Total, RailCant = 6,
+                        WeightAsFiredLb = 11,
+                    };
                     // Entry 407 section 5: the rifle with two barrels, one of them on now, so Equipment shows a rifle's page with its barrels.
                     window.Book = RecordBook.Empty.With(rifle).With(new Load("Test load", null)
                     {
@@ -685,6 +691,9 @@ public class Entry109Tests
                         // 5: the rifle's own page, with its barrels and the one on now.
                         window.EditRifle("Test rifle");
                         Save(window, $"equipment-{name}-{size}");
+                        // Entry 456: the same page at its Scope and mount part, with the figures, the tracking test and Top Gun.
+                        window.ShowScopeAndMount();
+                        Save(window, $"equipment-scope-{name}-{size}");
                         window.BackToEditor();
 
                         Assert.False(suppressor is null && outputs.Count > 1, "publishing the screenshots needs Alan's two 6 ARC scans from the test-data release (GROUPLAB_TEST_DATA)");

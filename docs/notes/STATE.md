@@ -9,23 +9,23 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 455 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 456 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
-- **Entry 455 (2026-10-19)**: Ballistics' Point blank view and phone tab (`PointBlankModel`, `PointBlankReport`, `PointBlankCard`);
-  schema 4 (least expansion velocity, previous zeros); IPSC is the A zone (question 102). Entry 456 is next; request 103 asks its Top Gun metric.
+- **Entries 455 and 456 (2026-10-19)**: Ballistics' Point blank view (`PointBlankModel`, `PointBlankReport`, `PointBlankCard`); the rifle's
+  Scope and mount (`ScopeMount`, `ScopeTracking`, `TopGun`), schema 5. Top Gun's comparison waits on request 103. **Later idea**: tracking
+  measured from a scanned tracking target (72 in tall at 20 mil and 100 yd: tiled pages or a plotter).
 - **Entries 454 and 452 (2026-10-19)**: each platform follows its own newest build (`platforms` in the second manifest; live in
   nightly 204, whose Android files joined both releases after the desktop's); Alan's tablet should reach **0.2.0-nightly.204**. The
   website and ships-list checks and a new release notes check are in `checks.yml`, which no nightly waits for; the ships list is not
   what the Linux download holds, the linux tarball still gates. A refused note publishes short notes with a warning.
 - **Entry 447 (2026-10-18)**: parts 1, 2, 4 done; 3: a focusing press's hold is off (ff9f61c1), one red since; popups now logged.
   Left from part 2: six windows untested (CSV mapping, store target, Fudd buster, group tools, print, figures); no real screen reader.
-- **Entries 441 to 453 (site)**: research thumbnails, 14 real and 7 drawn (proof and `which-is-which.txt` in `C:\Dev\grouplab-local\research-thumbs\`);
+- **Entries 441 to 453 (site; 442 to 450 the app's keyboard, demo and CI retry)**: research thumbnails, 14 real and 7 drawn (proof and `which-is-which.txt` in `C:\Dev\grouplab-local\research-thumbs\`);
   the ruler on every page (`RULER`); home menu tappable (`tests/site/taps.mjs`); concept B home; `heading_problems` holds the titles.
-- **Entries 442 to 450**: keyboard focus (`KeyboardFocus`); "On this page"; phone demo (`PhoneDemo`); one test retry in CI (`docs/notes/flaky-tests.md`).
 - **The usage guard** stops at 85% of the week. **The proof checklist**: rows 6, 8, 11, 12, 13, 15, 16, 21, 23 by tests, 18, 31 met.
 - **Waiting on Alan:** requests 83, 70, 72, 74 to 77, 103, 104; 86 later.
 

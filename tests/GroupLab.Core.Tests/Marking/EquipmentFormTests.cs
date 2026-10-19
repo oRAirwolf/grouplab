@@ -27,6 +27,11 @@ public class EquipmentFormTests
         SightHeightInches = 1.85,
         ZeroDistanceYards = 100,
         Notes = "Bedded 2025.",
+        ScopeTravel = 30,
+        ScopeTravelKind = GroupLab.Core.Ballistics.ScopeTravelKind.Total,
+        RailCant = 6,
+        SightScaleFactor = 0.987,
+        WeightAsFiredLb = 14.5,
     };
 
     private static Barrel FullBarrel() => new("Bartlein #3", "Tikka T3x", 480)

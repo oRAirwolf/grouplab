@@ -57,8 +57,9 @@ public static class ShotsToZero
     /// A group's sigma, one axis, in clicks: the angle it subtends at the distance, over the click's own angle. Shared by the desktop and
     /// the phone (entry 258), so the two cannot differ.
     /// </summary>
-    public static double SigmaClicks(double sigmaInches, double distanceInches, AngularUnit clickUnit, double clickValue) =>
-        Angular.Constant(clickUnit) / 2 * Math.Atan(sigmaInches / distanceInches) / clickValue;
+    /// <param name="scaleFactor">The rifle's sight scale factor (entry 456): a click moves the true angle marked times it.</param>
+    public static double SigmaClicks(double sigmaInches, double distanceInches, AngularUnit clickUnit, double clickValue, double scaleFactor = 1) =>
+        Angular.Constant(clickUnit) / 2 * Math.Atan(sigmaInches / distanceInches) / (clickValue * (scaleFactor > 0 ? scaleFactor : 1));
 
     /// <summary>One axis's chance, sigma known, for a group of <paramref name="shots"/>: h 0.5 for the closest click, 1.5 for within one.</summary>
     public static double Axis(double sigmaClicks, int shots, double h)

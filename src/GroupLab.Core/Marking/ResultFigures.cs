@@ -23,7 +23,8 @@ public sealed record ResultSection(string Key, string Heading, bool Open, IReadO
 public static class ResultFigures
 {
     /// <summary>The figures of a marking, sizes in <paramref name="angle"/> where the distance allows and it is given, in the person's length otherwise.</summary>
-    public static (IReadOnlyList<ResultFigure> Tiles, IReadOnlyList<ResultSection> Sections) Build(MarkingState state, UnitSettings units, AngularUnit? angle = null, InsideScatter insideScatter = InsideScatter.LeaveIt)
+    /// <param name="load">The load the marking names, as the records hold it, for Top Gun (entry 456); null leaves it out.</param>
+    public static (IReadOnlyList<ResultFigure> Tiles, IReadOnlyList<ResultSection> Sections) Build(MarkingState state, UnitSettings units, AngularUnit? angle = null, InsideScatter insideScatter = InsideScatter.LeaveIt, Load? load = null)
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(units);
@@ -90,6 +91,13 @@ public static class ResultFigures
         {
             advanced.Add(new ResultFigure("sdAcross", "Spread across", Size(sx), Explanation: "How far the shots spread from side to side, one standard deviation."));
             advanced.Add(new ResultFigure("sdUpDown", "Spread up and down", Size(sy), Explanation: "How far the shots spread up and down, one standard deviation."));
+        }
+
+        // Entry 456 section 3: Top Gun as Litz states it, beside the figures and never compared with them until its measure is confirmed.
+        if (GroupLab.Core.Ballistics.TopGun.For(state.Rifle, load) is { } topGun)
+        {
+            advanced.Add(new ResultFigure("topGun", "Top Gun, Litz's trend", string.Create(CultureInfo.InvariantCulture, $"{topGun:0.00} MOA average group"),
+                Explanation: GroupLab.Core.Ballistics.TopGun.Says(topGun) + " " + GroupLab.Core.Ballistics.TopGun.Note));
         }
 
         sections.Add(new ResultSection("advanced", "Advanced", false, advanced));

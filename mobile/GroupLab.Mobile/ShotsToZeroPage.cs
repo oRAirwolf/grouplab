@@ -144,7 +144,7 @@ internal sealed class ShotsToZeroPage : UserControl
             return;
         }
 
-        double sigmaClicks = ShotsToZero.SigmaClicks(zero.SigmaInches, distance, c.Unit, c.Value);
+        double sigmaClicks = ShotsToZero.SigmaClicks(zero.SigmaInches, distance, c.Unit, c.Value, state.Rifle?.SightScaleFactor ?? 1);
         int chosenSeed = int.TryParse(seed.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int s) ? s : 41;
         var bar = new ProgressBar { IsIndeterminate = true, MinHeight = 6 };
         var cancel = Screens.Choice("Cancel", () => work?.Cancel());

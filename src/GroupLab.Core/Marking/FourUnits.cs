@@ -87,7 +87,8 @@ public static class FourUnits
     /// What to turn, in the scope's own clicks, or null where the rifle does not record a click value. Never guessed: a scope that adjusts
     /// in quarter minutes and one that adjusts in tenth mils are both common, and assuming either would send somebody the wrong distance.
     /// </summary>
-    public static string? Clicks(double inches, double distanceYards, string? scopeUnits, double? clickValue)
+    /// <param name="scaleFactor">The rifle's sight scale factor (entry 456): the turret's reading is the true angle over it.</param>
+    public static string? Clicks(double inches, double distanceYards, string? scopeUnits, double? clickValue, double? scaleFactor = null)
     {
         if (clickValue is not { } value || value <= 0 || distanceYards <= 0)
         {
@@ -97,7 +98,7 @@ public static class FourUnits
         var four = Of(inches, distanceYards);
         string unit = Headline(scopeUnits);
         double angular = unit == "mil" ? four.Mil : four.Moa;
-        double clicks = Math.Abs(angular) / value;
+        double clicks = Math.Abs(angular) / value / (scaleFactor is > 0 and var f ? f : 1);
 
         if (clicks < 0.5)
         {

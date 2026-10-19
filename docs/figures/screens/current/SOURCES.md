@@ -202,6 +202,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `ballistics-point-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `ballistics-point-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `ballistics-point-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `equipment-scope-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `equipment-scope-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `equipment-scope-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `equipment-scope-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `equipment-scope-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `equipment-scope-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `equipment-scope-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `equipment-scope-light-2560x1440.png` | Entry109Tests synthetic sheet |
 | `firstrun-dark-1280x720.png` | no sheet at all |
 | `firstrun-dark-1400x900.png` | no sheet at all |
 | `firstrun-dark-1920x1080.png` | no sheet at all |

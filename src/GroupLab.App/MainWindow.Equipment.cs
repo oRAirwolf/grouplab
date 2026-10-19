@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using GroupLab.App.Theme;
+using GroupLab.Core.Ballistics;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Statistics;
 
@@ -149,6 +150,27 @@ public sealed partial class MainWindow
 
         foreach (var field in EquipmentForm.For(equipmentKind))
         {
+            // Entry 456: a field that starts a section puts its heading across both columns first.
+            if (field.Section is { } section)
+            {
+                if (column != 0)
+                {
+                    row++;
+                    column = 0;
+                }
+
+                var heading = new TextBlock { Text = section, Classes = { AppStyles.Section }, Margin = new Thickness(0, Tokens.Space8, 0, Tokens.Space8) };
+                Grid.SetRow(heading, row);
+                Grid.SetColumnSpan(heading, 2);
+                while (grid.RowDefinitions.Count <= row)
+                {
+                    grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+                }
+
+                grid.Children.Add(heading);
+                row++;
+            }
+
             string? value = CurrentEquipmentValue(field.Key);
             var cell = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(0, 0, Tokens.Space16, Tokens.Space12) };
             cell.Children.Add(new TextBlock
@@ -244,6 +266,7 @@ public sealed partial class MainWindow
         if (equipmentKind == EquipmentKind.Rifle && equipmentEditing is { } rifle && book.FindRifle(rifle) is not null)
         {
             equipmentForm.Children.Add(BarrelsOnThisRifle(rifle));
+            equipmentForm.Children.Add(ScopeAndMount(book.FindRifle(rifle)!));
         }
     }
 
@@ -341,6 +364,7 @@ public sealed partial class MainWindow
         "firearm" => ["Rifle", "Pistol"],
         "clickUnit" => ["mil", "MOA", "SMOA"],
         "twistDirection" => ["right", "left"],
+        "scopeTravelKind" => ["the total travel", "most up from my zero"],
         "dragModel" => ["G1", "G7"],
         // Entry 407 section 5.5: a barrel under "Barrels not yet on a rifle" is moved by choosing its rifle here.
         "rifle" => [.. book.Rifles.Select(r => r.Name)],
@@ -448,6 +472,16 @@ public sealed partial class MainWindow
                     ZeroDistanceYards = Number(Typed("zeroDistanceYards")),
                     Stock = Blank(Typed("stock")),
                     Notes = Blank(Typed("notes")),
+
+                    // Entry 455: a zero kept from the point blank view is not on this form, so it is kept from the rifle as it was.
+                    PreviousZerosJson = was?.PreviousZerosJson,
+
+                    // Entry 456: the scope and mount.
+                    ScopeTravel = Number(Typed("scopeTravel")),
+                    ScopeTravelKind = Typed("scopeTravelKind") is "most up from my zero" ? ScopeTravelKind.MostUpFromZero : Number(Typed("scopeTravel")) is null ? null : ScopeTravelKind.Total,
+                    RailCant = Number(Typed("railCant")),
+                    SightScaleFactor = Number(Typed("sightScaleFactor")),
+                    WeightAsFiredLb = Number(Typed("weightAsFiredLb")),
                 });
                 break;
 

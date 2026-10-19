@@ -172,7 +172,14 @@ internal sealed class BallisticsPage : UserControl
         step = Math.Clamp(step, 10, 500);
         bool mil = Mil;
         double click = RifleChosen?.ClickValue is > 0 and var c ? c : mil ? 0.1 : 0.25;
-        var points = SolverUse.Dope(input with { CrosswindMph = 10 }, max, step).Points.Where(p => p.RangeYards > 0).ToList();
+
+        // Entry 456: the turret's reading is the true angle over the sight scale factor.
+        click *= RifleChosen?.SightScaleFactor is > 0 and var factor ? factor : 1;
+        var flown = SolverUse.Dope(input with { CrosswindMph = 10 }, max, step);
+        var points = flown.Points.Where(p => p.RangeYards > 0).ToList();
+
+        // Entry 456 section 1: past the elevation the scope has left above its zero, the rest is held in the reticle.
+        var mount = RifleChosen is { } scoped ? ScopeMount.Figures(scoped, flown.ZeroAngleMoa) : null;
         bool wide = Bounds.Width > Bounds.Height && Bounds.Width > 600;
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions(wide ? "*,*,*,*,*,*,*,*" : "*,*,*,*,*"), RowSpacing = 6 };
         string unit = mil ? "mil" : "MOA";
@@ -217,7 +224,9 @@ internal sealed class BallisticsPage : UserControl
             {
                 units.DistanceText(p.RangeYards * 36),
                 up.ToString("0.0", CultureInfo.CurrentCulture),
-                Math.Round(up / click).ToString("0", CultureInfo.CurrentCulture),
+                p.DropInches < 0 && RifleChosen is { } r && ScopeMount.OutOfElevation(r, mount, Math.Atan(Math.Abs(p.DropInches) / (p.RangeYards * 36)) * BallisticSolver.MoaPerRadian) is { } hold
+                    ? hold
+                    : Math.Round(up / click).ToString("0", CultureInfo.CurrentCulture),
                 across.ToString("0.0", CultureInfo.CurrentCulture),
                 Math.Round(across / click).ToString("0", CultureInfo.CurrentCulture),
             };
@@ -622,9 +631,76 @@ internal sealed class BallisticsPage : UserControl
         }
 
         ShowClicks();
+
+        // Entry 456: the scope and mount, as the computer's rifle page has them; travel and cant in the scope unit.
+        string F(double? v, string format) => v?.ToString(format, CultureInfo.InvariantCulture) ?? "";
+        var travel = Screens.Numeric(Field(F(r?.ScopeTravel, "0.##")));
+        bool mostUp = r?.ScopeTravelKind == ScopeTravelKind.MostUpFromZero;
+        var travelKind = new WrapPanel();
+        void ShowTravelKind()
+        {
+            travelKind.Children.Clear();
+            travelKind.Children.Add(Chip("The total travel", !mostUp, () => { mostUp = false; ShowTravelKind(); }));
+            travelKind.Children.Add(Chip("Most up from my zero", mostUp, () => { mostUp = true; ShowTravelKind(); }));
+        }
+
+        ShowTravelKind();
+        var cant = Screens.Numeric(Field(F(r?.RailCant, "0.##")));
+        var factor = Screens.Numeric(Field(F(r?.SightScaleFactor, "0.000")));
+        var weight = Screens.Numeric(Field(F(r?.WeightAsFiredLb, "0.##")));
+        var mount = new StackPanel { Spacing = 6 };
+        if (r is not null && r.ScopeTravel is > 0 && LoadChosen is { } load && SolverUse.Missing(r, load).Count == 0)
+        {
+            var flight = BallisticSolver.Solve(SolverUse.Input(r, load, air)!, ScopeMount.TravelLooked, 25);
+            foreach (string line in ScopeMount.Lines(r, load.Name, ScopeMount.Figures(r, flight.ZeroAngleMoa, flight)!, units))
+            {
+                mount.Children.Add(Screens.Line(line));
+            }
+        }
+
+        if (r is not null && LoadChosen is { } chosen && TopGun.For(r, chosen) is { } topGun)
+        {
+            mount.Children.Add(Screens.Line(TopGun.Says(topGun, chosen.Name)));
+            mount.Children.Add(Screens.Dim(TopGun.Note));
+        }
+
+        // The tracking test, worked out here and put into the factor's field.
+        var expected = Screens.Numeric(Field((mil ? ScopeTracking.ExpectedMil : ScopeTracking.ExpectedMoa).ToString("0.0", CultureInfo.InvariantCulture)));
+        var reading = Screens.Numeric(Field("")).Id("ballistics-rifle-reading");
+        var tested = new TextBlock { TextWrapping = TextWrapping.Wrap };
+        var tracking = new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                Screens.Dim(ScopeTracking.Steps),
+                new WrapPanel { Children = { Labeled("Expected, in the scope unit", expected), Labeled("Turret reading", reading) } },
+                Screens.Choice("Work out the sight scale factor", () =>
+                {
+                    if (Number(expected) is not { } e || Number(reading) is not { } read)
+                    {
+                        tested.Text = "Enter the expected angle and the turret's reading.";
+                        return;
+                    }
+
+                    var result = ScopeTracking.Work(e, read);
+                    factor.Text = result.ScaleFactor.ToString("0.000", CultureInfo.InvariantCulture);
+                    tested.Text = string.Create(CultureInfo.InvariantCulture, $"Sight scale factor {result.ScaleFactor:0.000}, an error of {result.ErrorPercent:+0.00;-0.00;0.00} %. {result.Verdict} It is in the field above; Keep this rifle keeps it.");
+                }).Id("ballistics-rifle-tracking"),
+                tested,
+            },
+        };
+
         return Screens.Card(Screens.Heading("The rifle"), Picker(book.Rifles.Select(x => x.Name), n => { rifleName = n; Build(); }),
             Labeled("Name", name), Labeled("Sight height, in", sight), Labeled("Zero distance, yd", zero), Screens.Dim("Scope unit and one click"), unitChips,
             Labeled("One click, or any other", click), typedUnit,
+            Screens.Heading("Scope and mount"),
+            Labeled("Elevation travel, in the scope unit", travel), travelKind,
+            Labeled("Rail cant, in the scope unit", cant),
+            Labeled("Sight scale factor, 1.000 tracks true", factor),
+            Labeled("Weight as fired, lb", weight),
+            mount,
+            new Expander { Header = new TextBlock { Text = "Work it out from a tracking test" }, Content = tracking, MinHeight = Screens.Touch, HorizontalAlignment = HorizontalAlignment.Stretch },
             Screens.Primary("Keep this rifle", () =>
             {
                 var rifle = (r ?? new Rifle(name.Text ?? "My rifle", usual.Item1, usual.Item2)) with
@@ -634,6 +710,11 @@ internal sealed class BallisticsPage : UserControl
                     ClickUnit = mil ? AngularUnit.Mrad : AngularUnit.Moa,
                     SightHeightInches = Number(sight),
                     ZeroDistanceYards = Number(zero),
+                    ScopeTravel = Number(travel),
+                    ScopeTravelKind = Number(travel) is null ? null : mostUp ? ScopeTravelKind.MostUpFromZero : ScopeTravelKind.Total,
+                    RailCant = Number(cant),
+                    SightScaleFactor = Number(factor),
+                    WeightAsFiredLb = Number(weight),
                 };
                 Keep(book.With(rifle));
                 rifleName = rifle.Name;

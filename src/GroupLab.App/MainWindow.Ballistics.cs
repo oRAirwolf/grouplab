@@ -384,6 +384,9 @@ public sealed partial class MainWindow
         Refresh();
     }
 
+    /// <summary>The elevation a drop needs at a range, in MOA: the full angle to the point, as the clicks are worked out.</summary>
+    private static double ElevationMoa(double dropInches, double rangeInches) => Math.Atan(Math.Abs(dropInches) / rangeInches) * BallisticSolver.MoaPerRadian;
+
     /// <summary>The air as the Ballistics screen states it, the standard atmosphere where a field is empty or not a number.</summary>
     private AirInput Air() => new(
         double.TryParse(airTemperature.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double t)
@@ -502,6 +505,9 @@ public sealed partial class MainWindow
         int index = 0;
         // Entry 280 section 2: a group's zero offset carried in from Zero from this group, the same angle up or down at every range.
         var carriedZero = ballisticsZeroOffset;
+
+        // Entry 456 section 1: past the elevation the scope has left above its zero, the rest is held in the reticle.
+        var mount = ScopeMount.Figures(rifle!, table.ZeroAngleMoa);
         foreach (var solved in table.Points.Where(p => p.RangeYards > 0))
         {
             double range = solved.RangeYards * 36;
@@ -516,7 +522,9 @@ public sealed partial class MainWindow
                     UnitSettings.DistanceFromInches(range, units.Distance).ToString("0", CultureInfo.InvariantCulture),
                     units.Number(point.DropInches),
                     Angle(point.DropInches) + (point.DropInches <= -5e-4 ? " up" : point.DropInches >= 5e-4 ? " down" : ""),
-                    ClickText(point.DropInches, point.DropInches < 0 ? "up" : "down"),
+                    point.DropInches < 0 && ScopeMount.OutOfElevation(rifle!, mount, ElevationMoa(point.DropInches, range)) is { } hold
+                        ? hold
+                        : ClickText(point.DropInches, point.DropInches < 0 ? "up" : "down"),
                     units.Number(Math.Abs(point.WindInches)),
                     Angle(point.WindInches),
                     // The direction is in the heading, so the column holds the count alone and fits.
@@ -551,7 +559,7 @@ public sealed partial class MainWindow
             })));
         }
 
-        dopeTable.Children.Add(Line($"Zeroed at {units.DistanceText(input.ZeroRangeYards * 36)}, sight height {units.Length(input.SightHeightInches)}, in {AirWords(air)}. Drop is below the line of sight when negative; the clicks are {rifle!.Name}'s, {rifle.DescribeClick()}."));
+        dopeTable.Children.Add(Line($"Zeroed at {units.DistanceText(input.ZeroRangeYards * 36)}, sight height {units.Length(input.SightHeightInches)}, in {AirWords(air)}. Drop is below the line of sight when negative; the clicks are {rifle!.Name}'s, {rifle.DescribeClick()}{(ScopeTracking.Applied(rifle.SightScaleFactor) is { } ssf ? ", " + ssf : "")}."));
         dopeTable.Children.Add(Line(table.Stability is { } sg
             ? string.Create(CultureInfo.InvariantCulture, $"Gyroscopic stability {sg:0.00} by Miller's rule. Spin drift is not in the wind column.")
             : "No spin drift or stability: they need the twist, and the bullet's length and diameter."));

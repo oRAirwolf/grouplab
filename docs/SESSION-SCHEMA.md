@@ -1,6 +1,6 @@
 # GroupLab's storage schema
 
-**Schema version 4.** `DESIGN.md` section 15: "Storage is SQLite with a documented schema and full JSON export." This is the document; `src/GroupLab.Core/Records/SessionStore.cs` creates the database, and `SessionSchemaTests` fails if the statements below differ from what it creates.
+**Schema version 5.** `DESIGN.md` section 15: "Storage is SQLite with a documented schema and full JSON export." This is the document; `src/GroupLab.Core/Records/SessionStore.cs` creates the database, and `SessionSchemaTests` fails if the statements below differ from what it creates.
 
 ## Where it lives
 
@@ -12,7 +12,7 @@ On the first open, a record book from before the database, `records.json`, is co
 
 ```sql
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
-CREATE TABLE rifles (name TEXT PRIMARY KEY COLLATE NOCASE, click_value REAL NOT NULL, click_unit TEXT NOT NULL, sight_height_in REAL, zero_distance_yd REAL, twist_in REAL, twist_direction INTEGER, firearm TEXT, manufacturer TEXT, cartridge TEXT, barrel_length_in REAL, scope TEXT, stock TEXT, notes TEXT, barrel_on TEXT, previous_zeros TEXT);
+CREATE TABLE rifles (name TEXT PRIMARY KEY COLLATE NOCASE, click_value REAL NOT NULL, click_unit TEXT NOT NULL, sight_height_in REAL, zero_distance_yd REAL, twist_in REAL, twist_direction INTEGER, firearm TEXT, manufacturer TEXT, cartridge TEXT, barrel_length_in REAL, scope TEXT, stock TEXT, notes TEXT, barrel_on TEXT, previous_zeros TEXT, scope_travel REAL, scope_travel_kind TEXT, rail_cant REAL, sight_scale_factor REAL, weight_as_fired_lb REAL);
 CREATE TABLE barrels (name TEXT PRIMARY KEY COLLATE NOCASE, rifle TEXT, rounds INTEGER NOT NULL, length_in REAL, twist_in REAL, twist_direction INTEGER, installed TEXT, notes TEXT);
 CREATE TABLE loads (name TEXT PRIMARY KEY COLLATE NOCASE, components TEXT, muzzle_velocity_fps REAL, muzzle_velocity_sd_fps REAL, ballistic_coefficient REAL, drag_model TEXT, bc_reference TEXT, bullet_weight_gr REAL, bullet_length_in REAL, bullet_diameter_in REAL, muzzle_velocity_sd_from TEXT, bullet_name TEXT, brass_manufacturer TEXT, brass_cartridge TEXT, powder TEXT, powder_charge_gr REAL, overall_length_in REAL, base_to_ogive_in REAL, primer TEXT, notes TEXT, min_expansion_fps REAL);
 CREATE TABLE sessions (id INTEGER PRIMARY KEY, created_utc TEXT NOT NULL, shot_date TEXT, sheet_name TEXT NOT NULL, definition_id TEXT, definition_json TEXT, distance_in REAL, rifle TEXT, barrel TEXT, load TEXT, calibre_in REAL, marking_json TEXT NOT NULL, shot_count INTEGER NOT NULL, mean_radius_in REAL, mean_radius_lower_in REAL, mean_radius_upper_in REAL, image_path TEXT, image_sha256 TEXT, proof_image BLOB, proof_image_type TEXT);
@@ -64,3 +64,4 @@ A change raises the version and adds a migration from the version before. It cha
 | 1 | 2 | `ALTER TABLE loads ADD COLUMN muzzle_velocity_sd_from TEXT` | A velocity SD worked out from a chronograph string says where it came from, rather than looking like a figure somebody typed (`NOTES-FROM-PLANNING.md` entry 115 section 3). |
 | 2 | 3 | `ALTER TABLE ... ADD COLUMN` for each column added to `rifles`, `barrels` and `loads` above, in their order | Barrels under their rifle, with the one on now (entry 407 section 5). The Equipment screen's fields from entry 131 section 7 had never reached the database, so a barrel's length and twist, a rifle's cartridge and scope and a load's powder and charge were dropped at every save; they are kept now. After the upgrade, `BarrelMigration` puts every barrel under a rifle once. |
 | 3 | 4 | `ALTER TABLE rifles ADD COLUMN previous_zeros TEXT`, `ALTER TABLE loads ADD COLUMN min_expansion_fps REAL` | A zero kept from the point blank view keeps the one it replaced, newest first as JSON, so it can be put back; a load's least expansion velocity, from the bullet's maker, ends the point blank distances where the bullet stops opening (`NOTES-FROM-PLANNING.md` entry 455). |
+| 4 | 5 | `ALTER TABLE rifles ADD COLUMN` for `scope_travel`, `scope_travel_kind`, `rail_cant`, `sight_scale_factor` and `weight_as_fired_lb` | A rifle's scope and mount: its elevation travel (in the scope's unit, the whole of it or the most up from the zero), its rail's cant, its sight scale factor from a tracking test, and its weight as fired for Top Gun (`NOTES-FROM-PLANNING.md` entry 456). |

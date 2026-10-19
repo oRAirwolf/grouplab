@@ -40,7 +40,8 @@ public enum FieldKind
 /// <param name="Kind">What it holds.</param>
 /// <param name="Unit">The unit shown after the box, for a number, or null.</param>
 /// <param name="Required">True only for a name: entry 131 section 7.1 makes every other field optional.</param>
-public sealed record EquipmentField(string Key, string Label, FieldKind Kind, string? Unit = null, bool Required = false);
+/// <param name="Section">The heading the field starts, where the form groups its fields (entry 456's Scope and mount), or null.</param>
+public sealed record EquipmentField(string Key, string Label, FieldKind Kind, string? Unit = null, bool Required = false, string? Section = null);
 
 /// <summary>
 /// The Equipment screen, NOTES-FROM-PLANNING.md entry 131 section 7: rifles, barrels and loads, each with a form, every field optional except
@@ -70,6 +71,13 @@ public static class EquipmentForm
         new("sightHeightInches", "Sight height", FieldKind.Number, "in"),
         new("zeroDistanceYards", "Zeroed at", FieldKind.Number, "yd"),
         new("stock", "Chassis or stock", FieldKind.Words),
+
+        // Entry 456: the scope and mount, from Alan's pissinhot.com calculators. Travel and cant are in the scope unit chosen above.
+        new("scopeTravel", "Elevation travel", FieldKind.Number, "in the scope unit", Section: "Scope and mount"),
+        new("scopeTravelKind", "That travel is", FieldKind.Choice),
+        new("railCant", "Rail cant", FieldKind.Number, "in the scope unit"),
+        new("sightScaleFactor", "Sight scale factor", FieldKind.Number, "1.000 tracks true"),
+        new("weightAsFiredLb", "Weight as fired, with optic and bipod", FieldKind.Number, "lb"),
         new("notes", "Notes", FieldKind.Lines),
     ];
 
@@ -188,6 +196,16 @@ public static class EquipmentForm
             "sightHeightInches" => Text(rifle.SightHeightInches),
             "zeroDistanceYards" => Text(rifle.ZeroDistanceYards),
             "stock" => Text(rifle.Stock),
+            "scopeTravel" => Text(rifle.ScopeTravel),
+            "scopeTravelKind" => rifle.ScopeTravelKind switch
+            {
+                GroupLab.Core.Ballistics.ScopeTravelKind.MostUpFromZero => "most up from my zero",
+                GroupLab.Core.Ballistics.ScopeTravelKind.Total => "the total travel",
+                _ => null,
+            },
+            "railCant" => Text(rifle.RailCant),
+            "sightScaleFactor" => Text(rifle.SightScaleFactor),
+            "weightAsFiredLb" => Text(rifle.WeightAsFiredLb),
             "notes" => Text(rifle.Notes),
             _ => null,
         };

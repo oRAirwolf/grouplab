@@ -126,7 +126,7 @@ public sealed partial class MainWindow
             return;
         }
 
-        double sigmaClicks = ShotsToZero.SigmaClicks(zero.SigmaInches, distance, c.Unit, c.Value);
+        double sigmaClicks = ShotsToZero.SigmaClicks(zero.SigmaInches, distance, c.Unit, c.Value, session.State.Rifle?.SightScaleFactor ?? 1);
         int seed = int.TryParse(shotsSeed.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int s) ? s : 41;
         bool exact = shotsExact.IsChecked == true;
         string key = string.Create(CultureInfo.InvariantCulture, $"{sigmaClicks:R}|{zero.DegreesOfFreedom}|{exact}|{seed}");

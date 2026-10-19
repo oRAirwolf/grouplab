@@ -85,6 +85,20 @@ internal sealed class ComparePage : UserControl
             }
 
             column.Children.Add(Screens.Card(list));
+
+            // Entry 456 section 3: Top Gun for each compared load, as Litz states it.
+            if (GroupLab.Core.Ballistics.TopGun.Lines(records.Select(r => (r.Rifle, r.Load)), PhoneAnalysis.Store().LoadBook()) is { Count: > 0 } topGun)
+            {
+                var card = new StackPanel { Spacing = 6, Children = { Screens.Heading("Top Gun") } };
+                foreach (string line in topGun)
+                {
+                    card.Children.Add(Screens.Line(line));
+                }
+
+                card.Children.Add(Screens.Dim(GroupLab.Core.Ballistics.TopGun.Note));
+                column.Children.Add(Screens.Card(card));
+            }
+
             var verdict = new StackPanel { Spacing = 6, Children = { Screens.Heading("What these shots can tell"), LoadGroups.Key([.. report.Groups.Select(g => g.Name)]), Screens.Line(report.Headline) } };
             // Entry 312 section 3: plain words first; the ratio with its interval and the power sentence behind Details.
             foreach (string line in report.Plain)

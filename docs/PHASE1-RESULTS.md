@@ -1711,6 +1711,37 @@ presentation change with no measurement in it.
 10. **Alan's proof**: request 104, the card on his M220 once a nightly carries it. Request 103 (entry 456's Top Gun question) was
    written at the same time.
 
+## Entry 456: rail cant, sight scale factor and Top Gun, from Alan's pissinhot.com calculators (2026-10-19)
+
+The formulas are the entry's own account of the three pages. Reading the pages here: the safety check refused the fetch of the scope cant
+page, and the other two came back as page text without their scripts; the entry's formulas were complete, so nothing waited on it.
+
+1. **Rail cant** (`ScopeMount`, the rifle page's Scope and mount section): the elevation the zero uses is GroupLab's zero launch angle
+   (the one deliberate difference: his page adds a vacuum drop angle; for the Test load at 100 yd the page's formula gives 4.053 MOA and
+   the solver 4.012), half the travel (or the most up from the zero plus the zero's, his second mode), the most rail cant that still
+   zeroes, the elevation left above the zero with the rail's cant and the farthest range it reaches with a chosen load (1550 yd for the
+   screenshot rifle, 30 mil and a 6 mil rail), and the plain refusal when the rail is canted past what zeroes. Ballistics uses it: the
+   Trajectory table's clicks say "out of elevation, hold X mil in the reticle" past the last dialable range, At one range says the same,
+   and Point blank says when its zero needs more than is left; the phone's dope table too.
+2. **Sight scale factor**: a rifle field and a tracking-test helper (expected 20.0 mil or 66.0 MOA, the turret's reading, the factor,
+   the error, the band: under 0.5 % essentially perfect, under 2 % normal, 2 % or more significant, and the steps). Every click is the true
+   angle over the factor: `Clicks.For` (Trajectory, At one range, zero carried, Point blank and its card), the analysis's `FourUnits.Clicks`,
+   Shots Needed to Zero (`SigmaClicks`), the phone's dope table; "SSF 0.980 applied" said once beside them. **Later idea, not built**:
+   tracking measured from a scanned tracking target, which at 20 mil and 100 yd is 72 in tall (tiled pages or a plotter); in STATE.
+3. **Top Gun**: a rifle field, weight as fired; the figure as Litz states it on the rifle page for each load, in the analysis's advanced
+   figures (computer and phone) and in Compare loads (both), never coloured or worded as a pass or a fail. Not converted to mean radius and
+   not compared with GroupLab's figures: `TopGun.MetricConfirmed` is false until request 103 is answered, and the "clearly worse than the
+   trend" pointer (`TopGun.WorseThanTrend`, no pseudoscience) waits on it too. The combined dispersion table is left out.
+4. **Records, schema version 5**: `scope_travel`, `scope_travel_kind`, `rail_cant`, `sight_scale_factor`, `weight_as_fired_lb` on rifles,
+   through `EquipmentForm` (with a Section heading for Scope and mount), the record book file, the export and import (versions 2 to 5), and
+   the phone's rifle form. A desktop rifle save now keeps the rifle's previous zeros (entry 455), which its form does not show.
+5. **Phone parity**: the same fields, figures, tracking helper and Top Gun in Ballistics' rifle form; the dope's holds; Top Gun in the
+   result and Compare. **Docs** (docs helper, reviewed): the guide's Scope and mount part with the credits (pissinhot.com, Bryan Litz), its
+   PDF, the Features entry with its picture (`equipment-scope`), the tour, README, PHONE-PARITY.
+6. **Tests**: `ScopeMountTests` (7: the page's worked example against the solver's angle, both travel kinds, the refusal, the hold, the
+   tracking bands, the factor in every click count, Top Gun's arithmetic), `Entry456Tests` on the computer (2) and the phone (1), and
+   the equipment form's round trip with every new field.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

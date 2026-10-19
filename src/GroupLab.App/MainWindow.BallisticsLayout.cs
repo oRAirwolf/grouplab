@@ -416,9 +416,12 @@ public partial class MainWindow
         lead.Children.Add(leadLabel);
         lead.Children.Add(leadValue);
         atRangeLines.Children.Add(lead);
+        // Entry 456 section 1: past the elevation the scope has left above its zero, what to hold in the reticle instead of the clicks.
+        string? outOf = point.DropInches < 0 ? ScopeMount.OutOfElevation(rifle!, ScopeMount.Figures(rifle!, solved.ZeroAngleMoa), Math.Atan(Math.Abs(point.DropInches) / inches) * BallisticSolver.MoaPerRadian) : null;
         atRangeLines.Children.Add(new TextBlock
         {
-            Text = $"{ClickText(point.DropInches, point.DropInches < 0 ? "up" : "down")} · drop {units.Length(point.DropInches)}",
+            Text = $"{outOf ?? ClickText(point.DropInches, point.DropInches < 0 ? "up" : "down")} · drop {units.Length(point.DropInches)}"
+                + (ScopeTracking.Applied(rifle!.SightScaleFactor) is { } ssf ? " · " + ssf : ""),
             HorizontalAlignment = HorizontalAlignment.Right,
             FontFamily = Mono,
             Classes = { AppStyles.Secondary },

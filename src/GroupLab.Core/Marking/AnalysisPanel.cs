@@ -124,7 +124,7 @@ public sealed record AnalysisPanel(ImmutableList<PanelBlock> Blocks, string? Pro
             var four = FourUnits.Of(
                 Math.Abs(axis.OffsetInches),
                 yards,
-                FourUnits.Clicks(Math.Abs(axis.OffsetInches), yards, scope, state.Rifle?.ClickValue));
+                FourUnits.Clicks(Math.Abs(axis.OffsetInches), yards, scope, state.Rifle?.ClickValue, state.Rifle?.SightScaleFactor));
 
             // Entry 282 section 7: an axis too close to center to dial showed only "right" above "left", with no number. It gives the
             // amount and where the group sits; entry 424, it says "leave it" and why, with the shots that would settle it where known.

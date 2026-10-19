@@ -1,0 +1,151 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Add a barrel": [
+      749,
+      520,
+      99,
+      27
+    ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
+    "Bartlein is on Test rifle now": [
+      747,
+      442,
+      28,
+      32
+    ],
+    "Cancel": [
+      817,
+      345,
+      67,
+      27
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Column width: the left and right arrows widen or narrow it": [
+      724,
+      75,
+      6,
+      781
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
+    "Edit": [
+      1314,
+      445,
+      50,
+      27
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
+    ],
+    "EquipmentField_notes": [
+      747,
+      259,
+      613,
+      60
+    ],
+    "EquipmentField_railCant": [
+      747,
+      125,
+      140,
+      30
+    ],
+    "EquipmentField_scopeTravel": [
+      747,
+      75,
+      140,
+      11
+    ],
+    "EquipmentField_scopeTravelKind": [
+      1062,
+      75,
+      298,
+      13
+    ],
+    "EquipmentField_sightScaleFactor": [
+      1062,
+      125,
+      140,
+      30
+    ],
+    "EquipmentField_weightAsFiredLb": [
+      747,
+      192,
+      140,
+      30
+    ],
+    "Factory is on Test rifle now": [
+      747,
+      478,
+      28,
+      32
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Save": [
+      749,
+      345,
+      56,
+      27
+    ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

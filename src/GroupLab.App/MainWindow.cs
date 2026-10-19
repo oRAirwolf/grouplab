@@ -3052,6 +3052,12 @@ public sealed partial class MainWindow : Window
                 }
 
                 advancedFigures.Children.Add(Rowed(Figure("Sigma", all.Sigma!, reducedOrNull, f => f.Sigma, Tokens.ValueSize, FontWeight.Medium)));
+
+                // Entry 456 section 3: Top Gun as Litz states it, beside the figures and never compared with them until its measure is confirmed.
+                if (TopGun.For(session.State.Rifle, book.FindLoad(session.State.Load)) is { } topGun)
+                {
+                    advancedFigures.Children.Add(Note(TopGun.Says(topGun) + " " + TopGun.Note));
+                }
                 AddBullByBull(state);
                 if (all is { SdX: not null, SdY: not null } && SizeValue(all) is not null)
                 {

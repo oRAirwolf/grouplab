@@ -48,6 +48,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Sessions over time | `sessions` | on the phone | | on iOS |
 | Ballistics and hit chances | `ballistics` | on the phone | entry 259 screen 5, its own tab; printing the dope card is still to come | on iOS |
 | Point blank range | `point-blank` | on the phone | entry 455, Ballistics' Point blank tab: the same answer and words as the computer (`PointBlankReport`), the card shared or printed on the M220, the zero kept and put back | on iOS |
+| Scope and mount | `scope-and-mount` | on the phone | entry 456, Ballistics, Rifle: the same fields, what the scope and mount allow, the sight scale factor and its tracking test, and Top Gun, worked out by the same code as the computer (`ScopeMount`); "out of elevation" in the dope table | on iOS |
 | Fudd buster mode | `fudd-buster` | on the phone | entry 279 section 3 and entry 281 section 2, page A: the same three sections as the desktop's window | on iOS |
 | Walk me through a demo | `demo-tour` | on the phone | entry 446: thirteen steps on the phone's own screens with the desktop's sample (`DemoSample`), offered once after the first questions and from Settings; the phone's Back or End the tour stops it, and nothing is kept unless chosen | on iOS |
 | Work it from the keyboard | `keyboard` | left out | entry 442 says the phones are not part of it: a phone is worked by touch, and a hardware keyboard on a phone or tablet is not yet asked for | left out |

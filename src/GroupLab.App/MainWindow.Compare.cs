@@ -160,9 +160,13 @@ public sealed partial class MainWindow
         }
 
         var groups = setup.Groups.Select(g => (g.Name, g.Offsets, g.Detail, SpeedOf(g.Load))).ToList();
+        compareTopGun = GroupLab.Core.Ballistics.TopGun.Lines(records.Select(r => (r.Rifle, r.Load)), book);
         DiagnosticLog.Info("compare.sessions", ("groups", groups.Count));
         ShowComparison(groups, null);
     }
+
+    /// <summary>Entry 456 section 3: Top Gun for each compared load, shown under the tests.</summary>
+    private IReadOnlyList<string> compareTopGun = [];
 
     /// <summary>The sheet in the analysis, its subgroups as the groups, when its marking names two or more.</summary>
     internal void CompareSubgroups()
@@ -173,6 +177,9 @@ public sealed partial class MainWindow
             status.Text = "This sheet has no subgroups to compare.";
             return;
         }
+
+        // A subgroup is named by its load, so each is Top Gun's load in the sheet's rifle.
+        compareTopGun = GroupLab.Core.Ballistics.TopGun.Lines(map.Names.Select(load => (state.Rifle?.Name, (string?)load)), book);
 
         var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
         var groups = new List<(string, IReadOnlyList<PointD>, string, string?)>();
@@ -332,6 +339,17 @@ public sealed partial class MainWindow
         }
 
         compareColumn.Children.Add(new Border { Child = verdict, Classes = { AppStyles.JudgementCard } });
+
+        if (compareTopGun.Count > 0)
+        {
+            compareColumn.Children.Add(Heading("Top Gun"));
+            foreach (string line in compareTopGun)
+            {
+                compareColumn.Children.Add(Line(line));
+            }
+
+            compareColumn.Children.Add(Note(GroupLab.Core.Ballistics.TopGun.Note));
+        }
 
         compareColumn.Children.Add(Heading("Tests run"));
         foreach (var test in report.Tests)

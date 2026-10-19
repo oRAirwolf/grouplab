@@ -25,6 +25,91 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 456: rail cant, sight scale factor and Top Gun, from Alan's pissinhot.com calculators
+
+**Status: actioned 2026-10-19; every section done. Top Gun's comparison with GroupLab's figures waits on request 103, as the entry says.**
+
+From the planning session, 2026-10-19 09:30 UTC. Take it after entry 455. Desktop and phones (phone parity). Alan, 2026-10-19 03:17 to
+03:22 Denver, asked to bring three calculators from his own site into GroupLab: https://www.pissinhot.com/scopecant.html,
+https://www.pissinhot.com/topgun.html and https://www.pissinhot.com/ssf.html. They are his own work; port the formulas, not the pages'
+code or look (GroupLab has its own solver and style). He agreed to the placements below and said to write it up without a canvas.
+Read the three pages yourself if anything here is unclear (plain HTTPS GET, read only; nothing on pissinhot.com changes).
+
+## 1. Rail cant, in a new "Scope and mount" section of the rifle's page in Equipment
+
+What his page computes (scopecant.html, `calculate`):
+- Zero compensation ZC (MOA) = bore angle + drop angle, where bore angle = atan(sight height / zero range) and drop angle =
+  atan(drop / zero range) with drop = 0.5 g t squared from the time of flight to the zero range.
+- Half travel = the scope's total internal elevation / 2 (or, in his "max elevation from zero" mode, total = 2 x (max up from zero +
+  ZC)).
+- Maximum rail cant before the rifle cannot be zeroed = ZC + half travel.
+- With the rail's actual cant entered: elevation left above the zero = half travel + rail cant - ZC.
+
+In GroupLab:
+- New rifle fields: the scope's total elevation travel (with a choice of "total travel" or "maximum up from my zero", as his page
+  has), and the rail's cant (MOA or mil). Both optional.
+- Use GroupLab's own zero launch angle (`Trajectory.ZeroAngleMoa`) for ZC instead of the vacuum drop; say in the guide that this is
+  the one deliberate difference from the pissinhot page and why.
+- Show: elevation the zero uses, the most rail cant that still zeroes, elevation left above zero, and, with the rifle's chosen load,
+  **the farthest range that elevation reaches**. If the entered rail cant is more than the maximum, say plainly the rifle cannot be
+  zeroed with it.
+- Ballistics uses it: Trajectory rows past the last dialable range say "out of elevation, hold X mil (or MOA) in the reticle", and the
+  At one range panel says the same. The new point blank view (entry 455) says so if its zero needs more than is there.
+- Name it **"Rail cant"** in GroupLab (Alan's page calls it scope cant; plain "cant" usually means tilting the rifle).
+
+## 2. Sight scale factor (SSF), on the rifle's page in the same Scope and mount section
+
+What his page computes (ssf.html): SSF = expected value / actual turret reading from a tall target tracking test (CATS style,
+default 20.0 mil or 66.0 MOA); error % = (actual - expected) / expected x 100, positive meaning the scope under-tracks (each click
+moves less than marked). Verdict bands: under 0.5 % essentially perfect, under 2 % normal for quality optics, 2 % or more significant.
+
+In GroupLab:
+- A rifle field "Sight scale factor", default 1.000, with a "Work it out from a tracking test" helper: unit, expected (default 20.0 mil
+  / 66.0 MOA), turret reading, the result, the verdict, and the test's steps in plain words (level the reticle, measure the distance,
+  dial from the top line to the bottom line).
+- **Every click GroupLab gives is corrected by it:** turret reading = true angle / SSF. That is the Trajectory table, At one range,
+  zero corrections and Shots Needed to Zero, the point blank view's "clicks up", the printed point blank card, and the phone. Where
+  the SSF is not 1.000, the clicks say so once ("SSF 0.980 applied").
+- Later idea, not now: measuring tracking from a scanned tracking target. A 20 mil test at 100 yd is 72 in tall, so it needs tiled
+  pages or a plotter. Note it in STATE as a possible later entry.
+
+## 3. Top Gun, in the analysis results and on the rifle's page
+
+What his page computes (topgun.html): group size (MOA) = (muzzle energy ft lb / rifle weight lb) / 200, muzzle energy = bullet
+weight gr x velocity squared / 450240. Bryan Litz's TOP Gun theory (Modern Advancements in Long Range Shooting, Volume III, chapter
+3, 2022): a regression trend of "expected average group size" for a conventional bolt rifle with quality ammunition from a stable rest.
+
+In GroupLab:
+- New rifle field: **weight as fired** (with optic, loaded magazine, bipod and so on), lb or kg.
+- In the analysis figures, where the rifle and load are known: one line, for example "Top Gun expects about 0.82 MOA average group
+  for this rifle and load (Bryan Litz's trend, not a limit)." Beside it, the measured group in the same terms only once the metric is
+  confirmed (below). It is a trend line with real rifles scattered both sides: never a pass or fail, never colored as one.
+- When the measured precision is clearly worse than the trend (judged with the group's own confidence interval, so a small sample
+  does not trigger it), one short line pointing at what is usually checked: action bedding and return to battery, crown, scope mount
+  and rings, barrel, bullet engraving, technique and rest. No pseudoscience (no nodes, no harmonics).
+- The rifle page shows the Top Gun figure for each of its loads; Compare loads shows it per load.
+- Leave out his page's combined dispersion table: Hit probability already does that.
+
+**The metric is not confirmed.** Nobody in planning has the book. If Top Gun's group size is the average extreme spread of 5-shot
+groups, the matching mean radius over many shots is about 0.41 x that figure (sigma = ES5 / 3.06, mean radius = 1.2533 sigma;
+checked by simulation in planning, 200,000 groups). Until Alan confirms the shot count and the measure, show Top Gun's figure as Litz
+states it, do not convert it to mean radius, and do not compare it number for number with GroupLab's figures. Put a question in
+for-alan.md: "Does your friend's copy of Modern Advancements in Long Range Shooting, Volume III, chapter 3, say how many shots Top Gun's
+group size is from, and whether it is extreme spread? Alan is asking his friend (2026-10-19)." When answered, add the conversion and
+the side by side comparison.
+
+## For all three
+
+- Phone parity: the same fields and helpers on the phone's rifle page; the ballistics effects on the phone too.
+- User guide, Features page, README and the tour in the same change (entry 267). The guide credits the pissinhot.com calculators as
+  where these came from (Alan's own site) and Bryan Litz for Top Gun.
+- Tests: rail cant against a worked example from his page (same inputs, the same ZC, half travel and maximum, allowing for the
+  launch angle difference); SSF applied to clicks in every place listed; Top Gun's arithmetic; the "out of elevation" rows.
+- Records: the new rifle fields go through `EquipmentForm` like every other field, with the export and import file and the
+  database schema bumped as usual.
+
+---
+
 ## 2026-10-19, entry 455: maximum point blank range, a third view in Ballistics
 
 **Status: actioned 2026-10-19; every section done. The proof on Alan's M220 is request 104; the IPSC outline beyond its A zone is question 102.**

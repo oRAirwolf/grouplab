@@ -73,7 +73,7 @@ public sealed record ShotVelocity(long SessionId, int ShotId, long StringId, int
 public sealed class SessionStore
 {
     /// <summary>The schema's version, stored in the meta table and in every export.</summary>
-    public const int SchemaVersion = 4;
+    public const int SchemaVersion = 5;
 
     /// <summary>
     /// What each version before this one needs to become this one, oldest first, NOTES-FROM-PLANNING.md entry 115 section 3. Version 2 adds
@@ -87,6 +87,10 @@ public sealed class SessionStore
     /// <para>
     /// Version 4, NOTES-FROM-PLANNING.md entry 455: a rifle's previous zeros, so a zero kept from the point blank view can be put back, and
     /// a load's least expansion velocity, which ends the point blank distances where the bullet stops opening.
+    /// </para>
+    /// <para>
+    /// Version 5, NOTES-FROM-PLANNING.md entry 456: a rifle's scope and mount, its elevation travel and what that travel is, its rail's cant,
+    /// its sight scale factor, and its weight as fired.
     /// </para>
     /// </summary>
     public static IReadOnlyList<(int From, string Statement)> Upgrades { get; } =
@@ -116,13 +120,18 @@ public sealed class SessionStore
         (2, "ALTER TABLE loads ADD COLUMN notes TEXT"),
         (3, "ALTER TABLE rifles ADD COLUMN previous_zeros TEXT"),
         (3, "ALTER TABLE loads ADD COLUMN min_expansion_fps REAL"),
+        (4, "ALTER TABLE rifles ADD COLUMN scope_travel REAL"),
+        (4, "ALTER TABLE rifles ADD COLUMN scope_travel_kind TEXT"),
+        (4, "ALTER TABLE rifles ADD COLUMN rail_cant REAL"),
+        (4, "ALTER TABLE rifles ADD COLUMN sight_scale_factor REAL"),
+        (4, "ALTER TABLE rifles ADD COLUMN weight_as_fired_lb REAL"),
     ];
 
     /// <summary>Every statement that creates the schema, in order, exactly as docs/SESSION-SCHEMA.md gives them.</summary>
     public static IReadOnlyList<string> Schema { get; } =
     [
         "CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)",
-        "CREATE TABLE rifles (name TEXT PRIMARY KEY COLLATE NOCASE, click_value REAL NOT NULL, click_unit TEXT NOT NULL, sight_height_in REAL, zero_distance_yd REAL, twist_in REAL, twist_direction INTEGER, firearm TEXT, manufacturer TEXT, cartridge TEXT, barrel_length_in REAL, scope TEXT, stock TEXT, notes TEXT, barrel_on TEXT, previous_zeros TEXT)",
+        "CREATE TABLE rifles (name TEXT PRIMARY KEY COLLATE NOCASE, click_value REAL NOT NULL, click_unit TEXT NOT NULL, sight_height_in REAL, zero_distance_yd REAL, twist_in REAL, twist_direction INTEGER, firearm TEXT, manufacturer TEXT, cartridge TEXT, barrel_length_in REAL, scope TEXT, stock TEXT, notes TEXT, barrel_on TEXT, previous_zeros TEXT, scope_travel REAL, scope_travel_kind TEXT, rail_cant REAL, sight_scale_factor REAL, weight_as_fired_lb REAL)",
         "CREATE TABLE barrels (name TEXT PRIMARY KEY COLLATE NOCASE, rifle TEXT, rounds INTEGER NOT NULL, length_in REAL, twist_in REAL, twist_direction INTEGER, installed TEXT, notes TEXT)",
         "CREATE TABLE loads (name TEXT PRIMARY KEY COLLATE NOCASE, components TEXT, muzzle_velocity_fps REAL, muzzle_velocity_sd_fps REAL, ballistic_coefficient REAL, drag_model TEXT, bc_reference TEXT, bullet_weight_gr REAL, bullet_length_in REAL, bullet_diameter_in REAL, muzzle_velocity_sd_from TEXT, bullet_name TEXT, brass_manufacturer TEXT, brass_cartridge TEXT, powder TEXT, powder_charge_gr REAL, overall_length_in REAL, base_to_ogive_in REAL, primer TEXT, notes TEXT, min_expansion_fps REAL)",
         "CREATE TABLE sessions (id INTEGER PRIMARY KEY, created_utc TEXT NOT NULL, shot_date TEXT, sheet_name TEXT NOT NULL, definition_id TEXT, definition_json TEXT, distance_in REAL, rifle TEXT, barrel TEXT, load TEXT, calibre_in REAL, marking_json TEXT NOT NULL, shot_count INTEGER NOT NULL, mean_radius_in REAL, mean_radius_lower_in REAL, mean_radius_upper_in REAL, image_path TEXT, image_sha256 TEXT, proof_image BLOB, proof_image_type TEXT)",
@@ -329,7 +338,7 @@ public sealed class SessionStore
     {
         using var db = Connect();
         var rifles = new List<Rifle>();
-        using (var command = Command(db, "SELECT name, click_value, click_unit, sight_height_in, zero_distance_yd, twist_in, twist_direction, firearm, manufacturer, cartridge, barrel_length_in, scope, stock, notes, barrel_on, previous_zeros FROM rifles ORDER BY name", []))
+        using (var command = Command(db, "SELECT name, click_value, click_unit, sight_height_in, zero_distance_yd, twist_in, twist_direction, firearm, manufacturer, cartridge, barrel_length_in, scope, stock, notes, barrel_on, previous_zeros, scope_travel, scope_travel_kind, rail_cant, sight_scale_factor, weight_as_fired_lb FROM rifles ORDER BY name", []))
         using (var r = command.ExecuteReader())
         {
             while (r.Read())
@@ -349,6 +358,11 @@ public sealed class SessionStore
                     Notes = Text(r, 13),
                     BarrelOn = Text(r, 14),
                     PreviousZerosJson = Text(r, 15),
+                    ScopeTravel = Real(r, 16),
+                    ScopeTravelKind = Text(r, 17) is { } kind && Enum.TryParse<ScopeTravelKind>(kind, out var travelKind) ? travelKind : null,
+                    RailCant = Real(r, 18),
+                    SightScaleFactor = Real(r, 19),
+                    WeightAsFiredLb = Real(r, 20),
                 });
             }
         }
@@ -421,10 +435,11 @@ public sealed class SessionStore
         Execute(db, "DELETE FROM loads");
         foreach (var rifle in book.Rifles)
         {
-            Execute(db, "INSERT INTO rifles VALUES ($n, $c, $u, $s, $z, $t, $d, $f, $m, $ca, $bl, $sc, $st, $no, $on, $pz)", ("$n", rifle.Name), ("$c", rifle.ClickValue),
+            Execute(db, "INSERT INTO rifles VALUES ($n, $c, $u, $s, $z, $t, $d, $f, $m, $ca, $bl, $sc, $st, $no, $on, $pz, $tr, $tk, $rc, $sf, $wt)", ("$n", rifle.Name), ("$c", rifle.ClickValue),
                 ("$u", rifle.ClickUnit.ToString()), ("$s", rifle.SightHeightInches), ("$z", rifle.ZeroDistanceYards), ("$t", rifle.TwistInches), ("$d", rifle.TwistDirection),
                 ("$f", rifle.Firearm.ToString()), ("$m", rifle.Manufacturer), ("$ca", rifle.Cartridge), ("$bl", rifle.BarrelLengthInches), ("$sc", rifle.Scope),
-                ("$st", rifle.Stock), ("$no", rifle.Notes), ("$on", rifle.BarrelOn), ("$pz", rifle.PreviousZerosJson));
+                ("$st", rifle.Stock), ("$no", rifle.Notes), ("$on", rifle.BarrelOn), ("$pz", rifle.PreviousZerosJson),
+                ("$tr", rifle.ScopeTravel), ("$tk", rifle.ScopeTravelKind?.ToString()), ("$rc", rifle.RailCant), ("$sf", rifle.SightScaleFactor), ("$wt", rifle.WeightAsFiredLb));
         }
 
         foreach (var barrel in book.Barrels)
@@ -682,6 +697,8 @@ public sealed class SessionStore
                 ["zeroDistanceYards"] = x.ZeroDistanceYards, ["twistInches"] = x.TwistInches, ["twistDirection"] = x.TwistDirection,
                 ["barrelLengthInches"] = x.BarrelLengthInches, ["barrelOn"] = x.BarrelOn,
                 ["previousZeros"] = x.PreviousZerosJson is { } zeros ? JsonNode.Parse(zeros) : null,
+                ["scopeTravel"] = x.ScopeTravel, ["scopeTravelKind"] = x.ScopeTravelKind?.ToString(), ["railCant"] = x.RailCant,
+                ["sightScaleFactor"] = x.SightScaleFactor, ["weightAsFiredLb"] = x.WeightAsFiredLb,
             })]),
             ["barrels"] = new JsonArray([.. book.Barrels.Select(x => (JsonNode)new JsonObject
             {
@@ -725,7 +742,7 @@ public sealed class SessionStore
 
         // Entry 407 section 5: an export from version 2 has no barrel on any rifle and barrels that may name none; it reads, and the barrels
         // are put under their rifles as the move does on opening.
-        if ((int?)root["schemaVersion"] is not (2 or 3 or SchemaVersion))
+        if ((int?)root["schemaVersion"] is not (2 or 3 or 4 or SchemaVersion))
         {
             throw new InvalidDataException($"This export has schema version {(int?)root["schemaVersion"]}, and this GroupLab reads versions 2 to {SchemaVersion}.");
         }
@@ -743,6 +760,9 @@ public sealed class SessionStore
                 SightHeightInches = (double?)x["sightHeightInches"], ZeroDistanceYards = (double?)x["zeroDistanceYards"], TwistInches = (double?)x["twistInches"],
                 TwistDirection = (int?)x["twistDirection"], BarrelLengthInches = (double?)x["barrelLengthInches"], BarrelOn = (string?)x["barrelOn"],
                 PreviousZerosJson = PreviousZero.ToJson(PreviousZero.FromJson(x["previousZeros"]?.ToJsonString())),
+                ScopeTravel = (double?)x["scopeTravel"],
+                ScopeTravelKind = (string?)x["scopeTravelKind"] is { } kind && Enum.TryParse<ScopeTravelKind>(kind, out var travelKind) ? travelKind : null,
+                RailCant = (double?)x["railCant"], SightScaleFactor = (double?)x["sightScaleFactor"], WeightAsFiredLb = (double?)x["weightAsFiredLb"],
             })],
             [.. (root["barrels"] as JsonArray ?? []).Select(x => new Barrel((string)x!["name"]!, (string?)x["rifle"], (int)x["rounds"]!)
             {

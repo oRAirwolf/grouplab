@@ -600,7 +600,7 @@
     ],
     [
      "The form on the right",
-     "Name is the only field you must fill in. Sight height and Zeroed at are the two the zero correction uses; scope and click value matter for the ballistics page."
+     "Name is the only field you must fill in. Sight height and Zeroed at are the two the zero correction uses; scope and click value matter for the ballistics page. A Scope and mount part on the rifle form holds the elevation travel of the scope, the rail cant, a sight scale factor and the weight as fired; it shows what the scope and mount allow and sets the Top Gun trend from Bryan Litz beside each load."
     ],
     [
      "Barrels on this rifle",
@@ -623,6 +623,13 @@
     "Press Save. The record is then offered on every new session."
    ],
    "fits": "Used by <a href=\"/tour/marking/\">marking</a>, <a href=\"/tour/analysis/\">the analysis</a> and <a href=\"/tour/ballistics/\">ballistics</a>.",
+   "moreShots": [
+    [
+     "equipment-scope",
+     "The Scope and mount part of a rifle form: elevation travel, rail cant, sight scale factor and weight as fired, with what the scope and mount allow worked out under them",
+     "The Scope and mount part of a rifle: fill in the travel and the rail cant and it shows the elevation your zero uses, the most cant that still zeroes and how far the elevation left reaches, with a tracking test for the sight scale factor."
+    ]
+   ],
    "links": [
     [
      "The user guide",
