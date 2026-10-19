@@ -63,6 +63,8 @@ Nothing is guessed from a subject line. A commit with nothing a person would not
 
 **And the generator refuses bad notes**, failing the build rather than publishing them. A note is rejected if it is only a reference, begins with "Entry", is shorter than eight words, or uses words that mean nothing to a shooter: folded, gate record, harness, fixture, refactor, and a list of others. That was tested against seven notes, six deliberately bad, and it refused all six for the right reason.
 
+A refused note no longer costs a nightly, though. Seven nightlies were lost with every build fine, each because the checker refused one commit's note: a British spelling, a word only this project knows, a note saying nothing changed. Now the same check runs on every push, so a bad note shows red on its own commit and is put right there. If one still reaches the nightly, the build is published with short notes (the version, the commit and a link to the changes since the build before) and the run carries a warning, instead of no nightly at all.
+
 ## One platform does not hold up another
 
 The nightly is built for Windows, Linux, macOS, Android and the iPhone, and for a while one of them could hold the others back in two ways.
@@ -70,6 +72,8 @@ The nightly is built for Windows, Linux, macOS, Android and the iPhone, and for 
 The first was a flaky test: one that fails now and then on one of the three systems the tests run on, though nothing is wrong with the change. One such failure stopped the whole nightly, the phones included. So a test that fails is now run once more, on its own, in the same job. If it passes the second time the build goes ahead, and the test is named as flaky, in the run and in a list the project reads; a test that needs its second run three times in a fortnight goes on the list of things to fix. A test that fails twice still stops everything, because that is what a real fault looks like.
 
 The second was waiting. The desktop release waited for the Android build, which is allowed two hours, so a stuck Android build could hold the Windows installer back that long, though it could never stop it. Now the desktop files are published as soon as they are packaged, and the Android files join the same release when their own build finishes. The signed manifest is written again with them in it. It also lists, for each platform, the newest build that has a file for that platform, so a phone checking in the gap is pointed at the newest earlier build that has an Android file, and installs it, instead of finding nothing. Google Play is sent the bundle only once it is on the release.
+
+A third thing held builds back: checks that no build needs. A nightly is built when the tests pass on Windows, Linux and macOS and the jobs that build what ships succeed. The website build and the ships list (the list that decides whether a nightly is built, which is not what a download contains) used to sit in the same group as the tests, so a failure in either meant no nightly: since 2026-09-28, 12 nightlies were lost to one of them alone, 11 to the website build and 1 to the ships list. Both now live in their own workflow, with the new release notes check. They still run on every push and still show red, but none of them decides whether GroupLab is built.
 
 ## The rule that is easiest to get wrong
 

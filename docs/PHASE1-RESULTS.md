@@ -1616,6 +1616,33 @@ here as d1c07ea7; section 5's proofs were run here.
    the Android build failed: 204's Android entry stayed on 203 (`v0.2.0-nightly.203`'s own file), `update-check --as android
    0.2.0-nightly.202` was offered 203, a copy on 203 nothing, Windows on 203 was offered 204, and the first format carried no new field.
    Alan's tablet should now reach **0.2.0-nightly.203**; the first real nightly after this change is the live proof.
+   Live: nightly 204 (run 39231460564) was signed first with Android's entry carried from 203, then moved to 204 when its Android
+   files arrived three minutes later; a phone on 203 is offered 204.
+
+## Entry 452: the website check and a refused note stop costing nightlies (2026-10-19)
+
+1. **The website job no longer gates the nightly.** It moved out of ci.yml ("build and test", whose success starts the nightly) into
+   `.github/workflows/checks.yml` ("checks no nightly waits for"), under the same name, so it still runs and fails on every push and pull
+   request; website.yml's own gate is unchanged. "build and test" now holds the three test legs (each retrying a failed test once, entry
+   450) and the jobs that build what ships: the Windows package, the linux tarball, the intake worker and the test data.
+2. **The linux tarball's ships check** (`shipping-gate.py --check-generated`) compares the list of what ships with what the build reads.
+   That list decides whether a nightly is built; it is not what the Linux download contains. So it moved to checks.yml as "ships list".
+   The tarball job itself, which packs the Linux publish and checks it carries its native OpenCV library, stays a gate.
+3. **"Write the notes".** All seven runs (36372334414, 36434428741, 36515160656, 36648108371, 37426892451, 38409950467, 38449280753)
+   failed for one cause: the checker refused a trailer ('folded', "did not change", 'TestFlight' five times, 'millimetres', 'centres'),
+   and it ran only after every build had finished. Fixed at the cause: checks.yml's "release notes" job runs `release-notes.py --check` on
+   every push, so a refused note is red on its own commit and is put right in `docs/release-note-corrections.json`. And if one still
+   reaches the nightly, it publishes with `release-notes.py --fallback` (the version, the commit, a link to the list of changes since the
+   build before) and a warning annotation and summary; `docs/RELEASE-NOTES.md` takes the notes the build went out with
+   (`notes-written.md`) instead of asking the checker again. `NightlyNeverWaitsTests` (8) holds both.
+4. docs/UPDATES.md and the nightly-builds article say what decides a nightly and what happens to a refused note (written by the docs
+   helper, corrected: 12 nightlies were lost to the website job and the ships list alone, not 32).
+5. **Proofs.** Throwaway branch `proof/entry-452` (deleted): with the site build made to fail, "checks no nightly waits for" failed on
+   "website builds" (run 39226777937) while "build and test", the nightly's trigger, passed on all three legs and every build job (run
+   39226778099). The notes fallback, as a dry run of the nightly's own step on a commit carrying a refused note ('centres'): it exited 0,
+   wrote the short notes, an empty notes history, the warning and the summary, and `--check` named the same commit. No release was made.
+6. **The first nightly after 37326a5c**, 0.2.0-nightly.204 (run 39231460564): the desktop files were published at 09:44:37 UTC with
+   Android's entry carried from 203, and the Android files joined both releases at 09:47:36, Android's entry moving to 204.
 
 ## Decision log
 

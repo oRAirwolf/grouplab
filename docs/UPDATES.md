@@ -8,7 +8,7 @@ A **train** is a stream of builds you can follow.
 
 | Train | What is on it | Today |
 |---|---|---|
-| **Nightly** | Every commit that passes the tests on Windows, Linux and macOS, where a failed test is run once more and passing then counts (entry 450) | The only train with builds on it |
+| **Nightly** | Every commit that passes the tests on Windows, Linux and macOS, where a failed test is run once more and passing then counts (entry 450). The website, the ships list and the release notes are checked on every push too, but in `checks.yml`, and none of them decides whether a nightly is built (entry 452) | The only train with builds on it |
 | **Beta** | Builds somebody has looked at | Not available yet |
 | **Release** | A numbered version somebody chose to release | Not available yet |
 

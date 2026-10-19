@@ -9,19 +9,19 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 454 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-19, entry 452 (before it: entries 446, 445, 444 and 443).
 
 ---
 
 ## In flight
 
-- **Entry 454 (2026-10-19)**: 203's Android files added (run 39223723577); Alan's tablet should reach **0.2.0-nightly.203**. Each
-  platform now follows its newest build with a file (`platforms` in the second manifest); the next real nightly is the live proof.
-- **Entry 450 (2026-10-19)**: failed tests retried once in CI (flakes in `docs/notes/flaky-tests.md`, run `scripts/flaky-tests.py`);
-  desktop publish no longer waits for Android. **32** nightlies lost to a non-phone failure since 2026-09-28: the split is planning's.
+- **Entries 454 and 452 (2026-10-19)**: each platform follows its own newest build (`platforms` in the second manifest; live in
+  nightly 204, whose Android files joined both releases after the desktop's); Alan's tablet should reach **0.2.0-nightly.204**. The
+  website and ships-list checks and a new release notes check are in `checks.yml`, which no nightly waits for; the ships list is not
+  what the Linux download holds, the linux tarball still gates. A refused note publishes short notes with a warning.
+- **Entry 450 (2026-10-19)**: failed tests retried once in CI (flakes in `docs/notes/flaky-tests.md`, run `scripts/flaky-tests.py`).
 - **Entry 447 (2026-10-18)**: parts 1, 2, 4 done; 3: a focusing press's hold is off (ff9f61c1), one red since; popups now logged.
-  Left from part 2: CSV mapping, store target, Fudd buster, group tools, print and figures windows untested; phone pages two presses
-  deep; no real Narrator, VoiceOver or TalkBack run yet.
+  Left from part 2: six windows untested (CSV mapping, store target, Fudd buster, group tools, print, figures); no real screen reader.
 - **Entries 441, 443, 444, 448, 449 and 451**: the ruler on every page (`RULER`), home menu tappable (`tests/site/taps.mjs`); concept B is the home page (the one before is `page_home` at b216ce56); every page has
   its condensed headings, a top band over still rings (`PAGE_RINGS`), one header with all ten links from 1280 px and one footer; long
   pages (`LONG_PAGES`) have the ruler (`page.js`). `heading_problems` holds it, titles as written (Alan, entry 449).
@@ -74,7 +74,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (101 answered by entry 446 and arc
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.203 (2026-10-19 06:00 UTC, from d1c07ea7): desktop only, its Android files lost to a step order fixed in 37326a5c.
+- **Last nightly:** 0.2.0-nightly.204 (2026-10-19 09:44 UTC, from c9389b37): entry 454, phones follow their own newest build.
 - **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
 - Crash reports open: none. **#35** (Quack: a pooled set's small sheet showed sheet 1 only, a bull click picked by nearness) fixed and closed 2026-10-16, in nightly 197.
 

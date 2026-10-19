@@ -25,6 +25,43 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 452: the website check and the release notes step stop costing nightlies
+
+**Status: actioned 2026-10-19; every section done.**
+
+From the planning session, 2026-10-19 08:15 UTC, on entry 450 section 3's measurement. Take it after entry 447. Nothing here needs
+Alan. Alan left the choice to the planning session ("Do whatever you think is best", 2026-10-18).
+
+## The planning decision on the phone split
+
+Entry 450 section 3 found 32 lost nightlies since 2026-09-28, but none from a Windows or linux-x64 package. So the split entry 450
+asked about (phones no longer riding on the desktop packages) would have saved nothing, and is **not wanted**. What the count did show:
+
+- 20 from a failed test leg. Entry 450's retry covers the flaky ones; a test that fails twice should still stop every platform, since
+  all of them ship the shared code. No change.
+- 12 from jobs no application build uses: ci.yml's website job (11) and the linux tarball's ships check (1).
+- 7 nightlies that failed at "Write the notes" with every build fine.
+
+## What to do
+
+1. **The website job no longer gates the nightly.** A website failure must still fail and be seen (it gates the site's own deploy as
+   today), but the nightly's start condition must not depend on it. Either move it out of the "build and test" workflow into its own
+   workflow, or have `nightly.yml` look at the test legs and the jobs that build what ships, not the whole run's conclusion. Your
+   choice; the condition that stays must still be "every leg's tests passed".
+2. **The linux tarball's ships check:** if it checks what the linux-x64 download contains, it stays a gate. If it checks something
+   that does not ship, treat it like the website job. Say which in STATE.
+3. **"Write the notes" can no longer stop a nightly.** Find why the 7 runs failed (36372334414, 36434428741, 36515160656, 36648108371,
+   37426892451, 38409950467, 38449280753), fix the cause if there is one, and make a failure there publish the nightly with short
+   fallback notes (the version, the commit, a link to the commit list) and a warning annotation, rather than nothing.
+4. Update the nightly-builds article and wherever else says when a nightly is published, in the same change (entry 267).
+5. Proof: a run where only the website job fails still gets its nightly; one forced failure of the notes step on a throwaway branch
+   publishes with the fallback notes (to a throwaway prerelease or a dry run, never the real nightly or the stores). Delete the branch
+   and the throwaway release afterwards.
+6. Also confirm in STATE that the first nightly after 37326a5c has its Android files on both releases (entry 450 section 5's last
+   proof).
+
+---
+
 ## 2026-10-19, entry 454: a phone always updates to the newest nightly that has a phone build
 
 **Status: actioned 2026-10-19; every section done. Section 7's live proof is the first real nightly after this change, and Alan's tablet updating to 0.2.0-nightly.203 is for the planning session to confirm with him.**
