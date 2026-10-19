@@ -166,6 +166,9 @@ public sealed partial class MainWindow
         UpdateLayout();
     }
 
+    /// <summary>How far down the record's page is scrolled, for the headless tests.</summary>
+    internal double EquipmentFormOffset => (equipmentFormScroll?.Offset.Y ?? 0) + (equipmentScreenScroll?.Offset.Y ?? 0);
+
     /// <summary>The Scope and mount part's text, for the headless tests.</summary>
     internal IEnumerable<string> ScopeMountText => equipmentForm.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "");
 }

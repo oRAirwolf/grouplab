@@ -64,7 +64,7 @@ public sealed partial class MainWindow
             {
                 equipmentKind = kind;
                 equipmentEditing = null;
-                ShowEquipmentScreen();
+                ShowEquipmentScreen(top: true);
             };
             tabs.Children.Add(button);
         }
@@ -74,15 +74,27 @@ public sealed partial class MainWindow
 
         // Entry 298: the list and the form are peers, so the split between them keeps its share of the window.
         var left = new Border { Child = new ScrollViewer { Content = equipmentLists }, Padding = new Thickness(0, Tokens.Space8, Tokens.Space16, 0) };
-        var right = new Border { Child = new ScrollViewer { Content = equipmentForm }, Padding = new Thickness(Tokens.Space16, Tokens.Space8, 0, 0), Classes = { AppStyles.Side } };
+        equipmentFormScroll = new ScrollViewer { Content = equipmentForm };
+        var right = new Border { Child = equipmentFormScroll, Padding = new Thickness(Tokens.Space16, Tokens.Space8, 0, 0), Classes = { AppStyles.Side } };
         var two = PeerPanes("equipment", left, right, 0.5, 260, 320);
         two.MinHeight = 360;
         column.Children.Add(two);
-        return new ScrollViewer { Content = column };
+        equipmentScreenScroll = new ScrollViewer { Content = column };
+        return equipmentScreenScroll;
     }
 
-    /// <summary>The list on the left and the form on the right, rebuilt from the record book.</summary>
-    private void ShowEquipmentScreen()
+    private ScrollViewer? equipmentScreenScroll;
+
+    private ScrollViewer? equipmentFormScroll;
+
+    private (EquipmentKind, string?, string?) equipmentShown;
+
+    /// <summary>
+    /// The list on the left and the form on the right, rebuilt from the record book. A page opened, or a different record, starts at its
+    /// top; a rebuild of the same record after a save keeps its place (2026-10-19: a rifle opened after scrolling another started at the
+    /// other's place, and the website's Equipment picture with it).
+    /// </summary>
+    private void ShowEquipmentScreen(bool top = false)
     {
         equipmentLists.Children.Clear();
         equipmentProblem.Text = "";
@@ -108,7 +120,7 @@ public sealed partial class MainWindow
             {
                 equipmentKind = rifles ? EquipmentKind.Rifle : EquipmentKind.Load;
                 equipmentEditing = name;
-                ShowEquipmentScreen();
+                ShowEquipmentScreen(top: true);
             };
             equipmentLists.Children.Add(row);
         }
@@ -117,11 +129,21 @@ public sealed partial class MainWindow
         {
             equipmentKind = rifles ? EquipmentKind.Rifle : EquipmentKind.Load;
             equipmentEditing = null;
-            ShowEquipmentScreen();
+            ShowEquipmentScreen(top: true);
         });
         equipmentLists.Children.Add(add);
 
         BuildEquipmentForm();
+        var shown = (equipmentKind, equipmentEditing, barrelRifle);
+        if (top || shown != equipmentShown)
+        {
+            foreach (var scroll in new[] { equipmentFormScroll, equipmentScreenScroll })
+            {
+                scroll?.Offset = default;
+            }
+        }
+
+        equipmentShown = shown;
     }
 
     /// <summary>The form for the chosen record, generated from the field list so the screen and the record cannot drift apart.</summary>
@@ -342,7 +364,7 @@ public sealed partial class MainWindow
         equipmentKind = EquipmentKind.Barrel;
         equipmentEditing = barrel;
         barrelRifle = rifle;
-        ShowEquipmentScreen();
+        ShowEquipmentScreen(top: true);
     }
 
     /// <summary>Entry 407 section 5.2: marks a barrel as the one on its rifle now, which the setup's list puts first.</summary>
@@ -574,7 +596,7 @@ public sealed partial class MainWindow
         equipmentEditing = null;
         barrelRifle = null;
         Go(Destination.Equipment);
-        ShowEquipmentScreen();
+        ShowEquipmentScreen(top: true);
     }
 
     /// <summary>Opens a rifle's page, with its barrels, for the headless tests and the screenshot walk.</summary>
@@ -582,7 +604,7 @@ public sealed partial class MainWindow
     {
         ShowEquipment(EquipmentKind.Rifle);
         equipmentEditing = rifle;
-        ShowEquipmentScreen();
+        ShowEquipmentScreen(top: true);
     }
 
     /// <summary>Whether the Equipment screen is the one showing.</summary>

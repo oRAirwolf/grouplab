@@ -1546,7 +1546,7 @@ public sealed partial class MainWindow : Window
                     equipmentKind = EquipmentKind.Load;
                     equipmentEditing = load.Name;
                     Go(Destination.Equipment);
-                    ShowEquipmentScreen();
+                    ShowEquipmentScreen(top: true);
                 }
                 else
                 {

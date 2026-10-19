@@ -58,6 +58,29 @@ public class Entry456Tests
         }
     }
 
+    /// <summary>A rifle's page opened again starts at its top, where the scope unit and click are, not where the last one was left.</summary>
+    [AvaloniaFact]
+    public void ARiflePageOpensAtItsTopAfterScrolling()
+    {
+        var (window, _, _) = Entry109Tests.Sheet();
+        try
+        {
+            window.Book = RecordBook.Empty.With(Scoped).With(TestLoad);
+            window.EditRifle("Test rifle");
+            Settle();
+            window.ShowScopeAndMount();
+            Settle();
+            Assert.True(window.EquipmentFormOffset > 100, $"the page did not scroll ({window.EquipmentFormOffset})");
+            window.EditRifle("Test rifle");
+            Settle();
+            Assert.Equal(0, window.EquipmentFormOffset);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void TheDopeHoldsInTheReticlePastTheElevationLeftAndSaysTheFactorIsApplied()
     {
