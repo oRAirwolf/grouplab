@@ -3,9 +3,9 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-10-19 11:52 UTC
+## TestFlight, 2026-10-19 14:15 UTC
 
-- Both groups have build 205.
+- TestFlight: App Store Connect refused a request (422 Cannot add internal group to a build.); nothing further was done this run.
 <!-- /status:testflight -->
 
 <!-- status:store -->
