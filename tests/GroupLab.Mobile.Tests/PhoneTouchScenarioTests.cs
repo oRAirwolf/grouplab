@@ -272,6 +272,73 @@ public class PhoneTouchScenarioTests
     }
 
     /// <summary>
+    /// Entry 447 section 3: the simulator draws nothing for seconds after its first keyboard while the screen's thread answers, and a press is
+    /// judged against the last drawing. A hold's settling counts only time in which frames were drawn, and a pause in drawing is waited out
+    /// to its own limit and said, never taken for a covered control.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task AHoldWaitsOutAPauseInDrawingAndSaysIt()
+    {
+        if (Phone.Platform is null)
+        {
+            Phone.Start(new TestPhone(), Avalonia.Application.Current!, () => "US", null);
+        }
+
+        var shell = new Shell();
+        var window = new Window { Width = 412, Height = 915, Content = shell };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        var (settling, without) = (Scenario.MostSettling, Scenario.MostWithoutDrawing);
+        var unreached = new JsonObject { ["tap"] = "x", ["reached"] = false, ["controls"] = new JsonArray(new JsonObject { ["id"] = "x", ["screen"] = new JsonObject { ["x"] = 1 } }) };
+        Scenario.Look = _ => unreached.DeepClone().AsObject();
+        Scenario.MostSettling = TimeSpan.FromSeconds(0.6);
+        Scenario.MostWithoutDrawing = TimeSpan.FromSeconds(2);
+        Scenario.Watching(window);
+        try
+        {
+            Directory.CreateDirectory(Scenario.Results);
+            string hold = Path.Combine(Scenario.Results, Scenario.HoldFile);
+
+            int counted = 0;
+            async Task<JsonObject> Held(bool draw)
+            {
+                File.Delete(hold);
+                Scenario.FramesDrawn = () => draw ? ++counted : counted;
+                var step = Scenario.Do(new Scenario.Step("hold", new JsonObject { ["do"] = "hold", ["tap"] = "x", ["name"] = "paused", ["seconds"] = 1.0 }));
+                var clock = System.Diagnostics.Stopwatch.StartNew();
+                while (!File.Exists(hold) && clock.Elapsed < TimeSpan.FromSeconds(10))
+                {
+                    Dispatcher.UIThread.RunJobs();
+                    await Task.Delay(20);
+                }
+
+                Assert.True(File.Exists(hold), "no hold written");
+                var said = JsonNode.Parse(File.ReadAllText(hold))!.AsObject();
+                await step;
+                return said;
+            }
+
+            // Nothing drawn: the hold waits past its settling time to the pause's own limit, and says how long nothing was drawn.
+            var paused = await Held(draw: false);
+            Assert.True(paused["notDrawnMs"]!.GetValue<long>() >= 1900, paused.ToJsonString());
+            Assert.True(paused["settledMs"]!.GetValue<long>() >= 1900, paused.ToJsonString());
+
+            // Frames drawn: the settling time alone decides, as before.
+            var drawing = await Held(draw: true);
+            Assert.True(drawing["settledMs"]!.GetValue<long>() < 1900, drawing.ToJsonString());
+            Assert.True(drawing["notDrawnMs"]!.GetValue<long>() < 600, drawing.ToJsonString());
+        }
+        finally
+        {
+            Scenario.Watching(null);
+            Scenario.FramesDrawn = Scenario.CountedFrames;
+            Scenario.Look = Scenario.HoldFor;
+            (Scenario.MostSettling, Scenario.MostWithoutDrawing) = (settling, without);
+            window.Close();
+        }
+    }
+
+    /// <summary>
     /// The scenario names only controls the screens it taps have, so a renamed id fails here and not on the simulator: the Capture screen's,
     /// and since entry 363 (issue 19) the Targets screen's distance box and the keyboard bar's Next.
     /// </summary>

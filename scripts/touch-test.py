@@ -41,6 +41,9 @@ def tap_point(hold):
         return None, f"no control with the id {tap} is showing"
     if not control.get("enabled"):
         return None, f"{tap} is not enabled"
+    if hold.get("reached") is False and (hold.get("notDrawnMs") or 0) >= 30000:
+        # Entry 447 section 3: nothing was drawn for the whole wait, so whether a press would reach the control cannot be known.
+        return None, f"nothing was drawn for {hold['notDrawnMs'] / 1000:.0f} s, so whether a press reaches {tap} cannot be known"
     if hold.get("reached") is False:
         # Entry 447 section 3: what the drawing held for the control and its holders, and what the window's own test found there.
         drawn = "; ".join(f"{d.get('type')} laid out {d.get('layout')}, drawn {d.get('drawn')} shown {d.get('shown')}" for d in hold.get("drawn") or [])
@@ -220,6 +223,8 @@ def self_test():
     assert tap_point({**hold, "tap": "off"})[1] == "off is not enabled"
     assert tap_point({**hold, "tap": "gone"})[1] == "no control with the id gone is showing"
     assert tap_point({**hold, "reached": False, "under": "Border"})[1] == "go is covered at its middle by Border"
+    assert tap_point({**hold, "reached": False, "under": None, "notDrawnMs": 30100})[1] == "nothing was drawn for 30 s, so whether a press reaches go cannot be known"
+    assert tap_point({**hold, "notDrawnMs": 2300})[0] == (250, 260)
     assert tap_point({**hold, "view": {"x": 0, "y": 0, "width": 200, "height": 200}})[0] is None
     with tempfile.TemporaryDirectory() as folder:
         steps = [{"do": "hold", "tap": "go"}, {"do": "expect", "keyboard": True}]

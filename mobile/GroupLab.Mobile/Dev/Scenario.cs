@@ -405,6 +405,9 @@ internal static class Scenario
     /// while a scenario runs the UI thread is asked to answer four times a second at the highest priority, and an answer that took more than
     /// a second is logged with how long it took and how many layout passes ran meanwhile: a stall, and whether it was a layout loop.
     /// </summary>
+    /// <summary>Starts or stops the stall watch and the frame count as a scenario does, for the headless tests.</summary>
+    internal static void Watching(TopLevel? top) => Watch(top);
+
     private static void Watch(TopLevel? top)
     {
         generation++;
@@ -450,6 +453,12 @@ internal static class Scenario
     private static int frames;
 
     private static int generation;
+
+    /// <summary>How many frames have been drawn while a scenario runs; a test replaces it to stand for a screen that has stopped drawing.</summary>
+    internal static Func<int> FramesDrawn { get; set; } = CountedFrames;
+
+    /// <summary>The frames counted while a scenario runs.</summary>
+    internal static int CountedFrames() => Volatile.Read(ref frames);
 
     /// <summary>Entry 447 section 3: every frame the window's render loop ticks while a scenario runs is counted, to see whether drawing stopped.</summary>
     private static void Frame(int mine)
@@ -1332,6 +1341,9 @@ internal static class Scenario
     /// <summary>The longest a hold waits for the control to be drawn where it lies (<see cref="Settled"/>).</summary>
     internal static TimeSpan MostSettling { get; set; } = TimeSpan.FromSeconds(5);
 
+    /// <summary>The longest a hold waits through a pause in which nothing is drawn at all (<see cref="Settled"/>).</summary>
+    internal static TimeSpan MostWithoutDrawing { get; set; } = TimeSpan.FromSeconds(30);
+
     /// <summary>
     /// Entry 353, the first run on the simulator (run 37087711129): the hold for Continue, worked out 0.4 s after the keyboard raised the
     /// caliber question and while the screenshot before it held the screen's thread, found the page under Continue's middle and refused
@@ -1346,9 +1358,30 @@ internal static class Scenario
         var clock = Stopwatch.StartNew();
         var said = await OnUi(() => Look(tap));
         int looks = 1;
-        while (clock.Elapsed < MostSettling)
+
+        // Entry 447 section 3: the simulator draws nothing for two to six seconds after its first keyboard, while the screen's thread
+        // answers at once (run 39292731869: 131 frames from the keyboard opening until 2.3 s later), and a press is judged against the last
+        // drawing, so the keyboard bar's Next was unreachable until drawing resumed and the hold gave up first. Only time in which frames
+        // were drawn counts toward settling; a pause in drawing is waited out up to MostWithoutDrawing and said, so it is never taken for a
+        // control covered by something.
+        var drawing = TimeSpan.Zero;
+        var paused = TimeSpan.Zero;
+        int drawn = FramesDrawn();
+        while (drawing < MostSettling && paused < MostWithoutDrawing)
         {
+            var lap = Stopwatch.StartNew();
             await Task.Delay(200);
+            int counted = FramesDrawn();
+            if (counted != drawn || watched is null)
+            {
+                drawing += lap.Elapsed;
+            }
+            else
+            {
+                paused += lap.Elapsed;
+            }
+
+            drawn = counted;
             var again = await OnUi(() => Look(tap));
             looks++;
             bool still = Where(again, tap) is { } now && now == Where(said, tap);
@@ -1360,6 +1393,7 @@ internal static class Scenario
         }
 
         said["settledMs"] = clock.ElapsedMilliseconds;
+        said["notDrawnMs"] = (long)paused.TotalMilliseconds;
         said["looks"] = looks;
         return said;
     }
