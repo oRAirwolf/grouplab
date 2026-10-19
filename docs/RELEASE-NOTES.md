@@ -485,7 +485,7 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 - Printing straight to the Phomemo M834 from Android now feeds the sheet 15.5 mm further on a roll, so all of it clears the tear bar; choose a roll or fanfold sheets once under the print button.
 - An answered review question can now be asked again: on the computer click it in the review queue, on the phone show the answered marks, then press Ask again or pick another answer.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.175)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
