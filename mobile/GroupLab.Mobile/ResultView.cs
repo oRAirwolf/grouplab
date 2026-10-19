@@ -1131,7 +1131,10 @@ public sealed class ResultView : UserControl, IOpenTarget
                 .Where(x => x.Aim is not null)
                 .Select(x => (x.Shot, Away: FromSegment(at, ToScreen(x.Aim!.Image), ToScreen(x.Shot.Image))))
                 .Where(x => x.Away <= Reach / 2)
-                .MinBy(x => x.Away);
+
+                // Entry 457, crash report 36: MinBy over tuples throws on none, as a tap near no hole, line or bull found; this gives none.
+                .OrderBy(x => x.Away)
+                .FirstOrDefault();
             if (line.Shot is not null)
             {
                 return line.Shot.Bull;

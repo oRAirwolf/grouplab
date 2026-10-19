@@ -146,9 +146,11 @@ internal static class KeyboardFocus
             chain = [.. c.GetVisualAncestors().OfType<Control>().Prepend(c)];
             foreach (var a in chain)
             {
-                if (a.GetVisualParent() is Panel parent)
+                // Entry 457: a control whose visual parent is a panel but which is not one of its Children (a presenter's or a template's
+                // own child) has no place there; recording its -1 sent Restore to Children[-1] on nightly 204 (crash report 37).
+                if (a.GetVisualParent() is Panel parent && parent.Children.IndexOf(a) is >= 0 and var at)
                 {
-                    places[a] = parent.Children.IndexOf(a);
+                    places[a] = at;
                 }
             }
         }
@@ -165,7 +167,20 @@ internal static class KeyboardFocus
             focused = null;
             var ancestors = chain;
             var method = how;
-            Dispatcher.UIThread.Post(() => Restore(gone, ancestors, method), DispatcherPriority.Background);
+            // Entry 457: Restore never throws. A posted action that throws is reported twice, once to the dispatcher's handler and again
+            // from the finalizer as an unobserved task, because Avalonia also faults the operation's own task, which nothing awaits.
+            Dispatcher.UIThread.Post(() =>
+            {
+                try
+                {
+                    Restore(gone, ancestors, method);
+                }
+                catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or IndexOutOfRangeException)
+                {
+                    // Keeping the focus is a convenience: leave it where Avalonia put it, and say so once in the log.
+                    Diagnostics.DiagnosticLog.Warn("focus.keep", ("result", "skipped"), ("error", ex.GetType().Name));
+                }
+            }, DispatcherPriority.Background);
         }
 
         private void Restore(Control gone, List<Control> ancestors, NavigationMethod method)
@@ -189,7 +204,7 @@ internal static class KeyboardFocus
             if (replacement is null && gone.Tag is null && panel.Children.Count > 0)
             {
                 // The same kind of control, as many along in the rebuilt child as it was in the old one, in the child at the same place.
-                int place = Math.Min(Place(oldChild), panel.Children.Count - 1);
+                int place = Math.Clamp(Place(oldChild), 0, panel.Children.Count - 1);
                 var same = new[] { panel.Children[place] }.Concat(panel.Children[place].GetVisualDescendants().OfType<Control>())
                     .Where(c => c.GetType() == gone.GetType() && c.Focusable && c.IsEffectivelyVisible && c.IsEffectivelyEnabled).ToList();
                 int along = new[] { oldChild }.Concat(oldChild.GetVisualDescendants().OfType<Control>()).Where(c => c.GetType() == gone.GetType()).ToList().IndexOf(gone);
@@ -200,6 +215,6 @@ internal static class KeyboardFocus
         }
 
         /// <summary>Where the old child sat among its panel's children when it was focused, which its panel no longer remembers.</summary>
-        private int Place(Control oldChild) => places.TryGetValue(oldChild, out int at) ? at : 0;
+        private int Place(Control oldChild) => places.TryGetValue(oldChild, out int at) && at >= 0 ? at : 0;
     }
 }
