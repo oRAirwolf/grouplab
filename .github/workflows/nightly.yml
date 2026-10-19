@@ -1253,6 +1253,12 @@ jobs:
       VERSION: ${{ needs.name-it.outputs.version }}
       COMMIT: ${{ needs.name-it.outputs.commit }}
     steps:
+      # The checkout first: it empties the workspace, and in nightly 203 (run 39206788728) it came after the signed files were
+      # downloaded and took them away, so no Android file reached the releases (entry 450).
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.name-it.outputs.sha }}
+
       - uses: actions/download-artifact@v6
         continue-on-error: true
         with:
@@ -1269,11 +1275,6 @@ jobs:
             echo "::warning::the Android build made no files, so nightly $VERSION stays published without them"
             echo "### Nightly $VERSION has no Android files: the Android build made none (no upload key, or it failed or was stopped)" >> "$GITHUB_STEP_SUMMARY"
           fi
-
-      - uses: actions/checkout@v5
-        if: steps.files.outputs.present == 'yes'
-        with:
-          ref: ${{ needs.name-it.outputs.sha }}
 
       - uses: actions/setup-dotnet@v5
         if: steps.files.outputs.present == 'yes'

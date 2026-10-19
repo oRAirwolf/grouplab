@@ -194,4 +194,18 @@ public partial class NightlyNeverWaitsTests
 
     [GeneratedRegex(@"\n  [a-z0-9-]+:\n")]
     private static partial Regex NextJob();
+
+    /// <summary>
+    /// Nightly 203 (run 39206788728): the Android files job checked the repository out after downloading the signed files, and a checkout
+    /// empties the workspace, so no Android file reached either release. Every download in a late job comes after its checkout.
+    /// </summary>
+    [Fact]
+    public void ALateJobChecksOutBeforeItDownloadsAnything()
+    {
+        string job = Job(Workflow("nightly.yml"), "android-files");
+        int checkout = job.IndexOf("actions/checkout@", StringComparison.Ordinal);
+        Assert.True(checkout >= 0, "the Android files job no longer checks out; if it never does, this test can go");
+        Assert.True(checkout < job.IndexOf("actions/download-artifact@", StringComparison.Ordinal), "a download comes before the checkout");
+        Assert.DoesNotContain("actions/checkout@", job[(checkout + 10)..], StringComparison.Ordinal);
+    }
 }
