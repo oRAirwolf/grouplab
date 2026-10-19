@@ -1,0 +1,82 @@
+# Adds a published nightly's Android files from its own run, when the nightly's own job did not. NOTES-FROM-PLANNING.md entry 454 section 1.
+#
+# Nightly 203 (run 39206788728) published its desktop files and then lost its Android files to a step order fixed in 37326a5c, so the
+# moving release named 203 with no Android download and every phone stopped updating. This takes that run's signed Android files, its
+# desktop packages and its notes, and runs the same script as nightly.yml's own job. It never builds anything and never reaches a store.
+#
+#   gh workflow run android-files.yml -f run=<nightly run id> -f version=<0.2.0-nightly.N>
+#
+# The run's artifacts last a day (retention-days on android-signed), so this is for the day after a nightly at most.
+name: android files for a nightly
+
+on:
+  workflow_dispatch:
+    inputs:
+      run:
+        description: 'The nightly run whose Android files are to be added'
+        required: true
+        type: string
+      version:
+        description: 'That nightly, for example 0.2.0-nightly.203'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: nightly-files
+  cancel-in-progress: false
+
+jobs:
+  add:
+    name: add the Android files
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RUN: ${{ inputs.run }}
+      VERSION: ${{ inputs.version }}
+    steps:
+      # main's scripts and command line; the manifest still names the nightly's own commit, and the key that checks it is the same one.
+      - uses: actions/checkout@v5
+
+      - name: The nightly it is for
+        run: |
+          set -o pipefail
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN" --jq 'select(.path == ".github/workflows/nightly.yml") | .head_sha')
+          test -n "$sha" || { echo "::error::run $RUN is not a nightly run"; exit 1; }
+          gh release view "v$VERSION" --json tagName >/dev/null || { echo "::error::there is no release v$VERSION"; exit 1; }
+          echo "SHA=$sha" >> "$GITHUB_ENV"
+          echo "COMMIT=${sha:0:8}" >> "$GITHUB_ENV"
+
+      - uses: actions/download-artifact@v6
+        with:
+          name: android-signed
+          path: signed
+          run-id: ${{ inputs.run }}
+          github-token: ${{ github.token }}
+
+      - uses: actions/download-artifact@v6
+        with:
+          pattern: '*-package'
+          path: assets
+          run-id: ${{ inputs.run }}
+          github-token: ${{ github.token }}
+
+      - uses: actions/download-artifact@v6
+        with:
+          name: nightly-manifest-inputs
+          path: .
+          run-id: ${{ inputs.run }}
+          github-token: ${{ github.token }}
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Add them to both releases, with the manifest signed again
+        env:
+          GROUPLAB_UPDATE_SIGNING_KEY: ${{ secrets.GROUPLAB_UPDATE_SIGNING_KEY }}
+        run: bash scripts/nightly-android-files.sh

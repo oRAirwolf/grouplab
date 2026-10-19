@@ -145,7 +145,8 @@ public partial class ReleaseAssetTests
         Assert.Contains("update-check release/update-manifest.json", manifest, StringComparison.Ordinal);
         Assert.Contains("update-check release/update-manifest-2.json", manifest, StringComparison.Ordinal);
         // The two releases the publish job creates, and the pair the android-files job puts back on both once it has signed them again.
-        Assert.Equal(3, System.Text.RegularExpressions.Regex.Matches(nightly, @"release/update-manifest\.json release/update-manifest-2\.json").Count);
+        Assert.Equal(3, System.Text.RegularExpressions.Regex.Matches(nightly + File.ReadAllText(Repo.PathTo("scripts", "nightly-android-files.sh")),
+            @"release/update-manifest\.json release/update-manifest-2\.json").Count);
     }
 
     /// <summary>The package carries the licence, the notices, a read me and the samples, because a loose executable loses all of them.</summary>

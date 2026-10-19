@@ -156,8 +156,12 @@ public partial class NightlyNeverWaitsTests
         Assert.Contains("if: ${{ !cancelled() && needs.publish.result == 'success' }}", android, StringComparison.Ordinal);
         Assert.Contains("continue-on-error: true", android, StringComparison.Ordinal);
         Assert.Contains("name: nightly-manifest-inputs", android, StringComparison.Ordinal);
-        // The manifest is signed again with the Android downloads in it and the library as published, then put back on both releases.
-        Assert.Contains("run: bash scripts/nightly-manifest.sh", android, StringComparison.Ordinal);
+        // The manifest is signed again with the Android downloads in it and the library as published, then put back on both releases, by
+        // one script that android-files.yml also runs for a nightly whose files were not added (entry 454 section 1).
+        Assert.Contains("run: bash scripts/nightly-android-files.sh", android, StringComparison.Ordinal);
+        Assert.Contains("run: bash scripts/nightly-android-files.sh", Workflow("android-files.yml"), StringComparison.Ordinal);
+        android = File.ReadAllText(Repo.PathTo("scripts", "nightly-android-files.sh")).ReplaceLineEndings("\n");
+        Assert.Contains("bash scripts/nightly-manifest.sh", android, StringComparison.Ordinal);
         Assert.Contains("gh release download \"v$VERSION\" -p grouplab-target-library.json -D release", android, StringComparison.Ordinal);
         Assert.Contains("if [ ! -f release/grouplab-target-library.json ]; then", File.ReadAllText(Repo.PathTo("scripts", "nightly-manifest.sh")), StringComparison.Ordinal);
         Assert.Contains("gh release upload \"v$VERSION\" --clobber $manifests", android, StringComparison.Ordinal);
