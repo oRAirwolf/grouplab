@@ -107,4 +107,27 @@ public class Entry447HoldTests
         }
     }
 
+    /// <summary>
+    /// What decides a hit test is said for a control a press cannot reach and each of its holders, one log field each: the bar's Next went
+    /// unreached for seconds after the first keyboard in every simulator run, and the log could not say why.
+    /// </summary>
+    [AvaloniaFact]
+    public void AHolderIsSaidAsAHitTestSeesIt()
+    {
+        var (window, box) = Shown();
+        try
+        {
+            box.IsHitTestVisible = false;
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Dispatcher.UIThread.RunJobs();
+            string said = Scenario.Holder(box);
+            Assert.StartsWith("TextBox ", said, StringComparison.Ordinal);
+            Assert.Contains(" hit=False on=True seen=True ", said, StringComparison.Ordinal);
+            Assert.Matches(" drawn=-?[0-9]+,-?[0-9]+/[0-9]+x[0-9]+/shown/", said);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

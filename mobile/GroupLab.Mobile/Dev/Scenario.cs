@@ -407,6 +407,7 @@ internal static class Scenario
     /// </summary>
     private static void Watch(TopLevel? top)
     {
+        generation++;
         beat?.Dispose();
         beat = null;
         if (watched is { } before)
@@ -422,6 +423,8 @@ internal static class Scenario
 
         watched = top;
         top.LayoutUpdated += Laid;
+        int mine = ++generation;
+        top.RequestAnimationFrame(_ => Frame(mine));
         beat = new Timer(_ =>
         {
             long asked = Since.ElapsedMilliseconds;
@@ -443,6 +446,22 @@ internal static class Scenario
     }
 
     private static void Laid(object? sender, EventArgs e) => Interlocked.Increment(ref layouts);
+
+    private static int frames;
+
+    private static int generation;
+
+    /// <summary>Entry 447 section 3: every frame the window's render loop ticks while a scenario runs is counted, to see whether drawing stopped.</summary>
+    private static void Frame(int mine)
+    {
+        if (mine != generation || watched is not { } top)
+        {
+            return;
+        }
+
+        Interlocked.Increment(ref frames);
+        top.RequestAnimationFrame(_ => Frame(mine));
+    }
 
     private static void Gesture(object? sender, RoutedEventArgs e)
     {
@@ -1363,6 +1382,14 @@ internal static class Scenario
         };
     }
 
+    /// <summary>One holder as a hit test sees it: its place, whether it takes input, is enabled and shown, clips, its layer and transform.</summary>
+    internal static string Holder(Visual v) => string.Create(CultureInfo.InvariantCulture,
+        $"{v.GetType().Name} {v.Bounds.X:0},{v.Bounds.Y:0} {v.Bounds.Width:0}x{v.Bounds.Height:0} hit={(v as InputElement)?.IsHitTestVisible} on={(v as InputElement)?.IsEffectivelyEnabled} seen={v.IsEffectivelyVisible} clip={v.ClipToBounds} z={v.ZIndex} turned={v.RenderTransform is not null} drawn={Drew(v)}");
+
+    private static string Drew(Visual v) => Avalonia.Rendering.Composition.ElementComposition.GetElementVisual(v) is { } d
+        ? string.Create(CultureInfo.InvariantCulture, $"{d.Offset.X:0},{d.Offset.Y:0}/{d.Size.X:0}x{d.Size.Y:0}/{(d.Visible ? "shown" : "hidden")}/{(d.ClipToBounds ? "clips" : "open")}/{d.Opacity:0.##}")
+        : "none";
+
     /// <summary>What a hold says to the script that taps: see <see cref="Hold"/>.</summary>
     internal static JsonObject HoldFor(string tap)
     {
@@ -1410,7 +1437,15 @@ internal static class Scenario
                 // where the control is not reached, what the drawing holds for it and its holders is said, beside what the window's own test finds.
                 said["drawn"] = new JsonArray([.. new[] { target }.Concat(target.GetVisualAncestors().Take(4)).Select(Drawn)]);
                 said["windowUnder"] = (top.InputHitTest(middle) as Visual)?.GetType().Name;
-                DiagnosticLog.Info("scenario.unreached", ("tap", tap), ("under", under?.GetType().Name), ("drawn", said["drawn"]!.ToJsonString()));
+                // Entry 447 section 3: in every run the bar's Next went unreached for three to six seconds after the first keyboard, and only
+                // the first; the drawing had it in place and even the overlay's own test found nothing there. So what decides a hit test is
+                // said for the control and every holder up to the window, one field each, and every visual at the point, unfiltered.
+                var chain = new[] { target }.Concat(target.GetVisualAncestors()).ToList();
+                var fields = new List<(string Key, object? Value)> { ("tap", tap), ("under", under?.GetType().Name) };
+                fields.AddRange(chain.Select((v, i) => ("h" + i.ToString(CultureInfo.InvariantCulture), (object?)Holder(v))));
+                fields.Add(("at", string.Join(",", top.GetVisualsAt(middle).Select(v => v.GetType().Name).Take(16))));
+                fields.Add(("frames", Volatile.Read(ref frames)));
+                DiagnosticLog.Info("scenario.unreached", [.. fields]);
             }
         }
 
