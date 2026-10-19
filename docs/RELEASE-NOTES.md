@@ -481,7 +481,7 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 - A saved marking now names its photo by file name only, never your folders, and a marking and photo moved together to another folder reopen; if the photo is missing, GroupLab says so and asks for it.
 - On Android the button for printing straight to the Phomemo M834 now says its true size is still being checked, rather than that it has never been tried.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.176)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
