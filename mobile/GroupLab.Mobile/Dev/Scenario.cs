@@ -348,6 +348,8 @@ internal static class Scenario
 
     private static TopLevel? listening;
 
+    private static IDisposable? popups;
+
     /// <summary>
     /// Entry 447 section 3: while a scenario runs, every press and release the window receives is logged with where it landed and what it
     /// landed on. The simulator's Real taps lost a tap twice where GroupLab's own test said it would reach its button; whether the touch
@@ -359,17 +361,38 @@ internal static class Scenario
         {
             before.RemoveHandler(InputElement.PointerPressedEvent, Pressed);
             before.RemoveHandler(InputElement.PointerReleasedEvent, Released);
+            before.RemoveHandler(InputElement.TappedEvent, Gesture);
+            before.RemoveHandler(InputElement.HoldingEvent, Gesture);
             listening = null;
         }
 
+        popups?.Dispose();
+        popups = null;
         if (on && Shell.Current is { } shell && TopLevel.GetTopLevel(shell) is { } top)
         {
             top.AddHandler(InputElement.PointerPressedEvent, Pressed, RoutingStrategies.Tunnel, handledEventsToo: true);
             top.AddHandler(InputElement.PointerReleasedEvent, Released, RoutingStrategies.Tunnel, handledEventsToo: true);
+            top.AddHandler(InputElement.TappedEvent, Gesture, RoutingStrategies.Bubble, handledEventsToo: true);
+            top.AddHandler(InputElement.HoldingEvent, Gesture, RoutingStrategies.Bubble, handledEventsToo: true);
             listening = top;
+            // Entry 447 section 3: a popup that lays a dismissing layer over the window took the simulator's first Next even with a field's
+            // hold off, so every popup that opens or closes is said too, with what it holds and what it belongs to.
+            popups = Avalonia.Controls.Primitives.Popup.IsOpenProperty.Changed.AddClassHandler<Avalonia.Controls.Primitives.Popup>((popup, change) =>
+            {
+                var owner = popup.PlacementTarget ?? popup.Parent as Control;
+                DiagnosticLog.Info("scenario.popup", ("open", (object)popup.IsOpen), ("holds", popup.Child?.GetType().Name),
+                    ("owner", owner?.GetType().Name), ("id", owner is null ? null : AutomationProperties.GetAutomationId(owner)), ("dismiss", popup.IsLightDismissEnabled));
+            });
         }
 
         return on;
+    }
+
+    private static void Gesture(object? sender, RoutedEventArgs e)
+    {
+        var on = e.Source as Control;
+        DiagnosticLog.Info("scenario.gesture", ("what", e.RoutedEvent?.Name), ("state", (e as HoldingRoutedEventArgs)?.HoldingState.ToString()), ("on", on?.GetType().Name),
+            ("id", on is null ? null : AutomationProperties.GetAutomationId(on) ?? on.GetVisualAncestors().OfType<Control>().Select(AutomationProperties.GetAutomationId).FirstOrDefault(i => i is not null)));
     }
 
     private static void Pressed(object? sender, PointerPressedEventArgs e) => Said("pressed", e, sender);

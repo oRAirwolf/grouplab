@@ -52,6 +52,7 @@ public class ScenarioTests
             Assert.Contains("what=pressed", log, StringComparison.Ordinal);
             Assert.Contains("what=released", log, StringComparison.Ordinal);
             Assert.Contains("id=capture-change", log, StringComparison.Ordinal);
+            Assert.Contains("scenario.gesture", log, StringComparison.Ordinal);
         }
         finally
         {
