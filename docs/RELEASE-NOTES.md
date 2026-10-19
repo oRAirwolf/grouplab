@@ -490,7 +490,7 @@ From your reports and targets in this build: 1 fix from 5 error reports.
 
 - Publishing this build stopped after its downloads were up, before the newest-build download moved to it, so GroupLab Dev's updates, the update check and Google Play still offer nightly 176 until the next build; download this one from the link below.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.177)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
