@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.204
+
+**2026-10-19**, commit `c9389b3`. Nightly.
+
+**What you will notice**
+
+- A phone now updates to the newest nightly that has an Android file, even when a newer nightly's Android download is late or missing, and says plainly when it already has the newest.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.204)
+
+---
+
 ## 0.2.0-nightly.203
 
 **2026-10-19**, commit `d1c07ea`. Nightly.
