@@ -130,6 +130,12 @@ Where the specification is silent and a choice has to be made to go on, record t
   - **`phase-0` and `phase-0a`** are closed phases, kept as history.
   - **When Phase 1 closes,** `phase-1` is retired rather than carried alongside `main`.
   - **New work** goes on `main`, or on a short-lived branch merged back into it.
+- **Release notes, and the two trailers that say where a change came from** (entry 458). Every commit carries a `Release-note:` and a `Release-note-kind:` trailer, as CLAUDE.md describes. Two more sit beside them when people's reports or targets led to the change.
+  - **`Reported-via:`** goes on a fix that came from a report. Name where it came from, one or more of: automatic error report, error report sent from GroupLab, GitHub issue, email, Discord. Add a count when there is more than one from a place. Example: `Reported-via: automatic error report x3, Discord`.
+  - **`From-submissions:`** goes on a change made with targets people sent, such as a detection update from the learning loop. Say how many went in and from where, using only these sources: from GroupLab, sent from GroupLab automatically, sent from GroupLab by hand, uploaded on grouplab.org, from Discord, people sent. Example: `From-submissions: 31 sent from GroupLab automatically, 15 uploaded on grouplab.org, 2 from Discord`.
+  - **What the notes do with them:** the fix's line gains a plain phrase such as "(found from 5 automatic error reports)" or "(made with 48 targets people sent)", and the build's notes end with one line totaling the build's reports and targets. The releases page keeps the running total.
+  - **Never a name.** A person is not named in either trailer, and `scripts/release-notes.py` refuses any other word in them. A commit that closes a crash report issue without `Reported-via:` fails the release notes check that runs on every push.
+  - **The learning loop** writes its own tuning commit's note and `From-submissions:` trailer from its result, and makes no commit when nothing changes.
 
 ## Long-running steps
 

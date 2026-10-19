@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1787 |
-| measured | 2271 |
-| decided | 1455 |
+| measured | 2272 |
+| decided | 1458 |
 | unbacked | 0 |
-| **total** | **5513** |
+| **total** | **5517** |
 
-**1622** of them were read one sentence at a time and their backing written against the sentence. The other **3891** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1622** of them were read one sentence at a time and their backing written against the sentence. The other **3895** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -123,6 +123,9 @@ one that matters.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **`phase-1`** is kept until Phase 1 formally closes.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **`phase-0` and `phase-0a`** are closed phases, kept as history.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **When Phase 1 closes,** `phase-1` is retired rather than carried alongside `main`.
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **Release notes, and the two trailers that say where a change came from** (entry 458).
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Example: `From-submissions: 31 sent from GroupLab automatically, 15 uploaded on grouplab.org, 2 from Discord`.
+- *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **What the notes do with them:** the fix's line gains a plain phrase such as "(found from 5 automatic error reports)" or "(made with 48 targets people sent)", and the build's notes end with one line totaling the build's reports and targets.
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): ## Long-running steps **A job that will outlast the turn ends the turn** (NOTES-FROM-PLANNING.md entry 79 section 2, replacing the earlier rule of waiting in the turn).
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): - **Why:** two writers rewriting one file collided once (NOTES-FROM-PLANNING.md entry 44).
 - *decided* (working rules, each naming the NOTES-FROM-PLANNING.md entry that set it): Do not use it for anything you can settle by measurement, and do not use it to ask permission for work the brief already authorises.
@@ -5035,6 +5038,7 @@ one that matters.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): Tests run on Windows, macOS and Linux.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): If they all pass, a nightly build starts: it packages a Windows installer, signs a manifest saying what is in it, tags the commit, and publishes a release.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): That produced entries like: Entry 130 item 3.3: doubt travels with the number That is written for the project's own log.
+- *measured* (the article's own evidence: 2 sources, data from 2026-09-22): A line reads, for example, "found from 5 automatic error reports" or "made with 48 targets people sent".
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): One platform does not hold up another The nightly is built for Windows, Linux, macOS, Android and the iPhone, and for a while one of them could hold the others back in two ways.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): The desktop release waited for the Android build, which is allowed two hours, so a stuck Android build could hold the Windows installer back that long, though it could never stop it.
 - *measured* (the article's own evidence: 2 sources, data from 2026-09-22): A nightly is built when the tests pass on Windows, Linux and macOS and the jobs that build what ships succeed.

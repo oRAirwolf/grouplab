@@ -36,6 +36,20 @@ public class SendEverythingTests
         Assert.Contains((string?)after["submission"]!["state"], TargetPackages.States);
     }
 
+    /// <summary>Entry 458 section 2: one word, how the target was sent, from the person's sending choice; anything else is left out.</summary>
+    [Fact]
+    public void APackageSaysHowItWasSentInOneWord()
+    {
+        var terms = ReceiverTerms.Current;
+        Assert.Equal("automatic", TargetPackages.HowSent(SendingChoice.Always));
+        Assert.Equal("automatic", TargetPackages.HowSent(SendingChoice.Everything));
+        Assert.Equal("by hand", TargetPackages.HowSent(SendingChoice.Ask));
+        var sent = JsonNode.Parse(TargetPackages.Build([1, 2, 3], "target.png", [], [], [], [], [], "log", ConsentLevel.Testing, terms, sent: "by hand").Json)!;
+        Assert.Equal("by hand", (string?)sent["sent"]);
+        var other = JsonNode.Parse(TargetPackages.Build([1, 2, 3], "target.png", [], [], [], [], [], "log", ConsentLevel.Testing, terms, sent: "Alan").Json)!.AsObject();
+        Assert.False(other.ContainsKey("sent"));
+    }
+
     [Fact]
     public void TwoVersionsOfOnePictureShareACodeThatSaysNothingElse()
     {

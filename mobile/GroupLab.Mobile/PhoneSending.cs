@@ -168,7 +168,8 @@ internal static class PhoneSending
             ["capture"] = System.Text.Json.JsonSerializer.SerializeToNode(MarkingFile.CaptureDocument(state.Capture)),
         };
         var environment = new JsonObject { ["text"] = $"GroupLab {AppInfo.ShortVersion} on a phone, {System.Runtime.InteropServices.RuntimeInformation.OSDescription}" };
-        return TargetPackages.Build(image, name, [.. detected.Shots], [.. state.Shots], told, figures, environment, Log(), level, terms);
+        return TargetPackages.Build(image, name, [.. detected.Shots], [.. state.Shots], told, figures, environment, Log(), level, terms,
+            sent: TargetPackages.HowSent(Phone.Settings.LoadSending().Choice));
     }
 
     private static string Log()

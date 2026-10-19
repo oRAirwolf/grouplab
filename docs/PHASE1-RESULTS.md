@@ -1764,6 +1764,26 @@ page, and the other two came back as page text without their scripts; the entry'
 4. **Docs**: the guide's Report a problem part, the phone's part, the error reports feature's note and the support page say a report can
    be sent from GroupLab, with GitHub and email as the fallback.
 
+## Entry 458: release notes say what people's reports and targets changed (2026-10-19)
+
+1. **Where a fix's report came from**: `scripts/release-notes.py` reads `Reported-via:` (automatic error report, error report sent from
+   GroupLab, GitHub issue, email, Discord, with counts) and puts it on the fix's line, "(found from 5 automatic error reports)"; any other
+   word, a name among them, is refused. A commit that closes a crash report issue without it fails the release notes check on every push.
+   Entry 457's fix (0af39fc2) already carries it, so the next nightly's notes say "found from 5 automatic error reports". People who
+   agreed to be named (Quack, Jylee, Unholy, Fenix, Justin) stay in the commit's prose only; the trailer never carries a name.
+2. **Detection changes from targets**: `From-submissions:` says how many targets people sent went into a change ("made with 48 targets
+   people sent" on its line). The learning loop writes its commit's note from its own result (`learn.py release_note`): the targets and
+   where they came from, how many held back, how many more holes and fewer false marks on those (public totals only, from the tuning
+   result's new numeric fields), and what changed in plain words from `KNOB_WORDS`, never a constant's name; no change, no commit. The app
+   now records one word with each target, automatic or by hand (`TargetPackages.HowSent`), and the receiver keeps it in `meta.json` beside
+   `source` (app or web); targets from before say "people sent" without the split.
+3. **The running total**: each build's notes end with "From your reports and targets in this build: ..." when there is any; the releases
+   page has "What your reports and targets changed" (`/releases/#from-you`), the README's What is new carries the total once a build has
+   counted, the Support and Send a target pages link to it, and the Discord announcement carries the build's line with its notes.
+4. **Checks and docs**: the notes self-test covers both trailers, the counts, the total, a name refused and the crash report rule;
+   `SendEverythingTests.APackageSaysHowItWasSentInOneWord`. CONTRIBUTING.md says how to write the trailers and the nightly-builds article
+   mentions the counts (docs helper, reviewed).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

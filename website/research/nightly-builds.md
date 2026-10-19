@@ -65,6 +65,10 @@ Nothing is guessed from a subject line. A commit with nothing a person would not
 
 A refused note no longer costs a nightly, though. Seven nightlies were lost with every build fine, each because the checker refused one commit's note: a British spelling, a word only this project knows, a note saying nothing changed. Now the same check runs on every push, so a bad note shows red on its own commit and is put right there. If one still reaches the nightly, the build is published with short notes (the version, the commit and a link to the changes since the build before) and the run carries a warning, instead of no nightly at all.
 
+## Notes that say who helped
+
+The notes now also say which fixes came from people's error reports and which detection changes were made with targets people sent. A line reads, for example, "found from 5 automatic error reports" or "made with 48 targets people sent". Nobody is named, only a count and where the reports or targets came from. Each build's notes end with one line adding them up, and the releases page keeps the running total since the first build that counted them.
+
 ## One platform does not hold up another
 
 The nightly is built for Windows, Linux, macOS, Android and the iPhone, and for a while one of them could hold the others back in two ways.

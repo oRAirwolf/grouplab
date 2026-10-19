@@ -130,7 +130,31 @@ def whats_new() -> str:
             lines.append(f"- {note}" + (f" [{f['name']}]({SITE}/features/#{f['key']})" if f else ""))
         lines.append("")
     lines.append(f"Every build's notes are in [docs/RELEASE-NOTES.md](docs/RELEASE-NOTES.md) and at <{SITE}/releases/>.")
+    # Entry 458 section 3: the running total of what people's reports and targets changed, the same words as the releases page.
+    if (total := from_you()) is not None:
+        lines.append("")
+        lines.append(total)
     return "\n".join(lines)
+
+
+def from_you() -> str | None:
+    """ "Since nightly 206: 3 fixes from 8 error reports and 1 detection update from 48 targets people sent.", or None before any build counted."""
+    import re
+    first, fixes, reports, updates, targets = "", 0, 0, 0, 0
+    for block in re.split(r"(?m)^## ", NOTES.read_text(encoding="utf-8"))[1:]:
+        if (m := re.search(r"From your reports and targets in this build: (.+)\.", block)) is None:
+            continue
+        first = block.split("\n", 1)[0].strip()
+        for part in m.group(1).split(", "):
+            if (f := re.fullmatch(r"(\d+) fix(?:es)? from (\d+) error reports?", part)) is not None:
+                fixes, reports = fixes + int(f.group(1)), reports + int(f.group(2))
+            elif (u := re.fullmatch(r"(\d+) detection updates? from (\d+) targets people sent", part)) is not None:
+                updates, targets = updates + int(u.group(1)), targets + int(u.group(2))
+    if not first:
+        return None
+    said = ([f"{fixes} fix{'es' if fixes > 1 else ''} from {reports} error report{'s' if reports > 1 else ''}"] if fixes else []) + \
+        ([f"{updates} detection update{'s' if updates > 1 else ''} from {targets} targets people sent"] if updates else [])
+    return f"Since nightly {first.rsplit('.', 1)[-1]}: " + " and ".join(said) + f". [What your reports and targets changed]({SITE}/releases/#from-you)."
 
 
 # Entry 266: three columns, each gathering the Features page's groups under it; every other group follows in one line.

@@ -442,6 +442,8 @@ $meta = [
     'exclude_from_public_dataset' => $exclude,
 
     'source' => 'app',
+    // Entry 458 section 2: how it was sent, one word, so the release notes can count where targets came from.
+    'sent' => in_array($package['sent'] ?? null, ['automatic', 'by hand'], true) ? $package['sent'] : null,
 
     'consent' => [
         'agreed'        => true,

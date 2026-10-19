@@ -295,6 +295,92 @@ _spelling.loader.exec_module(AMERICAN)
 REFERENCE = re.compile(r"\s*\((?:[Ee]ntr(?:y|ies)|[Rr]equests?|[Qq]uestions?)\b[^)]*\)(?=\.?\s*$)")
 
 
+# NOTES-FROM-PLANNING.md entry 458: where a fix's report came from, and how many targets people sent went into a change, so the notes show
+# people that what they send makes a difference. Each source is one of these, with a count when more than one; a name never appears here.
+REPORTED = re.compile(r"^Reported-via:\s*(?P<value>.+)$", re.IGNORECASE)
+SUBMISSIONS = re.compile(r"^From-submissions:\s*(?P<value>.+)$", re.IGNORECASE)
+REPORT_SOURCES = {
+    "automatic error report": ("automatic error report", "automatic error reports"),
+    "error report sent from grouplab": ("error report sent from GroupLab", "error reports sent from GroupLab"),
+    "github issue": ("GitHub issue", "GitHub issues"),
+    "email": ("email", "emails"),
+    "discord": ("Discord post", "Discord posts"),
+}
+SUBMISSION_SOURCES = ("from grouplab", "from grouplab.org", "from discord", "sent from grouplab automatically", "sent from grouplab by hand",
+                      "uploaded on grouplab.org", "people sent")
+
+# Entry 458 section 1: a person is named only where they agreed to be (STATE and the consents: Quack, Jylee, Unholy, Fenix and Justin, by
+# first name); nothing else that looks like a name may follow a source.
+CONSENTED = ("Quack", "Jylee", "Unholy", "Fenix", "Justin")
+
+# A commit that closes a crash report issue says where it came from; CI fails it otherwise.
+CLOSES_REPORT = re.compile(r"\b(?:crash reports?|grouplab-crash-reports#)\s*#?(\d+)", re.IGNORECASE)
+
+
+def parts(value):
+    """A trailer's sources as (words, count): "automatic error report x3, Discord" is [("automatic error report", 3), ("discord", 1)]."""
+    found = []
+    for piece in value.split(","):
+        piece = piece.strip()
+        if not piece:
+            continue
+        m = re.fullmatch(r"(?:(\d+)\s+)?(.*?)(?:\s*x(\d+))?", piece, re.IGNORECASE)
+        count = int(m.group(1) or m.group(3) or 1)
+        found.append((m.group(2).strip().lower(), count))
+    return found
+
+
+def sources(message):
+    """The commit's Reported-via and From-submissions trailers, each as (words, count) pairs, and what is wrong with them."""
+    reported, submitted, wrong = [], [], []
+    for raw in message.splitlines():
+        line = raw.strip()
+        if (m := REPORTED.match(line)) is not None:
+            for words, count in parts(m.group("value")):
+                if words not in REPORT_SOURCES:
+                    wrong.append(f"Reported-via names {words!r}, which is not one of: {', '.join(REPORT_SOURCES)} (a person is never named there)")
+                else:
+                    reported.append((words, count))
+        elif (m := SUBMISSIONS.match(line)) is not None:
+            for words, count in parts(m.group("value")):
+                if words not in SUBMISSION_SOURCES:
+                    wrong.append(f"From-submissions names {words!r}, which is not one of: {', '.join(SUBMISSION_SOURCES)}")
+                else:
+                    submitted.append((words, count))
+    return reported, submitted, wrong
+
+
+def found_from(reported):
+    """ "found from 2 automatic error reports and a Discord post" """
+    said = []
+    for words, count in reported:
+        one, many = REPORT_SOURCES[words]
+        said.append(f"{count} {many}" if count > 1 else ("an " if one[0] in "aeiou" else "a ") + one)
+    return "found from " + (said[0] if len(said) == 1 else ", ".join(said[:-1]) + " and " + said[-1])
+
+
+def with_source(text, reported, submitted):
+    """A note with where it came from on its own line, in brackets before its full stop."""
+    tail = []
+    if reported:
+        tail.append(found_from(reported))
+    if submitted and "targets people sent" not in text:
+        tail.append(f"made with {sum(c for _, c in submitted)} targets people sent")
+    if not tail:
+        return text
+    return text[:-1].rstrip() + " (" + "; ".join(tail) + ")" + text[-1]
+
+
+def total_line(fixes, reports, updates, targets):
+    """The line a build's notes end with when people's reports or targets went into it, entry 458 section 3."""
+    said = []
+    if fixes:
+        said.append(f"{fixes} fix{'es' if fixes > 1 else ''} from {reports} error report{'s' if reports > 1 else ''}")
+    if updates:
+        said.append(f"{updates} detection update{'s' if updates > 1 else ''} from {targets} targets people sent")
+    return "From your reports and targets in this build: " + ", ".join(said) + "." if said else ""
+
+
 def reader_text(note):
     """A note as a reader sees it: the reference in brackets at its end taken off, the full stop kept."""
     text = REFERENCE.sub("", note.strip()).rstrip()
@@ -403,6 +489,7 @@ def build_notes(version, head, previous, heading=True, new=True):
     notes = {k: [] for k in KINDS}
     generated = []
     wrong = []
+    counted = {"fixes": 0, "reports": 0, "updates": 0, "targets": 0}
 
     for sha, message in commits(previous, head):
         # Entry 168 sections 3.3 and 4.1: a nightly writing its own notes is not a change, and a commit that touched
@@ -422,9 +509,20 @@ def build_notes(version, head, previous, heading=True, new=True):
             notes["internal"].append(line)
             generated.append(sha)
             continue
-        for note, kind in read_notes:
+        reported, submitted, bad = sources(message)
+        wrong += [f"{sha}: {b}" for b in bad]
+        if new and CLOSES_REPORT.search(message) and not reported:
+            wrong.append(f"{sha}: it closes a crash report and has no Reported-via trailer saying where the report came from (entry 458)")
+        if reported:
+            counted["fixes"] += 1
+            counted["reports"] += sum(c for _, c in reported)
+        if submitted:
+            counted["updates"] += 1
+            counted["targets"] += sum(c for _, c in submitted)
+        for i, (note, kind) in enumerate(read_notes):
             wrong += problems(sha, note, new=new)
-            notes[kind].append(reader_text(note))
+            # The source goes on the commit's first note, which is the one that says what it fixed or changed.
+            notes[kind].append(with_source(reader_text(note), reported, submitted) if i == 0 else reader_text(note))
 
     if wrong:
         return "", wrong
@@ -452,6 +550,10 @@ def build_notes(version, head, previous, heading=True, new=True):
         out.append("")
         for note in notes["internal"]:
             out.append("- " + note)
+        out.append("")
+
+    if line := total_line(counted["fixes"], counted["reports"], counted["updates"], counted["targets"]):
+        out.append(line)
         out.append("")
 
     text = "\n".join(out)
@@ -575,6 +677,29 @@ def self_test():
         ok = any("did not change" in s for s in said)
         failed += not ok
         print(("ok   " if ok else "FAIL ") + "refused: " + note[:60])
+    # Entry 458: where a fix's report came from, the targets a change was made with, the build's total, and never a name.
+    def check(name, ok):
+        nonlocal failed
+        failed += not ok
+        print(("ok   " if ok else "FAIL ") + name)
+
+    reported, submitted, wrong = sources("\n".join(["Subject", "", "Release-note: x", "Reported-via: automatic error report x3, Discord",
+                                                    "From-submissions: 31 from GroupLab, 15 from grouplab.org, 2 from Discord"]))
+    check("the trailers are read with their counts", reported == [("automatic error report", 3), ("discord", 1)]
+          and sum(c for _, c in submitted) == 48 and not wrong)
+    check("a fix's line says where its report came from",
+          with_source("Next unsure hole no longer raises an error.", reported, []) ==
+          "Next unsure hole no longer raises an error (found from 3 automatic error reports and a Discord post).")
+    check("a change made with targets says how many",
+          with_source("Hole finding finds more holes.", [], submitted) == "Hole finding finds more holes (made with 48 targets people sent).")
+    check("one report of each kind reads as one", found_from([("email", 1)]) == "found from an email")
+    check("the build's total line", total_line(2, 4, 1, 48) ==
+          "From your reports and targets in this build: 2 fixes from 4 error reports, 1 detection update from 48 targets people sent.")
+    check("no total line when nobody's report or target went in", total_line(0, 0, 0, 0) == "")
+    _, _, named = sources("\n".join(["Subject", "", "Reported-via: email from Bob"]))
+    check("a name in Reported-via is refused", len(named) == 1 and "never named" in named[0])
+    check("a fix that closes a crash report is recognized", CLOSES_REPORT.search("Crash report 37 (nightly 204)") is not None
+          and CLOSES_REPORT.search("grouplab-crash-reports#36") is not None and CLOSES_REPORT.search("an error report") is None)
     print("release-notes self-test: " + ("passed" if not failed else f"{failed} failed"))
     return 1 if failed else 0
 

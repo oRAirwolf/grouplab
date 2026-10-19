@@ -278,7 +278,14 @@ public static class LearnVerb
             ["publicFound"] = $"{after.Where(r => r.Public).Sum(r => r.Found)} of {after.Where(r => r.Public).Sum(r => r.Holes)}, was {before.Where(r => r.Public).Sum(r => r.Found)}",
             ["publicFalseMarks"] = $"{after.Where(r => r.Public).Sum(r => r.FalseMarks)}, was {before.Where(r => r.Public).Sum(r => r.FalseMarks)}",
             ["testingOnlyCount"] = after.Count(r => !r.Public),
+
+            // Entry 458 section 2: the same public totals as numbers, so the release note can say how many more holes and fewer false marks.
+            ["publicFoundBefore"] = before.Where(r => r.Public).Sum(r => r.Found),
+            ["publicFoundAfter"] = after.Where(r => r.Public).Sum(r => r.Found),
+            ["publicFalseBefore"] = before.Where(r => r.Public).Sum(r => r.FalseMarks),
+            ["publicFalseAfter"] = after.Where(r => r.Public).Sum(r => r.FalseMarks),
         };
+        result["trained"] = training.Count;
         result["table"] = SyntheticTable(startSynthetic, currentSynthetic);
         return Finish(result, outPath, output);
     }

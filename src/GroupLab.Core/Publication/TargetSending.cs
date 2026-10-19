@@ -317,12 +317,15 @@ public static class TargetPackages
         return [.. corrected["marks"]!.AsArray().OfType<JsonObject>().Select(m => ((int)m["id"]!, new PointD((double)m["x"]!, (double)m["y"]!), (int?)m["bull"], (string?)m["excluded"], (bool)m["notAShot"]!))];
     }
 
+    /// <summary>Entry 458: how a target goes under a sending choice: by itself under Always and Everything, by the person's own press otherwise.</summary>
+    public static string HowSent(SendingChoice choice) => choice is SendingChoice.Always or SendingChoice.Everything ? "automatic" : "by hand";
+
     /// <summary>The package, with its manifest naming the image by its size and SHA-256.</summary>
     /// <param name="submission">
     /// Entry 357 section 1, only under "Send everything I open": the state the picture was left in, its picture code, the reference of
     /// an earlier version where one was sent, and how far it got. Null, and absent from the package, otherwise, as before the entry.
     /// </param>
-    public static TargetPackage Build(byte[] image, string imageName, IReadOnlyList<MarkedShot> detected, IReadOnlyList<MarkedShot> final, JsonObject told, JsonObject analysis, JsonObject environment, string log, ConsentLevel level, ReceiverTerms terms, JsonObject? submission = null)
+    public static TargetPackage Build(byte[] image, string imageName, IReadOnlyList<MarkedShot> detected, IReadOnlyList<MarkedShot> final, JsonObject told, JsonObject analysis, JsonObject environment, string log, ConsentLevel level, ReceiverTerms terms, JsonObject? submission = null, string? sent = null)
     {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(terms);
@@ -345,6 +348,13 @@ public static class TargetPackages
         if (submission is not null)
         {
             package["submission"] = submission;
+        }
+
+        // Entry 458 section 2: one word, how it was sent, "automatic" or "by hand", so the release notes can say where the targets that
+        // changed the detection came from. Nothing personal.
+        if (sent is "automatic" or "by hand")
+        {
+            package["sent"] = sent;
         }
 
         return new TargetPackage(image, imageName, package.ToJsonString());

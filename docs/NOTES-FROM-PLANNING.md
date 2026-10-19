@@ -25,6 +25,64 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-19, entry 458: release notes say what people's reports and targets changed
+
+**Status: actioned 2026-10-19; every section done. The first build with the counts is the nightly after 0.2.0-nightly.205.**
+
+From the planning session, 2026-10-19 11:15 UTC. Take it right after entry 457 (whose first fix should already carry the new
+trailer), before 455 and 456. Nothing here needs Alan.
+
+Alan, 2026-10-19 04:56 Denver: "I would like it if the changelogs will show when an error was fixed from a user report and whether it
+was from an automatic report or submitted through github/email/discord. This way users who look at the release notes will see that
+their automatic reports are making a difference. I would also like it where if code finds a new target submission, either automatic or
+through the website, that it says that it refined the detection engine with x user submissions and what changes were made. I want the
+release notes to be more transparent about how user submissions, either automatic or manual are helping to make the application better
+for everybody."
+
+## 1. Fixes from reports say where the report came from
+
+- A new commit trailer, read by `scripts/release-notes.py` beside `Release-note` and `Release-note-kind`:
+  `Reported-via: automatic error report` (or `error report sent from GroupLab`, `GitHub issue`, `email`, `Discord`), with a count when
+  more than one (`Reported-via: automatic error report x3, Discord`). Several sources may be listed.
+- The notes show it on the fix's line, in plain words, for example: "Fixed: Next unsure hole could raise an error when the window
+  redrew (found from 2 automatic error reports)."
+- A person is named only where they have agreed to be (STATE and the memory of consents: Quack, Jylee, Unholy, Fenix, Justin by first
+  name); otherwise never a name, email, user name or anything from their files. An issue number is fine (entry 373 section 10).
+- Every fix that closes an issue in grouplab-crash-reports, or that came from a Discord post, a GitHub issue or an email, carries the
+  trailer; a check in CI fails a commit that closes a crash report issue without one. `docs/notes/error-reports.md` (entry 457) records
+  each report's source so the trailer is easy to write.
+
+## 2. Detection changes from submitted targets say how many and what changed
+
+- **The learning loop** (`scripts/learning/learn.py`, entries 394 to 396) writes its commit's release note from its own result instead
+  of the fixed sentence it has now, for example: "Hole finding was tuned against 48 targets people sent (31 sent from GroupLab, 15 uploaded
+  on grouplab.org, 2 from Discord), with 12 held back to check it: on those it now finds 9 more holes and makes 2 fewer false marks. What
+  changed: it looks for slightly smaller holes, and accepts a fainter rim on a white scanner lid." Each constant it can change gets a
+  plain-words name in a table beside `DETECTOR`, so the note never shows a constant name. A run that changes nothing writes no note.
+- **Any other change made using submitted targets** (a detection fix, a new store-bought fingerprint, a scan or photo case found in a
+  submission) carries a trailer `From-submissions: 31 from GroupLab, 15 from grouplab.org, 2 from Discord`, and the notes say "made with
+  48 targets people sent" on its line.
+- Where a submission came from must be known: if the intake does not already record whether a target was sent from the app
+  automatically, sent from the app by hand, uploaded on the website or posted on Discord, start recording that one word with each
+  submission (nothing personal). Counts before that date are reported as "people sent" without the split.
+
+## 3. Show the running total
+
+- Each build's notes end with one line when it has any: "From your reports and targets in this build: 2 error reports, 48 targets."
+- The Release notes page on grouplab.org and the README's release section carry a running total since the first build that counted
+  them ("Since nightly 205: 14 fixes from error reports, 3 detection updates from 112 targets people sent"), and the Support and Send a
+  target pages link to it with one sentence: reports and targets you send are counted here.
+- The Discord nightly announcement carries the same line.
+
+## 4. Docs and checks
+
+- `scripts/release-notes.py` tests for both trailers, the counts, the running total, the plain names of the learning loop's constants,
+  and that no name appears without consent.
+- CONTRIBUTING.md (how to write the trailers), the support page and the nightly-builds research article updated in the same change
+  (entry 267).
+
+---
+
 ## 2026-10-19, entry 457: the Next unsure hole error, a Send button on every report, and error reports triaged as they arrive
 
 **Status: actioned 2026-10-19; every section done. The issues close when the nightly carrying 0af39fc2 is published.**

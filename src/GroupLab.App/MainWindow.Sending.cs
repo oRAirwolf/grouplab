@@ -215,7 +215,8 @@ public sealed partial class MainWindow
         // What detection left, the state Discard edits returns to, before any person changed a mark.
         IReadOnlyList<MarkedShot> detected = detectedState is { } left ? [.. left.Shots] : [];
         var submission = sentState is not null && SharingSwitches.EverythingOpen ? Submission(file, sentState) : null;
-        return TargetPackages.Build(image, name, detected, [.. state.Shots], told, figures, environment, SessionLog(), level, terms, submission);
+        return TargetPackages.Build(image, name, detected, [.. state.Shots], told, figures, environment, SessionLog(), level, terms, submission,
+            TargetPackages.HowSent(settingsStore.LoadSending().Choice));
     }
 
     /// <summary>This session's log, as the diagnostics already write it, with anything that looks like a path taken out, the last 1.5 MB.</summary>

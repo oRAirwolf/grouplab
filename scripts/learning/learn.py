@@ -187,10 +187,67 @@ def command_tune() -> int:
         result = json.loads(result_path.read_text(encoding="utf-8"))
         (learning() / "tuning.md").write_text(tuning_text(result), encoding="utf-8")
         if result.get("accepted"):
-            pull_request(result)
+            pull_request(result, origins([work / name for name in corrected]))
     finally:
         shutil.rmtree(work, ignore_errors=True)
     return 0
+
+
+# NOTES-FROM-PLANNING.md entry 458 section 2: each constant the search can move, in plain words for each way it moved, so the release note
+# says what changed in a shooter's terms and never shows a constant's name.
+KNOB_WORDS = {
+    "OpenRadiusInches": ("looks for {s}smaller holes, keeping specks it used to clean away", "cleans away {s}larger specks before it looks for holes"),
+    "CloseRadiusInches": ("joins a torn rim's gaps {s}less readily", "joins a torn rim's gaps {s}more readily"),
+    "ResidualFraction": ("accepts a {s}fainter mark as a hole", "needs a {s}darker mark before it calls it a hole"),
+    "MinimumSolidity": ("accepts {s}more ragged holes", "wants {s}fuller, rounder holes"),
+    "MaximumAspect": ("wants holes {s}closer to round", "accepts {s}more stretched holes"),
+    "PaperBlockInches": ("judges the paper's brightness over a {s}smaller patch", "judges the paper's brightness over a {s}wider patch"),
+}
+
+# Where a submission came from, in the words the notes use, from the receiver's record (entry 458: source and how it was sent).
+SOURCE_WORDS = {("app", "automatic"): "sent from GroupLab automatically", ("app", "by hand"): "sent from GroupLab by hand", ("app", None): "from GroupLab",
+                ("web", None): "uploaded on grouplab.org", ("discord", None): "from Discord"}
+
+
+def origins(folders: list[Path]) -> dict[str, int]:
+    """How many of the submissions came from where, read from each one's meta.json; nothing personal is read."""
+    counts: dict[str, int] = {}
+    for folder in folders:
+        try:
+            meta = json.loads((folder / "meta.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            meta = {}
+        source = meta.get("source") if isinstance(meta.get("source"), str) else None
+        sent = meta.get("sent") if meta.get("sent") in ("automatic", "by hand") else None
+        words = SOURCE_WORDS.get((source, sent)) or SOURCE_WORDS.get((source, None)) or "people sent"
+        counts[words] = counts.get(words, 0) + 1
+    return counts
+
+
+def release_note(result: dict, counts: dict[str, int]) -> tuple[str, str]:
+    """The tuning commit's note and its From-submissions trailer, from the result itself (entry 458 section 2)."""
+    total = sum(counts.values())
+    split = ", ".join(f"{n} {w}" for w, n in sorted(counts.items(), key=lambda kv: -kv[1]))
+    held = result["heldOut"]
+    more = held.get("publicFoundAfter", 0) - held.get("publicFoundBefore", 0)
+    fewer = held.get("publicFalseBefore", 0) - held.get("publicFalseAfter", 0)
+    better = []
+    if more > 0:
+        better.append(f"finds {more} more hole{'s' if more != 1 else ''}")
+    if fewer > 0:
+        better.append(f"makes {fewer} fewer false mark{'s' if fewer != 1 else ''}")
+    changes = []
+    for name, value in result["constants"].items():
+        was = result["was"][name]
+        if name in KNOB_WORDS and value != was:
+            words = KNOB_WORDS[name][0 if value < was else 1]
+            changes.append(words.format(s="slightly " if abs(value - was) <= 0.2 * abs(was) else ""))
+    note = (f"Hole finding was tuned against {total} targets people sent ({split}), with {held['submissions']} held back to check it"
+            + (f": on those it now {' and '.join(better)}." if better else ".")
+            + (f" What changed: it {', and it '.join(changes)}." if changes else "")
+            + " (Entry 394)")
+    trailer = ", ".join(f"{n} {w}" for w, n in counts.items())
+    return note, trailer
 
 
 def tuning_text(result: dict) -> str:
@@ -202,7 +259,7 @@ def tuning_text(result: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def pull_request(result: dict) -> None:
+def pull_request(result: dict, counts: dict[str, int]) -> None:
     """A branch with the new constants and nothing else, and a pull request with the table, which Code reads and merges (entry 396)."""
     token = os.environ.get("LEARNING_TOKEN")
     if not token:
@@ -218,9 +275,10 @@ def pull_request(result: dict) -> None:
     source.write_text(text, encoding="utf-8")
     branch = f"tuning/{env('BUILD')}"
     run(["git", "checkout", "-b", branch], cwd=grouplab)
+    note, trailer = release_note(result, counts)
     run(["git", "-c", "user.name=grouplab-learning", "-c", "user.email=grouplab-learning@users.noreply.github.com", "commit", "-am",
-         f"Detection constants from the learning loop, {env('BUILD')}\n\nRelease-note: Hole finding uses settings tuned against the targets people "
-         f"have sent and corrected, and finds more holes on the ones held back to check it. (Entry 394)\nRelease-note-kind: changed"], cwd=grouplab)
+         f"Detection constants from the learning loop, {env('BUILD')}\n\nRelease-note: {note}\nRelease-note-kind: changed\nFrom-submissions: {trailer}"],
+        cwd=grouplab)
     run(["git", "push", f"https://x-access-token:{token}@github.com/{GROUPLAB_REPO}.git", branch], cwd=grouplab)
     held = result["heldOut"]
     body = "\n".join([

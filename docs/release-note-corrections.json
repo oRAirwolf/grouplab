@@ -106,6 +106,15 @@
           "kind": "internal"
         }
       ]
+    },
+    "ad75f8713a5975bdfccd5e6330f631cc152d0996": {
+      "why": "Entry 457's note named GitHub, which the notes' checks read as a name in code; the checks.yml release notes check failed on it.",
+      "notes": [
+        {
+          "note": "Make a report now sends from GroupLab: write what happened and press Send, and the report goes to the project with its error and logs, with email or an issue on the project's page only when sending cannot be done. (Entry 457)",
+          "kind": "new"
+        }
+      ]
     }
   }
 }

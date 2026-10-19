@@ -1196,6 +1196,7 @@ def page_send() -> str:
 <p class="eyebrow">Send a target &middot; <a class="plain" href="/shoot-a-target/">How to shoot one</a></p>
 <h1>Send your target photos.</h1>
 <p class="lead">No account, no email address, no follow up. Everything on this page is optional except the consent box.</p>
+<p class="small">Targets you send are counted in the release notes: <a href="/releases/#from-you">what your reports and targets changed</a>.</p>
 </div>
 </section>
 
@@ -1301,6 +1302,7 @@ def page_support() -> str:
 <h2 class="h3">Discord</h2>
 <p>Questions, bug reports, target sheets, and what people are shooting. The project's developer reads it.</p>
 <p class="small">A post in the bug-reports forum becomes a bug report for the developer, and the pictures you post there go on that report and nowhere else. For anything private, the support address below is better.</p>
+<p class="small">Reports you send are counted in the release notes: <a href="/releases/#from-you">what your reports and targets changed</a>.</p>
 <div class="actions">{btn("What is in the Discord", DISCORD, True)}</div>
 </div>
 </section>
@@ -2712,6 +2714,42 @@ NEWEST_RELEASES = 10
 HEAD4 = '<h4 class="h3">'
 
 
+# NOTES-FROM-PLANNING.md entry 458 section 3: the line a build's notes end with when people's reports or targets went into it, and the total.
+FROM_YOU = re.compile(r"From your reports and targets in this build: (.+)\.")
+
+
+def from_you_total(text: str) -> tuple[str, int, int, int, int] | None:
+    """The running total over every build in docs/RELEASE-NOTES.md: the first build that counted, fixes, reports, updates and targets."""
+    first, fixes, reports, updates, targets = "", 0, 0, 0, 0
+    for block in re.split(r"(?m)^## ", text)[1:]:
+        version = block.split("\n", 1)[0].strip()
+        if (m := FROM_YOU.search(block)) is None:
+            continue
+        first = version
+        for part in m.group(1).split(", "):
+            if (f := re.fullmatch(r"(\d+) fix(?:es)? from (\d+) error reports?", part)) is not None:
+                fixes, reports = fixes + int(f.group(1)), reports + int(f.group(2))
+            elif (u := re.fullmatch(r"(\d+) detection updates? from (\d+) targets people sent", part)) is not None:
+                updates, targets = updates + int(u.group(1)), targets + int(u.group(2))
+    return (first, fixes, reports, updates, targets) if first else None
+
+
+def from_you_sentence() -> str:
+    """The running total in words, or what will be counted before the first build that counts."""
+    total = from_you_total(need(REPO / "docs" / "RELEASE-NOTES.md").read_text(encoding="utf-8"))
+    if total is None:
+        return ("From the next nightly, each build's notes say which fixes came from your error reports and which detection changes were made "
+                "with targets you sent, and the running total is kept here.")
+    first, fixes, reports, updates, targets = total
+    number = first.rsplit(".", 1)[-1]
+    said = []
+    if fixes:
+        said.append(f"{fixes} fix{'es' if fixes > 1 else ''} from {reports} error report{'s' if reports > 1 else ''}")
+    if updates:
+        said.append(f"{updates} detection update{'s' if updates > 1 else ''} from {targets} targets people sent")
+    return f"Since nightly {number}: " + " and ".join(said) + "."
+
+
 def page_releases() -> str:
     blocks = []
     for i, (anchor, version, notes) in enumerate(releases()):
@@ -2732,6 +2770,10 @@ def page_releases() -> str:
 <h1>Release notes</h1>
 <p class="lead">Every build of GroupLab anyone could download, newest first. GroupLab is unreleased, so every one of these is a pre-release.</p>
 <p class="small faint">Nightly builds are produced on the nights the application changed, so a gap in the numbers means nothing shipped that night. Work on the website, the documentation or these notes does not make a new build. Numbers below 92 were the run that built them rather than the build itself, and a run that was canceled or skipped still took its number, which is why the older gaps are wider.</p>
+</section>
+<section class="wrap stack" id="from-you">
+<div class="panel pad stack tight"><h2 class="h3">What your reports and targets changed</h2><p>{esc(from_you_sentence())}</p>
+<p class="small faint">Each build's notes end with what came from people's error reports and the targets they sent. A fix says where its report came from, and nobody is named.</p></div>
 </section>
 <section class="wrap last stack">
 <h2 id="newest">The newest builds</h2>

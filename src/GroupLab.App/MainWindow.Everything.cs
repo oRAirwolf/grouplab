@@ -152,7 +152,7 @@ public sealed partial class MainWindow
         var submission = Submission(file, "unread");
         submission["stopped"] = "GroupLab stopped without closing while this picture was open";
         var package = TargetPackages.Build(image, name, [], [], [], [], new JsonObject { ["text"] = ReportPackage.EnvironmentText(RenderScaling) },
-            LogText(previous), settingsStore.LoadSending().Level!.Value, terms, submission);
+            LogText(previous), settingsStore.LoadSending().Level!.Value, terms, submission, "automatic");
         Sender.Keep(package, DateTime.UtcNow);
         DiagnosticLog.Info("send.left", ("state", "unread"), ("after", "stop"));
     }
