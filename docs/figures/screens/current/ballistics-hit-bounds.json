@@ -33,6 +33,12 @@
       112,
       27
     ],
+    "BallisticViewPointBlank": [
+      563,
+      138,
+      94,
+      27
+    ],
     "BallisticViewTrajectory": [
       356,
       138,
@@ -114,7 +120,7 @@
     "StatusLine": [
       69,
       881,
-      1007,
+      1014,
       15
     ],
     "Target shape": [

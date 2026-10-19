@@ -33,6 +33,12 @@
       112,
       27
     ],
+    "BallisticViewPointBlank": [
+      563,
+      138,
+      94,
+      27
+    ],
     "BallisticViewTrajectory": [
       356,
       138,
@@ -71,7 +77,7 @@
     ],
     "Keep these on the records": [
       72,
-      628,
+      666,
       182,
       27
     ],
@@ -161,7 +167,7 @@
     ],
     "▸": [
       70,
-      669,
+      707,
       230,
       19
     ],
