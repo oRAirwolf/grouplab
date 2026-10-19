@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.205
+
+**2026-10-19**, commit `d1093d2`. Nightly.
+
+**Under the hood**
+
+- The Research page on grouplab.org now shows a small picture for every article: a crop of a real target where one shows the idea, and a simple drawing where none does.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.205)
+
+---
+
 ## 0.2.0-nightly.204
 
 **2026-10-19**, commit `c9389b3`. Nightly.
