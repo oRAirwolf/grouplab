@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.202
+
+**2026-10-19**, commit `ff9f61c`. Nightly.
+
+**What you will notice**
+
+- On the phone, tapping into a box while the keyboard first comes up can no longer be taken for a long press, which could still open its Cut, Copy and Paste menu and take your next tap.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.202)
+
+---
+
 ## 0.2.0-nightly.201
 
 **2026-10-18**, commit `7cfa9eb`. Nightly.
