@@ -212,4 +212,42 @@ public partial class NightlyNeverWaitsTests
         Assert.True(checkout < job.IndexOf("actions/download-artifact@", StringComparison.Ordinal), "a download comes before the checkout");
         Assert.DoesNotContain("actions/checkout@", job[(checkout + 10)..], StringComparison.Ordinal);
     }
+
+    /// <summary>
+    /// Entry 452 section 1 and 2: the website job and the ships list are checks no nightly waits for. They run on every push in their own
+    /// workflow under the same names, and "build and test", whose success starts the nightly, holds only the test legs and the builds.
+    /// </summary>
+    [Fact]
+    public void TheWebsiteAndTheShipsListNoLongerDecideTheNightly()
+    {
+        string ci = Workflow("ci.yml"), checks = Workflow("checks.yml");
+        Assert.DoesNotContain("\n  website:\n", ci, StringComparison.Ordinal);
+        Assert.DoesNotContain("shipping-gate.py --check-generated", ci, StringComparison.Ordinal);
+        Assert.Contains("\n  tarball:\n", ci, StringComparison.Ordinal);
+        Assert.Contains("name: build and test", ci, StringComparison.Ordinal);
+
+        Assert.Contains("name: website builds", Job(checks, "website"), StringComparison.Ordinal);
+        Assert.Contains("python3 scripts/shipping-gate.py --check-generated", Job(checks, "ships-list"), StringComparison.Ordinal);
+        Assert.Contains("python3 scripts/release-notes.py --check HEAD", Job(checks, "release-notes"), StringComparison.Ordinal);
+        Assert.Contains("fetch-depth: 0", Job(checks, "release-notes"), StringComparison.Ordinal);
+        Assert.DoesNotContain("checks no nightly waits for", Workflow("nightly.yml"), StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Entry 452 section 3: seven nightlies were lost at "Write the notes" with every build fine. A refused note now publishes the build with
+    /// short notes and a warning, and docs/RELEASE-NOTES.md takes the notes the build went out with rather than asking the checker again.
+    /// </summary>
+    [Fact]
+    public void ARefusedNoteNoLongerStopsTheNightly()
+    {
+        string publish = Job(Workflow("nightly.yml"), "publish");
+        string notes = Step(publish, "Write the notes");
+        Assert.Contains("> notes.md 2> notes-refused.txt; then", notes, StringComparison.Ordinal);
+        Assert.Contains("python3 scripts/release-notes.py --fallback \"$VERSION\" \"$SHA\" > notes.md", notes, StringComparison.Ordinal);
+        Assert.Contains("::warning::", notes, StringComparison.Ordinal);
+        Assert.Contains("cp notes.md notes-written.md", notes, StringComparison.Ordinal);
+        string history = Step(publish, "Write this build's notes into docs/RELEASE-NOTES.md");
+        Assert.Contains("cp notes-written.md body.md", history, StringComparison.Ordinal);
+        Assert.DoesNotContain("release-notes.py \"$VERSION\" \"$SHA\" > body.md", history, StringComparison.Ordinal);
+    }
 }

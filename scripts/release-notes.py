@@ -579,9 +579,58 @@ def self_test():
     return 1 if failed else 0
 
 
+def newest_published():
+    """The newest nightly's tag, whatever its number, for checking the notes of everything pushed since it (entry 452)."""
+    out = subprocess.run(["git", "tag", "--list", "v*-nightly.*"], capture_output=True, text=True, check=True).stdout.split()
+    numbered = [(n, t) for t in out if (n := nightly_number(t)) is not None]
+    return max(numbered)[1] if numbered else ""
+
+
+def check(head):
+    """NOTES-FROM-PLANNING.md entry 452 section 3. Seven nightlies were lost because a trailer was refused at "Write the notes", after
+    every build had finished. CI runs this on every push instead, so a note that will be refused is red on the commit that wrote it,
+    and is put right in docs/release-note-corrections.json by the next commit, long before a nightly needs it."""
+    previous = newest_published()
+    _, wrong = build_notes("the next nightly", head, previous)
+    if wrong:
+        print(f"These release notes, pushed since {previous or 'the first build'}, would stop the next nightly's notes:", file=sys.stderr)
+        for line in wrong:
+            print("  " + line, file=sys.stderr)
+        print("\nPut each right in docs/release-note-corrections.json, by the commit's full hash. See NOTES-FROM-PLANNING.md entry 132.",
+              file=sys.stderr)
+        return 1
+    print(f"every release note since {previous or 'the first build'} can be published")
+    return 0
+
+
+def fallback(version, sha):
+    """Entry 452 section 3: the notes a nightly is published with when its own were refused, rather than no nightly at all. The
+    version, the commit and the list of commits since the build before, in a shooter's words; the run carries a warning."""
+    previous = previous_published(version)
+    since = f"{previous}...{sha}" if previous else sha
+    return "\n".join([
+        f"GroupLab {version}.",
+        "",
+        "**What you will notice**",
+        "",
+        "- The notes for this build could not be written in time, so it was published with this short note instead of waiting for them. "
+        "(Entry 452)",
+        "",
+        f"[Every change in this build](https://github.com/oRAirwolf/grouplab/compare/{since}), from commit `{sha[:7]}`.",
+        "",
+    ])
+
+
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--self-test":
         return self_test()
+
+    if len(sys.argv) > 1 and sys.argv[1] == "--check":
+        return check(sys.argv[2] if len(sys.argv) > 2 else "HEAD")
+
+    if len(sys.argv) > 3 and sys.argv[1] == "--fallback":
+        print(fallback(sys.argv[2], sys.argv[3]))
+        return 0
 
     if len(sys.argv) > 1 and sys.argv[1] == "--mark-gone":
         return mark_gone()

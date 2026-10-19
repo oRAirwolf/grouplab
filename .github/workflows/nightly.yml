@@ -986,14 +986,34 @@ jobs:
       # see itself or an older build depending on when it looked. The per-build `v<version>-nightly.N` tags do not move, so the script finds
       # the newest one below this build itself. A nightly that was cancelled or skipped never got a tag, so its changes roll into this one,
       # which is what section 1 asks for. The tags have to be in the checkout for that, hence the fetch.
+      #
+      # Entry 452 section 3: a refused note no longer stops the nightly. Seven were lost at this step with every build fine, each to one
+      # trailer the checker refused (a British spelling, a word only this repository knows). ci.yml's sibling checks.yml now runs the same
+      # check on every push, so a bad note is red on its own commit; if one still reaches here, the build is published with short notes
+      # naming the version, the commit and the list of changes, and the run carries a warning saying why.
       - name: Write the notes
         run: |
           git fetch --quiet --tags origin 2>/dev/null || true
-          python3 scripts/release-notes.py "$VERSION" "$SHA" > notes.md
+          if python3 scripts/release-notes.py "$VERSION" "$SHA" > notes.md 2> notes-refused.txt; then
+            # Entry 139 section 3: each recent build's own notes, so the update bar can show somebody everything they skipped. They ride
+            # in the second manifest format only, where a field an older build does not know is a field it ignores.
+            python3 scripts/release-notes.py --versions versions.json "$VERSION" "$SHA"
+          else
+            cat notes-refused.txt
+            python3 scripts/release-notes.py --fallback "$VERSION" "$SHA" > notes.md
+            echo '[]' > versions.json
+            echo "::warning::the release notes were refused, so $VERSION is published with short notes; put the trailer right in docs/release-note-corrections.json"
+            {
+              echo "### $VERSION is published with short notes: its own were refused"
+              echo
+              echo '```'
+              cat notes-refused.txt
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          # What was written, before anything is added for the release page, for docs/RELEASE-NOTES.md below.
+          cp notes.md notes-written.md
           cat notes.md
-          # Entry 139 section 3: each recent build's own notes, so the update bar can show somebody everything they skipped. They ride in
-          # the second manifest format only, where a field an older build does not know is a field it ignores.
-          python3 scripts/release-notes.py --versions versions.json "$VERSION" "$SHA"
 
       # Entry 145 section 3.3. The generator no longer hides a commit with no note in a count: it writes a line from the subject
       # instead. This is the other half of that, naming those commits in the build's own report, so a forgotten note is noticed on
@@ -1150,7 +1170,8 @@ jobs:
             exit 0
           fi
 
-          python3 scripts/release-notes.py "$VERSION" "$SHA" > body.md
+          # The notes this build was published with, short ones included (entry 452); written again here they would be refused again.
+          cp notes-written.md body.md
           python3 - "$VERSION" "$SHA" <<'PY'
           import io, sys, datetime
           version, sha = sys.argv[1], sys.argv[2]
