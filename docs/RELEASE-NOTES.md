@@ -12,6 +12,29 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.206
+
+**2026-10-19**, commit `37b93f3`. Nightly.
+
+**What you will notice**
+
+- Make a report now sends from GroupLab: write what happened and press Send, and the report goes to the project with its error and logs, with email or an issue on the project's page only when sending cannot be done.
+- The rifle's page has a Scope and mount part: how much rail cant still zeroes and how far your elevation reaches, a sight scale factor from a tracking test that corrects every click, and Bryan Litz's Top Gun group for each load.
+- A third Ballistics view, Point blank, shows how far you can hold dead on and still land your chosen share of shots in an animal's vital zone or a target, how to set the zero in clicks, and prints a card for the rifle.
+- On a small phone, the heading that opens the tracking test on the rifle's page now wraps onto a second line instead of being cut off.
+- Next unsure hole, and saving while a rebuilt panel had the focus, no longer raise an error on the computer, and tapping the result sheet on the phone away from every hole no longer does either (found from 5 automatic error reports).
+- Release notes now say which fixes came from your error reports and which detection changes were made with targets people sent, and keep a running total on the website.
+
+**Under the hood**
+
+- The development build's scripted test now notes any moment the screen stops answering, to find a rare stall on the iPhone simulator.
+
+From your reports and targets in this build: 1 fix from 5 error reports.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.206)
+
+---
+
 ## 0.2.0-nightly.205
 
 **2026-10-19**, commit `d1093d2`. Nightly.
