@@ -75,7 +75,7 @@ public sealed partial class MainWindow
     /// the distance for an angle. Every choice starts from GroupLab's guess (entry 278 section 2, the phone's CSV B), and one it could not
     /// guess starts empty and says so.
     /// </summary>
-    private async Task ShowMapping(CsvTable table, string name)
+    internal async Task ShowMapping(CsvTable table, string name)
     {
         var guess = CsvGuess.For(table, name);
         var columns = table.Headers.Select((h, i) => string.IsNullOrWhiteSpace(h) ? $"column {i + 1}" : h).ToList();
@@ -97,11 +97,20 @@ public sealed partial class MainWindow
         var body = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
         body.Children.Add(new TextBlock { Text = $"{name}: {table.Rows.Count} rows. Which columns hold the shots?", TextWrapping = TextWrapping.Wrap });
         body.Children.Add(Note("GroupLab's guesses, to check: " + string.Join(" ", guess.Lines)));
-        body.Children.Add(Row(new TextBlock { Text = "Across", Width = 110, VerticalAlignment = VerticalAlignment.Center }, across));
-        body.Children.Add(Row(new TextBlock { Text = "Up and down", Width = 110, VerticalAlignment = VerticalAlignment.Center }, upDown));
-        body.Children.Add(Row(new TextBlock { Text = "Unit", Width = 110, VerticalAlignment = VerticalAlignment.Center }, unit));
+        // Entry 447 section 2: each choice is named by the words beside it, as a screen reader reads it.
+        TextBlock Label(string words, Control named)
+        {
+            var label = new TextBlock { Text = words, Width = 110, VerticalAlignment = VerticalAlignment.Center };
+            Avalonia.Automation.AutomationProperties.SetLabeledBy(named, label);
+            return label;
+        }
+
+        body.Children.Add(Row(Label("Across", across), across));
+        body.Children.Add(Row(Label("Up and down", upDown), upDown));
+        body.Children.Add(Row(Label("Unit", unit), unit));
         body.Children.Add(upPositive);
-        body.Children.Add(Row(new TextBlock { Text = "Measured from", Width = 110, VerticalAlignment = VerticalAlignment.Center }, origin));
+        body.Children.Add(Row(Label("Measured from", origin), origin));
+        Avalonia.Automation.AutomationProperties.SetName(distance, "Shot at, in yards, needed for mil or MOA");
         body.Children.Add(Row(new TextBlock { Text = "Shot at", Width = 110, VerticalAlignment = VerticalAlignment.Center }, distance, new TextBlock { Text = "yards, needed for mil or MOA", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
         body.Children.Add(Note("Each row is one shot. Rows without two numbers, such as a total line, are left out and counted."));
         body.Children.Add(problem);

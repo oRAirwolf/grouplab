@@ -1856,6 +1856,21 @@ Wording by the docs helper (docs-sonnet), reviewed; sections 6, 7 and 11's last 
 - The guide, README and the Features sentence say it; `TopGun.MetricConfirmed` is gone, and every "average group" now reads "average
   five-shot group".
 
+## Entry 447 part 2, what was left: six windows and the phones' deeper pages (2026-10-20)
+
+- **Desktop, headless** (`Entry447WindowsTests`, one test a window): importing shot coordinates, Which target is this?, Fudd buster,
+  the three group tools (Shots and clicks, Zero from this group, Share a picture), the print confirmation, and the figures in their own
+  window, each tabbed all the way round: the focus never lost, something taking it, every stop named as a screen reader reads it.
+- **Found and fixed**: the coordinates window's four drop downs and its distance box had no names (now named by the words beside them,
+  the box as "Shot at, in yards, needed for mil or MOA"); Fudd buster had nothing that could take the focus, so a keyboard could not
+  scroll it and Tab lost the focus (its page now takes the focus, named, and the arrows and Page Down read down it). The other four
+  had no fault.
+- **Phones, headless at Android's largest text** (`Entry447Tests` on the phone, extended): Fix holes and the readings page from the
+  result, the store-bought target's fingerprint from Targets, and the printer check from Settings: every control named, and the
+  screen read before the bar. No fault.
+- **Still left**: a run with a real screen reader (Narrator, VoiceOver, TalkBack) on each system; that needs Alan's devices, and the
+  headless tests stand in until then.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

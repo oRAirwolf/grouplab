@@ -31,7 +31,7 @@ public sealed partial class MainWindow
     /// <summary>The window, for the headless tests: its text in order.</summary>
     internal Window? FuddBusterWindow { get; private set; }
 
-    private async Task OpenFuddBuster(MarkingState state)
+    internal async Task OpenFuddBuster(MarkingState state)
     {
         var counted = state.Shots.Where(s => s.IsShot && s.Exclusion is null && !GroupAnalysis.OnSighter(state, s)).ToList();
         var shots = GroupAnalysis.CompositeOffsets(state, counted);
@@ -72,7 +72,9 @@ public sealed partial class MainWindow
             Width = 640,
             Height = 760,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Content = new ScrollViewer { Content = body },
+            // Entry 447 section 2: the window holds only words and two plots, so its scroller takes the focus, named, and the arrows and Page Down
+            // read down it from the keyboard.
+            Content = new ScrollViewer { Content = body, Focusable = true, [Avalonia.Automation.AutomationProperties.NameProperty] = FuddBusterWords.Title },
         };
         Diagnostics.DiagnosticLog.Info("dialog.open", ("dialog", "fudd-buster"), ("shots", lesson.Shots));
         await FuddBusterWindow.ShowDialog(this);

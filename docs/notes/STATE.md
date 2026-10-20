@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-20, request 103 answered: Top Gun is five-shot extreme spread (before it: questions 102 to 105, entry 447).
+**Last rewritten:** 2026-10-20, entry 447 part 2's remainder (before it: request 103 answered, Top Gun is five-shot extreme spread).
 
 ---
 
@@ -17,8 +17,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Request 103 answered by Alan (2026-10-20)**: Top Gun's group is five-shot extreme spread, averaged. Groups are set beside it as
   the average five-shot spread their sigma implies (`TopGun.OnItsBasis`, `TopGun.Compared`), in Advanced and Compare loads on both.
-- **Alan's run of 2026-10-20, own limit 60% of the week**: then entry 447 part 2's remainder (keyboard pass on six windows, then the
-  phones' screen reader labels at the largest text), then Phase 9 (the slowest step in reading a scan or photo).
+- **Alan's run of 2026-10-20, own limit 60% of the week**: request 103 and entry 447 part 2's remainder done; next Phase 9
+  (the slowest step in reading a scan or photo, measured, sped up with identical results).
 - **Questions 102 to 105 (2026-10-19)**: the Windows package carries only `samples/sample-consent.md`. **Entries 457 to 459**: report
   Send everywhere; notes count reports and targets; the nightly publishes the site itself (its token's pushes start nothing).
 - **Entries 455 and 456 (2026-10-19)**: Ballistics' Point blank view (`PointBlankModel`, `PointBlankReport`, `PointBlankCard`); the rifle's
@@ -26,8 +26,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   measured from a scanned tracking target (72 in tall at 20 mil and 100 yd: tiled pages or a plotter).
 - **Entries 454 and 452 (2026-10-19)**: each platform follows its own newest build (`platforms` in the second manifest). The website,
   ships-list and release notes checks are in `checks.yml`, which no nightly waits for; a refused note publishes short notes with a warning.
-- **Entry 447 (2026-10-18 to 20)**: all four parts done; Real taps fixed (focusing press, tapper's idle wait, drawing pause) and proved by 20 green runs.
-  Left from part 2: six windows untested (CSV mapping, store target, Fudd buster, group tools, print, figures); no real screen reader.
+- **Entry 447 (2026-10-18 to 20)**: all four parts done; Real taps proved by 20 green runs. Part 2's remainder done 2026-10-20: six
+  windows tabbed headless (`Entry447WindowsTests`; CSV mapping names and Fudd buster's focus fixed), the phones' deeper pages named. Left: a real screen reader.
 
 ## The next three
 

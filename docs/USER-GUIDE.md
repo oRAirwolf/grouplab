@@ -348,6 +348,11 @@ The arrow keys:
 The arrows never act in a text box or a number box, radio buttons and drop downs keep their own arrows, and moving the focus never
 presses a button. The marking screen's own keys are listed in the line above the picture.
 
+The windows GroupLab opens over itself work the same way, from importing shot coordinates and Which target is this? to the
+print confirmation, the figures in their own window and the three group tools, and each box and button in them has a name a
+screen reader reads. Fudd buster holds only words and two plots, so its page takes the focus and the arrows and Page Down read
+down it.
+
 ### Click a hole to edit it
 
 A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:

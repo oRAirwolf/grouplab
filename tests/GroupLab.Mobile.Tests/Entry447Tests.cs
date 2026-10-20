@@ -74,6 +74,34 @@ public class Entry447Tests
                 Dispatcher.UIThread.RunJobs();
             }
 
+            // What entry 447 left: the pages two presses away, Fix holes and the readings page from the result, the fingerprint of a
+            // store-bought target from Targets, and the printer check from Settings.
+            void Open(string id)
+            {
+                var button = shell.GetVisualDescendants().OfType<Button>().FirstOrDefault(b => AutomationProperties.GetAutomationId(b) == id);
+                Assert.True(button is not null, id + " is not on the screen");
+                button!.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+                Check(shell, id, faults);
+            }
+
+            // How you shot it closes with its Done, not a Back.
+            shell.GetVisualDescendants().OfType<Button>().FirstOrDefault(b => AutomationProperties.GetAutomationId(b) == "bulls-done")
+                ?.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            foreach (string id in new[] { "result-fix-holes", "velocity-type" })
+            {
+                Open(id);
+                shell.WayBack()?.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            foreach (var (place, id) in new[] { (Shell.Place.Targets, "targets-add-store"), (Shell.Place.Settings, "settings-add-printer") })
+            {
+                shell.Show(place);
+                Dispatcher.UIThread.RunJobs();
+                Open(id);
+            }
+
             Assert.True(faults.Count == 0, string.Join(Environment.NewLine, faults));
         }
         finally
