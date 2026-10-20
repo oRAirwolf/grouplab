@@ -35,6 +35,8 @@ public class DropAndPasteTests
             await Task.Delay(25);
         }
 
+        // A drop waiting on a question nobody answers fails here rather than hanging the run.
+        Assert.True(window.Dropping.IsCompleted, "the drop did not finish in ten seconds" + (window.ProblemOpen ? ": a question is open, " + window.ProblemTitle : ""));
         await window.Dropping;
         Dispatcher.UIThread.RunJobs();
         Assert.Equal(tabs + 1, window.Targets.Count);
@@ -65,7 +67,8 @@ public class DropAndPasteTests
     /// <summary>
     /// Several dropped at once: entry 137 opened the first and counted the rest; entry 420 section 2 opened each in a tab of its own; entry 423
     /// reads their codes first. Two sheets that are not of one set still open a tab each, beside the target dropped on, and the same picture
-    /// under two names is one picture.
+    /// under two names is one picture. Entry 460 section 2: the two are copies of one single-page design, so they are asked about once, and
+    /// Keep a tab each opens a tab each.
     /// </summary>
     [AvaloniaFact]
     public async Task SeveralDroppedOpenOneTabEach()
@@ -86,6 +89,14 @@ public class DropAndPasteTests
         {
             int tabs = window.Targets.Count;
             window.OpenDropped([a, b, same]);
+            for (int i = 0; i < 400 && !window.ProblemOpen; i++)
+            {
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(25);
+            }
+
+            Assert.Equal(GroupLab.Core.Marking.CopiesQuestion.Title(2), window.ProblemTitle);
+            window.PressProblemChoice(GroupLab.Core.Marking.CopiesQuestion.Keep);
             await Opened(window, tabs + 1);
             Assert.Equal(b, window.Session.State.ImagePath);
             Assert.Contains("a.png, b.png: a tab each.", window.StatusText, StringComparison.Ordinal);
