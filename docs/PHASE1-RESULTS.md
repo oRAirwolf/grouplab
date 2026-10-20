@@ -1494,11 +1494,26 @@ site build pass.
    the keyboard is slow to come up. **The first fix** (nightly 201) closed such a menu when the late release showed the finger had been
    down less than the hold's wait; 12 runs in a row were green, and the 13th (39172455366) showed it closing the menu while a
    dismissing layer stayed over the window, because the field's hold does more than open the menu (it selects a word and shows
-   handles). **The fix at the cause** (`KeyboardRoom.HoldOffForAFocusingPress`): the press that first puts the focus in a field is a
+   handles). **The fix at that cause** (`KeyboardRoom.HoldOffForAFocusingPress`): the press that first puts the focus in a field is a
    tap to place the caret and bring up the keyboard, so the field's hold is off while that press is down and comes back once its
-   release has been handled; a long press on a field that already has the focus opens its menu as before (`Entry447HoldTests`). No
-   sleep or retry. The scripted taps' check also refuses a tap a menu's layer would take, and says so. The proof is 20 runs of
-   ios-app.yml in a row on this build, recorded below as they finish.
+   release has been handled; a long press on a field that already has the focus opens its menu as before (`Entry447HoldTests`).
+   **Two more causes, found on 2026-10-19 with more records** (a stalled screen thread, `scenario.stall`; each holder of an unreached
+   control as a hit test sees it; a count of frames drawn). Run 39243232233: XCTest spent 34 s in "Wait for com.apple.springboard to
+   idle" before one press, with GroupLab answering throughout, and the press lost its release; a finger does not wait for the home
+   screen, so the tapper now replaces XCTest's wait for idle with one that returns at once (`NoWaitForIdle`, printed in
+   touch-runner.log). Run 39284329697, then 39292731869 with frames counted: after the first keyboard, and only the first, the
+   simulator drew nothing for 2 to 6 seconds (131 frames from the keyboard opening until 2.3 s later) while the screen's thread
+   answered, and every holder of the bar's Next was hit-testable, enabled, shown and in place; Avalonia judges a press against the last
+   drawing, so Next could not be reached until drawing resumed, and a hold gave up after 5 seconds. A person cannot tap a bar that has
+   not been drawn, so this is the simulator's drawing, not GroupLab's fault. The check now counts only time in which frames are drawn
+   toward its 5 seconds, waits out a pause in drawing up to 30 seconds and says it ("nothing was drawn", never "covered"), and a control
+   that is really covered still fails after 5 seconds of drawing (`PhoneTouchScenarioTests.AHoldWaitsOutAPauseInDrawingAndSaysIt`).
+   No sleep or retry was added; question 104 asks planning whether this counts as fixed at the cause. The scripted taps' check also
+   refuses a tap a menu's layer would take, and says so. **The proof**: 20 runs of ios-app.yml in a row, all green, from 34d259e6 on
+   2026-10-19 and 20 (one more, 39304940907, was cancelled by another run starting and is not counted): 39299320603, 39306970375,
+   39310435399, 39314918748, 39319450122, 39323658807, 39327999986, 39332104867, 39335983262, 39339795636, 39342772254, 39345433622,
+   39348682023, 39351458267, 39354305928, 39356898269, 39359305053, 39361859347, 39364572136, 39366879795. The second showed the pause
+   waited out: 1.0 s with nothing drawn, then Next reached.
 4. **Tests and speed.** 4.1, **the corpus counts record rewritten** (`scans/phase1/measurements/detection-counts.json`, with
    `grouplab corpus counts --write`), approved by planning: 29 of 55 images changed, every one listed old and new in the commit. No
    image lost a real hole: on all 27 punched scans the punched holes found rose or held (by 0 to 5), never above the number punched. On

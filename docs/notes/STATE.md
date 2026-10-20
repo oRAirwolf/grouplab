@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-19, entry 459 (before it: entries 446, 445, 444 and 443).
+**Last rewritten:** 2026-10-20, entry 447 (before it: entries 446, 445, 444 and 443).
 
 ---
 
@@ -24,7 +24,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   nightly 204, whose Android files joined both releases after the desktop's); Alan's tablet should reach **0.2.0-nightly.204**. The
   website and ships-list checks and a new release notes check are in `checks.yml`, which no nightly waits for; the ships list is not
   what the Linux download holds, the linux tarball still gates. A refused note publishes short notes with a warning.
-- **Entry 447 (2026-10-18)**: parts 1, 2, 4 done; 3: a focusing press's hold is off (ff9f61c1), one red since; popups now logged.
+- **Entry 447 (2026-10-18 to 20)**: all four parts done; Real taps fixed (focusing press, tapper's idle wait, drawing pause) and proved by 20 green runs.
   Left from part 2: six windows untested (CSV mapping, store target, Fudd buster, group tools, print, figures); no real screen reader.
 - **Entries 441 to 453 (site; 442 to 450 the app's keyboard, demo and CI retry)**: research thumbnails, 14 real and 7 drawn (proof and `which-is-which.txt` in `C:\Dev\grouplab-local\research-thumbs\`);
   the ruler on every page (`RULER`); home menu tappable (`tests/site/taps.mjs`); concept B home; `heading_problems` holds the titles.
@@ -48,7 +48,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 447's parts 3 and 4: the iOS Real taps flake, then tests and speed (its limit 50%).
+1. Answers to questions 104 and 105 when planning sends them.
 2. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 3. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
 
