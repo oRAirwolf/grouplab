@@ -461,7 +461,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 - On the phone, closing the last open target from the Open targets sheet after going back to Capture no longer reports an error; the start of Capture shows as it should. (Error report 26).
 - Pages printed straight to the Phomemo M834 from the phone or the computer are now drawn 0.7 percent longer along the paper, because two test prints showed the M834 feeds that much short, so a sheet should come out true to size both ways.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.181)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
