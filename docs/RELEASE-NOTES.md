@@ -12,6 +12,21 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.212
+
+**2026-10-20**, commit `375eb0f`. Nightly.
+
+**What you will notice**
+
+- Several copies of one page dropped or chosen together are now asked about once: pool them as one group, or keep a tab each.
+- The window for importing shot coordinates now names each of its choices for a screen reader, and Fudd buster can be read down from the keyboard.
+- The shot you select now stands out further in the dark themes: its magenta is purer, and further from every other color on the plot.
+- Reading a 600 dpi scan is faster again: finding the holes takes about a fifth less time, and finds exactly the same holes. (Phase 9).
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.212)
+
+---
+
 ## 0.2.0-nightly.211
 
 **2026-10-20**, commit `c37d2d3`. Nightly.
