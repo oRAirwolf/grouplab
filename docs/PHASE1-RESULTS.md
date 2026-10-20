@@ -1828,6 +1828,18 @@ Wording by the docs helper (docs-sonnet), reviewed; sections 6, 7 and 11's last 
 11. Tour Ballistics blurb names Point blank; the Error reports card names Send (reworded since 207); the phone lists name Point blank;
     for-alan.md's first line rewritten from the open requests, and request 104 corrected to nightly 206 (Point blank is not in 205).
 
+## Questions 102 to 105, answered by Alan in the session (2026-10-19)
+
+- **102**: keep the A zone only. Hit probability's IPSC choice stays the official 15 by 32.5 cm A zone; no other zones are added.
+- **103**: keep the credit as it is. The guide and README say the three calculators began as ones GroupLab's developer wrote before
+  GroupLab, and the old site is not named.
+- **104**: keep it. The Real taps check goes on waiting out a measured pause in the simulator's drawing, and saying so.
+- **105**: yes. The Windows package now carries only the sample's own consent, `samples/sample-consent.md`, under the name
+  `samples/PROVENANCE.md` it always had in the zip. That section is a committed file rather than one cut out at packaging time,
+  because the shipping gate decides by path: `samples/PROVENANCE.md` left the ships list and `samples/sample-consent.md` joined it,
+  so a change to the website's consents no longer makes a build. `ReleaseAssetTests.ThePackageCarriesItsLicenceItsNoticesAndItsSamples`
+  holds the file to the full record's first section word for word, and `ShippingPathsTests` holds which of the two ships.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

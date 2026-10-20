@@ -12,7 +12,7 @@
 | **Given on** | 2026-09-21 |
 | **Given how** | In writing, to the planning session, and recorded in `docs/NOTES-FROM-PLANNING.md` entry 120 section 9 |
 | **What was said** | "Use scan 3 as the sample scan. I dont care about my load data being shared." |
-| **Covers** | This one file. Written before Alan's standing consent of 2026-09-24, below, which now covers the rest of his own photographs and scans too. |
+| **Covers** | This one file. Written before Alan's standing consent of 2026-09-24, which now covers the rest of his own photographs and scans too and is in the repository's full record, `samples/PROVENANCE.md`. |
 | **Licence** | The repository's, GPL-3.0, as for everything else published here |
 
 The load block written on the sheet is part of the image and is published with it: the date, the distance, the cartridge, the bullet, the powder charge, the brass, the primer and the seating depth. That is what "I dont care about my load data being shared" permits.

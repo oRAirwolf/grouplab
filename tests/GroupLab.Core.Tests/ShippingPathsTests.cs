@@ -93,6 +93,8 @@ public class ShippingPathsTests
         Assert.True(Ships("src/GroupLab.Core/Marking/Calibre.cs"), "the application's own source must ship");
         Assert.True(Ships("scripts/package-windows.ps1"), "the Windows packaging script decides what is in the download");
         Assert.True(Ships("samples/gl-cf25-ltr-d-25-shots-600-dpi.png"), "the sample is copied into the Windows package");
+        Assert.True(Ships("samples/sample-consent.md"), "the sample's own consent is copied into the Windows package");
+        Assert.False(Ships("samples/PROVENANCE.md"), "only the sample's own section ships, so the website's consents make no build (question 105)");
 
         // What made nightly 94, none of which is in the executable.
         foreach (string not in new[] { "scripts/claims.py", "scripts/counts.py", "scripts/split-logs.py", "scripts/release-notes.py",

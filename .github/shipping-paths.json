@@ -19,7 +19,7 @@
     "scripts/macos-bundle.py": "builds the macOS application bundle",
     ".github/workflows/package.yml": "decides what goes into every package on every platform",
     "samples/gl-cf25-ltr-d-25-shots-600-dpi.png": "copied into the Windows package as the shot sample",
-    "samples/PROVENANCE.md": "copied into the Windows package beside the sample",
+    "samples/sample-consent.md": "the sample's own section of samples/PROVENANCE.md, copied into the Windows package beside it (question 105)",
     "scans/phase0/gl-cf25-ltr-1-300-dpi.png": "copied into the Windows package as the unshot sample",
     "Directory.Build.props": "the version the build is named from, and the compiler settings",
     "nuget.config": "where the packages the executable contains are restored from",

@@ -154,7 +154,7 @@ public partial class ReleaseAssetTests
     public void ThePackageCarriesItsLicenceItsNoticesAndItsSamples()
     {
         string package = File.ReadAllText(Repo.PathTo("scripts", "package-windows.ps1"));
-        foreach (string required in new[] { "LICENSE", "THIRD-PARTY-NOTICES.md", "README.txt", "samples/gl-cf25-ltr-d-25-shots-600-dpi.png", "samples/PROVENANCE.md", "OpenCvSharpExtern.dll", "hostfxr.dll" })
+        foreach (string required in new[] { "LICENSE", "THIRD-PARTY-NOTICES.md", "README.txt", "samples/gl-cf25-ltr-d-25-shots-600-dpi.png", "samples/sample-consent.md", "samples/PROVENANCE.md", "OpenCvSharpExtern.dll", "hostfxr.dll" })
         {
             Assert.Contains(required, package, StringComparison.Ordinal);
         }
@@ -169,6 +169,13 @@ public partial class ReleaseAssetTests
         Assert.Contains("gl-cf25-ltr-d-25-shots-600-dpi.png", provenance, StringComparison.Ordinal);
         Assert.Contains("No consent record, no publication", provenance, StringComparison.Ordinal);
         Assert.Contains("93140a6a37777667", provenance, StringComparison.Ordinal);
+
+        // Question 105: the package carries only the sample's own section, so the website's consents make no build, and it is the full
+        // record's first section word for word, so the two cannot drift.
+        string own = File.ReadAllText(Repo.PathTo("samples", "sample-consent.md")).ReplaceLineEndings("\n").TrimEnd();
+        Assert.StartsWith(own + "\n\n---\n", provenance.ReplaceLineEndings("\n"), StringComparison.Ordinal);
+        Assert.Contains("'samples/sample-consent.md'", package, StringComparison.Ordinal);
+        Assert.DoesNotContain("Copy-Item 'samples/PROVENANCE.md'", package, StringComparison.Ordinal);
 
         // The package must read the sample as the shooter says it is, or fail rather than reach a tester.
         Assert.Contains("\"shots\": 25", File.ReadAllText(Repo.PathTo("samples", "sample.json")), StringComparison.Ordinal);

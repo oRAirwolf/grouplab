@@ -14,70 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 44 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 48 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 101, 99, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
-
----
-
-## 2026-10-19, question 105: the consent record ships, so a website consent makes a build
-
-**Status: open.** Entry 459 section 6 asked why entry 453's website note was taken as an application change. The Windows zip carries
-`samples/PROVENANCE.md` beside its sample sheet (`scripts/package-windows.ps1`), so the shipping gate rightly counts it as shipping, and
-entry 453's consent records for the research pictures made nightly 205 a real build whose only note was about the website.
-
-**What was done meanwhile:** nightly 205's entry now says it changed nothing in the application and that only the consent record beside
-the Windows sample is longer, and the commit's note is corrected in `docs/release-note-corrections.json`.
-
-**The question:** should the zip carry only the shipped sample's own consent record (its section, written out at packaging time and held
-to the full record by a test), so the website's consents stop making builds? I would do that.
-
----
-
-## 2026-10-19, question 104: the simulator's pause in drawing, and whether the Real taps fix counts as at the cause
-
-**Status: open.** Entry 447 section 3 asks for the flake fixed at its cause, with no added sleeps or retries that hide it. Three causes
-were found. Two are fixed in the app or the tapper (a focusing press's hold, and XCTest's wait for the home screen to idle). The third is
-the simulator itself: after its first keyboard it draws nothing for 2 to 6 seconds while GroupLab's thread answers, and a tap is judged
-against the last drawing, so the keyboard bar's Next cannot be reached until drawing resumes (runs 39284329697 and 39292731869).
-
-**What was done meanwhile:** the tap check counts only time in which frames are drawn toward its 5 seconds and waits out a pause in
-drawing up to 30 seconds, saying so. A control that is really covered still fails after 5 seconds of drawing. Nothing in GroupLab
-changed for a person, who cannot tap a bar that has not been drawn.
-
-**The question:** is waiting out a measured pause in drawing an acceptable fix for a pause that is the simulator's, or should the test
-instead open the keyboard once before its first scripted tap? I would keep it as it is, since it says when it happens.
-
----
-
-## 2026-10-19, question 103: crediting the calculators without naming the old site
-
-**Status: open.** Entry 456 says: "The guide credits the pissinhot.com calculators as where these came from (Alan's own site)". Alan's
-instruction of 2026-09-23 says no link to the old site appears anywhere on grouplab.org, and `NoPissinhotOnTheSiteTests` fails the build
-on the name anywhere in the built site; the guide is published there. The research rule also keeps the developer unnamed on the site.
-
-**What was done meanwhile:** the guide and README say "These three began as calculators GroupLab's developer wrote before GroupLab", and
-Top Gun is credited to Bryan Litz by name. The site's name appears only in code comments and the logs.
-
-**The question:** is that credit enough, or should the guide name the site (which needs the test and the 2026-09-23 rule changed, and
-Alan's word)? I would keep it as it is.
-
----
-
-## 2026-10-19, question 102: the IPSC target's whole outline, or only its A zone
-
-**Status: open.** Entry 455 says: "Replace GroupLab's own IPSC outline in `HitTarget` (its comment says it is not official) with the
-real dimensions, so Hit probability uses them too." The entry gives only the A zone, 15 by 32.5 cm (IPSC rules January 2024, appendix
-B2), and a search found no trustworthy source for the rest of the outline (the C and D zones, the head, the overall size), only pages
-that do not cite the rulebook.
-
-**What was done meanwhile:** Hit probability's IPSC choice is now the official A zone, a 15 by 32.5 cm rectangle, and the invented
-outline is gone (`HitTarget.IpscAZone`, `HitProbabilityTests.TheIpscShapeIsTheOfficialAZone`). Nothing official was guessed.
-
-**The question:** should Hit probability offer the whole IPSC target (A, C and D zones, each its own chance) as well? If so, the
-appendix B2 dimensions of each zone, as the rulebook gives them, are what is needed. I would keep the A zone as the default either way,
-since it is what a practical shooter aims to hit.
+> 105, 104, 103, 102, 101, 99, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
 

@@ -8,7 +8,7 @@
     open in the first minute; and zips it under a name that carries the version and the commit, so a bug report names a build.
 
     Nothing donated goes into the package. Both samples are Alan's own sheets, published from this repository: the shot one is
-    samples/gl-cf25-ltr-d-25-shots-600-dpi.png, whose consent record is samples/PROVENANCE.md, and the unshot one is a print-quality scan
+    samples/gl-cf25-ltr-d-25-shots-600-dpi.png, whose consent record is samples/PROVENANCE.md (the package carries its own section, samples/sample-consent.md), and the unshot one is a print-quality scan
     from scans/phase0. NOTES-FROM-PLANNING.md entry 120 section 9 is where the consent was given.
 
     It also writes copies under stable names, grouplab-win-x64.zip and grouplab-setup-win-x64.exe, which the release workflow attaches so the
@@ -79,7 +79,9 @@ $samples = Join-Path $staging 'samples'
 New-Item -ItemType Directory -Path $samples -Force | Out-Null
 Copy-Item 'scans/phase0/gl-cf25-ltr-1-300-dpi.png' (Join-Path $samples 'gl-cf25-ltr-300-dpi.png') -Force
 Copy-Item 'samples/gl-cf25-ltr-d-25-shots-600-dpi.png' (Join-Path $samples 'gl-cf25-ltr-d-25-shots-600-dpi.png') -Force
-Copy-Item 'samples/PROVENANCE.md' (Join-Path $samples 'PROVENANCE.md') -Force
+# Only the sample's own consent, not the whole record: the website's consents are in samples/PROVENANCE.md too, and a change to them
+# made a build whose only note was about the website (question 105). ReleaseAssetTests holds the two to the same words.
+Copy-Item 'samples/sample-consent.md' (Join-Path $samples 'PROVENANCE.md') -Force
 
 # What the package must carry, checked rather than assumed: the two programs, the runtime, the native OpenCV library, the sheets and the samples.
 $required = @(
