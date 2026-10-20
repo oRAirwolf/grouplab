@@ -5,6 +5,10 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+ "Several copies of one single-page design, such as three copies of the 2 MOA page, are asked about once too, \"Pool these 3 pictures as one group?\": Pool as one group opens them in one tab, each copy read and its holes found and pooled as its own sheet in order, and Keep a tab each opens each in a tab of its own, for separate loads or strings.": {
+  "kind": "decided",
+  "where": "src/GroupLab.App/SetTab.cs DropSorting and src/GroupLab.App/MainWindow.SetTab.cs AskToPoolCopies; src/GroupLab.Core/Marking/SetPool.cs CopiesQuestion; tests/GroupLab.App.Tests/Entry460Tests.cs (entry 460 section 2)"
+ },
  "Several copies of one single-page design, such as three copies of the 2 MOA page, are asked about once too, \"Pool these 3 pictures as one group?\": **Pool as one group** opens them in one tab, each copy read and its holes found and pooled as its own sheet in order, and **Keep a tab each** opens each in a tab of its own, for separate loads or strings.": {
   "kind": "decided",
   "where": "src/GroupLab.App/SetTab.cs DropSorting and src/GroupLab.App/MainWindow.SetTab.cs AskToPoolCopies; src/GroupLab.Core/Marking/SetPool.cs CopiesQuestion; tests/GroupLab.App.Tests/Entry460Tests.cs (entry 460 section 2)"
