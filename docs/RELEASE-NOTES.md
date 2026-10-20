@@ -460,7 +460,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 
 - A seldom used way of reading a bent sheet, offered only by a test command, no longer stops partway on a photograph that holds more than one target.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.182)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
