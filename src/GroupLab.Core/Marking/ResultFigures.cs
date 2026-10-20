@@ -93,11 +93,16 @@ public static class ResultFigures
             advanced.Add(new ResultFigure("sdUpDown", "Spread up and down", Size(sy), Explanation: "How far the shots spread up and down, one standard deviation."));
         }
 
-        // Entry 456 section 3: Top Gun as Litz states it, beside the figures and never compared with them until its measure is confirmed.
+        // Entry 456 section 3 and request 103: Top Gun, and these shots beside it as the average five-shot group their sigma implies.
         if (GroupLab.Core.Ballistics.TopGun.For(state.Rifle, load) is { } topGun)
         {
-            advanced.Add(new ResultFigure("topGun", "Top Gun, Litz's trend", string.Create(CultureInfo.InvariantCulture, $"{topGun:0.00} MOA average group"),
+            advanced.Add(new ResultFigure("topGun", "Top Gun, Litz's trend", string.Create(CultureInfo.InvariantCulture, $"{topGun:0.00} MOA average five-shot group"),
                 Explanation: GroupLab.Core.Ballistics.TopGun.Says(topGun) + " " + GroupLab.Core.Ballistics.TopGun.Note));
+            if (all.Sigma is { } sigma && GroupLab.Core.Ballistics.TopGun.OnItsBasis(sigma.Value, sigma.Lower, sigma.Upper, distance) is { } yours)
+            {
+                advanced.Add(new ResultFigure("topGunYours", "Yours on Top Gun's basis", string.Create(CultureInfo.InvariantCulture, $"{yours.Value:0.00} MOA average five-shot group"),
+                    Explanation: GroupLab.Core.Ballistics.TopGun.Compared(topGun, yours, n)));
+            }
         }
 
         sections.Add(new ResultSection("advanced", "Advanced", false, advanced));

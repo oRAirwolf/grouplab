@@ -342,7 +342,7 @@ Since the phone was brought level with the desktop (entries 258 and 259):
 - On the phone, Sessions can compare loads.
 - On the phone, Ballistics is a tab of its own: the dope, the trajectory and the chance of a hit with your own group.
 - On the computer and the phone, Ballistics has a Point blank view: how far you can hold dead on at a chosen animal or target and still land your chosen share of shots in its zone, from your own mean radius.
-- On the computer and the phone, the rifle has a Scope and mount part: elevation travel, rail cant, a sight scale factor that corrects every click, and the weight as fired for Bryan Litz's Top Gun trend. They began as calculators GroupLab's developer wrote before GroupLab.
+- On the computer and the phone, the rifle has a Scope and mount part: elevation travel, rail cant, a sight scale factor that corrects every click, and the weight as fired for Bryan Litz's Top Gun trend, with your own groups set beside it as the average five-shot group they imply. They began as calculators GroupLab's developer wrote before GroupLab.
 - On the phone, a set of sheets is a checklist: the sheets read so far pooled into one group, and those still to read.
 - On the phone, a scan says how it was printed, and every size is corrected to real inches.
 - On the phone, the camera's level works upright at a sheet left on its backer as well as flat over a table, names which under the

@@ -3,6 +3,16 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 103. One question for your friend's copy of Litz's book, a minute once you hear back (entry 456)
+
+**Answered 2026-10-20:** Alan, from the book: Top Gun's group size is the extreme spread of five-shot groups. GroupLab now sets each group beside the trend on that basis, the average five-shot extreme spread its sigma implies, on the computer and the phone.
+
+**Why:** GroupLab is adding Bryan Litz's Top Gun figure, the average group a rifle of that weight and load is expected to shoot. It shows
+the figure as Litz states it until we know what it measures, because comparing it with GroupLab's own group figures needs that.
+**The question:** does Modern Advancements in Long Range Shooting, Volume III, chapter 3, say how many shots Top Gun's group size is
+from, and whether it is extreme spread (the widest distance between two holes)? You said you are asking your friend (2026-10-19).
+**A good answer:** the shot count and the measure, for example "5-shot groups, extreme spread", or a photo of the page that says it.
+
 ## 102. The Discord bot puts pictures on their issues, one paste, about five minutes, whenever suits (entry 429)
 
 **Answered 2026-10-16 (07:45 UTC):** Alan ran the paste as written: all six files `OK`, the backup `/home/ubuntu/grouplab-server/backups/2026-10-16T074457Z-discord-worker-attachments`, the install done (it also kept `/usr/local/sbin/grouplab-discord-worker.py.20261016-014457.bak`), `OK: the token can put attachments on issues`, and the worker's log clean, with no `Traceback` and no `STOP`. Recorded in `docs/RESTORE.md`.

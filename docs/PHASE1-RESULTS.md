@@ -1840,6 +1840,22 @@ Wording by the docs helper (docs-sonnet), reviewed; sections 6, 7 and 11's last 
   so a change to the website's consents no longer makes a build. `ReleaseAssetTests.ThePackageCarriesItsLicenceItsNoticesAndItsSamples`
   holds the file to the full record's first section word for word, and `ShippingPathsTests` holds which of the two ships.
 
+## Request 103, answered by Alan: Top Gun is five-shot extreme spread, and groups are now set beside it (2026-10-20)
+
+- **The answer**: Litz's Top Gun group size (Modern Advancements in Long Range Shooting, Volume III, chapter 3) is the extreme spread
+  of five-shot groups, averaged. Request 103 is closed and archived in `docs/notes/for-alan-archive.md`.
+- **The comparison**: `TopGun.OnItsBasis` gives a group's own figure on that basis, the average five-shot extreme spread its sigma
+  implies: the range-statistic table's five-shot mean (3.066 at sigma 1) times the group's Rayleigh sigma, in MOA at the distance, with
+  the sigma's interval carried through. So a 20 or 50 shot session is compared fairly, not by cutting it into fives. `TopGun.Compared`
+  says "clearly wider" (with entry 456's list of what is usually checked) or "clearly tighter" only where the whole interval is on one
+  side of the trend, and otherwise "not clearly different at this many shots". No distance, or under five shots, and no line is shown.
+- **Where**: the analysis's Advanced figures on the computer and the phone (`ResultFigures`, key `topGunYours`; `MainWindow`), and
+  Compare loads on both, each group under its load's trend (`TopGun.Lines`, now given the groups and the distance).
+- **Proof**: `ScopeMountTests.YourGroupOnTopGunsBasisIsTheAverageFiveShotSpread` draws 40,000 five-shot groups at sigma 0.5 in at 100 yd
+  and their average spread (1.4668 MOA) lands within 0.01 MOA of the figure on its basis (1.4639); `ResultFiguresTests.AdvancedSetsTheGroupBesideTopGunOnItsBasis`.
+- The guide, README and the Features sentence say it; `TopGun.MetricConfirmed` is gone, and every "average group" now reads "average
+  five-shot group".
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -1,4 +1,4 @@
-**Open: 24.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **103** waits on your friend's copy of Litz's book. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 23.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **Your drop, entry 423 section 0 (not a request):** dropping several scans onto a tab that held a sheet replaced that tab's picture. On
 nightly 190 and earlier a drop always opened only the first picture, over the tab dropped on. On nightlies 191 and 192 each picture was
 meant to get its own tab, but when a question was showing in the middle of the window (as when a scan's codes do not read), the new tab
@@ -287,14 +287,6 @@ printed from it yet. It is in 0.2.0-nightly.206 and later (2026-10-19).
 **Steps:** in Ballistics, Point blank, with your rifle and load chosen, press Print a card and print it on the M220, from the computer or
 the phone. Put a photo of the label in `C:\Dev\grouplab-local\point-blank-card\`.
 **A good answer:** the photo, and whether every line is readable and nothing is cut off at the edges.
-
-## 103. One question for your friend's copy of Litz's book, a minute once you hear back (entry 456)
-
-**Why:** GroupLab is adding Bryan Litz's Top Gun figure, the average group a rifle of that weight and load is expected to shoot. It shows
-the figure as Litz states it until we know what it measures, because comparing it with GroupLab's own group figures needs that.
-**The question:** does Modern Advancements in Long Range Shooting, Volume III, chapter 3, say how many shots Top Gun's group size is
-from, and whether it is extreme spread (the widest distance between two holes)? You said you are asking your friend (2026-10-19).
-**A good answer:** the shot count and the measure, for example "5-shot groups, extreme spread", or a photo of the page that says it.
 
 ## 86. For later, at the range: aim points through a red dot, a prism and a medium power scope, about forty minutes (entry 392)
 

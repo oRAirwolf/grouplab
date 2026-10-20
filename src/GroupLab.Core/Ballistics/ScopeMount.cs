@@ -1,4 +1,5 @@
 using System.Globalization;
+using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Statistics;
 
@@ -179,14 +180,15 @@ public static class ScopeTracking
 /// group (MOA) = (muzzle energy, ft lb / rifle weight as fired, lb) / 200, with muzzle energy = bullet weight, gr, times velocity squared
 /// over 450240. A trend with real rifles on both sides of it: never a pass or a fail.
 /// <para>
-/// <b>What it measures is not confirmed</b> (request 103): how many shots a group is and whether it is extreme spread. Until it is, the figure is
-/// shown as Litz states it and never converted or set beside GroupLab's own figures; <see cref="MetricConfirmed"/> says so in one place.
+/// <b>What it measures</b> (request 103, Alan, 2026-10-20, from the book): the extreme spread of five-shot groups, averaged. So a group's own
+/// figure is set beside it on that basis, <see cref="OnItsBasis"/>: the average five-shot extreme spread the group's sigma implies, whatever
+/// number of shots it holds, with the sigma's interval carried through.
 /// </para>
 /// </summary>
 public static class TopGun
 {
-    /// <summary>False until Alan confirms the shot count and the measure (request 103); the comparison waits on it.</summary>
-    public const bool MetricConfirmed = false;
+    /// <summary>The shots in one of Top Gun's groups, whose extreme spread it averages (request 103).</summary>
+    public const int GroupShots = 5;
 
     public static double MuzzleEnergyFtLb(double bulletGrains, double velocityFps) => bulletGrains * velocityFps * velocityFps / 450240;
 
@@ -199,24 +201,76 @@ public static class TopGun
             ? GroupMoa(grains, fps, weight)
             : null;
 
-    /// <summary>"Top Gun expects about 0.82 MOA average group for this rifle and load (Bryan Litz's trend, not a limit)."</summary>
+    /// <summary>"Top Gun expects about 0.82 MOA average five-shot group for this rifle and load (Bryan Litz's trend, not a limit)."</summary>
     public static string Says(double moa, string what = "this rifle and load") =>
-        string.Create(CultureInfo.InvariantCulture, $"Top Gun expects about {moa:0.00} MOA average group for {what} (Bryan Litz's trend, not a limit).");
+        string.Create(CultureInfo.InvariantCulture, $"Top Gun expects about {moa:0.00} MOA average five-shot group for {what} (Bryan Litz's trend, not a limit).");
 
     /// <summary>
-    /// Compare loads' Top Gun lines, entry 456 section 3: one per load the compared sessions name, with the rifle each names, where both have
-    /// what it needs; the same load in two rifles is two lines.
+    /// A group's own figure on Top Gun's basis, request 103: the average extreme spread of five-shot groups that its sigma implies, the
+    /// range-statistic table's mean five-shot spread at sigma 1 times the sigma, in MOA at the distance, the sigma's interval carried through
+    /// the same way. Null without a distance. A bound the sigma has none for is NaN.
     /// </summary>
-    public static IReadOnlyList<string> Lines(IEnumerable<(string? Rifle, string? Load)> named, RecordBook book)
+    public static Estimate? OnItsBasis(double sigmaInches, double? lowerInches, double? upperInches, double? distanceInches)
     {
-        ArgumentNullException.ThrowIfNull(named);
+        if (RangeStatisticsTable.Default.Lookup(RangeStatistic.ExtremeSpread, GroupShots) is not { } five)
+        {
+            return null;
+        }
+
+        double? Moa(double? inches) => inches is { } i && double.IsFinite(i) ? UnitSettings.AngleIn(i * five.Mean, distanceInches, AngularUnit.Moa) : null;
+        return Moa(sigmaInches) is { } value ? new Estimate(value, Moa(lowerInches) ?? double.NaN, Moa(upperInches) ?? double.NaN) : null;
+    }
+
+    /// <summary>A group's offsets, in inches at the target, on Top Gun's basis, or null below the shots dispersion is quoted for.</summary>
+    public static Estimate? OnItsBasis(IReadOnlyList<PointD> offsets, double? distanceInches)
+    {
+        ArgumentNullException.ThrowIfNull(offsets);
+        if (offsets.Count < GroupAnalysis.MinimumShotsForDispersion)
+        {
+            return null;
+        }
+
+        var sigma = GroupStatistics.Rayleigh(offsets).Sigma;
+        return OnItsBasis(sigma.Value, sigma.Lower, sigma.Upper, distanceInches);
+    }
+
+    /// <summary>
+    /// "Your shots on the same basis: about 0.91 MOA average five-shot group (0.70 to 1.25), from 20 shots. Not clearly different from the
+    /// trend at this many shots." Clearly wider or tighter only where the whole interval is on one side of the trend.
+    /// </summary>
+    public static string Compared(double trendMoa, Estimate yours, int shots, string who = "Your shots")
+    {
+        bool bounded = double.IsFinite(yours.Lower) && double.IsFinite(yours.Upper);
+        string range = bounded ? string.Create(CultureInfo.InvariantCulture, $" ({yours.Lower:0.00} to {yours.Upper:0.00})") : "";
+        string verdict = !bounded ? ""
+            : yours.Lower > trendMoa ? " " + WorseThanTrend
+            : yours.Upper < trendMoa ? " Clearly tighter than the trend."
+            : " Not clearly different from the trend at this many shots.";
+        return string.Create(CultureInfo.InvariantCulture, $"{who} on the same basis: about {yours.Value:0.00} MOA average five-shot group{range}, from {shots} shots.{verdict}");
+    }
+
+    /// <summary>
+    /// Compare loads' Top Gun lines, entry 456 section 3: one per load the compared groups name, with the rifle each names, where both have
+    /// what it needs, the same load in two rifles being two lines; and under each, every group of that load on the same basis (request 103)
+    /// where it has the shots and the distance.
+    /// </summary>
+    public static IReadOnlyList<string> Lines(IEnumerable<(string? Rifle, string? Load, string Group, IReadOnlyList<PointD> Offsets)> groups, RecordBook book, double? distanceInches)
+    {
+        ArgumentNullException.ThrowIfNull(groups);
         ArgumentNullException.ThrowIfNull(book);
         var lines = new List<string>();
-        foreach (var (rifle, load) in named.Distinct())
+        foreach (var named in groups.GroupBy(g => (g.Rifle, g.Load)))
         {
-            if (For(book.FindRifle(rifle), book.FindLoad(load)) is { } moa)
+            if (For(book.FindRifle(named.Key.Rifle), book.FindLoad(named.Key.Load)) is { } moa)
             {
-                lines.Add(Says(moa, $"{load} in {rifle}"));
+                lines.Add(Says(moa, $"{named.Key.Load} in {named.Key.Rifle}"));
+                foreach (var group in named)
+                {
+                    if (OnItsBasis(group.Offsets, distanceInches) is { } yours)
+                    {
+                        lines.Add(Compared(moa, yours, group.Offsets.Count, group.Group));
+                    }
+                }
             }
         }
 
@@ -225,11 +279,12 @@ public static class TopGun
 
     /// <summary>What Top Gun is, said once wherever its figure is shown, on the computer and the phone.</summary>
     public const string Note = "A trend line from many rifles, with real rifles on both sides of it: a starting point, not a verdict on yours. "
-        + "Its group's shot count and measure are being checked, so it is not set beside GroupLab's own figures yet.";
+        + "Its group is the extreme spread of five shots, averaged, so GroupLab sets beside it the average five-shot group your shots' sigma "
+        + "implies, however many you fired, with its range.";
 
     /// <summary>
-    /// What is usually checked when a rifle groups clearly worse than the trend: entry 456's list, with no pseudoscience. Shown only once the
-    /// metric is confirmed and the group's own interval is clear of the trend.
+    /// What is usually checked when a rifle groups clearly worse than the trend: entry 456's list, with no pseudoscience. Shown only where the
+    /// group's own interval on Top Gun's basis is clear of the trend.
     /// </summary>
     public const string WorseThanTrend = "Clearly wider than the trend: what is usually checked is the action's bedding and its return to battery, the crown, "
         + "the scope's mount and rings, the barrel, how evenly the bullet is engraved, and the technique and the rest.";

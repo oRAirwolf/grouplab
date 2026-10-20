@@ -57,7 +57,7 @@ public class Entry456Tests
             var said = page.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "").ToList();
             Assert.Contains("Scope and mount", said);
             Assert.Contains(said, t => t.StartsWith("The zero uses 1.2 mil of elevation with Test load.", StringComparison.Ordinal));
-            Assert.Contains("Top Gun expects about 1.04 MOA average group for Test load (Bryan Litz's trend, not a limit).", said);
+            Assert.Contains("Top Gun expects about 1.04 MOA average five-shot group for Test load (Bryan Litz's trend, not a limit).", said);
 
             // The tracking test: 20 mil expected, the turret read 20.5, so 0.976 goes into the factor's field.
             var reading = page.GetLogicalDescendants().OfType<TextBox>().First(t => Id(t) == "ballistics-rifle-reading");

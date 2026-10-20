@@ -160,7 +160,7 @@ public sealed partial class MainWindow
         }
 
         var groups = setup.Groups.Select(g => (g.Name, g.Offsets, g.Detail, SpeedOf(g.Load))).ToList();
-        compareTopGun = GroupLab.Core.Ballistics.TopGun.Lines(records.Select(r => (r.Rifle, r.Load)), book);
+        compareTopGun = GroupLab.Core.Ballistics.TopGun.Lines(records.Zip(setup.Groups, (r, g) => (r.Rifle, r.Load, g.Name, g.Offsets)), book, setup.Distance);
         DiagnosticLog.Info("compare.sessions", ("groups", groups.Count));
         ShowComparison(groups, null);
     }
@@ -178,9 +178,6 @@ public sealed partial class MainWindow
             return;
         }
 
-        // A subgroup is named by its load, so each is Top Gun's load in the sheet's rifle.
-        compareTopGun = GroupLab.Core.Ballistics.TopGun.Lines(map.Names.Select(load => (state.Rifle?.Name, (string?)load)), book);
-
         var sighters = state.Bulls.Where(b => !b.Scoring).Select(b => b.Index).ToHashSet();
         var groups = new List<(string, IReadOnlyList<PointD>, string, string?)>();
         foreach (string name in map.Names)
@@ -190,6 +187,8 @@ public sealed partial class MainWindow
                 SpeedOf(name) ?? SpeedOf(state.Load)));
         }
 
+        // A subgroup is named by its load, so each is Top Gun's load in the sheet's rifle.
+        compareTopGun = GroupLab.Core.Ballistics.TopGun.Lines(groups.Select(g => (state.Rifle?.Name, (string?)g.Item1, g.Item1, g.Item2)), book, state.ShotDistanceInches);
         compareFooting = null;
         compareDistance = state.ShotDistanceInches;
         DiagnosticLog.Info("compare.subgroups", ("groups", groups.Count));

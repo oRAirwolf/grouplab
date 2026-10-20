@@ -69,4 +69,26 @@ public class ResultFiguresTests
         });
         Assert.All(tiles.Concat(sections[0].Figures).Where(f => f.Key is not ("groupSize" or "zero")), f => Assert.False(string.IsNullOrWhiteSpace(f.Explanation), $"{f.Label} explains nothing"));
     }
+
+    /// <summary>
+    /// Request 103: where the rifle and load are known, Advanced carries Top Gun and, beneath it, these shots on its basis, the average
+    /// five-shot group their sigma implies, the same number <c>TopGun.OnItsBasis</c> gives from the analysis's own sigma.
+    /// </summary>
+    [Fact]
+    public void AdvancedSetsTheGroupBesideTopGunOnItsBasis()
+    {
+        var state = Group() with { Rifle = new Rifle("Heavy", 0.25, AngularUnit.Moa) { WeightAsFiredLb = 11 } };
+        var load = new Load("Test load", null) { BulletWeightGrains = 140, MuzzleVelocityFps = 2710 };
+        var (_, sections) = ResultFigures.Build(state, UnitSettings.Imperial, load: load);
+        var advanced = sections.Single(s => s.Key == "advanced").Figures;
+        Assert.Contains(advanced, f => f.Key == "topGun" && f.Value == "1.04 MOA average five-shot group");
+        var sigma = GroupAnalysis.Analyse(state).Counted!.Sigma!;
+        var yours = GroupLab.Core.Ballistics.TopGun.OnItsBasis(sigma.Value, sigma.Lower, sigma.Upper, 3600)!.Value;
+        var figure = Assert.Single(advanced, f => f.Key == "topGunYours");
+        Assert.Equal(GroupLab.Core.Ballistics.TopGun.Compared(GroupLab.Core.Ballistics.TopGun.GroupMoa(140, 2710, 11), yours, 20), figure.Explanation);
+        Assert.StartsWith(yours.Value.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture) + " MOA", figure.Value, StringComparison.Ordinal);
+
+        var (_, noDistance) = ResultFigures.Build(state with { ShotDistanceInches = null }, UnitSettings.Imperial, load: load);
+        Assert.DoesNotContain(noDistance.Single(s => s.Key == "advanced").Figures, f => f.Key == "topGunYours");
+    }
 }

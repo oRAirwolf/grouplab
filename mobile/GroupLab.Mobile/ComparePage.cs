@@ -86,8 +86,8 @@ internal sealed class ComparePage : UserControl
 
             column.Children.Add(Screens.Card(list));
 
-            // Entry 456 section 3: Top Gun for each compared load, as Litz states it.
-            if (GroupLab.Core.Ballistics.TopGun.Lines(records.Select(r => (r.Rifle, r.Load)), PhoneAnalysis.Store().LoadBook()) is { Count: > 0 } topGun)
+            // Entry 456 section 3 and request 103: Top Gun for each compared load, and each group beside it on its basis.
+            if (GroupLab.Core.Ballistics.TopGun.Lines(records.Zip(setup.Groups, (r, g) => (r.Rifle, r.Load, g.Name, g.Offsets)), PhoneAnalysis.Store().LoadBook(), setup.Distance) is { Count: > 0 } topGun)
             {
                 var card = new StackPanel { Spacing = 6, Children = { Screens.Heading("Top Gun") } };
                 foreach (string line in topGun)

@@ -49,7 +49,7 @@ public class Entry456Tests
             Assert.Contains(text, t => t.StartsWith("The zero uses 1.2 mil of elevation with Test load.", StringComparison.Ordinal));
             Assert.Contains("Half the travel: 10.0 mil either way from the middle.", text);
             Assert.Contains(text, t => t.StartsWith("With the 6.0 mil rail, ", StringComparison.Ordinal) && t.Contains("which reaches", StringComparison.Ordinal));
-            Assert.Contains("Top Gun expects about 1.04 MOA average group for Test load (Bryan Litz's trend, not a limit).", text);
+            Assert.Contains("Top Gun expects about 1.04 MOA average five-shot group for Test load (Bryan Litz's trend, not a limit).", text);
             Assert.Contains(window.EquipmentFieldKeys, k => k == "sightScaleFactor");
         }
         finally

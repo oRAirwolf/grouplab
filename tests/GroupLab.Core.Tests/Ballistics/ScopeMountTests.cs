@@ -121,13 +121,56 @@ public class ScopeMountTests(ITestOutputHelper output)
         Assert.Equal(1.038, TopGun.GroupMoa(140, 2710, 11), 3);
         var rifle = new Rifle("Heavy", 0.1, AngularUnit.Mrad) { WeightAsFiredLb = 11 };
         var load = new Load("Test load", null) { BulletWeightGrains = 140, MuzzleVelocityFps = 2710 };
-        Assert.Equal("Top Gun expects about 1.04 MOA average group for this rifle and load (Bryan Litz's trend, not a limit).", TopGun.Says(TopGun.For(rifle, load)!.Value));
+        Assert.Equal("Top Gun expects about 1.04 MOA average five-shot group for this rifle and load (Bryan Litz's trend, not a limit).", TopGun.Says(TopGun.For(rifle, load)!.Value));
         Assert.Null(TopGun.For(rifle with { WeightAsFiredLb = null }, load));
         Assert.Null(TopGun.For(rifle, load with { MuzzleVelocityFps = null }));
-        Assert.False(TopGun.MetricConfirmed);
 
         var book = RecordBook.Empty.With(rifle).With(load);
-        Assert.Equal(["Top Gun expects about 1.04 MOA average group for Test load in Heavy (Bryan Litz's trend, not a limit)."],
-            TopGun.Lines([("Heavy", "Test load"), ("Heavy", "Test load"), ("Heavy", "Unknown")], book));
+        Assert.Equal(["Top Gun expects about 1.04 MOA average five-shot group for Test load in Heavy (Bryan Litz's trend, not a limit)."],
+            TopGun.Lines([("Heavy", "Test load", "First", []), ("Heavy", "Test load", "Second", []), ("Heavy", "Unknown", "Third", [])], book, 3600));
+    }
+
+    /// <summary>
+    /// Request 103 (Alan, 2026-10-20): Top Gun's group is the extreme spread of five shots, averaged. A group's own figure on that basis is
+    /// the average five-shot extreme spread its sigma implies, so drawing many five-shot groups at a known sigma and averaging their spreads
+    /// has to land on it, and its interval is the sigma's carried through.
+    /// </summary>
+    [Fact]
+    public void YourGroupOnTopGunsBasisIsTheAverageFiveShotSpread()
+    {
+        var random = new Random(103);
+        double Normal() => Math.Sqrt(-2 * Math.Log(1 - random.NextDouble())) * Math.Cos(2 * Math.PI * random.NextDouble());
+        const double sigma = 0.5;
+        double total = 0;
+        const int groups = 40000;
+        for (int g = 0; g < groups; g++)
+        {
+            total += FuddBuster.ExtremeSpread([.. Enumerable.Range(0, TopGun.GroupShots).Select(_ => new GroupLab.Core.Imaging.PointD(sigma * Normal(), sigma * Normal()))]);
+        }
+
+        double drawnMoa = UnitSettings.AngleIn(total / groups, 3600, AngularUnit.Moa)!.Value;
+        var yours = TopGun.OnItsBasis(sigma, 0.4, 0.7, 3600)!.Value;
+        output.WriteLine(string.Create(CultureInfo.InvariantCulture, $"drawn {drawnMoa:0.0000} MOA, on its basis {yours.Value:0.0000}"));
+        Assert.Equal(drawnMoa, yours.Value, 0.01);
+        Assert.Equal(yours.Value * 0.4 / sigma, yours.Lower, 6);
+        Assert.Equal(yours.Value * 0.7 / sigma, yours.Upper, 6);
+        Assert.Null(TopGun.OnItsBasis(sigma, 0.4, 0.7, null));
+        Assert.True(double.IsNaN(TopGun.OnItsBasis(sigma, null, 0.7, 3600)!.Value.Lower));
+
+        Assert.Equal("Your shots on the same basis: about 1.00 MOA average five-shot group (0.80 to 1.20), from 20 shots. Not clearly different from the trend at this many shots.",
+            TopGun.Compared(1.04, new Estimate(1.0, 0.8, 1.2), 20));
+        Assert.EndsWith(" Clearly tighter than the trend.", TopGun.Compared(1.04, new Estimate(0.7, 0.6, 0.9), 20));
+        Assert.EndsWith(" " + TopGun.WorseThanTrend, TopGun.Compared(1.04, new Estimate(1.6, 1.2, 2.1), 20));
+        Assert.DoesNotContain("Clearly", TopGun.Compared(1.04, new Estimate(1.6, double.NaN, double.NaN), 20));
+
+        // Compare loads: under the load's trend, each group of it with the shots and the distance, and none without.
+        var rifle = new Rifle("Heavy", 0.1, AngularUnit.Mrad) { WeightAsFiredLb = 11 };
+        var load = new Load("Test load", null) { BulletWeightGrains = 140, MuzzleVelocityFps = 2710 };
+        var book = RecordBook.Empty.With(rifle).With(load);
+        GroupLab.Core.Imaging.PointD[] five = [new(0, 0), new(0.5, 0), new(0, 0.5), new(-0.5, 0), new(0, -0.5)];
+        var lines = TopGun.Lines([("Heavy", "Test load", "Monday", five), ("Heavy", "Test load", "Tuesday", five[..4])], book, 3600);
+        Assert.Equal(2, lines.Count);
+        Assert.StartsWith("Monday on the same basis: about ", lines[1]);
+        Assert.Single(TopGun.Lines([("Heavy", "Test load", "Monday", five)], book, null));
     }
 }
