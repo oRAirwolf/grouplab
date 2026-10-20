@@ -462,7 +462,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 - On Windows, Targets can now print a sheet straight to a Phomemo M834 paired over Bluetooth, sending the same page the phone sends; it is built and not yet tried on a real M834 from a computer, and on macOS and Linux the choice says it is not available there yet.
 - The second of two M220 scale labels printed from the phone could come out shifted to the left with its left codes cut off; GroupLab now lets each label finish before sending the next.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.180)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
