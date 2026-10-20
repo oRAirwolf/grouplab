@@ -73,8 +73,8 @@ Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (100 and 98 answered 2026-10-20 b
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.207 (2026-10-19): Equipment pages open at their top; 206 had entries 455 to 458 and the first reports total.
-- **The site** follows main by itself (website.yml), but not the nightly's own [notes] pushes; those are dispatched by hand.
+- **Last nightly:** 0.2.0-nightly.212 (2026-10-20): entry 460, entry 447 part 2's windows and Phase 9's faster holes; 211 had Top Gun's comparison.
+- **The site** follows main by itself (website.yml) and the nightly publishes it; live at 8860c789, nightly 212, on 2026-10-20.
 - Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox
