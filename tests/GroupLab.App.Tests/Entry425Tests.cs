@@ -41,8 +41,8 @@ public class Entry425Tests
     /// and group centre's green or the aim's blue, nor the orange it replaces; and its edge is the opposite of it, so one of the two always
     /// shows. Near is closer than 100 in RGB, about the gap between two of the pooled sheets' own colors. Entry 430 section 3 adds the
     /// plot's own ink, the white or black a single sheet's shots are drawn in, and the light grey of a placed mark, both themes. One pair
-    /// is nearer: the light theme's magenta #b0009f is 68 from the fourth pooled sheet's plum #9c3f8f, and question 100 asks about it;
-    /// until it is answered that pair is held at 65, so it comes no closer.
+    /// is nearer: the light theme's magenta #b0009f is 68 from the fourth pooled sheet's plum #9c3f8f. Entry 460 (question 100, option B)
+    /// kept it, as no magenta on the light theme reaches 100 from all of these, so that pair is held at 65 and comes no closer.
     /// </summary>
     [Theory]
     [MemberData(nameof(Themes))]
@@ -63,18 +63,18 @@ public class Entry425Tests
     }
 
     /// <summary>
-    /// Entry 430 section 3: the per-bull marks on the picture, measured the same way. The magenta Alan chose is 84 from the violet bull
-    /// mark #b24bd6 in the dark themes, and 93 from it and 88 from the rose #d62a5b in the light, under the 100 the plot's inks keep, so
-    /// question 100 asks the planning session about it. Until it answers, this holds the selection no nearer to any bull mark than 80, so
-    /// nothing drifts closer while the question is open.
+    /// Entry 430 section 3: the per-bull marks on the picture, measured the same way. The magenta Alan chose was 84 from the violet bull
+    /// mark #b24bd6 in the dark themes, and 93 from it and 88 from the rose #d62a5b in the light. Entry 460 (question 100, option B): the dark
+    /// themes' #f800f8 is 108 or more from every one, held at 100 as the plot's inks are; the light theme's is kept and held at 80.
     /// </summary>
     [Theory]
     [MemberData(nameof(Themes))]
-    public void TheSelectionIsNoNearerTheBullMarksThanQuestion100Says(string theme)
+    public void TheSelectionIsNoNearerTheBullMarksThanQuestion100Chose(string theme)
     {
         var (ink, _) = Tokens.Selection(Variant(theme));
         var nearest = Tokens.BullMarks.Min(c => Distance(ink, c));
-        Assert.True(nearest >= 80, $"In the {theme} theme the selection is {nearest:0} from a bull mark");
+        double floor = theme == "light" ? 80 : 100;
+        Assert.True(nearest >= floor, $"In the {theme} theme the selection is {nearest:0} from a bull mark");
     }
 
     /// <summary>

@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-20, Phase 9's next step (before it: entry 447 part 2's remainder and request 103).
+**Last rewritten:** 2026-10-20, entry 460 part 1, question 100 (before it: Phase 9's next step, entry 447 part 2, request 103).
 
 ---
 
@@ -50,7 +50,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 2. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
-3. Questions 100 and 98, when the planning session answers them.
+3. Entry 460 part 2, question 98: pool several pictures of one single-page design, asked once.
 
 ## Blocked, and on what
 
@@ -64,8 +64,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (102 to 105 answered by Alan and archived 2026-10-19):
-- **100** the selection's magenta is near the light theme's fourth sheet and two bull marks (entry 430)
+Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (100 answered 2026-10-20 by entry 460: dark selection #f800f8):
 - **98** several pictures of one single-page design dropped together: a tab each meanwhile (entry 423)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9

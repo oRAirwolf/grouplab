@@ -5,6 +5,37 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-15, question 100: the magenta is nearer the light theme's plum sheet and two bull marks than the test's 100
+
+**Status: answered 2026-10-20 by Alan, from the planning canvas (entry 460 section 1): option B. The dark themes' selection is #f800f8, 108 or more from every ink and bull mark; the light theme's #b0009f and its fourth pooled sheet #9c3f8f are kept.****
+
+Entry 430 section 3: "Check the magenta against `BullMarks` (#b24bd6 and #d62a5b are the nearest) with the same distance the test
+already uses; if it is too close, say so as a question with the numbers and keep #ff3df5 / #b0009f meanwhile." The test calls two inks
+near when they are closer than 100 in RGB (`Entry425Tests`). Measured:
+
+| Selection | Nearest | Distance |
+|---|---|---|
+| dark #ff3df5 | bull mark #b24bd6 (violet) | 84 |
+| dark #ff3df5 | fourth pooled sheet #b65aa3 | 114 (clear) |
+| light #b0009f | **fourth pooled sheet #9c3f8f (plum)** | **68** |
+| light #b0009f | bull mark #d62a5b (rose) | 88 |
+| light #b0009f | bull mark #b24bd6 (violet) | 93 |
+
+Everything else (the plot's white and black, `MarkPlaced`, the bull, extreme spread, CEP, center, aim, the other sheets) is over 100 in
+both themes. The bull marks color a bull's shots on the picture while marking; the plum is the fourth sheet of a pooled set on the light
+theme, which is where the report came from. The ring, crosshair and edge still set the selection apart; the color alone is what is close.
+The contrast with its edge is 7.2 to 1 dark and 6.3 light (white on black was 21).
+
+**Built meanwhile:** Alan's two colors. The test holds the light plum pair at 65 and the bull marks at 80, so nothing comes nearer while
+this is open. **Options:** (a) keep them; the shape tells the selection apart and Alan chose them by eye; (b) dark #f800f8, a purer
+magenta, 108 from everything, with the light one kept (no magenta on the light theme reaches 100 from all of these: the best is about 89);
+(c) move the light theme's fourth sheet away from magenta, for example toward a brown or teal, which changes a pooled set's colors. I
+would choose (a) unless Alan finds the fourth sheet's shots confusable with the selection on the light theme; then (c).
+
+---
+
+---
+
 ## 2026-10-19, question 105: the consent record ships, so a website consent makes a build
 
 **Status: answered 2026-10-19 by Alan, in the session: yes: the Windows package carries only the sample's own consent, `samples/sample-consent.md`, held word for word to the full record by `ReleaseAssetTests`.**

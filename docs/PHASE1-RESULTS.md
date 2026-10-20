@@ -1884,6 +1884,13 @@ Wording by the docs helper (docs-sonnet), reviewed; sections 6, 7 and 11's last 
 - **Nothing moved**: the four local corpus scoreboards, the synthetic and any-target scoreboards and both corpus counts are line for line
   the same but for their time columns.
 
+## Entry 460: questions 100 and 98 answered by Alan from the planning canvas (2026-10-20)
+
+1. **Question 100, option B.** The dark themes' selection is now #f800f8 (`Tokens.Selection`), 108 or more from every plot ink and bull
+   mark where #ff3df5 was 84 from the violet bull mark; edged in black, 6.3 to 1. The light theme's #b0009f and its fourth pooled
+   sheet's #9c3f8f are kept. `Entry425Tests` now holds the dark selection 100 from the bull marks and the light one at 80, and the light
+   plum pair at 65, as answered. No guide, page or release note named the old value. Question 100 archived.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
