@@ -5,7 +5,7 @@
   "controls": {
     "Add a barrel": [
       749,
-      520,
+      505,
       99,
       27
     ],
@@ -23,13 +23,13 @@
     ],
     "Bartlein is on Test rifle now": [
       747,
-      442,
+      427,
       28,
       32
     ],
     "Cancel": [
       817,
-      345,
+      330,
       67,
       27
     ],
@@ -53,7 +53,7 @@
     ],
     "Edit": [
       1314,
-      445,
+      430,
       50,
       27
     ],
@@ -65,43 +65,31 @@
     ],
     "EquipmentField_notes": [
       747,
-      259,
+      244,
       613,
       60
     ],
     "EquipmentField_railCant": [
       747,
-      125,
+      110,
       140,
       30
     ],
-    "EquipmentField_scopeTravel": [
-      747,
-      75,
-      140,
-      11
-    ],
-    "EquipmentField_scopeTravelKind": [
-      1062,
-      75,
-      298,
-      13
-    ],
     "EquipmentField_sightScaleFactor": [
       1062,
-      125,
+      110,
       140,
       30
     ],
     "EquipmentField_weightAsFiredLb": [
       747,
-      192,
+      177,
       140,
       30
     ],
     "Factory is on Test rifle now": [
       747,
-      478,
+      463,
       28,
       32
     ],
@@ -113,7 +101,7 @@
     ],
     "Save": [
       749,
-      345,
+      330,
       56,
       27
     ],
