@@ -46,6 +46,7 @@ public class BenchCoverageTests
         ["ScopeMount"] = "Entry 456's rail cant figures: a few additions on the zero angle the solver already gives, which a dope table's bench case times.",
         ["ScopeTracking"] = "Entry 456's tracking test: one division and a comparison, worked out when a person presses the button.",
         ["TopGun"] = "Entry 456's Top Gun trend: one line of arithmetic per load.",
+        ["CopiesQuestion"] = "Entry 460's question about copies of one page: its words and a check of one definition's tiling, asked once per drop.",
         ["PointBlankCard"] = "Entry 455's point blank card: six lines of text laid out once when a person prints it; nothing a reading waits on.",
         ["PointBlankTargets"] = "Entry 455's list of targets and their sizes, a fixed table read when the view opens.",
         ["CaliberChoices"] = "The caliber box's list as one types: a filter over the cartridge table's 605 rows, done once per key press, too small to time against an analysis.",
