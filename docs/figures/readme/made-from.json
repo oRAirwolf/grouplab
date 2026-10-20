@@ -8,16 +8,16 @@
     "docs/figures/screens/phone/fold-capture-dark.png": "59bb2355b442d63579cf7e6fb10573660fb222a938a8353166633393c7c651c7",
     "docs/figures/screens/current/marking-dark-1400x900.png": "ded0a02567432530c24d27ddcec0114d585089eaa88d5de81f776fd6fbf9967d",
     "docs/figures/screens/current/analysis-open-dark-1400x900.png": "567097ab150bfe4d67a32320388386a55627cbf2f577b0b4c3319d9434e94d90",
-    "docs/figures/screens/current/compare-dark-1400x900.png": "44822b1b34a51d3ed79de6eefab10446949cac9b5821dec8daa640307018610b",
-    "docs/figures/screens/current/ballistics-hit-dark-1400x900.png": "94ef7819ab38db95241a53da1989f8d72d5a1e275226b2c6079fa9f0057e744f",
+    "docs/figures/screens/current/compare-dark-1400x900.png": "1b5d344dad1ad2f7dccc41bda8afa309b03b8016a4a0deb1ccdc16469712d506",
+    "docs/figures/screens/current/ballistics-hit-dark-1400x900.png": "40431b4280d94024ac760b6b5f85d39abace4edb1a8d0dfd96c7d3bd7be4644b",
     "docs/figures/screens/current/analysis-light-1400x900.png": "cc13b326b2d7282738ea4d7a96ccfd141174beaf83615d6b8c6d7494e477b2e9",
     "docs/figures/screens/phone/fold-result-light.png": "41a0f516ce8c843b2f7bc0ce36a113d0ee6d2d729e5c6d9aba8806f96f6437aa",
     "docs/figures/screens/current/targets-light-1400x900.png": "a3e1198f20b0875f3855478da1dbe9a3c3e7dc7ce2364001dc907c1d2c5fc5fb",
     "docs/figures/screens/phone/fold-capture-light.png": "d9e24ec40769a7c727ec5294382f520a559fcd4948cd8960a63193b303fe7971",
-    "docs/figures/screens/current/marking-light-1400x900.png": "544d7aa9eed7b75526ae14c86ff643d51db034f5f54141a0f33fd1808ff50b5f",
+    "docs/figures/screens/current/marking-light-1400x900.png": "a84d2dd550a3778d2d95fe49ef86b6b69e3fd8361138e564aa0d92f8374828ab",
     "docs/figures/screens/current/analysis-open-light-1400x900.png": "ae04a745497fac0eed2fbb539bde51920aa18de121b4215e38d8e10daae79490",
-    "docs/figures/screens/current/compare-light-1400x900.png": "dbd1e38369d1d378a169ad7f0cdce6caf2ce12a66752310ca3f0c3f23974345b",
-    "docs/figures/screens/current/ballistics-hit-light-1400x900.png": "1ba570daf26864a08167b081a0ceeb7c8d010f2e02ed015ed199d93e20e5ede9",
+    "docs/figures/screens/current/compare-light-1400x900.png": "26d552117060a29aa96ea02c8606972c0bc8266189819db2ab9e620737aa477e",
+    "docs/figures/screens/current/ballistics-hit-light-1400x900.png": "39a37ff85c82ad6b88fcc0700a84b623cedbff855fd04b2e42b55704d07f2f2c",
     "scripts/readme-images.py": "faa267cfad5a99e6c6341fc5d853f068f49117ebc52b34b7f119233658941a3a"
   }
 }
