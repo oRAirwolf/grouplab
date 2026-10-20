@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-20, entry 447 part 2's remainder (before it: request 103 answered, Top Gun is five-shot extreme spread).
+**Last rewritten:** 2026-10-20, Phase 9's next step (before it: entry 447 part 2's remainder and request 103).
 
 ---
 
@@ -17,8 +17,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Request 103 answered by Alan (2026-10-20)**: Top Gun's group is five-shot extreme spread, averaged. Groups are set beside it as
   the average five-shot spread their sigma implies (`TopGun.OnItsBasis`, `TopGun.Compared`), in Advanced and Compare loads on both.
-- **Alan's run of 2026-10-20, own limit 60% of the week**: request 103 and entry 447 part 2's remainder done; next Phase 9
-  (the slowest step in reading a scan or photo, measured, sped up with identical results).
+- **Alan's run of 2026-10-20, own limit 60% of the week**: request 103, entry 447 part 2's remainder and a Phase 9 step done:
+  holes on a 600 dpi scan 492 to 378 ms, every result the same (`BinaryMorphology.Open`). Next slowest: a phone photograph's codes.
 - **Questions 102 to 105 (2026-10-19)**: the Windows package carries only `samples/sample-consent.md`. **Entries 457 to 459**: report
   Send everywhere; notes count reports and targets; the nightly publishes the site itself (its token's pushes start nothing).
 - **Entries 455 and 456 (2026-10-19)**: Ballistics' Point blank view (`PointBlankModel`, `PointBlankReport`, `PointBlankCard`); the rifle's
@@ -42,7 +42,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Synchronization** (Phase 7): the options paper is `docs/notes/sync-options.md` (entry 324 section 2), for Alan to choose from.
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
-- **Performance** (Phase 9): hole finding on a scan (entry 392) and the phone's reading of a photograph (entry 400); the next waits for planning.
+- **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); the next slowest is a photograph's codes.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft follows the nightlies (entry 369); Google Play past internal test is Alan's call; Test Lab waits on request 62.
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.

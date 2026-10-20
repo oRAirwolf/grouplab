@@ -72,6 +72,101 @@ public class BinaryMorphologyTests
         Assert.True(managed.Count(b => b == 1) > pixels.Count(b => b == 1), "the close filled nothing, so it tested nothing");
     }
 
+    /// <summary>
+    /// Phase 9, 2026-10-20: hole finding now thresholds its residual and then opens it, rather than opening the grey residual and then
+    /// thresholding. Each case is a grey picture with discs on and over the edges, a residual's speckle and rows and columns set from side to
+    /// side, opened by OpenCV and thresholded, against thresholded and opened by the managed open; and the managed open against OpenCV's own
+    /// open of the same 0 and 1 image. Every pixel is compared.
+    /// </summary>
+    public static TheoryData<int, int, int, int, int> Opens => new()
+    {
+        // width, height, radius, seed, threshold
+        { 97, 61, 1, 31, 40 }, { 120, 90, 2, 32, 90 }, { 200, 150, 5, 33, 128 }, { 333, 211, 12, 34, 64 }, { 400, 300, 30, 35, 200 },
+        { 64, 400, 17, 36, 1 }, { 512, 512, 50, 37, 255 }, { 900, 300, 9, 38, 77 },
+    };
+
+    [Theory]
+    [MemberData(nameof(Opens))]
+    public void ThresholdingThenOpeningIsOpeningThenThresholdingToTheByte(int width, int height, int radius, int seed, int threshold)
+    {
+        var grey = Grey(width, height, radius, seed);
+        using var element = Cv2.GetStructuringElement(MorphShapes.Ellipse, new Size((2 * radius) + 1, (2 * radius) + 1));
+        element.GetArray(out byte[] points);
+        var halves = BinaryMorphology.HalfWidths(points, element.Cols, element.Rows)!;
+
+        using var source = Mat.FromPixelData(height, width, MatType.CV_8UC1, grey);
+        using var opened = new Mat();
+        Cv2.MorphologyEx(source, opened, MorphTypes.Open, element);
+        opened.GetArray(out byte[] greyOpened);
+        var before = greyOpened.Select(v => v >= threshold ? (byte)1 : (byte)0).ToArray();
+
+        var over = grey.Select(v => v >= threshold ? (byte)1 : (byte)0).ToArray();
+        var after = BinaryMorphology.Open(over, width, height, halves);
+        int differ = before.Zip(after).Count(p => p.First != p.Second);
+        Assert.True(differ == 0, $"{differ} of {grey.Length} pixels differ at radius {radius}, threshold {threshold}");
+
+        using var binary = Mat.FromPixelData(height, width, MatType.CV_8UC1, over);
+        using var nativeOpen = new Mat();
+        Cv2.MorphologyEx(binary, nativeOpen, MorphTypes.Open, element);
+        nativeOpen.GetArray(out byte[] native);
+        Assert.True(native.SequenceEqual(after), "the managed open is not OpenCV's");
+        Assert.Contains(after, v => v == 1);
+        Assert.True(after.Count(v => v == 1) < over.Count(v => v == 1), "the open removed nothing, so it tested nothing");
+    }
+
+    private static byte[] Grey(int width, int height, int radius, int seed)
+    {
+        var random = new Random(seed);
+        var pixels = new byte[width * height];
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            pixels[i] = (byte)random.Next(random.Next(4) == 0 ? 256 : 60);
+        }
+
+        for (int k = 0; k < 6; k++)
+        {
+            // Discs from a little under the element to several times it, some centred on or past an edge.
+            int cx = random.Next(-radius, width + radius), cy = random.Next(-radius, height + radius), r = Math.Max(1, (radius * (1 + random.Next(6))) / 2);
+            byte level = (byte)(80 + random.Next(176));
+            for (int y = Math.Max(0, cy - r); y <= Math.Min(height - 1, cy + r); y++)
+            {
+                for (int x = Math.Max(0, cx - r); x <= Math.Min(width - 1, cx + r); x++)
+                {
+                    if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= r * r)
+                    {
+                        pixels[(y * width) + x] = (byte)Math.Max(pixels[(y * width) + x], level - random.Next(20));
+                    }
+                }
+            }
+        }
+
+        // And one disc wider than the element, at full strength, wholly inside, so something survives every open.
+        int big = Math.Min((2 * radius) + 1, (Math.Min(width, height) / 2) - 1), bx = width / 2, by = height / 2;
+        for (int y = by - big; y <= by + big; y++)
+        {
+            for (int x = bx - big; x <= bx + big; x++)
+            {
+                if (((x - bx) * (x - bx)) + ((y - by) * (y - by)) <= big * big)
+                {
+                    pixels[(y * width) + x] = 255;
+                }
+            }
+        }
+
+        int row = random.Next(height), column = random.Next(width);
+        for (int x = 0; x < width; x++)
+        {
+            pixels[(row * width) + x] = 255;
+        }
+
+        for (int y = 0; y < height; y++)
+        {
+            pixels[(y * width) + column] = 255;
+        }
+
+        return pixels;
+    }
+
     [Fact]
     public void OnlyAnImageOfZerosAndOnesIsTakenAsBinary()
     {

@@ -287,40 +287,36 @@ public static partial class RenderDifferenceHoleDetector
         expected = aligned;
         inkFraction = InkFraction(observed, expected, paper, block);
 
-        // S6: the residual as a fraction of the paper-to-ink range, both signs.
+        // S6: the residual as a fraction of the paper-to-ink range, both signs. And nothing beyond the page's edge can become a candidate: on
+        // the N568 photograph the mat merged into one blob that swallowed every hole.
         double range = Math.Max(0.05, 1 - inkFraction);
+        double threshold = options.ResidualFraction * 255;
         var residual = new byte[width * height];
+        var over = new byte[width * height];
         Parallel.For(0, height, y =>
         {
             for (int x = 0; x < width; x++)
             {
                 int i = (y * width) + x;
+                if (!inside[i])
+                {
+                    over[i] = threshold <= 0 ? (byte)1 : (byte)0;
+                    continue;
+                }
+
                 double p = Math.Max(1, PaperAt(paper, block, width, height, x, y));
                 double e = 1 - ((1 - (expected.Pixels[i] / 255.0)) * (1 - inkFraction));
                 double n = observed.Pixels[i] / p;
                 residual[i] = (byte)Math.Clamp(Math.Round(255 * Math.Abs(e - n) / range), 0, 255);
+                over[i] = residual[i] >= threshold ? (byte)1 : (byte)0;
             }
         });
 
-        // And nothing beyond the page's edge can become a candidate: on the N568 photograph the mat merged into one blob that swallowed every hole.
-        for (int i = 0; i < residual.Length; i++)
-        {
-            if (!inside[i])
-            {
-                residual[i] = 0;
-            }
-        }
-
-        // S7: open, threshold, close, fill, hull.
+        // S7: threshold, open, close, fill, hull. Phase 9 (2026-10-20): the threshold is taken before the open rather than after, which for a
+        // flat element gives the same pixels (BinaryMorphology.Open says why), and opens a 0 and 1 image instead of a grey one.
         int open = Math.Max(2, (int)Math.Round(options.OpenRadiusInches * dpi, MidpointRounding.ToEven));
         int close = Math.Max(3, (int)Math.Round(options.CloseRadiusInches * dpi, MidpointRounding.ToEven));
-        var opened = backend.Morphology(new GrayImage(width, height, residual), MorphologyOperation.Open, open);
-        double threshold = options.ResidualFraction * 255;
-        var binary = new byte[width * height];
-        for (int i = 0; i < binary.Length; i++)
-        {
-            binary[i] = opened.Pixels[i] >= threshold ? (byte)1 : (byte)0;
-        }
+        var binary = backend.Morphology(new GrayImage(width, height, over), MorphologyOperation.Open, open).Pixels;
 
         var closed = backend.Morphology(new GrayImage(width, height, binary), MorphologyOperation.Close, close);
 
@@ -1108,16 +1104,31 @@ public static partial class RenderDifferenceHoleDetector
             return observed;
         }
 
+        // Phase 9 (2026-10-20): counted a row at a time on every core and added up; a count is the same whatever order it is added in.
+        int width = observed.Width;
         var histogram = new long[256];
-        long count = 0;
-        for (int i = 0; i < inside.Length; i++)
+        Parallel.For(0, observed.Height, () => new long[256], (y, _, local) =>
         {
-            if (inside[i] && expected.Pixels[i] >= 250)
+            for (int i = y * width, end = i + width; i < end; i++)
             {
-                histogram[observed.Pixels[i]]++;
-                count++;
+                if (inside[i] && expected.Pixels[i] >= 250)
+                {
+                    local[observed.Pixels[i]]++;
+                }
             }
-        }
+
+            return local;
+        }, local =>
+        {
+            lock (histogram)
+            {
+                for (int level = 0; level < 256; level++)
+                {
+                    histogram[level] += local[level];
+                }
+            }
+        });
+        long count = histogram.Sum();
 
         byte paper = 255;
         for (int level = 0, seen = 0; level < 256 && count > 0; level++)
@@ -1130,14 +1141,14 @@ public static partial class RenderDifferenceHoleDetector
             }
         }
 
-        var pixels = (byte[])observed.Pixels.Clone();
-        for (int i = 0; i < pixels.Length; i++)
+        var pixels = new byte[observed.Pixels.Length];
+        Parallel.For(0, observed.Height, y =>
         {
-            if (!inside[i])
+            for (int i = y * width, end = i + width; i < end; i++)
             {
-                pixels[i] = paper;
+                pixels[i] = inside[i] ? observed.Pixels[i] : paper;
             }
-        }
+        });
 
         return new GrayImage(observed.Width, observed.Height, pixels);
     }

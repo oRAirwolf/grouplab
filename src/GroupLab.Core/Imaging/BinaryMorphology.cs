@@ -113,6 +113,26 @@ public static class BinaryMorphology
     }
 
     /// <summary>
+    /// The open, an erosion then a dilation by the same element, of an image whose pixels are all 0 or 1: Phase 9, 2026-10-20. Hole finding
+    /// opens its residual and then thresholds it; for a flat element the two can be taken in either order and give the same pixels, since a
+    /// pixel is at or above the threshold after the erosion exactly where every point of the element is at or above it before, and the same
+    /// holds for the dilation with "some point". So the residual is thresholded first and opened here.
+    /// </summary>
+    /// <param name="halfWidths">From <see cref="HalfWidths"/>: one per row of an element of odd height, centred on the pixel.</param>
+    public static byte[] Open(byte[] pixels, int width, int height, int[] halfWidths)
+    {
+        ArgumentNullException.ThrowIfNull(pixels);
+        ArgumentNullException.ThrowIfNull(halfWidths);
+        if (halfWidths.Length % 2 == 0 || halfWidths.Any(w => w is < 0 or > WidestHalfWidth))
+        {
+            throw new ArgumentException("one half width per row of an element of odd height, each 0 to " + WidestHalfWidth, nameof(halfWidths));
+        }
+
+        var eroded = Pass(pixels, width, height, halfWidths, dilate: false);
+        return Pass(eroded, width, height, halfWidths, dilate: true);
+    }
+
+    /// <summary>
     /// One dilation or erosion. A dilation sets a pixel where some row of the element finds a set pixel within its half width; an erosion
     /// keeps a pixel set only where no row of the element finds an unset one. Rows beyond the image are skipped, as OpenCV's default border is.
     /// Entry 433: only the columns that can change are worked. An erosion keeps nothing a row did not already have set, since the element's

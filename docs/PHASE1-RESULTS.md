@@ -1871,6 +1871,19 @@ Wording by the docs helper (docs-sonnet), reviewed; sections 6, 7 and 11's last 
 - **Still left**: a run with a real screen reader (Narrator, VoiceOver, TalkBack) on each system; that needs Alan's devices, and the
   headless tests stand in until then.
 
+## Phase 9, 2026-10-20: finding the holes on a 600 dpi scan about a fifth sooner, every result the same
+
+- **Measured first**: the slowest step left in reading was finding the holes on the 600 dpi scan (about 490 ms in the bench); inside it,
+  besides the alignment (which entry 433 showed cannot be cheaper with the same shifts), the open of the grey residual and the threshold
+  after it (85 ms) and setting everything beyond the sheet to paper on one thread (37 ms).
+- **The change**: the residual is thresholded and then opened as a 0 and 1 image (`BinaryMorphology.Open`, taken by the imaging backend
+  for any 0 and 1 open), which for a flat element gives the same pixels as opening and then thresholding; the pass beyond the sheet runs
+  on every core. `BinaryMorphologyTests.ThresholdingThenOpeningIsOpeningThenThresholdingToTheByte` holds it to the byte against OpenCV.
+- **Before and after**: the bench's 600 dpi scan, finding the holes, 492 to 378 ms; a phone photograph 143 to 127; `grouplab analyze` on
+  the 25 hole 600 dpi sample 1,134 to 1,024. Detail in docs/PERFORMANCE.md.
+- **Nothing moved**: the four local corpus scoreboards, the synthetic and any-target scoreboards and both corpus counts are line for line
+  the same but for their time columns.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

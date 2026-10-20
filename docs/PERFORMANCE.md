@@ -48,6 +48,40 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Phase 9, 2026-10-20: the residual thresholded before it is opened, finding the holes on a 600 dpi scan about a fifth sooner
+
+**Measured first** (`grouplab bench --runs 5`, Release, this desktop): the slowest single step left in reading was finding the holes on the
+600 dpi scan, then reading a phone photograph's codes. Timers put into `RenderDifferenceHoleDetector.Detect` for this measurement and taken
+out after gave, warm, on the 600 dpi scan: the alignment about 150 to 200 ms (its phase correlations, which entry 433 showed cannot be made
+cheaper and keep every shift), drawing the sheet about 90, **the open of the grey residual 69 and the threshold after it 16**, the marks
+about 50, the warp about 40, **setting everything beyond the sheet to paper 37, on one thread**, and the residual about 40, 8 of it
+zeroing beyond the sheet on one thread.
+
+**The change, and why it is the same answer.** The residual was opened with a disc and then thresholded. For a flat element the two can
+be taken in either order: after the erosion a pixel is at or above the threshold exactly where every point of the disc around it was at
+or above it before, and after the dilation exactly where some point was, so thresholding first and opening the 0 and 1 image gives every
+pixel the old order gave. A 0 and 1 image is opened by `BinaryMorphology.Open`, the same row-run method entry 392 made for the close,
+which the imaging backend now takes for an open as well as a close of any 0 and 1 image. Setting the area beyond the sheet to paper now
+counts and fills a row at a time on every core, and the residual is zeroed beyond the sheet and thresholded inside its own pass.
+`BinaryMorphologyTests.ThresholdingThenOpeningIsOpeningThenThresholdingToTheByte` holds both halves on eight grey pictures with discs on
+and past the edges and rows and columns set from side to side: OpenCV's grey open then the threshold against the threshold then the
+managed open, and the managed open against OpenCV's own open of the same 0 and 1 image, every pixel.
+
+| | before | after |
+|---|---|---|
+| bench, a 600 dpi scan (no holes): S5-S8.holes, median of three benches of five, alternated | 492 ms | 378 ms |
+| bench, a 600 dpi scan, stage by stage | 1,038 ms | 918 ms |
+| bench, a phone photograph: S5-S8.holes | 143 ms | 127 ms |
+| bench, one sheet from file to figures | 325 ms | 323 ms |
+| bench, a batch of ten sheets | 2,741 ms | 2,690 ms |
+| `grouplab analyze` on the 600 dpi sample with 25 holes, a fresh process each, median of five, alternated | 1,134 ms | 1,024 ms |
+
+The generated sheet's figures moved both ways between benches (184 to 270 ms before, 196 to 288 after) while a game was running on the
+machine, and are left out. **Nothing moved:** `scoreboard --corpus` on the four local corpus folders, `scoreboard --synthetic`,
+`scoreboard --any-target` (whose binary opens now take the managed path too), and `corpus counts`, committed and local, are line for line
+the same before and after but for their time columns, and `grouplab analyze` on the 25 hole sample prints the same. The identify sweep
+was not run: nothing it calls changed. Nothing reads QR codes on several threads.
+
 ## Entry 447 section 4.3: a mark's rows found by halving, finding the holes about a sixth sooner on photographs
 
 **Measured first** (`grouplab bench --runs 5`, Release, this desktop): the slowest single steps left in reading were finding the holes

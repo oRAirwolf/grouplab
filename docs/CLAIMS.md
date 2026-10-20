@@ -19,12 +19,12 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 1821 |
-| measured | 2272 |
+| measured | 2277 |
 | decided | 1456 |
 | unbacked | 0 |
-| **total** | **5549** |
+| **total** | **5554** |
 
-**1627** of them were read one sentence at a time and their backing written against the sentence. The other **3922** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1627** of them were read one sentence at a time and their backing written against the sentence. The other **3927** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -1615,6 +1615,11 @@ one that matters.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): **What the gate was planned to cover, and still does:** - **The times a person actually waits:** start-up to a usable window, opening an image, a full analysis of a 600 dpi Letter scan, a full analysis of a phone photograph, the analysis screen after Accept, and a batch of ten sheets.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): - **Per platform**, because the answer differs: this desktop today, and a mid-range Android phone when Phase 6 exists.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): ## Phase 9, 2026-10-20: the residual thresholded before it is opened, finding the holes on a 600 dpi scan about a fifth sooner **Measured first** (`grouplab bench --runs 5`, Release, this desktop): the slowest single step left in reading was finding the holes on the 600 dpi scan, then reading a phone photograph's codes.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): For a flat element the two can be taken in either order: after the erosion a pixel is at or above the threshold exactly where every point of the disc around it was at or above it before, and after the dilation exactly where some point was, so thresholding first and opening the 0 and 1 image gives every pixel the old order gave.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): A 0 and 1 image is opened by `BinaryMorphology.Open`, the same row-run method entry 392 made for the close, which the imaging backend now takes for an open as well as a close of any 0 and 1 image.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): `BinaryMorphologyTests.ThresholdingThenOpeningIsOpeningThenThresholdingToTheByte` holds both halves on eight grey pictures with discs on and past the edges and rows and columns set from side to side: OpenCV's grey open then the threshold against the threshold then the managed open, and the managed open against OpenCV's own open of the same 0 and 1 image, every pixel.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): **Nothing moved:** `scoreboard --corpus` on the four local corpus folders, `scoreboard --synthetic`, `scoreboard --any-target` (whose binary opens now take the managed path too), and `corpus counts`, committed and local, are line for line the same before and after but for their time columns, and `grouplab analyze` on the 25 hole sample prints the same.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): ## Entry 447 section 4.3: a mark's rows found by halving, finding the holes about a sixth sooner on photographs **Measured first** (`grouplab bench --runs 5`, Release, this desktop): the slowest single steps left in reading were finding the holes on the 600 dpi scan (483 ms) and reading a phone photograph's codes (448 ms).
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): In the codes, the 445 ms are 70 ms finding eight places and about 375 ms reading them: a place with a code reads in about 12 ms, one without in 50 to 70, because the second detector runs only when the first finds nothing.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Stopping once every code of the sheet is read was tried and taken back: the bench's photograph is a frozen sheet printing four codes of which two are in the picture, and the identify sweep's 148 s did not move.
