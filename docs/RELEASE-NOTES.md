@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.210
+
+**2026-10-20**, commit `f162e39`. Nightly.
+
+**Under the hood**
+
+- The Windows download's sample sheet now carries only its own consent record, so a change to the website's consents no longer makes a new build.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.210)
+
+---
+
 ## 0.2.0-nightly.209
 
 **2026-10-19**, commit `34d259e`. Nightly.
