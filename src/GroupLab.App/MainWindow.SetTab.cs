@@ -272,7 +272,9 @@ public sealed partial class MainWindow
         var joining = new List<DroppedPicture>();
         if (targets.Current.Set is { } into)
         {
-            joining = into.Definition is null
+            joining = into.CopiesOf is not null
+                ? [.. first.Copies.SelectMany(s => s).Concat(first.Alone).Where(p => p.DefinitionId == into.DefinitionId && p.SetSheet is null)]
+                : into.Definition is null
                 ? [.. first.Unnamed]
                 : [.. first.Sets.SelectMany(s => s).Concat(first.Alone).Where(p => p.DefinitionId == into.DefinitionId && p.SetSheet is not null)];
             var fresh = joining.Where(p => into.Members.All(m => m.Hash != p.Hash)).ToList();
@@ -289,7 +291,7 @@ public sealed partial class MainWindow
 
         var sorting = DropSorting.Of([.. pictures.Where(p => joining.All(j => j.Hash != p.Hash))]);
         var sets = sorting.Sets;
-        var alone = sorting.Alone;
+        var alone = sorting.Alone.ToList();
         var unnamed = sorting.Unnamed.ToList();
 
         bool poolUnnamed = false;
@@ -325,6 +327,28 @@ public sealed partial class MainWindow
             unnamed = [];
         }
 
+        // Entry 460 section 2: copies of one single-page design, asked about once each design; kept, they open a tab each.
+        foreach (var copies in sorting.Copies)
+        {
+            var design = copies[0].Definition!;
+            if (!await AskToPoolCopies(copies.Count, design.Name).ConfigureAwait(true))
+            {
+                alone.AddRange(copies);
+                continue;
+            }
+
+            var group = new SetGroup(null, copies[0].DefinitionId) { CopiesOf = design };
+            group.Members.AddRange(copies.Select(p => new SetMember(p.Path, p.Hash, null)));
+            if (!await IntoATab(group).ConfigureAwait(true))
+            {
+                said.Add(string.Create(CultureInfo.InvariantCulture, $"{group.Name} could not open: a question is still open."));
+                continue;
+            }
+
+            await ReadSet(group).ConfigureAwait(true);
+            said.Add(string.Create(CultureInfo.InvariantCulture, $"{group.Name}, in one tab."));
+        }
+
         int opened = 0;
         var single = alone.Concat(unnamed).ToList();
         foreach (var picture in single)
@@ -345,7 +369,7 @@ public sealed partial class MainWindow
         }
 
         int twice = pictures.Count - pictures.Select(p => p.Hash).Distinct(StringComparer.Ordinal).Count();
-        DiagnosticLog.Info("drop.several", ("pictures", paths.Count), ("sets", sets.Count), ("alone", single.Count), ("pooledUnnamed", poolUnnamed));
+        DiagnosticLog.Info("drop.several", ("pictures", paths.Count), ("sets", sets.Count), ("copies", sorting.Copies.Count), ("alone", single.Count), ("pooledUnnamed", poolUnnamed));
         status.Text = string.Create(CultureInfo.InvariantCulture, $"{paths.Count} pictures dropped together: ") + string.Join(" ", said)
             + (twice > 0 ? string.Create(CultureInfo.InvariantCulture, $" {twice} {(twice == 1 ? "was the same picture" : "were the same pictures")} as another, so opened once.") : "")
             + (targets.Current.Set is { Showing: null } ? " " + poolWords : "");
@@ -428,6 +452,17 @@ public sealed partial class MainWindow
         return answer.Task;
     }
 
+    /// <summary>Entry 460 section 2: copies of one single-page design. "Pool as one group" is the default; closing the question keeps a tab each.</summary>
+    private Task<bool> AskToPoolCopies(int n, string design)
+    {
+        var answer = new TaskCompletionSource<bool>();
+        ShowProblem(CopiesQuestion.Title(n), CopiesQuestion.Body(n, design),
+            (CopiesQuestion.Pool, () => answer.TrySetResult(true)),
+            (CopiesQuestion.Keep, () => answer.TrySetResult(false)));
+        problemDismissed = () => answer.TrySetResult(false);
+        return answer.Task;
+    }
+
     /// <summary>
     /// Entry 423 section 1: the set's pictures not yet read, opened and read one after another inside its tab, the status saying "Reading sheet
     /// 2 of 3", each saved as its own session record once read; then the pool. Pictures with no codes are opened without detection, which
@@ -440,7 +475,7 @@ public sealed partial class MainWindow
         readingSet = true;
         try
         {
-            DetectOnOpen = detect && set.Definition is not null;
+            DetectOnOpen = detect && (set.Definition is not null || set.CopiesOf is not null);
             for (int k = 0; k < unread.Count; k++)
             {
                 var member = unread[k];

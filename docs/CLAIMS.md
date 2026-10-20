@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 1821 |
 | measured | 2277 |
-| decided | 1456 |
+| decided | 1457 |
 | unbacked | 0 |
-| **total** | **5554** |
+| **total** | **5555** |
 
-**1627** of them were read one sentence at a time and their backing written against the sentence. The other **3927** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1628** of them were read one sentence at a time and their backing written against the sentence. The other **3927** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3901,6 +3901,7 @@ one that matters.
 - *code* (src/GroupLab.Core/Marking/SetPool.cs Composite and SheetOf, and src/GroupLab.App/MainWindow.Compare.cs OpenPooled; held by SetPoolTests.ThePooledSetIsOneMarkingWithThePoolsFigures and PoolSetTests (entry 420)): GroupLab says which sheets of the set are still missing and how many shots it has of the bulls the set holds, and opens the pooled set on the analysis screen in a tab of its own: every shot on one plot, measured from its own bull, every figure a sheet has, and the Shots list naming each shot by sheet and bull (2.5 is bull 5 on sheet 2).
 - *code* (src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)): ![A pooled set of three sheets: 1 The set tab](figures/screens/current/set-tab-light-1400x900.png) ### Quicker: drop them together Drag the scans or photographs of a set onto the window at once (or paste them together) and GroupLab reads each one's codes first.
 - *code* (src/GroupLab.App/MainWindow.SetTab.cs DropSeveral, ReadCodes, ReadSet and ShowSetPool, src/GroupLab.App/SetTab.cs SetGroup and DropSorting; held by Entry423Tests.ThreeSheetsOfOneSetOpenOneTabPooledAsPoolTheChosen and TwoSetsMixedOpenATabEachAndAPictureAloneItsOwn (entry 423)): When they are sheets of one set they open in **one tab**, named for the set ("GroupLab 3x3 2 MOA, Set of 3 Letter Sheets, 3 sheets"); the sheets are read one after another while the status line says "Reading sheet 2 of 3", each is saved as its own session record, and the tab shows the pooled set, with no question asked.
+- *decided* (src/GroupLab.App/SetTab.cs DropSorting and src/GroupLab.App/MainWindow.SetTab.cs AskToPoolCopies; src/GroupLab.Core/Marking/SetPool.cs CopiesQuestion; tests/GroupLab.App.Tests/Entry460Tests.cs (entry 460 section 2)): Several copies of one single-page design, such as three copies of the 2 MOA page, are asked about once too, "Pool these 3 pictures as one group?": **Pool as one group** opens them in one tab, each copy read and its holes found and pooled as its own sheet in order, and **Keep a tab each** opens each in a tab of its own, for separate loads or strings.
 - *code* (src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow (Contents, PlannedEntries, Save only, Show me the file, Send shown only with a send address; MaxLength 500) opened by MainWindow.OpenReport from Settings, Diagnostics): It opens a window that lists what the report holds before anything is written: GroupLab's log of this run and the one before, the version of GroupLab, the operating system and the display, and, if you write them, a description of up to 500 characters and a way to reach you.
 - *code* (src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs): GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never.
 - *code* (src/GroupLab.App/MainWindow.Sending.cs OfferToSend; tests/GroupLab.App.Tests/Entry165Tests.cs NothingIsSentWithoutAYes): GroupLab can also send a target itself once you have analyzed it, with the holes it found and the ones you corrected, and it asks first every time unless you say otherwise in Settings.

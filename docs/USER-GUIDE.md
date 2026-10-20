@@ -697,9 +697,13 @@ to check its holes and scale and fix them as on any sheet; **Back to the set** s
 missing is named, and dropping it onto the set's tab later adds it. Two different pictures of the same sheet are both left out until you
 say which one counts; the same picture twice counts once. Pictures of two sets open a tab for each set, and a picture of anything else a
 tab of its own. Pictures with no codes to read, a target from a shop or a plain photograph, are asked about once: **Pool them in one tab**
-or **One tab each**; pooled, each still needs its own scale. A picture dropped onto a tab that already holds a target never replaces it:
-it opens in a new tab beside it. On the phone, choose the sheets of a set together, or share them into GroupLab together, and the set's
-checklist opens with the pooled group showing; the checklist also has **See the pooled group**.
+or **One tab each**; pooled, each still needs its own scale. Several copies of one single-page design, such as three copies of the 2 MOA
+page, are asked about once too, "Pool these 3 pictures as one group?": **Pool as one group** opens them in one tab, each copy read and
+its holes found and pooled as its own sheet in order, and **Keep a tab each** opens each in a tab of its own, for separate loads or
+strings. A picture dropped onto a tab that already holds a target never replaces it: it opens in a new tab beside it. On the phone,
+choose the sheets of a set together, or share them into GroupLab together, and the set's checklist opens with the pooled group showing;
+the checklist also has **See the pooled group**. Copies of one single-page design chosen together on the phone are asked the same
+question, and pooled they open as one group.
 
 Reading other sheets of one load as one group is **not built yet**. It is not a matter of adding the numbers up: separate sheets shot at one
 aim point each have their own center, and what a pooled figure means depends on which center you measure from, which is still being decided.

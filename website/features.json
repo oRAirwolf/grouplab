@@ -1244,6 +1244,7 @@
       ],
       "since": "next",
       "note": [
+        "Several copies of one page dropped or chosen together are now asked about once",
         "pool",
         "now opens your pooled set on the analysis screen in its own tab",
         "open in one tab, pooled"

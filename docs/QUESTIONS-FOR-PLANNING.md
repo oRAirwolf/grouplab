@@ -14,28 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 49 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 50 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 105, 104, 103, 102, 101, 100, 99, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
-
----
-
-## 2026-10-14, question 98: several pictures of one single-page design, dropped together
-
-**Status: open. Nothing waits on it; built meanwhile as below.**
-
-Entry 423 section 1 pools a drop when "every picture is a sheet of the same set (same definition, a set sheet number on each, no sheet
-twice)", and section 3 covers several sets, a missing sheet, a sheet twice and pictures whose codes cannot be read. It does not say what
-three pictures of the same **single-page** design do, for example three copies of the 2 MOA page (GL-CF9-LTR) shot as one group: their
-codes read, so they are not "pictures whose codes cannot be read", and they have no set sheet number, so they are not a set. Alan's words
-("it should recognize that you want all 3 photos to be pooled together") could cover them.
-
-**Built meanwhile:** each opens in a tab of its own, as any picture that is not part of a set does (`DropSorting.Of`), and the status line
-says so. **Options:** (a) keep that; (b) ask the same one question as for untagged pictures, "Pool these 3 pictures as one group?", and
-pool them as the untagged pool does (each its own sheet in order, `SetPool.CompositeOfPictures`), about an hour with tests; (c) pool them
-without asking, as a set is. I would choose (b): copies of one page are as often three loads as one group, so the drop alone does not
-say which, and the question is one click.
+> 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
 

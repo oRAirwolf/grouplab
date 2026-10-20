@@ -1,5 +1,6 @@
 using System.Globalization;
 using GroupLab.Core.Gltd.Model;
+using GroupLab.Core.Marking;
 
 namespace GroupLab.App;
 
@@ -49,6 +50,12 @@ internal sealed class SetGroup
     /// <summary>The set's definition; null for pictures with no codes, pooled because the person said so.</summary>
     public TargetDefinition? Definition { get; }
 
+    /// <summary>
+    /// Entry 460 section 2: for copies of one single-page design pooled because the person said so, that design. They pool as pictures with
+    /// no codes do, so <see cref="Definition"/> is null, but their codes read, so each is read and its holes found as it opens.
+    /// </summary>
+    public TargetDefinition? CopiesOf { get; init; }
+
     public string? DefinitionId { get; }
 
     public List<SetMember> Members { get; } = [];
@@ -77,7 +84,7 @@ internal sealed class SetGroup
         {
             if (Definition is null)
             {
-                return SetTabWords.PicturesName(Members.Count);
+                return CopiesOf is { } copied ? SetTabWords.CopiesName(copied.Name, Members.Count) : SetTabWords.PicturesName(Members.Count);
             }
 
             int sheets = Members.Select(m => m.Sheet).Distinct().Count();
@@ -98,33 +105,48 @@ internal sealed record DroppedPicture(string Path, string Hash, TargetDefinition
     public bool Named => Definition is not null;
 }
 
-/// <summary>Where the pictures of one drop go: the sets of two or more sheets, the pictures alone, and the pictures with no codes.</summary>
-internal sealed record DropSorting(IReadOnlyList<IReadOnlyList<DroppedPicture>> Sets, IReadOnlyList<DroppedPicture> Alone, IReadOnlyList<DroppedPicture> Unnamed)
+/// <summary>
+/// Where the pictures of one drop go: the sets of two or more sheets, the pictures alone, the pictures with no codes, and the copies of one
+/// single-page design.
+/// </summary>
+internal sealed record DropSorting(IReadOnlyList<IReadOnlyList<DroppedPicture>> Sets, IReadOnlyList<DroppedPicture> Alone, IReadOnlyList<DroppedPicture> Unnamed,
+    IReadOnlyList<IReadOnlyList<DroppedPicture>> Copies)
 {
     /// <summary>
     /// Entry 423 sections 1 and 3: the same picture twice is one picture; pictures of one set (same definition, a set sheet number on each) go
     /// together where there are two or more of them; any other picture whose codes named it goes alone; the rest have no codes to read.
+    /// Entry 460 section 2: two or more pictures of the same single-page design go together as copies, to be asked about once.
     /// </summary>
     public static DropSorting Of(IReadOnlyList<DroppedPicture> pictures)
     {
         ArgumentNullException.ThrowIfNull(pictures);
         var once = pictures.GroupBy(p => p.Hash, StringComparer.Ordinal).Select(g => g.First()).ToList();
         var sets = new List<IReadOnlyList<DroppedPicture>>();
+        var copies = new List<IReadOnlyList<DroppedPicture>>();
         var alone = new List<DroppedPicture>();
-        foreach (var group in once.Where(p => p.Named).GroupBy(p => p.SetSheet is null ? "\u0000" + p.Hash : p.DefinitionId ?? "", StringComparer.Ordinal))
+        foreach (var group in once.Where(p => p.Named).GroupBy(Key, StringComparer.Ordinal))
         {
             var list = group.ToList();
-            if (list.Count > 1)
-            {
-                sets.Add(list);
-            }
-            else
+            if (list.Count < 2)
             {
                 alone.AddRange(list);
             }
+            else if (list[0].SetSheet is null)
+            {
+                copies.Add(list);
+            }
+            else
+            {
+                sets.Add(list);
+            }
         }
 
-        return new DropSorting(sets, alone, [.. once.Where(p => !p.Named)]);
+        return new DropSorting(sets, alone, [.. once.Where(p => !p.Named)], copies);
+
+        // A sheet of a set by its set, a copy of a single-page design by its design, and anything else by itself.
+        static string Key(DroppedPicture p) => p.SetSheet is not null ? p.DefinitionId ?? ""
+            : p.Definition is { } d && CopiesQuestion.SinglePage(d) && p.DefinitionId is { } id ? "\u0001" + id
+            : "\u0000" + p.Hash;
     }
 }
 
@@ -146,6 +168,9 @@ internal static class SetTabWords
     public static string PoolQuestion(int n) => string.Create(CultureInfo.InvariantCulture, $"Pool these {n} pictures as one group?");
 
     public static string PicturesName(int n) => string.Create(CultureInfo.InvariantCulture, $"{n} pictures pooled");
+
+    /// <summary>Entry 460 section 2: "GroupLab 3x3 2 MOA, Letter, 3 copies pooled".</summary>
+    public static string CopiesName(string design, int n) => string.Create(CultureInfo.InvariantCulture, $"{design}, {n} copies pooled");
 
     public static string Reading(int k, int n, string called) => string.Create(CultureInfo.InvariantCulture, $"Reading sheet {k} of {n} ({called}). ");
 }

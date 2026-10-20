@@ -4,6 +4,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using GroupLab.App;
 using GroupLab.App.Diagnostics;
+using GroupLab.Core.Gltd.Model;
 using GroupLab.Core.Marking;
 
 namespace GroupLab.Mobile;
@@ -670,6 +671,15 @@ public sealed class CapturePage : UserControl
             return;
         }
 
+        // Entry 460 section 2: copies of one single-page design, asked about once; pooled, they open as one group, as on the computer.
+        if (read.Count == photos.Count && Copies(read) is { } design && await PoolCopies(this, read.Count, design.Name))
+        {
+            var pooled = SetPool.CompositeOfPictures([.. read.Select(r => r.State)]);
+            DiagnosticLog.Info("phone.copies.pooled", ("pictures", read.Count), ("shots", pooled.Shots.Count));
+            Content = new ResultView(new PhoneResult(pooled, null, null, null), new ShotSetup(pooled.Calibre, pooled.ShotDistanceInches), units, ShowStart);
+            return;
+        }
+
         if (read.Count > 0)
         {
             Present(read[^1], setup, units);
@@ -678,6 +688,40 @@ public sealed class CapturePage : UserControl
         {
             ShowStart();
         }
+    }
+
+    /// <summary>Entry 460 section 2: the single-page design two or more pictures read together are all copies of, or null.</summary>
+    internal static TargetDefinition? Copies(IReadOnlyList<PhoneResult> read)
+    {
+        ArgumentNullException.ThrowIfNull(read);
+        return read.Count >= 2 && read[0].Definition is { } first && CopiesQuestion.SinglePage(first)
+            && read.All(r => r.Definition?.Name == first.Name && r.State.SetSheet is null) ? first : null;
+    }
+
+    /// <summary>Entry 460 section 2: the question, as the computer asks it; true for "Pool as one group".</summary>
+    internal static Task<bool> PoolCopies(ContentControl host, int n, string design)
+    {
+        var answer = new TaskCompletionSource<bool>();
+        object? before = host.Content;
+        void Answer(bool pool)
+        {
+            host.Content = before;
+            DiagnosticLog.Info("phone.copies.asked", ("pool", pool));
+            answer.TrySetResult(pool);
+        }
+
+        host.Content = Screens.Page(new StackPanel
+        {
+            Spacing = 12,
+            Children =
+            {
+                Screens.Title(CopiesQuestion.Title(n)),
+                Screens.Line(CopiesQuestion.Body(n, design)),
+                Screens.Primary(CopiesQuestion.Pool, () => Answer(true)).Id("copies-pool"),
+                Screens.Choice(CopiesQuestion.Keep, () => Answer(false)).Id("copies-keep"),
+            },
+        });
+        return answer.Task;
     }
 
     /// <summary>One sheet of several read and saved without showing its result, with its own progress and Cancel; false where canceled.</summary>

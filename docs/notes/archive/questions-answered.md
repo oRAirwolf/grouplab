@@ -5,6 +5,26 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-14, question 98: several pictures of one single-page design, dropped together
+
+**Status: answered 2026-10-20 by Alan, from the planning canvas (entry 460 section 2): option B. Copies of one single-page design dropped or chosen together are asked about once, "Pool these 3 pictures as one group?", Pool as one group (the default) or Keep a tab each, on the computer and the phone.****
+
+Entry 423 section 1 pools a drop when "every picture is a sheet of the same set (same definition, a set sheet number on each, no sheet
+twice)", and section 3 covers several sets, a missing sheet, a sheet twice and pictures whose codes cannot be read. It does not say what
+three pictures of the same **single-page** design do, for example three copies of the 2 MOA page (GL-CF9-LTR) shot as one group: their
+codes read, so they are not "pictures whose codes cannot be read", and they have no set sheet number, so they are not a set. Alan's words
+("it should recognize that you want all 3 photos to be pooled together") could cover them.
+
+**Built meanwhile:** each opens in a tab of its own, as any picture that is not part of a set does (`DropSorting.Of`), and the status line
+says so. **Options:** (a) keep that; (b) ask the same one question as for untagged pictures, "Pool these 3 pictures as one group?", and
+pool them as the untagged pool does (each its own sheet in order, `SetPool.CompositeOfPictures`), about an hour with tests; (c) pool them
+without asking, as a set is. I would choose (b): copies of one page are as often three loads as one group, so the drop alone does not
+say which, and the question is one click.
+
+---
+
+---
+
 ## 2026-10-15, question 100: the magenta is nearer the light theme's plum sheet and two bull marks than the test's 100
 
 **Status: answered 2026-10-20 by Alan, from the planning canvas (entry 460 section 1): option B. The dark themes' selection is #f800f8, 108 or more from every ink and bull mark; the light theme's #b0009f and its fourth pooled sheet #9c3f8f are kept.****

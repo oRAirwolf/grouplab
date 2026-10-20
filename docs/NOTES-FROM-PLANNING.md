@@ -25,6 +25,32 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-20, entry 460: questions 100 and 98 answered by Alan from the planning canvas (take after the work in hand)
+
+**Status: actioned 2026-10-20; both sections done. Question 100 and question 98 archived as answered.**
+
+From the planning session, 2026-10-20 10:55 UTC. Alan chose from the canvas "Selection color and same-page drops"
+(claude.ai/artifact/FbbpmhwT3rF616vhQa37EV). Take this after the part you are on; it counts toward the same 60% limit.
+
+## 1. Question 100: option B
+
+The dark theme's selection becomes #f800f8 (108 or more from every ink, as the question measured). The light theme's selection stays
+#b0009f, and the light fourth pooled sheet stays #9c3f8f. Update the test that holds the distances (`Entry425Tests`) to the new dark
+value, the user guide and release notes if they name the color, and archive question 100 as answered.
+
+## 2. Question 98: option B
+
+When several pictures of the same single-page design are dropped together (their codes read, no set sheet number, for example three
+copies of GL-CF9-LTR), ask once, "Pool these 3 pictures as one group?", with two buttons, "Keep a tab each" and "Pool as one group"
+(the default). Pool as the untagged pool does (each its own sheet in order, `SetPool.CompositeOfPictures`); keep a tab each as now. The
+same on the phones where several pictures are picked at once. Tests, the user guide, release notes, and archive question 98 as answered.
+
+Wording on the canvas, to use as written: the question's body reads "They are three copies of the same page, GL-CF9-LTR (2 MOA). Pool
+them if they are one group shot across the pages. Keep a tab each if they are separate loads or separate strings." (with the real count
+and design name).
+
+One commit per part, STATE rewritten after each.
+
 ## 2026-10-18, entry 447: an overnight queue after entries 445 and 446
 
 **Status: actioned 2026-10-18 to 2026-10-20; every part done. Part 3 proved by 20 green runs in a row; question 104 asks whether waiting out the simulator's pause in drawing counts as fixed at the cause.**

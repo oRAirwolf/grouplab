@@ -1890,6 +1890,15 @@ Wording by the docs helper (docs-sonnet), reviewed; sections 6, 7 and 11's last 
    mark where #ff3df5 was 84 from the violet bull mark; edged in black, 6.3 to 1. The light theme's #b0009f and its fourth pooled
    sheet's #9c3f8f are kept. `Entry425Tests` now holds the dark selection 100 from the bull marks and the light one at 80, and the light
    plum pair at 65, as answered. No guide, page or release note named the old value. Question 100 archived.
+2. **Question 98, option B.** Two or more pictures of the same single-page design dropped together (codes read, no set sheet number) are
+   sorted as copies (`DropSorting.Copies`) and asked about once with Alan's words (`CopiesQuestion`): "Pool these 3 pictures as one
+   group?", "They are three copies of the same page, GroupLab 3x3 2 MOA, Letter. ...", **Pool as one group** (the default) or **Keep a
+   tab each**. Pooled, they open in one tab named "GroupLab 3x3 2 MOA, Letter, 3 copies pooled" and pool as pictures with no codes do
+   (`SetPool.CompositeOfPictures`), but each is read and its holes found as it opens, since its codes read (`SetGroup.CopiesOf`); a later
+   copy dropped onto that tab joins it. Kept, a tab each as before. On the phone, copies chosen together are asked the same question
+   (`CapturePage.Copies`, `CapturePage.PoolCopies`) and pooled open as one group on the result screen. Tests: `Entry460Tests` (sorting,
+   the words, a drop of three 2 MOA copies with both answers) and `Entry460PhoneTests`; the entry 423 drop tests still pass. The guide's
+   drop paragraph says it. Question 98 archived.
 
 ## Decision log
 

@@ -9,12 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-20, entry 460 part 1, question 100 (before it: Phase 9's next step, entry 447 part 2, request 103).
+**Last rewritten:** 2026-10-20, entry 460 done, questions 100 and 98 (before it: Phase 9's next step, entry 447 part 2, request 103).
 
 ---
 
 ## In flight
 
+- **Entry 460 (2026-10-20)**: dark selection #f800f8 (question 100); copies of one single-page design asked once, "Pool these 3
+  pictures as one group?", on both (question 98, `CopiesQuestion`).
 - **Request 103 answered by Alan (2026-10-20)**: Top Gun's group is five-shot extreme spread, averaged. Groups are set beside it as
   the average five-shot spread their sigma implies (`TopGun.OnItsBasis`, `TopGun.Compared`), in Advanced and Compare loads on both.
 - **Alan's run of 2026-10-20, own limit 60% of the week**: request 103, entry 447 part 2's remainder and a Phase 9 step done:
@@ -50,7 +52,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 2. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
-3. Entry 460 part 2, question 98: pool several pictures of one single-page design, asked once.
+3. Phase 9 again when planning says: a phone photograph's codes are the slowest step left (about 450 to 680 ms).
 
 ## Blocked, and on what
 
@@ -64,8 +66,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (100 answered 2026-10-20 by entry 460: dark selection #f800f8):
-- **98** several pictures of one single-page design dropped together: a tab each meanwhile (entry 423)
+Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (100 and 98 answered 2026-10-20 by entry 460):
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **36** a light installer, measured

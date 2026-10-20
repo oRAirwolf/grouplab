@@ -156,3 +156,33 @@ public static class SetPool
 
     private static string Upper(string word) => char.ToUpperInvariant(word[0]) + word[1..];
 }
+
+/// <summary>
+/// NOTES-FROM-PLANNING.md entry 460 section 2 (question 98, Alan's option B): several pictures of the same single-page design, their codes
+/// read and no set sheet number on any, for example three copies of the 2 MOA page, are asked about once, on the computer and the phone,
+/// since copies of one page are as often separate loads as one group. Pooled, they are pooled as pictures with no codes are, each its own
+/// sheet in order (<see cref="SetPool.CompositeOfPictures"/>). The words are Alan's, from the planning canvas.
+/// </summary>
+public static class CopiesQuestion
+{
+    public const string Pool = "Pool as one group";
+
+    public const string Keep = "Keep a tab each";
+
+    public static string Title(int n) => string.Create(CultureInfo.InvariantCulture, $"Pool these {n} pictures as one group?");
+
+    /// <summary>"They are three copies of the same page, GroupLab 3x3 2 MOA, Letter. Pool them if ..."</summary>
+    public static string Body(int n, string design) => string.Create(CultureInfo.InvariantCulture,
+        $"They are {Counted(n)} copies of the same page, {design}. Pool them if they are one group shot across the pages. Keep a tab each if they are separate loads or separate strings.");
+
+    /// <summary>Whether a design prints one page, so its pictures are copies of it rather than sheets of a set.</summary>
+    public static bool SinglePage(TargetDefinition definition)
+    {
+        ArgumentNullException.ThrowIfNull(definition);
+        return definition.Tiling is not { } tiling || tiling.Cols * tiling.Rows < 2;
+    }
+
+    private static string Counted(int n) => n is >= 2 and <= 12
+        ? ((string[])["two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"])[n - 2]
+        : n.ToString(CultureInfo.InvariantCulture);
+}
