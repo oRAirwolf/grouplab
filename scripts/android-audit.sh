@@ -72,5 +72,14 @@ if grep -E "FATAL EXCEPTION|Fatal signal|Unhandled managed exception" "$OUT/audi
   failed=1
 fi
 adb shell am force-stop "$PKG"
+
+# GroupLab Dev's own record of each screen and its log, beside what uiautomator read, so a finding can be checked against both.
+mkdir -p "$OUT/results"
+adb exec-out "run-as $PKG find files/scenario/results -type f 2>/dev/null" | tr -d '\r' | while read -r file; do
+  [ -n "$file" ] || continue
+  local_path="$OUT/results/${file#files/scenario/results/}"
+  mkdir -p "$(dirname "$local_path")"
+  adb exec-out "run-as $PKG cat '$file'" > "$local_path" < /dev/null
+done
 python3 "$HERE/scripts/screen-reader-audit.py" judge "$OUT/audit" || failed=1
 exit $failed

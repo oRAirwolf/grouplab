@@ -520,6 +520,9 @@ public class MainActivity : AvaloniaMainActivity
     protected override void OnResume()
     {
         base.OnResume();
+
+        // Entry 461 section 2.1: TalkBack's boxes where the controls are drawn, once Avalonia's view and its helper are in place.
+        Window?.DecorView?.Post(() => AccessibilityOnScreen.Install(Window?.DecorView));
         CameraSession.Active?.Resume();
 #if GROUPLAB_UPDATER
         Updates.SelfUpdate.Resumed();

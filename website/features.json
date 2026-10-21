@@ -918,7 +918,8 @@
         "the focus stays on the row you chose",
         "the arrow keys now nudge the selected hole",
         "Screen readers now name every control",
-        "a button that holds words and a picture by its words"
+        "a button that holds words and a picture by its words",
+        "the outline now sits on the control being read"
       ],
       "guide": "from-the-keyboard"
     },

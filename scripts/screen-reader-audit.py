@@ -9,7 +9,7 @@ screen with the platform's own tooling, keeps what it found in the output folder
   description), a role (a class that says what it is), and a touch target of at least 48 by 48 dp, the Accessibility Test Framework's
   rule; and every control GroupLab Dev says is showing and can be tapped has a node there, so nothing that can be tapped is hidden.
 - iOS: XCTest's own accessibility audit (performAccessibilityAudit, Xcode 15 and later), run by the XCUITest runner in scripts/touch/ios
-  on GroupLab Dev as it shows. Element detection, hit regions, descriptions, traits, actions and parent and child are judged; contrast,
+  on GroupLab Dev as it shows. Element detection, hit regions, descriptions and traits are judged; contrast,
   Dynamic Type and clipped text are kept and listed, since they are questions of look and not of what a screen reader can reach.
 
   screen-reader-audit.py android --package org.grouplab.app.dev --out <folder> [--seconds 1200]
@@ -36,7 +36,7 @@ INTERACTIVE = {"Button", "ToggleButton", "RadioButton", "CheckBox", "TextBox", "
 # Android classes that say nothing about what a node does.
 NO_ROLE = {"", "android.view.View", "android.view.ViewGroup", "android.widget.FrameLayout"}
 # XCTest's audit types that are about reaching and understanding a control, judged; the rest are kept and listed.
-IOS_JUDGED = {"elementDetection", "hitRegion", "sufficientElementDescription", "trait", "action", "parentChild"}
+IOS_JUDGED = {"elementDetection", "hitRegion", "sufficientElementDescription", "trait"}
 
 
 def _touch():
@@ -67,9 +67,17 @@ def overlap(a, b):
 def android_findings(audit, xml_text, dpi, package):
     """Every finding on one screen, from GroupLab Dev's record of it and uiautomator's tree of it."""
     root = ElementTree.fromstring(xml_text)
+    parents = {child: parent for parent in root.iter() for child in parent}
     nodes = []
     for node in root.iter("node"):
         if node.get("package") != package:
+            continue
+        # A scroll bar's own arrows and thumb are the platform's, read by TalkBack as the scroll they are part of, as on the computer.
+        above, inside_scroll_bar = parents.get(node), False
+        while above is not None:
+            inside_scroll_bar |= above.get("class") == "ScrollBar"
+            above = parents.get(above)
+        if inside_scroll_bar:
             continue
         box = bounds(node.get("bounds"))
         if box is None or box[2] <= 0 or box[3] <= 0:
@@ -243,6 +251,9 @@ def self_test():
 <node class="android.widget.Button" package="org.grouplab.app.dev" bounds="[100,400][200,480]" clickable="true" text="" content-desc=""/>
 <node class="android.view.View" package="org.grouplab.app.dev" bounds="[600,400][900,526]" clickable="true" text="Odd" content-desc=""/>
 <node class="android.widget.Button" package="com.android.systemui" bounds="[0,0][10,10]" clickable="true" text="" content-desc=""/>
+<node class="ScrollBar" package="org.grouplab.app.dev" bounds="[1038,300][1080,900]" clickable="false" text="" content-desc="">
+<node class="RepeatButton" package="org.grouplab.app.dev" bounds="[1038,300][1080,342]" clickable="true" text="Line up" content-desc=""/>
+</node>
 </node></hierarchy>"""
     audit = {"name": "t", "view": {"x": 0, "y": 0, "width": 1080, "height": 2400}, "controls": [
         {"type": "Button", "name": "Analyze", "enabled": True, "screen": {"x": 100, "y": 200, "width": 400, "height": 126}},

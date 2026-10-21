@@ -32,7 +32,8 @@ internal static class MoreFold
         }
 
         bool open = settings.LoadWhyOpen(Key(item));
-        var toggle = new Button { HorizontalAlignment = HorizontalAlignment.Left, MinHeight = minHeight, Classes = { AppStyles.Link } };
+        // Entry 461 section 2.1: as wide as it is tall at least, so on the phone "More ▸" is the 48 by 48 a finger needs (it was 47 wide).
+        var toggle = new Button { HorizontalAlignment = HorizontalAlignment.Left, MinHeight = minHeight, MinWidth = minHeight, Classes = { AppStyles.Link } };
         void Show()
         {
             inside.IsVisible = open;

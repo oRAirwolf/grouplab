@@ -187,8 +187,11 @@ internal sealed class BullsPage : UserControl
                 {
                     Content = doubled.Contains(index) ? bull.Label + " ×2" : bull.Label,
                     MinWidth = 44,
-                    MinHeight = 44,
-                    Margin = new Thickness(3),
+
+                    // Entry 461 section 2.1: 48 tall to touch, as every phone button is (Screens.Touch); the gap above and below is 1 where it
+                    // was 3, so each row of bulls keeps the 50 it had.
+                    MinHeight = Screens.Touch,
+                    Margin = new Thickness(3, 1),
 
                     // Entry 342, the phone sweep: at 320 wide the button's own padding left a bull's number 11 points, and "10" to "25" were cut.
                     Padding = new Thickness(2),

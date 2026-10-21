@@ -776,7 +776,8 @@ jobs:
           if [ ! -d "$project" ] || [ ! -d "$built" ]; then
             brew install xcodegen > audit-xcodegen.log 2>&1 || { tail -20 audit-xcodegen.log; exit 1; }
             xcodegen generate --spec scripts/touch/ios/project.yml --quiet
-            xcodebuild build-for-testing -project "$project" -scheme GroupLabTouch -destination "platform=iOS Simulator,id=$UDID"               -derivedDataPath "$built" > audit-build.log 2>&1 || { grep -E "error" audit-build.log | head -40; echo "::error::The XCUITest runner did not build"; exit 1; }
+            xcodebuild build-for-testing -project "$project" -scheme GroupLabTouch -destination "platform=iOS Simulator,id=$UDID" \
+              -derivedDataPath "$built" > audit-build.log 2>&1 || { grep -E "error" audit-build.log | head -40; echo "::error::The XCUITest runner did not build"; exit 1; }
           fi
           taps="$RUNNER_TEMP/audit-taps"
           rm -rf "$taps" && mkdir -p "$taps"
@@ -787,7 +788,8 @@ jobs:
           folder="$data/Documents/scenario"
           mkdir -p "$folder"
           rm -rf "$folder/results" "$folder/scenario.json.ran"
-          TEST_RUNNER_GROUPLAB_TAPS="$taps" xcodebuild test-without-building -project "$project" -scheme GroupLabTouch             -destination "platform=iOS Simulator,id=$UDID" -derivedDataPath "$built" -only-testing:TouchTests/TouchTests/testTaps > audit-runner.log 2>&1 &
+          TEST_RUNNER_GROUPLAB_TAPS="$taps" xcodebuild test-without-building -project "$project" -scheme GroupLabTouch \
+            -destination "platform=iOS Simulator,id=$UDID" -derivedDataPath "$built" -only-testing:TouchTests/TouchTests/testTaps > audit-runner.log 2>&1 &
           runner=$!
           start=$(date +%s)
           until [ -f "$taps/ready" ]; do

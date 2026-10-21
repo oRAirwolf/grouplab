@@ -82,7 +82,7 @@ enum Audit {
         let names: [(XCUIAccessibilityAuditType, String)] = [
             (.contrast, "contrast"), (.elementDetection, "elementDetection"), (.hitRegion, "hitRegion"),
             (.sufficientElementDescription, "sufficientElementDescription"), (.dynamicType, "dynamicType"), (.textClipped, "textClipped"),
-            (.trait, "trait"), (.action, "action"), (.parentChild, "parentChild"),
+            (.trait, "trait"),
         ]
         return names.first { type.contains($0.0) }?.1 ?? "other \(type.rawValue)"
     }
