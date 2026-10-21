@@ -12,6 +12,23 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.213
+
+**2026-10-21**, commit `a6473d1`. Nightly.
+
+**What you will notice**
+
+- With the screen reader on Android, the outline now sits on the control being read rather than above it, and the More buttons and the bulls to tap are a full finger's size.
+- Screen readers now read a button that holds words and a picture by its words, where they read a code name before, on the computer and the phones, and the phone's benchmark button is as easy to tap as the others.
+
+**Under the hood**
+
+- GroupLab can now keep several devices in step through a folder your own cloud app already syncs; nothing switches it on yet, and the first start of this build copies your records aside before updating how they are stored.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.213)
+
+---
+
 ## 0.2.0-nightly.212
 
 **2026-10-20**, commit `375eb0f`. Nightly.
