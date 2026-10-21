@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.215
+
+**2026-10-21**, commit `29eee02`. Nightly.
+
+**What you will notice**
+
+- Sync between devices: your sessions, rifles, loads and sheets can now stay the same on your computer and your phones through a folder your own cloud app already keeps in step, with no account; set it up in Settings.
+- In Conditions on the day, the link to the rifle's page wraps onto its own line instead of running off the side of a wide window.
+- Across the computer and the phone, nothing is cut off at small window sizes or the largest text any more: table headings, long choices and labels wrap, trimmed names show in full when you point at them, and the hint inside an empty box is easy to read.
+- A save, a print or a file that will not open now says so in the middle of the window, as other failures do, instead of in a small line, on the computer and the phone.
+- Speeds read in feet a second everywhere, and the phone names distances and lengths as the computer does.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.215)
+
+---
+
 ## 0.2.0-nightly.214
 
 **2026-10-21**, commit `fd6fe5a`. Nightly.
