@@ -1939,6 +1939,16 @@ Ten rows of `docs/RESEARCH.md`'s "Worth an article?", each checked for whether i
 - Request 105 in for-alan.md: a later twenty minutes with a real screen reader, for what a machine cannot judge. The guide's
   keyboard part says what is checked and that no person using a screen reader has tried it yet.
 
+## Entry 461 part 2.2: a phone photograph's codes, measured (2026-10-21)
+
+- The bench's photograph reads its codes square on in 662 to 861 ms (`grouplab analyze`, three fresh runs): the marker search 68 to
+  92 ms, placing and cutting out the 8 places about 75, and about 450 ms in OpenCV's two readers failing in full on the 6 places with no
+  code (WeChat 44 to 68 ms each, the second reader 5 to 35), where the other sheets sharing the frozen sheet's markers print theirs.
+- **Nothing changed:** a failing read is the reader's fixed sequence, and reading fewer places changes how many codes a picture is said
+  to have read (entry 415's finding). Question 106 puts the one real option to planning, with what it would cost; the bench baseline is
+  unchanged. Detail in docs/PERFORMANCE.md. QR codes are still read on one thread.
+- Worth an article? Not written: ordinary engineering, and the table is in PERFORMANCE.md.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

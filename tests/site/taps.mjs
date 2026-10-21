@@ -40,9 +40,15 @@ const port = 9300 + Math.floor(Math.random() * 500);
 const child = spawn(browser, ["--headless=new", "--disable-gpu", "--no-first-run", "--no-sandbox", `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, "about:blank"], { stdio: "ignore" });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let list;
-for (let i = 0; i < 80 && !list; i++) {
+// Entry 461: on a busy runner Chrome once took longer than 20 s to answer (run 39539787075), so it has a minute, and saying so.
+for (let i = 0; i < 240 && !list?.some((t) => t.type === "page"); i++) {
   await sleep(250);
   try { list = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); } catch {}
+}
+if (!list?.some((t) => t.type === "page")) {
+  console.error("taps: the browser gave no page to drive within a minute");
+  child.kill();
+  process.exit(2);
 }
 const ws = new WebSocket(list.find((t) => t.type === "page").webSocketDebuggerUrl);
 await new Promise((r) => ws.addEventListener("open", r, { once: true }));

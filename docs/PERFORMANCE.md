@@ -48,6 +48,30 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 461 section 2.2, 2026-10-21: a phone photograph's codes, measured, and nothing exact left to take
+
+**Measured** with timers put into `OpenCvSharpBackend.Read`, `LiveSheet.CodePlaces` and `SheetIdentification.Identify` for this
+measurement and taken out after: the bench's phone photograph (`scans/phase0/20260913_130543.jpg`, the frozen Phase 0 sheet), `grouplab
+analyze`, Release, this desktop, three fresh runs. Reading its codes square on took 662 to 861 ms for 8 places, 2 holding a code:
+
+| step | ms |
+|---|---|
+| finding the markers in the whole photograph (`PhotographMarkers`, 33 found) | 68 to 92 |
+| the sheets sharing those markers (9 of 68) and where each prints its codes | about 35, 16 of it the first sheet's layout |
+| cutting out the 8 places square on (`WarpPerspective`) | 4 to 8 each, about 40 |
+| WeChat's reader on each of the 6 places with no code | 44 to 68 each |
+| the second reader's detect and decode on those 6 | 5 to 35 each |
+| the 2 places with a code (WeChat 7 to 9, the decode 6 to 15) | 13 to 24 each |
+
+**Why nothing was changed.** About 450 ms is the two readers failing in full on the six empty places, which are where the other sheets
+sharing the frozen sheet's markers print their codes. A failing read is the reader's fixed sequence (two scales and four binarizers in
+WeChat), so it cannot be cut short and give the same answer on every picture; reading fewer places changes how many codes a picture is
+said to have read, which entry 415 already called a decision, not a speed-up. The marker search is OpenCV's with the sizes the picture
+needs, and its result is not the measurement's (that searches again sized from the sheet's own markers). Making the readers once and
+keeping them was measured in entry 415 and gained nothing. So the choice goes to planning as question 106, and the bench baseline is
+unchanged. The current sheets' photographs read in 167 to 283 ms (entry 415); this photograph is slow because of the sheet it shows.
+Nothing reads QR codes on several threads.
+
 ## Phase 9, 2026-10-20: the residual thresholded before it is opened, finding the holes on a 600 dpi scan about a fifth sooner
 
 **Measured first** (`grouplab bench --runs 5`, Release, this desktop): the slowest single step left in reading was finding the holes on the
