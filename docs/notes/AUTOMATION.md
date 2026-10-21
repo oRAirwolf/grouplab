@@ -47,7 +47,7 @@ should say what it is.
 
 ## Prepared, off until Alan says yes
 
-- **Tester notes in the Discord** (request 107): `scripts/tester-notes.py`, a step in nightly.yml. Posts each new "For <tester>" note
+- **Tester notes in the Discord** (request 107, answered "not for now" by Alan on 2026-10-21, entry 466: it stays off, no webhook is asked for, and the notes are passed on by hand): `scripts/tester-notes.py`, a step in nightly.yml. Posts each new "For <tester>" note
   once its fix is published, opening "Hey <name>,", through `DISCORD_TESTERS_WEBHOOK`; without it, the nightly's summary shows drafts.
   The notes in for-alan.md on 2026-10-21 are recorded as already passed on (`.github/tester-notes-posted.txt`). Undo: delete the secret.
 - **The weekly Oracle backup look** (request 106, replacing request 46's look by hand): `scripts/oracle-backups.py` and

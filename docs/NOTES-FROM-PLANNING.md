@@ -25,6 +25,24 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-21, entry 466: request 107 changed to "not for now" (replaces entry 464 section 0)
+
+**Status: actioned 2026-10-21. Every part done: request 107 closed as "not for now" and moved to the archive; the script and its step left in place and off; no webhook asked for.**
+
+From the planning session, 2026-10-21 20:05 UTC (14:05 Denver). Small; take it with or right after entry 464 section 0.
+
+Alan, 2026-10-21, after reading drafts of what the script would post: "Lets just not do the notes for now." This replaces the yes recorded
+in entry 464 section 0. Record request 107 as answered "not for now" and close it (move it to for-alan-archive.md with that answer).
+Leave `scripts/tester-notes.py` and its workflow step in place but switched off as they are; do not ask for `DISCORD_TESTERS_WEBHOOK`.
+The "For ..." notes stay in for-alan.md for Alan to pass on by hand, as before.
+
+For the record, why (found by the planning session in a dry read of the current for-alan.md, nothing posted): the paragraph split needs
+a blank line between notes, so the entry 420, 418 and 417 notes for Quack ran together into one message that continued into the range
+kit line with a path on Alan's computer; the messages are Code's written style after "Hey <name>," (about 180 words for the keyboard
+note, and "Hey Quack, pool the chosen in Session records..."); and nothing is reviewed before posting. If this is ever taken up again:
+a note ends at its own end, anything with a path or another heading is refused, the wording is rewritten short and casual in Alan's
+voice, and drafts go to a private channel first. Not now.
+
 ## 2026-10-21, entry 463: the three sync screens, chosen by Alan (1A, 2A, 3B)
 
 **Status: actioned 2026-10-21. Not done: the phone's pictures of the Sync page and the side by side, which need the emulator's walk; sync is not proven on two real devices. The three screens were built in one commit rather than one each, because they share one Settings section, one engine and one set of words, and none works without the others.**

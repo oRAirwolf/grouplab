@@ -315,6 +315,14 @@ covers what from the tree rather than a hit test, which missed a dialog's card a
 picker is proved by ios-app.yml on its next run. **Not done:** the phone's pictures of the Sync page and the side by side, which need the
 emulator's walk; and sync is not proven on two real devices.
 
+## Entry 466: request 107 answered "not for now" (2026-10-21)
+
+Alan read drafts of what `scripts/tester-notes.py` would post and said "Lets just not do the notes for now", replacing the yes of
+entry 464 section 0. Request 107 is closed and moved whole to `docs/notes/for-alan-archive.md` with that answer and the four
+conditions for taking it up again; `for-alan.md` now counts 25 open. `scripts/tester-notes.py` and its step in nightly.yml stay as
+built, switched off while `DISCORD_TESTERS_WEBHOOK` does not exist, and nobody is asked for it. `docs/notes/AUTOMATION.md` says so.
+The "For ..." notes stay in `for-alan.md` for Alan to pass on by hand.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

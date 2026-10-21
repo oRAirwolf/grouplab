@@ -3,6 +3,27 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 107. Say yes (or no) to GroupLab posting the tester notes and thanks on the Discord for you, two minutes, whenever suits (entry 462 section 5)
+
+**Answered 2026-10-21 (entry 466):** not for now. Alan, after reading drafts of what the script would post: "Lets just not do the notes for now." This replaces the yes of entry 464 section 0. The script and its step stay in place and switched off, no webhook is asked for, and the "For ..." notes stay in for-alan.md for Alan to pass on by hand. If it is ever taken up again: a note ends at its own end, anything with a path or another heading is refused, the wording is rewritten short and casual in Alan's voice, and drafts go to a private channel first.
+
+**Opened 2026-10-21.** Today the "For Quack" lines in this file wait for you to pass them on by hand. Entry 462 section 5 asks for that
+to be automated but kept off until you say yes, because it posts in the server in your name. What is prepared: `scripts/tester-notes.py`
+gathers each new "For ..." note once its fix is in a published nightly and posts it as written here, opening the way you would
+("Hey Quack, thank you for the keyboard report..."), through a Discord webhook in the channel you choose. The notes already in this
+file are taken as passed on by you, so only new ones go; say if any of them never reached the tester. It runs after each nightly, posts each note once, and is switched off until a secret named
+`DISCORD_TESTERS_WEBHOOK` exists. Every draft it would have posted is listed in the nightly's summary meanwhile, so you can read a few
+first.
+
+If yes: in Discord, the channel's **Edit Channel**, **Integrations**, **Webhooks**, **New Webhook**, name it GroupLab, **Copy Webhook
+URL**. Then in PowerShell, in `C:\Dev\grouplab`, paste this and paste the address when it asks (it is not shown or saved anywhere else):
+
+```
+gh secret set DISCORD_TESTERS_WEBHOOK -R oRAirwolf/grouplab; if ($?) { echo "OK: set" } else { echo "STOP: the secret was not set" }
+```
+
+A good result: `OK: set`. **A good answer** is any of: "yes, in #channel", "no", or "yes but show me ten drafts first".
+
 ## 103. One question for your friend's copy of Litz's book, a minute once you hear back (entry 456)
 
 **Answered 2026-10-20:** Alan, from the book: Top Gun's group size is the extreme spread of five-shot groups. GroupLab now sets each group beside the trend on that basis, the average five-shot extreme spread its sigma implies, on the computer and the phone.

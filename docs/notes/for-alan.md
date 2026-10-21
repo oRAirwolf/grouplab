@@ -1,4 +1,4 @@
-**Open: 26.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 25.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **DESIGN NEEDED** (entry 462 section 3; not a request for you; planning, please): **looks found in the interface sweep, one line a
 screen.** The faults are fixed and held by tests (words cut off, controls past the edge, words over words, contrast, failures now in the
 centred warning); these are looks, at 1280 by 720 unless said, pictures in `docs/figures/screens/current/` and `docs/figures/screens/phone/`.
@@ -318,25 +318,6 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
-
-## 107. Say yes (or no) to GroupLab posting the tester notes and thanks on the Discord for you, two minutes, whenever suits (entry 462 section 5)
-
-**Opened 2026-10-21.** Today the "For Quack" lines in this file wait for you to pass them on by hand. Entry 462 section 5 asks for that
-to be automated but kept off until you say yes, because it posts in the server in your name. What is prepared: `scripts/tester-notes.py`
-gathers each new "For ..." note once its fix is in a published nightly and posts it as written here, opening the way you would
-("Hey Quack, thank you for the keyboard report..."), through a Discord webhook in the channel you choose. The notes already in this
-file are taken as passed on by you, so only new ones go; say if any of them never reached the tester. It runs after each nightly, posts each note once, and is switched off until a secret named
-`DISCORD_TESTERS_WEBHOOK` exists. Every draft it would have posted is listed in the nightly's summary meanwhile, so you can read a few
-first.
-
-If yes: in Discord, the channel's **Edit Channel**, **Integrations**, **Webhooks**, **New Webhook**, name it GroupLab, **Copy Webhook
-URL**. Then in PowerShell, in `C:\Dev\grouplab`, paste this and paste the address when it asks (it is not shown or saved anywhere else):
-
-```
-gh secret set DISCORD_TESTERS_WEBHOOK -R oRAirwolf/grouplab; if ($?) { echo "OK: set" } else { echo "STOP: the secret was not set" }
-```
-
-A good result: `OK: set`. **A good answer** is any of: "yes, in #channel", "no", or "yes but show me ten drafts first".
 
 ## 106. A weekly look at the Oracle backups without you, about fifteen minutes once, whenever suits (entry 462 section 5)
 

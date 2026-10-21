@@ -9,12 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-21, entries 462 and 463 done (the overnight queue; sync's three screens, reachable on every platform).
+**Last rewritten:** 2026-10-21, entry 466 done (request 107 "not for now"); entries 464 and 465 in progress with helpers (entry 467).
 
 ---
 
 ## In flight
 
+- **Entry 467 (2026-10-21)**: Alan allowed helpers in parallel until 20:00 Denver (02:00 UTC) for entries 464 to 466; six running.
+- **Entry 466 (2026-10-21)**, done: request 107 answered "not for now"; `tester-notes.py` stays off, no webhook asked for.
 - **Entry 463 (2026-10-21)**, done: sync's screens 1A, 2A, 3B on the computer and the phone (`MainWindow.Sync`, `PhoneSync`,
   `SyncScreens`), in the guide, Features, README; Phase 7 Built, not proven. Phone pictures wait on the emulator's walk.
 - **Entry 462 (2026-10-21)**, done: question 106 answered; site audit (`site-audit.cjs` in checks.yml); three articles; interface
@@ -59,7 +61,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **24**; waiting on him: 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **25**; waiting on him: 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
