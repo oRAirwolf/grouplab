@@ -115,29 +115,26 @@ your optic, the Targets screen, which bull each shot belongs to (`bull-lines`), 
 (`shots-open`), chronograph readings on the analysis (`readings-here`), paper and backing (`paper-fold`), barrels under their rifle (`equipment`), all entry 407, CEP circles and every figure explained (the analysis open), compare loads, sessions, the figures you
 read off a target, the three sharing choices (Settings, where they are made), and a set's tab after the 2 MOA set's three sheets were dropped together (`set-tab`, entry 423).
 
-**Gaps: still a general screen**, each to get a crop of the view it names:
+**Their own picture since entry 462:** Conditions on the day (`conditions`), Every shot, and which count (`shots-window`), Zero from this group (`zero-window`), A picture to share (`share-window`) and Words explained where they appear (`word-explained`).
 
-| Entry | Its picture now | What it should show |
-|---|---|---|
-| Conditions on the day (entry 416) | the analysis open | Velocity and the vertical with Conditions on the day open, desktop; the phone's sheet at the next sitting |
-| A GroupLab sheet reads itself | the marking screen | a sheet's codes and markers found |
-| Every hole found | the marking screen | a few holes close up with their rings |
-| The bulls you aimed at | the marking screen | the bull picker with rows chosen |
-| A sheet shot off by the same amount | the analysis | the whole-sheet assignment's statement |
-| Any target you already shoot | the marking screen | bulls placed by hand and a scale drawn at one |
-| Open by dropping or pasting | the marking screen | the drop target over the window |
-| Shots in and out as CSV | the analysis | the export and import commands |
-| Large sheets | the Targets screen | the photograph detail statement for a tiled target |
-| Real inches from a scan | the analysis | the scale line saying the print's own size |
-| Photographs at an angle | the marking screen | the angle and its limit named |
-| Words explained where they appear | the analysis | a word's explanation open |
-| Tap a number to switch units | the analysis, with the one-time hint | a figure switched, with the note at the bottom |
-| Every shot, and which count | the analysis, with Shots and clicks | the Shots window with a shot left out |
-| Zero from this group | the analysis, with its button | the Zero from this group window |
-| Several aim points on one target | the analysis | aim points placed by hand, each in its color with its figures |
-| A picture to share | the analysis, with Share a picture | the Share a picture window with its results box |
-| The one-page report | the analysis | the one-page report itself |
-| Several targets open at once | the marking screen | the tab row with two targets, one of them not saved |
+**Gaps: still a general screen**, each to get a crop of the view it names, and why it waits:
+
+| Entry | Its picture now | What it should show | Why it waits |
+|---|---|---|---|
+| A GroupLab sheet reads itself | the marking screen | a sheet's codes and markers found | Show work at its codes stage draws the codes and markers found; the walk opens Show work only on a failed sheet so far |
+| Every hole found | the marking screen | a few holes close up with their rings | needs the marking screen zoomed onto a few holes with their rings, a view the walk has no way yet to frame on holes |
+| The bulls you aimed at | the marking screen | the bull picker with rows chosen | the bull picker's chosen rows are set by clicks the headless walk does not make yet |
+| A sheet shot off by the same amount | the analysis | the whole-sheet assignment's statement | needs a synthetic sheet shot a bull off, which the walk's one sheet is not |
+| Any target you already shoot | the marking screen | bulls placed by hand and a scale drawn at one | marking-other shows bulls placed by hand; the scale drawn at one is a drag the walk does not make yet |
+| Open by dropping or pasting | the marking screen | the drop target over the window | the drop target is drawn only while a drag is over the window, which headless rendering does not hold |
+| Shots in and out as CSV | the analysis | the export and import commands | the export and import are file pickers of the operating system, not drawn by GroupLab |
+| Large sheets | the Targets screen | the photograph detail statement for a tiled target | needs a tiled target in the library chosen on Targets, not yet in the walk |
+| Real inches from a scan | the analysis | the scale line saying the print's own size | needs a flatbed scan with a stated resolution, which the walk's synthetic sheet does not carry |
+| Photographs at an angle | the marking screen | the angle and its limit named | needs a photograph taken at an angle; the walk's pictures are drawn square |
+| Tap a number to switch units | the analysis, with the one-time hint | a figure switched, with the note at the bottom | the one-time hint shows on a real tap, which the walk cannot make; switching a figure without it would show half the feature |
+| Several aim points on one target | the analysis | aim points placed by hand, each in its color with its figures | aim points are placed by clicks the walk does not make yet |
+| The one-page report | the analysis | the one-page report itself | the report is a PDF and PNG file GroupLab writes, not a screen; its picture would be the file itself, which the walk does not render yet |
+| Several targets open at once | the marking screen | the tab row with two targets, one of them not saved | needs a second target opened unsaved beside the first; the walk keeps one target so every later picture is the same |
 
 **Store-bought targets recognized** (entries 340 and 341) has its own picture, `store-target`: a bullseye the walk draws itself, standing
 in for the Shoot-N-C since no maker's artwork is published, recognized with its bull placed and the scale warning, and the window that asks

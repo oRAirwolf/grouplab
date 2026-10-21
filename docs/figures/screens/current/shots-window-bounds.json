@@ -1,0 +1,13 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Counted": [
+      1306,
+      108,
+      78,
+      32
+    ]
+  }
+}

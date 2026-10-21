@@ -7,6 +7,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GroupLab.App;
 using GroupLab.App.Theme;
 using GroupLab.Cli.Imaging;
@@ -581,6 +582,33 @@ public class Entry109Tests
                         window.PickShots([]);
                         window.Focus();
 
+                        // Entry 462 section 4: the group tools' own windows for the Features page (entry 256), each at the walk's size: the
+                        // Shots window with its first shot left out, Zero from this group, and Share a picture with its results box.
+                        int leftOut = window.Session.State.Shots.First(s => s.IsShot).Id;
+                        window.Session.SetExclusion(leftOut, ExclusionReason.ByShooter);
+                        Dispatcher.UIThread.RunJobs();
+                        foreach (var (tool, toolName) in new (Func<Avalonia.Controls.Window> Make, string Name)[] { (window.ShotsWindow, "shots-window"), (window.ZeroFromWindow, "zero-window"), (window.ShareWindow, "share-window") })
+                        {
+                            var opened = tool();
+                            opened.Width = width;
+                            opened.Height = height;
+                            opened.Show(window);
+                            Dispatcher.UIThread.RunJobs();
+                            Save(opened, $"{toolName}-{name}-{size}");
+                            opened.Close();
+                        }
+
+                        window.Session.SetExclusion(leftOut, null);
+                        Dispatcher.UIThread.RunJobs();
+
+                        // Entry 462 section 4: a word's explanation open where it appears, as the keyboard opens it (TermHelp).
+                        var term = window.GetVisualDescendants().OfType<TextBlock>().First(t => t.Classes.Contains(TermHelp.Class) && t.Text == "Mean radius" && t.IsEffectivelyVisible);
+                        Avalonia.Controls.Primitives.FlyoutBase.ShowAttachedFlyout(term);
+                        Dispatcher.UIThread.RunJobs();
+                        Save(window, $"word-explained-{name}-{size}");
+                        Avalonia.Controls.Primitives.FlyoutBase.GetAttachedFlyout(term)?.Hide();
+                        Dispatcher.UIThread.RunJobs();
+
                         // Entry 407 section 7: no readings yet, and the speeds typed on the analysis itself.
                         window.OpenReadingsHere("2705 2711 2698 2716 2702");
                         window.BringVelocityIntoView();
@@ -783,6 +811,13 @@ public class Entry109Tests
                             Assert.True(window.Velocity is { HasResult: true }, window.Velocity?.Sentence);
                             window.BringVelocityIntoView();
                             Save(window, $"velocity-{name}-{width}x{height}");
+
+                            // Entry 462 section 4: Conditions on the day open under the block (entry 416), for its own Features picture.
+                            window.OpenConditions(true);
+                            Dispatcher.UIThread.RunJobs();
+                            window.BringVelocityIntoView();
+                            Save(window, $"conditions-{name}-{width}x{height}");
+                            window.OpenConditions(false);
                         }
 
                         // Entry 351: a timed string pairing, a row per reading, the fourth's choices open under its row: four readings of an

@@ -37,6 +37,9 @@ switch it, or press and hold it for every unit it can take, and GroupLab remembe
 
 ### Scope and mount
 
+![The rifle's Scope and mount fields in Equipment: 1 Rail cant, 2 Sight scale factor, 3 Weight as fired.](figures/screens/current/equipment-scope-light-1400x900.png)
+<!-- marks: EquipmentField_railCant | EquipmentField_sightScaleFactor | EquipmentField_weightAsFiredLb -->
+
 The rifle's page in Equipment has a **Scope and mount** part. Every field in it is optional, and on the phone the same fields are in Ballistics, under Rifle. These three began as calculators GroupLab's developer wrote before GroupLab: scope cant (here rail cant), sight scale factor and Top Gun. Top Gun is Bryan Litz's.
 
 **The fields:**
@@ -104,6 +107,9 @@ A3 sheet you printed before still reads. The roll sheets are for a plotter, and 
 Each 4x6, A6 or 100 by 150 mm label holds six bulls the size of the Letter sheets', in a set of five labels that pool into one group like the 300 yard tiles; a printer check label measures a label printer on its own paper, across and along the feed. Choose a thermal printer under **Print on** and GroupLab draws the page one dot at a time in black only, with every code and marker on whole dots, shows every dot in the preview, and names anything a narrow printer would cut off before you print. Thermal paper darkens in heat and fades in sunlight, so photograph a thermal target the day you shoot it. For a label printer GroupLab does not print to itself, **Save for a printer app…** on the computer, or **Share for a printer app** on the phone, hands the sheet to the printer's own app as a black and white picture at 300 dpi and a PDF, both at the page's true size; print them at 100 percent or actual size, never fit to page. The **darkness test page** beside it shows what each darkness setting in the app does to fine lines. No label printer has printed GroupLab's check page yet, so until one has, label printing should work but is not proven. On Windows, with **Phomemo M834** chosen under **Print on** and the printer paired in Windows Settings (Bluetooth and devices, Add device), **Print on the Phomemo M834** sends the sheet straight to it over Bluetooth, the same page the phone sends, with **A continuous roll** or **Fanfold sheets** chosen as on the phone; it has not yet been tried on a real M834 from a computer. Close the Phomemo app on the phone while the computer prints, since the printer takes one connection at a time. On macOS and Linux the choice says it is not available there yet.
 
 ### The zeroing grids are for sighting in by eye
+
+![A zeroing grid chosen in Targets, with its preview beside the list: 1 Open as PDF.](figures/screens/current/targets-zero-light-1400x900.png)
+<!-- marks: Open as PDF -->
 
 Each prints at exact scale, so at the bench you fire, read the correction off the grid, dial it and fire again. The squares are a scope's own: 0.2 mil or 0.5 MOA, with a small tick at every click (0.1 mil or 1/4 MOA) between the lines along the center cross and the frame. The legend above the grid, large enough to read through the scope, says what a square and a tick are; each line's distance from the aim is written outside the grid, and nothing on it. Aim at the diamond. A 4 in or 10 cm bar at the bottom checks the print: measure it before you shoot. The sheet has no load block, so enter the load on the session. The design, C3, was chosen by Alan with Jylee and Unholy. For a zero worked out from a group, and the group figures, shoot a [5x5 sheet](#2-shoot-it) instead. GroupLab still reads a scanned zeroing grid, but it cannot know the order of the shots or the dialing between them, which is what the grid was for.
 
@@ -460,6 +466,9 @@ Fudd buster mode, Unholy's idea and his name for it, sits beside it from twenty 
 
 Shots Needed to Zero, suggested by Jylee, sits under them. From the group's spread and your scope's click value (the rifle's own, or chosen there) it says how many shots a zeroing group needs before its center, dialed to the nearest click, lands on the click closest to the true zero, or within one click of it, 90, 95 and 99 times in 100. Within one click usually takes a handful of shots; the closest click can take hundreds, because a true zero near the line between two clicks is hard to resolve. The spread measured on a few shots may be larger than it looks, so GroupLab allows for that by simulation, and shows its trials and seed; tick **Treat the measured sigma as exact** to work it out exactly instead.
 
+
+![Shots Needed to Zero in the analysis: 1 Treat the measured sigma as exact, 2 Calculate again](figures/screens/current/shots-to-zero-light-1400x900.png)
+<!-- marks: Treat the measured sigma as exact | Calculate again -->
 **Export** writes the complete record as a GroupLab file, which names its photo by file name only, never the folders it sits in, so keep the two side by side: moved together they reopen anywhere, and where the photo is not beside it GroupLab says so and asks for it. Or it writes the shot coordinates as CSV for a spreadsheet: one row a shot, across and up from the point of aim in inches, MOA and mil, with the distance in the header, and each row naming its sheet, its session and the distance. **Import shots from a CSV,** in the menu, reads coordinates exported by other software: it starts from GroupLab's guesses at which column is across, which is up and down, the unit, which way is up, and whether the numbers are measured from the point of aim or from the group's own center, each to check and change, and a choice it cannot guess starts empty and says so; then it shows the analysis. Numbers measured from the group's center say nothing about where the aim was, so then there is no offset from aim. There is no image with an import, so the figures are the whole of it. **Choose several files at once** to put shots from many sheets together in one group, of any kind of sheet: they must have the same columns, as GroupLab's own exports do.
 
 ## 6. Sessions and the report
@@ -598,6 +607,9 @@ the same answer.
 The IPSC choice is the official IPSC target A zone, 15 by 32.5 cm, which replaces an outline GroupLab had drawn itself.
 
 ### Point blank range
+
+![The Point blank view of Ballistics: 1 Work out the point blank range, 2 Keep this zero on Test rifle, 3 Print a card.](figures/screens/current/ballistics-point-light-1400x900.png)
+<!-- marks: Work out the point blank range | Keep this zero on Test rifle | Print a card… -->
 
 The middle's third view, **Point blank**, answers one question: if I set my zero once, out to what distance can I hold dead on at
 the animal or target I am shooting at, and be sure of hitting? It uses the rifle, the load and the air already chosen. On the phone it
@@ -753,8 +765,13 @@ The gear opens the settings:
 
 ### Walk me through a demo
 
+![The demo tour on the phone, with Next and End the tour.](figures/screens/phone/fold-demo-light.png)
+
 A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target. It is offered once after the first run's questions, and any time from the row near the top of Settings or the header's ... menu; Settings also says **Carry on from step N of 13** when you left one part way. Each step outlines the real control and you can do it yourself or press **Next** and GroupLab does it. **End the tour** or Esc stops it at any step. It stops at Print, because printing is always your own press. Nothing the demo makes (its tab, its session, its picture) is kept unless you tick **Keep this demo in Sessions** on the last step.
 
+
+![The demo tour at step 6 of 13: 1 Next, 2 End the tour](figures/screens/current/demo-tour-light-1400x900.png)
+<!-- marks: Next | End the tour -->
 **On the phone** (Android, iPhone and iPad) the tour is thirteen steps on the phone's own screens, with the same sample sheet: it opens it as a chosen picture from GroupLab's own files, never the camera, then shows the result, its figures, Fix holes, Shots, Zero from this group, Share a picture, Sessions, Ballistics, Targets and Settings. It is offered once after the first questions, and any time from Settings, **Guided demo**, **Walk me through a demo**, which also says **Carry on from step N of 13** when you left one part way. The card under or over each outlined control says the step's number, and scrolls when the phone's text is at its largest; a screen reader reads the card with its number. **Next** does the step for you; **End the tour**, or the phone's Back, stops it, and what it made is removed unless you tick **Keep this demo in Sessions** on the last step.
 
 ## 13. On the phone
@@ -777,6 +794,8 @@ accessibility sizes stop at the size Android's largest reaches, so the screens s
 bar, the bar shows the five icons alone, larger, and goes back to the names when the text is smaller again; your phone's screen reader
 still reads each one out by name, and a long press shows it. A wider screen, such as a folding phone opened, keeps the names for longer.
 
+
+![The phone's Targets screen at the largest text size, where the bar along the bottom shows its five icons alone](figures/screens/phone/fold-targets-largest-text-light.png)
 ### Capture
 
 Capture is the first screen: the GroupLab mark, as wide as the screen allows without the page scrolling, one row with the caliber

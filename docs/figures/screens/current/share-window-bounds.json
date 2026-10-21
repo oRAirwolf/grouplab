@@ -1,0 +1,91 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "23 shots, 1 left out": [
+      1084,
+      98,
+      138,
+      32
+    ],
+    "At 100 yd": [
+      1084,
+      242,
+      85,
+      32
+    ],
+    "Center 0.022 in right, 0.019 in low": [
+      1084,
+      206,
+      228,
+      32
+    ],
+    "Close": [
+      1209,
+      517,
+      59,
+      27
+    ],
+    "Crop": [
+      1084,
+      479,
+      300,
+      32
+    ],
+    "Extreme spread 0.463 in (0.13 mil)": [
+      1084,
+      170,
+      232,
+      32
+    ],
+    "GroupLab 5x5 Load Development, Letter, 2026-10-21": [
+      1084,
+      60,
+      269,
+      34
+    ],
+    "Label": [
+      1084,
+      371,
+      60,
+      32
+    ],
+    "Label across the top": [
+      1084,
+      407,
+      300,
+      32
+    ],
+    "Mean radius 0.127 in (0.04 mil)": [
+      1084,
+      134,
+      211,
+      32
+    ],
+    "Mean radius circle": [
+      1084,
+      335,
+      135,
+      32
+    ],
+    "Results box style": [
+      1084,
+      443,
+      300,
+      32
+    ],
+    "Save picture…": [
+      1086,
+      517,
+      111,
+      27
+    ],
+    "Test rifle, Test load, .308 in (7.82 mm)": [
+      1084,
+      278,
+      250,
+      32
+    ]
+  }
+}

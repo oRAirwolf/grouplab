@@ -120,7 +120,8 @@ public partial class MainWindow
 
             // Section 1.3: the sight height and the zero stay on the rifle, with a link to its page.
             var rifle = state.Rifle is { } r ? window.book.Rifles.FirstOrDefault(x => string.Equals(x.Name, r.Name, StringComparison.OrdinalIgnoreCase)) : null;
-            var rifleLine = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space4 };
+            // Entry 462 section 3: a row that wraps; a horizontal stack let the sentence run on and pushed the link past the window's edge.
+            var rifleLine = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = Tokens.Space4 };
             rifleLine.Children.Add(new TextBlock
             {
                 Text = rifle is null ? "Sight height and zero come from the rifle; this sheet has none chosen." : RifleWords(rifle, units),

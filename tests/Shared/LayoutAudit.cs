@@ -44,8 +44,8 @@ internal static class LayoutAudit
                 continue;
             }
 
-            // A tooltip floats over what it explains by design, so it is not counted as words over words.
-            if (!text.GetVisualAncestors().Any(a => a is ToolTip))
+            // A tooltip or a flyout floats over what it explains by design, so it is not counted as words over words.
+            if (!text.GetVisualAncestors().Any(a => a is ToolTip or FlyoutPresenter))
             {
                 texts.Add((text, shown));
             }

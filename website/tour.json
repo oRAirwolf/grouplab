@@ -346,6 +346,31 @@
    ],
    "moreShots": [
     [
+     "conditions",
+     "Velocity and the vertical with Conditions on the day open under it",
+     "Conditions on the day opens under Velocity and the vertical: the air and the rifle the session was shot with, from the rifle's page or typed for that day."
+    ],
+    [
+     "word-explained",
+     "Mean radius's explanation open beside the figures",
+     "A word underlined with dots opens its plain explanation where it stands, with the precise one under it and a way to the glossary."
+    ],
+    [
+     "shots-window",
+     "The Shots window with every shot's offset and clicks, the fourth left out",
+     "Shots and clicks lists every shot's offset and the clicks that would bring it onto its aim point; a shot left out stays on the record, struck through."
+    ],
+    [
+     "zero-window",
+     "The Zero from this group window",
+     "Zero from this group: where the group sits, the clicks to move it, and how sure that is from this many shots."
+    ],
+    [
+     "share-window",
+     "Share a picture, the target with its results box",
+     "Share a picture: the target with a results box you choose the lines of and drag where you want, saved as a picture."
+    ],
+    [
      "velocity",
      "Velocity and the vertical under the group's figures, with the velocity band on the plot and a chart of height against velocity",
      "With a group's chronograph readings, Velocity and the vertical: about how much of the vertical comes from velocity alone, the two spreads side by side, and each shot's height against the reading paired with it, beside the solver's slope. The amber band on the plot is what velocity alone would make."

@@ -17,7 +17,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entry 462 (2026-10-21), the overnight queue to 95% of the week**: 0 (question 106 answered), 1 (site audit, `site-audit.cjs`
   in checks.yml), 2 (three articles) 3 (interface sweep, `LayoutAudit`; looks DESIGN NEEDED) and 5
-  (automation: `run-start.py`, `site-live.py`; requests 106 and 107 prepared, off) done; 4 next, then entry 463.
+  (automation: `run-start.py`, `site-live.py`; requests 106 and 107 prepared, off) and 4 (pictures) done; entry 463 next.
 - **Entry 461 (2026-10-21), Alan's queue for the week**, done: three research pieces published; screen reader audits on all three
   (`ScreenReaderAudit`, `scripts/screen-reader-audit.py`), `SpokenNames`, Android's TalkBack boxes moved (`AccessibilityOnScreen`);
   codes measured (question 106); sync option A's engine, schema 6 (`SyncEngine`, `grouplab sync`), reached by nothing.

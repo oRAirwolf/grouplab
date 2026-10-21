@@ -5,6 +5,22 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+ "A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo), held by Entry439Tests, shown in docs/figures/screens/current/demo-tour-light-1400x900.png (entry 462 section 4)"
+  },
+ "### Scope and mount ![The rifle's Scope and mount fields in Equipment: 1 Rail cant, 2 Sight scale factor, 3 Weight as fired.](figures/screens/current/equipment-scope-light-1400x900.png) The rifle's page in Equipment has a **Scope and mount** part.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/ScopeMount.cs (ScopeMount) and the Equipment screen's EquipmentField_railCant, EquipmentField_sightScaleFactor and EquipmentField_weightAsFiredLb, shown in docs/figures/screens/current/equipment-scope-light-1400x900.png (entry 462 section 4)"
+  },
+ "### The zeroing grids are for sighting in by eye ![A zeroing grid chosen in Targets, with its preview beside the list: 1 Open as PDF.](figures/screens/current/targets-zero-light-1400x900.png) Each prints at exact scale, so at the bench you fire, read the correction off the grid, dial it and fire again.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Targets built-in zeroing grid sheets, previewed in docs/figures/screens/current/targets-zero-light-1400x900.png with its Open as PDF button (entry 462 section 4)"
+  },
+ "### Point blank range ![The Point blank view of Ballistics: 1 Work out the point blank range, 2 Keep this zero on Test rifle, 3 Print a card.](figures/screens/current/ballistics-point-light-1400x900.png) The middle's third view, **Point blank**, answers one question: if I set my zero once, out to what distance can I hold dead on at the animal or target I am shooting at, and be sure of hitting?": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics point blank range, shown on the Ballistics screen in docs/figures/screens/current/ballistics-point-light-1400x900.png (entry 462 section 4)"
+  },
  "On the phone each is at least 48 by 48 to touch, and the emulator and the simulator read the screens the way TalkBack and VoiceOver do.": {
    "kind": "code",
    "where": "tests/GroupLab.Mobile.Tests/Entry461PhoneAccessibilityTests.cs EveryPlaceReadsAsAScreenReaderNeedsIt (48 by 48 on every place, tests/Shared/ScreenReaderAudit.cs); scripts/screen-reader-audit.py (Android's node tree from uiautomator, 48 dp; XCTest's performAccessibilityAudit through scripts/touch/ios/Tests/TouchTests.swift Audit), run by android-emulator.yml and ios-app.yml \"Screen reader audit\" on scripts/scenarios/phone-audit.json (entry 461 section 2.1)"

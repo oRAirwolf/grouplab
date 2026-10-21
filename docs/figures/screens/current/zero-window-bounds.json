@@ -1,0 +1,25 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Close": [
+      472,
+      162,
+      59,
+      27
+    ],
+    "Open in Shots Needed to Zero": [
+      18,
+      162,
+      204,
+      27
+    ],
+    "Use as the zero offset in Ballistics": [
+      234,
+      162,
+      226,
+      27
+    ]
+  }
+}
