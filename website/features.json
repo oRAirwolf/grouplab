@@ -65,6 +65,7 @@
     "Reading a target is faster: on the desktop a sheet goes from file to figures in about half the time",
     "Reading a 600 dpi scan is faster",
     "A 600 dpi scan now opens sooner",
+    "A phone photograph is now opened and read a little sooner",
     "GroupLab reads the square codes on a sheet one at a time again",
     "The command line's render can now draw a sheet's bulls in red or blue",
     "On a store-bought target, Find holes no longer marks bold printed ring numbers",

@@ -224,8 +224,9 @@ internal static class PhoneAnalysis
     {
         var clock = Stopwatch.StartNew();
         ReadStage.Began("load");
-        var (grey, _) = ImageLoader.Load(working.Path);
-        var (value, _) = ImageLoader.LoadMaxChannel(working.Path);
+        // Entry 464 section 4: the grey and the brightest channel from one read of the file, decoded side by side; the same images as the
+        // two loaders gave one after the other (ImageLoaderSameResultTests).
+        var (grey, value, _) = ImageLoader.LoadGreyAndMax(working.Path);
         DiagnosticLog.Info("read.stage", [("stage", "load"), ("ms", clock.ElapsedMilliseconds), ("size", $"{grey.Width}x{grey.Height}"), .. DeviceHealth.Fields()]);
         token.ThrowIfCancellationRequested();
         var backend = new OpenCvSharpBackend();

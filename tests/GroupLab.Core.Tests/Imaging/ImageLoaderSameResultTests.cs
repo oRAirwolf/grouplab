@@ -115,6 +115,49 @@ public class ImageLoaderSameResultTests
         }
     }
 
+    /// <summary>
+    /// Entry 464 section 4: a JPEG's grey is still decoded on its own, now on another thread while the colour is decoded, in the loader
+    /// the phone reads its working picture with and in the editor's. Both are the separate loaders' to the bit, at full size and brought
+    /// down to a working size, on the committed phone photograph and on a render written as a JPEG.
+    /// </summary>
+    [Fact]
+    public void AJpegDecodedSideBySideGivesTheSeparateLoadersImagesToTheBit()
+    {
+        string written = Path.Combine(Path.GetTempPath(), $"grouplab-jpeg-{Guid.NewGuid():N}.jpg");
+        try
+        {
+            using (var render = OpenCvSharp.Cv2.ImRead(Corpus()[0], OpenCvSharp.ImreadModes.Color))
+            {
+                OpenCvSharp.Cv2.ImWrite(written, render, new OpenCvSharp.ImageEncodingParam(OpenCvSharp.ImwriteFlags.JpegQuality, 92));
+            }
+
+            foreach (string path in new[] { Repo.PathTo("scans", "phase0", "20260913_130543.jpg"), written })
+            {
+                Assert.False(ImageLoader.OneDecodeServes(File.ReadAllBytes(path)));
+                foreach (double? most in new double?[] { null, 2.0 })
+                {
+                    var (grey, max, metadata) = ImageLoader.LoadGreyAndMax(path, most);
+                    var (separateGrey, separateMetadata) = ImageLoader.Load(path, most);
+                    var (separateMax, _) = ImageLoader.LoadMaxChannel(path, most);
+                    Assert.True(grey.Pixels.SequenceEqual(separateGrey.Pixels), $"{Path.GetFileName(path)} at {most}: the grey differs");
+                    Assert.True(max.Pixels.SequenceEqual(separateMax.Pixels), $"{Path.GetFileName(path)} at {most}: the brightest channel differs");
+                    Assert.Equal((separateGrey.Width, separateGrey.Height, separateMetadata.Width, separateMetadata.DpiX), (grey.Width, grey.Height, metadata.Width, metadata.DpiX));
+                }
+
+                var (editorGrey, editorMax, colour, _) = ImageLoader.LoadForEditor(path);
+                using (colour)
+                {
+                    Assert.True(editorGrey.Pixels.SequenceEqual(ImageLoader.Load(path).Image.Pixels), $"{Path.GetFileName(path)}: the editor's grey differs");
+                    Assert.True(editorMax.Pixels.SequenceEqual(ImageLoader.LoadMaxChannel(path).MaxChannel.Pixels), $"{Path.GetFileName(path)}: the editor's brightest channel differs");
+                }
+            }
+        }
+        finally
+        {
+            File.Delete(written);
+        }
+    }
+
     /// <summary>A PNG with one more chunk straight after its header.</summary>
     private static byte[] WithChunk(byte[] png, string type, byte[] data)
     {

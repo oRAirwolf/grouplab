@@ -91,6 +91,22 @@ than being taken here.
 **Taken: a JPEG's two decodes side by side** (the next commit). A JPEG's grey cannot be made from its colour decode (entry 130), so it
 is decoded twice; the two decodes are independent, so the grey is now decoded on another thread while the colour is decoded and reduced,
 and the phone reads its working copy with one read of the file rather than two.
+`ImageLoaderSameResultTests.AJpegDecodedSideBySideGivesTheSeparateLoadersImagesToTheBit` holds it: on the committed phone photograph and a
+render written as a JPEG, at full size and at a working size, the grey and the brightest channel are the separate loaders' to the bit,
+the editor's included. Before and after by turns, same load, median ms:
+
+| | before | after |
+|---|---|---|
+| bench, load a phone photograph, three benches of five each | 57 to 58 | 33 to 43 |
+| the window's open, the three photographs | 36 to 77 | 23 to 48 |
+| the phone's decode of its working copy, all four pictures | 30 to 42 | 19 to 26 |
+| bench, load a 600 dpi Letter scan (a PNG, decoded once already) | 352 to 357 | 350 to 364 |
+
+The whole reading moves by those 10 to 30 ms, which is inside the noise of the rest of it here. **Nothing moved:**
+`scoreboard --corpus` on the four local corpus folders, `scoreboard --synthetic` and `corpus counts`, committed and local, are line for
+line the same before and after but for their time columns; `grouplab analyze` on the 600 dpi sample, Fold 7 picture-1 and the Phase 0
+photograph prints the same but for its times; and the four pictures' holes, on both paths, are the same to the last digit. Nothing reads
+QR codes on several threads.
 
 ## Entry 461 section 2.2, 2026-10-21: a phone photograph's codes, measured, and nothing exact left to take
 

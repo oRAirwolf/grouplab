@@ -217,9 +217,27 @@ public static class ImageLoader
             return (GreyLikeLibpng(colour), MaxOf(colour), Working(read, colour, bytes, mostMegapixels));
         }
 
-        using var greyMat = Decode(bytes, path, colour: false, read, mostMegapixels);
-        using var colourMat = Decode(bytes, path, colour: true, read, mostMegapixels);
-        return (OpenCvSharpBackend.Copy(greyMat), MaxOf(colourMat), Working(read, greyMat, bytes, mostMegapixels));
+        // Entry 464 section 4: the two decodes are each their own, so the grey is decoded on another thread while the colour is decoded
+        // and reduced here; each gives the pixels it gave alone.
+        var greyTask = Task.Run(() =>
+        {
+            using var greyMat = Decode(bytes, path, colour: false, read, mostMegapixels);
+            return (OpenCvSharpBackend.Copy(greyMat), Working(read, greyMat, bytes, mostMegapixels));
+        });
+        GrayImage max;
+        try
+        {
+            using var colourMat = Decode(bytes, path, colour: true, read, mostMegapixels);
+            max = MaxOf(colourMat);
+        }
+        catch
+        {
+            greyTask.ContinueWith(t => _ = t.Exception, TaskScheduler.Default);
+            throw;
+        }
+
+        var (grey, metadata) = greyTask.GetAwaiter().GetResult();
+        return (grey, max, metadata);
     }
 
     /// <summary>max(R, G, B) at each pixel of a colour image.</summary>
@@ -243,13 +261,11 @@ public static class ImageLoader
     }
 
     /// <summary>The grey image of a file whose colour decode is <paramref name="colour"/>: made from it where that is identical, else decoded.</summary>
-    private static GrayImage GreyOf(byte[] bytes, Mat colour, string path)
-    {
-        if (OneDecodeServes(bytes))
-        {
-            return GreyLikeLibpng(colour);
-        }
+    private static GrayImage GreyOf(byte[] bytes, Mat colour, string path) => OneDecodeServes(bytes) ? GreyLikeLibpng(colour) : GreyDecoded(bytes, path);
 
+    /// <summary>The file decoded as grey by OpenCV, where the colour decode cannot give it.</summary>
+    private static GrayImage GreyDecoded(byte[] bytes, string path)
+    {
         using var grey = Cv2.ImDecode(bytes, ImreadModes.Grayscale | ImreadModes.IgnoreOrientation);
         if (grey.Empty())
         {
@@ -349,22 +365,27 @@ public static class ImageLoader
         byte[] bytes = Bytes(path);
         var metadata = ImageMetadataReader.Read(bytes);
         NotTooLarge(metadata, path);
-        var colour = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
-        if (colour.Empty())
-        {
-            colour.Dispose();
-            throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
-        }
 
+        // Entry 464 section 4: where the grey is decoded on its own (a JPEG, a PNG naming its gamma), it is decoded on another thread
+        // while the colour is decoded here, each giving the pixels it gave alone.
+        var greyTask = OneDecodeServes(bytes) ? null : Task.Run(() => GreyDecoded(bytes, path));
+        var colour = Cv2.ImDecode(bytes, ImreadModes.Color | ImreadModes.IgnoreOrientation);
         try
         {
-            NotTooLarge(colour, path);
+            if (colour.Empty())
+            {
+                throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
+            }
 
-            return (GreyOf(bytes, colour, path), MaxOf(colour), colour, metadata);
+            NotTooLarge(colour, path);
+            var max = MaxOf(colour);
+            var grey = greyTask is null ? GreyLikeLibpng(colour) : greyTask.GetAwaiter().GetResult();
+            return (grey, max, colour, metadata);
         }
         catch
         {
             colour.Dispose();
+            greyTask?.ContinueWith(t => _ = t.Exception, TaskScheduler.Default);
             throw;
         }
     }
