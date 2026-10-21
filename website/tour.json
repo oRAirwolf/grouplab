@@ -131,6 +131,10 @@
      "A thin line runs from every hole to its bull, and Lines to bulls switches them off. A line worth a second look is dashed in orange with a question mark beside the hole, and Next unsure hole goes to the next one. Click a bull to choose it: it gets a blue ring, its lines turn blue, the others fade, and clicking holes gives them to it or takes them away until you press Done or Escape."
     ],
     [
+     "The numbers on the picture",
+     "Each bull's number stands in plain gray at the top left, outside its ring, and each hole's number in a dark tag just outside the ring, where it covers no other number and no hole. Several holes on one bull have their tags in a column beside it on short lines. The shot you select is an open magenta ring with four short ticks, so the hole stays in sight, and its tag turns magenta."
+    ],
+    [
      "How did you shoot this sheet?",
      "Three cards: one shot on each bull I used, some bulls took two or more (then tap those bulls), or every hole to its nearest bull. Bulls left blank are found by themselves, with buttons to tap the ones that took two or the ones you fired at. Loads on this sheet sets one load, one a row, one a column, or the bulls you pick, and a line reads back what GroupLab will make of it."
     ],
@@ -211,7 +215,7 @@
      ],
      [
       "Move this hole",
-      "With the crosshair on a ring, picks the hole up; drag its circle, drawn at the bullet's size, onto the hole, the crosshair traveling with it, and press Put the hole here."
+      "With the crosshair on a ring, picks the hole up; drag its circle, drawn at the bullet's size, onto the hole, its magenta ring and ticks traveling with it, and press Put the hole here."
      ],
      [
       "Remove this hole",

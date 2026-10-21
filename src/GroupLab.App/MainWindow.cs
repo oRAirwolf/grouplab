@@ -2915,6 +2915,8 @@ public sealed partial class MainWindow : Window
             shotDistance.Text = state.ShotDistanceInches is { } inches ? UnitSettings.DistanceFromInches(inches, ChosenDistanceUnit()).ToString("0.###", CultureInfo.InvariantCulture) : "";
         }
 
+        // Entry 465 section 1A: the bulls' outer rings, for the tags to sit outside.
+        canvas.BullRings = MarkTags.OuterRingInches(plotDefinition);
         // Entry 318 section 1: a size flag stays on the picture until the person settles it or moves the shot.
         canvas.DetectorFlags = state.Shots.Where(s => ReviewQueue.StillFlagged(state, s)).ToDictionary(s => s.Id, s => s.Oversize!.Tentative);
         canvas.JoinedFlags = state.Shots.Where(s => ReviewQueue.StillFlagged(state, s) && s.Oversize is { Joined: true }).Select(s => s.Id).ToHashSet();

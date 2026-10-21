@@ -25,6 +25,14 @@
   "kind": "code",
   "where": "src/GroupLab.App/CompositePlot.cs KeyLayout and ArrangeKey, held by Entry465Tests and Entry465PhoneTests (entry 465 item 2A); website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
  },
+  "![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png) On the picture, each bull's number stands outside its outer ring at the top left, in plain gray, and each hole's number sits in a dark tag just outside the ring, placed where it covers no other tag, no bull's number and no hole.": {
+   "kind": "code",
+   "where": "MarkTags.Place in src/GroupLab.Core/Marking/MarkTags.cs, drawn by MarkingCanvas.Render in src/GroupLab.App and MarkingAPage.Viewer.Render in mobile/GroupLab.Mobile; held by MarkTagsTests, Entry465MarkingTests and Entry465PhoneMarkingTests (entry 465 section 1A)"
+  },
+  "Where a bull holds several holes, as on a target marked by hand, their tags stand in a column beside it, 1a, 1b, 1c from the top, each on a short line to its hole.": {
+   "kind": "code",
+   "where": "MarkTags.Place in src/GroupLab.Core/Marking/MarkTags.cs, drawn by MarkingCanvas.Render in src/GroupLab.App and MarkingAPage.Viewer.Render in mobile/GroupLab.Mobile; held by MarkTagsTests, Entry465MarkingTests and Entry465PhoneMarkingTests (entry 465 section 1A)"
+  },
  "Sync between devices in Settings, with another device in the folder: This device's name, Sync now, Stop syncing When a session was changed on two devices If the same session was changed on two devices before they synced, GroupLab never picks one by itself.": {
   "kind": "code",
   "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"

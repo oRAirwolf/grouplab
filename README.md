@@ -279,7 +279,7 @@ That is the whole point of the project. Everything else is the machinery that ma
 
 **A GroupLab sheet is the fast lane, not a requirement.** On its own sheets everything is automatic: the scale, every hole, and which bull each shot belongs to, and one shot per bull gives large groups. You print a target sheet that GroupLab generates. It carries a grid of small bullseyes and machine-readable registration markers, plus QR codes holding the sheet's complete geometric definition, so any software that has never seen the design can still analyze it correctly.
 
-You shoot it, then scan or photograph the sheet, still stapled to the board if you like.
+You shoot it, then scan or photograph the sheet, still stapled to the board if you like. On the picture each hole carries its bull's number in a small tag just outside the bull's ring, placed so that no number covers another or a hole, and any hole can be moved, added or removed.
 
 ```mermaid
 flowchart TB

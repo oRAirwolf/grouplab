@@ -1034,15 +1034,15 @@ public class Entry109Tests
         SheetPictures(outputs);
     }
 
-    private const double PlainDpi = 150;
+    internal const double PlainDpi = 150;
 
-    private const int PlainOuter = 150;
+    internal const int PlainOuter = 150;
 
     /// <summary>The plain sample's four aim points, in its pixels: two by two on a Letter page at 150 dpi.</summary>
-    private static readonly PointD[] PlainCentres = [new(425, 560), new(850, 560), new(425, 1110), new(850, 1110)];
+    internal static readonly PointD[] PlainCentres = [new(425, 560), new(850, 560), new(425, 1110), new(850, 1110)];
 
     /// <summary>Five shots on each bull, where the sample's holes are drawn.</summary>
-    private static readonly (int X, int Y)[] PlainHoles =
+    internal static readonly (int X, int Y)[] PlainHoles =
     [
         (440, 548), (409, 575), (431, 590), (452, 566), (417, 541),
         (866, 552), (839, 571), (858, 584), (871, 565), (844, 543),
@@ -1094,7 +1094,7 @@ public class Entry109Tests
         return file;
     }
 
-    private static string PlainSample()
+    internal static string PlainSample()
     {
         string folder = Path.Combine(Path.GetTempPath(), $"grouplab-plain-{Guid.NewGuid():N}");
         Directory.CreateDirectory(folder);

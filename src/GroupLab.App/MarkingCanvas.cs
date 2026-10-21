@@ -703,6 +703,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         }
 
         bool byHand = PlacedByHand(state);
+        var bullInk = new Dictionary<int, IBrush>();
         if (lasso.Count > 1)
         {
             for (int i = 1; i < lasso.Count; i++)
@@ -718,7 +719,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             var colour = ColourOf(state, bull.Index);
             Marks.Ring(context, colour, c, 16, ChosenBull == bull.Index ? Tokens.MarkSelectedCoreWidth : Tokens.MarkCoreWidth);
             Marks.Cross(context, colour, c, 6);
-            Marks.Label(context, bull.Label, colour, c + new Vector(18, -18));
+            bullInk[bull.Index] = colour;
         }
 
         int? lit = Lit(state);
@@ -736,7 +737,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                     Marks.Ring(context, Marks.Chosen, c, 13, Tokens.MarkSelectedCoreWidth);
                 }
 
-                Marks.Label(context, bull.Label, mine ? Marks.Chosen : Marks.Dimmed, c + new Vector(8, 6));
+                bullInk[bull.Index] = mine ? Marks.Chosen : Marks.Dimmed;
                 continue;
             }
 
@@ -747,7 +748,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
                 Marks.Ring(context, Marks.Selected, c, 13, Tokens.MarkSelectedCoreWidth);
             }
 
-            Marks.Label(context, bull.Label, chosen ? Marks.Selected : Marks.Faint, c + new Vector(8, 6));
+            bullInk[bull.Index] = chosen ? Marks.Selected : Marks.Faint;
         }
 
         foreach (var (at, text) in SideLabels)
@@ -778,6 +779,8 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         // drawn in the alert colour so it looks as abnormal as it is. A plain group has no printed numbers, and its marks carry none.
         var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId);
         var lines = BullLines.For(state).ToDictionary(l => l.Shot);
+        var tagHoles = new List<TagHole>();
+        var tagWords = new Dictionary<int, (string Text, IBrush Ink)>();
         foreach (var shot in state.Shots)
         {
             var at = dragging == shot.Id ? dragAt : shot.Image;
@@ -785,6 +788,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             if (shot.NotAShot)
             {
                 Marks.Saltire(context, Marks.Faint, c, 6);
+                tagHoles.Add(new TagHole(shot.Id, new PointD(c.X, c.Y), 6, null, 0, 0));
                 continue;
             }
 
@@ -792,7 +796,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             // and unlabelled so it does not read as work. It is still a mark, and selecting it still works.
             if (SetAside.Contains(shot.Id) && shot.Id != Selected)
             {
-                Marks.Ring(context, Marks.Faint, c, ImpactRadius(state, at, shot.MeasuredDiameterInches), 1, Marks.Dashed);
+                double aside = ImpactRadius(state, at, shot.MeasuredDiameterInches);
+                Marks.Ring(context, Marks.Faint, c, aside, 1, Marks.Dashed);
+                tagHoles.Add(new TagHole(shot.Id, new PointD(c.X, c.Y), aside, null, 0, 0));
                 continue;
             }
 
@@ -863,10 +869,42 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             Marks.Dot(context, colour, c, 1);
             var label = labels[shot.Id];
             string text = string.Join(" ", new[] { label.Text, shot.Exclusion is null ? null : "excluded" }.Where(t => t is not null));
+            // Entry 465 section 1A: the tag is kept clear of the hole's circle, its flag ring, and for the selected shot the selection's
+            // ring and ticks; where it goes is decided once every hole is known.
+            double clear = selected ? radius + Tokens.SelectionGap + Tokens.SelectionArm : DetectorFlags.ContainsKey(shot.Id) ? radius + AlertRingGap : radius;
+            var (tagWidth, tagHeight) = text.Length > 0 ? Marks.TagSize(text) : (0, 0);
+            tagHoles.Add(new TagHole(shot.Id, new PointD(c.X, c.Y), clear, shot.Bull, tagWidth, tagHeight));
             if (text.Length > 0)
             {
-                Marks.Label(context, text, label.Abnormal && !selected ? Marks.Alert : colour, c + new Vector(radius + 4, -radius - 8));
+                tagWords[shot.Id] = (text, label.Abnormal && !selected ? Marks.Alert : colour);
             }
+        }
+
+        // Entry 465 section 1A: each bull's number outside its outer ring at the top left, plain and muted, and each hole's tag just outside
+        // the ring where it lies on nothing else, the tags of several holes on one bull in a column on short leader lines.
+        var tagBulls = state.Bulls.Where(b => bullInk.ContainsKey(b.Index)).Select(b =>
+        {
+            var c = ToControl(byHand && draggingBull == b.Index ? bullDragAt : b.Image);
+            var (w, h) = Marks.NumberSize(b.Label);
+            return new TagBull(b.Index, new PointD(c.X, c.Y), byHand ? 0 : RingOnScreen(state, b), w, h);
+        }).ToList();
+        var tags = MarkTags.Place(tagBulls, tagHoles);
+        LastTags = (tags, tagHoles);
+        foreach (var number in tags.Bulls)
+        {
+            Marks.Number(context, state.Bulls.First(b => b.Index == number.Index).Label, bullInk[number.Index], number.Box);
+        }
+
+        foreach (var tag in tags.Holes)
+        {
+            var (text, ink) = tagWords[tag.ShotId];
+            bool selected = tag.ShotId == Selected;
+            if (tag.LeaderFrom is { } from && tag.LeaderTo is { } to)
+            {
+                Marks.Leader(context, selected ? new SolidColorBrush(Tokens.Selection(ActualThemeVariant).Ink) : ink, from, to);
+            }
+
+            Marks.Tag(context, text, ink, tag.Box, ActualThemeVariant, selected);
         }
 
         // An impact being placed is "this one", in amber: a cross where the pointer is, and a ring where it will snap when let go (entry 39 section 4).
@@ -889,9 +927,24 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         {
             var at = dragging == selectedShot.Id ? dragAt : selectedShot.Image;
             double radius = ImpactRadius(state, at, selectedShot.MeasuredDiameterInches);
-            Marks.Selection(context, ActualThemeVariant, ToControl(at), radius + Tokens.SelectionGap, radius + 1);
+            // Entry 465 section 1A: an open ring with four short ticks outside it, so the hole itself stays in plain sight.
+            Marks.Selection(context, ActualThemeVariant, ToControl(at), radius + Tokens.SelectionGap, radius + Tokens.SelectionGap);
         }
     }
+
+    /// <summary>
+    /// Entry 465 section 1A: the radius of the outer printed ring of each bull, in inches by its index, from the sheet's definition; empty on a
+    /// target GroupLab did not print, where the tags go round the bull's own holes instead.
+    /// </summary>
+    public IReadOnlyDictionary<int, double> BullRings { get; set; } = new Dictionary<int, double>();
+
+    /// <summary>The bull numbers and hole tags as last drawn, and the holes they keep clear of, for the tests.</summary>
+    internal (TagLayout Layout, IReadOnlyList<TagHole> Holes)? LastTags { get; private set; }
+
+    /// <summary>A bull's outer ring radius on screen, or 0 where it is not known.</summary>
+    private double RingOnScreen(MarkingState state, BullAim bull) => state.Scale is { } scale && BullRings.TryGetValue(bull.Index, out double inches)
+        ? inches * HoleSize.PixelsPerInch(scale, bull.Image) * zoom
+        : 0;
 
     /// <summary>
     /// An impact's ring radius on screen, in sheet units so it scales with the image. NOTES-FROM-PLANNING.md entry 309 section 3.4, Alan: the

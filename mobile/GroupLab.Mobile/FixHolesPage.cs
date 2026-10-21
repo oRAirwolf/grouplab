@@ -50,7 +50,8 @@ internal sealed class FixHolesPage : UserControl
     /// <param name="turns">The quarter turns the result shows the picture upright by.</param>
     /// <param name="finished">Called once with the corrected marking, or null where the changes were thrown away or none were made.</param>
     /// <param name="units">The person's units, for how far a hole being moved has gone.</param>
-    public FixHolesPage(MarkingState state, int turns, Action<MarkingState?> finished, UnitSettings? units = null)
+    /// <param name="bullRings">Each bull's outer ring radius in inches, from the sheet's design, for the tags to sit outside (entry 465 section 1A).</param>
+    public FixHolesPage(MarkingState state, int turns, Action<MarkingState?> finished, UnitSettings? units = null, IReadOnlyDictionary<int, double>? bullRings = null)
     {
         ArgumentNullException.ThrowIfNull(state);
         WorkInProgress.HoldWhileShown(this);
@@ -61,6 +62,7 @@ internal sealed class FixHolesPage : UserControl
         {
             Height = 420,
             RingInches = state.Calibre?.DiameterInches,
+            BullRings = bullRings ?? new Dictionary<int, double>(),
         };
         viewer.Moved += Show;
         viewer.TappedAt += (_, screen) => Tap(screen);

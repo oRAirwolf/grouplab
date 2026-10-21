@@ -473,7 +473,7 @@ public sealed class ResultView : UserControl, IOpenTarget
                         session.Load(fixedState);
                         Changed();
                     }
-                }, units);
+                }, units, MarkTags.OuterRingInches(definition));
             }).Id("result-fix-holes"));
             picture.Children.Add(Screens.Dim("Move, add or remove a hole under a crosshair, with zoom and undo."));
             picture.Children.Add(picturePane);

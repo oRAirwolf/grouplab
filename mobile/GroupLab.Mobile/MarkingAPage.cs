@@ -10,6 +10,7 @@ using GroupLab.App.Diagnostics;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
+using Marks = GroupLab.App.Theme.Marks;
 
 namespace GroupLab.Mobile;
 
@@ -499,6 +500,15 @@ internal sealed class MarkingAPage : UserControl
         /// <summary>Entry 376 section A4: the bull lit with its holes and lines.</summary>
         public int? Lit { get; set; }
 
+        /// <summary>
+        /// Entry 465 section 1A: the radius of each bull's outer printed ring in inches, by its index, for the tags to sit outside; empty
+        /// where the sheet's design is not known, and the tags go round the bull's own holes instead.
+        /// </summary>
+        public IReadOnlyDictionary<int, double> BullRings { get; set; } = new Dictionary<int, double>();
+
+        /// <summary>The bull numbers and hole tags as last drawn, and the holes they keep clear of, for the tests.</summary>
+        internal (TagLayout Layout, IReadOnlyList<TagHole> Holes)? LastTags { get; private set; }
+
         /// <summary>Entry 407 section 1.3: whether <see cref="Lit"/> is a bull chosen to give holes to, which dims every other bull.</summary>
         public bool Picking { get; set; }
 
@@ -691,6 +701,7 @@ internal sealed class MarkingAPage : UserControl
             BullLineInk.Draw(context, session.State, ToScreen, Lit, Picking, LinesToBulls, id => id == Held ? HeldAt : null);
 
             var labels = ShotLabels.For(session.State).ToDictionary(l => l.ShotId, l => l.Text);
+            var tagBulls = new List<TagBull>();
             foreach (var bull in session.State.Bulls)
             {
                 var at = ToScreen(bull.Image);
@@ -701,10 +712,15 @@ internal sealed class MarkingAPage : UserControl
 
                 context.DrawLine(blue, new Point(at.X - 12, at.Y), new Point(at.X + 12, at.Y));
                 context.DrawLine(blue, new Point(at.X, at.Y - 12), new Point(at.X, at.Y + 12));
+                var (w, h) = Marks.NumberSize(bull.Label);
+                double ring = BullRings.TryGetValue(bull.Index, out double inches) && ScreenPerInch(bull.Image) is { } perInch ? inches * perInch : 0;
+                tagBulls.Add(new TagBull(bull.Index, new PointD(at.X, at.Y), ring, w, h));
             }
 
             var found = new Pen(Brushes.OrangeRed, 2);
             var added = new Pen(Brushes.LimeGreen, 2);
+            var tagHoles = new List<TagHole>();
+            var tagWords = new Dictionary<int, (string Text, IBrush Ink)>();
             int number = 0;
             foreach (var shot in session.State.Shots.Where(s => s.IsShot))
             {
@@ -724,28 +740,65 @@ internal sealed class MarkingAPage : UserControl
 
                 // Entry 318 section 2: a hole Find holes proposed and is unsure of is ringed in amber, as a mark to check is on the result.
                 bool doubted = ReviewQueue.StillDoubted(session.State, shot);
-                context.DrawEllipse(null, shot.Bull is { } own && own == Lit ? new Pen(lit, 3) : Picking ? new Pen(new SolidColorBrush(Colors.Gray, 0.5), 1.5) : byHand ? added : doubted ? new Pen(amber, 2.5) : found, at, radius, radius);
+                var ring = shot.Bull is { } own && own == Lit ? new Pen(lit, 3) : Picking ? new Pen(new SolidColorBrush(Colors.Gray, 0.5), 1.5) : byHand ? added : doubted ? new Pen(amber, 2.5) : found;
+                context.DrawEllipse(null, ring, at, radius, radius);
                 if (byHand)
                 {
                     context.DrawEllipse(Brushes.LimeGreen, null, at, 2.5, 2.5);
                 }
-                else
+
+                // Entry 376 section A6: a hole carries its bull's number, never a count. Entry 465 section 1A: in a dark tag placed with the
+                // computer's, outside the bull's ring where it lies on nothing else; a hole being moved keeps clear of its selection ring.
+                string? text = labels.GetValueOrDefault(shot.Id) ?? (byHand ? null : number.ToString(CultureInfo.CurrentCulture));
+                var (w, h) = text is null ? (0, 0) : Marks.TagSize(text);
+                double clear = shot.Id == Held ? radius + GroupLab.App.Theme.Tokens.SelectionGap + GroupLab.App.Theme.Tokens.SelectionArm : radius;
+                tagHoles.Add(new TagHole(shot.Id, new PointD(at.X, at.Y), clear, shot.Bull, w, h));
+                if (text is not null)
                 {
-                    // Entry 376 section A6: a hole carries its bull's number, never a count.
-                    var text = new FormattedText(labels.GetValueOrDefault(shot.Id) ?? number.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, Typeface.Default, 12, Brushes.OrangeRed);
-                    context.DrawText(text, new Point(at.X + radius + 1, at.Y - radius - 9));
+                    tagWords[shot.Id] = (text, ring.Brush ?? Brushes.OrangeRed);
                 }
             }
 
-            // The crosshair, fixed at the middle, or on the center of the hole being moved; its ring the bullet's real size where the scale and
-            // caliber are known.
-            var middle = HeldAt is { } heldAt ? ToScreen(heldAt) : new Point(Bounds.Width / 2, Bounds.Height / 2);
+            var tags = MarkTags.Place(tagBulls, tagHoles);
+            LastTags = (tags, tagHoles);
+            var muted = new SolidColorBrush(GroupLab.App.Theme.Tokens.MarkFaint);
+            foreach (var bullTag in tags.Bulls)
+            {
+                var bull = session.State.Bulls.First(b => b.Index == bullTag.Index);
+                Marks.Number(context, bull.Label, bull.Index == Lit ? lit : muted, bullTag.Box);
+            }
+
+            var selectionInk = new SolidColorBrush(GroupLab.App.Theme.Tokens.Selection(ActualThemeVariant).Ink);
+            foreach (var tag in tags.Holes)
+            {
+                var (text, ink) = tagWords[tag.ShotId];
+                bool selected = tag.ShotId == Held;
+                if (tag.LeaderFrom is { } from && tag.LeaderTo is { } to)
+                {
+                    Marks.Leader(context, selected ? selectionInk : ink, from, to);
+                }
+
+                Marks.Tag(context, text, ink, tag.Box, ActualThemeVariant, selected);
+            }
+
+            // The crosshair, fixed at the middle while no hole is being moved; its ring the bullet's real size where the scale and caliber are
+            // known.
+            if (HeldAt is { } holding)
+            {
+                // Entry 465 section 1A: the hole being moved is the selected one, an open magenta ring with four short ticks outside it as
+                // on the computer, so the hole stays in sight and its center is pointed at from four sides.
+                double r = HoleRadius(holding) + GroupLab.App.Theme.Tokens.SelectionGap;
+                Marks.Selection(context, ActualThemeVariant, ToScreen(holding), r, r);
+                return;
+            }
+
+            var middle = new Point(Bounds.Width / 2, Bounds.Height / 2);
             var cross = new Pen(Brushes.White, 1.5);
             context.DrawLine(cross, new Point(middle.X - 30, middle.Y), new Point(middle.X - 6, middle.Y));
             context.DrawLine(cross, new Point(middle.X + 6, middle.Y), new Point(middle.X + 30, middle.Y));
             context.DrawLine(cross, new Point(middle.X, middle.Y - 30), new Point(middle.X, middle.Y - 6));
             context.DrawLine(cross, new Point(middle.X, middle.Y + 6), new Point(middle.X, middle.Y + 30));
-            if (RingInches is not null && ScreenPerInch(Centre) is not null && HeldAt is null)
+            if (RingInches is not null && ScreenPerInch(Centre) is not null)
             {
                 double ring = HoleRadius(Centre);
                 context.DrawEllipse(null, cross, middle, ring, ring);

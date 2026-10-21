@@ -89,6 +89,8 @@ public class BenchCoverageTests
         ["VelocityVertical"] = "Three solver runs to one distance and sums over a group's shots, once when a person asks for the comparison; no detection. Entry 322 section 3.",
         ["CanonicalJsonWriter"] = "Writing a definition back out happens in the editor's save, which is measured as a control.",
         ["MarkingFile"] = "Measured as part of saving and reopening a session, which is what writes and reads it.",
+        ["MarkTags"] = "Entry 465 section 1A: where each number and tag is drawn on the picture, a few hundred box comparisons a frame; nothing it decides reaches a figure.",
+        ["TagBox"] = "The box MarkTags places, a record of four numbers.",
         ["ShotLabels"] = "A few dozen string comparisons inside the analysis, below the resolution of any figure here.",
         ["ChangeWords"] = "The undo tooltip's words, read from two markings once per edit, below the resolution of any figure here.",
         ["ShotCsv"] = "Reading or writing one CSV of shot coordinates when a person asks, a few hundred rows at most.",

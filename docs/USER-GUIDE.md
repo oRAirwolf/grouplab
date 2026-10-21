@@ -268,6 +268,12 @@ named, and every photograph you open keeps how far off square it was and how goo
 
 ![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png)
 
+On the picture, each bull's number stands outside its outer ring at the top left, in plain gray, and each hole's number sits in a dark
+tag just outside the ring, placed where it covers no other tag, no bull's number and no hole. Where a bull holds several holes, as on a
+target marked by hand, their tags stand in a column beside it, 1a, 1b, 1c from the top, each on a short line to its hole. The shot you
+select has an open magenta ring with four short ticks outside it, so the hole itself stays in sight, and its tag turns magenta. Fix holes
+on the phone draws them the same way.
+
 The pill in the header counts the marks that need you. The review queue in the side panel lists each one with the choices that settle it. The items are:
 - **Contested assignment:** a hole that could belong to either of two bulls, or one that the matching gave to a bull other than its nearest.
 - **Possibly two holes:** a mark about the size of two holes.
@@ -323,7 +329,7 @@ When the marks are right, Accept and analyze. Anything still open stays open: th
 If these figures are new to you, you can learn them from the beginning in [Statistics for shooters](STATISTICS-PRIMER.md).
 
 The analysis has three columns:
-- **On the left:** the sheet small, drawn from its definition with every shot on it, then the load and the shot table, whose headings name the unit its numbers are in (across, in; up/down, in; radius, in), following the length unit chosen in Settings. A click on a bull in the small sheet selects the shots given to that bull, and a click on a shot wide of every bull selects that shot. For a pooled set, every sheet's shots are drawn over the one sheet, each sheet in its own color, and a click on a bull selects its shot from every sheet. A shot picked anywhere, on the plot, the picture or a row of the table, is ringed with a cross through it in all three places, in magenta, a color nothing else in GroupLab uses, edged in black on the dark theme and white on the light, over every other mark, and its row has an amber bar, a brighter fill and bold numbers; the table scrolls to it.
+- **On the left:** the sheet small, drawn from its definition with every shot on it, then the load and the shot table, whose headings name the unit its numbers are in (across, in; up/down, in; radius, in), following the length unit chosen in Settings. A click on a bull in the small sheet selects the shots given to that bull, and a click on a shot wide of every bull selects that shot. For a pooled set, every sheet's shots are drawn over the one sheet, each sheet in its own color, and a click on a bull selects its shot from every sheet. A shot picked anywhere, on the plot, the picture or a row of the table, is ringed in all three places, in magenta, with a cross through it on the plot and four short ticks outside the ring on the picture, a color nothing else in GroupLab uses, edged in black on the dark theme and white on the light, over every other mark, and its row has an amber bar, a brighter fill and bold numbers; the table scrolls to it.
 - **In the center:** the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center, over the bull's rings drawn as wide gray bands. The key, saying what each mark is, sits in a compact box directly under the plot, in two columns where it fits, so it never covers the shots; in a window too small for both it folds into a Key button above the plot. On the phone the key sits under the plot the same way. Green lines cross at the group's center and blue lines at where you aimed, both across the whole plot; the CEP circles are green, CEP 50 dotted, CEP 90 solid, CEP 95 dashed and CEP 99 in dashes and dots; the extreme spread is a red dashed line between the two shots furthest apart. Toggles beside the plot turn CEP 50, CEP 90, CEP 95, CEP 99 and the extreme spread on and off, and GroupLab remembers them; CEP 95 and CEP 99 start off. CEP 99 on also lists it with the figures, with its range, and where your shots are too few to reach that far out, fewer than one expected outside the circle, it says the circle is the model's guess rather than something the shots show. Under Advanced, **A circle for any percent** takes a percent from 1 to 99.9, draws it in long dashes, lists it, and is remembered. **Group** and **Whole target** beside them frame the group alone or the entire bull with the group inside it, also remembered. The mouse wheel or a pinch zooms, dragging empty paper moves the view, and a double click returns to the fitted view. An excluded shot is drawn hollow and is never removed.
 - **On the right:** the zero correction, the figures and the two judgment cards.
 
@@ -923,7 +929,7 @@ figures does the same from a list, which is the way to check which bull each sho
 then **Add a hole here**, or **Remove this hole**, with **Undo** for each. After adding or moving a hole, GroupLab asks which bull it
 was fired at, its own choice first. Each hole's circle is drawn at your bullet's diameter, so a
 correct circle sits on the edge of its hole; with no caliber set, a line says that setting it makes the circles true size. **Move this
-hole** leaves the circle where it was: drag the circle itself with your finger, the crosshair on its center, while a dashed ghost stays
+hole** leaves the circle where it was: drag the circle itself with your finger, ringed in magenta with four short ticks pointing at its center, while a dashed ghost stays
 where it started and a line says how far it has moved, and the picture scrolls when the circle nears an edge; **Put the hole here** drops
 it and **Cancel** puts it back. On the computer, every hole's circle is the caliber's size too once one is set, with the size GroupLab
 measured dashed beside it, and a hole dragged with the select tool leaves the same dashed ghost. **Done** takes

@@ -118,6 +118,69 @@ public static class Marks
 
     private static readonly IBrush Plate = new SolidColorBrush(Tokens.MarkPlate);
     private static readonly IBrush LabelText = new SolidColorBrush(Tokens.MarkLabelText);
+    private static readonly IPen NumberHalo = new Pen(new SolidColorBrush(Tokens.Paper, 0.75), 3, lineJoin: PenLineJoin.Round);
+
+    private static FormattedText TagText(string text, IBrush brush) =>
+        new(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Mono), Tokens.TableRowSize, brush);
+
+    private static FormattedText NumberText(string text, IBrush brush) =>
+        new(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.TableRowSize, brush);
+
+    /// <summary>The size of a hole's tag, its plate and text, as <see cref="Tag"/> draws it, for the tags' placing.</summary>
+    public static (double Width, double Height) TagSize(string text)
+    {
+        var formatted = TagText(text, LabelText);
+        return (formatted.Width + 7, formatted.Height + 2);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 465 section 1A: a hole's tag in the box the placing gave it, as <see cref="Label"/> draws one, light text
+    /// on a dark plate with a bar in the mark's colour; and the selected shot's tag in the selection's magenta with its text in the opposite
+    /// ink, so the tag and the ring round the hole are found together.
+    /// </summary>
+    public static void Tag(DrawingContext context, string text, IBrush brush, GroupLab.Core.Marking.TagBox box, ThemeVariant? selectedIn = null, bool selected = false)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        var plate = new Rect(box.X, box.Y, box.Width, box.Height);
+        if (selected)
+        {
+            var (ink, edge) = Tokens.Selection(selectedIn);
+            context.FillRectangle(new SolidColorBrush(ink), plate);
+            context.DrawText(TagText(text, new SolidColorBrush(edge)), new Point(box.X + 5, box.Y + 1));
+            return;
+        }
+
+        context.FillRectangle(Plate, plate);
+        context.FillRectangle(brush, new Rect(plate.X, plate.Y, 2, plate.Height));
+        context.DrawText(TagText(text, LabelText), new Point(box.X + 5, box.Y + 1));
+    }
+
+    /// <summary>The size of a bull's number as <see cref="Number"/> draws it.</summary>
+    public static (double Width, double Height) NumberSize(string text)
+    {
+        var formatted = NumberText(text, LabelText);
+        return (formatted.Width + 2, formatted.Height);
+    }
+
+    /// <summary>
+    /// Entry 465 section 1A: a bull's number, plain muted text outside its ring with a thin edge of paper round each letter, so it reads on the
+    /// paper and on a bull's black alike and never looks like a hole's tag.
+    /// </summary>
+    public static void Number(DrawingContext context, string text, IBrush brush, GroupLab.Core.Marking.TagBox box)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        var formatted = NumberText(text, brush);
+        if (formatted.BuildGeometry(new Point(box.X + 1, box.Y)) is { } outline)
+        {
+            context.DrawGeometry(null, NumberHalo, outline);
+        }
+
+        context.DrawText(formatted, new Point(box.X + 1, box.Y));
+    }
+
+    /// <summary>Entry 465 section 1A: the short line from a hole's edge to its tag, where the tag stands in a column away from it.</summary>
+    public static void Leader(DrawingContext context, IBrush brush, GroupLab.Core.Imaging.PointD from, GroupLab.Core.Imaging.PointD to) =>
+        Line(context, brush, new Point(from.X, from.Y), new Point(to.X, to.Y), 1);
 
     /// <summary>
     /// A mark's label: light mono text on a dark plate, with a bar in the mark's colour down its left edge. Text in the mark's own colour on

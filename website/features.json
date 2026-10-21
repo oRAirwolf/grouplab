@@ -389,7 +389,7 @@
       "key": "every-hole",
       "group": "Reading a target",
       "name": "Every hole found, and every one yours to change",
-      "sentence": "Holes are found for you, and any one can be moved, added, removed, called a flyer or given a note.",
+      "sentence": "Holes are found for you, and any one can be moved, added, removed, called a flyer or given a note. On the picture each bull's number stands outside its ring and each hole's number in a tag that covers nothing else, several on one bull fanned out in a column, and the shot you select is an open magenta ring that leaves the hole in sight.",
       "shot": "marking",
       "platforms": [
         "Windows",
@@ -399,7 +399,7 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.28",
-      "note": ["You can now click a hole to edit it", "On a crinkled sheet, GroupLab no longer marks a hole", "On a flatbed scan, GroupLab now finds the holes that show the scanner",
+      "note": ["You can now click a hole to edit it", "each bull's number now sits outside its ring", "On a crinkled sheet, GroupLab no longer marks a hole", "On a flatbed scan, GroupLab now finds the holes that show the scanner",
         "Finding the holes in a photograph is about a sixth quicker"],
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue",
