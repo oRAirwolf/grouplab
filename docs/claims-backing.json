@@ -33,6 +33,26 @@
    "kind": "code",
    "where": "MarkTags.Place in src/GroupLab.Core/Marking/MarkTags.cs, drawn by MarkingCanvas.Render in src/GroupLab.App and MarkingAPage.Viewer.Render in mobile/GroupLab.Mobile; held by MarkTagsTests, Entry465MarkingTests and Entry465PhoneMarkingTests (entry 465 section 1A)"
   },
+ "What you are looking at Question 1 of 4.": {
+  "kind": "code",
+  "where": "website/tour.json firstrun mobile block; a new install's phone first run opens on Question 1 of 4, mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"
+ },
+ "What you are looking at Question 2 of 4.": {
+  "kind": "code",
+  "where": "website/tour.json firstrun; docs/figures/screens/current/firstrun-light-1400x900.png is taken by tests/GroupLab.App.Tests/Entry109Tests.cs after answering the first of four questions (entry 465 item 5A)"
+ },
+ "The first run asks one question at a time, on the computer and on the phone: Question 1 of 4 over a bar with a part for each question, and Back , Skip for now and Next beneath it.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/FirstRunSteps.cs, MainWindow.Sending.cs ShowFirstRunIfDue and mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.App.Tests/Entry465FirstRunTests.cs and tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"
+ },
+ "Newest Coming in the next build Works in your scope&#x27;s unit The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.": {
+  "kind": "code",
+  "where": "website/features.json scope-unit, shown among the newest because of entry 465 item 5A's note; the scope question is src/GroupLab.App/MainWindow.Sending.cs FillFirstRunScope (entry 294)"
+ },
+ "The first run asks one question at a time, on the computer and on the phone: **Question 1 of 4** over a bar with a part for each question, and **Back**, **Skip for now** and **Next** beneath it.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/FirstRunSteps.cs, MainWindow.Sending.cs ShowFirstRunIfDue and mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.App.Tests/Entry465FirstRunTests.cs and tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"
+ },
  "Sync between devices in Settings, with another device in the folder: This device's name, Sync now, Stop syncing When a session was changed on two devices If the same session was changed on two devices before they synced, GroupLab never picks one by itself.": {
   "kind": "code",
   "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"

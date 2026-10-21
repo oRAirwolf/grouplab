@@ -973,6 +973,9 @@ public class Entry109Tests
                         first.SetTheme(theme);
                         first.ShowFirstRunIfDue();
                         Assert.True(first.FirstRunShown);
+                        // Entry 465 item 5A: one question a step; the picture is the second, sending targets, with the scope answered.
+                        first.PressSend("Mil");
+                        Dispatcher.UIThread.RunJobs();
                         Save(first, $"firstrun-{name}-{width}x{height}");
                     }
                     finally

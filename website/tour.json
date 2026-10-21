@@ -40,34 +40,34 @@
  "screens": {
   "firstrun": {
    "name": "The first run",
-   "blurb": "The first time GroupLab opens it asks whether your scope is in mil or MOA, then three questions: whether to send your targets, whether to send error reports, and whether to take part in the hardware survey.",
+   "blurb": "The first time GroupLab opens it asks, one question at a time, whether your scope is in mil or MOA, then three more: whether to send your targets, whether to send error reports, and whether to take part in the hardware survey.",
    "purpose": "GroupLab works in your scope's unit from the start, and nothing leaves your computer until you have said it may. Each sharing question says exactly what would be sent before you answer it, and each has a way to say no. The answers are kept and can be changed at any time in Settings, under Units and Sharing.",
    "withoutASheet": "No difference. It appears before any sheet is opened.",
    "parts": [
     [
-     "Is your scope in mil or MOA?",
-     "Mil, MOA, or Both, I have rifles of each, and whether sizes on the paper are in inches or millimeters. The zero correction, the clicks and the dope then read in that unit, and each rifle can keep its own."
+     "Question 2 of 4",
+     "Where you are, over a bar with one part for each question: the one showing in amber, those answered in teal."
     ],
     [
      "Send your targets",
-     "What goes with each target, then the two consents, testing only or may be published, and three answers: send every target automatically, ask me each time, or never."
+     "What goes with each target, then the two consents, testing only or may be published, and the answers: send everything you open, send finished targets only, ask me each time, or never."
     ],
     [
-     "Error reports",
-     "What a report holds and what it never holds, a photograph, a file name, a location or anything you wrote, then send them automatically, ask each time, or never."
+     "Back, Skip for now and Next",
+     "Back returns to the question before. Skip for now moves on and records nothing, so that question is asked again the next time GroupLab starts. Next passes over a question already answered."
     ],
     [
-     "The hardware survey",
-     "A weekly report of what the computer is and how fast GroupLab ran. Below it, the benchmark is offered: Yes does not run it, and it runs only when you start it."
+     "The other questions",
+     "Is your scope in mil or MOA? comes first, with whether sizes on the paper are in inches or millimeters; after sending targets come error reports, what a report holds and what it never holds, and the hardware survey, whose Yes does not run the benchmark."
     ]
    ],
    "steps": [
     "Open GroupLab for the first time.",
     "Say whether your scope is in mil or MOA, and whether you measure in inches or millimeters.",
-    "Read each sharing question and answer it; No is always one of the answers.",
+    "Read each sharing question and answer it; No is always one of the answers, and Skip for now leaves one for the next start.",
     "Change any answer later in Settings, under Units and Sharing."
    ],
-   "fits": "Shown once, over the marking screen, before anything else.",
+   "fits": "Shown once, over the marking screen, before anything else, one question at a time.",
    "links": [
     [
      "What GroupLab sends from your computer",
@@ -83,24 +83,24 @@
    ],
    "mobile": {
     "shot": "fold-firstrun",
-    "caption": "Before you start, on a phone-sized screen.",
+    "caption": "Before you start, one question at a time, on a phone-sized screen.",
     "parts": [
      [
-      "Send your targets",
-      "What goes with each target, and the two consents to choose between."
+      "Question 1 of 4",
+      "Where you are, over a bar with one part for each question."
      ],
      [
-      "Error reports",
-      "What a report holds, and whether to send them."
+      "The question",
+      "The scope's unit first, then sending targets, error reports and the hardware survey, each with what would be sent."
      ],
      [
-      "The hardware survey",
-      "Yes or no; the benchmark runs only when you tap it."
+      "Back, Skip for now and Next",
+      "Along the bottom; Skip for now records nothing, and the question is asked again at the next start."
      ]
     ],
     "steps": [
      "Open GroupLab on the phone for the first time.",
-     "Answer each question; they are kept, and Settings changes them."
+     "Answer each question, or skip it for now; answers are kept, and Settings changes them."
     ]
    }
   },

@@ -495,7 +495,10 @@
         "iPhone and iPad"
       ],
       "since": "next",
-      "note": "GroupLab now asks whether your scope is in mil or MOA",
+      "note": [
+        "GroupLab now asks whether your scope is in mil or MOA",
+        "The first run now asks one question at a time"
+      ],
       "tour": "firstrun",
       "guide": "each-rifle-keeps-its-own",
       "mobile": {

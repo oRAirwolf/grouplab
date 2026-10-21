@@ -325,30 +325,112 @@ public sealed partial class MainWindow
         }
 
         var terms = ReceiverTerms.Current;
-        var outer = new StackPanel { Spacing = Tokens.Space24, MaxWidth = 620, Margin = new Thickness(Tokens.Space24) };
-        var card = new StackPanel { Spacing = Tokens.Space8, IsVisible = targetsDue };
-        var errors = new StackPanel { Spacing = Tokens.Space8, IsVisible = errorsDue };
-        var survey = new StackPanel { Spacing = Tokens.Space8, IsVisible = surveyDue };
-        var scope = new StackPanel { Spacing = Tokens.Space8, IsVisible = scopeDue };
+        // Entry 465 item 5A: one question at a time, in this order, each a step of its own with the step bar above it and Back, Skip for
+        // now and Next below it, so every step fits a 720 high window with its buttons in view. Only the step showing is visible.
+        var outer = new StackPanel { Spacing = Tokens.Space24 };
+        var card = new StackPanel { Spacing = Tokens.Space8, IsVisible = false };
+        var errors = new StackPanel { Spacing = Tokens.Space8, IsVisible = false };
+        var survey = new StackPanel { Spacing = Tokens.Space8, IsVisible = false };
+        var scope = new StackPanel { Spacing = Tokens.Space8, IsVisible = false };
         outer.Children.Add(scope);
         outer.Children.Add(card);
         outer.Children.Add(errors);
         outer.Children.Add(survey);
+        var asked = new List<StackPanel>();
+        foreach (var (part, due) in new[] { (scope, scopeDue), (card, targetsDue), (errors, errorsDue), (survey, surveyDue) })
+        {
+            if (due)
+            {
+                asked.Add(part);
+            }
+        }
+
+        var flow = new FirstRunSteps(asked.Count);
+        var body = new ScrollViewer { Content = outer, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
+        var of = new TextBlock { Classes = { AppStyles.Faint } };
+        var bar = new Avalonia.Controls.Primitives.UniformGrid { Columns = asked.Count, Rows = 1, Margin = new Thickness(0, Tokens.Space4, 0, 0) };
+        var back = new Button { Content = FirstRunSteps.Back, Margin = new Thickness(2), Classes = { AppStyles.Secondary } };
+        var skip = new Button { Content = FirstRunSteps.Skip, Margin = new Thickness(2), Classes = { AppStyles.Secondary } };
+        var next = new Button { Content = FirstRunSteps.Next, Margin = new Thickness(2), Classes = { AppStyles.Primary } };
+
+        // Entry 273: the printer card is offered once, under the last question, and never holds the screen open.
+        bool printerGone = false;
         StackPanel? printer = null;
-        printer = FirstRunPrinterCard(() => printer!.IsVisible = false);
+        printer = FirstRunPrinterCard(() =>
+        {
+            printerGone = true;
+            printer!.IsVisible = false;
+        });
         if (printer is not null)
         {
             outer.Children.Add(printer);
         }
-        void Answered()
+
+        void ShowStep()
         {
-            if (!card.IsVisible && !errors.IsVisible && !survey.IsVisible && !scope.IsVisible)
+            if (flow.Finished)
             {
                 firstRun.IsVisible = false;
                 // Entry 439 section 1.1: after the first run's questions, the guided demo is offered, once.
                 OfferDemoIfDue();
+                return;
             }
+
+            for (int i = 0; i < asked.Count; i++)
+            {
+                asked[i].IsVisible = i == flow.At;
+            }
+
+            if (printer is not null)
+            {
+                printer.IsVisible = flow.IsLast && !printerGone;
+            }
+
+            of.Text = flow.Of;
+            var palette = Tokens.For(ActualThemeVariant);
+            bar.Children.Clear();
+            for (int i = 0; i < flow.Count; i++)
+            {
+                var segment = new Border
+                {
+                    Height = 4,
+                    Margin = new Thickness(2, 0),
+                    CornerRadius = new CornerRadius(2),
+                    Background = new SolidColorBrush(i == flow.At ? palette.Amber : flow.Answered(i) ? palette.Teal : palette.Line2),
+                };
+                Avalonia.Automation.AutomationProperties.SetName(segment, flow.BarName(i));
+                bar.Children.Add(segment);
+            }
+
+            back.IsEnabled = flow.CanBack;
+            skip.IsEnabled = flow.CanSkip;
+            next.IsEnabled = flow.CanNext;
+            body.Offset = default;
         }
+
+        void Answered()
+        {
+            flow.Answer();
+            ShowStep();
+        }
+
+        back.Click += (_, _) =>
+        {
+            flow.MoveBack();
+            ShowStep();
+        };
+        skip.Click += (_, _) =>
+        {
+            // Nothing is recorded for a skipped question: its setting stays unset, and it is asked again at the next start.
+            DiagnosticLog.Info("first-run.skipped", ("question", flow.At + 1));
+            flow.SkipForNow();
+            ShowStep();
+        };
+        next.Click += (_, _) =>
+        {
+            flow.MoveNext();
+            ShowStep();
+        };
 
         FillFirstRunScope(scope, Answered);
         FillFirstRunErrors(errors, Answered);
@@ -400,13 +482,33 @@ public sealed partial class MainWindow
 
         card.Children.Add(Row([.. SharingWords.TargetChoices.Select(c => (Control)Button(c.Words, () => Choose(c.Choice)))]));
         card.Children.Add(Line(SharingWords.TargetsLater));
-        firstRun.Child = new Border
+        var foot = new DockPanel { LastChildFill = false, Margin = new Thickness(0, Tokens.Space12, 0, 0) };
+        var onward = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space8, Children = { skip, next } };
+        DockPanel.SetDock(back, Dock.Left);
+        DockPanel.SetDock(onward, Dock.Right);
+        foot.Children.Add(back);
+        foot.Children.Add(onward);
+        var head = new StackPanel { Spacing = Tokens.Space4, Margin = new Thickness(0, 0, 0, Tokens.Space12), Children = { of, bar } };
+        var steps = new DockPanel { MaxWidth = 740, Margin = new Thickness(Tokens.Space24, Tokens.Space16) };
+        DockPanel.SetDock(head, Dock.Top);
+        DockPanel.SetDock(foot, Dock.Bottom);
+        steps.Children.Add(head);
+        steps.Children.Add(foot);
+        steps.Children.Add(body);
+        var frame = new Border
         {
-            Child = new ScrollViewer { Content = outer },
+            Child = steps,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(Tokens.Space12),
             Classes = { AppStyles.Side },
         };
+        // The step never grows past the window, so Back, Skip for now and Next stay in view; only a step's own words would scroll.
+        void Fit(double height) => frame.MaxHeight = Math.Max(240, height - 2 * Tokens.Space12);
+        firstRun.SizeChanged += (_, e) => Fit(e.NewSize.Height);
+        Fit(firstRun.Bounds.Height > 0 ? firstRun.Bounds.Height : Bounds.Height);
+        firstRun.Child = frame;
+        ShowStep();
         firstRun.IsVisible = true;
     }
 

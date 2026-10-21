@@ -64,6 +64,7 @@
     <Compile Include="..\..\src\GroupLab.App\UnitTap.cs" Link="Shared\UnitTap.cs" />
     <Compile Include="..\..\src\GroupLab.App\Landing.cs" Link="Shared\Landing.cs" />
     <Compile Include="..\..\src\GroupLab.App\SharingWords.cs" Link="Shared\SharingWords.cs" />
+    <Compile Include="..\..\src\GroupLab.App\FirstRunSteps.cs" Link="Shared\FirstRunSteps.cs" />
     <Compile Include="..\..\src\GroupLab.App\SharingSwitches.cs" Link="Shared\SharingSwitches.cs" />
     <Compile Include="..\..\src\GroupLab.App\TargetSender.cs" Link="Shared\TargetSender.cs" />
     <Compile Include="..\..\src\GroupLab.App\MoreFold.cs" Link="Shared\MoreFold.cs" />

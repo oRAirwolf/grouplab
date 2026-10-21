@@ -16,6 +16,12 @@ GroupLab works in your scope's unit, mil or MOA, and neither is the default. The
 it asks **Is your scope in mil (1) or MOA (2)?**, with a third answer, **Both, I have rifles of each** (3), and whether you measure sizes on the paper
 in inches or millimeters. Your answer becomes the **Scope unit** at the top of Units in Settings, where you can change it at any time.
 
+The first run asks one question at a time, on the computer and on the phone: **Question 1 of 4** over a bar with a part for each
+question, and **Back**, **Skip for now** and **Next** beneath it. Answering moves on to the next question. **Skip for now** records no
+answer, so that question is asked again the next time GroupLab starts; **Back** returns to a question already answered, and **Next**
+passes over it again. The scope's unit comes first, then whether to send your targets, whether to send error reports and whether to take
+part in the hardware survey, each saying what would be sent before you answer.
+
 ![The first question GroupLab asks: 1 Mil, 2 MOA, 3 Both](figures/screens/current/scope-unit-light-1400x900.png)
 <!-- marks: Mil | MOA | Both, I have rifles of each -->
 

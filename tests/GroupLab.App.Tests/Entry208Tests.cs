@@ -61,9 +61,20 @@ public class Entry208Tests
         {
             opened.Window.ShowFirstRunIfDue();
             Settle();
+            Assert.All(opened.Window.FirstRunCard.GetVisualDescendants().OfType<RadioButton>(), r => Assert.NotEqual(true, r.IsChecked));
+            // Entry 465 item 5A: one question a step, in this order; the survey's step is the third, reached here by skipping the two before.
+            Assert.Contains(SharingWords.TargetsQuestion, Said(opened.Window.FirstRunCard));
+            Assert.Contains("Question 1 of 3", Said(opened.Window.FirstRunCard));
+            opened.Window.PressSend("Skip for now");
+            Settle();
+            Assert.Contains(SharingWords.ErrorsQuestion, Said(opened.Window.FirstRunCard));
+            Assert.DoesNotContain(SharingWords.TargetsQuestion, Said(opened.Window.FirstRunCard));
+            opened.Window.PressSend("Skip for now");
+            Settle();
             var said = Said(opened.Window.FirstRunCard);
-            int targets = said.IndexOf(SharingWords.TargetsQuestion), errors = said.IndexOf(SharingWords.ErrorsQuestion), survey = said.IndexOf(SharingWords.SurveyQuestion);
-            Assert.True(targets >= 0 && targets < errors && errors < survey, string.Join(" | ", said));
+            Assert.Contains("Question 3 of 3", said);
+            Assert.Contains(SharingWords.SurveyQuestion, said);
+            Assert.DoesNotContain(SharingWords.ErrorsQuestion, said);
             Assert.Contains(SharingWords.BenchmarkOffer, said);
             Assert.All(SurveyReport.WhatIsSent, line => Assert.Contains("• " + line, said));
             Assert.DoesNotContain(SharingWords.EarlierKept, said);
