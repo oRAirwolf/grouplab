@@ -71,6 +71,19 @@ public sealed partial class MainWindow
     private readonly Border demoBadge = new() { IsHitTestVisible = false, Width = 22, Height = 22, Classes = { AppStyles.DemoBadge } };
     private readonly TextBlock demoBadgeText = new() { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.DemoBadgeText } };
     private readonly Border demoCard = new() { Width = 360, Classes = { AppStyles.ProblemCard } };
+    // Entry 465 item 6A: the card's pointer, a small diamond in the card's own colours half behind its edge, toward the outlined part.
+    private readonly Border demoPointer = new()
+    {
+        Width = 14,
+        Height = 14,
+        Padding = default,
+        CornerRadius = new CornerRadius(2),
+        IsHitTestVisible = false,
+        IsVisible = false,
+        RenderTransform = new RotateTransform(45),
+        RenderTransformOrigin = RelativePoint.Center,
+        Classes = { AppStyles.ProblemCard },
+    };
     private readonly TextBlock demoTitle = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Title } };
     private readonly TextBlock demoSays = new() { TextWrapping = TextWrapping.Wrap };
     private readonly TextBlock demoCount = new() { Classes = { AppStyles.Faint } };
@@ -111,6 +124,7 @@ public sealed partial class MainWindow
         demoEnd.Click += (_, _) => EndDemo(keep: false);
         demoLayer.Children.Add(demoSpot);
         demoLayer.Children.Add(demoBadge);
+        demoLayer.Children.Add(demoPointer);
         demoLayer.Children.Add(demoCard);
         var take = new Button { Content = DemoWords.Offer, Classes = { AppStyles.Primary } };
         var notNow = new Button { Content = DemoWords.NotNow, Classes = { AppStyles.Secondary } };
@@ -267,7 +281,8 @@ public sealed partial class MainWindow
 
     /// <summary>
     /// Entry 437 section 3's marking, around the real control: an amber outline with a halo, and the step's number in a badge on its top left
-    /// corner. The card sits below the control where there is room, else above, else beside it, so it never covers its own spotlight.
+    /// corner. Entry 465 item 6A: the card sits beside the outline on whichever side has room, never over it, with a pointer toward it, and
+    /// at the bottom of the window where no side has room (<see cref="DemoCardPlacement"/>).
     /// </summary>
     private void PlaceDemo()
     {
@@ -292,36 +307,38 @@ public sealed partial class MainWindow
         var target = DemoSpotlit is { } c && c.IsEffectivelyVisible && c.Bounds.Width > 1 && c.TranslatePoint(default, demoLayer) is { } at
             ? new Rect(at, c.Bounds.Size) : (Rect?)null;
         demoSpot.IsVisible = demoBadge.IsVisible = target is not null;
-        double x = (width - card.Width) / 2, y = Tokens.Space24 * 3;
+        Rect? outlined = null;
         if (target is { } r)
         {
             var ring = r.Inflate(4);
+            outlined = ring;
             Avalonia.Controls.Canvas.SetLeft(demoSpot, ring.X);
             Avalonia.Controls.Canvas.SetTop(demoSpot, ring.Y);
             demoSpot.Width = ring.Width;
             demoSpot.Height = ring.Height;
             Avalonia.Controls.Canvas.SetLeft(demoBadge, Math.Clamp(ring.X - 11, 0, Math.Max(0, width - 22)));
             Avalonia.Controls.Canvas.SetTop(demoBadge, Math.Clamp(ring.Y - 11, 0, Math.Max(0, height - 22)));
-            if (ring.Bottom + Tokens.Space12 + card.Height <= height)
-            {
-                y = ring.Bottom + Tokens.Space12;
-                x = ring.X;
-            }
-            else if (ring.Y - Tokens.Space12 - card.Height >= 0)
-            {
-                y = ring.Y - Tokens.Space12 - card.Height;
-                x = ring.X;
-            }
-            else
-            {
-                y = Math.Clamp(ring.Y, 0, Math.Max(0, height - card.Height));
-                x = ring.Right + Tokens.Space12 + card.Width <= width ? ring.Right + Tokens.Space12 : ring.X - Tokens.Space12 - card.Width;
-            }
         }
 
-        Avalonia.Controls.Canvas.SetLeft(demoCard, Math.Clamp(x, Tokens.Space12, Math.Max(Tokens.Space12, width - card.Width - Tokens.Space12)));
-        Avalonia.Controls.Canvas.SetTop(demoCard, Math.Clamp(y, Tokens.Space12, Math.Max(Tokens.Space12, height - card.Height - Tokens.Space12)));
+        var place = DemoCardPlacement.Place(new Size(width, height), outlined, card, Tokens.Space12);
+        DemoCardSideShown = place.Side;
+        Avalonia.Controls.Canvas.SetLeft(demoCard, place.At.X);
+        Avalonia.Controls.Canvas.SetTop(demoCard, place.At.Y);
+        demoPointer.IsVisible = place.Pointer is not null;
+        if (place.Pointer is { } tip)
+        {
+            Avalonia.Controls.Canvas.SetLeft(demoPointer, tip.X - demoPointer.Width / 2);
+            Avalonia.Controls.Canvas.SetTop(demoPointer, tip.Y - demoPointer.Height / 2);
+        }
     }
+
+    /// <summary>Which side of the outlined part the card is on as the step shows, for the headless walk.</summary>
+    internal DemoCardSide DemoCardSideShown { get; private set; } = DemoCardSide.Bottom;
+
+    /// <summary>The card and its pointer, for the headless walk that holds the card off the part it describes.</summary>
+    internal Control DemoCard => demoCard;
+
+    internal Control DemoPointer => demoPointer;
 
     /// <summary>
     /// Entry 439 section 3.2: nothing the demo made is kept unless the person chose to keep it: its tab closes with nothing asked, the
@@ -411,7 +428,7 @@ public sealed partial class MainWindow
         }
 
         settingsStore.SaveDemoOffered();
-        demoCard.IsVisible = demoSpot.IsVisible = demoBadge.IsVisible = false;
+        demoCard.IsVisible = demoSpot.IsVisible = demoBadge.IsVisible = demoPointer.IsVisible = false;
         demoOffer.IsVisible = true;
         demoLayer.IsVisible = true;
         PlaceDemo();

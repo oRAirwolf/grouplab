@@ -830,7 +830,7 @@
     ],
     [
      "demo-tour",
-     "Step 6 of the Walk me through a demo tour: an amber outline and a numbered badge around the real control, and a card beside it with Back, Next and End the tour",
+     "Step 9 of the Walk me through a demo tour: an amber outline and a numbered badge around the zero correction, and a card beside it, pointing at it, with Back, Next and End the tour",
      "Walk me through a demo, a thirteen step tour on a sample sheet GroupLab makes itself. It is offered once after the first run's questions, and any time from the row near the top of Settings or the header's ... menu. Do each step yourself or press Next and GroupLab does it. End the tour whenever you like, and carry on later from where you left off. It never prints by itself, and nothing it makes is kept unless you tick Keep this demo in Sessions on the last step."
     ]
    ],

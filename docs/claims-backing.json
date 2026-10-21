@@ -33,6 +33,14 @@
    "kind": "code",
    "where": "MarkTags.Place in src/GroupLab.Core/Marking/MarkTags.cs, drawn by MarkingCanvas.Render in src/GroupLab.App and MarkingAPage.Viewer.Render in mobile/GroupLab.Mobile; held by MarkTagsTests, Entry465MarkingTests and Entry465PhoneMarkingTests (entry 465 section 1A)"
   },
+ "You can do the step yourself or press Next and GroupLab does it.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/MainWindow.Demo.cs DemoNext, which does the step's own action before showing the next (entry 439 section 2)"
+ },
+ "You can do the step yourself or press **Next** and GroupLab does it.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/MainWindow.Demo.cs DemoNext, which does the step's own action before showing the next (entry 439 section 2)"
+ },
  "What you are looking at Question 1 of 4.": {
   "kind": "code",
   "where": "website/tour.json firstrun mobile block; a new install's phone first run opens on Question 1 of 4, mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"

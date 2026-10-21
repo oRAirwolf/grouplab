@@ -80,6 +80,19 @@ internal sealed class PhoneDemo
     private readonly Border badge = new() { IsHitTestVisible = false, MinWidth = 26, MinHeight = 26, Padding = new Thickness(6, 1), Classes = { AppStyles.DemoBadge } };
     private readonly TextBlock badgeText = new() { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.DemoBadgeText } };
     private readonly Border card = new() { Classes = { PhoneStyles.Card } };
+    // Entry 465 item 6A, as on the desktop: a small diamond in the card's own colours, half behind its edge, pointing at the outline.
+    private readonly Border pointer = new()
+    {
+        Width = 14,
+        Height = 14,
+        Padding = default,
+        CornerRadius = new CornerRadius(2),
+        IsHitTestVisible = false,
+        IsVisible = false,
+        RenderTransform = new RotateTransform(45),
+        RenderTransformOrigin = RelativePoint.Center,
+        Classes = { PhoneStyles.Card },
+    };
     private readonly ScrollViewer cardScroll = new() { HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
     private readonly TextBlock count = Screens.Quiet("");
     private readonly TextBlock title = Screens.Heading("");
@@ -104,6 +117,7 @@ internal sealed class PhoneDemo
         card.Id("demo-card");
         Layer.Children.Add(spot);
         Layer.Children.Add(badge);
+        Layer.Children.Add(pointer);
         Layer.Children.Add(card);
         offer.Child = new StackPanel
         {
@@ -282,6 +296,7 @@ internal sealed class PhoneDemo
         double margin = Tokens.Space12, cardWidth = Math.Min(width - 2 * margin, 440);
         if (OfferShown)
         {
+            Set(pointer, Visual.IsVisibleProperty, false);
             Set(offer, Layoutable.WidthProperty, cardWidth);
             Set(offer, Canvas.LeftProperty, (width - cardWidth) / 2);
             Set(offer, Canvas.TopProperty, Math.Max(margin, (height - offer.Bounds.Height) / 3));
@@ -309,6 +324,7 @@ internal sealed class PhoneDemo
 
         Set(spot, Visual.IsVisibleProperty, target is not null);
         Set(badge, Visual.IsVisibleProperty, target is not null);
+        Rect? outlined = null;
         Set(card, Layoutable.WidthProperty, cardWidth);
         // The words' own height as the last layout found it inside the card's scroll, so nothing is measured here: measuring the card's
         // words again on every pass, against the scroll's own measuring, laid the whole screen out again for ever.
@@ -318,6 +334,7 @@ internal sealed class PhoneDemo
         if (target is { } r)
         {
             var ring = r.Inflate(4);
+            outlined = ring;
             Set(spot, Canvas.LeftProperty, ring.X);
             Set(spot, Canvas.TopProperty, ring.Y);
             Set(spot, Layoutable.WidthProperty, ring.Width);
@@ -349,10 +366,27 @@ internal sealed class PhoneDemo
         }
 
         double tall = Math.Max(3 * Screens.Touch, room);
+        double top = Math.Clamp(y, margin, Math.Max(margin, height - margin - Math.Min(want, tall)));
         Set(card, Layoutable.MaxHeightProperty, tall);
         Set(card, Canvas.LeftProperty, x);
-        Set(card, Canvas.TopProperty, Math.Clamp(y, margin, Math.Max(margin, height - margin - Math.Min(want, tall))));
+        Set(card, Canvas.TopProperty, top);
+
+        // The pointer, on the card's edge toward the outline: the top where the card is below it, the bottom where it is above, and none
+        // where the card, scrolling at the largest text, has had to sit over part of it.
+        var placed = new Rect(x, top, cardWidth, Math.Min(want, tall));
+        var tip = outlined is { } part
+            ? DemoCardPlacement.PointerFor(placed, part, placed.Y >= part.Bottom ? DemoCardSide.Below : DemoCardSide.Above)
+            : null;
+        Set(pointer, Visual.IsVisibleProperty, tip is not null);
+        if (tip is { } tipAt)
+        {
+            Set(pointer, Canvas.LeftProperty, tipAt.X - pointer.Width / 2);
+            Set(pointer, Canvas.TopProperty, tipAt.Y - pointer.Height / 2);
+        }
     }
+
+    /// <summary>The card's pointer, for the headless walk.</summary>
+    internal Border Pointer => pointer;
 
     /// <summary>A value set only where it changes, so placing the card never asks for another layout of its own accord.</summary>
     private static void Set(AvaloniaObject on, AvaloniaProperty property, object value)

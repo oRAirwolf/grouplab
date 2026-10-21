@@ -1002,14 +1002,15 @@ public class Entry109Tests
                         GroupLab.Tests.Support.Temp.Delete(scopeOnly);
                     }
 
-                    // Entry 439 section 4.3: the guided demo, at its step on the plot, for the Features page and the user guide.
+                    // Entry 439 section 4.3: the guided demo for the Features page and the user guide; entry 465 item 6A, at the zero correction's
+                    // step, where the card sits beside the outlined part with its pointer.
                     string demoFolder = Path.Combine(Path.GetTempPath(), $"grouplab-entry439-{Guid.NewGuid():N}");
                     var demo = new MainWindow(new AppSettingsStore(Path.Combine(demoFolder, "settings.json"))) { Width = width, Height = height };
                     try
                     {
                         demo.Show();
                         demo.SetTheme(theme);
-                        var started = demo.StartDemo(5);
+                        var started = demo.StartDemo(8);
                         for (var until = DateTime.UtcNow.AddMinutes(1); !started.IsCompleted && DateTime.UtcNow < until;)
                         {
                             Dispatcher.UIThread.RunJobs();

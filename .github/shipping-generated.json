@@ -36,6 +36,7 @@
     "src/GroupLab.App/CompositePlot.cs",
     "src/GroupLab.App/ConditionsWords.cs",
     "src/GroupLab.App/ControlNames.cs",
+    "src/GroupLab.App/DemoCardPlacement.cs",
     "src/GroupLab.App/DemoWords.cs",
     "src/GroupLab.App/Diagnostics/",
     "src/GroupLab.App/FingerprintPicture.cs",

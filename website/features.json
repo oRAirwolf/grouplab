@@ -901,7 +901,8 @@
       "note": [
         "New users can choose Walk me through a demo",
         "The guided demo's printing step now works on macOS and Linux",
-        "Walk me through a demo now takes you round the phone's own screens"
+        "Walk me through a demo now takes you round the phone's own screens",
+        "The guided demo's card now sits beside the part it describes"
       ],
       "guide": "walk-me-through-a-demo",
       "mobile": {
