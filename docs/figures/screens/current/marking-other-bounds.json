@@ -81,13 +81,79 @@
       34,
       34
     ],
-    "NEXT": [
+    "NEXT, 1. Count differs from rounds fired": [
       1045,
       429,
       339,
       27
     ],
-    "NOW": [
+    "NEXT, 10. Possibly one hole, shot 3 on bull 4": [
+      1045,
+      744,
+      339,
+      27
+    ],
+    "NEXT, 11. Two shots on one bull, shot 2 on bull 1": [
+      1045,
+      779,
+      339,
+      27
+    ],
+    "NEXT, 12. Two shots on one bull, shot 2 on bull 2": [
+      1045,
+      814,
+      339,
+      27
+    ],
+    "NEXT, 13. Two shots on one bull, shot 2 on bull 3": [
+      1045,
+      849,
+      339,
+      27
+    ],
+    "NEXT, 3. Possibly one hole, shot 3 on bull 2": [
+      1045,
+      499,
+      339,
+      27
+    ],
+    "NEXT, 4. Possibly one hole, shot 5 on bull 2": [
+      1045,
+      534,
+      339,
+      27
+    ],
+    "NEXT, 5. Possibly one hole, shot 3 on bull 2": [
+      1045,
+      569,
+      339,
+      27
+    ],
+    "NEXT, 6. Possibly one hole, shot 1 on bull 3": [
+      1045,
+      604,
+      339,
+      27
+    ],
+    "NEXT, 7. Possibly one hole, shot 3 on bull 3": [
+      1045,
+      639,
+      339,
+      27
+    ],
+    "NEXT, 8. Possibly one hole, shot 1 on bull 4": [
+      1045,
+      674,
+      339,
+      27
+    ],
+    "NEXT, 9. Possibly one hole, shot 3 on bull 4": [
+      1045,
+      709,
+      339,
+      27
+    ],
+    "NOW, 2. Possibly one hole, shot 3 on bull 1": [
       1045,
       464,
       339,
