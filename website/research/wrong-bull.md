@@ -84,7 +84,7 @@ What does tell them apart is how a sheet is shot. A load sheet is fired from bul
 
 Two days later the same sheet, photographed on a tablet, gave two different answers on two runs. Both runs found the same 14 holes. The difference was one hole added by hand at bull 10, where the shot had torn the paper's right edge and nothing found it. With 15 holes, the one in ten allowance let the reading a row higher pass as well, the two readings tied, and GroupLab fell back to the nearest bull. Tried at 399 places a thumb could have put that hole, the rule found no offset at any of them.
 
-So the matching became one problem. Every reading is a one to one matching of holes to bulls around one common offset, re-centred on the middle of the holes and repeated. The order of preference is:
+So the matching became one problem. Every reading is a one to one matching of holes to bulls around one common offset, re-centered on the middle of the holes and repeated. The order of preference is:
 
 1. Holes that fit the bulls as aimed, with no offset, as well as any other reading are read that way, so a zeroed sheet is never moved. A scan from 20 September shows why this comes first: with its holes partly merged, a shooting order 0.8 inch off fitted almost as well as the truth.
 2. Otherwise the shooting order, bulls 1 to k for the fewest k that fit, when it fits as well as any reading and its offset is smaller than the spacing between bulls.
@@ -93,7 +93,7 @@ So the matching became one problem. Every reading is a one to one matching of ho
 
 On the tablet photograph it now gives bulls 1 to 15 at all 399 places, without asking. Each hole is drawn with a line to the bull it was given, so a wrong reading shows at a glance, and a click on a bull lights its shots.
 
-The lesson for anyone building this is that a sheet of one shot a bull is a matching problem with a prior, not a set of nearest neighbours. The order people shoot in is information, and a tie the holes cannot break is a question to ask, not a guess to hide.
+The lesson for anyone building this is that a sheet of one shot a bull is a matching problem with a prior, not a set of nearest neighbors. The order people shoot in is information, and a tie the holes cannot break is a question to ask, not a guess to hide.
 
 ## What you can do now
 

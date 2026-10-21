@@ -1916,6 +1916,29 @@ Ten rows of `docs/RESEARCH.md`'s "Worth an article?", each checked for whether i
   commercial target, and a scan detector on photographs).
 - Checks: the site builds; `claims.py --check` all backed; consistency 0 findings; README checked.
 
+## Entry 461 part 2.1: screen reader audits on all three platforms (2026-10-21)
+
+- **The computer** (`tests/Shared/ScreenReaderAudit.cs`): Avalonia hands Windows UI Automation its automation peers, so the peer tree
+  is what Narrator reads. Every window the entry 447 tests tab round (the eight places, the report, the printer check and the six
+  windows of `Entry447WindowsTests`) is walked: every control a person presses, types into or chooses, shown and enabled, must be in
+  the control view (not Raw), carry a name in words, a control type that says what it is, and be reached by Tab (a stop, or inside a
+  stop that takes it with the arrows). `Entry461AccessibilityTests` holds the audit to a window made to fail it.
+- **What it found and was fixed:** a button or choice holding a panel was named by Avalonia after the panel's type, so Narrator read
+  the printer check's four ways to print as "Avalonia.Controls.StackPanel" and three marking buttons as "Avalonia.Controls.DockPanel";
+  the old tab round missed it because the name was not empty. `SpokenNames` (desktop and phone) names each such control from the words
+  inside it unless the code named it, and keeps it current when the content changes; a type-shaped name now counts as no name in both
+  checks. On the phone, Settings' "Run the benchmark now" was 44 tall, now 48 (`BenchmarkPanel`'s `runHeight`).
+- **The phones, headless** (`Entry461PhoneAccessibilityTests`): the first run and every place, the same walk with a 48 by 48 touch
+  target: no other finding.
+- **The phones, on the platforms' own trees:** a scenario step `audit` (`Scenario.Audit`) stops on each of the sweep's 13 screens
+  (`scripts/scenarios/phone-audit.json`, held to the sweep by `ScreenReaderAuditTests`); `scripts/screen-reader-audit.py` reads
+  Android's accessibility node tree with uiautomator (every node that can be tapped named, with a role, 48 by 48 dp, and every control
+  GroupLab Dev says can be tapped present in the tree) and runs XCTest's `performAccessibilityAudit` through the XCUITest runner
+  (element detection, hit regions, descriptions, traits, actions, parent and child judged; contrast, Dynamic Type and clipped text kept
+  in the artifact). New steps "Screen reader audit" in android-emulator.yml (`scripts/android-audit.sh`) and ios-app.yml.
+- Request 105 in for-alan.md: a later twenty minutes with a real screen reader, for what a machine cannot judge. The guide's
+  keyboard part says what is checked and that no person using a screen reader has tried it yet.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

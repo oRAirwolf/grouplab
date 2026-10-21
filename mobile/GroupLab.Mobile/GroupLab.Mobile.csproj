@@ -42,6 +42,8 @@
     <Compile Include="..\..\src\GroupLab.Cli\Imaging\*.cs" LinkBase="Shared\Imaging" />
     <!-- Entry 243 section 3.4: the Targets screen's "Made for your optic", the desktop's generator and the layout rules it designs with. -->
     <Compile Include="..\..\src\GroupLab.Cli\Library\TargetGenerator.cs" Link="Shared\Library\TargetGenerator.cs" />
+    <!-- Entry 461 section 2.1: a button holding a panel is named by its words, not its type, for TalkBack and VoiceOver as for Narrator. -->
+    <Compile Include="..\..\src\GroupLab.App\SpokenNames.cs" Link="Shared\SpokenNames.cs" />
     <Compile Include="..\..\src\GroupLab.Cli\Library\ParametricSheet.cs" Link="Shared\Library\ParametricSheet.cs" />
     <Compile Include="..\..\src\GroupLab.Cli\Library\LibraryBuilder.cs" Link="Shared\Library\LibraryBuilder.cs" />
     <!-- Entry 348: the fingerprint steps' work, the same as the desktop's: entry 344's engine and the session both screens drive. -->

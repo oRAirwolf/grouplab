@@ -917,7 +917,8 @@
         "On the computer the arrow keys now work",
         "the focus stays on the row you chose",
         "the arrow keys now nudge the selected hole",
-        "Screen readers now name every control"
+        "Screen readers now name every control",
+        "a button that holds words and a picture by its words"
       ],
       "guide": "from-the-keyboard"
     },

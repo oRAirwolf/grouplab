@@ -61,6 +61,7 @@ public sealed class App : Application
     {
         Styles.Add(new FluentTheme());
         AppStyles.Apply(this);
+        SpokenNames.Attach();
     }
 
     public override void OnFrameworkInitializationCompleted()

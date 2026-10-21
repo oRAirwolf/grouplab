@@ -7,6 +7,10 @@ import XCTest
 /// the script writes "request", "x y seconds" in screen points; this presses there for that long and writes "done"; "stop" ends it. The
 /// press goes through the springboard, whose frame is the whole screen, so it lands on whatever is there, GroupLab Dev or the keyboard,
 /// exactly as a finger would, and XCTest never waits on GroupLab Dev, which draws continuously, to fall idle.
+///
+/// Entry 461 section 2.1: a request of "audit" runs XCTest's own accessibility audit on GroupLab Dev as it shows, writes every issue to
+/// "audit-result.json" (its type, its short and long description, and the element's label and frame where it has one) and then "done";
+/// scripts/screen-reader-audit.py judges them.
 final class TouchTests: XCTestCase {
     func testTaps() throws {
         guard let folder = ProcessInfo.processInfo.environment["GROUPLAB_TAPS"], !folder.isEmpty else {
@@ -31,6 +35,14 @@ final class TouchTests: XCTestCase {
 
             if let text = try? String(contentsOfFile: request, encoding: .utf8) {
                 try? files.removeItem(atPath: request)
+                if text.hasPrefix("audit") {
+                    let issues = Audit.run(XCUIApplication(bundleIdentifier: "org.grouplab.app.dev"))
+                    let data = try JSONSerialization.data(withJSONObject: issues, options: [.prettyPrinted])
+                    try data.write(to: URL(fileURLWithPath: (folder as NSString).appendingPathComponent("audit-result.json")), options: .atomic)
+                    try "audit".write(toFile: done, atomically: true, encoding: .utf8)
+                    continue
+                }
+
                 let numbers = text.split(whereSeparator: { $0 == " " || $0 == "\n" }).compactMap { Double(String($0)) }
                 if numbers.count >= 2 {
                     corner.withOffset(CGVector(dx: numbers[0], dy: numbers[1])).press(forDuration: numbers.count > 2 ? numbers[2] : 0.15)
@@ -42,6 +54,37 @@ final class TouchTests: XCTestCase {
         }
 
         XCTFail("nothing said stop in 30 minutes")
+    }
+}
+
+/// Entry 461 section 2.1: XCTest's accessibility audit (Xcode 15 and later), every type, each issue kept and none failing the test here.
+enum Audit {
+    static func run(_ app: XCUIApplication) -> [[String: Any]] {
+        var issues: [[String: Any]] = []
+        do {
+            try app.performAccessibilityAudit(for: .all) { issue in
+                var row: [String: Any] = ["type": name(issue.auditType), "summary": issue.compactDescription, "detail": issue.detailedDescription]
+                if let element = issue.element {
+                    row["label"] = element.label
+                    let frame = element.frame
+                    row["frame"] = [frame.minX, frame.minY, frame.width, frame.height]
+                }
+                issues.append(row)
+                return true
+            }
+        } catch {
+            issues.append(["type": "error", "summary": "the audit did not run: \(error)"])
+        }
+        return issues
+    }
+
+    static func name(_ type: XCUIAccessibilityAuditType) -> String {
+        let names: [(XCUIAccessibilityAuditType, String)] = [
+            (.contrast, "contrast"), (.elementDetection, "elementDetection"), (.hitRegion, "hitRegion"),
+            (.sufficientElementDescription, "sufficientElementDescription"), (.dynamicType, "dynamicType"), (.textClipped, "textClipped"),
+            (.trait, "trait"), (.action, "action"), (.parentChild, "parentChild"),
+        ]
+        return names.first { type.contains($0.0) }?.1 ?? "other \(type.rawValue)"
     }
 }
 

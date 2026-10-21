@@ -5,6 +5,10 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+ "On the phone each is at least 48 by 48 to touch, and the emulator and the simulator read the screens the way TalkBack and VoiceOver do.": {
+   "kind": "code",
+   "where": "tests/GroupLab.Mobile.Tests/Entry461PhoneAccessibilityTests.cs EveryPlaceReadsAsAScreenReaderNeedsIt (48 by 48 on every place, tests/Shared/ScreenReaderAudit.cs); scripts/screen-reader-audit.py (Android's node tree from uiautomator, 48 dp; XCTest's performAccessibilityAudit through scripts/touch/ios/Tests/TouchTests.swift Audit), run by android-emulator.yml and ios-app.yml \"Screen reader audit\" on scripts/scenarios/phone-audit.json (entry 461 section 2.1)"
+  },
  "OpenCV&#x27;s marker and QR detectors on Android, from .NET In September 2026 no published runtime gave a .NET application on Android OpenCV&#x27;s ArUco markers and WeChat QR detector.": {
    "kind": "measured",
    "where": "docs/ANDROID.md section 3, the routes as read on 2026-09-25 (OpenCvSharp's runtimes Windows, Linux and macOS only; the community android-arm64 runtime core, imgproc, imgcodecs and dnn only), and android/opencv/build-extern.sh's header; the research card of opencv-on-android-from-dotnet (entry 461)"

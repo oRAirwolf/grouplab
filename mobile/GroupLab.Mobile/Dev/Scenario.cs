@@ -45,7 +45,8 @@ namespace GroupLab.Mobile.Dev;
 /// <c>log</c>, the newest lines of the log; <c>replay</c>, a camera clip or a picture played through the capture screen in place of the
 /// camera, and <c>record</c>, the camera's last seconds kept as clips (<see cref="CameraReplay"/>); <c>hold</c>, a wait while a script
 /// outside taps the control named <c>"tap"</c> with a real touch, and <c>expect</c>, what that tap should have done (entry 353, see
-/// <see cref="Hold"/>); <c>close</c>, the system's own sheet over the screen, such as the photo picker, closed as its Cancel would, or
+/// <see cref="Hold"/>); <c>audit</c>, a wait while a script outside reads the screen as a screen reader would (entry 461, see
+/// <see cref="Audit"/>); <c>close</c>, the system's own sheet over the screen, such as the photo picker, closed as its Cancel would, or
 /// else the camera. A step it does not know fails and says so. Before the
 /// application starts, the first run's questions are answered unless the scenario has <c>"firstRun": "ask"</c>, and <c>"caliber"</c> with
 /// <c>"distanceInches"</c> are saved as the Capture screen's setup. <c>"stopOnFailure": false</c> carries on past a step that failed.
@@ -548,6 +549,8 @@ internal static class Scenario
                 return await OnUi(() => CameraReplay.RecordStep(step));
             case "hold":
                 return await Hold(step.Text("tap"), Name(step.Text("name"), "hold"), TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 120), 1, 1800)));
+            case "audit":
+                return await Audit(Name(step.Text("name"), "audit"), TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 120), 1, 1800)));
             case "expect":
                 return await Expect(step, TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 5), 0, 600)));
             case "close":
@@ -1269,6 +1272,11 @@ internal static class Scenario
     /// <summary>What the script that taps writes before it takes the hold away: <c>{"ok": true, "detail": "..."}</c>.</summary>
     internal const string TappedFile = "tapped.json";
 
+    /// <summary>The file an <c>audit</c> step writes for the script that reads the screen, and the script's answer (entry 461).</summary>
+    internal const string AuditFile = "audit.json";
+
+    internal const string AuditedFile = "audited.json";
+
     /// <summary>How many lines the log had when the last hold began; <c>expect</c>'s <c>"log"</c> looks only at the lines after it.</summary>
     private static int logMark;
 
@@ -1332,6 +1340,56 @@ internal static class Scenario
         finally
         {
             File.Delete(tapped);
+        }
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 461 section 2.1: an <c>audit</c> stops the scenario on a screen and writes <see cref="AuditFile"/>, the
+    /// screen's name and what <see cref="HoldFor"/> says about every control showing, its place, the view's place and its units. A script
+    /// outside (scripts/screen-reader-audit.py) reads the same screen with the platform's own tooling, the accessibility node tree over
+    /// adb on Android and XCTest's accessibility audit on the simulator, keeps what it found beside its own results, writes
+    /// <see cref="AuditedFile"/> and takes the audit file away; the scenario then goes on. The script judges, not this: the step fails
+    /// only when nothing answered.
+    /// </summary>
+    private static async Task<(bool, string)> Audit(string name, TimeSpan most)
+    {
+        string audit = Path.Combine(Results, AuditFile);
+        string audited = Path.Combine(Results, AuditedFile);
+        File.Delete(audited);
+        var said = await OnUi(() => Look(string.Empty));
+        said.Remove("tap");
+        said["name"] = name;
+        string text = said.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+        await File.WriteAllTextAsync(Path.Combine(Results, name + ".audit.json"), text);
+        await File.WriteAllTextAsync(audit + ".part", text);
+        File.Move(audit + ".part", audit, overwrite: true);
+        DiagnosticLog.Info("scenario.audit", ("screen", name));
+
+        var clock = Stopwatch.StartNew();
+        while (File.Exists(audit) && clock.Elapsed < most)
+        {
+            await Task.Delay(100);
+        }
+
+        if (File.Exists(audit))
+        {
+            File.Delete(audit);
+            return (false, $"nothing read {name} in {most.TotalSeconds:0} s");
+        }
+
+        try
+        {
+            var answer = File.Exists(audited) ? JsonNode.Parse(await File.ReadAllTextAsync(audited)) as JsonObject : null;
+            string detail = answer?["detail"]?.GetValueKind() == JsonValueKind.String ? answer["detail"]!.GetValue<string>() : "no answer";
+            return (answer is not null, $"{name}: {detail}");
+        }
+        catch (JsonException e)
+        {
+            return (false, $"{name}: what the script wrote is not JSON: {e.Message}");
+        }
+        finally
+        {
+            File.Delete(audited);
         }
     }
 

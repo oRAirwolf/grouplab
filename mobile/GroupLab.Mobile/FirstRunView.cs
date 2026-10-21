@@ -198,7 +198,7 @@ public sealed class FirstRunView : UserControl
                 {
                     survey.IsVisible = false;
                     Answered();
-                });
+                }, runHeight: Screens.Touch);
                 bool doneOffered = false;
                 benchmark.Ended += () =>
                 {

@@ -107,6 +107,7 @@
     "src/GroupLab.App/SheetView.cs",
     "src/GroupLab.App/ShotOrderChart.cs",
     "src/GroupLab.App/ShotsCurve.cs",
+    "src/GroupLab.App/SpokenNames.cs",
     "src/GroupLab.App/SpreadStrips.cs",
     "src/GroupLab.App/SupportLink.cs",
     "src/GroupLab.App/SurveyQueue.cs",

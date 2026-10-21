@@ -9,6 +9,8 @@ using Avalonia.VisualTree;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 
+using GroupLab.Tests.Support;
+
 namespace GroupLab.App.Tests;
 
 /// <summary>
@@ -120,7 +122,7 @@ public class Entry447Tests
             }
 
             stops.Add(c);
-            if (string.IsNullOrWhiteSpace(ControlAutomationPeer.CreatePeerForElement(c).GetName()))
+            if (!ScreenReaderAudit.IsSpokenName(ControlAutomationPeer.CreatePeerForElement(c).GetName()))
             {
                 unnamed.Add($"{c.GetType().Name} {AutomationProperties.GetAutomationId(c)} {c.Name}");
             }
@@ -157,6 +159,8 @@ public class Entry447Tests
                 Assert.True(stops.Count > 5 && stops.Count < 800, $"{place}: {stops.Count} stops");
                 Assert.Contains(stops, s => s.Classes.Contains(GroupLab.App.Theme.AppStyles.RailButton));
                 Assert.True(unnamed.Count == 0, place + ": " + string.Join("; ", unnamed));
+                var found = ScreenReaderAudit.Findings(window, stops);
+                Assert.True(found.Count == 0, place + ": " + string.Join("; ", found));
             }
         }
         finally
@@ -186,6 +190,8 @@ public class Entry447Tests
                 Assert.False(lost, owned.Title + ": the focus was lost");
                 Assert.True(stops.Count > 1, owned.Title + ": nothing takes the focus");
                 Assert.True(unnamed.Count == 0, owned.Title + ": " + string.Join("; ", unnamed));
+                var found = ScreenReaderAudit.Findings(owned, stops);
+                Assert.True(found.Count == 0, owned.Title + ": " + string.Join("; ", found));
                 owned.Close();
             }
         }

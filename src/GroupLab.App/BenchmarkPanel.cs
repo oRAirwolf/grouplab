@@ -36,13 +36,15 @@ public sealed class BenchmarkPanel : StackPanel
 
     /// <param name="runWords">The start button's words: "Run it now" on the first run screen, "Run the benchmark now" in Settings.</param>
     /// <param name="later">Where there is a Later, what it does; null for no Later.</param>
-    public BenchmarkPanel(AppSettingsStore store, Func<(TargetDefinition? Definition, IImagingBackend Backend)> prepare, Func<Task>? afterRun, string runWords, Action? later)
+    /// <param name="runHeight">The start button's least height: 44 on the computer, the phone's 48 to touch (entry 461 section 2.1).</param>
+    public BenchmarkPanel(AppSettingsStore store, Func<(TargetDefinition? Definition, IImagingBackend Backend)> prepare, Func<Task>? afterRun, string runWords, Action? later,
+        double runHeight = 44)
     {
         this.store = store;
         this.prepare = prepare;
         this.afterRun = afterRun;
         Spacing = Tokens.Space8;
-        run = new Button { Content = runWords, MinHeight = 44 };
+        run = new Button { Content = runWords, MinHeight = runHeight };
         run.Click += (_, _) => Start();
         cancel = new Button { Content = SharingWords.BenchmarkCancel, MinHeight = 44, IsVisible = false };
         cancel.Click += (_, _) => Cancel();

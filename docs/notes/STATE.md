@@ -9,23 +9,22 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-21, entry 461 part 1 done (research rows decided); parts 2 and 3 next (before it: entry 460, questions 100 and 98).
+**Last rewritten:** 2026-10-21, entry 461 parts 1 and 2.1 done (research rows; screen reader audits); 2.2 and 3 next.
 
 ---
 
 ## In flight
 
 - **Entry 461 (2026-10-21), Alan's queue for the rest of the week**: part 1 done, every "not yet" research row decided;
-  published `recognizing-store-bought-targets` and `opencv-on-android-from-dotnet`, and wrong-bull's October sections. Next: part 2
-  (screen reader audits on all three, then a phone photograph's codes faster), part 3 (sync option A's engine, nothing reachable).
+  published `recognizing-store-bought-targets` and `opencv-on-android-from-dotnet`, and wrong-bull's October sections. Part 2.1:
+  screen reader audits (`ScreenReaderAudit`, `scripts/screen-reader-audit.py`, "Screen reader audit" on the emulator and simulator);
+  buttons holding a panel now named by their words (`SpokenNames`). Next: 2.2 (a photograph's codes faster), 3 (sync option A).
 - **Entry 460 (2026-10-20)**: dark selection #f800f8 (question 100); copies of one single-page design asked once, "Pool these 3
   pictures as one group?", on both (question 98, `CopiesQuestion`).
 - **Request 103 answered by Alan (2026-10-20)**: Top Gun's group is five-shot extreme spread, averaged. Groups are set beside it as
   the average five-shot spread their sigma implies (`TopGun.OnItsBasis`, `TopGun.Compared`), in Advanced and Compare loads on both.
 - **Alan's run of 2026-10-20, own limit 60% of the week**: request 103, entry 447 part 2's remainder and a Phase 9 step done:
   holes on a 600 dpi scan 492 to 378 ms, every result the same (`BinaryMorphology.Open`). Next slowest: a phone photograph's codes.
-- **Questions 102 to 105 (2026-10-19)**: the Windows package carries only `samples/sample-consent.md`. **Entries 457 to 459**: report
-  Send everywhere; notes count reports and targets; the nightly publishes the site itself (its token's pushes start nothing).
 - **Entries 455 and 456 (2026-10-19)**: Ballistics' Point blank view (`PointBlankModel`, `PointBlankReport`, `PointBlankCard`); the rifle's
   Scope and mount (`ScopeMount`, `ScopeTracking`, `TopGun`), schema 5. Top Gun's comparison done (request 103). **Later idea**: tracking
   measured from a scanned tracking target (72 in tall at 20 mil and 100 yd: tiled pages or a plotter).

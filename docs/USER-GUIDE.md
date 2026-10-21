@@ -353,6 +353,12 @@ print confirmation, the figures in their own window and the three group tools, a
 screen reader reads. Fudd buster holds only words and two plots, so its page takes the focus and the arrows and Page Down read
 down it.
 
+**With a screen reader** (Narrator, TalkBack or VoiceOver): every button, box and choice is checked by machine for what a screen reader
+needs. Each has a name in words and says what it is, a button holding words and a picture is read by its words, and on the computer
+Tab reaches each one. On the phone each is at least 48 by 48 to touch, and the emulator and the simulator read the screens the way
+TalkBack and VoiceOver do. Whether the order things are read in makes sense aloud is something only a person can judge, and nobody
+using a screen reader has tried GroupLab yet.
+
 ### Click a hole to edit it
 
 A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:

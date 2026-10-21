@@ -10,6 +10,8 @@ using GroupLab.Core.Registration;
 using GroupLab.Core.StoreTargets;
 using Window = Avalonia.Controls.Window;
 
+using GroupLab.Tests.Support;
+
 namespace GroupLab.App.Tests;
 
 /// <summary>
@@ -36,6 +38,8 @@ public class Entry447WindowsTests
         Assert.False(lost, what + ": the focus was lost");
         Assert.True(stops.Count > 0, what + ": nothing takes the focus");
         Assert.True(unnamed.Count == 0, what + ": " + string.Join("; ", unnamed));
+        var found = ScreenReaderAudit.Findings(dialog!, stops);
+        Assert.True(found.Count == 0, what + ": " + string.Join("; ", found));
         dialog!.Close();
         Settle();
     }

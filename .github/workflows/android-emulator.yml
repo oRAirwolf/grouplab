@@ -123,6 +123,24 @@ jobs:
           disable-animations: true
           script: bash scripts/android-touch.sh apk/grouplab-dev-x86_64.apk android-touch
 
+      # Entry 461 section 2.1: what TalkBack would find, by machine: Android's accessibility node tree on the sweep's screens, every node
+      # that can be tapped named, with a role and 48 dp to touch, and nothing that can be tapped missing (scripts/android-audit.sh).
+      - name: Screen reader audit
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 40
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          ram-size: 4096M
+          disk-size: 6000M
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back emulated
+          disable-animations: true
+          script: bash scripts/android-audit.sh apk/grouplab-dev-x86_64.apk android-audit
+
       # Entry 414 section 2: GroupLab Dev stopped by Android in the middle of a reading, five times at different points, and started again
       # each time; a start that runs nothing fails here with Android's log kept (scripts/android-force-stop.sh).
       - name: Started again after a stop in the middle of a reading
@@ -243,6 +261,7 @@ jobs:
           path: |
             android-sweep
             android-touch
+            android-audit
             android-force-stop
             android-screens
             android-quality

@@ -47,6 +47,7 @@
     <Compile Include="..\Shared\Temp.cs" Link="Support\Temp.cs" />
     <Compile Include="..\Shared\TestTempRoot.cs" Link="Support\TestTempRoot.cs" />
     <Compile Include="..\Shared\StandInPoster.cs" Link="Support\StandInPoster.cs" />
+    <Compile Include="..\Shared\ScreenReaderAudit.cs" Link="Support\ScreenReaderAudit.cs" />
   </ItemGroup>
 
 </Project>

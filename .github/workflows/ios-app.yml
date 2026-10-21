@@ -763,6 +763,51 @@ jobs:
           [ "$failed" = 0 ] && echo "### Real taps on the simulator: Take a picture, Choose a photo, Done and Continue each did their job, with the keyboard up and down." >> "$GITHUB_STEP_SUMMARY"
           exit $failed
 
+      # Entry 461 section 2.1: what VoiceOver would find, by machine. GroupLab Dev runs scripts/scenarios/phone-audit.json, the sweep's
+      # screens, stopping at each; the XCUITest runner from Real taps runs XCTest's own accessibility audit there, and
+      # scripts/screen-reader-audit.py judges what it found: anything a screen reader cannot reach or name fails, and contrast, Dynamic
+      # Type and clipped text are kept in the artifact.
+      - name: Screen reader audit
+        if: ${{ !cancelled() && env.UDID != '' }}
+        timeout-minutes: 40
+        run: |
+          project=scripts/touch/ios/GroupLabTouch.xcodeproj
+          built="$RUNNER_TEMP/touch-build"
+          if [ ! -d "$project" ] || [ ! -d "$built" ]; then
+            brew install xcodegen > audit-xcodegen.log 2>&1 || { tail -20 audit-xcodegen.log; exit 1; }
+            xcodegen generate --spec scripts/touch/ios/project.yml --quiet
+            xcodebuild build-for-testing -project "$project" -scheme GroupLabTouch -destination "platform=iOS Simulator,id=$UDID"               -derivedDataPath "$built" > audit-build.log 2>&1 || { grep -E "error" audit-build.log | head -40; echo "::error::The XCUITest runner did not build"; exit 1; }
+          fi
+          taps="$RUNNER_TEMP/audit-taps"
+          rm -rf "$taps" && mkdir -p "$taps"
+          xcrun simctl ui "$UDID" appearance light || true
+          xcrun simctl ui "$UDID" content_size large || true
+          xcrun simctl terminate "$UDID" org.grouplab.app.dev || true
+          data=$(xcrun simctl get_app_container "$UDID" org.grouplab.app.dev data)
+          folder="$data/Documents/scenario"
+          mkdir -p "$folder"
+          rm -rf "$folder/results" "$folder/scenario.json.ran"
+          TEST_RUNNER_GROUPLAB_TAPS="$taps" xcodebuild test-without-building -project "$project" -scheme GroupLabTouch             -destination "platform=iOS Simulator,id=$UDID" -derivedDataPath "$built" -only-testing:TouchTests/TouchTests/testTaps > audit-runner.log 2>&1 &
+          runner=$!
+          start=$(date +%s)
+          until [ -f "$taps/ready" ]; do
+            if ! kill -0 "$runner" 2>/dev/null; then tail -40 audit-runner.log; echo "::error::The XCUITest runner ended before it could audit"; exit 1; fi
+            if [ $(( $(date +%s) - start )) -gt 300 ]; then tail -40 audit-runner.log; echo "::error::The XCUITest runner was not ready in 300 s"; exit 1; fi
+            sleep 2
+          done
+          cp scripts/scenarios/phone-audit.json "$folder/scenario.json"
+          # At 300 dpi, as the sweep reads it: the audit is about the screens, not the reading's speed.
+          sips -Z 3300 -s dpiWidth 300 -s dpiHeight 300 samples/gl-cf25-ltr-d-25-shots-600-dpi.png --out "$folder/sample.png" > /dev/null
+          xcrun simctl launch --console-pty "$UDID" org.grouplab.app.dev > audit-console.log 2>&1 &
+          launcher=$!
+          failed=0
+          python3 scripts/screen-reader-audit.py ios --data "$data" --taps "$taps" --pid "$launcher" --out screen-reader-audit --seconds 1500 || failed=1
+          touch "$taps/stop"
+          xcrun simctl terminate "$UDID" org.grouplab.app.dev || true
+          wait "$runner" || echo "::warning::The XCUITest runner ended with an error; audit-runner.log has it"
+          python3 scripts/screen-reader-audit.py judge screen-reader-audit || failed=1
+          exit $failed
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -775,6 +820,8 @@ jobs:
             touch
             touch-*.log
             touch-last.png
+            screen-reader-audit
+            audit-*.log
             dev-console.log
             dev-last-screen.png
             build-dev-simulator.log
