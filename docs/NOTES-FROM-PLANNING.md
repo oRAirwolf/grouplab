@@ -43,6 +43,80 @@ note, and "Hey Quack, pool the chosen in Session records..."); and nothing is re
 a note ends at its own end, anything with a path or another heading is refused, the wording is rewritten short and casual in Alan's
 voice, and drafts go to a private channel first. Not now.
 
+## 2026-10-21, entry 465: the eleven interface looks, chosen by Alan (1A 2A 3B 4B 5A 6A 7B 8A 9A 10B 11A)
+
+**Status: actioned 2026-10-21. All eleven looks built, on the computer and the phone wherever the screen exists on both (4B's pill is the computer's only). Not done: the pictures, which the weekly and push screenshot jobs retake (the desktop set on this push; the phone's on the emulator's next walk); within 1A, the "?" beside an unsure line is not yet kept clear of the tags, and the phone's result picture still draws no tags. Questions 107 and 108 raised; neither blocks anything.**
+
+From the planning session, 2026-10-21 19:50 UTC (13:50 Denver). Alan chose from the canvas "Interface looks (entry 462)"
+(claude.ai/artifact/1QJ1rGETcBpGP3dFmwrvUF), drawn for the DESIGN NEEDED lines of entry 462 sections 1 and 3. Take this after entry
+464, under the same limit (95% of this week before the reset at 2026-10-22 02:00 UTC, the usual 85% guard after it: finish the section
+in progress and stop). Main model. One commit per item or per pair of small items, STATE rewritten after each; the computer and the
+phone together wherever the screen exists on both. Mark both DESIGN NEEDED lines in for-alan.md answered. Every change keeps the
+LayoutAudit, the screen reader audit and the site audit green, and the screenshots, guides, Features and README follow in the same
+change (entry 267). The canvas drawings are mockups: match their idea, not their pixels, and keep GroupLab's own look.
+
+## 1A Marking: numbers outside the ring, the selected shot an open ring
+
+Each bull's number sits outside its outer ring (top left, plain muted text), and each hole's number sits in its dark tag just outside
+the ring, placed so no tag overlaps another tag, a bull number or a hole. The selected shot is shown by an open magenta ring around the
+hole with four short ticks outside it, so the hole itself stays visible (no fill or cross through it); its tag turns magenta. On Any
+target, holes close together get their tags fanned out on short leader lines (1a, 1b, 1c in a column), never stacked.
+
+## 2A Analysis: units in each heading, the key under the plot
+
+"Shots, from their own bull" headings carry the unit in each heading ("across, in", "up/down, in", "radius, in", following the unit
+chosen). The plot's key moves out from over the plot to a compact box directly under it, two columns where it fits.
+
+## 3B Store-bought target: a short bar along the bottom of the picture
+
+"Which target is this?" becomes a bar docked along the bottom of the picture area: the question and one line of why on the first
+line, the sizes as buttons side by side, and Not sure. The picture is moved up so the bull being asked about is fully in view above the
+bar. On the phone the same as a bottom sheet that never covers the bull.
+
+## 4B Set tab: the Scale checked pill moves to the top of the side panel
+
+The pill leaves the header (the path keeps its full room) and sits at the top of the side panel, with one line under it saying how the
+scale was checked (for example "From the printed codes on all 3 sheets, against your printer check"). The same wherever the pill
+appears.
+
+## 5A First run: one question at a time
+
+The first run asks one question per step, with "Question N of M", a step bar, Back, Next and Skip for now, so every step fits a 720 high
+window with its buttons in view. Nothing asked changes, and the consent wording stays word for word.
+
+## 6A Demo tour: the card beside the part it describes, with a pointer
+
+The tour's card is placed beside the outlined part, on whichever side has room, never over the part it describes or its text, with a
+small pointer toward it. If no side has room, it falls back to the bottom of the window.
+
+## 7B Compare loads: the pictures stay; the space says what the difference means
+
+With two loads, the group pictures keep their size and the rest of "Each load's group" holds "What the difference means": the main
+figures of each load side by side and GroupLab's own plain sentence on whether the difference can be told apart at these shot counts
+(and how many shots would, where GroupLab already works that out). No new statistics invented for it. With three or more loads the card
+is as now.
+
+## 8A Phone, Scale markers: no dotted text; a "What is this?" button by each heading
+
+Body text on that page is plain. Each marker's name is a heading with a small "What is this?" button beside it that opens the glossary
+entry. Look at the other phone pages with many dotted words and treat them the same way where it reads better; say which.
+
+## 9A Phone, Targets at the largest text: one field to a row, the label above it
+
+At large text sizes (where two fields side by side would wrap their labels), "Made for your optic" puts one field to a row with its
+label above it. At normal sizes it may stay two to a row.
+
+## 10B Site, links inside sentences in the dark theme: a thin, softer underline, full on hover
+
+Links inside sentences (not the menu, buttons or cards) get a 1 px underline in the link color at about 55% opacity, offset about
+4 px, which becomes a full 2 px underline on hover and focus. This is the second cue WCAG 1.4.1 asks for. Do the same in the light theme
+only if the audit finds the same problem there.
+
+## 11A Site, amber on the grey panels of "How it works", light theme: a white panel behind them
+
+The big numbers, the stage labels and the strip above each deep dive keep their amber and get a white panel behind them, so they pass
+4.5 to 1. The site audit holds it.
+
 ## 2026-10-21, entry 463: the three sync screens, chosen by Alan (1A, 2A, 3B)
 
 **Status: actioned 2026-10-21. Not done: the phone's pictures of the Sync page and the side by side, which need the emulator's walk; sync is not proven on two real devices. The three screens were built in one commit rather than one each, because they share one Settings section, one engine and one set of words, and none works without the others.**

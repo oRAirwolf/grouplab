@@ -9,13 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-21, entry 466 done (request 107 "not for now"); entries 464 and 465 in progress with helpers (entry 467).
+**Last rewritten:** 2026-10-21, entries 466 and 465 done (request 107 "not for now"; the eleven looks); entry 464 in progress with helpers (entry 467).
 
 ---
 
 ## In flight
 
-- **Entry 467 (2026-10-21)**: Alan allowed helpers in parallel until 20:00 Denver (02:00 UTC) for entries 464 to 466; six running.
+- **Entry 467 (2026-10-21)**: Alan allowed helpers in parallel until 20:00 Denver (02:00 UTC) for entries 464 to 466; paced by the
+  five-hour window, which nine helpers would have spent in under an hour (`usage-now.json` now records its reset).
+- **Entry 465 (2026-10-21)**, done: all eleven looks (1A to 11A) on the computer and the phone; pictures follow from the screenshot jobs.
 - **Entry 466 (2026-10-21)**, done: request 107 answered "not for now"; `tester-notes.py` stays off, no webhook asked for.
 - **Entry 463 (2026-10-21)**, done: sync's screens 1A, 2A, 3B on the computer and the phone (`MainWindow.Sync`, `PhoneSync`,
   `SyncScreens`), in the guide, Features, README; Phase 7 Built, not proven. Phone pictures wait on the emulator's walk.
@@ -24,13 +26,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 461 (2026-10-21), Alan's queue for the week**, done: three research pieces published; screen reader audits on all three
   (`ScreenReaderAudit`, `scripts/screen-reader-audit.py`), `SpokenNames`, Android's TalkBack boxes moved (`AccessibilityOnScreen`);
   codes measured (question 106); sync option A's engine, schema 6 (`SyncEngine`, `grouplab sync`), reached by nothing.
-- **Entry 460 (2026-10-20)**: dark selection #f800f8 (question 100); copies of one single-page design asked once, "Pool these 3
-  pictures as one group?", on both (question 98, `CopiesQuestion`).
-- **Request 103 answered by Alan (2026-10-20)**: Top Gun's group is five-shot extreme spread, averaged. Groups are set beside it as
-  the average five-shot spread their sigma implies (`TopGun.OnItsBasis`, `TopGun.Compared`), in Advanced and Compare loads on both.
-- **2026-10-20**: Phase 9, holes on a 600 dpi scan 492 to 378 ms, every result the same (`BinaryMorphology.Open`).
-- **Entry 447 (2026-10-18 to 20)**: all four parts done; Real taps proved by 20 green runs. Part 2's remainder done 2026-10-20: six
-  windows tabbed headless (`Entry447WindowsTests`; CSV mapping names and Fudd buster's focus fixed), the phones' deeper pages named. Left: a real screen reader.
 
 ## The next three
 
@@ -53,7 +48,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 2. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
-3. The looks sent as DESIGN NEEDED by entry 462 (two site colours, eight interface lines), once planning draws them.
+3. Entry 464's remainder: sync tidying, proofs, articles and speed merged as they finish, then the full consistency audit.
 
 ## Blocked, and on what
 
@@ -67,7 +62,9 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave it):
+Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave it):
+- **108** the scan's own resolution as a scale has no words on the Set tab yet (nothing waits)
+- **107** whether the phone stops numbering found holes on a marking with no bulls (nothing waits)
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **36** a light installer, measured

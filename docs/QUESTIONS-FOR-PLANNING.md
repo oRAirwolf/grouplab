@@ -21,6 +21,23 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-21, question 108: the scan's own resolution as a scale has no words on the Set tab yet
+
+**Status: open.** Entry 465 item 4B put a line under the Scale checked pill saying how the scale was found, built only from what each
+sheet's scale records (`ScaleSaid` in `src/GroupLab.Core`). A flatbed scan's stated resolution offered as the scale
+(`StatedResolutionScale.Offer`, entry 130 section 4.1) is reached by no screen today, so it has no case of its own; if it is ever wired
+in, it would read as "a length you measured", which is untrue. **Options:** (a) give it its own marker on the scale and its own line
+("From the scan's own resolution, 600 dpi") when it is wired; (b) leave it until then. **I would choose (b)**, with (a) done in the same
+change that first lets a person reach it. Nothing waits on this.
+
+## 2026-10-21, question 107: should the phone stop numbering found holes on a marking with no bulls?
+
+**Status: open.** Entry 465 item 1A placed every bull number and hole tag by one shared rule on the computer and the phone. On the phone,
+holes found on a marking with no bulls (Any target, found by Find holes) still carry the old count number (1, 2, 3); the computer shows
+none there, and entry 376 A6 says a hole never carries a count. **Options:** (a) the phone drops them, as the computer does; (b) both
+show the tag 1a, 1b, ... of the one bull that a no-bull marking has. **I would choose (a)**, a one-line change, because it is what entry
+376 A6 already decided; I left it because 1A did not ask for it. Nothing waits on this.
+
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 
 **Status: open, being tested (entry 278 section 3):** Alan chose to test rather than choose. The three pages, A as built, B a hairline on the card's edge and C corner marks, are made; request 53 asks for them printed, scanned and photographed with a card, and the answer comes from measuring those photographs. A stays built until then.

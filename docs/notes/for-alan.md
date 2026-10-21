@@ -1,5 +1,5 @@
 **Open: 25.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
-**DESIGN NEEDED** (entry 462 section 3; not a request for you; planning, please): **looks found in the interface sweep, one line a
+**DESIGN NEEDED** (entry 462 section 3): **Answered 2026-10-21: 1A, 2A, 3B, 4B, 5A, 6A, 7B, 8A, 9A (entry 465), all built 2026-10-21.** The lines as they were: **looks found in the interface sweep, one line a
 screen.** The faults are fixed and held by tests (words cut off, controls past the edge, words over words, contrast, failures now in the
 centred warning); these are looks, at 1280 by 720 unless said, pictures in `docs/figures/screens/current/` and `docs/figures/screens/phone/`.
 1. **Marking** (`marking-light-1280x720.png`): hole numbers stack on the bull numbers around bulls 14 and 17, and the magenta marker
@@ -13,7 +13,7 @@ centred warning); these are looks, at 1280 by 720 unless said, pictures in `docs
 7. **Compare loads** (`compare-light-1280x720.png`): two loads leave half of the "Each load's group" card empty.
 8. **Phone, scale markers** (`fold-scale-markers-light.png`): so many glossary words are dotted-underlined that the page reads as links.
    **Phone, targets at the largest text** (`fold-targets-largest-text-light.png`): the optic labels take three lines.
-**DESIGN NEEDED** (entry 462 section 1; not a request for you; planning, please): **two colour findings on grouplab.org that only a
+**DESIGN NEEDED** (entry 462 section 1): **Answered 2026-10-21: 10B and 11A (entry 465), built 2026-10-21; the underline went on in both themes, because the light theme had the same fault on six links.** The lines as they were: **two colour findings on grouplab.org that only a
 look decision fixes.** Everything else the accessibility audit found is fixed.
 1. **Links inside sentences in the dark theme** are amber on light grey text with no underline, about 2 to 1 between the two, so a
    reader who cannot tell the colours apart cannot see the link (WCAG 1.4.1 wants 3 to 1 or a second cue). 101 links across the guides,

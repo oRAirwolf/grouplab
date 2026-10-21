@@ -323,6 +323,35 @@ conditions for taking it up again; `for-alan.md` now counts 25 open. `scripts/te
 built, switched off while `DISCORD_TESTERS_WEBHOOK` does not exist, and nobody is asked for it. `docs/notes/AUTOMATION.md` says so.
 The "For ..." notes stay in `for-alan.md` for Alan to pass on by hand.
 
+## Entry 465: the eleven interface looks Alan chose, built (2026-10-21)
+
+Built by five helpers in their own worktrees under entry 467, merged and tested together here. Each item is its own commit.
+
+| item | what a person sees now | held by |
+|---|---|---|
+| 1A Marking (645d83f3) | bull numbers outside the outer ring at the top left; hole tags just outside the ring, never on a tag, a bull number or a hole; the selected shot an open magenta ring with four ticks and a magenta tag; close holes on Any target fanned in a column on leader lines | `MarkTags.Place` (Core, shared by both); `MarkTagsTests`, `Entry465MarkingTests`, `Entry465PhoneMarkingTests` |
+| 2A Analysis (95c9e91b) | the shots headings carry the unit chosen ("across, in"); the plot's key in a box under the plot, two columns where it fits | `Entry465Tests`, `Entry465PhoneTests` |
+| 3B Store-bought (54c20722) | "Which target is this?" a bar along the bottom of the picture, the bull moved up whole above it; a bottom sheet on the phone | `StoreTargetScreenTests`, `StoreTargetPhoneTests` |
+| 4B Set tab (4294d76e, c30b4505) | the Scale checked pill at the top of the side panel with one line saying how the scale was found, built only from what each sheet's scale records | `ScaleSaid`, `ScalePillTests`, `ScaleSaidTests` |
+| 5A First run (eea0a1e7) | one question a step, "Question N of M", a step bar, Back, Next and Skip for now; every step fits 1280 by 720; every question's words compared with a recording taken before the change | `FirstRunSteps`, `FirstRunWordsBefore` (both suites) |
+| 6A Demo tour (0742f96f, 30cb8ac7) | the card beside the outlined part with a pointer, the bottom of the window only where no side has room; on the phone the step's number moves clear of the card | `DemoCardPlacement`, `Entry465PhoneDemoTests`, the phone sweep |
+| 7B Compare loads (06ccbfac) | with two loads, "What the difference means": the main figures side by side and GroupLab's existing sentence on whether these shots tell them apart and how many would | `LoadComparison.Compare`, `Entry465CompareTests` |
+| 8A Phone, Scale markers (fd3e362d) | plain body text, a "What is this?" button by each marker's name; five new glossary entries; the Targets library rows and the optic card made plain too; Settings, Capture, Sessions, Ballistics and the figures left as they read well | `Entry465PhoneWordsTests` |
+| 9A Phone, Targets at largest text (fd3e362d) | one field to a row, the label above, when a label would not fit half the width on one line | `Entry465PhoneWordsTests` |
+| 10B Site links (3d5edaef) | a 1 px underline at 55% in sentences, full 2 px on hover and focus, in both themes: the light theme had the same fault on six links | `scripts/site-audit.cjs`, 82 pages, 0 findings |
+| 11A Site, How it works (3d5edaef) | a white panel behind the amber numbers, stage labels and strips, passing 4.5 to 1 | `scripts/site-audit.cjs` |
+
+**Merging.** Three helpers each named a new test file `Entry465PhoneTests` or `Entry465Tests`; the later ones became
+`Entry465PhoneWordsTests`, `Entry465MarkingTests` and `Entry465PhoneMarkingTests`, and the backing names them. Put together, the phone
+sweep found the tour's step number under the card's title on the result plot, which now fills the screen since its key moved under it;
+fixed in 30cb8ac7. A temp folder reused across ended test runs carried a "did not exit" marker into the next run and put GroupLab's own
+error bar on the first screen; a fresh folder cleared it, so nothing in the application was wrong there.
+
+**Tests** on the merged head: Core 3112 passed (the two local-only failures were the inbox line, which CI sees empty, and one British
+spelling in a site comment, fixed); App 624 passed before 5A, 6A, 3B and 4B were merged and 638 on the merged head (30cb8ac7); Mobile 219 passed with the sweep and demo tests passing after the fix. Claims 5726, all backed; README
+current; site build ok. **Is it worth an article?** No: these are GroupLab's own screens, and nothing in them changes what another
+shooter does or another developer builds.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
