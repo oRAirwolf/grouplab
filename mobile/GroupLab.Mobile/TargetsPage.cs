@@ -53,24 +53,24 @@ public sealed class TargetsPage : UserControl
         column.Children.Add(Screens.Title("Targets"));
         column.Children.Add(Screens.Line("Print a sheet GroupLab reads by itself, or share it as a PDF to print on a computer. Print it at actual size."));
 
-        // Entry 246, look B: the optic's form on one card, two fields to a row, the choices as cards, and the one action in amber.
+        // Entry 246, look B: the optic's form on one card, two fields to a row, the choices as cards, and the one action in amber. Entry 465,
+        // 9A: one to a row, each label above its box, where two side by side would wrap a label (the largest text sizes).
         static Control Pair(Control a, Control b)
         {
             Screens.Detach(a);
             Screens.Detach(b);
-            Grid.SetColumn(b, 2);
-            return new Grid { ColumnDefinitions = new ColumnDefinitions("*,12,*"), Children = { a, b } };
+            return new FieldPair { Children = { a, b } };
         }
 
         // Entry 243 section 4 item 4: the C bull's diamond beside the disc, sized by the same rule.
         column.Children.Add(Screens.Card(
             Screens.Heading("Made for your optic"),
-            Screens.Dim("Say how far, the lowest magnification you will shoot at (1 for a red dot, with the dot's size) and how many shots. GroupLab sizes a bull you can center on through that optic, and makes as many sheets as the shots need."),
+            Screens.Quiet("Say how far, the lowest magnification you will shoot at (1 for a red dot, with the dot's size) and how many shots. GroupLab sizes a bull you can center on through that optic, and makes as many sheets as the shots need."),
             Pair(Field("Distance, yd", distance), Field("Lowest magnification", magnification)),
             Pair(Field("Red dot size in MOA, at 1x only", dot), Field("Shots", shots)),
             Screens.Dim("Paper"),
             Pair(letter, a4),
-            Screens.Dim("Bull shape"),
+            Screens.Quiet("Bull shape"),
             Pair(disc, diamond),
             Screens.Primary("Make the sheet", Generate),
             Screens.Detach(said)).Id("targets-optic"));
@@ -91,14 +91,16 @@ public sealed class TargetsPage : UserControl
         // Each family on a card of its own, a sheet a row: its name, and beneath it its paper and how many bulls it has.
         foreach (var family in sheets.GroupBy(s => s.Family))
         {
-            column.Children.Add(Screens.Dim(family.Key));
+            // Entry 465, 8A: the family's name and each sheet's paper and bulls are names, not explanations, so they are plain: "bulls" in
+            // every row had dotted forty lines of the library.
+            column.Children.Add(Screens.Quiet(family.Key));
             var rows = new StackPanel();
             foreach (var sheet in family)
             {
                 int bulls = sheet.Definition.Bulls.Count(b => b.Scoring);
                 string paper = sheet.Paper.Split(',')[0];
                 string count = bulls == 1 ? "1 bull" : $"{bulls} bulls";
-                rows.Children.Add(Screens.Row(sheet.Definition.Name, sheet.Sheets > 1 ? $"{paper} · {count} a sheet, {sheet.Sheets} sheets" : $"{paper} · {count}", () => Content = Sheet(sheet)));
+                rows.Children.Add(Screens.Row(sheet.Definition.Name, sheet.Sheets > 1 ? $"{paper} · {count} a sheet, {sheet.Sheets} sheets" : $"{paper} · {count}", () => Content = Sheet(sheet), explain: false));
             }
 
             column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
@@ -245,7 +247,7 @@ public sealed class TargetsPage : UserControl
             var saved = Phone.Settings.LoadBoards();
             if (saved.Count == 0)
             {
-                boards.Children.Add(Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.NoBoards));
+                boards.Children.Add(Screens.Quiet(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.NoBoards));
             }
 
             foreach (var board in saved)
@@ -295,15 +297,20 @@ public sealed class TargetsPage : UserControl
             }
         }
 
+        // Entry 465, 8A: the lines are plain, and each marker's name is a heading with "What is this?" beside it for the glossary's entry;
+        // every line here named a glossary word, so every line was dotted and the page read as a page of links.
         Fill();
         return Screens.Card(
             Screens.Heading(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Heading),
-            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Intro),
-            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Brackets + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.BracketsGive),
+            Screens.Quiet(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Intro),
+            PhoneTerms.Named(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Brackets),
+            Screens.Quiet(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.BracketsGive),
             Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintBrackets, () => Print(GroupLab.Core.ScaleMarkers.MarkerKind.Bracket)).Id("targets-markers-brackets"),
-            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Bars + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.BarsGive),
+            PhoneTerms.Named(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Bars),
+            Screens.Quiet(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.BarsGive),
             Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintBars, () => Print(bars)).Id("targets-markers-bars"),
-            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Stickers + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.StickersGive),
+            PhoneTerms.Named(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Stickers),
+            Screens.Quiet(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.StickersGive),
             Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintStickers, () => Print(GroupLab.Core.ScaleMarkers.MarkerKind.Sticker)).Id("targets-markers-stickers"),
             Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.LabelStickers, () =>
             {
@@ -311,7 +318,8 @@ public sealed class TargetsPage : UserControl
                 said.Text = Share(GroupLab.Core.ScaleMarkers.ScaleMarkerPages.FileName(GroupLab.Core.ScaleMarkers.MarkerKind.Sticker, GroupLab.Core.ScaleMarkers.MarkerPaper.Label4x6), pngs, pdf, picture: true, "Board stickers");
             }).Id("targets-markers-label"),
             Screens.Choice(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.MeasureBoard.TrimEnd('…'), () => _ = Measure()).Id("targets-markers-board"),
-            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Labels + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.LabelsGive),
+            PhoneTerms.Named(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Labels),
+            Screens.Quiet(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.LabelsGive),
             LabelSizeChoice(),
             Screens.Choice("Share four scale labels for the printer's app", () =>
             {
@@ -324,8 +332,9 @@ public sealed class TargetsPage : UserControl
             }).Id("targets-markers-labels"),
             Screens.Choice(M220Print, () => _ = PrintOnM220(said)).Id("targets-markers-labels-m220"),
             boards,
-            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Card + ". " + GroupLab.Core.ScaleMarkers.ScaleMarkerWords.CardGives),
-            Screens.Dim(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintNote),
+            PhoneTerms.Named(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.Card),
+            Screens.Quiet(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.CardGives),
+            Screens.Quiet(GroupLab.Core.ScaleMarkers.ScaleMarkerWords.PrintNote),
             said);
     }
 
@@ -621,5 +630,67 @@ public sealed class TargetsPage : UserControl
         // Entry 250 section 1: the sheet as its PDF prints it, words and the actual-size instruction included; entry 297, its bulls in color.
         var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: 0, PrintNote: SceneBuilder.ActualSizeNote, BullColour: colour));
         return scenes.Pages.Count == 0 ? null : scenes.Pages[0];
+    }
+}
+
+/// <summary>
+/// Two fields of "Made for your optic", NOTES-FROM-PLANNING.md entry 465, 9A: at a text size larger than the ordinary one, where either field
+/// would not fit its half on one line, one to a row, each label above its box, across the full width; otherwise side by side, each in half
+/// the width, as before. At Android's largest text two side by side made "Lowest magnification" two lines and "Red dot size in MOA, at 1x
+/// only" three. At the ordinary size the dot's label wraps to two lines beside "Shots", as it always has, and stays there.
+/// </summary>
+internal sealed class FieldPair : Panel
+{
+    private const double Gap = 12;
+
+    /// <summary>Whether the two went one to a row at the last layout, for the headless tests.</summary>
+    public bool Stacked { get; private set; }
+
+    protected override Avalonia.Size MeasureOverride(Avalonia.Size availableSize)
+    {
+        if (Children.Count < 2)
+        {
+            return default;
+        }
+
+        Control a = Children[0], b = Children[1];
+        double width = availableSize.Width;
+        double half = (width - Gap) / 2;
+        a.Measure(Avalonia.Size.Infinity);
+        b.Measure(Avalonia.Size.Infinity);
+        bool larger = GroupLab.App.Theme.TextSize.Of(GroupLab.App.Theme.Tokens.BodySize) > GroupLab.App.Theme.Tokens.BodySize;
+        Stacked = larger && double.IsFinite(width) && (Math.Ceiling(a.DesiredSize.Width) > half || Math.Ceiling(b.DesiredSize.Width) > half);
+        if (Stacked)
+        {
+            a.Measure(new Avalonia.Size(width, double.PositiveInfinity));
+            b.Measure(new Avalonia.Size(width, double.PositiveInfinity));
+            return new Avalonia.Size(width, a.DesiredSize.Height + Gap + b.DesiredSize.Height);
+        }
+
+        double column = double.IsFinite(width) ? half : Math.Max(a.DesiredSize.Width, b.DesiredSize.Width);
+        a.Measure(new Avalonia.Size(column, double.PositiveInfinity));
+        b.Measure(new Avalonia.Size(column, double.PositiveInfinity));
+        return new Avalonia.Size(double.IsFinite(width) ? width : 2 * column + Gap, Math.Max(a.DesiredSize.Height, b.DesiredSize.Height));
+    }
+
+    protected override Avalonia.Size ArrangeOverride(Avalonia.Size finalSize)
+    {
+        if (Children.Count < 2)
+        {
+            return finalSize;
+        }
+
+        Control a = Children[0], b = Children[1];
+        if (Stacked)
+        {
+            a.Arrange(new Avalonia.Rect(0, 0, finalSize.Width, a.DesiredSize.Height));
+            b.Arrange(new Avalonia.Rect(0, a.DesiredSize.Height + Gap, finalSize.Width, b.DesiredSize.Height));
+            return finalSize;
+        }
+
+        double half = Math.Max(0, (finalSize.Width - Gap) / 2);
+        a.Arrange(new Avalonia.Rect(0, 0, half, finalSize.Height));
+        b.Arrange(new Avalonia.Rect(half + Gap, 0, half, finalSize.Height));
+        return finalSize;
     }
 }

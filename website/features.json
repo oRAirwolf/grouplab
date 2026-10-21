@@ -1192,7 +1192,7 @@
       "key": "explain-words",
       "group": "Sharing and privacy",
       "name": "Words explained where they appear",
-      "sentence": "Words like sigma, CEP, MOA and bull are underlined with dots in GroupLab and on the website; point at one for a plain explanation.",
+      "sentence": "Words like sigma, CEP, MOA and bull are underlined with dots in GroupLab and on the website; point at one for a plain explanation. On the phone, a page that names one thing after another, such as Scale markers, stays plain, with What is this? beside each name.",
       "shot": "word-explained",
       "platforms": [
         "Windows",
@@ -1205,7 +1205,10 @@
       "mobile": {
         "noPicture": "a word explained by a tap on the phone is photographed at the next sitting with the phone"
       },
-      "note": "Words like sigma, CEP, MOA and bull are underlined with dots"
+      "note": [
+        "Words like sigma, CEP, MOA and bull are underlined with dots",
+        "On the phone, Scale markers on Targets now reads as plain text"
+      ]
     },
     {
       "key": "updates",

@@ -953,7 +953,7 @@ so it says so and points you to mean radius. In **All figures**, a value too lon
 tab of its own: the dope, the trajectory and the chance of a hit. Targets prints a sheet through Android's print dialog or shares its
 PDF, and prints the printer check page; on Android it also prints straight to a Phomemo M834 over Bluetooth at true size, without
 the Phomemo app, with **Paper in the M834** for a roll (fed 15.5 mm further so the sheet clears the tear bar) or fanfold sheets; thermal roll paper
-curls, so flatten a sheet (rolled the other way, or under a heavy book) before scanning it; at the range a clip or tape is enough; Settings, under **Printers**, checks your printer. On a large screen, such as the Tab S8 Ultra or
+curls, so flatten a sheet (rolled the other way, or under a heavy book) before scanning it; at the range a clip or tape is enough; Settings, under **Printers**, checks your printer. On Targets, Scale markers is plain text: each marker's name is a heading with **What is this?** beside it, which opens the glossary's entry for that marker, and the library's rows are plain too. At the larger text sizes, where two fields side by side would wrap their labels, **Made for your optic** puts one field to a row with its label above it. On a large screen, such as the Tab S8 Ultra or
 the Fold 7 opened, the result shows the sheet beside the numbers.
 
 ![Sessions on the phone held sideways, with Open a session file, Import shots from a CSV file and the one session just analyzed](figures/screens/phone/fold-sessions-landscape-light.png)

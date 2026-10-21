@@ -15,11 +15,23 @@ of what you actually know.
 
 A number that says how well a bullet keeps its speed against the air. A higher one slows less, drops less and drifts less in the wind. It is printed on the box or in the maker's data.
 
+## Bank card
+
+<a id="bank-card"></a>
+
+Any card the size of a bank card, laid back side up flat on or beside the target, gives GroupLab the scale with nothing to print. It is the least accurate marker, because it is small, its corners are rounded and its thickness lifts it off the paper. GroupLab blanks the card out of the photo and never reads anything on it.
+
 ## Bias correction
 
 <a id="bias-correction"></a>
 
 A small adjustment that stops a spread figure worked out from a few shots from reading too small on average. Without it, small groups would look slightly better than the rifle really shoots.
+
+## Board stickers
+
+<a id="board-stickers"></a>
+
+Four code stickers stuck near the corners of the board you hang targets on. GroupLab measures the board once, from a photo with a GroupLab sheet on it. After that, every photo of a target on that board has its scale with nothing placed.
 
 ## Bull
 
@@ -84,6 +96,12 @@ The check of whether two or more loads put their groups in different places, bey
 <a id="confidence-preset"></a>
 
 One choice that sets every uncertainty you cannot measure at once, from a known distance with the air measured to a guessed distance with a guessed wind. Change any one of them and the choice becomes custom.
+
+## Corner brackets
+
+<a id="corner-brackets"></a>
+
+Four printed right-angled pieces, one laid flat near each corner of a target that is not a GroupLab sheet. Their codes give GroupLab the scale and the camera's angle, and it finds the target's own corners from its edges, so the cut does not need to be neat.
 
 ## Correlated normal and Grubbs-Patnaik
 
@@ -320,6 +338,18 @@ How many shots a figure was worked out from. It decides how far any figure can b
 <a id="scale"></a>
 
 How GroupLab turns distances in the picture into inches on the target. On a GroupLab sheet it comes from the printed markers; on any other target you set it with a ruler length or a known rectangle. Every measurement depends on it.
+
+## Scale bars
+
+<a id="scale-bars"></a>
+
+A printed strip with a code at each end, a known distance apart, laid flat along an edge of the target. One gives the scale, and two laid at a right angle give the camera's angle too. It works the same touching the target or a little apart from it.
+
+## Scale labels
+
+<a id="scale-labels"></a>
+
+A strip from a label printer with rows of codes across its width, stuck flat on the target where you will not shoot. One gives the scale, and two at opposite corners give the camera's angle too. Every label has its own codes, so two on one target are told apart.
 
 ## Shape
 
