@@ -295,6 +295,12 @@ CSS = r"""
 .hiw-strip .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px}.hiw-strip ul{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
 .hiw-strip li{border:1px solid var(--line2);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--dim)}
 .hiw-strip li[aria-current="true"]{border-color:var(--amber);color:var(--amber)}
+/* Entry 465, 11A: in the light theme the amber words on the grey panels (the figures, a link beside them, and the strip above each deep
+   dive) keep their amber on a white panel of their own, over 4.5 to 1 where the grey gave 4.19. The site audit holds it. */
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) :is(.hiw-numbers dt,.hiw-numbers a,.hiw-strip a){background:var(--panel);border-radius:6px;padding:0 6px}
+:root:not([data-theme="dark"]) .hiw-numbers dt{justify-self:start}:root:not([data-theme="dark"]) .hiw-strip li[aria-current="true"]{background:var(--panel)}}
+:root[data-theme="light"] :is(.hiw-numbers dt,.hiw-numbers a,.hiw-strip a){background:var(--panel);border-radius:6px;padding:0 6px}
+:root[data-theme="light"] .hiw-numbers dt{justify-self:start}:root[data-theme="light"] .hiw-strip li[aria-current="true"]{background:var(--panel)}
 .hiw-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:24px 0 8px}
 .hiw-stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}.hiw-big{font-family:"IBM Plex Mono",monospace;font-size:30px;color:var(--amber);margin:0}
 .hiw-section{margin-top:72px;max-width:1100px}.hiw-intro{max-width:880px}

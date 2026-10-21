@@ -1,7 +1,8 @@
 // The site's page audit, entry 462 section 1: every page the builder made, opened in a real browser at a phone's width and a
 // desktop's, in both themes. It reports what a reader would hit: the page wider than the screen, text cut off inside its box, a picture
 // or file that does not load, a link to a page that is not there, and every accessibility finding axe-core makes (WCAG 2.1 A and AA,
-// colour contrast included). It changes nothing.
+// colour contrast included). It changes nothing. Entry 465 adds two checks of its own, in both themes: a link inside a sentence is
+// underlined (10B), and every amber word on the How it works pages is 4.5 to 1 against its panel (11A).
 //
 //   node scripts/site-audit.cjs [--site website/_site] [--widths 390,1440] [--themes light,dark] [--only a11y] [--shots DIR] [--json FILE]
 //
@@ -161,6 +162,44 @@ async function main() {
           }
         }
         if (width === widths[0]) {
+          // Entry 465, 10B and 11A, held whatever axe-core decides: a link inside a sentence carries an underline, so colour is not
+          // the only thing telling it apart (WCAG 1.4.1); and on the How it works pages every word in amber is 4.5 to 1 against what
+          // it is drawn on (3 to 1 for large text), the white panel behind the big numbers, the stage labels and the strip.
+          const held = await page.evaluate(how => {
+            const rgb = s => (s.match(/[\d.]+/g) || []).map(Number);
+            const lum = ([r, g, b]) => [r, g, b].map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); })
+              .reduce((t, v, i) => t + v * [0.2126, 0.7152, 0.0722][i], 0);
+            const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
+            const ground = el => {
+              for (let a = el; a; a = a.parentElement) {
+                const c = rgb(getComputedStyle(a).backgroundColor);
+                if (c.length >= 3 && (c.length < 4 || c[3] > 0.95)) return c.slice(0, 3);
+              }
+              return rgb(getComputedStyle(document.body).backgroundColor).slice(0, 3);
+            };
+            const shown = el => el.checkVisibility({ opacityProperty: true, visibilityProperty: true }) && el.getClientRects().length;
+            const out = [];
+            for (const a of document.querySelectorAll("main a[href]")) {
+              const block = a.closest("p,li,dd,td,figcaption,blockquote");
+              if (!block || !shown(a) || a.closest("nav,header,footer,.toc,[role=navigation]") || a.className) continue;
+              const words = a.textContent.trim().length;
+              if (!words || block.textContent.trim().length <= words + 2) continue;
+              if (!/underline/.test(getComputedStyle(a).textDecorationLine)) out.push(`a link inside a sentence is told apart by its colour alone: "${a.textContent.trim().slice(0, 40)}"`);
+            }
+            if (how) {
+              const amber = rgb(getComputedStyle(document.documentElement).getPropertyValue("--amber").trim().replace(/^#(..)(..)(..)$/, (m, r, g, b) => `${parseInt(r, 16)},${parseInt(g, 16)},${parseInt(b, 16)}`));
+              for (const el of document.body.querySelectorAll("*")) {
+                if (![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) || !shown(el)) continue;
+                const cs = getComputedStyle(el);
+                if (rgb(cs.color).slice(0, 3).join() !== amber.join()) continue;
+                const size = parseFloat(cs.fontSize), large = size >= 24 || (size >= 18.66 && Number(cs.fontWeight) >= 700);
+                const r = ratio(amber, ground(el));
+                if (r < (large ? 3 : 4.5)) out.push(`amber "${el.textContent.trim().slice(0, 30)}" is ${r.toFixed(2)} to 1 on its panel`);
+              }
+            }
+            return out;
+          }, p.startsWith("/tour/how-it-works/"));
+          for (const h of held) say(p, theme, h, "entry-465");
           const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
           for (const v of axe.violations) {
             for (const n of v.nodes) {
