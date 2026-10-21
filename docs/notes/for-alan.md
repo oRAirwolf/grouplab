@@ -8,10 +8,12 @@
 2. **Two devices changed the same session**: both versions side by side, with which device and when, what differs (marks added or
    moved, the load, the notes), and three choices: keep this one, keep that one, keep both as two sessions. Nothing is decided without
    the person; until they choose, both stay. It needs a place to be found later too (a count on Sessions, say).
-3. **"Also copy the original photographs"**, with its size: geometry is about 5 KB a target and the proof picture about 400 KB, so a
-   year of 200 targets is about 80 MB without originals; one 600 dpi scan is about 25 MB and a phone photograph 3 to 6 MB, so the same
-   year with originals is about 1 to 5 GB. The choice should show the size for this person's own records, measured, not these
-   estimates. Measured figures will replace these when the engine's tests have them.
+3. **"Also copy the original photographs"**, with its size. Measured on the 22 sessions in this computer's GroupLab (2026-10-21): a
+   session's marks are a median of 38 KB, its sheet's design 7 KB and its proof picture 226 KB, about 350 KB a target in a change file
+   once the picture is written as text, so **a year of 200 targets is about 70 MB** in the folder, 10 MB of it the marks and designs.
+   With the originals, add each photograph as taken: a phone photograph is 3 to 6 MB and a 600 dpi scan about 25 MB, so the same year
+   is about 1 to 5 GB. The choice should show these figures worked out from the person's own records. A session changed again is
+   written again whole, so a much-edited session costs a few times its size until the old change files are tidied (not built yet).
 A good answer: a concept of each, for Alan to choose from.
 
 **Your drop, entry 423 section 0 (not a request):** dropping several scans onto a tab that held a sheet replaced that tab's picture. On

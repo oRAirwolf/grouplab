@@ -25,6 +25,106 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-21, entry 461: a queue for the rest of the week, chosen by Alan (research articles, screen reader and speed, sync option A)
+
+**Status: actioned 2026-10-21. Not done: section 2.1's real screen reader sitting, which needs Alan (request 105); section 2.2's speed-up, measured with nothing exact to take (question 106); section 3.2's three screens, waiting on the DESIGN NEEDED in for-alan.md. Tidying old change files (3.1) was not asked for and is not built.**
+
+From the planning session, 2026-10-21 02:05 UTC (2026-10-20 20:05 Denver). Alan asked what Code could work on with the week's
+allowance left (usage-now.json `seven_day` 37% when written; the week resets 2026-10-22 02:00 UTC) and chose the three parts below, in
+this order. Take them in order, one commit per part where the part allows it (part 3 may need several), STATE rewritten after each.
+This queue has no limit of its own: the usual guard (85%, 88% for a finishing block) applies. At the guard, finish the step in hand
+cleanly and stop; what is left stays here for the next session. Anything that needs Alan goes to for-alan.md, anything judged by
+looking goes there as DESIGN NEEDED, and the work moves on. Main model for application work; chores and wording to the helpers as
+CLAUDE.md says. Error reports are checked before each part, as entry 457 says.
+
+## 1. Research articles: decide every "not yet" row in docs/RESEARCH.md
+
+Go through every row of "Worth an article?" whose decision is **not yet** or **not written yet**, and decide each one now: written, or
+not written with its reason. For each, check first whether the data it was waiting for now exists. The rows as of today:
+
+1. Entry 410 section 1: the corpus's false marks, and crease shadows along the print that read like holes.
+2. Entry 376 Part A: which bull each shot belongs to (match a sheet as one problem, read it as aimed first).
+3. Entry 374: a sheet shot one bull off in every shot (the C bull of 4 October).
+4. Entry 362: finding a store-bought target's corners on a counter.
+5. Entry 332: the fingerprint of store-bought targets. Note that Alan decided on 2026-10-01 that he will not scan a second sheet of
+   each product, so request 64's second sheet is not coming: decide it on what exists, with a remembered scale described as a
+   warning that the shooter checks, as that decision says.
+6. Entry 261: the detector under synthetic degradations.
+7. Entries 196 and 197: a touching pair found as two shots about half the time.
+8. Entry 198: OpenCV with ArUco and WeChat QR under OpenCvSharp on Android. The build has run on phones since, so this one can be
+   decided.
+9. Entry 344: a fingerprint and its scale from a camera photograph of a poster.
+10. Entry 158 program A: the scan detector on overlapping holes in photographs, if its row is still open.
+
+Every article written meets entry 392 section 1 (every checkable sentence backed in claims-backing.json, figures regenerated from
+committed scripts and data, simulations rerunnable, no pseudoscience, the developer not named, the existing byline). A ready article
+is published as entry 393 allows and listed in website/research/PUBLISHED.md; one only partly honest stays draft. Anything on synthetic
+data says so in its first lines. No orange commercial target, no friend's 2026-09-16 scan. Each new article gets its thumbnail as
+entry 453 does. The report names every article published.
+
+## 2. Screen readers, automated, then the next speed step
+
+### 2.1 Screen reader audits on all three platforms
+
+Entry 447 part 2 left one thing: no real Narrator, VoiceOver or TalkBack run. A person's run still needs Alan, but most of what a
+screen reader would find can be checked by machine. Add audits that run in CI, using each platform's own tooling:
+
+- **iOS:** XCTest's accessibility audit (`performAccessibilityAudit`, Xcode 15 and later) over every screen the phone tests already
+  reach, in ios-app.yml.
+- **Android:** the Accessibility Test Framework's checks (or an equivalent walk of the accessibility node tree on the emulator):
+  every control that can be tapped has a name, a role and a touch target of at least 48 dp, and nothing that can be tapped is hidden
+  from the tree.
+- **Windows:** a UI Automation walk of every window (what Narrator reads): every interactive control has a name and a control type,
+  and the Tab order reaches it, alongside the headless tab walk `Entry447WindowsTests` already does.
+
+Fix what they find. A finding that cannot be fixed without a look decision goes to for-alan.md as DESIGN NEEDED. Write one plain
+request into for-alan.md for later, not urgent, saying what a short real screen reader sitting would still check that the audits
+cannot (reading order making sense aloud, announcements after an analysis finishes), so it is ready when Alan has twenty minutes.
+Tests, the user guide's keyboard and accessibility part, release notes (only what a person can reach).
+
+### 2.2 Phase 9: a phone photograph's codes
+
+The slowest step left is reading a phone photograph's codes, about 450 to 680 ms. Find where it spends its time, make it faster with
+every result identical, as entries 433 and 447 part 4.3 did, and record the before and after in docs/PERFORMANCE.md and the bench
+baseline. Entry 414's rule stands: OpenCV's QR detectors are never run on several threads.
+
+## 3. Synchronization, Phase 7: option A, chosen by Alan
+
+Alan chose **option A** of docs/notes/sync-options.md on 2026-10-20: GroupLab writes small change files into a folder the person's own
+cloud client already syncs (OneDrive, Google Drive for desktop, Dropbox, iCloud Drive), and reads the other devices' change files from
+it. Option B (signing in to the providers' APIs) is not decided and is not built now. Record the decision in sync-options.md, DESIGN.md
+section 18 if it needs a line, and the decision log.
+
+### 3.1 Build the engine, with nothing a person can reach yet
+
+As sync-options.md option A describes:
+
+1. A revision number on every record the export carries, so a change can be told from the version it replaced. If that needs a new
+   database schema, the first open of the new build copies `grouplab.db` aside before upgrading, as every schema change does.
+2. The change file format: whole records with their identity (`DataExport.Identity`) and revision, written only by the device that
+   made them, named by device and time, so two devices never write the same file and no cloud client makes a conflicted copy.
+3. Reading the other devices' change files when GroupLab starts and every few minutes while it is open, and merging with the import's
+   merge: a record changed on one device wins; the same record changed on two devices since they last met is kept both ways and listed
+   for the person to choose, never decided silently. Deletions travel as markers kept 90 days.
+4. The tiers: geometry and the proof picture always; originals only when the person has asked for them.
+5. Reaching the folder: any folder on the desktop; Android's own folder picker (the Storage Access Framework); on iPhone and iPad a
+   security-scoped bookmark to a folder in Files.
+6. Tests that matter most: two and three simulated devices sharing one folder, the same session changed on two devices, a deletion
+   against an edit, a half-written change file (as a cloud client delivers one mid-copy), a device that comes back after months, a
+   folder that disappears, and nothing ever lost: before any merge changes a record, the record as it was is kept where the person can
+   get it back. Nothing in this part may delete or overwrite a person's data without that copy.
+
+A command for testing it from the command line (`grouplab sync` against folders) is fine. No screen, no setting and no menu item a
+person can reach until the screens are chosen; the release notes say it is under the hood, and nothing on the site or the README
+says sync exists yet.
+
+### 3.2 The three screens, as DESIGN NEEDED
+
+Write one DESIGN NEEDED in for-alan.md for the planning session to turn into concepts: the Settings screen for choosing the folder
+(desktop and phone), what a person sees when two devices changed the same session, and the "also copy the original photographs"
+choice with its size. Say what each must show and the real numbers it will have (for example the size of a year of targets with and
+without originals). Build them only after Alan chooses.
+
 ## 2026-10-20, entry 460: questions 100 and 98 answered by Alan from the planning canvas (take after the work in hand)
 
 **Status: actioned 2026-10-20; both sections done. Question 100 and question 98 archived as answered.**

@@ -177,7 +177,8 @@ public sealed partial class SessionStoreTests : IDisposable
     }
 
     /// <summary>Version 2's schema: this one with the rifles, barrels and loads tables as they were before entry 407 section 5.</summary>
-    private static IEnumerable<string> VersionTwo => SessionStore.Schema.Select(s =>
+    // Version 2 had none of synchronization's tables, which version 6 added.
+    private static IEnumerable<string> VersionTwo => SessionStore.Schema.Where(s => !s.Contains("TABLE sync_", StringComparison.Ordinal)).Select(s =>
         s.StartsWith("CREATE TABLE rifles", StringComparison.Ordinal) ? "CREATE TABLE rifles (name TEXT PRIMARY KEY COLLATE NOCASE, click_value REAL NOT NULL, click_unit TEXT NOT NULL, sight_height_in REAL, zero_distance_yd REAL, twist_in REAL, twist_direction INTEGER)"
         : s.StartsWith("CREATE TABLE barrels", StringComparison.Ordinal) ? "CREATE TABLE barrels (name TEXT PRIMARY KEY COLLATE NOCASE, rifle TEXT, rounds INTEGER NOT NULL)"
         : s.StartsWith("CREATE TABLE loads", StringComparison.Ordinal) ? "CREATE TABLE loads (name TEXT PRIMARY KEY COLLATE NOCASE, components TEXT, muzzle_velocity_fps REAL, muzzle_velocity_sd_fps REAL, ballistic_coefficient REAL, drag_model TEXT, bc_reference TEXT, bullet_weight_gr REAL, bullet_length_in REAL, bullet_diameter_in REAL, muzzle_velocity_sd_from TEXT)"

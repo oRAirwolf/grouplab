@@ -1,5 +1,24 @@
 # Synchronization: the options (Phase 7)
 
+**Decided 2026-10-20, Alan: option A.** Option B (signing in to the providers' APIs) is not decided and is not built. Entry 461
+section 3.1 built the engine with nothing a person can reach: `GroupLab.Core.Sync.SyncEngine`, `grouplab sync`, schema 6
+(`docs/SESSION-SCHEMA.md`). What it does, as built:
+
+- **Layout:** `GroupLab sync/devices/<device>.json` (name and when it last wrote) and `GroupLab sync/changes/<device>/<time>-<n>-<random>.json`,
+  written only by that device, beside its name and renamed into place; readers take only names ending `.json` that do not begin with
+  a full stop. Originals, when asked for, go to `GroupLab sync/originals/<sha256>.<ext>`.
+- **Revisions:** each record (session, rifle, barrel, load, designed sheet, portable setting) has a version vector, the count of
+  changes each device made to it. A device notices its own changes at each run by the record's SHA-256 against the last one, so no save
+  anywhere in the application had to change.
+- **The merge:** newer wins, older is ignored, changed on two devices since they last met is kept both ways and listed
+  (`sync_conflicts`) for Keep this one, Keep the other, or Keep both (sessions); a deletion against a change keeps the change and lists
+  it on both devices; a deletion's marker is kept 90 days in the database once written, and for ever in the change files, so a device
+  back after months still receives it. Before a merge changes or takes away a record, it is kept whole (`sync_kept`).
+- **A half-written file** (no `"end": true`, or not whole JSON) is left and read on a later run; **a missing folder** changes nothing.
+- **Not built yet:** tidying old change files (each device's files are kept; a session edited again is written again whole), and the
+  three screens, which wait on the DESIGN NEEDED in `docs/notes/for-alan.md`. The Android folder (`SafSyncFolder`, the Storage Access
+  Framework) and the iOS bookmark (`BookmarkSyncFolder`) are built and reached by nothing.
+
 NOTES-FROM-PLANNING.md entry 324 section 2. An options paper only: no code and no new dependency. Planning reads it and decides with Alan.
 Written 2026-10-01.
 

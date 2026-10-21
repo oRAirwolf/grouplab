@@ -9,16 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-21, entry 461 parts 1, 2.1 and 2.2 done (research rows; screen reader audits; codes measured); 3 next.
+**Last rewritten:** 2026-10-21, entry 461 done (research rows decided; screen reader audits; codes measured; sync option A's engine).
 
 ---
 
 ## In flight
 
-- **Entry 461 (2026-10-21), Alan's queue for the rest of the week**: part 1 done, every "not yet" research row decided;
-  published `recognizing-store-bought-targets` and `opencv-on-android-from-dotnet`, and wrong-bull's October sections. Part 2.1:
-  screen reader audits (`ScreenReaderAudit`, `scripts/screen-reader-audit.py`, "Screen reader audit" on the emulator and simulator);
-  buttons holding a panel now named by their words (`SpokenNames`). Part 2.2: measured, nothing exact to take (question 106). Next: 3.
+- **Entry 461 (2026-10-21), Alan's queue for the week**, done: three research pieces published; screen reader audits on all three
+  (`ScreenReaderAudit`, `scripts/screen-reader-audit.py`), `SpokenNames`, Android's TalkBack boxes moved (`AccessibilityOnScreen`);
+  codes measured (question 106); sync option A's engine, schema 6 (`SyncEngine`, `grouplab sync`), reached by nothing.
 - **Entry 460 (2026-10-20)**: dark selection #f800f8 (question 100); copies of one single-page design asked once, "Pool these 3
   pictures as one group?", on both (question 98, `CopiesQuestion`).
 - **Request 103 answered by Alan (2026-10-20)**: Top Gun's group is five-shot extreme spread, averaged. Groups are set beside it as
@@ -40,7 +39,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   checking a proposal needs a sheet shot with its string.
 - **Velocity regression** (Phase 5): on both screens since entry 323, in the conditions entered on Ballistics since 329; a
   session's own conditions are entered under the block (entry 416); the phone's picture waits for request 50's sitting.
-- **Synchronization** (Phase 7): the options paper is `docs/notes/sync-options.md` (entry 324 section 2), for Alan to choose from.
+- **Synchronization** (Phase 7): option A chosen 2026-10-20; the engine is built (entry 461); the screens wait on their design.
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); the next slowest is a photograph's codes.
@@ -51,7 +50,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 2. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
-3. Phase 9 again when planning says: a phone photograph's codes are the slowest step left (about 450 to 680 ms).
+3. Sync's three screens once planning's concepts are chosen (DESIGN NEEDED of entry 461 section 3.2).
 
 ## Blocked, and on what
 
@@ -84,7 +83,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 461, parts 2 and 3.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -99,7 +98,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
 - **ios-app.yml's "Real taps" lost a first tap** (about 1 run in 4) because a field's Cut, Copy and Paste menu opened for a tap handled
   late while the keyboard first came up; `KeyboardRoom.HoldOffForAFocusingPress` stops it (entry 447 section 3).
-- **The database is schema version 3** (entry 407 section 5): a new build's first open copies `grouplab.db` to `grouplab.pre-v2.db`.
+- **The database is schema version 6** (entry 461): each upgrade's first open copies `grouplab.db` to `grouplab.pre-vN.db` first.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
 - **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it

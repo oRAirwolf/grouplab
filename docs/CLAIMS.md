@@ -18,13 +18,13 @@ one that matters.
 
 | backing | claims |
 |---|---|
-| code | 1829 |
-| measured | 2335 |
-| decided | 1466 |
+| code | 1830 |
+| measured | 2339 |
+| decided | 1469 |
 | unbacked | 0 |
-| **total** | **5630** |
+| **total** | **5638** |
 
-**1632** of them were read one sentence at a time and their backing written against the sentence. The other **3998** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1632** of them were read one sentence at a time and their backing written against the sentence. The other **4006** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -251,6 +251,8 @@ one that matters.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): Free tiers of 15 GB, 5 GB, and 5 GB respectively hold hundreds of full scans and effectively unlimited geometry.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): Sign in with Apple is standard OIDC and works on Windows and Android as well as Apple devices, so it is available everywhere.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): iCloud Drive, by contrast, has no supported third-party API on Windows or Android, so Apple can serve as an identity provider on every platform but as a storage backend only on Apple hardware.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): **Chosen first: a folder the person's own cloud client syncs** (option A of `docs/notes/sync-options.md`, Alan, 2026-10-20).
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): Measured on 22 sessions (2026-10-21), a target with its proof picture is about 350 KB in the folder, not the 5 KB and 400 KB estimated above, since the marking carries every edit.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): **The analysis screen's last parts and the comparison** (entry 113 sections 1 and 2).
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): It is drawn from the definition, as section 18's archived view is, with every shot at its bull's centre plus its offset, and a click on a bull selects the shots on it.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): **The desktop's design language, as built** (entry 243 section 3.5, written down from `src/GroupLab.App/Theme/Tokens.cs` and `AppStyles.cs` so the phone can be held to it).
@@ -1615,6 +1617,10 @@ one that matters.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): **What the gate was planned to cover, and still does:** - **The times a person actually waits:** start-up to a usable window, opening an image, a full analysis of a 600 dpi Letter scan, a full analysis of a phone photograph, the analysis screen after Accept, and a batch of ten sheets.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): - **Per platform**, because the answer differs: this desktop today, and a mid-range Android phone when Phase 6 exists.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): A failing read is the reader's fixed sequence (two scales and four binarizers in WeChat), so it cannot be cut short and give the same answer on every picture; reading fewer places changes how many codes a picture is said to have read, which entry 415 already called a decision, not a speed-up.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): Making the readers once and keeping them was measured in entry 415 and gained nothing.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): So the choice goes to planning as question 106, and the bench baseline is unchanged.
+- *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): The current sheets' photographs read in 167 to 283 ms (entry 415); this photograph is slow because of the sheet it shows.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): ## Phase 9, 2026-10-20: the residual thresholded before it is opened, finding the holes on a 600 dpi scan about a fifth sooner **Measured first** (`grouplab bench --runs 5`, Release, this desktop): the slowest single step left in reading was finding the holes on the 600 dpi scan, then reading a phone photograph's codes.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): For a flat element the two can be taken in either order: after the erosion a pixel is at or above the threshold exactly where every point of the disc around it was at or above it before, and after the dilation exactly where some point was, so thresholding first and opening the 0 and 1 image gives every pixel the old order gave.
 - *measured* (measurements recorded with their dates in the document and in docs/PHASE0-RESULTS.md and docs/PHASE1-RESULTS.md): A 0 and 1 image is opened by `BinaryMorphology.Open`, the same row-run method entry 392 made for the close, which the imaging backend now takes for an open as well as a close of any 0 and 1 image.
@@ -2664,7 +2670,8 @@ one that matters.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): ## Figures come in both themes NOTES-FROM-PLANNING.md entry 143 section 1.2.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): ## Three states, and a record of what went live Entry 143 section 1.3.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): The standing rule, and what was decided NOTES-FROM-PLANNING.md entry 158 section 1.
-- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | investigation | decision | why | |---|---|---| | The four false hole marks left on the corpus, and a hole's step all round its rim (entry 434) | not written | Nine photographs with a hole truth cannot separate the mechanism from the sheets it was found on, and the one test tried separated nothing: real holes step as weakly as the false marks.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | investigation | decision | why | |---|---|---| | Where a phone photograph's codes spend their time (entry 461 section 2.2) | not written | Ordinary engineering a shooter never sees, and nothing was changed: the time is OpenCV's two readers failing on places where other sheets print their codes; docs/PERFORMANCE.md keeps the table and question 106 the choice.
+- *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | The four false hole marks left on the corpus, and a hole's step all round its rim (entry 434) | not written | Nine photographs with a hole truth cannot separate the mechanism from the sheets it was found on, and the one test tried separated nothing: real holes step as weakly as the false marks.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): Already covered in substance by entry 415's row.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Where finding the holes spends its time, and a cheaper close (entry 433) | not written | Ordinary engineering a shooter never sees: a 600 dpi scan's holes found about a tenth sooner and a photograph's no sooner.
 - *decided* (the design as decided, section by section, in NOTES-FROM-PLANNING.md): | | Reading a photograph's codes, a cut-out stopped at its first code (entry 415 section 3) | not written | Ordinary engineering a shooter sees only as a reading a few tens of milliseconds quicker; PERFORMANCE.md keeps the tables.
@@ -2825,7 +2832,7 @@ one that matters.
 
 ### docs/SESSION-SCHEMA.md
 
-- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): # GroupLab's storage schema **Schema version 5.** `DESIGN.md` section 15: "Storage is SQLite with a documented schema and full JSON export." This is the document; `src/GroupLab.Core/Records/SessionStore.cs` creates the database, and `SessionSchemaTests` fails if the statements below differ from what it creates.
+- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): # GroupLab's storage schema **Schema version 6.** `DESIGN.md` section 15: "Storage is SQLite with a documented schema and full JSON export." This is the document; `src/GroupLab.Core/Records/SessionStore.cs` creates the database, and `SessionSchemaTests` fails if the statements below differ from what it creates.
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): - **Barrels under their rifle** (entry 407 section 5): every barrel names its rifle in `barrels.rifle`, and `rifles.barrel_on` names the one on it now.
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): The solver's fields are all optional (`NOTES-FROM-PLANNING.md` entry 112 section 4).
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): - **`sessions`:** one analysed sheet each (entry 112 section 1), in `DESIGN.md` section 18's three tiers.
@@ -2841,6 +2848,7 @@ one that matters.
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): ADD COLUMN` for each column added to `rifles`, `barrels` and `loads` above, in their order | Barrels under their rifle, with the one on now (entry 407 section 5).
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): The Equipment screen's fields from entry 131 section 7 had never reached the database, so a barrel's length and twist, a rifle's cartridge and scope and a load's powder and charge were dropped at every save; they are kept now.
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): | | 3 | 4 | `ALTER TABLE rifles ADD COLUMN previous_zeros TEXT`, `ALTER TABLE loads ADD COLUMN min_expansion_fps REAL` | A zero kept from the point blank view keeps the one it replaced, newest first as JSON, so it can be put back; a load's least expansion velocity, from the bullet's maker, ends the point blank distances where the bullet stops opening (`NOTES-FROM-PLANNING.md` entry 455).
+- *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): | | 5 | 6 | the four `CREATE TABLE sync_...` statements above | Synchronization through a folder the person's cloud client syncs, option A of `docs/notes/sync-options.md`, chosen by Alan on 2026-10-20 (entry 461 section 3): each record's revision, the files read, the versions waiting for the person and every record a merge changed, kept.
 - *code* (describes src/GroupLab.Core/Updates, src/GroupLab.App/Diagnostics, src/GroupLab.Core/Records/SessionStore.cs and src/GroupLab.Core/Reporting/VolunteerPack.cs): | | 4 | 5 | `ALTER TABLE rifles ADD COLUMN` for `scope_travel`, `scope_travel_kind`, `rail_cant`, `sight_scale_factor` and `weight_as_fired_lb` | A rifle's scope and mount: its elevation travel (in the scope's unit, the whole of it or the most up from the zero), its rail's cant, its sight scale factor from a tracking test, and its weight as fired for Top Gun (`NOTES-FROM-PLANNING.md` entry 456).
 
 ### docs/SPEC-ERRATA.md

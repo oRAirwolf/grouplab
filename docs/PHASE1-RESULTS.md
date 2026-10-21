@@ -1934,8 +1934,17 @@ Ten rows of `docs/RESEARCH.md`'s "Worth an article?", each checked for whether i
   (`scripts/scenarios/phone-audit.json`, held to the sweep by `ScreenReaderAuditTests`); `scripts/screen-reader-audit.py` reads
   Android's accessibility node tree with uiautomator (every node that can be tapped named, with a role, 48 by 48 dp, and every control
   GroupLab Dev says can be tapped present in the tree) and runs XCTest's `performAccessibilityAudit` through the XCUITest runner
-  (element detection, hit regions, descriptions, traits, actions, parent and child judged; contrast, Dynamic Type and clipped text kept
-  in the artifact). New steps "Screen reader audit" in android-emulator.yml (`scripts/android-audit.sh`) and ios-app.yml.
+  (element detection, hit regions, descriptions and traits judged; contrast, Dynamic Type and clipped text kept in the artifact). New
+  steps "Screen reader audit" in android-emulator.yml (`scripts/android-audit.sh`) and ios-app.yml.
+- **The first runs (39539794514, 39539797209).** Android read all 13 screens: every node named, every role given, and two findings
+  that are GroupLab's, "More ▸" 47 dp wide (now at least as wide as tall, `MoreFold`) and the bull buttons of "How you shot this sheet"
+  44 dp tall (now 48, their gap 1 where it was 3, so the grid keeps its height). The rest was one fault: **every control's box in
+  Android's accessibility tree sat 128 pixels, the status bar, above where it is drawn**, because Avalonia 12.1.2's helper sets each
+  box on the screen from the control's place in GroupLab's view and never adds where the view is (it calls `SetBoundsInScreen` and never
+  `GetLocationOnScreen`); TalkBack's outline was drawn above what it read, and Android cut the top and bottom controls to slivers.
+  `AccessibilityOnScreen` wraps Avalonia's helper on the Android head, answering exactly as it does and moving each box by the view's
+  place before Android clips it. A scroll bar's own arrows are left out of the judging, as on the computer. iOS: the runner did not
+  build, because XCTest has no audit types for actions or parent and child; they were taken out.
 - Request 105 in for-alan.md: a later twenty minutes with a real screen reader, for what a machine cannot judge. The guide's
   keyboard part says what is checked and that no person using a screen reader has tried it yet.
 
@@ -1948,6 +1957,35 @@ Ten rows of `docs/RESEARCH.md`'s "Worth an article?", each checked for whether i
   to have read (entry 415's finding). Question 106 puts the one real option to planning, with what it would cost; the bench baseline is
   unchanged. Detail in docs/PERFORMANCE.md. QR codes are still read on one thread.
 - Worth an article? Not written: ordinary engineering, and the table is in PERFORMANCE.md.
+
+## Entry 461 part 3: synchronization through the person's own cloud folder, option A, the engine (2026-10-21)
+
+- **Decided:** option A of docs/notes/sync-options.md (Alan, 2026-10-20); recorded there, in DESIGN.md section 18 and the decision log.
+  Option B is not decided and not built.
+- **Revisions (3.1 item 1):** schema 6 adds `sync_records`, `sync_seen`, `sync_conflicts` and `sync_kept` (docs/SESSION-SCHEMA.md); the
+  first open of the new build copies `grouplab.db` to `grouplab.pre-v5.db` before upgrading, as every schema change does. Each record
+  the export carries has a version vector (`VersionVector`); a device finds its own changes by each record's SHA-256 at every run.
+- **Change files (item 2):** whole records with their identity (`DataExport.Identity` for a session) and revision, in
+  `GroupLab sync/changes/<device>/`, written only by that device, beside their name and renamed into place, at most 25 sessions a file,
+  ending `"end": true`.
+- **Reading and merging (item 3):** `SyncEngine.Run`, at start and every five minutes once a screen calls it (`SyncEngine.Every`);
+  newer wins, the same record changed on two devices is kept both ways and listed, a deletion against a change keeps the change and
+  lists it on both, deletion markers kept 90 days in the database and always in the change files. `SyncEngine.Resolve`: keep this
+  one, keep the other, keep both (sessions), understood. Every record a merge replaces or takes away is kept whole first (`Kept`).
+- **Tiers (item 4):** geometry and the proof picture always; the originals only with `SyncOptions.Originals`, to
+  `GroupLab sync/originals/<sha256>.<ext>`; the photograph's path on a device never travels.
+- **Reaching the folder (item 5):** `DirectorySyncFolder` (the computer, and iOS once a bookmark has opened it), `SafSyncFolder`
+  (Android's folder picker, the Storage Access Framework, with its permission kept), `BookmarkSyncFolder` (a security-scoped bookmark
+  to a folder in Files). The two phone ones build in CI and are reached by nothing.
+- **Tests (item 6):** `SyncEngineTests`, twelve: two devices (a session with its strings, a rifle, a sheet, a setting), three devices,
+  the same session changed on two (listed both sides, chosen, settled everywhere), keep both, a deletion against an edit, a half-written
+  change file read once whole, a device back after 200 days (the deletion still reaches it), a folder that disappears (nothing changes),
+  nothing lost (a load and a sheet kept as they were), originals only when asked, each device only its own files.
+- **`grouplab sync <database> <folder>`**, with `--list` and `--choose`, for testing. Nothing on any screen, setting or menu; the
+  README and the site say nothing of sync.
+- **Measured for the screens (3.2):** on this computer's 22 sessions, a proof picture's median is 226 KB, a marking's 38 KB and a
+  design's 7 KB: about 350 KB a target in the folder, 70 MB for a year of 200. The DESIGN NEEDED in for-alan.md carries the figures.
+- **Not built:** tidying old change files; the three screens (DESIGN NEEDED).
 
 ## Decision log
 
@@ -2246,4 +2284,7 @@ One line per method choice where there was a real alternative: what was rejected
 - **Entry 120 section 10: the preview sits in the grid row, over inside the scroll viewer.** Inside one it measured its own natural size and left the window two thirds empty; the scroll viewer is now used only when zoomed, where panning is the point of it.
 - **Entry 121: the version raised to 0.2.0, over renaming what is already published.** v0.1.0 is history and stays where it is; the train moves above it instead.
 - **Entry 122: one interface for everything outside the process, over telling the benchmark not to click that button.** An exclusion list would have fixed this button and left the next one to be found by somebody's browser opening.
+- **Entry 461: version vectors noticed by hash at each run, over a revision counter bumped in every save.** A counter alone cannot tell
+  "changed on two devices since they last met" from "changed twice on one", and bumping in every save would have touched every screen
+  that saves; the hash finds a device's own changes wherever they were made, and the vector says how two versions stand.
 - **Entry 391: the M834's feed taken as 99.30 percent, the mean of all five readings against the lengths drawn, over planning's 99.35 or the scan's 99.49 alone.** The scan is the most precise single reading and agreed with the rendering across, but its scale along the carriage is unproven, and the plain mean keeps every reading within the instruments' own 0.2 percent.

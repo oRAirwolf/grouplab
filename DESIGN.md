@@ -496,6 +496,11 @@ Identity and storage are separate concerns. Sign in with Apple is standard OIDC 
 
 **The application is fully functional with no account, forever.** Synchronization is an opt-in convenience and never a gate.
 
+**Chosen first: a folder the person's own cloud client syncs** (option A of `docs/notes/sync-options.md`, Alan, 2026-10-20). GroupLab
+writes change files into a folder the person picks and reads the other devices' from it, and never talks to a cloud provider; the
+sign-in above is not built and is not decided. Measured on 22 sessions (2026-10-21), a target with its proof picture is about 350 KB
+in the folder, not the 5 KB and 400 KB estimated above, since the marking carries every edit.
+
 A small project-operated service remains useful for distributing the target definition library and for share links in the pattern already used by the BVA tool. Both are measured in kilobytes.
 
 ## 19. User interface

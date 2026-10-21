@@ -70,10 +70,10 @@ public sealed record ShotVelocity(long SessionId, int ShotId, long StringId, int
 /// chronograph strings and their mapping to shots, so adding Xero import later needs no migration of the sessions. The schema is
 /// <see cref="Schema"/>, documented in docs/SESSION-SCHEMA.md, which a test holds to the database this creates.
 /// </summary>
-public sealed class SessionStore
+public sealed partial class SessionStore
 {
     /// <summary>The schema's version, stored in the meta table and in every export.</summary>
-    public const int SchemaVersion = 5;
+    public const int SchemaVersion = 6;
 
     /// <summary>
     /// What each version before this one needs to become this one, oldest first, NOTES-FROM-PLANNING.md entry 115 section 3. Version 2 adds
@@ -125,6 +125,10 @@ public sealed class SessionStore
         (4, "ALTER TABLE rifles ADD COLUMN rail_cant REAL"),
         (4, "ALTER TABLE rifles ADD COLUMN sight_scale_factor REAL"),
         (4, "ALTER TABLE rifles ADD COLUMN weight_as_fired_lb REAL"),
+        (5, SyncRecordsTable),
+        (5, SyncSeenTable),
+        (5, SyncConflictsTable),
+        (5, SyncKeptTable),
     ];
 
     /// <summary>Every statement that creates the schema, in order, exactly as docs/SESSION-SCHEMA.md gives them.</summary>
@@ -140,7 +144,17 @@ public sealed class SessionStore
         "CREATE TABLE shot_velocities (session_id INTEGER NOT NULL REFERENCES sessions(id) ON DELETE CASCADE, shot_id INTEGER NOT NULL, string_id INTEGER NOT NULL, ordinal INTEGER NOT NULL, PRIMARY KEY (session_id, shot_id), FOREIGN KEY (string_id, ordinal) REFERENCES chronograph_shots(string_id, ordinal) ON DELETE CASCADE)",
         "CREATE INDEX sessions_rifle ON sessions(rifle)",
         "CREATE INDEX sessions_load ON sessions(load)",
+        SyncRecordsTable,
+        SyncSeenTable,
+        SyncConflictsTable,
+        SyncKeptTable,
     ];
+
+    // Entry 461 section 3.1: synchronization's own tables, schema 6 (SessionStore.Sync.cs).
+    private const string SyncRecordsTable = "CREATE TABLE sync_records (kind TEXT NOT NULL, key TEXT NOT NULL, hash TEXT, vector TEXT NOT NULL, deleted_utc TEXT, written TEXT, PRIMARY KEY (kind, key))";
+    private const string SyncSeenTable = "CREATE TABLE sync_seen (file TEXT PRIMARY KEY, applied_utc TEXT NOT NULL)";
+    private const string SyncConflictsTable = "CREATE TABLE sync_conflicts (id INTEGER PRIMARY KEY, kind TEXT NOT NULL, key TEXT NOT NULL, vector TEXT NOT NULL, payload TEXT, from_device TEXT NOT NULL, found_utc TEXT NOT NULL)";
+    private const string SyncKeptTable = "CREATE TABLE sync_kept (id INTEGER PRIMARY KEY, kind TEXT NOT NULL, key TEXT NOT NULL, payload TEXT NOT NULL, why TEXT NOT NULL, kept_utc TEXT NOT NULL)";
 
     private readonly string connection;
 
@@ -742,7 +756,7 @@ public sealed class SessionStore
 
         // Entry 407 section 5: an export from version 2 has no barrel on any rifle and barrels that may name none; it reads, and the barrels
         // are put under their rifles as the move does on opening.
-        if ((int?)root["schemaVersion"] is not (2 or 3 or 4 or SchemaVersion))
+        if ((int?)root["schemaVersion"] is not (2 or 3 or 4 or 5 or SchemaVersion))
         {
             throw new InvalidDataException($"This export has schema version {(int?)root["schemaVersion"]}, and this GroupLab reads versions 2 to {SchemaVersion}.");
         }
