@@ -1,4 +1,18 @@
 **Open: 26.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**DESIGN NEEDED** (entry 462 section 3; not a request for you; planning, please): **looks found in the interface sweep, one line a
+screen.** The faults are fixed and held by tests (words cut off, controls past the edge, words over words, contrast, failures now in the
+centred warning); these are looks, at 1280 by 720 unless said, pictures in `docs/figures/screens/current/` and `docs/figures/screens/phone/`.
+1. **Marking** (`marking-light-1280x720.png`): hole numbers stack on the bull numbers around bulls 14 and 17, and the magenta marker
+   hides bull 14's hole. **Any target** (`marking-other-light-1280x720.png`): the 1a, 1b and 1c labels sit on each other.
+2. **Analysis** (`analysis-light-1280x720.png`): "Shots, from their own bull" has no units in its headings, and the plot's key sits over
+   the plot.
+3. **Store-bought target** (`store-target-light-1280x720.png`): "Which target is this?" covers the bull it asks about.
+4. **Set tab** (`set-tab-light-1280x720.png`): the "Scale checked" pill crowds the path at the top.
+5. **First run** (`firstrun-light-1280x720.png`): the questions are taller than a 720 high window, so the last buttons are a scroll away.
+6. **Demo tour** (`demo-tour-light-1280x720.png`): the tour's card covers the panel text it is describing.
+7. **Compare loads** (`compare-light-1280x720.png`): two loads leave half of the "Each load's group" card empty.
+8. **Phone, scale markers** (`fold-scale-markers-light.png`): so many glossary words are dotted-underlined that the page reads as links.
+   **Phone, targets at the largest text** (`fold-targets-largest-text-light.png`): the optic labels take three lines.
 **DESIGN NEEDED** (entry 462 section 1; not a request for you; planning, please): **two colour findings on grouplab.org that only a
 look decision fixes.** Everything else the accessibility audit found is fixed.
 1. **Links inside sentences in the dark theme** are amber on light grey text with no underline, about 2 to 1 between the two, so a
@@ -309,9 +323,9 @@ print, on the computer and in GroupLab Dev; and a mark much bigger than your bul
 
 **Opened 2026-10-21.** Today the "For Quack" lines in this file wait for you to pass them on by hand. Entry 462 section 5 asks for that
 to be automated but kept off until you say yes, because it posts in the server in your name. What is prepared: `scripts/tester-notes.py`
-gathers each new "For ..." line once its fix is in a published nightly, rewrites it in your usual short and casual way ("hey Quack,
-nightly 215 has the fix for the keyboard thing you hit, thanks for the screenshot, it helped"), and posts it through a Discord webhook
-in the channel you choose. It runs after each nightly, posts each note once, and is switched off until a secret named
+gathers each new "For ..." note once its fix is in a published nightly and posts it as written here, opening the way you would
+("Hey Quack, thank you for the keyboard report..."), through a Discord webhook in the channel you choose. The notes already in this
+file are taken as passed on by you, so only new ones go; say if any of them never reached the tester. It runs after each nightly, posts each note once, and is switched off until a secret named
 `DISCORD_TESTERS_WEBHOOK` exists. Every draft it would have posted is listed in the nightly's summary meanwhile, so you can read a few
 first.
 

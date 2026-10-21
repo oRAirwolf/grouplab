@@ -151,7 +151,11 @@ public sealed partial class MainWindow
         var middle = new StackPanel { Spacing = Tokens.Space12, Children = { ViewSwitch(), trajectoryMiddle, hitMiddle, pointMiddle } };
         ballisticLeftPane = new Border { Child = new ScrollViewer { Content = left }, Padding = new Thickness(Tokens.Space16, Tokens.Space12), Classes = { AppStyles.Side } };
         ballisticMiddlePane = new ScrollViewer { Content = new StackPanel { Margin = new Thickness(Tokens.Space20, Tokens.Space12), Spacing = Tokens.Space12, Children = { middle } } };
-        ballisticRightPane = new Border { Child = AtOneRange(), Padding = new Thickness(Tokens.Space16, Tokens.Space12), Classes = { AppStyles.Side } };
+        // Entry 462 section 3: at 1280 by 720 the last lines of the prediction ran under the status bar with no way to reach them.
+        // The scroll bar is drawn over the right margin, which is the pane's padding moved inside it, so the figures keep their width.
+        var atOneRange = AtOneRange();
+        atOneRange.Margin = new Thickness(0, 0, Tokens.Space16, 0);
+        ballisticRightPane = new Border { Child = new ScrollViewer { Content = atOneRange, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled }, Padding = new Thickness(Tokens.Space16, Tokens.Space12, 0, Tokens.Space12), Classes = { AppStyles.Side } };
         // Entry 298: a grip beside each side column, the width it is left at remembered, and Reset layout forgetting both.
         ballisticLeftGrip = Grip();
         ballisticRightGrip = Grip();
@@ -485,6 +489,9 @@ public sealed partial class MainWindow
                     FontSize = Tokens.DetailSize,
                     FontFamily = heading ? Tokens.Sans : Mono,
                     HorizontalAlignment = HorizontalAlignment.Right,
+                    // Entry 462 section 3: a heading wider than its column at 1280 by 720 was cut off; it takes a second line instead.
+                    TextWrapping = heading ? TextWrapping.Wrap : TextWrapping.NoWrap,
+                    TextAlignment = TextAlignment.Right,
                     Margin = new Thickness(0, 0, Tokens.Space8, 0),
                     Classes = { heading ? AppStyles.Dim : AppStyles.Secondary },
                 };

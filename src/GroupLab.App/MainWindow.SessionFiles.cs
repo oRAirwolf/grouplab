@@ -77,6 +77,7 @@ public sealed partial class MainWindow
         catch (Exception ex) when (ex is SessionPackageException or IOException or UnauthorizedAccessException)
         {
             problem.Text = ex.Message;
+            ShowProblem("The session file did not open", ex.Message);
             DiagnosticLog.Info("session.file", ("opened", false), ("reason", ex.GetType().Name));
             return;
         }

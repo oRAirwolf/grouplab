@@ -151,7 +151,7 @@ public sealed class VelocityBlockTests
         Assert.NotNull(block.MeasuredSlope);
         Assert.Equal(K, block.SolverSlope!.Value, 9);
         Assert.False(block.SlopeDisagrees);
-        Assert.StartsWith("Shot by shot, each 10 fps raised the hole ", block.SlopeSentence, StringComparison.Ordinal);
+        Assert.StartsWith("Shot by shot, each 10 ft/s raised the hole ", block.SlopeSentence, StringComparison.Ordinal);
         Assert.EndsWith(", inside that range.", block.SlopeSentence, StringComparison.Ordinal);
         Assert.Contains("The solver says " + UnitSettings.Imperial.Length(K * 10) + ",", block.SlopeSentence, StringComparison.Ordinal);
     }

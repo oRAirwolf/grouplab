@@ -297,7 +297,7 @@ public static class VelocityBlocks
         // Metric readers think in steps of 3 m/s, near enough the 10 ft/s an imperial reader thinks in.
         bool metric = units.Distance == DistanceUnit.Metre;
         double step = metric ? 3 / 0.3048 : 10;
-        string stepWords = metric ? "3 m/s" : "10 fps";
+        string stepWords = metric ? "3 m/s" : "10 ft/s";
         string Paper(double inches) => units.Length(inches);
         string? slopeSentence = null;
         IReadOnlyList<VelocityDot> dots = [];

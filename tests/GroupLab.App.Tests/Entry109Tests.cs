@@ -303,6 +303,13 @@ public class Entry109Tests
             Dispatcher.UIThread.RunJobs();
             var frame = window.CaptureRenderedFrame();
             Assert.NotNull(frame);
+
+            // Entry 462 section 3: with GROUPLAB_LAYOUT_AUDIT naming a file, every screen photographed is also checked for words cut off,
+            // controls past the window's edge, words over words and contrast, at every size and in both themes, one line a finding.
+            if (Environment.GetEnvironmentVariable("GROUPLAB_LAYOUT_AUDIT") is { Length: > 0 } audit)
+            {
+                File.AppendAllLines(audit, GroupLab.Tests.Support.LayoutAudit.Findings(window).Select(f => name + "\t" + f));
+            }
             foreach (string output in outputs)
             {
                 frame.Save(Path.Combine(output, name + ".png"), new PngBitmapEncoderOptions());
@@ -707,7 +714,13 @@ public class Entry109Tests
                         {
                             // Entry 113 section 2: two sessions of the sheet compared, the second saved as another load the first time round.
                             long saved = window.CurrentSession!.Value;
-                            long copy = window.Sessions.Save(window.Sessions.Get(saved)! with { Id = 0, CreatedUtc = "2099-01-01T00:00:00Z", ShotDate = "2099-01-01", Load = "Second load" });
+                            // Entry 462 section 3: a week before, not 2099, which the published pictures showed as the second load's date.
+                            var weekBefore = DateTime.UtcNow.Date.AddDays(-7);
+                            long copy = window.Sessions.Save(window.Sessions.Get(saved)! with
+                            {
+                                Id = 0, CreatedUtc = weekBefore.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", System.Globalization.CultureInfo.InvariantCulture),
+                                ShotDate = weekBefore.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), Load = "Second load",
+                            });
                             window.ChooseSession(saved, true);
                             window.ChooseSession(copy, true);
                         }

@@ -108,6 +108,7 @@ public partial class MainWindow
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or Win32Exception)
         {
             markerSaid.Text = "The page could not be opened to print (" + e.Message + "). It is saved at " + path + ".";
+            ShowProblem("The page did not open to print", markerSaid.Text);
             DiagnosticLog.Exception(LogLevel.Warn, "markers.print", e);
             return;
         }
@@ -141,6 +142,7 @@ public partial class MainWindow
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
             markerSaid.Text = "The labels could not be saved: " + e.Message;
+            ShowProblem("The labels were not saved", markerSaid.Text);
             return;
         }
 
@@ -169,6 +171,7 @@ public partial class MainWindow
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
             markerSaid.Text = "The check label could not be saved: " + e.Message;
+            ShowProblem("The check label was not saved", markerSaid.Text);
             return;
         }
 
@@ -235,6 +238,7 @@ public partial class MainWindow
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
             markerSaid.Text = "The stickers could not be saved: " + e.Message;
+            ShowProblem("The stickers were not saved", markerSaid.Text);
             return;
         }
 

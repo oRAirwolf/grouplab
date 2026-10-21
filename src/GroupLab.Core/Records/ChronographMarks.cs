@@ -115,7 +115,7 @@ public sealed class ChronographMarks
 
     public bool InMetres { get; }
 
-    public string Unit => InMetres ? "m/s" : "fps";
+    public string Unit => InMetres ? "m/s" : "ft/s"; // entry 462 section 3: ft/s, as every other screen writes it
 
     /// <summary>Why the proposal is as it is, entry 342's sentences; none for a list typed by hand.</summary>
     public IReadOnlyList<string> Reasons { get; }

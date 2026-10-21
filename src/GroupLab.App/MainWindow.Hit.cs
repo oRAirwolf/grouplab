@@ -28,7 +28,12 @@ public sealed partial class MainWindow
     private static readonly HitSource[] HitStringSources =
         [HitSource.Wind, HitSource.Range, HitSource.Drag, HitSource.Temperature, HitSource.Pressure, HitSource.Humidity, HitSource.Inclination, HitSource.Azimuth, HitSource.Latitude];
 
-    private readonly ComboBox hitFrom = new() { ItemsSource = HitFromChoices, SelectedIndex = 0, MinWidth = 260 };
+    // Entry 462 section 3: a choice longer than the box at 1280 by 720 was cut off; it takes a second line instead.
+    private readonly ComboBox hitFrom = new()
+    {
+        ItemsSource = HitFromChoices, SelectedIndex = 0, MinWidth = 260,
+        ItemTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<string>((s, _) => new TextBlock { Text = s, TextWrapping = TextWrapping.Wrap }),
+    };
     private readonly TextBox hitPrecision = Field();
     private readonly TextBlock hitFromWords = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     private readonly TextBox hitDistance = Field("600");
@@ -37,7 +42,11 @@ public sealed partial class MainWindow
     private readonly TextBox hitHeight = Field("12");
     private readonly ComboBox hitSizeUnit = new() { MinWidth = 90 };
     private readonly TextBox hitWind = Field("10");
-    private readonly ComboBox hitPreset = new() { ItemsSource = HitPresets.All.Select(p => p.Name).Append(HitPresets.Custom).ToList(), SelectedIndex = 1, MinWidth = 260 };
+    private readonly ComboBox hitPreset = new()
+    {
+        ItemsSource = HitPresets.All.Select(p => p.Name).Append(HitPresets.Custom).ToList(), SelectedIndex = 1, MinWidth = 260,
+        ItemTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<string>((s, _) => new TextBlock { Text = s, TextWrapping = TextWrapping.Wrap }),
+    };
     private readonly TextBlock hitPresetWords = new() { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
     private readonly TextBox hitShots = Field("1");
     private readonly TextBox hitVelocitySd = Field();

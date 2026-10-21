@@ -382,7 +382,7 @@ public sealed partial class MainWindow
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            status.Text = "The card could not be saved: " + e.Message;
+            Failed("The card was not saved", "The card could not be saved: " + e.Message);
             return;
         }
 

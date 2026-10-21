@@ -2052,6 +2052,37 @@ thumbnail and is listed in `website/research/PUBLISHED.md`. No link to any site 
 Candidate 4 found three investigations since entry 402 with no row: the screen reader audits, synchronization and the site audit, each
 decided not written in RESEARCH.md with its reason.
 
+## Entry 462 section 3: the interface sweep, faults fixed and looks sent to Alan (2026-10-21)
+
+**How.** `tests/Shared/LayoutAudit.cs`, new, shared by the desktop and phone suites, walks a window's controls and reports words cut off
+(trimmed with no tooltip, wider or taller than their box, or hidden by a box that clips and does not scroll that way), a control a person
+uses past the window's edge, words drawn over words (a dialog's solid card or a tooltip over them excepted), and words under WCAG AA
+contrast (4.5 to 1, 3 to 1 for large) with both colours named. On the desktop it runs in the every-screen walk (`Entry109Tests`) when
+`GROUPLAB_LAYOUT_AUDIT` names a file: every screen at 1280x720, 1400x900, 1920x1080 and 2560x1440 in both themes; the weekly screenshot job
+now fails on any finding, after committing the pictures. It also runs on every push beside the screen reader audit in the entry 447 window
+tests. On the phone, `Entry462PhoneLayoutTests` lays out every place at 360, 412 and 600 wide, both themes, at the ordinary and the
+largest text size (the iPhone's largest is held at Android's, so one pass covers both), headless, the same Avalonia code the emulator
+runs. A chores-haiku walk of 55 pictures found what a machine cannot judge.
+
+**First walk: 417 findings; after the fixes: none, desktop and phone.** Fixed: Ballistics' table headings cut off (they wrap), its
+Elevation figure running over its label in a narrow panel (it goes under), its right panel's last lines under the status bar with no way
+to scroll (it scrolls, the bar drawn in the padding so nothing narrows); the hit plot's key off its right edge and two long choices cut
+off in their boxes (they wrap); equipment labels with a long unit and the flagged-marks heading cut off (they wrap); the shot table's
+"center" cut off (its first column 52 px); every trimmed name (tabs, the path, session lists) now has its whole text as a tooltip
+(`TrimmedTips`); the hint inside an empty box was the base theme's grey at half strength, about 2 to 1 (now whole, in the faint text
+colour); faint notes inside an expander were 4.12 to 1 on its grey (now dim). **Failures as the centred warning** (Alan, 2026-10-02,
+entry 356): fifteen save, print and open failures still said in a small line now also raise it: the point blank card, the scale marker
+page, labels, check label and stickers, the session database at start, a marking or session that will not open, a session file, a
+chronograph file (twice), a scale rectangle that cannot be used, and on the phone the M220 card and labels. **Same thing, same words:**
+chronograph readings and the velocity block's step said "fps" where every other screen says "ft/s"; the phone's designer said "Distance,
+yards" and the computer "Distance, yd"; the phone's Settings said "Sizes on the paper" for what the computer calls "Lengths". The
+published Compare and Sessions pictures dated their second session 2099-01-01; it is now a week before. **Not checked by machine:** focus
+visibility (entry 447 holds the tab order and names) and screens deeper than the phone's bottom places.
+
+**Looks for Alan** (DESIGN NEEDED in for-alan.md, eight lines): marking labels stacking, the analysis key over the plot and unit-less
+headings, the store-target question over the bull, the set tab's pill, the first run taller than 720, the demo card over its text,
+Compare's half-empty card, and two phone pages.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

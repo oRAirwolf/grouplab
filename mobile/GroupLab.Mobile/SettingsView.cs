@@ -40,7 +40,7 @@ public sealed class SettingsView : UserControl
         }
 
         column.Children.Add(Screens.Dim(GroupLab.Core.Marking.UnitSettings.ScopeUnitSays));
-        column.Children.Add(Screens.Line("Sizes on the paper"));
+        column.Children.Add(Screens.Line("Lengths"));
         foreach (var linear in new[] { GroupLab.Core.Marking.LinearUnit.Inch, GroupLab.Core.Marking.LinearUnit.Millimetre, GroupLab.Core.Marking.LinearUnit.Centimetre })
         {
             var radio = Screens.Radio("lengthUnit", GroupLab.Core.Marking.UnitSettings.Symbol(linear), now.Linear == linear);

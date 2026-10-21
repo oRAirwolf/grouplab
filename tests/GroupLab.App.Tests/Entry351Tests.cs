@@ -65,7 +65,7 @@ public class Entry351Tests
 
             // The choices under the row, the phone's sheet's, in its words and order, then Cancel.
             Click(Mark(4));
-            Assert.Contains(window.ChronographText, t => t == "Reading 4, 1043 fps, goes with");
+            Assert.Contains(window.ChronographText, t => t == "Reading 4, 1043 ft/s, goes with");
             var words = window.GetLogicalDescendants().OfType<Button>().Select(b => b.Content as string).Where(c => c is not null).ToList();
             int at = words.IndexOf(ChronographMarks.AShotWords + "…") - 1;
             Assert.True(at >= 0);

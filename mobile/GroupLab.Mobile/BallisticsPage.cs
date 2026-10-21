@@ -594,7 +594,8 @@ internal sealed class BallisticsPage : UserControl
         catch (Exception e)
         {
             DiagnosticLog.Info("print.m220", ("what", "point blank card"), ("error", e.GetType().Name));
-            said.Text = $"The card did not reach the M220 ({e.Message}). Turn the printer off and on, then try again.";
+            // Entry 462 section 3: a print that failed is the centred sheet (entry 356), not a line.
+            ProblemSheet.Stop(said, said, "The card did not print", $"The card did not reach the M220 ({e.Message}). Turn the printer off and on, then try again.");
         }
     }
 

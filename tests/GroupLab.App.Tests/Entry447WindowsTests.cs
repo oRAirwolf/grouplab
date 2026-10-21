@@ -40,6 +40,8 @@ public class Entry447WindowsTests
         Assert.True(unnamed.Count == 0, what + ": " + string.Join("; ", unnamed));
         var found = ScreenReaderAudit.Findings(dialog!, stops);
         Assert.True(found.Count == 0, what + ": " + string.Join("; ", found));
+        var laid = LayoutAudit.Findings(dialog!);
+        Assert.True(laid.Count == 0, what + ": " + string.Join("; ", laid));
         dialog!.Close();
         Settle();
     }

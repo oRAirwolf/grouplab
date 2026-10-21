@@ -40,7 +40,7 @@ The factor is the angle the lines really are apart over the angle the turret rea
 
 ## What it costs at distance
 
-For the same 140 grain load at 2710 ft/s, a rifle with a 0.63 MOA mean radius, a still target and a perfectly known distance, here is the chance of a first-round hit on a 10 in circle. The first column is GroupLab's hit probability for a centred shot; the others are the same shots moved low by the tracking error times the elevation dialed:
+For the same 140 grain load at 2710 ft/s, a rifle with a 0.63 MOA mean radius, a still target and a perfectly known distance, here is the chance of a first-round hit on a 10 in circle. The first column is GroupLab's hit probability for a centered shot; the others are the same shots moved low by the tracking error times the elevation dialed:
 
 | Distance | Dial | Error moves it, per percent | Tracking true | 1 percent | 2 percent | 4 percent |
 |---|---|---|---|---|---|---|

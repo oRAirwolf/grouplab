@@ -35,7 +35,7 @@ public class Issue19Tests
             Settle();
             TextBox Labelled(string label) => shell.GetVisualDescendants().OfType<TextBlock>().First(t => t.Text == label)
                 .GetVisualParent()!.GetVisualDescendants().OfType<TextBox>().First();
-            var order = new[] { "Distance, yards", "Lowest magnification", "Red dot size in MOA, at 1x only", "Shots" }.Select(Labelled).ToList();
+            var order = new[] { "Distance, yd", "Lowest magnification", "Red dot size in MOA, at 1x only", "Shots" }.Select(Labelled).ToList();
             order[0].Focus();
             shell.Keyboard.Opened(874 - 336);
             Settle();

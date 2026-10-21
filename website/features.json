@@ -10,6 +10,8 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "Across the computer and the phone, nothing is cut off",
+    "A save, a print or a file that will not open now says so in the middle of the window",
     "Opening a rifle, barrel or load on the Equipment screen now starts at the top",
     "On a small phone, the heading that opens the tracking test",
     "Release notes now say which fixes came from",

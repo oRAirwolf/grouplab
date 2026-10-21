@@ -87,6 +87,8 @@ internal sealed class HitScatter : Control
 
         Marks.Cross(context, Marks.Faint, centre, 6, 1);
         var legend = new FormattedText("teal: first round    red: second round, corrected from the first", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.DetailSize, new SolidColorBrush(palette.Dim));
+        // Entry 462 section 3: in a narrow plot the key ran off the right edge; it takes a second line instead.
+        legend.MaxTextWidth = Math.Max(1, Bounds.Width - (2 * Pad));
         context.DrawText(legend, new Point(Pad, Bounds.Height - legend.Height - 4));
     }
 }

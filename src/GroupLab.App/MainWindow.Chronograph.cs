@@ -151,6 +151,7 @@ public sealed partial class MainWindow
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or FormatException or NotSupportedException or ExcelDataReader.Exceptions.ExcelReaderException)
         {
             problem.Text = "That file could not be read: " + e.Message;
+            ShowProblem("The file did not open", problem.Text);
         }
     }
 
@@ -220,6 +221,7 @@ public sealed partial class MainWindow
         catch (FormatException e)
         {
             problem.Text = "That file could not be read as a chronograph file: " + e.Message;
+            ShowProblem("The file did not open", problem.Text);
             return;
         }
 

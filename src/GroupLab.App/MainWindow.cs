@@ -619,6 +619,7 @@ public sealed partial class MainWindow : Window
     /// <summary>The window with its settings kept in <paramref name="settings"/>, which the headless tests point at a file of their own.</summary>
     internal MainWindow(AppSettingsStore settings)
     {
+        TrimmedTips.Install();
         settingsStore = settings;
         NameTheFields();
         // Entry 442: the focus kept when a panel is rebuilt under it, and the arrows between buttons; the shot table answers its own.
@@ -786,6 +787,8 @@ public sealed partial class MainWindow : Window
         {
             sessions = null;
             problem.Text = "The session database could not be opened (" + ex.Message + "), so sessions and records are not kept this time.";
+            // Entry 462 section 3: a failure that stops the work is the centred warning too (entry 356); the line keeps its record.
+            Avalonia.Threading.Dispatcher.UIThread.Post(() => ShowProblem("Sessions are not being kept", problem.Text));
             DiagnosticLog.Exception(LogLevel.Warn, "store.open", ex);
         }
 
@@ -1978,6 +1981,7 @@ public sealed partial class MainWindow : Window
         catch (MarkingFileException ex)
         {
             problem.Text = ex.Message;
+            ShowProblem("The marking did not open", ex.Message);
             DiagnosticLog.Exception(LogLevel.Warn, "file.open", ex, [.. DiagnosticLog.File(path), ("kind", "marking")]);
             return;
         }
@@ -1985,6 +1989,7 @@ public sealed partial class MainWindow : Window
         {
             // A marking moved or deleted since it was chosen: say so rather than let the read tear the window down.
             problem.Text = "The marking could not be read: " + ex.Message;
+            ShowProblem("The marking did not open", problem.Text);
             DiagnosticLog.Exception(LogLevel.Warn, "file.open", ex, [.. DiagnosticLog.File(path), ("kind", "marking")]);
             return;
         }
@@ -2821,6 +2826,7 @@ public sealed partial class MainWindow : Window
                 catch (ArgumentException ex)
                 {
                     problem.Text = ex.Message;
+                    ShowProblem("That scale cannot be used", ex.Message);
                     DiagnosticLog.Exception(LogLevel.Warn, "scale.rectangle", ex);
                 }
             }
@@ -3128,9 +3134,14 @@ public sealed partial class MainWindow : Window
                 flags.Children.Add(new Expander
                 {
                     // Entry 291 section 7 item 4: a shot placed on the hole inside a larger mark is flagged too, and is not possibly two holes.
-                    Header = state.Shots.Any(s => ReviewQueue.StillFlagged(state, s) && s.Oversize is { Joined: true })
-                        ? (flagged.Children.Count == 1 ? "1 mark flagged for its size" : $"{flagged.Children.Count} marks flagged for their size")
-                        : flagged.Children.Count == 1 ? "1 mark flagged as possibly two holes" : $"{flagged.Children.Count} marks flagged as possibly two holes",
+                    // Entry 462 section 3: a heading that wraps, which a plain string in an expander's header does not.
+                    Header = new TextBlock
+                    {
+                        TextWrapping = TextWrapping.Wrap,
+                        Text = state.Shots.Any(s => ReviewQueue.StillFlagged(state, s) && s.Oversize is { Joined: true })
+                            ? (flagged.Children.Count == 1 ? "1 mark flagged for its size" : $"{flagged.Children.Count} marks flagged for their size")
+                            : flagged.Children.Count == 1 ? "1 mark flagged as possibly two holes" : $"{flagged.Children.Count} marks flagged as possibly two holes",
+                    },
                     Content = flagged,
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                 });
@@ -3356,7 +3367,7 @@ public sealed partial class MainWindow : Window
         // Entry 104 section 4: a column headed with the shot's number is read as sorted by it, so it is, not in detection order.
         var ordered = plotted.OrderBy(p => int.TryParse(p.Label, NumberStyles.Integer, CultureInfo.InvariantCulture, out int k) ? k : int.MaxValue).ThenBy(p => p.Label, StringComparer.Ordinal).ToList();
         bool bullColumn = ordered.Any(p => p.Bull is { } b && b != p.Label);
-        string columns = bullColumn ? "44,44,*,*,*" : "44,*,*,*";
+        string columns = bullColumn ? "52,44,*,*,*" : "52,*,*,*"; // entry 462 section 3: 44 cut "center" off
         Grid Cells(IEnumerable<string> texts, bool heading, bool dim, bool struck, bool chosen = false)
         {
             var grid = new Grid { ColumnDefinitions = new ColumnDefinitions(columns) };
@@ -3688,6 +3699,7 @@ public sealed partial class MainWindow : Window
         catch (MarkingFileException ex)
         {
             problem.Text = "The session's marking could not be read: " + ex.Message;
+            ShowProblem("The session did not open", problem.Text);
             return;
         }
 

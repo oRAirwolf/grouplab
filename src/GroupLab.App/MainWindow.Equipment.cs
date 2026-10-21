@@ -198,6 +198,8 @@ public sealed partial class MainWindow
             cell.Children.Add(new TextBlock
             {
                 Text = field.Unit is null ? field.Label : $"{field.Label} ({field.Unit})",
+                // Entry 462 section 3: a long unit, such as the click value's, was cut off at 1280 by 720.
+                TextWrapping = TextWrapping.Wrap,
                 Classes = { AppStyles.Label },
             });
 

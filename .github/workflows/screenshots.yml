@@ -64,6 +64,8 @@ jobs:
       - name: Render every screen
         env:
           GROUPLAB_SCREENS_TO_DOCS: '1'
+          # Entry 462 section 3: every screen photographed is also checked for words cut off, past the edge or over words, and contrast.
+          GROUPLAB_LAYOUT_AUDIT: ${{ runner.temp }}/layout-audit.tsv
           GROUPLAB_TEST_DATA: ${{ runner.temp }}/test-data
         run: >
           dotnet test tests/GroupLab.App.Tests
@@ -112,3 +114,12 @@ jobs:
           git diff --cached --quiet -- docs/figures/readme || git commit -m "[screens] the README's pictures, from the new screenshots" -m "Entry 266."
           git push origin main
           echo "committed $count changed images; the next push that touches the site publishes them"
+
+      # Entry 462 section 3: the pictures are committed first, so a finding never holds back the website's screenshots; then the job fails
+      # on any finding, at any size, in either theme, naming the screen.
+      - name: Every screen is laid out whole
+        shell: bash
+        run: |
+          f="$RUNNER_TEMP/layout-audit.tsv"
+          if [ -s "$f" ]; then echo "::error::$(wc -l < "$f") layout findings"; cat "$f"; exit 1; fi
+          echo "every screen laid out whole, at every size and in both themes"

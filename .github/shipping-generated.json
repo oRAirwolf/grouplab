@@ -119,6 +119,7 @@
     "src/GroupLab.App/Theme/",
     "src/GroupLab.App/Toast.cs",
     "src/GroupLab.App/TrajectoryGraph.cs",
+    "src/GroupLab.App/TrimmedTips.cs",
     "src/GroupLab.App/UnitTap.cs",
     "src/GroupLab.App/VelocityBlockView.cs",
     "src/GroupLab.App/VelocityStrip.cs",

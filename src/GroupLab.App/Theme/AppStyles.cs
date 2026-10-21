@@ -184,6 +184,42 @@ public static class AppStyles
         Restyle(app);
         app.ActualThemeVariantChanged += (_, _) => Restyle(app);
         TextSize.RestyleOnChange(app, Restyle);
+        WholePlaceholders();
+    }
+
+    private static bool placeholdersWhole;
+
+    /// <summary>
+    /// Entry 462 section 3: the Fluent template draws a box's hint at half strength, which is set inside the template and outranks any
+    /// style, so the hint is made whole on the part itself when the template is applied.
+    /// </summary>
+    private static void WholePlaceholders()
+    {
+        if (placeholdersWhole)
+        {
+            return;
+        }
+
+        placeholdersWhole = true;
+        TemplatedControl.TemplateAppliedEvent.AddClassHandler<TemplatedControl>((box, e) =>
+        {
+            if (e.NameScope.Find<TextBlock>("PART_Placeholder") is { } hint)
+            {
+                hint.Opacity = 1;
+            }
+
+            // A choice box's hint is its own part, found by its words once they are bound.
+            if (box is ComboBox { PlaceholderText: { Length: > 0 } words })
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    foreach (var part in Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(box).OfType<TextBlock>().Where(t => t.Text == words))
+                    {
+                        part.Opacity = 1;
+                    }
+                });
+            }
+        });
     }
 
     private static void Restyle(Application app)
@@ -242,7 +278,13 @@ public static class AppStyles
             yield return ($"TextControlBackground{state}", Brush(p.FieldBg));
             yield return ($"TextControlForeground{state}", Brush(p.Text));
             yield return ($"TextControlBorderBrush{state}", Brush(state == "Focused" ? p.FocusRing : p.FieldBorder));
+
+            // Entry 462 section 3: the hint inside an empty box was the base theme's grey, about 2 to 1 on the field; the faint text colour
+            // reads at AA in both themes.
+            yield return ($"TextControlPlaceholderForeground{state}", Brush(p.Faint));
         }
+
+        yield return ("ComboBoxPlaceHolderForeground", Brush(p.Faint));
     }
 
     /// <summary>Form text: a warning is amber, a refusal red, the meanings entry 93 fixed (entry 100 section 1).</summary>
@@ -252,6 +294,10 @@ public static class AppStyles
 
     private static GroupLabStyles Build(Palette p) =>
     [
+        // Entry 462 section 3: the hint inside an empty box was drawn at half strength, about 2 to 1 on the field; whole and in the faint
+        // text colour it reads at AA in both themes.
+        Rule(x => x.OfType<TextBox>(), (TextBox.PlaceholderForegroundProperty, Brush(p.Faint))),
+        Rule(x => x.OfType<ComboBox>(), (ComboBox.PlaceholderForegroundProperty, Brush(p.Faint))),
         Rule(x => x.OfType<TextBlock>().Class(FormWarning), (TextBlock.ForegroundProperty, Brush(p.WarningText))),
         Rule(x => x.OfType<TextBlock>().Class(FormError), (TextBlock.ForegroundProperty, Brush(p.ErrorText))),
         Rule(x => x.OfType<TextBox>().Class(":disabled"), (TemplatedControl.ForegroundProperty, Brush(p.Disabled))),
@@ -285,6 +331,8 @@ public static class AppStyles
         Rule(x => x.OfType<TextBlock>().Class(Dim), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(HeadlineFigure), (TextBlock.ForegroundProperty, Brush(p.Amber))),
         Rule(x => x.OfType<TextBlock>().Class(Faint), (TextBlock.FontSizeProperty, Tokens.SecondarySize), (TextBlock.ForegroundProperty, Brush(p.Faint))),
+        // Entry 462 section 3: an expander's own grey is lighter than the panels, and faint words on it were 4.1 to 1; dim reads at AA.
+        Rule(x => x.OfType<Expander>().Descendant().OfType<TextBlock>().Class(Faint), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(Alert), (TextBlock.ForegroundProperty, Brush(p.Alert))),
         Rule(x => x.OfType<Border>().Class(Needed), (Border.BorderBrushProperty, Brush(p.Alert))),
         Rule(x => x.OfType<TextBlock>().Class(Good), (TextBlock.ForegroundProperty, Brush(p.Teal))),

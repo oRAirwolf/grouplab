@@ -161,6 +161,10 @@ public class Entry447Tests
                 Assert.True(unnamed.Count == 0, place + ": " + string.Join("; ", unnamed));
                 var found = ScreenReaderAudit.Findings(window, stops);
                 Assert.True(found.Count == 0, place + ": " + string.Join("; ", found));
+
+                // Entry 462 section 3: and laid out whole: nothing cut off, past the edge or drawn over, every line at AA contrast.
+                var laid = LayoutAudit.Findings(window);
+                Assert.True(laid.Count == 0, place + ": " + string.Join("; ", laid));
             }
         }
         finally
@@ -192,6 +196,8 @@ public class Entry447Tests
                 Assert.True(unnamed.Count == 0, owned.Title + ": " + string.Join("; ", unnamed));
                 var found = ScreenReaderAudit.Findings(owned, stops);
                 Assert.True(found.Count == 0, owned.Title + ": " + string.Join("; ", found));
+                var laid = LayoutAudit.Findings(owned);
+                Assert.True(laid.Count == 0, owned.Title + ": " + string.Join("; ", laid));
                 owned.Close();
             }
         }

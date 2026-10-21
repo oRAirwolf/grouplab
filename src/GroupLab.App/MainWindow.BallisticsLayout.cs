@@ -415,6 +415,19 @@ public partial class MainWindow
         Grid.SetColumn(leadValue, 1);
         lead.Children.Add(leadLabel);
         lead.Children.Add(leadValue);
+
+        // Entry 462 section 3: where the panel is too narrow for both on one line, the figure ran over its label; it goes under it instead.
+        lead.RowDefinitions = new RowDefinitions("Auto,Auto");
+        lead.SizeChanged += (_, e) =>
+        {
+            leadLabel.Measure(Size.Infinity);
+            leadValue.Measure(Size.Infinity);
+            bool under = leadLabel.DesiredSize.Width + leadValue.DesiredSize.Width > e.NewSize.Width;
+            Grid.SetRow(leadValue, under ? 1 : 0);
+            Grid.SetColumn(leadValue, under ? 0 : 1);
+            Grid.SetColumnSpan(leadValue, under ? 2 : 1);
+            leadValue.HorizontalAlignment = under ? HorizontalAlignment.Right : HorizontalAlignment.Stretch;
+        };
         atRangeLines.Children.Add(lead);
         // Entry 456 section 1: past the elevation the scope has left above its zero, what to hold in the reticle instead of the clicks.
         string? outOf = point.DropInches < 0 ? ScopeMount.OutOfElevation(rifle!, ScopeMount.Figures(rifle!, solved.ZeroAngleMoa), Math.Atan(Math.Abs(point.DropInches) / inches) * BallisticSolver.MoaPerRadian) : null;

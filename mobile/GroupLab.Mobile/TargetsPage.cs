@@ -66,7 +66,7 @@ public sealed class TargetsPage : UserControl
         column.Children.Add(Screens.Card(
             Screens.Heading("Made for your optic"),
             Screens.Dim("Say how far, the lowest magnification you will shoot at (1 for a red dot, with the dot's size) and how many shots. GroupLab sizes a bull you can center on through that optic, and makes as many sheets as the shots need."),
-            Pair(Field("Distance, yards", distance), Field("Lowest magnification", magnification)),
+            Pair(Field("Distance, yd", distance), Field("Lowest magnification", magnification)),
             Pair(Field("Red dot size in MOA, at 1x only", dot), Field("Shots", shots)),
             Screens.Dim("Paper"),
             Pair(letter, a4),
@@ -545,7 +545,8 @@ public sealed class TargetsPage : UserControl
         catch (Exception e)
         {
             DiagnosticLog.Info("print.m220", ("step", step), ("error", e.GetType().Name), ("ms", clock.ElapsedMilliseconds));
-            said.Text = $"The labels did not reach the M220: while {step}, it stopped ({e.Message}). Turn the printer off and on, then try again.";
+            // Entry 462 section 3: a print that failed is the centred sheet (entry 356), not a line.
+            ProblemSheet.Stop(said, said, "The labels did not print", $"The labels did not reach the M220: while {step}, it stopped ({e.Message}). Turn the printer off and on, then try again.");
         }
     }
 

@@ -85,7 +85,7 @@ public class Entry351Tests
             Assert.Equal(3, view.Changing);
             var sheet = view.GetLogicalDescendants().OfType<Border>().Single(b => IdOf(b) == "chrono-sheet");
             Assert.True(sheet.IsVisible);
-            Assert.Contains("Reading 4, 1041 fps, goes with", Words(sheet));
+            Assert.Contains("Reading 4, 1041 ft/s, goes with", Words(sheet));
             foreach (var (kind, words) in ChronographMarks.Choices)
             {
                 var choice = sheet.GetLogicalDescendants().OfType<Button>().Single(b => IdOf(b) == "chrono-choice-" + kind.ToString().ToLowerInvariant());
