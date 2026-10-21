@@ -459,7 +459,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 - Nothing in the application changes; the project can now build its command line for an arm64 Linux server, to read sent targets there.
 - Behind the scenes, every target sent from GroupLab with your corrections is now read again by each new build and compared with what you kept, moved, added and removed, so a build that reads real targets worse is caught; only numbers are kept.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.183)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
