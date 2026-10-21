@@ -174,7 +174,7 @@ public sealed class CapturePage : UserControl
                 others,
                 status,
                 Screens.Card(gettingStarted, Screens.Dim("Tips for a good picture"), tips),
-                Link("grouplab.org", () => Phone.Platform.OpenAddress("https://grouplab.org/")),
+                Link("grouplab.org", () => Phone.Platform.OpenAddress("https://grouplab.org/"), "GroupLab's website, grouplab.org"),
                 Screens.Quiet($"Free and open source · GPL-3.0 · {AppInfo.ShortVersion}"),
             },
         });
@@ -230,9 +230,16 @@ public sealed class CapturePage : UserControl
     /// <summary>The start with the question sheet over it.</summary>
     private readonly Grid home;
 
-    private static Button Link(string words, Action chosen)
+    private static Button Link(string words, Action chosen, string? spoken = null)
     {
         var link = new Button { Content = words, MinHeight = Screens.Touch, Margin = new Avalonia.Thickness(0, 0, 16, 0), Classes = { GroupLab.App.Theme.AppStyles.Link } };
+
+        // Entry 461 section 2.1: VoiceOver's audit takes an address alone for a name nobody can say; the link says what it opens.
+        if (spoken is not null)
+        {
+            Avalonia.Automation.AutomationProperties.SetName(link, spoken);
+        }
+
         link.Click += (_, _) => chosen();
         return link;
     }

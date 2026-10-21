@@ -86,6 +86,11 @@ def android_findings(audit, xml_text, dpi, package):
 
     found = []
     scale = 160 / dpi
+    # The view's own edges: a control scrolled part way out of it is only the sliver that shows, so its size is not judged, as the
+    # Accessibility Test Framework does not judge a control the screen cuts off.
+    own = [b for n, b in nodes if not (n.get("class") or "").startswith("android.")] or [b for _, b in nodes]
+    top = min((b[1] for b in own), default=0)
+    bottom = max((b[1] + b[3] for b in own), default=0)
     for node, box in nodes:
         if node.get("clickable") != "true" and node.get("long-clickable") != "true":
             continue
@@ -96,7 +101,8 @@ def android_findings(audit, xml_text, dpi, package):
         if (node.get("class") or "") in NO_ROLE:
             found.append(f"{what}: no role, its class is {node.get('class') or 'empty'}")
         width, height = box[2] * scale, box[3] * scale
-        if width < SMALLEST_DP - 0.5 or height < SMALLEST_DP - 0.5:
+        cut_off = box[1] <= top + 1 or box[1] + box[3] >= bottom - 1
+        if not cut_off and (width < SMALLEST_DP - 0.5 or height < SMALLEST_DP - 0.5):
             found.append(f"{what}: {width:.0f} by {height:.0f} dp, smaller than {SMALLEST_DP} by {SMALLEST_DP} to touch")
 
     view = audit.get("view") or {}
@@ -149,6 +155,23 @@ def answer_android(device, audit, out):
     return {"screen": name, "platform": "android", "findings": findings, "kept": []}
 
 
+def judged(issue):
+    """Whether an issue XCTest found is GroupLab's to fix. Two are not, and are kept in the artifact: the scroll bar, a strip 16 points wide
+    down the right edge, which is the platform's own part, as on the computer and Android; and text found inside a picture with no element
+    named (the photograph of a sheet, with its handwriting and printed labels), which no label can represent and the words around it say."""
+    kind = issue.get("type")
+    frame = issue.get("frame") or []
+    if kind == "error":
+        return True
+    if kind not in IOS_JUDGED:
+        return False
+    if kind == "hitRegion" and len(frame) == 4 and frame[2] <= 20 and frame[3] >= 200:
+        return False
+    if kind == "elementDetection" and not frame and not issue.get("label"):
+        return False
+    return True
+
+
 def answer_ios(device, audit, out):
     name = audit.get("name", "screen")
     folder = device.taps
@@ -177,7 +200,7 @@ def answer_ios(device, audit, out):
     findings, kept = [], []
     for issue in issues:
         line = f"{issue.get('type')}: {issue.get('summary')}" + (f" (\"{issue['label']}\")" if issue.get("label") else "")
-        (findings if issue.get("type") in IOS_JUDGED or issue.get("type") == "error" else kept).append(line)
+        (findings if judged(issue) else kept).append(line)
     return {"screen": name, "platform": "ios", "findings": findings, "kept": kept}
 
 
@@ -248,6 +271,8 @@ def self_test():
     xml_text = """<hierarchy rotation="0">
 <node class="android.widget.FrameLayout" package="org.grouplab.app.dev" bounds="[0,0][1080,2400]" clickable="false" text="" content-desc="">
 <node class="android.widget.Button" package="org.grouplab.app.dev" bounds="[100,200][500,326]" clickable="true" text="Analyze" content-desc=""/>
+<node class="Panel" package="org.grouplab.app.dev" bounds="[0,128][1080,2337]" clickable="false" text="" content-desc=""/>
+<node class="Button" package="org.grouplab.app.dev" bounds="[100,2317][500,2337]" clickable="true" text="Scrolled half out" content-desc=""/>
 <node class="android.widget.Button" package="org.grouplab.app.dev" bounds="[100,400][200,480]" clickable="true" text="" content-desc=""/>
 <node class="android.view.View" package="org.grouplab.app.dev" bounds="[600,400][900,526]" clickable="true" text="Odd" content-desc=""/>
 <node class="android.widget.Button" package="com.android.systemui" bounds="[0,0][10,10]" clickable="true" text="" content-desc=""/>
@@ -269,6 +294,11 @@ def self_test():
     assert not any("Off" in f or "Words" in f or "systemui" in f for f in found), found
     assert len(found) == 4, found
     assert bounds("[1,2][11,22]") == (1, 2, 10, 20)
+    assert not judged({"type": "hitRegion", "frame": [424, 62, 16, 787]})
+    assert judged({"type": "hitRegion", "frame": [16, 600, 40, 30]})
+    assert not judged({"type": "elementDetection", "summary": "Potentially inaccessible text"})
+    assert judged({"type": "sufficientElementDescription", "frame": [16, 465, 408, 21]})
+    assert not judged({"type": "contrast", "frame": [1, 2, 3, 4]})
     print("screen-reader-audit self-test passed")
     return 0
 

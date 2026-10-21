@@ -1945,6 +1945,13 @@ Ten rows of `docs/RESEARCH.md`'s "Worth an article?", each checked for whether i
   `AccessibilityOnScreen` wraps Avalonia's helper on the Android head, answering exactly as it does and moving each box by the view's
   place before Android clips it. A scroll bar's own arrows are left out of the judging, as on the computer. iOS: the runner did not
   build, because XCTest has no audit types for actions or parent and child; they were taken out.
+- **The second runs (39544356145, 39544358247).** Android: the wrapper installed (`accessibility.bounds installed=True` in GroupLab Dev's
+  log) and the 100 misplaced boxes were gone; the three left were controls cut off by the bottom of the scrolled view, whose box is the
+  sliver showing, now not judged for size, as the Accessibility Test Framework does not. iOS read all 13 screens: 20 issues. Fixed:
+  empty lines of text (a status line with nothing to say yet) were read as elements with no description, now kept out of the tree while
+  empty (`SpokenNames.Quiet`); "grouplab.org" alone was not a name a person can say, now "GroupLab's website, grouplab.org". Not
+  judged, kept in the artifact: the scroll bar, a 16 point strip down the right edge, and text XCTest found inside the photograph of
+  the sheet on Fix holes (its handwriting and printed labels), which no label can represent and the words above it say.
 - Request 105 in for-alan.md: a later twenty minutes with a real screen reader, for what a machine cannot judge. The guide's
   keyboard part says what is checked and that no person using a screen reader has tried it yet.
 

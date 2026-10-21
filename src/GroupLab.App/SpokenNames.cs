@@ -11,11 +11,13 @@ namespace GroupLab.App;
 /// NOTES-FROM-PLANNING.md entry 461 section 2.1: a button, choice or list row whose content is a panel of words and pictures is named by
 /// Avalonia after the panel's type, so Narrator read the printer check's four ways to print as "Avalonia.Controls.StackPanel". Each one
 /// without a name of its own takes the words inside it, joined by commas, and keeps them up to date when its content changes. A name the
-/// code gave it is never replaced.
+/// code gave it is never replaced. A line of text with nothing in it yet (a status line waiting for something to say) is kept out of the
+/// screen reader's tree while it is empty, since VoiceOver's audit found each one read as an element with nothing to say.
 /// </summary>
 internal static class SpokenNames
 {
     private static readonly ConditionalWeakTable<ContentControl, string> Given = new();
+    private static readonly ConditionalWeakTable<TextBlock, object> Quietened = new();
     private static bool attached;
 
     public static void Attach()
@@ -34,6 +36,25 @@ internal static class SpokenNames
                 Fill(c);
             }
         });
+        Control.LoadedEvent.AddClassHandler<TextBlock>((t, _) => Quiet(t));
+        TextBlock.TextProperty.Changed.AddClassHandler<TextBlock>((t, _) => Quiet(t));
+    }
+
+    /// <summary>An empty line of text out of the screen reader's tree while it is empty, and back in once it has words; a choice the code made is left alone.</summary>
+    public static void Quiet(TextBlock t)
+    {
+        bool empty = string.IsNullOrWhiteSpace(t.Text) && (t.Inlines is null || t.Inlines.Count == 0);
+        bool ours = Quietened.TryGetValue(t, out _);
+        if (empty && !ours && !t.IsSet(AutomationProperties.AccessibilityViewProperty))
+        {
+            AutomationProperties.SetAccessibilityView(t, AccessibilityView.Raw);
+            Quietened.AddOrUpdate(t, t);
+        }
+        else if (!empty && ours)
+        {
+            t.ClearValue(AutomationProperties.AccessibilityViewProperty);
+            Quietened.Remove(t);
+        }
     }
 
     public static void Fill(ContentControl c)

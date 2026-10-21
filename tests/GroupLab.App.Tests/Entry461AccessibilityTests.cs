@@ -40,4 +40,33 @@ public class Entry461AccessibilityTests
             window.Close();
         }
     }
+
+    /// <summary>VoiceOver's audit read each empty status line as an element with nothing to say: an empty line is out of the tree until it has words.</summary>
+    [AvaloniaFact]
+    public void AnEmptyLineOfTextIsOutOfTheTreeUntilItHasWords()
+    {
+        var status = new TextBlock();
+        var kept = new TextBlock { Text = "" };
+        AutomationProperties.SetAccessibilityView(kept, AccessibilityView.Content);
+        var window = new Window { Width = 300, Height = 200, Content = new StackPanel { Children = { status, kept } } };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            Assert.Equal(AccessibilityView.Raw, AutomationProperties.GetAccessibilityView(status));
+            status.Text = "3 unsure holes";
+            Dispatcher.UIThread.RunJobs();
+            Assert.NotEqual(AccessibilityView.Raw, AutomationProperties.GetAccessibilityView(status));
+            status.Text = "";
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(AccessibilityView.Raw, AutomationProperties.GetAccessibilityView(status));
+
+            // A choice the code made is left alone.
+            Assert.Equal(AccessibilityView.Content, AutomationProperties.GetAccessibilityView(kept));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
