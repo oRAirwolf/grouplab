@@ -36,7 +36,7 @@ run again on 2026-10-21 and passed, with the test-data release's files (checked 
 | 17 | The target library | No gate was written; the one held is every action the README names done through the window, with a session still opening after its sheet is deleted: `Entry112Tests.TheLibraryKeepsOwnSheetsBesideTheBuiltInOnesAndAsksBeforeDeleting`, and `OwnSheetsTests` for the files |
 | 21 | Garmin Xero import | `ChronographWorkbookTests.EveryOneOfAlansExportsReadsWhereTheyAreHere`, every one of Alan's exports on this computer (never on CI) |
 | 23 | Load against load on screen | `RealSessionProofTests.AlansTwoSuppressorSessionsCompareOnScreenAsTheComparisonSays` |
-| 31 | `grouplab bench` | The baseline gate passed on the computer that set it (entries 388, 415 and 433, docs/PERFORMANCE.md). Run again on 2026-10-21 while other builds and test runs shared the computer, its timings were from a third slower to four times as slow, which the gate rightly failed; that run measured the load, not GroupLab |
+| 31 | `grouplab bench` | The baseline gate passed on the computer that set it (entries 388, 415 and 433, docs/PERFORMANCE.md). Run again on 2026-10-21 while other builds and test runs shared the computer, its timings were from a third slower to four times as slow, which the gate rightly failed; that run measured the load, not GroupLab. Run again the same evening with nothing else working, on the merged head of entries 464 and 465 (Release, `--runs 3`), the gate passed on all thirteen figures |
 
 **Left built, not proven**, and exactly what would prove each:
 

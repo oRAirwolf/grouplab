@@ -352,6 +352,56 @@ spelling in a site comment, fixed); App 624 passed before 5A, 6A, 3B and 4B were
 current; site build ok. **Is it worth an article?** No: these are GroupLab's own screens, and nothing in them changes what another
 shooter does or another developer builds.
 
+## Entry 464: sync tidying, proofs, two articles, speed and an audit (2026-10-21)
+
+Worked by four helpers under entry 467, then the audit on docs-sonnet, merged and tested here. Section 0 (request 107) was replaced by
+entry 466 before it was started.
+
+**1. Sync tidying (1a9850bb).** Each device writes the change files it has read, and the records waiting for a choice there, to
+`GroupLab sync/read/<device>.json`, and that is the only basis for tidying. Once a day a device moves only its own files, and only one
+that every other device lists as read, whose every record a later file of its own carries newer, and in which nothing waits for a
+choice anywhere. The move copies the file whole to `GroupLab sync/trash/<device>/`, reads it back and compares it before the original
+goes; the trash is emptied 14 days after the move, counted from the move. A device with no read position, or one that cannot be read,
+holds everything back, and a write to a folder that has gone missing now refuses rather than making a new empty one. The Sync block on
+the computer and the phone and `grouplab sync` say what was tidied and what it freed. Tests: two devices, one away a month; a choice
+waiting; the folder going missing at six points; the 14 days; the phone's layout. Built, not proven, until two real devices run it.
+Question 109: a device that never comes back holds tidying back for ever.
+
+**2. Proofs (551d39cd).** Of the 27 rows still built, not proven in `docs/PROOF-CHECKLIST.md`, eleven moved to Done with their
+evidence named: significance testing, subgroups, doubles, comparing photos, rounds fired, session records, the report, the target
+library (a gate written for it), the Garmin Xero import (this computer only), load against load, and `grouplab bench` on its recorded
+passes of entries 388, 415 and 433. The other sixteen each have a line saying the material that would prove them (a camera and a shot
+sheet, a printer and paper, a range and a chronograph, a person timed, a phone sitting, Google Play). Nothing of entry 465's was moved.
+
+**3. Articles (2ad2524f, 053746fe).** No row in "Worth an article?" still said not yet; every "not written" row's reason still holds,
+and the aim-points draft still waits on request 86. Two pieces never decided passed the test and are published: "How much of your
+vertical is your velocity?" and "Where a first-round miss comes from", each with seeded figures held by `ArticleFiguresTests`. The
+canted-scope article's source line named a file that does not exist; it now names the ballistics code.
+
+**4. Speed and the audit (c4217def, 3d15f53d, 4b255fc8).** Measured stage by stage from opening a picture to its analysis on the
+computer and the phone's path (`docs/PERFORMANCE.md`): on a photograph the codes are the largest stage, as question 106 left them; on a
+600 dpi scan, the holes and the PNG's decode. One gain taken: a JPEG's grey and colour copies are decoded side by side, opening a phone
+photograph about a third sooner, held to the bit by `ImageLoaderSameResultTests`, and the corpus, synthetic scoreboard and counts are the
+same line for line. A larger gain on the first picture after start-up, publishing precompiled, is question 110. The consistency audit
+after entry 465 found one stale page (`docs/SURVEY.md` still described the first run as one screen), fixed; consistency 0 findings.
+
+**Is it worth an article?** Sync tidying and the speed gain: no, ordinary engineering a shooter never sees. The proofs: no, a record.
+
+## Entry 467: helpers in parallel until 20:00 Denver (2026-10-21)
+
+Nine main-model helpers started at 19:55 UTC, each in its own worktree on a piece whose files did not overlap. **The five-hour window,
+not the week, was the limit**: nine helpers took it from 14 to 33 percent in about twelve minutes, which would have spent it well
+before its 22:10 reset and stopped everything. So the four entry 464 helpers were paused at once and the 2A and 7B helper stopped once
+its work was merged, and resumed with their context when the window reset; `scripts/usage-statusline.js` now writes the five-hour
+window's reset into `usage-now.json` so the next run can see it. Entry 465's five finished first, as entry 467 section 5 asks, then
+464's four and the audit on docs-sonnet. The week went from 45 to 57 percent.
+
+**Merging.** Each helper's commits were cherry-picked onto phase-1 in turn. The only real conflicts were the claims backing, resolved as
+JSON (both sides kept), the register regenerated, and three test files given the same name by different helpers, renamed. The merged
+tree's App suite is the test that counts, because no helper saw the others' work: it found the phone tour's badge under the card. Two
+stopped helpers left shell processes running, ended by number; a temp folder reused across ended runs carried a "did not exit" marker
+into the next run, so every run now starts from an empty one.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

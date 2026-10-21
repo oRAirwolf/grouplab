@@ -25,6 +25,30 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-21, entry 467: helpers in parallel until 20:00 Denver tonight, to finish entries 464 to 466
+
+**Status: actioned 2026-10-21. Every part done: entries 464, 465 and 466 finished with helpers in their own worktrees, merged, tested and pushed before 20:00 Denver; every helper finished and its worktree compared with main. Nothing of 464 to 466 is left.**
+
+From the planning session, 2026-10-21 19:50 UTC (13:50 Denver). Read this one FIRST, before starting entry 464: it decides how 464 to
+466 are worked.
+
+Alan, 2026-10-21: "Can you tell code that it can work in parallel until 8pm? Let it do as much as it needs to complete its work before
+8pm." This is his word under CLAUDE.md's standing rule 1 (helpers in parallel only when Alan asks).
+
+1. **Allowed:** helpers in parallel, as many as the work needs, to finish entries 464, 465 and 466 before **20:00 Denver today
+   (2026-10-22 02:00 UTC)**, when the week resets. Standing rule 2 still holds: chores and screenshot walks to `chores-haiku`, wording
+   and consistency checks to `docs-sonnet`, application code, tests, statistics and UI on the main model (main model helpers are
+   allowed for this).
+2. **Split by what cannot collide:** one worktree per helper, each on a separate section with files that do not overlap (for example
+   sync tidying, the proofs, the research articles, and the interface looks of entry 465 split by screen). The main session merges,
+   runs the full tests, and pushes; one push at a time, so a nightly is not cancelled for nothing.
+3. **Budget:** up to 95% of this week (as entries 464 and 465 say). Check `usage-now.json` before starting each helper.
+4. **Wind down:** no new helper after 19:15 Denver (01:15 UTC). By 19:45 Denver every helper is finished or stopped, its finished
+   work merged and pushed and its unfinished work committed to a branch or written down in STATE, and each worktree compared with main
+   before it goes to the trash (the existing rule). At 20:00 Denver parallel work ends: after the reset, one piece at a time again under
+   the usual 85% guard, and anything left of 464 to 466 is listed in STATE under "The next three".
+5. Order of priority if not everything fits: entry 466 (small), entry 465 (Alan's picks), then entry 464's sections in its order.
+
 ## 2026-10-21, entry 466: request 107 changed to "not for now" (replaces entry 464 section 0)
 
 **Status: actioned 2026-10-21. Every part done: request 107 closed as "not for now" and moved to the archive; the script and its step left in place and off; no webhook asked for.**
@@ -116,6 +140,56 @@ only if the audit finds the same problem there.
 
 The big numbers, the stage labels and the strip above each deep dive keep their amber and get a white panel behind them, so they pass
 4.5 to 1. The site audit holds it.
+
+## 2026-10-21, entry 464: the rest of the week's allowance, chosen by Alan (request 107 yes; sync tidying; proofs; articles; speed and audit)
+
+**Status: actioned 2026-10-21. Section 0 was replaced by entry 466 (request 107 "not for now"). Sections 1 to 4 done. Not done: sync tidying is not proven on two real devices; sixteen of the 31 checklist rows still need material a machine cannot give (each with its line in `docs/PROOF-CHECKLIST.md`); the phone's own decode on a device is not measured. Questions 109 and 110 raised; neither blocks anything.**
+
+From the planning session, 2026-10-21 17:40 UTC (11:40 Denver). Code was idle at 44% of the week with the reset at 2026-10-22 02:00 UTC
+(20:00 Denver). Alan chose all of the offered work, in this order. This queue may use up to **95% of this week** (as entry 462 did);
+after the reset, the usual 85% guard applies: finish the section in progress, commit, rewrite STATE and stop, and leave anything not
+started listed in STATE under "The next three" for the planning session to offer again. Main model for application code; helpers only
+if Alan asks. One commit per section, STATE rewritten after each. Error reports are checked before each section, as entry 457 says.
+
+## 0. Request 107 answered: yes
+
+Alan, 2026-10-21: yes to GroupLab posting the tester notes and thanks on the Discord for him. The channel is not chosen yet; the planning
+session is asking him. Record the answer and keep request 107 open until `DISCORD_TESTERS_WEBHOOK` exists (it stays switched off until
+then, as built). Do not ask him for the webhook address and never read, print or store it. When the secret appears, the first run posts
+only notes new since today, as entry 462 section 5 says. Until then each nightly's summary keeps listing the drafts it would post.
+
+## 1. Sync: tidying old change files (Phase 7)
+
+`docs/notes/sync-options.md` lists it as not built: a session changed again is written again whole, and each device's change files are
+kept, so a much-edited session costs a few times its size in the person's folder. Build the tidying: a change file is removed only when
+every device that has written to the folder has read past it, and never while any device has not been seen; nothing a person has not
+yet resolved (the side by side of entry 463) is ever tidied. Backups first, as always: a tidied file goes to a `trash` folder inside the
+sync folder and is kept 14 days before it is removed (Alan's rule on deleting). Say on the Sync block what was tidied and how much space
+it freed. Tests for: two devices, one offline for a month; a conflict waiting; a folder that goes missing during tidying. Guide, Features
+and README in the same change. It stays "built, not proven" until two real devices run it.
+
+## 2. Proof: the "built, not proven" features a machine can prove
+
+From `docs/PROOF-CHECKLIST.md`, take every one of the 31 that a machine can prove honestly (computer-made photos with known answers,
+emulator and simulator runs, round trips through files), prove it, and move it to proven with the evidence named. Do not mark proven
+anything that needs a real camera, printer, chronograph, range or person; for each of those, write one line on exactly what material
+would prove it. Update the Features page, the README and `docs/claims-backing.json` together.
+
+## 3. Research articles from the "not yet" rows
+
+Write and publish the research articles still marked not yet, most useful to shooters first, under the standing rule of entry 393
+(ready articles published without asking): sources named, no pseudoscience, a thumbnail for each (entry 453, look C).
+
+## 4. Speed (Phase 9), then a full audit
+
+First Phase 9: measure where time goes from opening a photograph to the finished analysis on the computer and the phone, and take any
+gain that leaves every result the same, as before. Then a full consistency audit of the README, grouplab.org, the guides, the release
+notes and the assets against the application as of nightly 215 (entry 267), fixing what it finds.
+
+## Not in this entry
+
+The ten looks sent as DESIGN NEEDED by entry 462 sections 1 and 3 are being drawn by the planning session as concepts for Alan. Leave
+them as they are; his choices will come as a new entry.
 
 ## 2026-10-21, entry 463: the three sync screens, chosen by Alan (1A, 2A, 3B)
 

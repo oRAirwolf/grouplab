@@ -9,23 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-21, entries 466 and 465 done (request 107 "not for now"; the eleven looks); entry 464 in progress with helpers (entry 467).
+**Last rewritten:** 2026-10-21, entries 464 to 467 done (helpers in parallel until 20:00 Denver; the eleven looks; sync tidying, proofs, two articles, speed, audit).
 
 ---
 
 ## In flight
 
-- **Entry 467 (2026-10-21)**: Alan allowed helpers in parallel until 20:00 Denver (02:00 UTC) for entries 464 to 466; paced by the
-  five-hour window, which nine helpers would have spent in under an hour (`usage-now.json` now records its reset).
+- **Entry 467 (2026-10-21)**, done: helpers in parallel until 20:00 Denver, paced by the five-hour window (nine helpers would have
+  spent it in under an hour; `usage-now.json` now records its reset). Every worktree finished and merged.
+- **Entry 464 (2026-10-21)**, done: sync tidying into the folder's `trash` (built, not proven); eleven checklist rows moved to Done;
+  two articles published; a JPEG's two decodes side by side (a photograph opens about a third sooner); audit 0 findings.
 - **Entry 465 (2026-10-21)**, done: all eleven looks (1A to 11A) on the computer and the phone; pictures follow from the screenshot jobs.
 - **Entry 466 (2026-10-21)**, done: request 107 answered "not for now"; `tester-notes.py` stays off, no webhook asked for.
 - **Entry 463 (2026-10-21)**, done: sync's screens 1A, 2A, 3B on the computer and the phone (`MainWindow.Sync`, `PhoneSync`,
   `SyncScreens`), in the guide, Features, README; Phase 7 Built, not proven. Phone pictures wait on the emulator's walk.
-- **Entry 462 (2026-10-21)**, done: question 106 answered; site audit (`site-audit.cjs` in checks.yml); three articles; interface
-  sweep (`LayoutAudit`, weekly in screenshots.yml); automation (`run-start.py`, `site-live.py`, requests 106 and 107 off); pictures.
-- **Entry 461 (2026-10-21), Alan's queue for the week**, done: three research pieces published; screen reader audits on all three
-  (`ScreenReaderAudit`, `scripts/screen-reader-audit.py`), `SpokenNames`, Android's TalkBack boxes moved (`AccessibilityOnScreen`);
-  codes measured (question 106); sync option A's engine, schema 6 (`SyncEngine`, `grouplab sync`), reached by nothing.
 
 ## The next three
 
@@ -37,7 +34,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   checking a proposal needs a sheet shot with its string.
 - **Velocity regression** (Phase 5): on both screens since entry 323, in the conditions entered on Ballistics since 329; a
   session's own conditions are entered under the block (entry 416); the phone's picture waits for request 50's sitting.
-- **Synchronization** (Phase 7): built on every platform (entries 461 and 463); proving it needs two real devices on one folder.
+- **Synchronization** (Phase 7): built on every platform with tidying (entries 461, 463, 464); proving it needs two real devices.
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
@@ -48,7 +45,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 2. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
-3. Entry 464's remainder: sync tidying, proofs, articles and speed merged as they finish, then the full consistency audit.
+3. Questions 107 to 110 once planning answers them (phone hole counts, the scan's resolution line, forgetting a sync device, precompiled builds).
 
 ## Blocked, and on what
 
@@ -62,7 +59,9 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave it):
+Seven, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave it):
+- **110** whether the builds are published precompiled, for a faster first picture (nothing waits)
+- **109** a sync device that never comes back holds tidying back for ever (nothing waits)
 - **108** the scan's own resolution as a scale has no words on the Set tab yet (nothing waits)
 - **107** whether the phone stops numbering found holes on a marking with no bulls (nothing waits)
 - **67** the printer check page as grid style 4 (with Alan)
@@ -72,7 +71,7 @@ Five, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave it
 ## Builds and the site
 
 - **Last nightly:** 0.2.0-nightly.215 (2026-10-21): entries 462 and 463 (the interface fixes, the centred failures, sync on every platform).
-- **The site** follows main by itself (website.yml) and the nightly publishes it; live at a98e146b (nightly 215) on 2026-10-21.
+- **The site** follows main by itself (website.yml) and the nightly publishes it; live at 4234a595 (entries 465 and 464's articles) on 2026-10-21.
 - Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox

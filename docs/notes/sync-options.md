@@ -15,9 +15,10 @@ section 3.1 built the engine with nothing a person can reach: `GroupLab.Core.Syn
   it on both devices; a deletion's marker is kept 90 days in the database once written, and for ever in the change files, so a device
   back after months still receives it. Before a merge changes or takes away a record, it is kept whole (`sync_kept`).
 - **A half-written file** (no `"end": true`, or not whole JSON) is left and read on a later run; **a missing folder** changes nothing.
-- **Not built yet:** tidying old change files (each device's files are kept; a session edited again is written again whole), and the
-  three screens, which wait on the DESIGN NEEDED in `docs/notes/for-alan.md`. The Android folder (`SafSyncFolder`, the Storage Access
-  Framework) and the iOS bookmark (`BookmarkSyncFolder`) are built and reached by nothing.
+- **Built since:** the three screens (entry 463), and tidying (entry 464): each device writes what it has read to
+  `GroupLab sync/read/<device>.json` and once a day moves its own change files that every device has read and a later file replaces
+  into `GroupLab sync/trash/<device>/`, removed 14 days after the move. Built, not proven: it waits on two real devices on one folder.
+  A device that never syncs again holds tidying back for ever (question 109).
 
 NOTES-FROM-PLANNING.md entry 324 section 2. An options paper only: no code and no new dependency. Planning reads it and decides with Alan.
 Written 2026-10-01.
