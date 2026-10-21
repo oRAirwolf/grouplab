@@ -457,7 +457,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 
 - The banner for a chosen bull names a numbered bull as "bull 7", and the screens for this release's changes are now drawn for grouplab.org from the application itself.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.185)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
