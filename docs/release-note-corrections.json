@@ -133,6 +133,15 @@
           "kind": "internal"
         }
       ]
+    },
+    "5f6d02692c4d98330162d38567a0cc720f4bab9c": {
+      "why": "Entry 461's note named Android's screen reader by its product name, written as one word with a capital inside, which the release notes refuse as a name only this repository knows.",
+      "notes": [
+        {
+          "note": "With the screen reader on Android, the outline now sits on the control being read rather than above it, and the More buttons and the bulls to tap are a full finger's size. (Entry 461, 2.1)",
+          "kind": "fixed"
+        }
+      ]
     }
   }
 }
