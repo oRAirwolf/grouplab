@@ -1249,6 +1249,22 @@ jobs:
             git push origin main || { git pull --rebase --quiet origin main && git push origin main; }
           fi
 
+      # NOTES-FROM-PLANNING.md entry 462 section 5, request 107: the "For <tester>" notes in docs/notes/for-alan.md whose fix this build
+      # published, passed on in the Discord as Alan would. Off until Alan says yes: without DISCORD_TESTERS_WEBHOOK it posts nothing and
+      # prints the drafts here. .github/tester-notes-posted.txt records each one posted, so a rerun never posts it twice.
+      - name: Pass the tester notes on
+        continue-on-error: true
+        env:
+          DISCORD_TESTERS_WEBHOOK: ${{ secrets.DISCORD_TESTERS_WEBHOOK }}
+        run: |
+          if [ -n "$DISCORD_TESTERS_WEBHOOK" ]; then echo "::add-mask::$DISCORD_TESTERS_WEBHOOK"; fi
+          { echo "### Tester notes"; echo; python3 scripts/tester-notes.py; } | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ -n "$(git status --porcelain -- .github/tester-notes-posted.txt)" ]; then
+            git add .github/tester-notes-posted.txt
+            git commit -m "[notes] Tester notes passed on for $VERSION" -m "Recorded so a rerun does not post them twice, NOTES-FROM-PLANNING.md entry 462 section 5."
+            git push origin main || { git pull --rebase --quiet origin main && git push origin main; }
+          fi
+
       - name: Say what it is
         run: |
           {

@@ -2083,6 +2083,23 @@ visibility (entry 447 holds the tab order and names) and screens deeper than the
 headings, the store-target question over the bull, the set tab's pill, the first run taller than 720, the demo card over its text,
 Compare's half-empty card, and two phone pages.
 
+## Entry 462 section 5: what is still done by hand, automated where nothing from Alan is needed (2026-10-21)
+
+`docs/notes/AUTOMATION.md`, new: 24 recurring steps, who does each, how often, what already does it, and whether it can be automated
+with nothing from Alan; the "handoff task" the entry names was not found anywhere and is left for the planning session to name.
+
+**Built:** `scripts/run-start.py` does the start of every run (open requests, error reports, earlier scratch folders cleared by
+clean-scratch.py's own rule, external status in a line a store, the inbox, the week's usage, whether the logs need splitting);
+`scripts/site-live.py` asks grouplab.org's build tag once a minute until a commit is live or the time is up. With sections 1 and 3, the
+site's accessibility and every screen's layout are now checked by machine. **Prepared, off:** `scripts/tester-notes.py` and a nightly
+step post each new "For <tester>" note once its fix is published, opening "Hey <name>,", only once `DISCORD_TESTERS_WEBHOOK` exists
+(request 107; the notes already in for-alan.md are recorded as passed on); `scripts/oracle-backups.py` and `oracle-backups.yml` list the
+boot volume backups on Mondays with a read-only key and keep a `backups` issue while the newest Full is over eight days old or everything
+expires within a week, only once the five `OCI_*` secrets exist (request 106, replacing request 46's look). Both are in RESTORE.md with
+how to stop them. Self-tests pass; with no secrets both say so and do nothing. **Left by hand:** STATE, folding entries, release-note
+wording, publishing articles, merging tuning pull requests and the planning session's relay are judgements; the whole-server restore test
+needs more than read access.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -1,0 +1,62 @@
+name: oracle backups
+
+# NOTES-FROM-PLANNING.md entry 462 section 5, request 106: the weekly look at the server's Oracle boot volume backups that request 46 asks
+# Alan to make by hand. Prepared and off: with no OCI_* secrets it says so and does nothing. With them (a key that can only read boot
+# volume backups) it lists them on Mondays and keeps one issue labelled backups open while something is wrong, closing it when all is well.
+# It changes nothing on the server and in Oracle.
+
+on:
+  schedule:
+    - cron: '30 13 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  look:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Look at the backups
+        id: look
+        env:
+          OCI_USER: ${{ secrets.OCI_USER }}
+          OCI_TENANCY: ${{ secrets.OCI_TENANCY }}
+          OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+          OCI_REGION: ${{ secrets.OCI_REGION }}
+          OCI_KEY: ${{ secrets.OCI_KEY }}
+          OCI_COMPARTMENT: ${{ secrets.OCI_COMPARTMENT }}
+        shell: bash
+        run: |
+          python3 scripts/oracle-backups.py --self-test
+          if [ -n "$OCI_KEY" ]; then python3 -m pip install --quiet oci==2.185.0; fi
+          set +e
+          python3 scripts/oracle-backups.py | tee said.txt
+          echo "code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          cat said.txt >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the backups issue
+        if: steps.look.outputs.code == '0' || steps.look.outputs.code == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          open=$(gh issue list --label backups --state open --json number -q '.[0].number')
+          if [ "${{ steps.look.outputs.code }}" = "1" ]; then
+            body="$(cat said.txt)"$'\n\n'"Found by .github/workflows/oracle-backups.yml (entry 462 section 5). Request 46 in docs/notes/for-alan.md says how to look by hand."
+            if [ -n "$open" ]; then gh issue comment "$open" --body "$body"; else gh label create backups --force >/dev/null; gh issue create --label backups --title "The server's Oracle backups need a look" --body "$body"; fi
+          elif [ -n "$open" ] && grep -q "available" said.txt; then
+            gh issue close "$open" --comment "All well on $(date -u +%F): $(head -1 said.txt)"
+          fi
+
+      - name: Oracle could not be asked
+        if: steps.look.outputs.code == '2'
+        run: exit 1
