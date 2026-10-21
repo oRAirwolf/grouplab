@@ -463,7 +463,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 
 - Nothing changes beyond what the corrected note for entry 400 says; this puts back the earlier way of reading a sheet's codes while a test that stopped on one platform is looked into.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.184)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
