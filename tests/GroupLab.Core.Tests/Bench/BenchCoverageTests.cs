@@ -43,6 +43,7 @@ public class BenchCoverageTests
     /// </summary>
     private static readonly Dictionary<string, string> NotMeasured = new(StringComparer.Ordinal)
     {
+        ["ScaleSaid"] = "Entry 465 4B's line under the scale's pill: words chosen from what each sheet's scale records, once per refresh; nothing is measured.",
         ["ScopeMount"] = "Entry 456's rail cant figures: a few additions on the zero angle the solver already gives, which a dope table's bench case times.",
         ["ScopeTracking"] = "Entry 456's tracking test: one division and a comparison, worked out when a person presses the button.",
         ["TopGun"] = "Entry 456's Top Gun trend: one line of arithmetic per load.",
