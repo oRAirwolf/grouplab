@@ -48,6 +48,50 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 464 section 4, 2026-10-21: from opening a picture to its analysis, stage by stage, on the desktop and the phone's path
+
+**Measured** on this desktop (Release, commit 88f8aeb4) while other work was building on the machine, so every figure is a median and
+before and after were measured by turns under the same load. Two paths, each in one process, one run thrown away and then five, the
+whole measured twice: the window's (Open's decode, the codes, the analysis keeping the timeline's pictures, then every figure the analysis
+screen shows) and the phone's (`PhoneAnalysis.Run` headless, as GroupLab Dev reads a picture handed to it, the stages as it logs them).
+Four pictures: the 600 dpi sample with 25 holes (a flatbed scan), two Fold 7 photographs of the local corpus (sitting-2026-09-29
+picture-1 and range-2026-10-04 load-sheet-close, Alan's own, kept on his computer) and the bench's phone photograph of the frozen Phase 0
+sheet. The timings were taken by a test written for this and deleted after. Median ms, the mean of the two rounds:
+
+| picture, path | open or prepare | decode | codes | markers | bulls | capture | holes | assign, figures | whole |
+|---|---|---|---|---|---|---|---|---|---|
+| 600 dpi sample, window | 231 | in open | 296 | 108 | 115 | | 588 | 17 | 1,378 |
+| 600 dpi sample, phone | 249 | 31 | 196 | 33 | 31 | | 137 | 7 | 717 |
+| Fold 7 picture-1, window | 37 | in open | 414 | 53 | 49 | | 117 | 15 | 743 |
+| Fold 7 picture-1, phone | 58 | 35 | 412 | 51 | 48 | | 124 | 7 | 805 |
+| Fold 7 load-sheet-close, window | 76 | in open | 351 | 208 | 94 | 116 | 199 | 2 | 1,113 |
+| Fold 7 load-sheet-close, phone | 99 | 42 | 309 | 156 | 71 | 110 | 141 | 6 | 1,020 |
+| Phase 0 photograph, window | 57 | in open | 555 | 91 | 45 | 60 | 152 | 0 | 1,046 |
+| Phase 0 photograph, phone | 94 | 39 | 478 | 62 | 43 | 41 | 104 | 0 | 907 |
+
+"Prepare" is the phone making its working copy (decoding, shrinking to the working size and writing it); on a phone that decode is
+Android's, so only the rest of the phone's path is the phone's own code here. "Markers" is S2 and S3, "capture" the bent sheet's fit.
+
+**Where the time goes, warm.** On a photograph, reading the sheet's codes is the largest stage, 310 to 555 ms of 740 to 1,110: the two QR
+readers on each place a code may be, one place at a time, which question 106 left as it is (entry 462 section 0). Finding the holes is
+next, 104 to 199 ms, then on the bent sheet its markers and the fit. On the 600 dpi scan finding the holes is the largest, 588 ms at full
+size against 137 on the phone's working size, and opening it is 231 ms, nearly all the PNG decode. The figures after Accept are under 15 ms.
+
+**Where the time goes, cold: the first picture after start.** `grouplab analyze` in a fresh process, five runs each, median, read the
+Fold 7 picture-1 in 1,603 ms and the 600 dpi sample in 2,646. Warm, the same stages are far cheaper: finding the bulls 336 ms against
+about 50, assigning 41 against 5, measuring the group 194 against 7, finding the holes 485 against about 120. That difference is .NET
+compiling GroupLab's own code as it is first used, and running it unoptimized until it has been used enough, as entry 414 section 1.2
+found for the first trajectory. The same command published precompiled (`dotnet publish -p:PublishReadyToRun=true`, into a scratch
+folder) read the same two in 1,069 and 2,307 ms; turning tiered compilation off read them in 1,355 and 1,902, but entry 414 measured that
+to make the solver three times slower for good. **Not changed, and why:** publishing precompiled is a change to how every desktop build
+is packaged (the analysis library alone grows from 4.1 to 8.6 MB) and to the start-up the baseline gate holds, and the phone's own
+equivalent (Android's AOT, off in its project) changes the download too, so it goes to planning as a question with these figures rather
+than being taken here.
+
+**Taken: a JPEG's two decodes side by side** (the next commit). A JPEG's grey cannot be made from its colour decode (entry 130), so it
+is decoded twice; the two decodes are independent, so the grey is now decoded on another thread while the colour is decoded and reduced,
+and the phone reads its working copy with one read of the file rather than two.
+
 ## Entry 461 section 2.2, 2026-10-21: a phone photograph's codes, measured, and nothing exact left to take
 
 **Measured** with timers put into `OpenCvSharpBackend.Read`, `LiveSheet.CodePlaces` and `SheetIdentification.Identify` for this
