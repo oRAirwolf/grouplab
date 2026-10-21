@@ -269,7 +269,7 @@ CSS = r"""
 .hiw-block:hover{text-decoration:none;border-color:var(--amber)}
 .hiw-layer-core .hiw-block{background:var(--amber-tint);border-color:var(--amber-tint-b)}
 .hiw-layer-check .hiw-block{background:transparent;border:1px dashed var(--teal-tint-b)}
-.hiw-block[aria-pressed="true"]{border:2px solid var(--amber);padding:9px 11px}
+.hiw-block[aria-current="true"]{border:2px solid var(--amber);padding:9px 11px}
 .hiw-block.hiw-on-path{border-color:var(--amber)}
 .hiw-name{font-size:15px;font-weight:600}.hiw-sub{font-size:12px;color:var(--dim)}.hiw-path{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);overflow-wrap:anywhere}
 .hiw-aside{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;align-self:start;position:sticky;top:88px;max-height:calc(100vh - 110px);overflow-y:auto}
@@ -305,7 +305,7 @@ CSS = r"""
 .hiw-card,.hiw-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
 .hiw-card h3{font-size:16px;margin:0 0 6px}.hiw-card-hi{background:var(--amber-tint);border-color:var(--amber-tint-b)}
 .hiw-badge{display:inline-block;font-size:11px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--panel2);margin:0 0 6px}
-.hiw-file code{font-size:12px}
+.hiw-file code{font-size:12px;overflow-wrap:anywhere}
 .hiw-timeline{list-style:none;padding:0;margin:16px 0;border-left:2px solid var(--line2)}
 .hiw-timeline li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:0 0 22px 18px;position:relative}
 .hiw-timeline li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--amber)}
@@ -322,7 +322,7 @@ CSS = r"""
 .hiw-timeline li{grid-template-columns:minmax(0,1fr);gap:4px}
 .hiw-section{margin-top:52px}
 /* PhoneDeep: a table becomes one card per row, each cell with its column's name. */
-.hiw-table{border:0}.hiw-table table,.hiw-table tbody,.hiw-table tr,.hiw-table td{display:block;width:100%}
+.hiw-table{border:0}.hiw-table table,.hiw-table tbody,.hiw-table tr,.hiw-table td,.hiw-table caption{display:block;width:100%}
 .hiw-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .hiw-table tr{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px}
 .hiw-table td{border:0;padding:3px 0}.hiw-table td::before{content:attr(data-label);display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--dim)}
@@ -355,7 +355,7 @@ JS = r"""
     stepper.hidden = view !== "follow";
     var onPath = view === "follow" ? (steps[step - 1].dataset.parts || "").split(" ") : [];
     blocks.forEach(function (b) {
-      b.setAttribute("aria-pressed", String(view === "parts" && b.dataset.part === current));
+      if (view === "parts" && b.dataset.part === current) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current");
       b.classList.toggle("hiw-on-path", onPath.indexOf(b.dataset.part) >= 0);
     });
     stepper.querySelectorAll("button").forEach(function (b, i) { if (i === step - 1) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current"); });

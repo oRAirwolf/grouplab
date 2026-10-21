@@ -283,7 +283,7 @@
      "A dot at each shot's center, drawn where it landed relative to its own bull, on white with dark outlines at the hole size, so it reads on a laptop in daylight. The group center and the extreme spread line are the one color that stands out."
     ],
     [
-     "The key, top left",
+     "The key, bottom left",
      "What each mark means, listing only what is shown: the shots, the red extreme spread line, the green CEP circles (50 dotted, 90 solid, 95 dashed), the green lines through the group center and the blue lines through where you aimed, and, where the session has chronograph readings, the amber velocity band. A shot you pick is ringed, with a cross through it, in a magenta nothing else uses, over everything else. Toggles beside the plot turn CEP 50, 90 and 95, the extreme spread and the velocity band on and off, and Group or Whole target frames the group alone or the entire bull; GroupLab remembers both. The wheel or a pinch zooms, dragging empty paper moves the view, and a double click fits it again."
     ],
     [
@@ -531,11 +531,11 @@
    "parts": [
     [
      "The plots along the top",
-     "One per load. Dots are the shots about their own bulls, excluded ones left out; the green lines cross at the group center and the blue lines at the aim point, with the green CEP circles the analysis screen's toggles have on. Here they are the developer's own two 6 ARC sheets of 2026-09-26, one shot through each of two suppressors; the article linked below says what they show about the point of impact."
+     "One per load. Dots are the shots about their own bulls, excluded ones left out, each load in its own color with a dashed circle around its group. Tap a group to stack them on one center. The article linked below shows what two real sheets compared can say."
     ],
     [
      "The figures under each plot",
-     "Sigma, mean radius and extreme spread, each with its 95 percent interval."
+     "Sigma, mean radius and extreme spread, with the range each could really be where one is given."
     ],
     [
      "Mean radius, with the range each could really be",
@@ -981,13 +981,13 @@
     ],
     [
      "Printing it",
-     "It prints like any sheet, at its true size, and Save as my own keeps it in Your own sheets beside the built-in ones."
+     "It prints like any sheet, at its true size, and Save to your own sheets keeps it in your own sheets beside the built-in ones."
     ]
    ],
    "steps": [
     "Open Targets and choose Design your own sheet.",
     "Enter the distance, the lowest magnification or the red dot's size, and the number of shots, and choose Make the sheet.",
-    "Read why it is the size it is, then print it, or save it as your own."
+    "Read why it is the size it is, then print it, or save it to your own sheets."
    ],
    "fits": "Between choosing a sheet and shooting it. Once the set is shot, drop its scans or photographs on the window together: they open in one tab, read one after another and pooled with no question asked, and GroupLab says which sheets are still missing; or analyze each sheet in any order and tick them in Session records, where Pool the chosen does the same. Where the {optic:arcminutes} arcminute rule comes from is <a href='/research/can-you-see-the-bull/'>Can you see the bull?</a>",
    "links": [
@@ -1056,7 +1056,7 @@
     ],
     [
      "How big is this target?",
-     "Three ways to give one true length: its printed size, with width and height boxes; a GroupLab sheet in the photo; or two points and a distance. Under the one picked, what GroupLab measured for that way on test photos, never a promise that one is always best."
+     "Ways to give one true length: markers found in the photo, its printed size, with width and height boxes, a GroupLab sheet in the photo, two points and a distance, or a bank card beside it. Under the one picked, what GroupLab measured for that way on test photos, never a promise that one is always best."
     ],
     [
      "Back and Next",

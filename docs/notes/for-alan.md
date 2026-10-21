@@ -1,5 +1,14 @@
-**Open: 24.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
-**DESIGN NEEDED** (entry 461 section 3.2; not a request for you; planning, please): **the three screens of synchronization**, option A
+**Open: 26.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**DESIGN NEEDED** (entry 462 section 1; not a request for you; planning, please): **two colour findings on grouplab.org that only a
+look decision fixes.** Everything else the accessibility audit found is fixed.
+1. **Links inside sentences in the dark theme** are amber on light grey text with no underline, about 2 to 1 between the two, so a
+   reader who cannot tell the colours apart cannot see the link (WCAG 1.4.1 wants 3 to 1 or a second cue). 101 links across the guides,
+   the support and Discord pages. Options: an underline on links inside sentences only (the menu, buttons and cards stay as they are), or
+   a lighter amber in dark. Picture: `docs/figures/site/entry-462/links-in-sentences-dark.webp`.
+2. **Amber words on the grey panels of "How it works"** in the light theme (the big numbers, the stage labels, the strip above each deep
+   dive) are 4.19 to 1, just under the 4.5 asked for small text. Options: the white panel behind them, or a darker amber for text on grey.
+   Picture: `docs/figures/site/entry-462/tour-amber-on-grey-light.webp`.
+**DESIGN NEEDED** (entry 461 section 3.2): **the three screens of synchronization. Answered 2026-10-21: 1A, 2A, 3B (entry 463), being built.** Option A
 (a folder the person's own cloud client syncs). The engine is being built with nothing a person can reach; these three are drawn first.
 1. **Choosing the folder**, in Settings on the computer and the phone: the folder chosen (on the computer any folder, on Android the
    system's folder picker, on iPhone and iPad a folder in Files), this device's name as the other devices will see it, when it last
@@ -295,6 +304,45 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 107. Say yes (or no) to GroupLab posting the tester notes and thanks on the Discord for you, two minutes, whenever suits (entry 462 section 5)
+
+**Opened 2026-10-21.** Today the "For Quack" lines in this file wait for you to pass them on by hand. Entry 462 section 5 asks for that
+to be automated but kept off until you say yes, because it posts in the server in your name. What is prepared: `scripts/tester-notes.py`
+gathers each new "For ..." line once its fix is in a published nightly, rewrites it in your usual short and casual way ("hey Quack,
+nightly 215 has the fix for the keyboard thing you hit, thanks for the screenshot, it helped"), and posts it through a Discord webhook
+in the channel you choose. It runs after each nightly, posts each note once, and is switched off until a secret named
+`DISCORD_TESTERS_WEBHOOK` exists. Every draft it would have posted is listed in the nightly's summary meanwhile, so you can read a few
+first.
+
+If yes: in Discord, the channel's **Edit Channel**, **Integrations**, **Webhooks**, **New Webhook**, name it GroupLab, **Copy Webhook
+URL**. Then in PowerShell, in `C:\Dev\grouplab`, paste this and paste the address when it asks (it is not shown or saved anywhere else):
+
+```
+gh secret set DISCORD_TESTERS_WEBHOOK -R oRAirwolf/grouplab; if ($?) { echo "OK: set" } else { echo "STOP: the secret was not set" }
+```
+
+A good result: `OK: set`. **A good answer** is any of: "yes, in #channel", "no", or "yes but show me ten drafts first".
+
+## 106. A weekly look at the Oracle backups without you, about fifteen minutes once, whenever suits (entry 462 section 5)
+
+**Opened 2026-10-21.** Request 46 asks you to look at the boot volume backups in the Oracle console. Entry 462 section 5 asks for that to
+be automated: `.github/workflows/oracle-backups.yml` (prepared, off) would list the backups each Monday with a read-only key and open an
+issue only when the newest Full is older than eight days or none will outlast the next one. It needs a key that can only read backups,
+which only you can make. It changes nothing on the server and cannot delete anything.
+
+In the Oracle console: **Identity & Security**, **Domains**, Default, **Users**, **Create user** `grouplab-backup-reader` (no email
+needed); **Groups**, **Create group** `BackupReaders` with that user in it; **Policies**, **Create Policy** in the root compartment,
+name `grouplab-backup-reader`, with the one statement `Allow group BackupReaders to read boot-volume-backups in tenancy`. Then the user's
+**API keys**, **Add API key**, **Generate API key pair**, **Download private key**, **Add**. The page then shows a short configuration;
+keep it open. In PowerShell, in `C:\Dev\grouplab`, paste this; it asks for each value from that page and the downloaded key's path,
+then deletes nothing:
+
+```
+foreach ($n in 'OCI_USER','OCI_TENANCY','OCI_FINGERPRINT','OCI_REGION') { $v = Read-Host "$n (user, tenancy, fingerprint, region from the page)"; $v | gh secret set $n -R oRAirwolf/grouplab; if (-not $?) { echo "STOP: $n was not set"; break } }; $k = Read-Host "Path of the downloaded .pem key"; Get-Content -Raw $k | gh secret set OCI_KEY -R oRAirwolf/grouplab; if ($?) { echo "OK: five secrets set; move the .pem into your password manager or delete it" } else { echo "STOP: the key was not set" }
+```
+
+A good result: `OK: five secrets set`. **A good answer**: "done", and request 46 closes with the first green Monday run.
 
 ## 105. For later, not urgent: twenty minutes with a real screen reader (entry 461 section 2.1)
 

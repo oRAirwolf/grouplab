@@ -2000,6 +2000,35 @@ Alan chose (b): every place on a photograph is still read, so a picture showing 
 as answered in `docs/notes/archive/questions-answered.md`, the measurement stays in `docs/PERFORMANCE.md` with the answer under it, and
 Phase 9 has no next step queued. Nothing in the application changed.
 
+## Entry 462 section 1: a full audit of grouplab.org (2026-10-21)
+
+**How.** `scripts/site-audit.cjs`, new, opens every page the builder makes (79) in Chrome at 390 and 1440 px in both themes and reports
+what a reader would hit: the page wider than the screen, words cut off inside a box, words drawn over words, a picture or file that does
+not load, a link to a page that is not built, and every axe-core finding for WCAG 2.1 A and AA. Anything not on the site is refused, so a
+slow outside server cannot hold a page. External links were fetched one by one (165, all answer) and the download page's ten files were
+compared with the rolling nightly's assets (all there; nightly 214 named). Lighthouse 12.2.1 ran on six pages.
+
+**Found and fixed.** Eighteen research articles, What can be measured and the hole detection deep dive were wider than a phone (file names in sources and
+code did not wrap); two research articles offered JSON downloads the builder never copied (suppressor shift, photo hole size); the upload
+page's file field had no label; the tour diagram marked its chosen link "pressed", which a link cannot be (now "current"); ten tables and
+one listing scrolled sideways with no way to reach them by keyboard (each that scrolls now takes focus); the tour's cards skipped from the
+page title to a third level heading; a table caption on the hole detection page shrank to a word per line on a phone; two small lines
+under 4.5 to 1 now use the theme's existing dim and on-amber colours. The tour's words were checked against its pictures: five pages fixed
+(the key is bottom left, Compare's plots and figures, Fingerprint's five ways to give a length, the optic's "Save to your own sheets").
+Features' platform lists were checked against PHONE-PARITY.md and about 30 of its on-screen names against the source; none wrong
+(the demo tour does have thirteen steps). The release notes page names nightly 214; the research index has all 39 published articles,
+each with its picture. `claims.py --check`, `consistency.py` (with the live site) find nothing; the stale consistency issue was closed.
+
+**Waiting on a look decision** (for-alan.md, DESIGN NEEDED of entry 462 section 1, pictures in `docs/figures/site/entry-462/`): links
+inside sentences in the dark theme (about 2 to 1 against the text, no underline; 101 links) and amber words on How it works' grey panels
+in the light theme (4.19 to 1). `website/a11y-pending.json` lists them so the check prints them as waiting.
+
+**Lighthouse, after the fixes** (local build, light): accessibility, best practices, SEO. Home 95, 100, 100; Features 100, 100, 100;
+download 96, 100, 100; user guide 96, 100, 100; How many shots 96, 100, 100; tour 98 before its heading fix, 100, 100. Every remaining
+accessibility point is the link finding above.
+
+**In CI.** `checks.yml`'s website job now runs `site-audit.cjs --only a11y` (axe on every page, both themes, at phone width): 67 s here.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -1,0 +1,5 @@
+[
+ {"rule": "link-in-text-block", "pages": "/", "theme": "dark", "why": "Links inside sentences in the dark theme: an underline or a lighter amber is a look decision. for-alan.md, DESIGN NEEDED of entry 462 section 1, item 1."},
+ {"rule": "link-in-text-block", "pages": "/", "theme": "light", "why": "The same, the few light theme links on the Discord, download and support pages. DESIGN NEEDED of entry 462 section 1, item 1."},
+ {"rule": "color-contrast", "pages": "/tour/how-it-works/", "theme": "light", "why": "Amber words on the grey panels of How it works, 4.19 to 1. DESIGN NEEDED of entry 462 section 1, item 2."}
+]

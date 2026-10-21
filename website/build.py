@@ -1216,9 +1216,9 @@ def page_send() -> str:
 <form id="send" class="send-form stack" method="post" action="/api/upload.php" enctype="multipart/form-data" data-max-files="{limit["maxFiles"]}" data-max-file-mb="{limit["maxFileMegabytes"]}" data-max-send-mb="{limit["maxSubmissionMegabytes"]}" data-max-set-files="{limit["maxSetFiles"]}" data-max-set-mb="{limit["maxSetMegabytes"]}">
 <noscript><p class="small warn">Sending needs JavaScript, because of the check that proves you are a person. Reading this page does not.</p></noscript>
 
-<h2 class="h3">The photos</h2>
+<h2 class="h3" id="photos-title">The photos</h2>
 <p class="small faint">Up to {limit["maxSetFiles"]} files, {limit["maxFileMegabytes"]} MB each and {limit["maxSetMegabytes"]} MB in total, so a set shot across several sheets goes in one go: the page sends it in parts of up to {limit["maxFiles"]} files and {limit["maxSubmissionMegabytes"]} MB by itself, and it arrives as one submission. {types}. Not {esc(limit["typesRefused"][0])}: it is not a photograph and the rebuild cannot handle it. Send them as they came off the camera, not cropped and not through a messaging app.</p>
-<input type="file" id="photos" name="photos[]" multiple accept="image/jpeg,image/png,image/tiff,image/heic,image/heif,.jpg,.jpeg,.png,.tif,.tiff,.heic,.heif" required>
+<input type="file" id="photos" aria-labelledby="photos-title" name="photos[]" multiple accept="image/jpeg,image/png,image/tiff,image/heic,image/heif,.jpg,.jpeg,.png,.tif,.tiff,.heic,.heif" required>
 <div id="setLabels" class="stack tight" hidden>
 <p class="small faint">If these are several sheets of one set, say which sheet and which view each photo is. Leave any you are not sure of.</p>
 <label class="small">How many sheets? <select id="setSheets"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>
@@ -2014,7 +2014,7 @@ def page_home() -> str:
 </div>
 </section>
 <nav class="tp-index mono" aria-label="Sections of this page">{index}</nav>
-<div class="tp-band"><div class="tp-ticker mono"><div class="tp-tags" data-terms="off">{tags}</div><div class="tp-tags tp-again" aria-hidden="true" data-terms="off">{tags}</div></div></div>
+<div class="tp-band" data-clips="a ticker"><div class="tp-ticker mono"><div class="tp-tags" data-terms="off">{tags}</div><div class="tp-tags tp-again" aria-hidden="true" data-terms="off">{tags}</div></div></div>
 
 <section class="tp-section" id="measure">
 <div class="tp-strip-label mono tp-head" data-terms="off"><span>01 / MEASURE</span><span class="tp-wide">REAL SCREENS, RENDERED FROM THE CURRENT BUILD</span></div>
@@ -2925,7 +2925,7 @@ def page_tour_index() -> str:
         cards.append(
             f'<a class="panel pad stack tight research-card plain" href="/tour/{key}/">'
             f'{shown("desktop", desktop_thumb)}{shown("mobile", mobile_thumb)}'
-            f'<h3 class="h3">{esc(item["name"])}</h3>'
+            f'<h2 class="h3">{esc(item["name"])}</h2>'
             f'<p class="small">{esc(item["blurb"])}</p>'
             "</a>"
         )
@@ -3945,7 +3945,7 @@ html:not(.tp-js) .tp-tags,.tp-still .tp-tags{flex-wrap:wrap;row-gap:8px;padding-
 .tp-phone-shot.tp-low{transform:translateY(30px)}
 .tp-close{background:var(--sunk);padding:110px 40px;text-align:center}
 .tp-close h2{margin:0 0 26px;font-size:96px;line-height:.95}
-.tp .tp-free{margin:18px 0 0;font-size:12px;color:var(--faint)}
+.tp .tp-free{margin:18px 0 0;font-size:12px;color:var(--dim)}
 .tp .tp-today{margin:0;padding:28px 40px 0;max-width:860px;font-size:15px;line-height:1.6;color:var(--faint)}
 html.tp-js:not(.tp-still) .tp-ease{transition:opacity .7s ease,transform .7s ease}
 html.tp-js:not(.tp-still) .tp-ease:not(.tp-in){opacity:0;transform:translateY(18px)}
@@ -4336,7 +4336,7 @@ pre code{background:none;padding:0;font-size:inherit}
 .btn-primary:hover{opacity:.92}
 .btn-secondary{color:var(--text)}
 .btn-secondary:hover{border-color:var(--text)}
-.btn-sub{font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:400;letter-spacing:normal;text-transform:none;opacity:.85}
+.btn-sub{font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:400;letter-spacing:normal;text-transform:none}
 
 /* panels */
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:0}
@@ -4489,7 +4489,7 @@ h2:hover>.hlink,h3:hover>.hlink,.hlink:focus-visible{opacity:1}
 .prose h1{font-size:clamp(40px,4.6vw,60px);margin-bottom:6px}
 .prose h2{font-size:34px;margin-top:28px}
 .prose h3{margin-top:12px}
-.prose p,.prose li{color:var(--text);font-size:17px;line-height:1.7}
+.prose p,.prose li{color:var(--text);font-size:17px;line-height:1.7;overflow-wrap:break-word}
 .prose ul,.prose ol{margin:0;padding-left:24px}
 .prose li{margin-bottom:6px}
 .prose table{border-collapse:collapse;width:100%;font-size:15px;border-top:1px solid var(--line2)}
@@ -4679,6 +4679,18 @@ JS = r"""/* GroupLab theme: follows the system unless the visitor has chosen, an
       });
     }
   });
+  // A wide table or listing scrolls sideways on a phone; one that does is given a place in the tab order, so somebody using a keyboard
+  // can reach it and scroll it with the arrows (entry 462 section 1, axe's scrollable-region-focusable).
+  function reachable() {
+    var wide = document.querySelectorAll("table, pre");
+    for (var i = 0; i < wide.length; i++) {
+      var w = wide[i];
+      if (w.scrollWidth > w.clientWidth + 1 && getComputedStyle(w).overflowX !== "visible") w.setAttribute("tabindex", "0");
+      else if (w.getAttribute("tabindex") === "0") w.removeAttribute("tabindex");
+    }
+  }
+  document.addEventListener("DOMContentLoaded", reachable);
+  window.addEventListener("resize", reachable);
 })();
 """
 
@@ -5105,7 +5117,9 @@ def main() -> None:
         figures = REPO / "website" / "research" / meta["slug"]
         for extra in sorted(figures.rglob("*")) if figures.is_dir() else []:
             # A drawn thumbnail is inlined into the index card, so only the picture kind is served as a file.
-            if extra.is_file() and extra.suffix.lower() in {".png", ".svg", ".csv", ".webp"} and extra.name != "thumb.svg":
+            # So is every file the article offers for download, whatever its kind (entry 462 section 1: two JSON downloads went nowhere).
+            offered = extra.relative_to(figures).as_posix() in (meta.get("data") or []) if extra.is_file() else False
+            if extra.is_file() and (offered or extra.suffix.lower() in {".png", ".svg", ".csv", ".webp"}) and extra.name != "thumb.svg":
                 copy(extra, f"research/{meta['slug']}/{extra.relative_to(figures).as_posix()}")
     write("tour/index.html", page_tour_index())
     for path, title, description, body in _how_it_works.pages():

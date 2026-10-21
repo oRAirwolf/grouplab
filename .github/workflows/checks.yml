@@ -49,6 +49,19 @@ jobs:
       - name: Build the site
         run: python website/build.py
 
+      # NOTES-FROM-PLANNING.md entry 462 section 1: every built page through axe-core in a real browser, light and dark, at a phone's width
+      # (WCAG 2.1 A and AA, contrast included). A finding fails the push that made it; the few that wait on a look decision sent to Alan are
+      # listed in website/a11y-pending.json and printed as waiting. The runner's own Chrome is used, so nothing is downloaded but two packages.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Every page passes the accessibility check
+        run: |
+          mkdir -p "$RUNNER_TEMP/a11y" && cd "$RUNNER_TEMP/a11y" && npm init -y >/dev/null
+          npm install --no-audit --no-fund --silent playwright-core@1.48.2 @axe-core/playwright@4.10.1
+          cd "$GITHUB_WORKSPACE" && NODE_PATH="$RUNNER_TEMP/a11y/node_modules" node scripts/site-audit.cjs --only a11y
+
       # NOTES-FROM-PLANNING.md entry 267: the weekly consistency audit's checks, offline and as warnings, so a drift shows on the push that
       # made it; the weekly job (consistency.yml) adds the network checks and keeps the issue.
       - name: The consistency audit, as warnings
