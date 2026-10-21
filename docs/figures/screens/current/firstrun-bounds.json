@@ -28,9 +28,15 @@
       38
     ],
     "Ask me each time": [
-      393,
-      677,
+      863,
+      638,
       132,
+      27
+    ],
+    "Back": [
+      333,
+      704,
+      56,
       27
     ],
     "Ballistics": [
@@ -38,12 +44,6 @@
       122,
       34,
       34
-    ],
-    "Both, I have rifles of each": [
-      516,
-      133,
-      178,
-      27
     ],
     "CalibreBox": [
       1051,
@@ -105,12 +105,6 @@
       200,
       32
     ],
-    "MOA": [
-      449,
-      133,
-      55,
-      27
-    ],
     "MaterialFold": [
       1045,
       771,
@@ -118,16 +112,10 @@
       17
     ],
     "May be published. I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection, and I understand they may be published as part of GroupLab's public test data on GitHub and in its research articles, under the GPL-3.0 license, for anyone to download and use. GPS location data is removed from every photo before anything is published.": [
-      391,
-      541,
-      612,
+      331,
+      537,
+      738,
       68
-    ],
-    "Mil": [
-      393,
-      133,
-      44,
-      27
     ],
     "More": [
       1352,
@@ -136,8 +124,8 @@
       34
     ],
     "Never": [
-      537,
-      677,
+      1007,
+      638,
       62,
       27
     ],
@@ -145,6 +133,12 @@
       61,
       4,
       159,
+      27
+    ],
+    "Next": [
+      1014,
+      704,
+      55,
       27
     ],
     "Not known": [
@@ -188,6 +182,30 @@
       93,
       34,
       34
+    ],
+    "Question 1 of 4, answered": [
+      333,
+      189,
+      181,
+      4
+    ],
+    "Question 2 of 4, now": [
+      518,
+      189,
+      181,
+      4
+    ],
+    "Question 3 of 4, to come": [
+      703,
+      189,
+      181,
+      4
+    ],
+    "Question 4 of 4, to come": [
+      888,
+      189,
+      181,
+      4
     ],
     "Redo (Ctrl+Y)": [
       422,
@@ -244,14 +262,14 @@
       34
     ],
     "Send everything I open, to help improve GroupLab": [
-      393,
-      642,
+      333,
+      638,
       325,
       27
     ],
     "Send finished targets only": [
-      730,
-      642,
+      670,
+      638,
       181,
       27
     ],
@@ -297,17 +315,11 @@
       92,
       27
     ],
-    "Sizes in inches": [
-      391,
-      91,
-      113,
-      32
-    ],
-    "Sizes in millimeters": [
-      512,
-      91,
-      142,
-      32
+    "Skip for now": [
+      901,
+      704,
+      101,
+      27
     ],
     "StatusLine": [
       69,
@@ -322,9 +334,9 @@
       34
     ],
     "Testing only. I took these photos, or I have permission to share them. GroupLab may use them to test and improve its detection. They are kept by the project and never published. GPS location data is removed from every photo when it arrives.": [
-      391,
-      482,
-      619,
+      331,
+      478,
+      711,
       51
     ],
     "Undo (Ctrl+Z)": [

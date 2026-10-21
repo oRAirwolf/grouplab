@@ -69,12 +69,6 @@
       267,
       19
     ],
-    "6 of 13: The group, and its figures. Every shot is drawn on one bull from its own aim point, with the group's center and circles. The figures beside it stay in view.": [
-      1028,
-      83,
-      360,
-      204
-    ],
     "6, -0.16, 0.06, 0.14": [
       70,
       702,
@@ -93,6 +87,12 @@
       267,
       19
     ],
+    "9 of 13: The zero correction. How far the group's center is from your aim, in your scope's clicks. When the shots cannot tell a click from luck, it says to leave it, and why.": [
+      667,
+      242,
+      360,
+      204
+    ],
     "9, -0.33, 0.35, 0.45": [
       70,
       759,
@@ -106,8 +106,8 @@
       38
     ],
     "Back": [
-      1055,
-      233,
+      694,
+      392,
       56,
       27
     ],
@@ -148,7 +148,7 @@
       44
     ],
     "Close this target": [
-      338,
+      282,
       8,
       20,
       20
@@ -165,15 +165,15 @@
       34,
       34
     ],
-    "Demo: sample sheet, Analysis, not saved": [
+    "Demo: sample sheet, Analysis": [
       61,
       4,
-      273,
+      217,
       27
     ],
     "End the tour": [
-      1261,
-      233,
+      900,
+      392,
       100,
       27
     ],
@@ -208,13 +208,13 @@
       34
     ],
     "Next": [
-      1123,
-      233,
+      762,
+      392,
       55,
       27
     ],
     "Open another target": [
-      372,
+      316,
       6,
       30,
       22
@@ -239,9 +239,27 @@
     ],
     "Review them": [
       1197,
-      99,
+      170,
       79,
       17
+    ],
+    "ScaleHow": [
+      1045,
+      128,
+      339,
+      30
+    ],
+    "ScalePill": [
+      1045,
+      99,
+      122,
+      25
+    ],
+    "ScaleSaid": [
+      1045,
+      99,
+      339,
+      59
     ],
     "Session records": [
       4,
@@ -251,7 +269,7 @@
     ],
     "Set the shot distance": [
       1047,
-      607,
+      678,
       152,
       27
     ],
@@ -270,7 +288,7 @@
     "StatusLine": [
       69,
       881,
-      958,
+      1014,
       15
     ],
     "Targets": [
@@ -293,13 +311,13 @@
     ],
     "Zero from this group…": [
       1047,
-      387,
+      458,
       158,
       27
     ],
     "ZeroCorrection": [
       1045,
-      172,
+      243,
       339,
       201
     ],
@@ -311,7 +329,7 @@
     ],
     "why ▸": [
       1353,
-      101,
+      172,
       31,
       15
     ],

@@ -1,0 +1,283 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Accept and analyze": [
+      1205,
+      46,
+      143,
+      27
+    ],
+    "Add a hole": [
+      1047,
+      388,
+      90,
+      27
+    ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
+    "Close this target": [
+      317,
+      8,
+      20,
+      20
+    ],
+    "Column width: the left and right arrows widen or narrow it": [
+      1022,
+      134,
+      6,
+      742
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
+    "Detect on a GroupLab sheet": [
+      913,
+      46,
+      192,
+      27
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
+    ],
+    "Every hole to its nearest bull, however many. Nothing is asked.": [
+      1058,
+      829,
+      313,
+      40
+    ],
+    "Fit the image to the view": [
+      893,
+      745,
+      34,
+      34
+    ],
+    "Impact": [
+      215,
+      93,
+      34,
+      34
+    ],
+    "Lasso shots onto a bull": [
+      329,
+      93,
+      34,
+      34
+    ],
+    "Lines to bulls": [
+      1045,
+      273,
+      105,
+      32
+    ],
+    "MaterialFold": [
+      1045,
+      134,
+      157,
+      17
+    ],
+    "More": [
+      1352,
+      42,
+      34,
+      34
+    ],
+    "Next unsure hole": [
+      1149,
+      388,
+      128,
+      27
+    ],
+    "Not sure": [
+      421,
+      837,
+      77,
+      27
+    ],
+    "One shot on each bull I used. GroupLab asks about any bull that seems to hold two.": [
+      1058,
+      673,
+      313,
+      40
+    ],
+    "Open another target": [
+      351,
+      6,
+      30,
+      22
+    ],
+    "Pan, and click a mark to select it": [
+      63,
+      93,
+      34,
+      34
+    ],
+    "Picture": [
+      53,
+      134,
+      969,
+      664
+    ],
+    "Place bulls, on a target GroupLab did not print": [
+      291,
+      93,
+      34,
+      34
+    ],
+    "Point of aim": [
+      177,
+      93,
+      34,
+      34
+    ],
+    "Redo (Ctrl+Y)": [
+      422,
+      93,
+      34,
+      34
+    ],
+    "ReviewQueue": [
+      1045,
+      202,
+      339,
+      15
+    ],
+    "Rotate left ([)": [
+      931,
+      745,
+      34,
+      34
+    ],
+    "Rotate right (])": [
+      969,
+      745,
+      34,
+      34
+    ],
+    "Scale: length": [
+      101,
+      93,
+      34,
+      34
+    ],
+    "Scale: rectangle": [
+      139,
+      93,
+      34,
+      34
+    ],
+    "Select": [
+      253,
+      93,
+      34,
+      34
+    ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "SetupBlock": [
+      1045,
+      134,
+      339,
+      17
+    ],
+    "Shoot-N-C 6 in bullseye": [
+      246,
+      837,
+      167,
+      27
+    ],
+    "Shoot-N-C 8 in bullseye": [
+      69,
+      837,
+      169,
+      27
+    ],
+    "Show work": [
+      1109,
+      46,
+      92,
+      27
+    ],
+    "Some bulls took two or more. Then tap those bulls on the sheet.": [
+      1058,
+      751,
+      313,
+      40
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1307,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
+    ],
+    "Undo (Ctrl+Z)": [
+      384,
+      93,
+      34,
+      34
+    ],
+    "WhichTargetBar": [
+      53,
+      798,
+      969,
+      78
+    ],
+    "Zoom in": [
+      817,
+      745,
+      34,
+      34
+    ],
+    "Zoom out": [
+      855,
+      745,
+      34,
+      34
+    ],
+    "store-bought-stand-in.png, Marking": [
+      61,
+      4,
+      252,
+      27
+    ],
+    "why ▸": [
+      1353,
+      548,
+      31,
+      15
+    ]
+  }
+}
