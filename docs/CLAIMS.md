@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 1868 |
 | measured | 2443 |
-| decided | 1475 |
+| decided | 1476 |
 | unbacked | 0 |
-| **total** | **5786** |
+| **total** | **5787** |
 
-**1656** of them were read one sentence at a time and their backing written against the sentence. The other **4130** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1657** of them were read one sentence at a time and their backing written against the sentence. The other **4130** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -3183,6 +3183,7 @@ one that matters.
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): # The hardware and benchmark survey NOTES-FROM-PLANNING.md entries 207 section 3 and 208, 2026-09-25.
 - *code* (NOTES-FROM-PLANNING.md entry 223; website/api/limits.json surveyOpen; website/api/survey.php OPEN; src/GroupLab.Core/Updates/OutsideWorld.cs PostSurveyAsync): **Built, and open since 2026-09-25** (entry 219 item D1, opened by entry 223 once Alan had installed the worker): `surveyOpen` in `website/api/limits.json` is true, and the receiver takes reports.
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): Asking **One first run screen, three choices** (entry 208): sending targets, error reports, and the hardware survey with its benchmark, one after another on the window that asks today, each with its own plain description of what is sent and its own answer.
+- *decided* (src/GroupLab.App/FirstRunSteps.cs (Words, Back, Next, Skip); NOTES-FROM-PLANNING.md entry 465 item 5A): Since entry 465 the first run shows them one question at a time, with Back, Skip for now and Next.
 - *decided* (NOTES-FROM-PLANNING.md entries 207 section 3 and 208; the thresholds of 10 and 200 reports are judgment, docs/SURVEY.md): **Nothing is chosen for the person** on any of the three, the rule entry 203 section 3 set and `Entry203Tests` holds.
 - *code* (src/GroupLab.App/SurveyQueue.cs Unsent and SendDueAsync; src/GroupLab.App/AppSettings.cs LoadBenchmarkRuns (entry 241)): - A random installation number, so one machine is counted once, which the person can reset in Settings at any time (section 7).
 - *measured* (measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width): The desktop's reference today is `SpikeRun` in the Android spike: the sample at 600 dpi takes 7.9 s on Alan's desktop and 17 s on the Fold 7.

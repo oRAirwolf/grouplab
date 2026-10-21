@@ -8,7 +8,7 @@ so the minimums in `docs/PLATFORM-SUPPORT.md` rest on reports rather than guesse
 ## 1. Asking
 
 **One first run screen, three choices** (entry 208): sending targets, error reports, and the hardware survey with its benchmark, one after
-another on the window that asks today, each with its own plain description of what is sent and its own answer. Saying yes to one never
+another on the window that asks today, each with its own plain description of what is sent and its own answer. Since entry 465 the first run shows them one question at a time, with Back, Skip for now and Next. Saying yes to one never
 turns on another. **Nothing is chosen for the person** on any of the three, the rule entry 203 section 3 set and `Entry203Tests` holds. A
 long window scrolls; no choice hides behind a "more" link.
 
