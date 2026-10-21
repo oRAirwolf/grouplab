@@ -37,6 +37,34 @@ public sealed partial class MainWindow
     /// <summary>The set in the tab showing, for the headless tests.</summary>
     internal SetGroup? CurrentSet => targets.Current.Set;
 
+    /// <summary>A member's marking while it is parked with its set, for the headless tests.</summary>
+    internal static MarkingState? MemberState(SetMember member) => (member?.Parked as ParkedTarget)?.Session.State;
+
+    /// <summary>
+    /// Entry 465 4B: the scale of each sheet the figures showing come from, and what a pool holds: a set's tab showing its pool, every sheet
+    /// it counts ("picture" for pictures with no codes, each with its own scale or none yet); a pool of saved sheets in its own tab, each
+    /// sheet's; otherwise the one sheet's own.
+    /// </summary>
+    private (IReadOnlyList<ScaleReference?> Scales, string Noun) ScalesShown(MarkingState state)
+    {
+        if (targets.Current.Set is { Showing: null } set && !readingSet)
+        {
+            var counted = set.Members.Where(m => m.Read && m.Parked is ParkedTarget && (set.Definition is null || set.Counts(m)))
+                .Select(m => ((ParkedTarget)m.Parked!).Session.State.Scale).ToList();
+            if (counted.Count > 0)
+            {
+                return (counted, set.Definition is null ? "picture" : "sheet");
+            }
+        }
+
+        if (targets.Current.PooledScales is { Count: > 0 } pooled)
+        {
+            return (pooled, "sheet");
+        }
+
+        return ([state.Scale], "sheet");
+    }
+
     private Button setSheets = new();
 
     /// <summary>Says so and returns true while a set is being read, so a tab is not switched under it.</summary>

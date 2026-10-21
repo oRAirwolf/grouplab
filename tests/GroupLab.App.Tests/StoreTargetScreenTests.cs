@@ -77,6 +77,7 @@ public class StoreTargetScreenTests
         window.RefreshForTests();
         Assert.Contains(StoreTargetMatch.Warning, window.StatisticsText);
         Assert.Contains("Scale from the printed size", window.ScalePillText, StringComparison.Ordinal);
+        Assert.Equal("From the printed size of the Shoot-N-C 8 in bullseye, which GroupLab recognized; not checked against a ruler or a GroupLab sheet.", window.ScaleHowText);
         window.Close();
     }
 

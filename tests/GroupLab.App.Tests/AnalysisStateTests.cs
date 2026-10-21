@@ -89,6 +89,7 @@ public class AnalysisStateTests
             Dispatcher.UIThread.RunJobs();
             Assert.True(window.Analysing);
             Assert.Equal("\u26a0 Scale set by hand", window.PillText);
+            Assert.EndsWith("length you measured on the picture.", window.ScaleHowText, StringComparison.Ordinal);
 
             // The breadcrumb's sheet crumb is the file's name, and one click goes back to the marks with nothing lost.
             var crumb = Named(window, Path.GetFileName(path));

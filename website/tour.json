@@ -308,7 +308,7 @@
     ],
     [
      "The scale badge",
-     "Scale checked, with a tick, when the sheet's own markers set the scale. The detail is behind Show work."
+     "At the top of the figures: Scale checked, with a tick, when the sheet's own markers set the scale, and a line under it saying how the scale was found, from the printed markers with your printer check or the scan's resolution behind them, a length you measured, or a store-bought target's printed size. The detail is behind Show work."
     ],
     [
      "The load block, left",

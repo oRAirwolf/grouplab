@@ -98,7 +98,7 @@ public sealed partial class MainWindow
         // Entry 420 section 1, Quack's question: the pooled set opens in the analysis screen, in its own tab, as a sheet does.
         if (pooled.Shots > 0)
         {
-            OpenPooled(definition, SetPool.Composite(definition, states));
+            OpenPooled(definition, SetPool.Composite(definition, states), [.. states.Select(s => s.Scale)]);
         }
     }
 
@@ -107,12 +107,14 @@ public sealed partial class MainWindow
     /// own shade with a key, every figure, and the Shots list naming each shot sheet.bull. It is opened as a saved sheet with no picture is,
     /// and is not saved again as a session of its own.
     /// </summary>
-    internal void OpenPooled(TargetDefinition definition, MarkingState pooled)
+    internal void OpenPooled(TargetDefinition definition, MarkingState pooled, IReadOnlyList<ScaleReference?>? scales = null)
     {
         if (AddTarget(choose: false) is null)
         {
             return;
         }
+
+        targets.Current.PooledScales = scales;
 
         ShowPooledHere(definition, pooled);
         status.Text = $"{pooled.SheetLabel}, in its own tab. Each shot is named sheet.bull: 2.5 is bull 5 on sheet 2. Tap a sheet in the plot's key to show it alone.";

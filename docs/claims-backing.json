@@ -5,26 +5,26 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
- "On the tour · In the user guide · The research behind it Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart; with two loads, What the difference means sets their main figures side by side beside the pictures and says in a sentence whether these shots tell them apart and how many would.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
- },
- "With two loads, Each load's group keeps the two pictures at their size and fills the rest of the card with What the difference means : each load's shots, mean radius, extreme spread and CEP 90 side by side, GroupLab's plain sentence on whether these shots can tell the two apart and how far apart their spreads could be, and how many shots each would take to tell a 10 percent difference apart.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
- },
- "With two loads, What the difference means fills the rest of the card: each load's shots, mean radius, extreme spread and CEP 90 side by side, whether these shots can tell the two apart, and how many shots each would take to tell a 10 percent difference apart.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
- },
- "Newest Coming in the next build CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, named in the key in a compact box under the plot, and under Advanced a circle for any percent you type.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/CompositePlot.cs KeyLayout and ArrangeKey, held by Entry465Tests and Entry465PhoneTests (entry 465 item 2A); website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
- },
- "On the tour · In the user guide CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, named in the key in a compact box under the plot, and under Advanced a circle for any percent you type.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/CompositePlot.cs KeyLayout and ArrangeKey, held by Entry465Tests and Entry465PhoneTests (entry 465 item 2A); website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
- },
+  "On the tour · In the user guide · The research behind it Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart; with two loads, What the difference means sets their main figures side by side beside the pictures and says in a sentence whether these shots tell them apart and how many would.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
+  },
+  "With two loads, Each load's group keeps the two pictures at their size and fills the rest of the card with What the difference means : each load's shots, mean radius, extreme spread and CEP 90 side by side, GroupLab's plain sentence on whether these shots can tell the two apart and how far apart their spreads could be, and how many shots each would take to tell a 10 percent difference apart.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
+  },
+  "With two loads, What the difference means fills the rest of the card: each load's shots, mean radius, extreme spread and CEP 90 side by side, whether these shots can tell the two apart, and how many shots each would take to tell a 10 percent difference apart.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
+  },
+  "Newest Coming in the next build CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, named in the key in a compact box under the plot, and under Advanced a circle for any percent you type.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs KeyLayout and ArrangeKey, held by Entry465Tests and Entry465PhoneTests (entry 465 item 2A); website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
+  "On the tour · In the user guide CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, named in the key in a compact box under the plot, and under Advanced a circle for any percent you type.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/CompositePlot.cs KeyLayout and ArrangeKey, held by Entry465Tests and Entry465PhoneTests (entry 465 item 2A); website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+  },
   "![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png) On the picture, each bull's number stands outside its outer ring at the top left, in plain gray, and each hole's number sits in a dark tag just outside the ring, placed where it covers no other tag, no bull's number and no hole.": {
    "kind": "code",
    "where": "MarkTags.Place in src/GroupLab.Core/Marking/MarkTags.cs, drawn by MarkingCanvas.Render in src/GroupLab.App and MarkingAPage.Viewer.Render in mobile/GroupLab.Mobile; held by MarkTagsTests, Entry465MarkingTests and Entry465PhoneMarkingTests (entry 465 section 1A)"
@@ -33,143 +33,170 @@
    "kind": "code",
    "where": "MarkTags.Place in src/GroupLab.Core/Marking/MarkTags.cs, drawn by MarkingCanvas.Render in src/GroupLab.App and MarkingAPage.Viewer.Render in mobile/GroupLab.Mobile; held by MarkTagsTests, Entry465MarkingTests and Entry465PhoneMarkingTests (entry 465 section 1A)"
   },
- "You can do the step yourself or press Next and GroupLab does it.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/MainWindow.Demo.cs DemoNext, which does the step's own action before showing the next (entry 439 section 2)"
- },
- "You can do the step yourself or press **Next** and GroupLab does it.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/MainWindow.Demo.cs DemoNext, which does the step's own action before showing the next (entry 439 section 2)"
- },
- "What you are looking at Question 1 of 4.": {
-  "kind": "code",
-  "where": "website/tour.json firstrun mobile block; a new install's phone first run opens on Question 1 of 4, mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"
- },
- "What you are looking at Question 2 of 4.": {
-  "kind": "code",
-  "where": "website/tour.json firstrun; docs/figures/screens/current/firstrun-light-1400x900.png is taken by tests/GroupLab.App.Tests/Entry109Tests.cs after answering the first of four questions (entry 465 item 5A)"
- },
- "The first run asks one question at a time, on the computer and on the phone: Question 1 of 4 over a bar with a part for each question, and Back , Skip for now and Next beneath it.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/FirstRunSteps.cs, MainWindow.Sending.cs ShowFirstRunIfDue and mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.App.Tests/Entry465FirstRunTests.cs and tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"
- },
- "Newest Coming in the next build Works in your scope&#x27;s unit The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.": {
-  "kind": "code",
-  "where": "website/features.json scope-unit, shown among the newest because of entry 465 item 5A's note; the scope question is src/GroupLab.App/MainWindow.Sending.cs FillFirstRunScope (entry 294)"
- },
- "The first run asks one question at a time, on the computer and on the phone: **Question 1 of 4** over a bar with a part for each question, and **Back**, **Skip for now** and **Next** beneath it.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/FirstRunSteps.cs, MainWindow.Sending.cs ShowFirstRunIfDue and mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.App.Tests/Entry465FirstRunTests.cs and tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"
- },
- "Sync between devices in Settings, with another device in the folder: This device's name, Sync now, Stop syncing When a session was changed on two devices If the same session was changed on two devices before they synced, GroupLab never picks one by itself.": {
-  "kind": "code",
-  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"
- },
- "Both versions are kept, Sessions shows a banner, \"1 session to choose between\", and the session's row a 2 versions tag.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests and Entry463PhoneTests (entry 463)"
- },
- "Synchronization** | **Built, not proven** | through a folder your own cloud app already keeps in step, with no GroupLab account, on the computer and the phones | | **8.": {
-  "kind": "code",
-  "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
- },
- "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app already keeps in step (OneDrive, Dropbox, Google Drive, iCloud Drive); there is no GroupLab account and nothing goes anywhere but that folder.": {
-  "kind": "code",
-  "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
- },
- "![The settings](figures/screens/current/settings-light-1400x900.png) ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab sends](figures/screens/current/settings-data-light-1400x900.png) ### Sync between devices Your sessions, rifles, loads and designed sheets can stay the same on your computer and your phones.": {
-  "kind": "code",
-  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"
- },
- "![Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing](figures/screens/current/sync-settings-light-1400x900.png) ### When a session was changed on two devices If the same session was changed on two devices before they synced, GroupLab never picks one by itself.": {
-  "kind": "code",
-  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"
- },
- "![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png) ### Walk me through a demo ![The demo tour on the phone, with Next and End the tour.](figures/screens/phone/fold-demo-light.png) A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests and Entry463PhoneTests (entry 463)"
- },
- "Synchronization** | **Built, not proven** | through a folder your own cloud app already keeps in step, with no GroupLab account, on the computer and the phones ": {
-  "kind": "code",
-  "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
- },
- "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app alre": {
-  "kind": "code",
-  "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
- },
- "![The settings](figures/screens/current/settings-light-1400x900.png) ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab send": {
-  "kind": "code",
-  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs; the settings pictures as before (entry 463)"
- },
- "GroupLab does it through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive.": {
-  "kind": "code",
-  "where": "src/GroupLab.Core/Sync/SyncEngine.cs (Run, the folder's devices and changes files) and SyncScreens.Explained; src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by tests/GroupLab.App.Tests/Entry463Tests.cs and tests/GroupLab.Mobile.Tests/Entry463PhoneTests.cs (entry 463)"
- },
- "Each card shows what your records weigh now and in a year at your own pace (or at 200 sessions a year where there are too few to tell), with bars on one scale.": {
-  "kind": "code",
-  "where": "src/GroupLab.Core/Sync/SyncScreens.cs Cards and ScaleLine, SyncEngine.Measure; held by tests/GroupLab.Core.Tests/Sync/SyncScreensTests.cs TheCardsUseTheOwnPaceWhereThereIsEnoughHistoryAnd200AYearOtherwise (entry 463)"
- },
- "![Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing](figures/screens/current/sync-settings-l": {
-  "kind": "code",
-  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs; the settings pictures as before (entry 463)"
- },
- "Both versions are kept, Sessions shows a banner, \"1 session to choose between\", and the session's row a **2 versions** tag.": {
-  "kind": "code",
-  "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests.ASessionChangedOnTwoDevicesIsFoundOnSessionsAndKeptBothWays and Entry463PhoneTests (entry 463)"
- },
- "![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png) ### Wal": {
-  "kind": "code",
-  "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests.ASessionChangedOnTwoDevicesIsFoundOnSessionsAndKeptBothWays and Entry463PhoneTests (entry 463)"
- },
- "A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target.": {
+  "You can do the step yourself or press Next and GroupLab does it.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs DemoNext, which does the step's own action before showing the next (entry 439 section 2)"
+  },
+  "You can do the step yourself or press **Next** and GroupLab does it.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Demo.cs DemoNext, which does the step's own action before showing the next (entry 439 section 2)"
+  },
+  "What you are looking at Question 1 of 4.": {
+   "kind": "code",
+   "where": "website/tour.json firstrun mobile block; a new install's phone first run opens on Question 1 of 4, mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"
+  },
+  "What you are looking at Question 2 of 4.": {
+   "kind": "code",
+   "where": "website/tour.json firstrun; docs/figures/screens/current/firstrun-light-1400x900.png is taken by tests/GroupLab.App.Tests/Entry109Tests.cs after answering the first of four questions (entry 465 item 5A)"
+  },
+  "The first run asks one question at a time, on the computer and on the phone: Question 1 of 4 over a bar with a part for each question, and Back , Skip for now and Next beneath it.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/FirstRunSteps.cs, MainWindow.Sending.cs ShowFirstRunIfDue and mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.App.Tests/Entry465FirstRunTests.cs and tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"
+  },
+  "Newest Coming in the next build Works in your scope&#x27;s unit The first run asks whether your scope is in mil or MOA, each rifle keeps its own scope unit and click (0.1 mil, 0.05 mil, 1/4 MOA, 1/8 MOA or any other), and the zero correction, the clicks, the dope, the hit chance and group sizes as angles then read in that unit alone, with the other one tap away.": {
+   "kind": "code",
+   "where": "website/features.json scope-unit, shown among the newest because of entry 465 item 5A's note; the scope question is src/GroupLab.App/MainWindow.Sending.cs FillFirstRunScope (entry 294)"
+  },
+  "The first run asks one question at a time, on the computer and on the phone: **Question 1 of 4** over a bar with a part for each question, and **Back**, **Skip for now** and **Next** beneath it.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/FirstRunSteps.cs, MainWindow.Sending.cs ShowFirstRunIfDue and mobile/GroupLab.Mobile/FirstRunView.cs, held by tests/GroupLab.App.Tests/Entry465FirstRunTests.cs and tests/GroupLab.Mobile.Tests/Entry465PhoneFirstRunTests.cs (entry 465 item 5A)"
+  },
+  "Sync between devices in Settings, with another device in the folder: This device's name, Sync now, Stop syncing When a session was changed on two devices If the same session was changed on two devices before they synced, GroupLab never picks one by itself.": {
+   "kind": "code",
+   "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"
+  },
+  "Both versions are kept, Sessions shows a banner, \"1 session to choose between\", and the session's row a 2 versions tag.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests and Entry463PhoneTests (entry 463)"
+  },
+  "Synchronization** | **Built, not proven** | through a folder your own cloud app already keeps in step, with no GroupLab account, on the computer and the phones | | **8.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
+  },
+  "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app already keeps in step (OneDrive, Dropbox, Google Drive, iCloud Drive); there is no GroupLab account and nothing goes anywhere but that folder.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
+  },
+  "![The settings](figures/screens/current/settings-light-1400x900.png) ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab sends](figures/screens/current/settings-data-light-1400x900.png) ### Sync between devices Your sessions, rifles, loads and designed sheets can stay the same on your computer and your phones.": {
+   "kind": "code",
+   "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"
+  },
+  "![Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing](figures/screens/current/sync-settings-light-1400x900.png) ### When a session was changed on two devices If the same session was changed on two devices before they synced, GroupLab never picks one by itself.": {
+   "kind": "code",
+   "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"
+  },
+  "![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png) ### Walk me through a demo ![The demo tour on the phone, with Next and End the tour.](figures/screens/phone/fold-demo-light.png) A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests and Entry463PhoneTests (entry 463)"
+  },
+  "Synchronization** | **Built, not proven** | through a folder your own cloud app already keeps in step, with no GroupLab account, on the computer and the phones ": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
+  },
+  "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app alre": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
+  },
+  "![The settings](figures/screens/current/settings-light-1400x900.png) ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab send": {
+   "kind": "code",
+   "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs; the settings pictures as before (entry 463)"
+  },
+  "GroupLab does it through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncEngine.cs (Run, the folder's devices and changes files) and SyncScreens.Explained; src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by tests/GroupLab.App.Tests/Entry463Tests.cs and tests/GroupLab.Mobile.Tests/Entry463PhoneTests.cs (entry 463)"
+  },
+  "Each card shows what your records weigh now and in a year at your own pace (or at 200 sessions a year where there are too few to tell), with bars on one scale.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncScreens.cs Cards and ScaleLine, SyncEngine.Measure; held by tests/GroupLab.Core.Tests/Sync/SyncScreensTests.cs TheCardsUseTheOwnPaceWhereThereIsEnoughHistoryAnd200AYearOtherwise (entry 463)"
+  },
+  "![Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing](figures/screens/current/sync-settings-l": {
+   "kind": "code",
+   "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs; the settings pictures as before (entry 463)"
+  },
+  "Both versions are kept, Sessions shows a banner, \"1 session to choose between\", and the session's row a **2 versions** tag.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests.ASessionChangedOnTwoDevicesIsFoundOnSessionsAndKeptBothWays and Entry463PhoneTests (entry 463)"
+  },
+  "![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png) ### Wal": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests.ASessionChangedOnTwoDevicesIsFoundOnSessionsAndKeptBothWays and Entry463PhoneTests (entry 463)"
+  },
+  "A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo), held by Entry439Tests, shown in docs/figures/screens/current/demo-tour-light-1400x900.png (entry 462 section 4)"
   },
- "### Scope and mount ![The rifle's Scope and mount fields in Equipment: 1 Rail cant, 2 Sight scale factor, 3 Weight as fired.](figures/screens/current/equipment-scope-light-1400x900.png) The rifle's page in Equipment has a **Scope and mount** part.": {
+  "### Scope and mount ![The rifle's Scope and mount fields in Equipment: 1 Rail cant, 2 Sight scale factor, 3 Weight as fired.](figures/screens/current/equipment-scope-light-1400x900.png) The rifle's page in Equipment has a **Scope and mount** part.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Ballistics/ScopeMount.cs (ScopeMount) and the Equipment screen's EquipmentField_railCant, EquipmentField_sightScaleFactor and EquipmentField_weightAsFiredLb, shown in docs/figures/screens/current/equipment-scope-light-1400x900.png (entry 462 section 4)"
   },
- "### The zeroing grids are for sighting in by eye ![A zeroing grid chosen in Targets, with its preview beside the list: 1 Open as PDF.](figures/screens/current/targets-zero-light-1400x900.png) Each prints at exact scale, so at the bench you fire, read the correction off the grid, dial it and fire again.": {
+  "### The zeroing grids are for sighting in by eye ![A zeroing grid chosen in Targets, with its preview beside the list: 1 Open as PDF.](figures/screens/current/targets-zero-light-1400x900.png) Each prints at exact scale, so at the bench you fire, read the correction off the grid, dial it and fire again.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Targets built-in zeroing grid sheets, previewed in docs/figures/screens/current/targets-zero-light-1400x900.png with its Open as PDF button (entry 462 section 4)"
   },
- "### Point blank range ![The Point blank view of Ballistics: 1 Work out the point blank range, 2 Keep this zero on Test rifle, 3 Print a card.](figures/screens/current/ballistics-point-light-1400x900.png) The middle's third view, **Point blank**, answers one question: if I set my zero once, out to what distance can I hold dead on at the animal or target I am shooting at, and be sure of hitting?": {
+  "### Point blank range ![The Point blank view of Ballistics: 1 Work out the point blank range, 2 Keep this zero on Test rifle, 3 Print a card.](figures/screens/current/ballistics-point-light-1400x900.png) The middle's third view, **Point blank**, answers one question: if I set my zero once, out to what distance can I hold dead on at the animal or target I am shooting at, and be sure of hitting?": {
    "kind": "code",
    "where": "src/GroupLab.Core/Ballistics point blank range, shown on the Ballistics screen in docs/figures/screens/current/ballistics-point-light-1400x900.png (entry 462 section 4)"
   },
- "On the phone each is at least 48 by 48 to touch, and the emulator and the simulator read the screens the way TalkBack and VoiceOver do.": {
+  "On the phone each is at least 48 by 48 to touch, and the emulator and the simulator read the screens the way TalkBack and VoiceOver do.": {
    "kind": "code",
    "where": "tests/GroupLab.Mobile.Tests/Entry461PhoneAccessibilityTests.cs EveryPlaceReadsAsAScreenReaderNeedsIt (48 by 48 on every place, tests/Shared/ScreenReaderAudit.cs); scripts/screen-reader-audit.py (Android's node tree from uiautomator, 48 dp; XCTest's performAccessibilityAudit through scripts/touch/ios/Tests/TouchTests.swift Audit), run by android-emulator.yml and ios-app.yml \"Screen reader audit\" on scripts/scenarios/phone-audit.json (entry 461 section 2.1)"
   },
- "OpenCV&#x27;s marker and QR detectors on Android, from .NET In September 2026 no published runtime gave a .NET application on Android OpenCV&#x27;s ArUco markers and WeChat QR detector.": {
+  "OpenCV&#x27;s marker and QR detectors on Android, from .NET In September 2026 no published runtime gave a .NET application on Android OpenCV&#x27;s ArUco markers and WeChat QR detector.": {
    "kind": "measured",
    "where": "docs/ANDROID.md section 3, the routes as read on 2026-09-25 (OpenCvSharp's runtimes Windows, Linux and macOS only; the community android-arm64 runtime core, imgproc, imgcodecs and dnn only), and android/opencv/build-extern.sh's header; the research card of opencv-on-android-from-dotnet (entry 461)"
   },
- "Several copies of one single-page design, such as three copies of the 2 MOA page, are asked about once too, \"Pool these 3 pictures as one group?\": Pool as one group opens them in one tab, each copy read and its holes found and pooled as its own sheet in order, and Keep a tab each opens each in a tab of its own, for separate loads or strings.": {
-  "kind": "decided",
-  "where": "src/GroupLab.App/SetTab.cs DropSorting and src/GroupLab.App/MainWindow.SetTab.cs AskToPoolCopies; src/GroupLab.Core/Marking/SetPool.cs CopiesQuestion; tests/GroupLab.App.Tests/Entry460Tests.cs (entry 460 section 2)"
- },
- "Several copies of one single-page design, such as three copies of the 2 MOA page, are asked about once too, \"Pool these 3 pictures as one group?\": **Pool as one group** opens them in one tab, each copy read and its holes found and pooled as its own sheet in order, and **Keep a tab each** opens each in a tab of its own, for separate loads or strings.": {
-  "kind": "decided",
-  "where": "src/GroupLab.App/SetTab.cs DropSorting and src/GroupLab.App/MainWindow.SetTab.cs AskToPoolCopies; src/GroupLab.Core/Marking/SetPool.cs CopiesQuestion; tests/GroupLab.App.Tests/Entry460Tests.cs (entry 460 section 2)"
- },
- "GroupLab shows it as \"Top Gun expects about 1.04 MOA average five-shot group for this rifle and load (Bryan Litz's trend, not a limit).\", on the rifle's page for each of its loads, in the analysis's Advanced figures where the rifle and load are known, and in Compare loads for each load.": {
-  "kind": "code",
-  "where": "src/GroupLab.Core/Ballistics/ScopeMount.cs TopGun.OnItsBasis and TopGun.Compared; tests/GroupLab.Core.Tests/Ballistics/ScopeMountTests.cs YourGroupOnTopGunsBasisIsTheAverageFiveShotSpread and tests/GroupLab.Core.Tests/Marking/ResultFiguresTests.cs (request 103, Alan, 2026-10-20: five-shot extreme spread)"
- },
- "So where the shots and the distance allow, GroupLab sets your own group beside it on the same basis: the average five-shot extreme spread your shots' sigma implies, however many shots you fired, with its range, for example against a trend of 1.04 MOA, \"Your shots on the same basis: about 1.00 MOA average five-shot group (0.80 to 1.20), from 20 shots.": {
-  "kind": "code",
-  "where": "src/GroupLab.Core/Ballistics/ScopeMount.cs TopGun.OnItsBasis and TopGun.Compared; tests/GroupLab.Core.Tests/Ballistics/ScopeMountTests.cs YourGroupOnTopGunsBasisIsTheAverageFiveShotSpread and tests/GroupLab.Core.Tests/Marking/ResultFiguresTests.cs (request 103, Alan, 2026-10-20: five-shot extreme spread)"
- },
-  "- **The Windows zip and installer bring two sample sheets** (the macOS and Linux downloads and the phones do not), so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.": {"kind": "code", "where": "scripts/package-windows.ps1 stages the samples folder, and packaging/windows/grouplab.iss installs that staging folder; no other package script names samples (entry 459 section 10)"},
-  "Phases 6 and 8 stay in progress although their gates are met (Phase 6's on the Fold 7, Phase 8's on every TestFlight nightly), because the rest of what each holds is built and not yet proven.": {"kind": "decided", "where": "entry 459 section 9: ReadmeTests holds the table to DESIGN.md section 21, so a phase with its gate met says why it stays In progress"},
-  "The installer carries the same folder; the macOS and Linux downloads and the phones carry no samples folder.": {"kind": "code", "where": "scripts/package-windows.ps1 and packaging/windows/grouplab.iss (entry 459 section 10)"},
-  "Samples The Windows zip and installer carry two sample sheets, so there is something to open in the first minute; the other downloads do not.": {"kind": "code", "where": "scripts/package-windows.ps1 stages the samples folder, and packaging/windows/grouplab.iss installs that staging folder; no other package script names samples (entry 459 section 10)"},
-  "Today GroupLab is test builds, rebuilt after every change that passes its tests, so one may be broken; the Windows and Linux downloads are unsigned.": {"kind": "decided", "where": "README.md Before you install: the macOS builds are signed and notarized, the Store and Android builds are signed, and only the Windows and Linux direct downloads are unsigned (entry 459 section 5)"},
-  "A trajectory for one rifle and load, a dope table at whatever spacing you ask for, the chance of a hit from your own measured precision, and Point blank, the range you can hold dead on.": {"kind": "code", "where": "src/GroupLab.Core/Ballistics/PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs, the Point blank view (entry 459 section 11)"},
-  "On the phone; not yet pictured there Ballistics A trajectory for one rifle and load, a dope table at whatever spacing you ask for, the chance of a hit from your own measured precision, and Point blank, the range you can hold dead on.": {"kind": "code", "where": "src/GroupLab.Core/Ballistics/PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs, the Point blank view (entry 459 section 11)"},
-    "What is not done yet 02 Send a report from GroupLab In GroupLab, open the settings from the gear at the bottom left and choose Report a problem under Diagnostics, or Make a report on an error's banner.": {"kind": "code", "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow.Send and NotOpen; src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync (entry 457)"},
-    "03 If it cannot be sent Where sending is not open yet or a send fails, the window says so.": {"kind": "code", "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow.Send and NotOpen; src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync (entry 457)"},
+  "Several copies of one single-page design, such as three copies of the 2 MOA page, are asked about once too, \"Pool these 3 pictures as one group?\": Pool as one group opens them in one tab, each copy read and its holes found and pooled as its own sheet in order, and Keep a tab each opens each in a tab of its own, for separate loads or strings.": {
+   "kind": "decided",
+   "where": "src/GroupLab.App/SetTab.cs DropSorting and src/GroupLab.App/MainWindow.SetTab.cs AskToPoolCopies; src/GroupLab.Core/Marking/SetPool.cs CopiesQuestion; tests/GroupLab.App.Tests/Entry460Tests.cs (entry 460 section 2)"
+  },
+  "Several copies of one single-page design, such as three copies of the 2 MOA page, are asked about once too, \"Pool these 3 pictures as one group?\": **Pool as one group** opens them in one tab, each copy read and its holes found and pooled as its own sheet in order, and **Keep a tab each** opens each in a tab of its own, for separate loads or strings.": {
+   "kind": "decided",
+   "where": "src/GroupLab.App/SetTab.cs DropSorting and src/GroupLab.App/MainWindow.SetTab.cs AskToPoolCopies; src/GroupLab.Core/Marking/SetPool.cs CopiesQuestion; tests/GroupLab.App.Tests/Entry460Tests.cs (entry 460 section 2)"
+  },
+  "GroupLab shows it as \"Top Gun expects about 1.04 MOA average five-shot group for this rifle and load (Bryan Litz's trend, not a limit).\", on the rifle's page for each of its loads, in the analysis's Advanced figures where the rifle and load are known, and in Compare loads for each load.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/ScopeMount.cs TopGun.OnItsBasis and TopGun.Compared; tests/GroupLab.Core.Tests/Ballistics/ScopeMountTests.cs YourGroupOnTopGunsBasisIsTheAverageFiveShotSpread and tests/GroupLab.Core.Tests/Marking/ResultFiguresTests.cs (request 103, Alan, 2026-10-20: five-shot extreme spread)"
+  },
+  "So where the shots and the distance allow, GroupLab sets your own group beside it on the same basis: the average five-shot extreme spread your shots' sigma implies, however many shots you fired, with its range, for example against a trend of 1.04 MOA, \"Your shots on the same basis: about 1.00 MOA average five-shot group (0.80 to 1.20), from 20 shots.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/ScopeMount.cs TopGun.OnItsBasis and TopGun.Compared; tests/GroupLab.Core.Tests/Ballistics/ScopeMountTests.cs YourGroupOnTopGunsBasisIsTheAverageFiveShotSpread and tests/GroupLab.Core.Tests/Marking/ResultFiguresTests.cs (request 103, Alan, 2026-10-20: five-shot extreme spread)"
+  },
+  "- **The Windows zip and installer bring two sample sheets** (the macOS and Linux downloads and the phones do not), so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.": {
+   "kind": "code",
+   "where": "scripts/package-windows.ps1 stages the samples folder, and packaging/windows/grouplab.iss installs that staging folder; no other package script names samples (entry 459 section 10)"
+  },
+  "Phases 6 and 8 stay in progress although their gates are met (Phase 6's on the Fold 7, Phase 8's on every TestFlight nightly), because the rest of what each holds is built and not yet proven.": {
+   "kind": "decided",
+   "where": "entry 459 section 9: ReadmeTests holds the table to DESIGN.md section 21, so a phase with its gate met says why it stays In progress"
+  },
+  "The installer carries the same folder; the macOS and Linux downloads and the phones carry no samples folder.": {
+   "kind": "code",
+   "where": "scripts/package-windows.ps1 and packaging/windows/grouplab.iss (entry 459 section 10)"
+  },
+  "Samples The Windows zip and installer carry two sample sheets, so there is something to open in the first minute; the other downloads do not.": {
+   "kind": "code",
+   "where": "scripts/package-windows.ps1 stages the samples folder, and packaging/windows/grouplab.iss installs that staging folder; no other package script names samples (entry 459 section 10)"
+  },
+  "Today GroupLab is test builds, rebuilt after every change that passes its tests, so one may be broken; the Windows and Linux downloads are unsigned.": {
+   "kind": "decided",
+   "where": "README.md Before you install: the macOS builds are signed and notarized, the Store and Android builds are signed, and only the Windows and Linux direct downloads are unsigned (entry 459 section 5)"
+  },
+  "A trajectory for one rifle and load, a dope table at whatever spacing you ask for, the chance of a hit from your own measured precision, and Point blank, the range you can hold dead on.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs, the Point blank view (entry 459 section 11)"
+  },
+  "On the phone; not yet pictured there Ballistics A trajectory for one rifle and load, a dope table at whatever spacing you ask for, the chance of a hit from your own measured precision, and Point blank, the range you can hold dead on.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Ballistics/PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs, the Point blank view (entry 459 section 11)"
+  },
+  "What is not done yet 02 Send a report from GroupLab In GroupLab, open the settings from the gear at the bottom left and choose Report a problem under Diagnostics, or Make a report on an error's banner.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow.Send and NotOpen; src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync (entry 457)"
+  },
+  "03 If it cannot be sent Where sending is not open yet or a send fails, the window says so.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow.Send and NotOpen; src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync (entry 457)"
+  },
   "The third view, Point blank: how far you can hold dead on and still put your chosen share of shots in the zone, how to set the zero in clicks, and the present zero of your rifle beside it.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.PointBlank.cs FillPointBlank; src/GroupLab.Core/Ballistics/PointBlankReport.cs PointBlankReport.Work (HowToSet, CurrentZero) (entry 455)"
@@ -7841,6 +7868,14 @@
   "Work out the sight scale factor from a tracking test takes the unit, the angle you expected (20.0 mil or 66.0 MOA to start, the lines of a tall tracking target) and the turret reading, and gives the factor, the expected angle divided by the reading.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Ballistics/ScopeMount.cs ScopeTracking (entry 456)"
+  },
+  "At the top of the figures on the right, the badge reads **Scale checked** when the sheet's own markers set the scale, and the line under it says how the scale was found, such as \"From the printed markers on all 3 sheets, against your printer check\"; Show work has the detail.": {
+   "kind": "code",
+   "where": "Entry 465 4B (Alan chose the pill at the top of the side panel): ScaleSaid.How in src/GroupLab.Core/Marking/ScaleSaid.cs, built from each sheet's own scale (SheetReference.ScaleFrom for a printer check, PrintScale for the scan's resolution), shown by MainWindow's scaleHow under the pill; held by ScaleSaidTests and ScalePillTests"
+  },
+  "At the top of the figures on the right, the badge reads Scale checked when the sheet's own markers set the scale, and the line under it says how the scale was found, such as \"From the printed markers on all 3 sheets, against your printer check\"; Show work has the detail.": {
+   "kind": "code",
+   "where": "Entry 465 4B (Alan chose the pill at the top of the side panel): ScaleSaid.How in src/GroupLab.Core/Marking/ScaleSaid.cs, built from each sheet's own scale (SheetReference.ScaleFrom for a printer check, PrintScale for the scan's resolution), shown by MainWindow's scaleHow under the pill; held by ScaleSaidTests and ScalePillTests"
   }
  },
  "rules": [

@@ -29,6 +29,14 @@ public sealed partial class MainWindow
     /// <summary>The scale's pill on the analysis, for the headless tests.</summary>
     internal string ScalePillText => registrationText.Text ?? "";
 
+    /// <summary>Entry 465 4B: the pill itself and the line under it, for the headless tests.</summary>
+    internal Border ScalePill => registrationPill;
+
+    internal string ScaleHowText => scaleHow.Text ?? "";
+
+    /// <summary>The header's actions on the analysis, which the pill has left, for the headless tests.</summary>
+    internal StackPanel AnalysisActions => analysisActions;
+
     /// <summary>The warning under the scale, with the way to check it.</summary>
     private StackPanel StoreTargetWarning()
     {

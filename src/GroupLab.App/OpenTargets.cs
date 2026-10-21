@@ -26,6 +26,9 @@ internal sealed class OpenTarget
     /// <summary>Entry 423: the sheets of a set, or pictures pooled, read together in this one tab; null for a tab of one target.</summary>
     public SetGroup? Set { get; set; }
 
+    /// <summary>Entry 465 4B: for a pool of saved sheets in a tab of its own, each sheet's own scale, so the pill says how they were found.</summary>
+    public IReadOnlyList<GroupLab.Core.Marking.ScaleReference?>? PooledScales { get; set; }
+
     /// <summary>Entry 439: the tab the guided demo opened, named for it and removed when the demo ends.</summary>
     public bool Demo { get; set; }
 

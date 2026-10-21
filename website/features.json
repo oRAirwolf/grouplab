@@ -1045,7 +1045,7 @@
       "key": "true-size",
       "group": "Sheets and printing",
       "name": "Real inches from a scan",
-      "sentence": "A scan measures how large the sheet was really printed and corrects every size, so a sheet your printer shrank still measures right.",
+      "sentence": "A scan measures how large the sheet was really printed and corrects every size, so a sheet your printer shrank still measures right, and the top of the figures says how each sheet's scale was found.",
       "shot": "analysis",
       "platforms": [
         "Windows",
@@ -1055,7 +1055,10 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.95",
-      "note": "A scanned target now reports real inches",
+      "note": [
+        "A scanned target now reports real inches",
+        "with a line saying how the scale was found"
+      ],
       "tour": "analysis",
       "guide": "1-print-a-sheet",
       "article": "printer-true-size",

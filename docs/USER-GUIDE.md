@@ -428,7 +428,7 @@ or Excel), or paste the velocities, then **Accept the mapping**.
 ![Velocity and the vertical, with the share velocity explains: 1 Conditions on the day, 2 Velocity band](figures/screens/current/velocity-light-1400x900.png)
 <!-- marks: Conditions on the day | Velocity band -->
 
-**Back**, top left, returns to marking with every edit as you left it. The badge beside Show work reads **Scale checked** when the sheet's own markers set the scale; Show work has the detail. **Own window** moves the figures to a window of their own, for a second monitor, and closing that window puts them back.
+**Back**, top left, returns to marking with every edit as you left it. At the top of the figures on the right, the badge reads **Scale checked** when the sheet's own markers set the scale, and the line under it says how the scale was found, such as "From the printed markers on all 3 sheets, against your printer check"; Show work has the detail. **Own window** moves the figures to a window of their own, for a second monitor, and closing that window puts them back.
 
 **Under the shot table,** **Shots and clicks** opens every shot with its offset across and up from the aim point, the clicks that would
 bring it onto the aim at your rifle's click value, and a **Counted** tick: untick it and the shot is left out of every figure, struck

@@ -145,7 +145,10 @@ public sealed partial class MainWindow : Window
     /// <summary>The analysis state's pill: the registration and its residual, where the editor has the review count.</summary>
     private readonly TextBlock registrationText = new() { Classes = { AppStyles.PillText } };
 
-    private readonly Border registrationPill = new() { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, Tokens.Space8, 0), Classes = { AppStyles.Pill } };
+    private readonly Border registrationPill = new() { Name = "ScalePill", HorizontalAlignment = HorizontalAlignment.Left, Classes = { AppStyles.Pill } };
+
+    /// <summary>Entry 465 4B: the line under the scale's pill saying how the scale was found.</summary>
+    private readonly TextBlock scaleHow = new() { Name = "ScaleHow", TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } };
 
     /// <summary>The analysis state's breadcrumb: the sheet crumb is a button back to the editor, one click from a figure to the marks behind it.</summary>
     private readonly StackPanel analysisCrumbs = new() { Orientation = Orientation.Horizontal, IsVisible = false, VerticalAlignment = VerticalAlignment.Center };
@@ -952,7 +955,6 @@ public sealed partial class MainWindow : Window
         editorActions.Children.Add(acceptButton);
         editorActions.Children.Add(Overflow());
         registrationPill.Child = registrationText;
-        analysisActions.Children.Add(registrationPill);
         analysisActions.Children.Add(showWorkAnalysis);
         foreach (var toggle in new[] { showWorkEditor, showWorkAnalysis })
         {
@@ -1080,6 +1082,9 @@ public sealed partial class MainWindow : Window
         // Entry 105 section 2: the headings carry the column's hierarchy, so each has a rule above it.
         bannerLine.Children.Add(unsettled);
         bannerLine.Children.Add(Link("Review them", BackToEditor));
+        // Entry 465 4B: the scale's pill leaves the header, so the path there keeps its room, and leads the side panel with the line that
+        // says how the scale was found.
+        figures.Children.Add(new StackPanel { Name = "ScaleSaid", Spacing = Tokens.Space4, Children = { registrationPill, scaleHow } });
         figures.Children.Add(unsettledBanner);
         figures.Children.Add(Ruled("Zero correction"));
         figures.Children.Add(zeroPanel);
@@ -3309,13 +3314,11 @@ public sealed partial class MainWindow : Window
         ToolTip.SetTip(sheetCrumb, "Back to the sheet, with every edit as you left it");
         // Entry 169 section 5: the badge says the one thing a shooter needs from it, and the markers, the residual and the rest are behind Show
         // work for whoever wants them.
-        registrationText.Text = state.Scale switch
-        {
-            null => "\u26a0 No scale",
-            SheetReference => "\u2713 Scale checked",
-            RectangleReference { PrintedTarget: not null } => "\u26a0 Scale from the printed size",
-            _ => "\u26a0 Scale set by hand",
-        };
+        // Entry 465 4B: a set's tab, or a pool of saved sheets, says it of every sheet it pools, never more than the sheets did.
+        var (scalesShown, noun) = ScalesShown(state);
+        registrationText.Text = ScaleSaid.Pill(scalesShown);
+        scaleHow.Text = ScaleSaid.How(scalesShown, units, noun);
+        bool scaleChecked = ScaleSaid.AllChecked(scalesShown);
         ToolTip.SetTip(registrationPill, null);
         registrationWork.Text = state.Scale is null ? "No scale is set."
             : "Scale: from " + state.Scale.Describe(units) + (state.Scale is SheetReference && registrationResidual is { } residual ? $"; the markers fit to within {units.Length(residual)}." : ".");
@@ -3323,7 +3326,7 @@ public sealed partial class MainWindow : Window
         {
             classes.Remove(AppStyles.Good);
             classes.Remove(AppStyles.Warn);
-            classes.Add(state.Scale is SheetReference ? AppStyles.Good : AppStyles.Warn);
+            classes.Add(scaleChecked ? AppStyles.Good : AppStyles.Warn);
         }
 
         // Entry 109 section 3a: a compact amber banner at the top, with a link back to the editor; entry 103 section 1's sentence behind "why".

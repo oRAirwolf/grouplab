@@ -206,6 +206,14 @@ public static class ShotCsv
     public static readonly PointD Aim = new(20000, 20000);
 
     /// <summary>
+    /// Entry 465 4B: whether a length is the one an imported marking is built on, an inch from <see cref="Aim"/> at
+    /// <see cref="PixelsPerInch"/>, rather than one a person measured, so the scale's line can say which. A marking reopened from its file
+    /// keeps the same length, so it is still known.
+    /// </summary>
+    public static bool IsImported(LengthReference length) =>
+        length is not null && length.A == Aim && length.B == new PointD(Aim.X + PixelsPerInch, Aim.Y) && length.Inches == 1;
+
+    /// <summary>
     /// A marking made from imported offsets: no image, a scale of <see cref="PixelsPerInch"/>, the point of aim at <see cref="Aim"/> and each
     /// shot placed by hand at its offset, so every figure GroupLab computes works on it as on a marked sheet. Numbers measured from the
     /// group's own center (entry 278 section 2) say nothing about where the aim was, so then no point of aim is set and the result shows the
