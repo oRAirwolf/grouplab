@@ -5,6 +5,33 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-21, question 106: a photograph's codes cannot be read sooner without reading fewer of them
+
+**Status: answered 2026-10-21 by Alan (entry 462 section 0): (b), leave it. Every place is still read, so a picture showing two sheets is still caught; the measurement stays in docs/PERFORMANCE.md.** Entry 461 section 2.2 asked for a phone photograph's codes faster "with every result identical". Measured on the
+bench's photograph (`scans/phase0/20260913_130543.jpg`, the frozen sheet, `grouplab analyze`, Release, this desktop, three runs): the
+square-on reading took 662 to 861 ms for 8 places, 2 of them holding a code. Of it: finding the markers in the whole photograph 68 to 92
+ms; matching the sheets and placing the codes about 35; cutting out the 8 places about 40 (4 to 8 each); on each of the **6 places with
+no code**, OpenCV's WeChat reader 44 to 68 ms and then its second reader 5 to 35 ms; on the 2 with a code, 13 to 24 ms each. So about
+450 ms of it is the two readers failing in full, which is their fixed sequence of two scales and four binarizers (WeChat) and its
+detect and decode (the second); nothing in it can be skipped and still give the same result on every picture. The 6 empty places are
+where the other sheets sharing the frozen sheet's markers print their codes (7 mm higher on the newer layout), which is why this
+photograph is the slowest: the five Fold 7 photographs of newer sheets read in 167 to 283 ms (entry 415). Entry 415 reached the same
+place: "the only way to do less of it is to read fewer codes, which changes how many codes a picture is said to have read; that is a
+decision, not a speed-up."
+
+Options:
+- **(a) Read the places in order of the sheet they belong to, and stop at the first sheet whose places give one sheet and tile** with
+  every one of that sheet's places read. On this photograph the frozen sheet prints four codes, two of them in the picture (entry 447
+  section 4.3), so it would read those 2 places and skip the other sheets' 6, about 400 ms sooner. What changes: a picture holding codes of two different sheets (a sheet laid on another) would no longer be
+  caught when the first sheet's places all read; and the count of codes read stays the same here but can be lower elsewhere.
+- **(b) Leave it.** The slow case is the frozen Phase 0 sheet and photographs of sheets that share its markers; GroupLab's own current
+  sheets read in under 300 ms.
+
+I would choose **(b)**: the frozen sheet is the oldest layout, a person printing today does not get it, and (a) weakens the check that a
+picture shows one sheet. Nothing was changed; docs/PERFORMANCE.md has the measurement.
+
+---
+
 ## 2026-10-14, question 98: several pictures of one single-page design, dropped together
 
 **Status: answered 2026-10-20 by Alan, from the planning canvas (entry 460 section 2): option B. Copies of one single-page design dropped or chosen together are asked about once, "Pool these 3 pictures as one group?", Pool as one group (the default) or Keep a tab each, on the computer and the phone.****

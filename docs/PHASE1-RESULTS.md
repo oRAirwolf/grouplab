@@ -1994,6 +1994,12 @@ Ten rows of `docs/RESEARCH.md`'s "Worth an article?", each checked for whether i
   design's 7 KB: about 350 KB a target in the folder, 70 MB for a year of 200. The DESIGN NEEDED in for-alan.md carries the figures.
 - **Not built:** tidying old change files; the three screens (DESIGN NEEDED).
 
+## Entry 462 section 0: question 106 answered, a photograph's codes left as they are (2026-10-21)
+
+Alan chose (b): every place on a photograph is still read, so a picture showing two sheets is still caught. Question 106 is archived
+as answered in `docs/notes/archive/questions-answered.md`, the measurement stays in `docs/PERFORMANCE.md` with the answer under it, and
+Phase 9 has no next step queued. Nothing in the application changed.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

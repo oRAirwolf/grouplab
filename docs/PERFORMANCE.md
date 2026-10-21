@@ -72,6 +72,9 @@ keeping them was measured in entry 415 and gained nothing. So the choice goes to
 unchanged. The current sheets' photographs read in 167 to 283 ms (entry 415); this photograph is slow because of the sheet it shows.
 Nothing reads QR codes on several threads.
 
+**Answered 2026-10-21 (entry 462 section 0): (b), leave it.** Every place is still read, so a picture showing two sheets is still
+caught. Phase 9 has no next step queued.
+
 ## Phase 9, 2026-10-20: the residual thresholded before it is opened, finding the holes on a 600 dpi scan about a fifth sooner
 
 **Measured first** (`grouplab bench --runs 5`, Release, this desktop): the slowest single step left in reading was finding the holes on the

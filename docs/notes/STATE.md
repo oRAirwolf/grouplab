@@ -42,7 +42,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Synchronization** (Phase 7): option A chosen 2026-10-20; the engine is built (entry 461); the screens wait on their design.
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
-- **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); the next slowest is a photograph's codes.
+- **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft follows the nightlies (entry 369); Google Play past internal test is Alan's call; Test Lab waits on request 62.
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
@@ -64,8 +64,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Four, all in `docs/QUESTIONS-FOR-PLANNING.md`:
-- **106** a photograph's codes: reading fewer places is the only saving left (entry 461 section 2.2)
+Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave it):
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **36** a light installer, measured
