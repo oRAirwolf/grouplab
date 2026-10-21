@@ -339,9 +339,6 @@ internal sealed class PhoneDemo
             Set(spot, Canvas.TopProperty, ring.Y);
             Set(spot, Layoutable.WidthProperty, ring.Width);
             Set(spot, Layoutable.HeightProperty, ring.Height);
-            double bw = Math.Max(26, badge.Bounds.Width), bh = Math.Max(26, badge.Bounds.Height);
-            Set(badge, Canvas.LeftProperty, Math.Clamp(ring.X - bw / 2, 0, Math.Max(0, width - bw)));
-            Set(badge, Canvas.TopProperty, Math.Clamp(ring.Y - bh / 2, 0, Math.Max(0, height - bh)));
             double below = height - margin - (ring.Bottom + margin), above = ring.Y - 2 * margin;
             if (want <= below)
             {
@@ -370,6 +367,21 @@ internal sealed class PhoneDemo
         Set(card, Layoutable.MaxHeightProperty, tall);
         Set(card, Canvas.LeftProperty, x);
         Set(card, Canvas.TopProperty, top);
+
+        // Where the card has had to sit over the outline, the step's number moves to a corner of the outline the card leaves clear, and
+        // is not shown where it leaves none, so it is never drawn over the card's words (entry 465: the plot grew when its key moved under it).
+        if (outlined is { } around)
+        {
+            double bw = Math.Max(26, badge.Bounds.Width), bh = Math.Max(26, badge.Bounds.Height);
+            var over = new Rect(x, top, cardWidth, Math.Min(want, tall));
+            var corners = new[] { around.TopLeft, around.BottomLeft, around.TopRight, around.BottomRight }
+                .Select(c => new Rect(Math.Clamp(c.X - bw / 2, 0, Math.Max(0, width - bw)), Math.Clamp(c.Y - bh / 2, 0, Math.Max(0, height - bh)), bw, bh));
+            var clear = corners.FirstOrDefault(c => !c.Intersects(over));
+            Set(badge, Visual.OpacityProperty, clear != default ? 1.0 : 0.0);
+            var at = clear != default ? clear : corners.First();
+            Set(badge, Canvas.LeftProperty, at.X);
+            Set(badge, Canvas.TopProperty, at.Y);
+        }
 
         // The pointer, on the card's edge toward the outline: the top where the card is below it, the bottom where it is above, and none
         // where the card, scrolling at the largest text, has had to sit over part of it.

@@ -4185,7 +4185,7 @@ code,.mono{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace}
 code{font-size:.88em;background:var(--panel2);padding:1px 6px;border-radius:3px}
 a.term{color:inherit;font-weight:inherit;text-decoration:underline dotted;text-underline-offset:3px;cursor:help}
 a.term:hover{text-decoration:underline dotted}
-/* Entry 465, 10B: a link inside a sentence has a thin, softer underline, full on hover and focus, so its colour is not all that tells it
+/* Entry 465, 10B: a link inside a sentence has a thin, softer underline, full on hover and focus, so its color is not all that tells it
    apart (WCAG 1.4.1); the menu, buttons and cards keep their own look. The site audit holds it. */
 main :is(p,li,dd,td,figcaption,blockquote) a:not([class]):not(:is(nav,header,footer,.toc) a){text-decoration-line:underline;text-decoration-thickness:1px;text-decoration-color:color-mix(in srgb,var(--amber) 55%,transparent);text-underline-offset:4px}
 main :is(p,li,dd,td,figcaption,blockquote) a:not([class]):not(:is(nav,header,footer,.toc) a):is(:hover,:focus-visible){text-decoration-thickness:2px;text-decoration-color:var(--amber)}

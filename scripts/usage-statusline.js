@@ -20,6 +20,7 @@ process.stdin.on("end", () => {
       seven_day: pct(week.used_percentage),
       five_hour: pct(five.used_percentage),
       seven_day_resets_at: week.resets_at ?? null,
+      five_hour_resets_at: five.resets_at ?? null,
       written_utc: new Date().toISOString(),
     };
     if (now.seven_day !== null) {
