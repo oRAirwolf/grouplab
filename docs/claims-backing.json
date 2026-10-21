@@ -8232,6 +8232,17 @@
    "match": "^A velocity SD of 10 ft/s adds two hundredths of an inch|^So a 100 yard group cannot show you your velocity",
    "kind": "measured",
    "where": "the research index card repeats the description of website/research/how-much-vertical-is-velocity.md, whose numbers are held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TheVelocityArticlesFiguresHold and whose sources are in its front matter (entry 464 section 3)"
+  },
+  {
+   "surface": "^site:research/where\\-a\\-first\\-miss\\-comes\\-from/",
+   "kind": "measured",
+   "where": "the article's own evidence: 4 sources (Litz's book named as further reading, nothing taken from it), worked 2026-10-21 by GroupLab's hit probability at its fixed seed, 10,000 trials a case, for one load and one rifle; every number held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TheMissArticlesFiguresHold (the first and second round under each preset, the two largest costs, the velocity's and the air's costs, the rifle's five-shot size, the presets' wind and distance errors), the presets checked against src/GroupLab.Core/Ballistics/HitPresets.cs HitPresets and the method against src/GroupLab.Core/Ballistics/HitProbability.cs HitProbability (Work) (entry 464 section 3)"
+  },
+  {
+   "surface": "^site:research/index\\.html$",
+   "match": "^Where a first-round miss comes from At 300 yards|^At 600 and 1000 it is mostly the wind call",
+   "kind": "measured",
+   "where": "the research index card repeats the description of website/research/where-a-first-miss-comes-from.md, whose numbers are held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TheMissArticlesFiguresHold and whose sources are in its front matter (entry 464 section 3)"
   }
  ]
 }

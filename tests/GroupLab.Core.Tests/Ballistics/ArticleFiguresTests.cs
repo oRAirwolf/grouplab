@@ -228,4 +228,62 @@ public class ArticleFiguresTests(ITestOutputHelper output)
             Assert.InRange(high, sdHigh - 0.06, sdHigh + 0.06);
         }
     }
+
+    /// <summary>
+    /// Entry 464 section 3, "Where a first-round miss comes from": GroupLab's hit probability (seeded, <see cref="HitProbability.DefaultSeed"/>)
+    /// on a 10 in circle for a rifle of 0.63 MOA mean radius measured at 100 yd and a velocity SD of 10 ft/s, at 300, 600 and 1000 yd under each
+    /// of the three confidence presets; the first and second round, and the two sources that cost the most first-round hits.
+    /// </summary>
+    [Fact]
+    public void TheMissArticlesFiguresHold()
+    {
+        double sigmaMrad = HitPrecision.MradFromMoa(0.63 / Math.Sqrt(Math.PI / 2));
+
+        // The rifle averages about 1.5 MOA for five shots; the presets' wind errors are 1.5, 3 and 4 mph, and the guessed distance 5 percent.
+        Assert.InRange(0.63 / Math.Sqrt(Math.PI / 2) * RangeStatisticsTable.Default.Lookup(RangeStatistic.ExtremeSpread, 5)!.Value.Mean, 1.5, 1.56);
+        Assert.Equal([1.5, 3, 4], HitPresets.All.Select(p => p.Errors(600)[HitSource.Wind].Sd));
+        Assert.Equal(30, HitPresets.All[2].Errors(600)[HitSource.Range].Sd, 9);
+        HitAnswer Work(int yards, IReadOnlyDictionary<HitSource, HitUncertainty> preset)
+        {
+            var errors = new Dictionary<HitSource, HitUncertainty>(preset) { [HitSource.Velocity] = new(10) };
+            return HitProbability.Work(new HitSetup(Load, yards, HitTarget.Circle(10), new HitPrecision(sigmaMrad, null, 100), errors));
+        }
+
+        foreach (var (yards, alone) in new[] { (300, 0.994), (600, 0.706), (1000, 0.333) })
+        {
+            var answer = Work(yards, new Dictionary<HitSource, HitUncertainty>());
+            Say($"{yards} yd, the rifle and its velocity alone: {answer.FirstRound.Value:0.000}");
+            Assert.InRange(answer.FirstRound.Value, alone - 0.006, alone + 0.006);
+        }
+
+        var expected = new (int Preset, int Yards, double First, double Second, HitSource Most, double MostCost, HitSource Next, double NextCost)[]
+        {
+            (0, 300, 0.989, 0.914, HitSource.Dispersion, 0.011, HitSource.Wind, 0.005),
+            (0, 600, 0.566, 0.445, HitSource.Dispersion, 0.301, HitSource.Wind, 0.136),
+            (0, 1000, 0.162, 0.180, HitSource.Wind, 0.162, HitSource.Dispersion, 0.112),
+            (1, 300, 0.964, 0.914, HitSource.Dispersion, 0.035, HitSource.Wind, 0.030),
+            (1, 600, 0.379, 0.445, HitSource.Wind, 0.317, HitSource.Dispersion, 0.172),
+            (1, 1000, 0.079, 0.180, HitSource.Wind, 0.204, HitSource.Dispersion, 0.030),
+            (2, 300, 0.906, 0.914, HitSource.Dispersion, 0.075, HitSource.Wind, 0.071),
+            (2, 600, 0.166, 0.445, HitSource.Wind, 0.219, HitSource.Range, 0.136),
+            (2, 1000, 0.015, 0.180, HitSource.Wind, 0.063, HitSource.Range, 0.035),
+        };
+        foreach (var row in expected)
+        {
+            var answer = Work(row.Yards, HitPresets.All[row.Preset].Errors(row.Yards));
+            var cost = answer.Costs.ToDictionary(c => c.Source, c => c.Cost);
+            Say($"{HitPresets.All[row.Preset].Name}, {row.Yards} yd: first {answer.FirstRound.Value:0.000}, second {answer.SecondRound.Value:0.000}; {string.Join(", ", answer.Costs.Take(3).Select(c => $"{c.Source} {c.Cost:0.000}"))}; velocity {cost[HitSource.Velocity]:0.000}");
+            Assert.Null(answer.Refusal);
+            Assert.InRange(answer.FirstRound.Value, row.First - 0.006, row.First + 0.006);
+            Assert.InRange(answer.SecondRound.Value, row.Second - 0.006, row.Second + 0.006);
+            Assert.Equal(row.Most, answer.Costs[0].Source);
+            Assert.Equal(row.Next, answer.Costs[1].Source);
+            Assert.InRange(answer.Costs[0].Cost, row.MostCost - 0.006, row.MostCost + 0.006);
+            Assert.InRange(answer.Costs[1].Cost, row.NextCost - 0.006, row.NextCost + 0.006);
+
+            // The velocity's spread never costs as much as one hit in a hundred, and nothing in the air or the drag costs more than about one.
+            Assert.True(cost[HitSource.Velocity] < 0.01);
+            Assert.True(answer.Costs.Where(c => c.Source is HitSource.Drag or HitSource.Temperature or HitSource.Pressure or HitSource.Humidity or HitSource.Inclination).All(c => c.Cost < 0.012));
+        }
+    }
 }

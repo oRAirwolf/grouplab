@@ -53,3 +53,4 @@ Each line is the slug, then the date it went live, then which batch it came out 
 - canted-scope-at-distance  2026-10-21  entry 462, under entry 393's standing rule
 - when-a-click-is-not-a-click  2026-10-21  entry 462, under entry 393's standing rule
 - how-much-vertical-is-velocity  2026-10-21  entry 464, under entry 393's standing rule
+- where-a-first-miss-comes-from  2026-10-21  entry 464, under entry 393's standing rule
