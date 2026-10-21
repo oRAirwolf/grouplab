@@ -497,6 +497,8 @@ shots. The phone makes the same page.
 
 Tick two or more sessions in Session records and press Compare the chosen. They appear side by side on the comparison screen, the rail's chart. Each has its plot and its figures with intervals, and below them are the tests with their verdicts.
 
+With two loads, **Each load's group** keeps the two pictures at their size and fills the rest of the card with **What the difference means**: each load's shots, mean radius, extreme spread and CEP 90 side by side, GroupLab's plain sentence on whether these shots can tell the two apart and how far apart their spreads could be, and how many shots each would take to tell a 10 percent difference apart. It sits beside the pictures where the card is wide enough and under them where it is not, as on a phone held upright. With three or more loads the card shows the pictures alone.
+
 ![Two loads compared](figures/screens/current/compare-light-1400x900.png)
 
 ### The loads are never ranked by their figures alone

@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using GroupLab.App.Theme;
 using GroupLab.Core.Imaging;
+using GroupLab.Core.Statistics;
 
 namespace GroupLab.App;
 
@@ -20,6 +21,11 @@ internal sealed record LoadGroup(string Name, IReadOnlyList<PointD> Offsets, Poi
 /// one larger plot with every group on the same center, the first load filled dots, the second rings, and so on, with a button a load to hide
 /// or show it; a tap on the stacked plot puts them side by side again. The choice holds while the page is open. The desktop and the phone
 /// draw the same card; the Android and iOS applications compile this file as it is.
+/// <para>
+/// Entry 465 item 7B: with two loads the pictures keep their size and the rest of the card holds "What the difference means", beside them
+/// where it fits and under them where it does not: each load's main figures side by side and the comparison's own sentences on whether these
+/// shot counts can tell the two apart and how many shots would. With three or more loads the card is as it was.
+/// </para>
 /// </summary>
 internal sealed class LoadGroups : UserControl
 {
@@ -30,15 +36,21 @@ internal sealed class LoadGroups : UserControl
     private readonly bool fill;
     private double cell;
     private readonly HashSet<int> hidden = [];
+    private readonly LoadComparisonReport? report;
+
+    /// <summary>Whether "What the difference means" sat beside the pictures when the card was last built.</summary>
+    private bool besideLast;
 
     /// <param name="groups">The loads, in the order chosen.</param>
     /// <param name="size">A length in inches as the person reads it: an angle where there is a distance, or a length.</param>
     /// <param name="cell">The side of one small plot; the stacked plot is twice it.</param>
     /// <param name="touch">The least height of a button, a finger's on the phone.</param>
     /// <param name="fill">Entry 312 section 1: on a wide screen the plots grow to share the card's width; the cell is then the least.</param>
-    public LoadGroups(IReadOnlyList<LoadGroup> groups, Func<double, string> size, double cell = 150, double touch = 32, bool fill = false)
+    /// <param name="report">Entry 465 item 7B: the comparison, whose figures and sentences fill the card's free space when it has two loads.</param>
+    public LoadGroups(IReadOnlyList<LoadGroup> groups, Func<double, string> size, double cell = 150, double touch = 32, bool fill = false, LoadComparisonReport? report = null)
     {
         this.groups = groups;
+        this.report = report is { Groups.Count: 2 } && groups.Count == 2 ? report : null;
         this.size = size;
         this.cell = cell;
         least = cell;
@@ -47,7 +59,8 @@ internal sealed class LoadGroups : UserControl
         ActualThemeVariantChanged += (_, _) => Build();
         SizeChanged += (_, e) =>
         {
-            if (this.fill && Math.Abs(Fit(this.groups.Count, e.NewSize.Width, least) - this.cell) >= 1)
+            if ((this.fill && Math.Abs(Fit(this.groups.Count, e.NewSize.Width, least) - this.cell) >= 1)
+                || (this.report is not null && Beside(e.NewSize.Width) != besideLast))
             {
                 Build();
             }
@@ -187,7 +200,7 @@ internal sealed class LoadGroups : UserControl
             }
 
             Plots = plots;
-            column.Children.Add(row);
+            column.Children.Add(WithMeaning(row));
             column.Children.Add(Bar(extent, cell));
             column.Children.Add(new TextBlock { Text = "Each group about its own center, at one scale. Tap a group to stack them on one center.", TextWrapping = TextWrapping.Wrap, FontSize = TextSize.Of(Tokens.SecondarySize), Classes = { AppStyles.Secondary } });
         }
@@ -205,7 +218,7 @@ internal sealed class LoadGroups : UserControl
 
             plot.Tapped += (_, _) => Toggle();
             Plots = [plot];
-            column.Children.Add(plot);
+            column.Children.Add(WithMeaning(plot));
             column.Children.Add(Bar(extent, side));
             var buttons = new WrapPanel();
             for (int i = 0; i < groups.Count; i++)
@@ -223,6 +236,124 @@ internal sealed class LoadGroups : UserControl
         }
 
         Content = column;
+    }
+
+    /// <summary>The least width "What the difference means" is given beside the pictures; narrower, it goes under them.</summary>
+    internal const double MeaningLeast = 300;
+
+    /// <summary>Whether a card this wide leaves room for "What the difference means" beside the pictures.</summary>
+    private bool Beside(double width) => report is not null && double.IsFinite(width) && width - PicturesWidth(width) >= MeaningLeast;
+
+    /// <summary>The width the pictures take in a row at a card's width, side by side or stacked, as <see cref="Build"/> lays them out.</summary>
+    private double PicturesWidth(double width)
+    {
+        double side = fill ? Fit(groups.Count, width, least) : cell;
+        return Stacked
+            ? (fill && width >= Wide ? Math.Max(least * 2, Math.Min(side * 2, Math.Min(width, Largest * 1.5))) : side * 2) + Tokens.Space12
+            : groups.Count * (side + Tokens.Space12);
+    }
+
+    /// <summary>Entry 465 item 7B: "What the difference means" as last built, for the tests; null with three or more loads.</summary>
+    internal StackPanel? Meaning { get; private set; }
+
+    /// <summary>Whether it sits beside the pictures, for the tests.</summary>
+    internal bool MeaningBeside => besideLast;
+
+    /// <summary>The pictures with "What the difference means" beside them where it fits and under them where not; the pictures alone otherwise.</summary>
+    private Control WithMeaning(Control pictures)
+    {
+        if (report is null)
+        {
+            Meaning = null;
+            besideLast = false;
+            return pictures;
+        }
+
+        Meaning = Means(report, size);
+        besideLast = Beside(Bounds.Width);
+        if (!besideLast)
+        {
+            Meaning.Margin = new Thickness(0, Tokens.Space4, 0, Tokens.Space8);
+            return new StackPanel { Spacing = Tokens.Space8, Children = { pictures, Meaning } };
+        }
+
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*") };
+        pictures.VerticalAlignment = VerticalAlignment.Top;
+        Meaning.Margin = new Thickness(Tokens.Space12, 0, 0, Tokens.Space8);
+        Grid.SetColumn(Meaning, 1);
+        grid.Children.Add(pictures);
+        grid.Children.Add(Meaning);
+        return grid;
+    }
+
+    /// <summary>The heading of the card's part that says what the difference between two loads means.</summary>
+    internal const string MeaningHeading = "What the difference means";
+
+    /// <summary>
+    /// Entry 465 item 7B, "What the difference means": the two loads' main figures side by side, the shots and then the figures the phone's
+    /// chart offers (mean radius, extreme spread and CEP 90), then the comparison's own headline, its sentence on how far apart the spreads
+    /// could be, and how many shots each would take to tell a 10 percent difference apart. Nothing here is worked out afresh.
+    /// </summary>
+    internal static StackPanel Means(LoadComparisonReport report, Func<double, string> size)
+    {
+        ArgumentNullException.ThrowIfNull(report);
+        ArgumentNullException.ThrowIfNull(size);
+        var panel = new StackPanel { Spacing = Tokens.Space8 };
+        panel.Children.Add(new TextBlock { Text = MeaningHeading, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
+        var table = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,Auto,Auto"), HorizontalAlignment = HorizontalAlignment.Left };
+        var rows = new List<(string Label, Func<ComparedGroup, string> Value)>
+        {
+            ("Shots", g => g.Shots.ToString(CultureInfo.CurrentCulture)),
+            ("Mean radius", g => size(g.MeanRadius.Value)),
+            ("Extreme spread", g => size(g.ExtremeSpread)),
+            ("CEP 90", g => size(g.Rayleigh.Cep(0.9).Value)),
+        };
+        for (int r = 0; r <= rows.Count; r++)
+        {
+            table.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+        }
+
+        for (int i = 0; i < report.Groups.Count; i++)
+        {
+            var name = Named(i, report.Groups[i].Name, FontWeight.SemiBold, 200);
+            name.Margin = new Thickness(Tokens.Space16, 0, 0, Tokens.Space4);
+            name.HorizontalAlignment = HorizontalAlignment.Right;
+            Grid.SetColumn(name, i + 1);
+            table.Children.Add(name);
+        }
+
+        for (int r = 0; r < rows.Count; r++)
+        {
+            var label = new TextBlock { Text = rows[r].Label, FontSize = TextSize.Of(Tokens.SecondarySize), Margin = new Thickness(0, 2), VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } };
+            Grid.SetRow(label, r + 1);
+            table.Children.Add(label);
+            for (int i = 0; i < report.Groups.Count; i++)
+            {
+                var value = new TextBlock
+                {
+                    Text = rows[r].Value(report.Groups[i]),
+                    FontSize = TextSize.Of(Tokens.SecondarySize),
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    TextAlignment = TextAlignment.Right,
+                    Margin = new Thickness(Tokens.Space16, 2, 0, 2),
+                };
+                Grid.SetRow(value, r + 1);
+                Grid.SetColumn(value, i + 1);
+                table.Children.Add(value);
+            }
+        }
+
+        panel.Children.Add(table);
+        panel.Children.Add(new TextBlock { Text = report.Headline, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Warn } });
+        foreach (string? line in new[] { report.Apart, report.ShotsNeeded })
+        {
+            if (line is { Length: > 0 })
+            {
+                panel.Children.Add(new TextBlock { Text = line, TextWrapping = TextWrapping.Wrap, FontSize = TextSize.Of(Tokens.SecondarySize), Classes = { AppStyles.Secondary } });
+            }
+        }
+
+        return panel;
     }
 
     /// <summary>The scale bar under the plots: a round length about a third of a plot's half width, drawn to the plots' scale.</summary>

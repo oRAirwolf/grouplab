@@ -5,6 +5,18 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+ "On the tour · In the user guide · The research behind it Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart; with two loads, What the difference means sets their main figures side by side beside the pictures and says in a sentence whether these shots tell them apart and how many would.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
+ },
+ "With two loads, Each load's group keeps the two pictures at their size and fills the rest of the card with What the difference means : each load's shots, mean radius, extreme spread and CEP 90 side by side, GroupLab's plain sentence on whether these shots can tell the two apart and how far apart their spreads could be, and how many shots each would take to tell a 10 percent difference apart.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
+ },
+ "With two loads, What the difference means fills the rest of the card: each load's shots, mean radius, extreme spread and CEP 90 side by side, whether these shots can tell the two apart, and how many shots each would take to tell a 10 percent difference apart.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
+ },
  "Newest Coming in the next build CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, named in the key in a compact box under the plot, and under Advanced a circle for any percent you type.": {
   "kind": "code",
   "where": "src/GroupLab.App/CompositePlot.cs KeyLayout and ArrangeKey, held by Entry465Tests and Entry465PhoneTests (entry 465 item 2A); website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"

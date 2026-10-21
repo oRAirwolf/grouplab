@@ -753,7 +753,7 @@
       "key": "compare",
       "group": "The numbers",
       "name": "Compare loads honestly",
-      "sentence": "Compare loads draws each load's figures with the range they could really be, so you can see whether the shots can tell two loads apart.",
+      "sentence": "Compare loads draws each load's figures with the range they could really be, so you can see whether the shots can tell two loads apart; with two loads, What the difference means sets their main figures side by side beside the pictures and says in a sentence whether these shots tell them apart and how many would.",
       "shot": "compare",
       "platforms": [
         "Windows",
@@ -763,7 +763,7 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.42",
-      "note": "Compare loads now draws each load's mean radius and sigma",
+      "note": ["Compare loads now draws each load's mean radius and sigma", "What the difference means"],
       "tour": "compare",
       "guide": "7-comparing-loads",
       "article": "pooling-groups",

@@ -73,7 +73,8 @@ internal sealed class ComparePage : UserControl
             }
 
             // Entry 309 section 2: each load's group about its own center at one scale, in its color; a tap stacks them on one center.
-            Groups = new LoadGroups([.. report.Groups.Select(g => new LoadGroup(g.Name, g.Offsets, g.Centre, g.MeanRadius.Value))], Size, cell: 150, touch: Screens.Touch, fill: true);
+            // Entry 465 item 7B: with two loads, what the difference means under the pictures, or beside them on a wide screen.
+            Groups = new LoadGroups([.. report.Groups.Select(g => new LoadGroup(g.Name, g.Offsets, g.Centre, g.MeanRadius.Value))], Size, cell: 150, touch: Screens.Touch, fill: true, report: report);
             column.Children.Add(Screens.Card(Groups));
             chipsAt = column.Children.Count;
             column.Children.Add(new ContentControl());

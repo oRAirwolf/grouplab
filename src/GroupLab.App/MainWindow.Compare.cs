@@ -262,8 +262,9 @@ public sealed partial class MainWindow
         compareColumn.Children.Add(Line($"{report.Groups.Count} loads, {report.Groups.Sum(g => g.Shots)} shots, in the order chosen." + (compareFooting is null ? "" : " " + compareFooting)));
 
         // Entry 309 section 2: the groups first, each about its own center at one scale in its load's color, and a tap stacks them.
+        // Entry 465 item 7B: with two loads the card's free space says what the difference means, from this comparison's own words.
         compareGroupsCard = new LoadGroups([.. report.Groups.Select(g => new LoadGroup(g.Name, g.Offsets, g.Centre, g.MeanRadius.Value))],
-            inches => Sized(inches, compareDistance).Value, cell: 200);
+            inches => Sized(inches, compareDistance).Value, cell: 200, report: report);
         compareColumn.Children.Add(new Border { Child = compareGroupsCard, Classes = { AppStyles.ResultCard } });
 
         // Each load's figures with their intervals, side by side, its name in its color.

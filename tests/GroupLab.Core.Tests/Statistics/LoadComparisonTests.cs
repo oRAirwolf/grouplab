@@ -163,4 +163,23 @@ public class LoadComparisonTests
         Assert.Contains(three.Details, e => e.Contains("Holm's method", StringComparison.Ordinal));
         Assert.Contains(three.Plain, p => p.Contains("under Details", StringComparison.Ordinal));
     }
+
+    /// <summary>
+    /// Entry 465 item 7B: the two sentences the Compare card shows beside two loads' pictures are the plain verdict's own, never worked out
+    /// afresh; with three loads there is no single pair to say it of.
+    /// </summary>
+    [Fact]
+    public void TheCardsSentencesAreThePlainVerdictsOwn()
+    {
+        var two = LoadComparison.Compare([("41.5 gr", Group(1, 10, 0.12)), ("42.1 gr", Group(2, 10, 0.10))], Inches);
+        Assert.NotNull(two.Apart);
+        Assert.Contains(two.Apart!, two.Plain);
+        Assert.Contains(two.ShotsNeeded, two.Plain);
+        Assert.Equal(two.Plain[^1], two.ShotsNeeded);
+        Assert.Equal($"To tell a 10 percent difference in spread apart would take about {SampleSize.ShotsPerLoad(1.10)} shots each; these groups have 10 and 10.", two.ShotsNeeded);
+
+        var three = LoadComparison.Compare([("a", Group(5, 8, 0.1)), ("b", Group(6, 8, 0.1)), ("c", Group(7, 8, 0.1))], Inches);
+        Assert.Null(three.Apart);
+        Assert.Contains(three.ShotsNeeded, three.Plain);
+    }
 }

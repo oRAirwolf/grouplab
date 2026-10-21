@@ -40,6 +40,15 @@ public sealed record LoadComparisonReport(
 
     /// <summary>The exact figures behind <see cref="Plain"/>: the ratio of the sigmas with its 95 percent interval, and the power sentence.</summary>
     public IReadOnlyList<string> Details { get; init; } = [];
+
+    /// <summary>
+    /// Entry 465 item 7B: with two loads, the sentence of <see cref="Plain"/> on how far apart their spreads could be, which "What the
+    /// difference means" on the Compare card shows beside the pictures; null with three or more, where every pair is compared instead.
+    /// </summary>
+    public string? Apart { get; init; }
+
+    /// <summary>Entry 465 item 7B: the sentence of <see cref="Plain"/> on how many shots each would take to tell a 10 percent difference apart.</summary>
+    public string ShotsNeeded { get; init; } = "";
 }
 
 public static class LoadComparison
@@ -165,10 +174,12 @@ public static class LoadComparison
 
         int said = explanation.Count;
         var plain = new List<string>(explanation);
+        string? apart = null;
         if (compared.Count == 2)
         {
             var only = paired[0];
-            plain.Add(Apart(compared[0].Name, compared[1].Name, only.Ratio.Lower, only.Ratio.Upper));
+            apart = Apart(compared[0].Name, compared[1].Name, only.Ratio.Lower, only.Ratio.Upper);
+            plain.Add(apart);
             explanation.Add($"{compared[0].Name}'s sigma is {only.Ratio.Value.ToString("0.00", CultureInfo.InvariantCulture)} times {compared[1].Name}'s, 95 percent interval {only.Ratio.Lower.ToString("0.00", CultureInfo.InvariantCulture)} to {only.Ratio.Upper.ToString("0.00", CultureInfo.InvariantCulture)}.");
         }
         else
@@ -182,11 +193,12 @@ public static class LoadComparison
         }
 
         string have = compared.Count == 2 ? $"{compared[0].Shots} and {compared[1].Shots}" : string.Join(", ", compared.Select(g => g.Shots));
-        plain.Add($"To tell a 10 percent difference in spread apart would take about {SampleSize.ShotsPerLoad(1.10)} shots each; these groups have {have}.");
+        string shotsNeeded = $"To tell a 10 percent difference in spread apart would take about {SampleSize.ShotsPerLoad(1.10)} shots each; these groups have {have}.";
+        plain.Add(shotsNeeded);
         explanation.Add($"To resolve a difference of 10 percent, with 80 percent power at the 5 percent level, takes {SampleSize.ShotsPerLoad(1.10)} shots per load. These groups have {string.Join(", ", compared.Select(g => g.Shots))}.");
         var resolve = new[] { 1.10, 1.25, 1.50 }.Select(k => new ResolveRow(k, SampleSize.ShotsPerLoad(k))).ToList();
         var details = explanation.Skip(said).ToList();
-        return new LoadComparisonReport(compared, tests, paired, overlap, headline, explanation, resolve) { Plain = plain, Details = details };
+        return new LoadComparisonReport(compared, tests, paired, overlap, headline, explanation, resolve) { Plain = plain, Details = details, Apart = apart, ShotsNeeded = shotsNeeded };
     }
 
     /// <summary>
