@@ -129,7 +129,7 @@ A target GroupLab did not print, with several bulls (suggested by Unholy, also T
 
 ### Store-bought targets
 
-<!--count:store-targets:Words-->Nine<!--/count--> store-bought targets, from Birchwood Casey and the National Target Company, are recognized on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent for the five made from 600 dpi scans and to within about 0.6 to 0.75 percent for those made from phone photographs, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike. The list grows as targets are added to it, and a target added after your build reaches it without a new build: GroupLab looks for a newer signed list when it starts (on a phone, only on Wi-Fi with the battery and storage not low, at most every six hours) and uses it only when its signature checks. Add a store-bought target saves a small reference file for you to send, by email to support@grouplab.org.
+<!--count:store-targets:Words-->Nine<!--/count--> store-bought targets, from Birchwood Casey and the National Target Company, are recognized on the computer and the phone: GroupLab names the target, places its bulls and takes the scale from its printed size, within a median of 0.06 percent for the five made from 600 dpi scans and to within about 0.6 to 0.75 percent for those made from phone photographs, warns that printed targets can vary with Check the scale one click away, and asks which you have when the 6 in and 8 in Shoot-N-C bullseyes look alike: a short bar along the bottom of the picture, the sizes side by side and Not sure, with the bullseye moved up whole above it (on the phone, a sheet under the picture). The list grows as targets are added to it, and a target added after your build reaches it without a new build: GroupLab looks for a newer signed list when it starts (on a phone, only on Wi-Fi with the battery and storage not low, at most every six hours) and uses it only when its signature checks. Add a store-bought target saves a small reference file for you to send, by email to support@grouplab.org.
 
 ![A store-bought bullseye recognized, with GroupLab asking which of the 6 in and 8 in Shoot-N-C bullseyes it is](figures/screens/current/store-target-light-1400x900.png)
 
@@ -366,8 +366,8 @@ The arrow keys:
 The arrows never act in a text box or a number box, radio buttons and drop downs keep their own arrows, and moving the focus never
 presses a button. The marking screen's own keys are listed in the line above the picture.
 
-The windows GroupLab opens over itself work the same way, from importing shot coordinates and Which target is this? to the
-print confirmation, the figures in their own window and the three group tools, and each box and button in them has a name a
+Which target is this?, along the bottom of the picture, takes Enter for its first size and Escape for Not sure. The windows GroupLab
+opens over itself work the same way, from importing shot coordinates to the print confirmation, the figures in their own window and the three group tools, and each box and button in them has a name a
 screen reader reads. Fudd buster holds only words and two plots, so its page takes the focus and the arrows and Page Down read
 down it.
 

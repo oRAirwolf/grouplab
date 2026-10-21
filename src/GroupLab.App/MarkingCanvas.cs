@@ -574,6 +574,27 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         }
     }
 
+    /// <summary>
+    /// Entry 465 3B: a part of the picture, two opposite corners in stored image pixels, brought whole into view with <paramref name="margin"/>
+    /// screen units round it: at the zoom it is shown at where it fits, smaller where it does not, and moved to the middle of the control.
+    /// </summary>
+    internal void KeepWhole(PointD topLeft, PointD bottomRight, double margin)
+    {
+        EnsureView();
+        if (bitmap is null || Bounds.Width <= 2 * margin || Bounds.Height <= 2 * margin)
+        {
+            return;
+        }
+
+        PointD[] corners = [topLeft, new(bottomRight.X, topLeft.Y), bottomRight, new(topLeft.X, bottomRight.Y)];
+        var shown = corners.Select(c => ViewRotation.ToDisplay(c, turns, imageWidth, imageHeight)).ToList();
+        double left = shown.Min(p => p.X), right = shown.Max(p => p.X), top = shown.Min(p => p.Y), bottom = shown.Max(p => p.Y);
+        double fits = Math.Min((Bounds.Width - (2 * margin)) / Math.Max(1, right - left), (Bounds.Height - (2 * margin)) / Math.Max(1, bottom - top));
+        zoom = Math.Min(zoom, fits);
+        offset = new Vector((Bounds.Width / 2) - ((left + right) / 2 * zoom), (Bounds.Height / 2) - ((top + bottom) / 2 * zoom));
+        InvalidateVisual();
+    }
+
     /// <summary>Brings an image point to the centre of the control at the current zoom, for the review queue.</summary>
     public void CentreOn(PointD image)
     {

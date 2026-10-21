@@ -371,7 +371,7 @@ public sealed class ResultView : UserControl, IOpenTarget
                 var choices = Content;
                 if (seen.Recognition.AsksWhichSize)
                 {
-                    Content = new WhichTargetPage(seen.Recognition, match => MarkStoreTarget(result, seen, match, image, setup, units, again, choices));
+                    Content = new WhichTargetPage(seen, image.Path, image.Metadata.Orientation, match => MarkStoreTarget(result, seen, match, image, setup, units, again, choices));
                 }
                 else
                 {

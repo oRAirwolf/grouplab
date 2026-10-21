@@ -1057,11 +1057,15 @@ public sealed partial class MainWindow : Window
         emptyCanvas.Children.Add(openFirst);
         // Entry 137 section 5: the two ways in that have no button are said here, where somebody with an empty window is looking.
         emptyCanvas.Children.Add(new TextBlock { Text = $"Or drop an image here, or paste one with {CommandKey.Label("V")}.", HorizontalAlignment = HorizontalAlignment.Center, Classes = { AppStyles.Secondary } });
-        var canvasArea = new Panel();
+        // Entry 465 3B: "Which target is this?" is a bar docked along the bottom of the picture area, so the picture above it, with its view
+        // controls, never runs under it.
+        var canvasArea = new Grid { RowDefinitions = new RowDefinitions("*,Auto") };
         canvasArea.Children.Add(canvas);
         canvasArea.Children.Add(emptyCanvas);
         canvasArea.Children.Add(dropTarget);
         canvasArea.Children.Add(new Border { Child = view, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, Classes = { AppStyles.ViewCluster } });
+        Grid.SetRow(whichTargetBar, 1);
+        canvasArea.Children.Add(whichTargetBar);
 
         // The editor state: the tool strip above the sheet and the review column, with a splitter between them (entry 105 section 1).
         DockPanel.SetDock(bar, Dock.Top);
@@ -5201,7 +5205,7 @@ public sealed partial class MainWindow : Window
     internal void OnReviewKey(object? sender, KeyEventArgs e)
     {
         // Entry 356 section 3: while a dialog is open its keys are its own, Enter its first choice and Escape to dismiss it.
-        if (ProblemKey(e))
+        if (ProblemKey(e) || WhichTargetKey(e))
         {
             return;
         }

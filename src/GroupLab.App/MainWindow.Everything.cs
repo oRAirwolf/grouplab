@@ -51,6 +51,8 @@ public sealed partial class MainWindow
     /// </summary>
     private void LeavePicture(bool closing)
     {
+        // Entry 465 3B: a question asked about the picture goes with it, unanswered.
+        EndWhichTarget();
         string? path = session.State.ImagePath;
         try
         {

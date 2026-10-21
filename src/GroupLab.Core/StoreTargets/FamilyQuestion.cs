@@ -38,8 +38,11 @@ public static class FamilyQuestion
 
     public const string NotSure = "Not sure";
 
-    /// <summary>Why it is asked, under the title.</summary>
-    public const string Why = "This target is sold at more than one size with the same printing, and the picture does not show which. The size you choose sets the scale and places the bulls.";
+    /// <summary>
+    /// Why it is asked, one line beside the title. Entry 465 3B: the question is a short bar along the bottom of the picture, so the why is
+    /// one line rather than two sentences.
+    /// </summary>
+    public const string Why = "Sold at more than one size with the same printing; the size you choose sets the scale and places the bulls.";
 
     /// <summary>What "Not sure" leaves the person to do.</summary>
     public const string NotSureSaid = "No size chosen, so no scale is set. Measure a known length or the target's printed size to set it.";
@@ -53,6 +56,25 @@ public static class FamilyQuestion
             .ThenBy(m => m.Target.PrintedInches.Width * m.Target.PrintedInches.Height)
             .Select(m => new FamilyAnswer(m, m.Target.ShortName, string.Create(CultureInfo.CurrentCulture,
                 $"Printed area about {m.Target.PrintedInches.Width:0.#} by {m.Target.PrintedInches.Height:0.#} in, {m.Target.Maker} {m.Target.Catalogue}")))];
+    }
+
+    /// <summary>
+    /// Entry 465 3B: the part of the picture the question is about, which the screen keeps whole in view above the question: the printed
+    /// area, holding the bull, where the family's first member's fit puts it (every member's fit puts the bull in the same place), clipped to
+    /// the picture, in its pixels. Null where none of it is in the picture.
+    /// </summary>
+    public static (Imaging.PointD TopLeft, Imaging.PointD BottomRight)? AskedAbout(StoreTargetRecognition recognition, int width, int height)
+    {
+        ArgumentNullException.ThrowIfNull(recognition);
+        if (recognition.Family.FirstOrDefault() is not { } member || width <= 0 || height <= 0)
+        {
+            return null;
+        }
+
+        var corners = member.Scale().Corners;
+        double left = Math.Max(0, corners.Min(c => c.X)), top = Math.Max(0, corners.Min(c => c.Y));
+        double right = Math.Min(width, corners.Max(c => c.X)), bottom = Math.Min(height, corners.Max(c => c.Y));
+        return right > left && bottom > top ? (new Imaging.PointD(left, top), new Imaging.PointD(right, bottom)) : null;
     }
 
     /// <summary>The family the question is about, for remembering the answer.</summary>

@@ -294,7 +294,7 @@
       "key": "store-targets",
       "group": "Reading a target",
       "name": "Store-bought targets recognized",
-      "sentence": "Store-bought targets from Birchwood Casey and the National Target Company are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a small window asking 6 in or 8 in when a Shoot-N-C bullseye could be either.",
+      "sentence": "Store-bought targets from Birchwood Casey and the National Target Company are named by themselves, their bulls placed and the scale taken from the printed size, with a note that printed targets vary a little and Check the scale beside it, and a short bar along the bottom of the picture asking 6 in or 8 in, the bullseye kept whole in view above it, when a Shoot-N-C bullseye could be either.",
       "shot": "store-target",
       "platforms": [
         "Windows",
@@ -310,7 +310,8 @@
       "note": [
         "GroupLab now recognizes five Birchwood Casey targets on the computer and the phone",
         "GroupLab now recognizes nine store-bought targets",
-        "When a picture of the Shoot-N-C bullseye cannot show whether it is the 6 inch or the 8 inch"
+        "When a picture of the Shoot-N-C bullseye cannot show whether it is the 6 inch or the 8 inch",
+        "Which target is this? is now a short bar along the bottom of the picture"
       ],
       "guide": "store-bought-targets"
     },

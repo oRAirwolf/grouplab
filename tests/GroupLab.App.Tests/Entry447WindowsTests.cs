@@ -78,7 +78,18 @@ public class Entry447WindowsTests
             var seen = StoreTargetRecognizer.Decide([C("bc-34805-shoot-n-c-8in-bull", 200, 0.988, 60), C("bc-34550-shoot-n-c-6in-bull", 72, 0.928, 80)]);
             _ = window.ApplyRecognition(seen);
             Settle();
-            RoundsWithEveryStopNamed(window.WhichTargetWindow, "Which target is this?");
+            // Entry 465 3B: the question is a bar in the window now, not a window of its own, so the window's own round reaches its
+            // answers, each named, and the screen is laid out whole with it open.
+            var bar = window.WhichTargetBar;
+            Assert.True(bar is not null, "Which target is this? did not open");
+            var (stops, unnamed, lost) = Entry447Tests.TabRound(window);
+            Assert.False(lost, "Which target is this?: the focus was lost");
+            Assert.True(unnamed.Count == 0, "Which target is this?: " + string.Join("; ", unnamed));
+            Assert.Equal(3, stops.Count(s => s.GetLogicalAncestors().Contains(bar)));
+            var found = ScreenReaderAudit.Findings(window, stops);
+            Assert.True(found.Count == 0, string.Join("; ", found));
+            var laid = LayoutAudit.Findings(window);
+            Assert.True(laid.Count == 0, string.Join("; ", laid));
         }
         finally
         {

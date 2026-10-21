@@ -443,6 +443,7 @@ public sealed partial class MainWindow
     private ParkedTarget TakeParked()
     {
         FlushWaitingSave();
+        EndWhichTarget();
         leavingAsk.IsVisible = false;
         afterLeaving = null;
         discardConfirm.IsVisible = false;

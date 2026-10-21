@@ -461,7 +461,7 @@ public class Entry109Tests
                         }
 
                         // Entries 340 and 341, entry 256's own picture: a store-bought target recognized, its bull placed and the scale
-                        // warning beside it, with the window asking which size over the picture. The target is a stand-in GroupLab draws,
+                        // warning beside it, with the bar along the bottom of the picture asking which size. The target is a stand-in GroupLab draws,
                         // because a maker's artwork is never published (entry 340); recognition is given the numbers a crop of the 8 in
                         // bullseye measured, so the window asks.
                         string bought = StoreTargetStandIn();
@@ -483,44 +483,17 @@ public class Entry109Tests
                             var seen = GroupLab.Core.StoreTargets.StoreTargetRecognizer.Decide([Fit(eight, StandInDpi, 200, 0.988), Fit(six, StandInDpi * 8 / 6, 72, 0.928)]);
                             var asked = window.ApplyRecognition(seen);
                             Dispatcher.UIThread.RunJobs();
-                            var question = window.WhichTargetWindow!;
-                            Dispatcher.UIThread.RunJobs();
-                            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-                            Dispatcher.UIThread.RunJobs();
-                            using var asking = question.CaptureRenderedFrame()!;
-                            string dialogFile = Path.Combine(Path.GetDirectoryName(bought)!, "question.png");
-                            asking.Save(dialogFile, new PngBitmapEncoderOptions());
+
+                            // Entry 465 3B: the question is a bar along the bottom of the picture, the bull moved up whole above it, so the
+                            // window is the picture as it is.
+                            var question = window.WhichTargetBar!;
+                            Save(window, $"store-target-{name}-{size}");
+
                             question.GetLogicalDescendants().OfType<Button>()
                                 .First(b => Avalonia.Automation.AutomationProperties.GetName(b) == "Shoot-N-C 8 in bullseye")
                                 .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
                             Dispatcher.UIThread.RunJobs();
                             asked.GetAwaiter().GetResult();
-                            window.Canvas.FitToView();
-                            Dispatcher.UIThread.RunJobs();
-                            window.ScaleInputs.BringIntoView();
-                            Dispatcher.UIThread.RunJobs();
-                            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-                            Dispatcher.UIThread.RunJobs();
-                            using var behind = window.CaptureRenderedFrame()!;
-                            string behindFile = Path.Combine(Path.GetDirectoryName(bought)!, "behind.png");
-                            behind.Save(behindFile, new PngBitmapEncoderOptions());
-
-                            // The question laid over the picture's lower left, where it covers neither the bull nor the scale and its warning.
-                            using var whole = Cv2.ImRead(behindFile, ImreadModes.Unchanged);
-                            using var over = Cv2.ImRead(dialogFile, ImreadModes.Unchanged);
-                            int x = (int)(whole.Width * 0.04), y = Math.Max(0, whole.Height - over.Height - (int)(whole.Height * 0.06));
-                            var room = new OpenCvSharp.Rect(x, y, Math.Min(over.Width, whole.Width - x), Math.Min(over.Height, whole.Height - y));
-                            using (var into = new Mat(whole, room))
-                            using (var part = new Mat(over, new OpenCvSharp.Rect(0, 0, room.Width, room.Height)))
-                            {
-                                part.CopyTo(into);
-                            }
-
-                            Cv2.Rectangle(whole, room, Scalar.All(128), 1);
-                            foreach (string output in outputs)
-                            {
-                                Cv2.ImWrite(Path.Combine(output, $"store-target-{name}-{size}.png"), whole);
-                            }
                         }
                         finally
                         {

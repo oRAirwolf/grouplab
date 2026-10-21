@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -17,7 +18,7 @@ namespace GroupLab.Mobile.Tests;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entries 340 and 341 on the phone: a picture that names no GroupLab sheet but is a store-bought target GroupLab
 /// knows goes straight to Marking A with its bull placed and its printed size as the scale, the warning and "Check the scale" under it; a
-/// family member the picture cannot tell from its other size asks "Which target is this?" first, the last answer first; the result carries
+/// family member the picture cannot tell from its other size asks "Which target is this?" first, in a bottom sheet under the picture (entry 465 3B), the last answer first; the result carries
 /// the warning, and a GroupLab sheet's never does.
 /// </summary>
 public class StoreTargetPhoneTests
@@ -96,7 +97,8 @@ public class StoreTargetPhoneTests
         var question = Shown<WhichTargetPage>(window);
         Assert.Contains(question.GetVisualDescendants().OfType<TextBlock>(), t => t.Text == FamilyQuestion.Title);
         Assert.Equal([SixInch, EightInch], question.Answers.Select(a => a.Match.Target.Id));
-        Assert.Equal(2, question.GetVisualDescendants().OfType<TargetOutline>().Count());
+        Assert.Contains(question.GetVisualDescendants().OfType<TextBlock>(), t => t.Text == FamilyQuestion.Why);
+        Assert.StartsWith("Printed area about 6 by 6 in", AutomationProperties.GetHelpText(ById(question, "which-target-" + SixInch)), StringComparison.Ordinal);
         Assert.True(ById(question, "which-target-not-sure").IsVisible);
 
         ById(question, "which-target-" + EightInch).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
@@ -108,6 +110,45 @@ public class StoreTargetPhoneTests
         var b = scale.ToTarget(new PointD(260, 200));
         Assert.Equal(1.0, b.X - a.X, 6);
         Assert.Equal(EightInch, Phone.Settings.LoadFamilyAnswer(StoreTargetLibrary.ShootNCBullseye));
+        window.Close();
+    }
+
+    /// <summary>
+    /// Entry 465 3B on the phone: the question is a bottom sheet under the picture, and on a phone and on a small phone the target asked
+    /// about is whole in the picture above the sheet, never under it, with every button of the sheet on the screen.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(412, 915)]
+    [InlineData(360, 640)]
+    public void TheSheetNeverCoversTheBullAndItsButtonsAreOnTheScreen(int width, int height)
+    {
+        var phone = Started();
+        var seen = StoreTargetRecognizer.Decide([C(EightInch, 200, 0.988, 60), C(SixInch, 72, 0.928, 80)]);
+        var window = new Window { Width = width, Height = height, Content = new ResultView(Unnamed(phone, seen), new ShotSetup(Calibre.Of(0.308), 3600), UnitSettings.Imperial, () => { }) };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        var question = Shown<WhichTargetPage>(window);
+        var (topLeft, bottomRight) = question.AskedAbout!.Value;
+        double sheetTop = question.Sheet.TranslatePoint(new Avalonia.Point(0, 0), window)!.Value.Y;
+        var picture = new Avalonia.Rect(question.Picture.TranslatePoint(new Avalonia.Point(0, 0), window)!.Value, question.Picture.Bounds.Size);
+        Assert.True(picture.Height > 100, $"the picture has {picture.Height} of the screen");
+        foreach (var corner in new[] { topLeft, new PointD(bottomRight.X, topLeft.Y), bottomRight, new PointD(topLeft.X, bottomRight.Y) })
+        {
+            var at = question.Picture.TranslatePoint(question.Picture.ToScreen(corner), window)!.Value;
+            Assert.True(picture.Inflate(0.5).Contains(at) && at.Y <= sheetTop, $"the target's corner {corner} is at {at}, out of view above the sheet at {sheetTop}");
+        }
+
+        var screen = new Avalonia.Rect(0, 0, width, height);
+        foreach (var button in question.Sheet.GetVisualDescendants().OfType<Button>())
+        {
+            var box = new Avalonia.Rect(button.TranslatePoint(new Avalonia.Point(0, 0), window)!.Value, button.Bounds.Size);
+            Assert.True(button.IsEffectivelyVisible && screen.Contains(box), $"{AutomationProperties.GetName(button)} is at {box}, off the screen");
+        }
+
+        // The two sizes side by side.
+        var six = ById(question, "which-target-" + SixInch);
+        var eight = ById(question, "which-target-" + EightInch);
+        Assert.Equal(six.TranslatePoint(new Avalonia.Point(0, 0), window)!.Value.Y, eight.TranslatePoint(new Avalonia.Point(0, 0), window)!.Value.Y, 1);
         window.Close();
     }
 
