@@ -99,73 +99,73 @@
       30,
       22
     ],
-    "Reading 1, 2689 fps: Not this group. Change it": [
+    "Reading 1, 2689 ft/s: Not this group. Change it": [
       576,
       420,
       160,
       27
     ],
-    "Reading 10, 2706 fps: Shot 2a. Change it": [
+    "Reading 10, 2706 ft/s: Shot 2a. Change it": [
       576,
       804,
       160,
       27
     ],
-    "Reading 11, 2690 fps: Shot 2b. Change it": [
+    "Reading 11, 2690 ft/s: Shot 2b. Change it": [
       576,
       837,
       160,
       27
     ],
-    "Reading 12, 2697 fps: Shot 2c. Change it": [
+    "Reading 12, 2697 ft/s: Shot 2c. Change it": [
       576,
       870,
       160,
       6
     ],
-    "Reading 2, 2696 fps: Not this group. Change it": [
+    "Reading 2, 2696 ft/s: Not this group. Change it": [
       576,
       453,
       160,
       27
     ],
-    "Reading 3, 2703 fps: Not this group. Change it": [
+    "Reading 3, 2703 ft/s: Not this group. Change it": [
       576,
       486,
       160,
       27
     ],
-    "Reading 4, 2710 fps: Not this group. Change it": [
+    "Reading 4, 2710 ft/s: Not this group. Change it": [
       576,
       519,
       160,
       27
     ],
-    "Reading 5, 2694 fps: Shot 1a, clean bore. Change it": [
+    "Reading 5, 2694 ft/s: Shot 1a, clean bore. Change it": [
       576,
       639,
       160,
       27
     ],
-    "Reading 6, 2701 fps: Shot 1b. Change it": [
+    "Reading 6, 2701 ft/s: Shot 1b. Change it": [
       576,
       672,
       160,
       27
     ],
-    "Reading 7, 2708 fps: Shot 1c. Change it": [
+    "Reading 7, 2708 ft/s: Shot 1c. Change it": [
       576,
       705,
       160,
       27
     ],
-    "Reading 8, 2692 fps: Shot 1d. Change it": [
+    "Reading 8, 2692 ft/s: Shot 1d. Change it": [
       576,
       738,
       160,
       27
     ],
-    "Reading 9, 2699 fps: Shot 1e, left out in ShotView. Change it": [
+    "Reading 9, 2699 ft/s: Shot 1e, left out in ShotView. Change it": [
       576,
       771,
       195,
@@ -192,7 +192,7 @@
     "StatusLine": [
       69,
       881,
-      1007,
+      1014,
       15
     ],
     "Targets": [

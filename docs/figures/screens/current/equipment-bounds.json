@@ -59,7 +59,7 @@
     ],
     "EquipmentField_clickValue": [
       747,
-      496,
+      513,
       140,
       30
     ],
@@ -81,15 +81,9 @@
       299,
       30
     ],
-    "EquipmentField_notes": [
-      747,
-      868,
-      613,
-      8
-    ],
     "EquipmentField_railCant": [
       747,
-      734,
+      751,
       140,
       30
     ],
@@ -101,13 +95,13 @@
     ],
     "EquipmentField_scopeTravel": [
       747,
-      665,
+      682,
       140,
       30
     ],
     "EquipmentField_scopeTravelKind": [
       1062,
-      665,
+      682,
       298,
       32
     ],
@@ -119,25 +113,25 @@
     ],
     "EquipmentField_sightScaleFactor": [
       1062,
-      734,
+      751,
       140,
       30
     ],
     "EquipmentField_stock": [
       1062,
-      563,
+      580,
       298,
       30
     ],
     "EquipmentField_weightAsFiredLb": [
       747,
-      801,
+      818,
       140,
       30
     ],
     "EquipmentField_zeroDistanceYards": [
       747,
-      563,
+      580,
       140,
       30
     ],
