@@ -171,6 +171,8 @@ done is in brackets. Nothing in it can be settled without Alan: every line needs
 14. **The signed APK and the development build installed together** on one phone: proves 29 (request 50). (Phone sitting.)
 15. **One stapled, curled sheet photographed three times**, once the surface model has been changed: proves 2. (Home, later.)
 16. **The support page's address**, when there is one: proves 18.
+17. **Two real devices on one cloud folder** for a few weeks, one of them away for some days: proves Phase 7's sync, its side by side and
+    its tidying of old change files (entry 464), which the README marks built, not proven and which is outside the 31. (Home.)
 
 Every sheet from the range is also scanned at 600 dpi, which is what lets each one be measured against its own photographs. Item 3
 needs a change to detection rather than more material (197 of 198 holes, 2 false marks), item 31's gate is written and met (entry 388),

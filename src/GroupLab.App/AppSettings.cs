@@ -818,7 +818,8 @@ public sealed class AppSettingsStore(string path)
     /// they were entered on, as this device's calendar day, and the conditions. Desktop and phone alike.
     /// </summary>
     /// <summary>
-    /// Entry 463: this device's synchronization, its folder, its name as the others see it, whether originals travel, and its last run. It is
+    /// Entry 463: this device's synchronization, its folder, its name as the others see it, whether originals travel, its last run, and what
+    /// its last tidying of old change files did (entry 464). It is
     /// this device's own, so it is never among the settings synchronization carries. A device never named is named from the machine.
     /// </summary>
     public GroupLab.Core.Sync.SyncSetup LoadSync(string defaultName) => Read(file =>
@@ -830,7 +831,11 @@ public sealed class AppSettingsStore(string path)
             (bool?)sync?["originals"] ?? false,
             (string?)sync?["lastUtc"],
             (int?)sync?["lastIn"] ?? 0,
-            (int?)sync?["lastOut"] ?? 0);
+            (int?)sync?["lastOut"] ?? 0,
+            (string?)sync?["tidiedUtc"],
+            (int?)sync?["tidiedFiles"] ?? 0,
+            (long?)sync?["tidiedBytes"] ?? 0,
+            (long?)sync?["freedBytes"] ?? 0);
     }) ?? new GroupLab.Core.Sync.SyncSetup(null, defaultName);
 
     public bool SaveSync(GroupLab.Core.Sync.SyncSetup setup) => Save(file =>
@@ -844,6 +849,10 @@ public sealed class AppSettingsStore(string path)
             ["lastUtc"] = setup.LastUtc,
             ["lastIn"] = setup.LastIn,
             ["lastOut"] = setup.LastOut,
+            ["tidiedUtc"] = setup.TidiedUtc,
+            ["tidiedFiles"] = setup.TidiedFiles,
+            ["tidiedBytes"] = setup.TidiedBytes,
+            ["freedBytes"] = setup.FreedBytes,
         };
     });
 

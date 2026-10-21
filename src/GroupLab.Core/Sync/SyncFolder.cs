@@ -27,6 +27,12 @@ public interface ISyncFolder
     void Write(string path, ReadOnlySpan<byte> bytes);
 
     bool Exists(string path);
+
+    /// <summary>
+    /// Takes the file away; nothing where it is not there. Only tidying calls it (entry 464 section 1), and only once a whole copy of the
+    /// file has been read back from the sync folder's trash.
+    /// </summary>
+    void Delete(string path);
 }
 
 /// <summary>A folder on this device's own file system: the computer's, or on iPhone and iPad the folder a bookmark has opened.</summary>
@@ -60,6 +66,14 @@ public sealed class DirectorySyncFolder(string root) : ISyncFolder
     {
         string full = Full(path);
         string folder = System.IO.Path.GetDirectoryName(full)!;
+
+        // The folder's own folders are made on the way, never the folder itself: one that went away part way through a run (unplugged, or
+        // moved) is not made again empty somewhere else.
+        if (!Directory.Exists(Root))
+        {
+            throw new DirectoryNotFoundException("The sync folder is not there now.");
+        }
+
         Directory.CreateDirectory(folder);
         string part = System.IO.Path.Combine(folder, "." + System.IO.Path.GetFileName(full) + ".part");
         using (var stream = new FileStream(part, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -72,4 +86,14 @@ public sealed class DirectorySyncFolder(string root) : ISyncFolder
     }
 
     public bool Exists(string path) => File.Exists(Full(path));
+
+    public void Delete(string path)
+    {
+        if (!Directory.Exists(Root))
+        {
+            throw new DirectoryNotFoundException("The sync folder is not there now.");
+        }
+
+        File.Delete(Full(path));
+    }
 }

@@ -13,7 +13,10 @@ namespace GroupLab.Core.Sync;
 /// <param name="LastUtc">When the last run that reached the folder finished.</param>
 /// <param name="LastIn">How many changes it brought in.</param>
 /// <param name="LastOut">How many it wrote.</param>
-public sealed record SyncSetup(string? Folder, string DeviceName, bool Originals = false, string? LastUtc = null, int LastIn = 0, int LastOut = 0)
+/// <param name="TidiedUtc">When tidying last moved or took away anything (entry 464 section 1), and what: <paramref name="TidiedFiles"/>
+/// old change files of <paramref name="TidiedBytes"/> moved to the folder's trash, and <paramref name="FreedBytes"/> taken away from it.</param>
+public sealed record SyncSetup(string? Folder, string DeviceName, bool Originals = false, string? LastUtc = null, int LastIn = 0, int LastOut = 0,
+    string? TidiedUtc = null, int TidiedFiles = 0, long TidiedBytes = 0, long FreedBytes = 0)
 {
     public bool On => !string.IsNullOrEmpty(Folder);
 }
@@ -112,6 +115,53 @@ public static class SyncScreens
             ? "nothing new either way"
             : $"{setup.LastIn} change{(setup.LastIn == 1 ? "" : "s")} in, {setup.LastOut} out";
         return $"Synced {Ago(at, nowUtc)}: {changes}.";
+    }
+
+    /// <summary>
+    /// Entry 464 section 1, what a tidying did, in a line: "Tidied: 12 old change files, 3.4 MB, moved to the sync folder's trash for 14 days;
+    /// 1.2 MB freed from the trash." Null when it did nothing. <paramref name="ago"/>, where given, says when.
+    /// </summary>
+    public static string? Tidied(SyncTidied tidied, string? ago = null)
+    {
+        ArgumentNullException.ThrowIfNull(tidied);
+        var parts = new List<string>();
+        if (tidied.Moved > 0)
+        {
+            parts.Add($"{tidied.Moved} old change file{(tidied.Moved == 1 ? "" : "s")}, {Size(tidied.MovedBytes)}, moved to the sync folder's trash for {SyncEngine.TrashDays} days");
+        }
+
+        if (tidied.Removed > 0)
+        {
+            parts.Add($"{Size(tidied.FreedBytes)} freed from the trash");
+        }
+
+        return parts.Count == 0 ? null : $"Tidied{(ago is null ? "" : " " + ago)}: {string.Join("; ", parts)}.";
+    }
+
+    /// <summary>The Sync block's line for the last tidying that did anything, with when; null before there was one.</summary>
+    public static string? TidyLine(SyncSetup setup, DateTime nowUtc)
+    {
+        ArgumentNullException.ThrowIfNull(setup);
+        return setup.TidiedUtc is { } utc && DateTime.TryParse(utc, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var at)
+            ? Tidied(new SyncTidied(setup.TidiedFiles, setup.TidiedBytes, setup.FreedBytes > 0 ? 1 : 0, setup.FreedBytes), Ago(at, nowUtc))
+            : null;
+    }
+
+    /// <summary>What a run's tidying did, kept on the setup where it did anything, so the Sync block says it until the next one that does.</summary>
+    public static SyncSetup WithTidied(SyncSetup setup, SyncReport report, DateTime nowUtc)
+    {
+        ArgumentNullException.ThrowIfNull(setup);
+        ArgumentNullException.ThrowIfNull(report);
+        return report.Tidied is { Any: true } t
+            ? setup with { TidiedUtc = nowUtc.ToString("o", CultureInfo.InvariantCulture), TidiedFiles = t.Moved, TidiedBytes = t.MovedBytes, FreedBytes = t.FreedBytes }
+            : setup;
+    }
+
+    /// <summary>A different folder chosen: what tidying did in the last one is no longer said.</summary>
+    public static SyncSetup InFolder(SyncSetup setup, string folder)
+    {
+        ArgumentNullException.ThrowIfNull(setup);
+        return setup with { Folder = folder, TidiedUtc = null, TidiedFiles = 0, TidiedBytes = 0, FreedBytes = 0 };
     }
 
     /// <summary>"just now", "2 minutes ago", "3 hours ago", "4 days ago".</summary>

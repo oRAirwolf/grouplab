@@ -34,6 +34,27 @@ public sealed class SyncScreensTests : IDisposable
         "{\"marks\":1}", 25, 0.3, 0.25, 0.4, null, new string('a', 64), [1, 2, 3], "image/jpeg");
 
     [Fact]
+    public void TheTidyLineSaysWhatWasTidiedAndFreedOrNothing()
+    {
+        // Entry 464 section 1: one plain line, or none when tidying did nothing.
+        var now = new DateTime(2026, 10, 21, 12, 0, 0, DateTimeKind.Utc);
+        Assert.Null(SyncScreens.Tidied(SyncTidied.None));
+        Assert.Equal("Tidied: 12 old change files, 3.4 MB, moved to the sync folder's trash for 14 days.", SyncScreens.Tidied(new SyncTidied(12, 3_400_000, 0, 0)));
+        Assert.Equal("Tidied: 1 old change file, 48 KB, moved to the sync folder's trash for 14 days; 1.2 MB freed from the trash.",
+            SyncScreens.Tidied(new SyncTidied(1, 48_000, 3, 1_200_000)));
+        Assert.Equal("Tidied: 1.2 MB freed from the trash.", SyncScreens.Tidied(new SyncTidied(0, 0, 3, 1_200_000)));
+
+        var setup = new SyncSetup("C:/Cloud", "Desk");
+        Assert.Null(SyncScreens.TidyLine(setup, now));
+        var report = new SyncReport(true, 0, 0, 0, 0, 0, 0, [], new SyncTidied(12, 3_400_000, 0, 0));
+        var kept = SyncScreens.WithTidied(setup, report, now.AddDays(-2));
+        Assert.Equal("Tidied 2 days ago: 12 old change files, 3.4 MB, moved to the sync folder's trash for 14 days.", SyncScreens.TidyLine(kept, now));
+
+        // A run whose tidying did nothing keeps what the last one that did something said.
+        Assert.Same(kept, SyncScreens.WithTidied(kept, report with { Tidied = SyncTidied.None }, now));
+    }
+
+    [Fact]
     public void TheStatusLineSaysWhenAndWhatEachWay()
     {
         var now = new DateTime(2026, 10, 21, 12, 0, 0, DateTimeKind.Utc);

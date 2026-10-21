@@ -86,6 +86,19 @@ public sealed partial class SessionStore
         Execute(db, "INSERT OR REPLACE INTO sync_seen VALUES ($f, $t)", ("$f", file), ("$t", utc));
     }
 
+    /// <summary>Entry 464 section 1: when this device last finished tidying its old change files, in the meta table; null before it ever has.</summary>
+    public string? SyncTidiedUtc()
+    {
+        using var db = Connect();
+        return Scalar(db, "SELECT value FROM meta WHERE key = 'sync_tidied'") as string;
+    }
+
+    public void MarkSyncTidied(string utc)
+    {
+        using var db = Connect();
+        Execute(db, "INSERT OR REPLACE INTO meta (key, value) VALUES ('sync_tidied', $t)", ("$t", utc));
+    }
+
     public long AddSyncConflict(string kind, string key, VersionVector vector, string? payload, string fromDevice, string utc)
     {
         ArgumentNullException.ThrowIfNull(vector);

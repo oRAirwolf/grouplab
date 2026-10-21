@@ -136,4 +136,12 @@ internal sealed class SafSyncFolder(Context context, Uri tree) : ISyncFolder
     }
 
     public bool Exists(string path) => Find(path, false, false) is not null;
+
+    public void Delete(string path)
+    {
+        if (Find(path, false, false) is { } id)
+        {
+            DocumentsContract.DeleteDocument(Resolver, Document(id));
+        }
+    }
 }

@@ -12,10 +12,13 @@ namespace GroupLab.Core.Sync;
 /// <summary>What a run is told to do beyond the geometry and the proof pictures, which always travel.</summary>
 /// <param name="Originals">Also copy the original photographs into the folder: only when the person has asked for it (tier 3).</param>
 /// <param name="DeletionDays">How long a deletion's marker is kept here once it has been written out.</param>
-public sealed record SyncOptions(bool Originals = false, int DeletionDays = 90);
+/// <param name="TrashDays">How long a tidied change file is kept in the sync folder's trash, from when it was moved there (entry 464).</param>
+/// <param name="TidyHours">How often old change files are tidied: once a day, since it reads this device's own change files through.</param>
+public sealed record SyncOptions(bool Originals = false, int DeletionDays = 90, int TrashDays = SyncEngine.TrashDays, int TidyHours = 24);
 
-/// <summary>What a run did, in numbers and in a few plain lines.</summary>
-public sealed record SyncReport(bool Reached, int FilesRead, int FilesWaiting, int Applied, int ToChoose, int Written, int OriginalsCopied, IReadOnlyList<string> Said);
+/// <summary>What a run did, in numbers and in a few plain lines; <paramref name="Tidied"/> is what tidying old change files did, when it ran.</summary>
+public sealed record SyncReport(bool Reached, int FilesRead, int FilesWaiting, int Applied, int ToChoose, int Written, int OriginalsCopied, IReadOnlyList<string> Said,
+    SyncTidied? Tidied = null);
 
 /// <summary>What the person chose for a record changed on two devices.</summary>
 public enum SyncChoice
@@ -49,6 +52,8 @@ public enum SyncChoice
 /// listed for the person to choose, never decided silently. A deletion against a change keeps the change, and says so. Before a merge
 /// changes or takes away a record here, the record as it was is kept (<see cref="SessionStore.Kept"/>), so nothing is lost.</item>
 /// <item>Tiers: geometry and the proof picture always; the original photographs only when the person has asked for them.</item>
+/// <item>Each device writes what it has read to <c>GroupLab sync/read/&lt;device&gt;.json</c>, and once a day tidies its own change files that
+/// every other device has read and a later file of its own carries newer versions of, into the folder's trash (<see cref="SyncTidy"/>).</item>
 /// </list>
 /// </summary>
 public static class SyncEngine
@@ -58,6 +63,9 @@ public static class SyncEngine
     public const string Format = "grouplab-sync";
 
     public const int Version = 1;
+
+    /// <summary>How long a tidied change file is kept in the sync folder's trash before it is taken away: Alan's rule on deleting.</summary>
+    public const int TrashDays = 14;
 
     /// <summary>How often a run is due while GroupLab is open, besides the one when it starts.</summary>
     public static TimeSpan Every { get; } = TimeSpan.FromMinutes(5);
@@ -103,6 +111,8 @@ public static class SyncEngine
         string now = Utc(nowUtc);
         int read = 0, waiting = 0, applied = 0, written = 0, originals = 0;
         var said = new List<string>();
+        var tidied = new SyncTidy.Counted();
+        var readHere = new Dictionary<string, List<string>>(StringComparer.Ordinal);
         try
         {
             // 1. This device's own changes since the last run, each given a new revision.
@@ -112,11 +122,13 @@ public static class SyncEngine
             // 2. Every other device's change files not yet read, oldest first.
             foreach (string device in folder.Folders(Root + "/changes").Where(d => d != me))
             {
+                var readFrom = readHere[device] = [];
                 foreach (string name in folder.Files($"{Root}/changes/{device}").Where(IsChangeFile))
                 {
                     string seen = device + "/" + name;
                     if (store.SyncSeen(seen))
                     {
+                        readFrom.Add(name);
                         continue;
                     }
 
@@ -132,6 +144,7 @@ public static class SyncEngine
                     }
 
                     store.MarkSyncSeen(seen, now);
+                    readFrom.Add(name);
                     read++;
                 }
             }
@@ -151,6 +164,10 @@ public static class SyncEngine
                 var device = new JsonObject { ["format"] = Format, ["version"] = Version, ["device"] = me, ["name"] = deviceName, ["lastWrittenUtc"] = now };
                 folder.Write($"{Root}/devices/{me}.json", Encoding.UTF8.GetBytes(device.ToJsonString()));
             }
+
+            // 5. What this device has read, for the others' tidying, and then its own (entry 464 section 1).
+            SyncTidy.WritePosition(store, folder, me, readHere);
+            SyncTidy.Run(store, folder, me, nowUtc, options, tidied);
         }
         catch (IOException e)
         {
@@ -165,7 +182,12 @@ public static class SyncEngine
         said.Insert(0, $"{applied} change{(applied == 1 ? "" : "s")} from other devices in {read} file{(read == 1 ? "" : "s")}, {written} written from this one"
             + (waiting > 0 ? $", {waiting} file{(waiting == 1 ? "" : "s")} still arriving" : "")
             + (toChoose > 0 ? $", {toChoose} to choose" : "") + ".");
-        return new SyncReport(true, read, waiting, applied, toChoose, written, originals, said);
+        if (SyncScreens.Tidied(tidied.Result) is { } tidy)
+        {
+            said.Insert(1, tidy);
+        }
+
+        return new SyncReport(true, read, waiting, applied, toChoose, written, originals, said, tidied.Result);
     }
 
     /// <summary>The person's choice for a record changed on two devices: whichever is kept, the other is kept as it was too.</summary>
@@ -360,7 +382,7 @@ public static class SyncEngine
     /// <summary>One record in a change file: its identity, its revision, and the record itself or when it was taken away.</summary>
     internal sealed record ChangeRecord(string Kind, string Key, VersionVector Vector, string? DeletedUtc, JsonObject? Data);
 
-    private static bool IsChangeFile(string name) => name.EndsWith(".json", StringComparison.Ordinal) && !name.StartsWith('.');
+    internal static bool IsChangeFile(string name) => name.EndsWith(".json", StringComparison.Ordinal) && !name.StartsWith('.');
 
     /// <summary>The records of a change file, or null where it is not whole yet (or not one this GroupLab can read), to be tried again later.</summary>
     internal static List<ChangeRecord>? ReadChangeFile(byte[]? bytes)
@@ -675,7 +697,7 @@ public static class SyncEngine
         return copied;
     }
 
-    private static string Utc(DateTime t) => t.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'", CultureInfo.InvariantCulture);
+    internal static string Utc(DateTime t) => t.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'", CultureInfo.InvariantCulture);
 
     /// <summary>
     /// Entry 463 section 2: the two versions of a session changed on two devices, this device's (null where it is gone) and the other's, for

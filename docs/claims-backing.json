@@ -7904,6 +7904,26 @@
   "Where a Shoot-N-C bullseye could be the 6 in or the 8 in, a small window asks which.": {
    "kind": "code",
    "where": "NOTES-FROM-PLANNING.md entries 340 and 341 (Alan's decision: recognition ships, the printed size is the scale with a warning, a family asks which size); the five products in src/GroupLab.Core/StoreTargets/Fingerprints/library.json, recognition in StoreTargetRecognizer, on the desktop src/GroupLab.App/MainWindow.StoreTargets.cs and on the phone mobile/GroupLab.Mobile/PhoneAnalysis.cs Recognize; the warning StoreTargetMatch.Warning and CheckScale; the question FamilyQuestion (6 in and 8 in, the Shoot-N-C bullseye family); the picture is Entry109Tests' stand-in bullseye (docs/figures/screens/current/SOURCES.md)"
+  },
+  "Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder&#x27;s own trash, keeps it there 14 days, and says what it tidied.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncTidy.cs (Run, Move, Empty; SyncEngine.TrashDays = 14) and SyncScreens.Tidied and TidyLine, shown by src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by SyncTidyTests, SyncTidyWindowTests and SyncTidyPhoneTests (entry 464 section 1); not proven on two real devices yet"
+  },
+  "Tidied files go to a trash folder inside the sync folder and are removed 14 days after they were moved there.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncTidy.cs (Run, Move, Empty; SyncEngine.TrashDays = 14) and SyncScreens.Tidied and TidyLine, shown by src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by SyncTidyTests, SyncTidyWindowTests and SyncTidyPhoneTests (entry 464 section 1); not proven on two real devices yet"
+  },
+  "A line under the status says what the last tidying did, for example \"Tidied 2 hours ago: 12 old change files, 3.4 MB, moved to the sync folder's trash for 14 days\", and there is no line until there is something to say.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncTidy.cs (Run, Move, Empty; SyncEngine.TrashDays = 14) and SyncScreens.Tidied and TidyLine, shown by src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by SyncTidyTests, SyncTidyWindowTests and SyncTidyPhoneTests (entry 464 section 1); not proven on two real devices yet"
+  },
+  "Old change files are tidied once every device has read them and a newer file replaces all they hold, into a trash inside the folder kept 14 days (entry 464).": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncTidy.cs (Run, Move, Empty; SyncEngine.TrashDays = 14) and SyncScreens.Tidied and TidyLine, shown by src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by SyncTidyTests, SyncTidyWindowTests and SyncTidyPhoneTests (entry 464 section 1); not proven on two real devices yet"
+  },
+  "Tidied files go to a `trash` folder inside the sync folder and are removed 14 days after they were moved there.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncTidy.cs (Run, Move, Empty; SyncEngine.TrashDays = 14) and SyncScreens.Tidied and TidyLine, shown by src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by SyncTidyTests, SyncTidyWindowTests and SyncTidyPhoneTests (entry 464 section 1); not proven on two real devices yet"
   }
  },
  "rules": [

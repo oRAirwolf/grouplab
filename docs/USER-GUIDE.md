@@ -791,6 +791,13 @@ a folder in Files). Then:
 - **This device's name** (1) is what the other devices see it called.
 - The line beside **Sync now** (2) says when it last synced and what came in and went out. GroupLab syncs every five minutes while it is
   open, and at once when you press it.
+- Once a day GroupLab tidies its own old change files: a session changed again is written again whole, so the old copies would otherwise
+  build up. A file is tidied only when every other device in the folder has said it has read it, a later file holds a newer version of
+  everything in it, and nothing in it is waiting for you to choose between two versions. While any device in the folder has not yet said
+  what it has read (one that has not synced for a while, or an older GroupLab), nothing is tidied. Tidied files go to a `trash` folder
+  inside the sync folder and are removed 14 days after they were moved there. A line under the status says what the last tidying did, for
+  example "Tidied 2 hours ago: 12 old change files, 3.4 MB, moved to the sync folder's trash for 14 days", and there is no line until
+  there is something to say.
 - **Other devices in the folder** lists each with when it last wrote.
 - **Also copy the original photographs** is two cards: **Marks and proof pictures**, the usual choice, which is enough to see and work with
   every session anywhere, or **Also the original photographs**, so another device can open the full picture. Each card shows what your

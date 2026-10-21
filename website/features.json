@@ -1420,7 +1420,7 @@
      "key": "sync",
      "group": "Updates and platforms",
      "name": "Sync between your devices",
-     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, and the original photographs travel only if you ask.",
+     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, and the original photographs travel only if you ask. Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder's own trash, keeps it there 14 days, and says what it tidied.",
      "shot": "sync-settings",
      "platforms": [
       "Windows",
@@ -1432,7 +1432,8 @@
      "since": "next",
      "note": [
       "Sync between devices",
-      "stay the same on your computer and phones"
+      "stay the same on your computer and phones",
+      "old change files"
      ],
      "tour": "settings",
      "guide": "sync-between-devices",

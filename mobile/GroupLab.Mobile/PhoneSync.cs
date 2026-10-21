@@ -59,7 +59,7 @@ internal static class PhoneSync
             return;
         }
 
-        Save(Setup with { Folder = name });
+        Save(Setup.Folder == name ? Setup : SyncScreens.InFolder(Setup, name));
         Unreachable = false;
         DiagnosticLog.Info("sync.folder", ("chosen", true));
         Start();
@@ -123,8 +123,10 @@ internal static class PhoneSync
 
             Unreachable = false;
             Others = result.Others;
-            Save(Setup with { LastUtc = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture), LastIn = report.Applied, LastOut = report.Written });
-            DiagnosticLog.Info("sync.run", ("in", report.Applied), ("out", report.Written), ("toChoose", report.ToChoose), ("waiting", report.FilesWaiting));
+            Save(SyncScreens.WithTidied(Setup with { LastUtc = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture), LastIn = report.Applied, LastOut = report.Written },
+                report, DateTime.UtcNow));
+            DiagnosticLog.Info("sync.run", ("in", report.Applied), ("out", report.Written), ("toChoose", report.ToChoose), ("waiting", report.FilesWaiting),
+                ("tidied", report.Tidied?.Moved ?? 0), ("removed", report.Tidied?.Removed ?? 0));
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException or Microsoft.Data.Sqlite.SqliteException)
         {
@@ -303,6 +305,12 @@ internal sealed class SyncPage : UserControl
         column.Children.Add(Screens.Quiet(SyncScreens.DeviceNameLabel));
         column.Children.Add(name.Id("sync-name"));
         column.Children.Add(Screens.Line(PhoneSync.Running ? "Syncing…" : SyncScreens.Status(setup, DateTime.UtcNow) ?? "").Id("sync-status"));
+        if (SyncScreens.TidyLine(setup, DateTime.UtcNow) is { } tidied)
+        {
+            // Entry 464: what the last tidying of old change files did, or nothing when there has been none.
+            column.Children.Add(Screens.Dim(tidied).Id("sync-tidied"));
+        }
+
         var now = Screens.Primary(SyncScreens.SyncNow, () => _ = PhoneSync.Now()).Id("sync-now");
         now.IsEnabled = !PhoneSync.Running;
         column.Children.Add(now);

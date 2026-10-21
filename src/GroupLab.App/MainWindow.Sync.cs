@@ -82,7 +82,7 @@ public partial class MainWindow
     /// <summary>Chooses the folder to sync through, by its path (the picker gives one), and runs at once.</summary>
     internal void ChooseSyncFolder(string folder)
     {
-        SaveSync(Sync with { Folder = folder });
+        SaveSync(Sync.Folder == folder ? Sync : SyncScreens.InFolder(Sync, folder));
         syncUnreachable = false;
         DiagnosticLog.Info("sync.folder", ("chosen", true));
         StartSyncTimer();
@@ -145,8 +145,10 @@ public partial class MainWindow
             }
 
             syncUnreachable = false;
-            SaveSync(Sync with { LastUtc = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture), LastIn = report.Applied, LastOut = report.Written });
-            DiagnosticLog.Info("sync.run", ("in", report.Applied), ("out", report.Written), ("toChoose", report.ToChoose), ("waiting", report.FilesWaiting));
+            SaveSync(SyncScreens.WithTidied(Sync with { LastUtc = DateTime.UtcNow.ToString("o", System.Globalization.CultureInfo.InvariantCulture), LastIn = report.Applied, LastOut = report.Written },
+                report, DateTime.UtcNow));
+            DiagnosticLog.Info("sync.run", ("in", report.Applied), ("out", report.Written), ("toChoose", report.ToChoose), ("waiting", report.FilesWaiting),
+                ("tidied", report.Tidied?.Moved ?? 0), ("removed", report.Tidied?.Removed ?? 0));
             if (report.Applied > 0 || report.ToChoose > 0)
             {
                 FillSessions();
@@ -222,6 +224,12 @@ public partial class MainWindow
         var now = Button(SyncScreens.SyncNow, () => _ = SyncNowAsync());
         now.IsEnabled = !syncRunning;
         syncSection.Children.Add(new WrapPanel { ItemSpacing = Tokens.Space12, LineSpacing = Tokens.Space4, Children = { status, now } });
+
+        // Entry 464: what the last tidying of old change files did, or nothing when there has been none.
+        if (SyncScreens.TidyLine(setup, DateTime.UtcNow) is { } tidied)
+        {
+            syncSection.Children.Add(Line(tidied));
+        }
 
         // The other devices seen in the folder.
         syncSection.Children.Add(new TextBlock { Text = SyncScreens.OtherDevicesHeading, Classes = { AppStyles.Label } });

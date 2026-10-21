@@ -500,7 +500,8 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app
   already keeps in step (OneDrive, Dropbox, Google Drive, iCloud Drive); there is no GroupLab account and nothing goes anywhere but that
   folder. A session changed on two devices is kept both ways and shown side by side until you choose, and the original photographs travel
-  only if you ask. Proving it needs two real devices on one cloud folder.
+  only if you ask. Old change files are tidied once every device has read them and a newer file replaces all they hold, into a trash
+  inside the folder kept 14 days (entry 464). Proving it needs two real devices on one cloud folder.
 
 **Phase 8. iOS.**
 - **In progress.** The plan, with sizes, is `docs/IOS-PLAN.md` (entry 278 section 6): the shared phone screens, OpenCV built for iOS, the camera on AVFoundation, and a nightly build signed on GitHub's Mac machines and sent to TestFlight. Submission to the App Store waits for Alan.
