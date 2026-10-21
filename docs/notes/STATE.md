@@ -72,8 +72,8 @@ Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave i
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.214 (2026-10-21): entry 461's last fixes (empty lines, the website link); 213 had parts 1 to 3.
-- **The site** follows main by itself (website.yml) and the nightly publishes it; live at fd6fe5a4 (entry 461) on 2026-10-21.
+- **Last nightly:** 0.2.0-nightly.215 (2026-10-21): entries 462 and 463 (the interface fixes, the centred failures, sync on every platform).
+- **The site** follows main by itself (website.yml) and the nightly publishes it; live at a98e146b (nightly 215) on 2026-10-21.
 - Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox
