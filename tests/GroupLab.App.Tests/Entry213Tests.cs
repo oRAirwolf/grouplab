@@ -9,8 +9,8 @@ using GroupLab.Core.Marking;
 namespace GroupLab.App.Tests;
 
 /// <summary>
-/// NOTES-FROM-PLANNING.md entry 213 section 2: the composite plot's key never covers the data. Beside the plot where the width allows,
-/// below it where the height does, and otherwise a small Key button in a strip of its own; the plot is drawn and clipped in what is left.
+/// NOTES-FROM-PLANNING.md entry 213 section 2: the composite plot's key never covers the data. In a box under the plot where the height
+/// allows (entry 465 item 2A), and otherwise a small Key button in a strip of its own; the plot is drawn and clipped in what is left.
 /// </summary>
 public class Entry213Tests
 {

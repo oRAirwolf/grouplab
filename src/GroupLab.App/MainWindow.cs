@@ -3368,7 +3368,8 @@ public sealed partial class MainWindow : Window
         // Entry 104 section 4: a column headed with the shot's number is read as sorted by it, so it is, not in detection order.
         var ordered = plotted.OrderBy(p => int.TryParse(p.Label, NumberStyles.Integer, CultureInfo.InvariantCulture, out int k) ? k : int.MaxValue).ThenBy(p => p.Label, StringComparer.Ordinal).ToList();
         bool bullColumn = ordered.Any(p => p.Bull is { } b && b != p.Label);
-        string columns = bullColumn ? "52,44,*,*,*" : "52,*,*,*"; // entry 462 section 3: 44 cut "center" off
+        // Entry 462 section 3: 44 cut "center" off. Entry 465 item 2A: up/down takes a little more, so "up/down, in" stays on one line.
+        string columns = bullColumn ? "52,44,*,1.2*,*" : "52,*,1.2*,*";
         Grid Cells(IEnumerable<string> texts, bool heading, bool dim, bool struck, bool chosen = false)
         {
             var grid = new Grid { ColumnDefinitions = new ColumnDefinitions(columns) };
@@ -3384,6 +3385,7 @@ public sealed partial class MainWindow : Window
                     TextAlignment = TextAlignment.Right,
                     Margin = new Thickness(0, 0, Tokens.Space8, 0),
                     TextDecorations = struck ? TextDecorations.Strikethrough : null,
+                    TextWrapping = heading ? TextWrapping.Wrap : TextWrapping.NoWrap,
                     Classes = { chosen ? AppStyles.SelectedRow : heading || dim ? AppStyles.Dim : AppStyles.Secondary },
                 };
                 Grid.SetColumn(cell, c++);
@@ -3393,7 +3395,8 @@ public sealed partial class MainWindow : Window
             return grid;
         }
 
-        string[] Heads() => bullColumn ? ["shot", "bull", "across", "up/down", "radius"] : ["shot", "across", "up/down", "radius"];
+        // Entry 465 item 2A: each length heading names its unit, the one chosen in Settings that the numbers under it are written in.
+        string[] Heads() => [.. OffsetHeadings(units, bullColumn)];
         var head = Cells(Heads(), heading: true, dim: true, struck: false);
         head.Margin = new Thickness(Tokens.Space4, 0, Tokens.Space4, Tokens.Space4);
         offsetTable.Children.Add(head);
@@ -3472,6 +3475,24 @@ public sealed partial class MainWindow : Window
         ShowAimPoints(state);
         ShowFullFigures(state);
         ShowBullLoads(state);
+    }
+
+    /// <summary>
+    /// Entry 465 item 2A: the headings of "Shots, from their own bull", each length with its unit ("across, in", "up/down, mm"), following
+    /// the length unit chosen, since the table's numbers are written in it.
+    /// </summary>
+    internal static IReadOnlyList<string> OffsetHeadings(UnitSettings units, bool bullColumn)
+    {
+        ArgumentNullException.ThrowIfNull(units);
+        string unit = UnitSettings.Symbol(units.Linear);
+        List<string> heads = ["shot"];
+        if (bullColumn)
+        {
+            heads.Add("bull");
+        }
+
+        heads.AddRange([$"across, {unit}", $"up/down, {unit}", $"radius, {unit}"]);
+        return heads;
     }
 
     /// <summary>One scoring bull's discs from the sheet's definition, in inches, outermost first; none for a marking the definition is not known for.</summary>
@@ -4199,6 +4220,9 @@ public sealed partial class MainWindow : Window
 
     /// <summary>The rows of the Shots table, entry 425, for the tests.</summary>
     internal IReadOnlyList<Button> OffsetRows => [.. offsetTable.Children.OfType<Button>()];
+
+    /// <summary>The headings of "Shots, from their own bull", for the tests (entry 465 item 2A).</summary>
+    internal IReadOnlyList<string> OffsetHeads => [.. offsetTable.Children.OfType<Grid>().First().Children.OfType<TextBlock>().Select(t => t.Text ?? "")];
 
     /// <summary>The composite plot's four mark toggles, CEP 50, CEP 90, CEP 95 and the extreme spread, for the headless tests.</summary>
     internal IReadOnlyList<CheckBox> PlotToggles => [cep50Box, cep90Box, cep95Box, spreadBox];

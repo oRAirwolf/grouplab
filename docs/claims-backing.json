@@ -5,6 +5,14 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+ "Newest Coming in the next build CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, named in the key in a compact box under the plot, and under Advanced a circle for any percent you type.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/CompositePlot.cs KeyLayout and ArrangeKey, held by Entry465Tests and Entry465PhoneTests (entry 465 item 2A); website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+ },
+ "On the tour · In the user guide CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, named in the key in a compact box under the plot, and under Advanced a circle for any percent you type.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/CompositePlot.cs KeyLayout and ArrangeKey, held by Entry465Tests and Entry465PhoneTests (entry 465 item 2A); website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
+ },
  "Sync between devices in Settings, with another device in the folder: This device's name, Sync now, Stop syncing When a session was changed on two devices If the same session was changed on two devices before they synced, GroupLab never picks one by itself.": {
   "kind": "code",
   "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"

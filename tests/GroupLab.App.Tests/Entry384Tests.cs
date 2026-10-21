@@ -14,8 +14,8 @@ namespace GroupLab.App.Tests;
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 384 section 1, from Alan's screenshot on nightly 175: with the key beside the analysis drawing, everything
-/// right of the key's left edge was blank for the whole height, every circle and line cut off level with it. The key now covers only its
-/// own box; the drawing runs on below it.
+/// right of the key's left edge was blank for the whole height, every circle and line cut off level with it. Entry 465 item 2A moved the key
+/// to a box of its own under the plot: the drawing now spans the plot's whole width above the key, and nothing of it runs under the key.
 /// </summary>
 public sealed class Entry384Tests
 {
@@ -24,7 +24,7 @@ public sealed class Entry384Tests
     [InlineData("dark", 1000, 420)]
     [InlineData("light", 1500, 700)]
     [InlineData("dark", 700, 420)]
-    public void BelowTheKeyTheDrawingGoesOn(string theme, int width, int height)
+    public void TheDrawingSpansThePlotAndStopsAboveTheKey(string theme, int width, int height)
     {
         var plot = new CompositePlot
         {
@@ -40,31 +40,49 @@ public sealed class Entry384Tests
         {
             var (data, key, collapsed) = plot.KeyLayout();
             Assert.False(collapsed, $"{width} by {height}: the key folded into a button, so this size tests nothing");
-            // Beside the drawing, look below the key; below the drawing, look right of it: either way the drawing must go on there.
-            bool beside = key.X >= data.Right - 1;
-            var (x0, x1, y0, y1) = beside
-                ? ((int)key.X + 2, (int)plot.Bounds.Width - 2, (int)key.Bottom + 6, (int)plot.Bounds.Height - 2)
-                : ((int)key.Right + 6, (int)plot.Bounds.Width - 2, (int)key.Y + 2, (int)key.Bottom - 2);
+            Assert.True(key.Top >= data.Bottom, $"{width} by {height}: the key {key} is not under the plot {data}");
+            Assert.Equal(plot.Bounds.Width, data.Width);
             var size = new PixelSize((int)plot.Bounds.Width, (int)plot.Bounds.Height);
             using var bitmap = new RenderTargetBitmap(size);
             bitmap.Render(plot);
             var paper = Tokens.Plot(plot.ActualThemeVariant).Paper;
-            int drawn = 0, looked = 0;
-            for (int y = y0; y < y1; y += 2)
+            bool Inked(int x, int y)
             {
-                for (int x = x0; x < x1; x += 2)
+                var c = At(bitmap, x, y);
+                return Math.Abs(c.R - paper.R) + Math.Abs(c.G - paper.G) + Math.Abs(c.B - paper.B) > 30;
+            }
+
+            // The plot's right part, past where a key beside it once began, is drawn on: the lines and the circles reach the edge.
+            int drawn = 0;
+            for (int y = (int)data.Top + 2; y < (int)data.Bottom - 2; y += 2)
+            {
+                for (int x = (int)(data.Right * 0.8); x < (int)data.Right - 2; x += 2)
                 {
-                    looked++;
-                    var c = At(bitmap, x, y);
-                    if (Math.Abs(c.R - paper.R) + Math.Abs(c.G - paper.G) + Math.Abs(c.B - paper.B) > 30)
-                    {
-                        drawn++;
-                    }
+                    drawn += Inked(x, y) ? 1 : 0;
                 }
             }
 
-            Assert.True(looked > 0, $"{width} by {height}: nothing below the key to look at");
-            Assert.True(drawn > 0, $"{width} by {height}, {theme}: {(beside ? "below" : "beside")} the key, all {looked} pixels looked at are blank paper");
+            Assert.True(drawn > 0, $"{width} by {height}, {theme}: the right of the plot is blank paper");
+
+            // Under the plot, level with the key and beside its box, nothing of the drawing: it stopped at the plot's edge.
+            int under = 0, looked = 0;
+            var around = new Rect(key.X - 2, key.Y - 2, key.Width + 4, key.Height + 4);
+            for (int y = (int)data.Bottom + 1; y < (int)key.Bottom - 1; y += 2)
+            {
+                for (int x = 1; x < (int)plot.Bounds.Width - 1; x += 2)
+                {
+                    if (around.Contains(new Point(x, y)))
+                    {
+                        continue;
+                    }
+
+                    looked++;
+                    under += Inked(x, y) ? 1 : 0;
+                }
+            }
+
+            Assert.True(looked > 0, $"{width} by {height}: nothing beside the key to look at");
+            Assert.True(under == 0, $"{width} by {height}, {theme}: {under} of {looked} pixels beside the key are drawn on");
         }
         finally
         {

@@ -492,12 +492,16 @@ internal sealed class CompositePlot : Control
         inks = Tokens.Plot(ActualThemeVariant);
         var accent = new SolidColorBrush(inks.Accent);
         context.FillRectangle(new SolidColorBrush(inks.Paper), new Rect(Bounds.Size));
-        var (area, _, keyInStrip) = KeyLayout();
+        var (area, _, _) = KeyLayout();
         var (scale, origin) = Frame(area);
-        // Entry 384 section 1: the group is fitted to the area clear of the key, so the key never covers it, but the drawing runs over the
-        // whole canvas; clipped to the fitted area, everything right of the key's edge was blank for the full height. The key covers only
-        // its own box, drawn last. A key folded into the strip above keeps the plot below the strip.
-        var drawn = ShowKey && !keyInStrip ? new Rect(Bounds.Size) : area;
+        // Entry 465 item 2A: the key has its own box under the plot, so the drawing stops at the plot's edge and nothing runs under the key.
+        // Entry 384's blank strip came from a key beside the plot; under it, the plot keeps the whole width.
+        var drawn = area;
+        if (PlotHeight is { } plotHeight && Math.Abs(Bounds.Height - (plotHeight + KeyRoom(Bounds.Width))) > 0.5)
+        {
+            // The key changed its length (a circle turned on, a shot picked): the phone's control grows or shrinks to hold it.
+            Avalonia.Threading.Dispatcher.UIThread.Post(InvalidateMeasure);
+        }
         using (context.PushClip(drawn))
         {
             // Entry 204 section 2, back to front: the rings, the shots, the CEP circles, the extreme spread, the centre lines, the selection.
@@ -681,8 +685,8 @@ internal sealed class CompositePlot : Control
     private sealed record KeyEntry(string Text, Action<DrawingContext, Point> Swatch);
 
     /// <summary>
-    /// The key, entry 105 section 3: each mark drawn as it is on the plot, then its name, in a panel at the plot's top left, beside what it
-    /// names rather than stranded under it. A tooltip helps a person who suspects there is something to hover over; the key tells them.
+    /// The key, entry 105 section 3: each mark drawn as it is on the plot, then its name, since entry 465 item 2A in a compact box directly
+    /// under the plot rather than over it. A tooltip helps a person who suspects there is something to hover over; the key tells them.
     /// </summary>
     private List<KeyEntry> Key()
     {
@@ -771,11 +775,20 @@ internal sealed class CompositePlot : Control
 
     private const double KeyLine = 20, KeySwatch = 22, KeyPad = 10, KeyGap = 8, SmallestData = 240, KeyButtonHeight = 24;
 
+    /// <summary>Entry 465 item 2A: the narrowest a column's words may wrap to before the key keeps to one column.</summary>
+    private const double KeyColumnText = 180;
+
     /// <summary>
     /// The height of the strip the collapsed Key button sits in, all of it the button's to tap. The desktop's 28 fits a pointer; the phone
     /// sets a thumb's height (entry 290 section 6), and the button is drawn the same size in the middle of it.
     /// </summary>
     internal static double KeyStrip { get; set; } = 28;
+
+    /// <summary>
+    /// Entry 465 item 2A, on the phone: the plot's own height, with the control growing by the key's so the key sits in its box under the
+    /// plot and never folds into a button. Null on the desktop, where the plot fills the space it is given and the key takes its share.
+    /// </summary>
+    internal double? PlotHeight { get; set; }
 
     /// <summary>What a tap on the collapsed Key button may land on: the button and the strip around it, not the plot beneath.</summary>
     private static Rect KeyHit(Rect button) => new(0, 0, button.Right + (KeyGap / 2), KeyStrip);
@@ -786,10 +799,77 @@ internal sealed class CompositePlot : Control
     private List<FormattedText> KeyTexts(IEnumerable<KeyEntry> entries) => [.. entries.Select(e => new FormattedText(e.Text, CultureInfo.InvariantCulture,
         FlowDirection.LeftToRight, new Typeface(Tokens.Sans), Tokens.SecondarySize, new SolidColorBrush(inks.Ink)))];
 
+    /// <summary>The key arranged for a width: its box's size, and each entry's words and cell inside the box, in the key's order.</summary>
+    private sealed record KeyArrangement(Size Size, IReadOnlyList<(KeyEntry Entry, FormattedText Text, Rect Cell)> Cells, int Columns);
+
     /// <summary>
-    /// NOTES-FROM-PLANNING.md entry 213 section 2: the key never covers the data. It sits beside the plot or below it, whichever leaves the
-    /// plot the larger square, and otherwise collapses to a small Key button in a strip of its own, which opens the key over the plot only
-    /// when the person asks for it. <see cref="DataRect"/> is what is left for the plot, and every mark is drawn and clipped inside it.
+    /// Entry 465 item 2A: the key in a compact box, two columns where each column's words still have <see cref="KeyColumnText"/> to wrap
+    /// in, filled down the first column and then the second, and one column otherwise; words longer than their column wrap onto a second
+    /// line rather than run past the box.
+    /// </summary>
+    private KeyArrangement ArrangeKey(List<KeyEntry> entries, double width)
+    {
+        var texts = KeyTexts(entries);
+        double widest = texts.Count == 0 ? 0 : texts.Max(t => t.Width);
+        double inner = Math.Max(0, width - (2 * KeyGap) - (2 * KeyPad));
+        double half = ((inner - KeyGap) / 2) - KeySwatch;
+        int columns = entries.Count >= 4 && half >= KeyColumnText ? 2 : 1;
+        double textWidth = Math.Max(40, Math.Min(Math.Ceiling(widest) + 1, columns == 2 ? half : inner - KeySwatch));
+        foreach (var text in texts)
+        {
+            text.MaxTextWidth = textWidth;
+        }
+
+        int rows = (entries.Count + columns - 1) / columns;
+        var cells = new Rect[entries.Count];
+        double y = KeyPad / 2;
+        for (int r = 0; r < rows; r++)
+        {
+            double height = KeyLine;
+            for (int c = 0; c < columns; c++)
+            {
+                if ((c * rows) + r is int i && i < entries.Count)
+                {
+                    height = Math.Max(height, texts[i].Height + 4);
+                }
+            }
+
+            for (int c = 0; c < columns; c++)
+            {
+                if ((c * rows) + r is int i && i < entries.Count)
+                {
+                    cells[i] = new Rect(KeyPad + (c * (KeySwatch + textWidth + KeyGap)), y, KeySwatch + textWidth, height);
+                }
+            }
+
+            y += height;
+        }
+
+        double boxWidth = (2 * KeyPad) + (columns * (KeySwatch + textWidth)) + ((columns - 1) * KeyGap);
+        return new KeyArrangement(new Size(boxWidth, y + (KeyPad / 2)), [.. entries.Select((e, i) => (e, texts[i], cells[i]))], columns);
+    }
+
+    /// <summary>The control's height on the phone: the plot's own, the key's box and a gap either side of it.</summary>
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        if (PlotHeight is not { } plot)
+        {
+            return base.MeasureOverride(availableSize);
+        }
+
+        double width = double.IsFinite(availableSize.Width) ? availableSize.Width : Bounds.Width;
+        return new Size(0, plot + KeyRoom(width));
+    }
+
+    /// <summary>The height the key takes under the plot at a width, with its gaps; none when no key is drawn.</summary>
+    private double KeyRoom(double width) => ShowKey && width > 0 ? ArrangeKey(Key(), width).Size.Height + (2 * KeyGap) : 0;
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 213 section 2, as entry 465 item 2A placed it: the key never covers the data. It sits in a compact box
+    /// directly under the plot, and where that would leave the plot smaller than <see cref="SmallestData"/> it collapses to a small Key
+    /// button in a strip of its own, which opens the key over the plot only when the person asks for it. On the phone the control grows to
+    /// hold the key instead, so it never collapses there. <see cref="DataRect"/> is what is left for the plot, and every mark is drawn and
+    /// clipped inside it.
     /// </summary>
     internal (Rect Data, Rect Key, bool Collapsed) KeyLayout()
     {
@@ -799,18 +879,13 @@ internal sealed class CompositePlot : Control
             return (all, default, false);
         }
 
-        var entries = Key();
-        var texts = KeyTexts(entries);
-        double width = KeySwatch + texts.Max(t => t.Width) + (2 * KeyPad), height = (entries.Count * KeyLine) + KeyPad;
-        // Beside or below, whichever leaves the plot the larger square, since a group is about as tall as it is wide.
-        var beside = (Data: new Rect(0, 0, Math.Max(0, all.Width - width - (2 * KeyGap)), all.Height), Key: new Rect(all.Width - width - KeyGap, KeyGap, width, height));
-        double w = Math.Min(width, all.Width - (2 * KeyGap));
-        var below = (Data: new Rect(0, 0, all.Width, Math.Max(0, all.Height - height - (2 * KeyGap))), Key: new Rect(KeyGap, all.Height - height - KeyGap, w, height));
-        static double Square(Rect r) => Math.Min(r.Width, r.Height);
-        var best = Square(beside.Data) >= Square(below.Data) ? beside : below;
-        if (Square(best.Data) >= SmallestData && best.Key.Width > 0)
+        var size = ArrangeKey(Key(), all.Width).Size;
+        double plotHeight = PlotHeight is { } fixedHeight ? Math.Min(fixedHeight, all.Height) : all.Height - size.Height - (2 * KeyGap);
+        var data = new Rect(0, 0, all.Width, Math.Max(0, plotHeight));
+        var key = new Rect(KeyGap, data.Bottom + KeyGap, Math.Min(size.Width, Math.Max(0, all.Width - (2 * KeyGap))), size.Height);
+        if (PlotHeight is not null || (Math.Min(data.Width, data.Height) >= SmallestData && key.Width > 0))
         {
-            return (best.Data, best.Key, false);
+            return (data, key, false);
         }
 
         double button = Math.Min(KeyButtonHeight, KeyStrip - 4);
@@ -820,47 +895,55 @@ internal sealed class CompositePlot : Control
     /// <summary>The rectangle the plot itself is drawn in, clear of the key.</summary>
     internal Rect DataRect => KeyLayout().Data;
 
-    /// <summary>The key's box where it is drawn, or null while it is folded away.</summary>
-    private Rect? KeyBox()
+    /// <summary>The key's box where it is drawn, and its entries' cells there, or null while it is folded away.</summary>
+    private (Rect Box, KeyArrangement Arranged)? KeyBox()
     {
         if (!ShowKey)
         {
             return null;
         }
 
-        var entries = Key();
         var (_, place, collapsed) = KeyLayout();
         if (collapsed && !keyOpen)
         {
             return null;
         }
 
-        var texts = KeyTexts(entries);
-        double width = Math.Min(Math.Max(0, Bounds.Width - (2 * KeyPad)), KeySwatch + texts.Max(t => t.Width) + (2 * KeyPad));
-        return collapsed ? new Rect(KeyPad, KeyStrip + 2, width, (entries.Count * KeyLine) + KeyPad) : place;
+        var arranged = ArrangeKey(Key(), Bounds.Width);
+        double width = Math.Min(Math.Max(0, Bounds.Width - (2 * KeyPad)), arranged.Size.Width);
+        return (collapsed ? new Rect(KeyPad, KeyStrip + 2, width, arranged.Size.Height) : place, arranged);
     }
+
+    /// <summary>Entry 465 item 2A: the key's box as drawn, for the tests; null while it is folded into its button.</summary>
+    internal Rect? KeyDrawn => KeyBox()?.Box;
+
+    /// <summary>The number of columns the key is drawn in, for the tests.</summary>
+    internal int KeyColumns => ArrangeKey(Key(), Bounds.Width).Columns;
 
     /// <summary>Entry 420: the pooled set's sheet whose row of the key is at a point, or null.</summary>
     internal int? SheetInKeyAt(Point at)
     {
-        var sheets = PooledSheets;
-        if (sheets.Count == 0 || KeyBox() is not { } box || !box.Contains(at))
+        if (PooledSheets.Count == 0 || KeyBox() is not var (box, arranged) || !box.Contains(at))
         {
             return null;
         }
 
-        var texts = Key().Select(k => k.Text).ToList();
-        int row = (int)Math.Floor((at.Y - box.Y - (KeyPad / 2)) / KeyLine);
-        return row >= 0 && row < texts.Count && texts[row].StartsWith("Sheet ", StringComparison.Ordinal)
-            && int.TryParse(texts[row]["Sheet ".Length..texts[row].IndexOf(':', StringComparison.Ordinal)], NumberStyles.Integer, CultureInfo.InvariantCulture, out int k)
-            ? k - 1 : null;
+        var inside = new Point(at.X - box.X, at.Y - box.Y);
+        foreach (var (entry, _, cell) in arranged.Cells)
+        {
+            string text = entry.Text;
+            if (cell.Contains(inside) && text.StartsWith("Sheet ", StringComparison.Ordinal)
+                && int.TryParse(text["Sheet ".Length..text.IndexOf(':', StringComparison.Ordinal)], NumberStyles.Integer, CultureInfo.InvariantCulture, out int k))
+            {
+                return k - 1;
+            }
+        }
+
+        return null;
     }
 
     private void DrawKey(DrawingContext context)
     {
-        var entries = Key();
-        const double line = KeyLine, swatch = KeySwatch, pad = KeyPad;
-        var texts = KeyTexts(entries);
         var (_, place, collapsed) = KeyLayout();
         if (collapsed)
         {
@@ -874,19 +957,33 @@ internal sealed class CompositePlot : Control
             }
         }
 
-        double width = Math.Min(Math.Max(0, Bounds.Width - (2 * pad)), swatch + texts.Max(t => t.Width) + (2 * pad));
-        var box = collapsed ? new Rect(pad, KeyStrip + 2, width, (entries.Count * line) + pad) : place;
-        context.DrawRectangle(new SolidColorBrush(inks.Paper), new Pen(new SolidColorBrush(inks.Ring), 1), box, 3, 3);
-        for (int i = 0; i < entries.Count; i++)
+        if (KeyBox() is not var (box, arranged))
         {
-            double y = box.Y + (pad / 2) + (i * line) + (line / 2);
-            entries[i].Swatch(context, new Point(box.X + pad + (swatch / 2) - 4, y));
-            context.DrawText(texts[i], new Point(box.X + pad + swatch, y - (texts[i].Height / 2)));
+            return;
+        }
+
+        context.DrawRectangle(new SolidColorBrush(inks.Paper), new Pen(new SolidColorBrush(inks.Ring), 1), box, 3, 3);
+        double oneLine = KeyTexts([new KeyEntry("Key", (_, _) => { })])[0].Height;
+        using (context.PushClip(box))
+        {
+            foreach (var (entry, text, cell) in arranged.Cells)
+            {
+                var at = new Point(box.X + cell.X, box.Y + cell.Y);
+                // The words centred in their row, and the swatch beside their first line where they wrap.
+                double top = at.Y + ((cell.Height - text.Height) / 2);
+                entry.Swatch(context, new Point(at.X + (KeySwatch / 2) - 4, top + (Math.Min(text.Height, oneLine) / 2)));
+                context.DrawText(text, new Point(at.X + KeySwatch, top));
+            }
         }
     }
 
     private PlotShot? ShotAt(Point at)
     {
+        if (!DataRect.Contains(at))
+        {
+            return null;
+        }
+
         var (scale, _) = Frame(DataRect);
         double reach = Math.Max(8, ShowOutlines ? (CalibreInches ?? 0) * scale / 2 : 0);
         return Visible

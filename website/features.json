@@ -709,7 +709,7 @@
       "key": "cep",
       "group": "The numbers",
       "name": "CEP circles, any percent",
-      "sentence": "CEP 50, 90, 95 and 99 are drawn and listed with their ranges, and under Advanced a circle for any percent you type.",
+      "sentence": "CEP 50, 90, 95 and 99 are drawn and listed with their ranges, named in the key in a compact box under the plot, and under Advanced a circle for any percent you type.",
       "shot": "analysis-open",
       "platforms": [
         "Windows",
@@ -719,7 +719,7 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.111",
-      "note": "The analysis screen can now draw and list CEP 99",
+      "note": ["The analysis screen can now draw and list CEP 99", "the plot's key sits in a compact box under the plot"],
       "tour": "analysis-open",
       "guide": "the-full-cep-table-and-the-fitted-ellipse",
       "article": "cep-explained",
@@ -1518,7 +1518,7 @@
       "key": "shots-table",
       "group": "The numbers",
       "name": "Every shot, and which count",
-      "sentence": "The Shots list is short rows: each shot's offset across and up from its aim point and its distance from its own bull. Open one in place to change its bull, say when it was fired, count it or leave it out (struck through, with no reason asked), or delete it as not a hole, which can still be undone. On the computer, a click on a hole or a bull on the picture brings its place in the side panel fully into view and flashes it, and the line under the picture says what the click did. The list ends with the group's center, the mean of the shots counted, which is the zero correction's figure. On the phone, a bull chosen in Bull by bull brings the picture into view the same way. Suggested by Jylee.",
+      "sentence": "The Shots list is short rows: each shot's offset across and up from its aim point and its distance from its own bull, under headings that name the unit, such as across, in. Open one in place to change its bull, say when it was fired, count it or leave it out (struck through, with no reason asked), or delete it as not a hole, which can still be undone. On the computer, a click on a hole or a bull on the picture brings its place in the side panel fully into view and flashes it, and the line under the picture says what the click did. The list ends with the group's center, the mean of the shots counted, which is the zero correction's figure. On the phone, a bull chosen in Bull by bull brings the picture into view the same way. Suggested by Jylee.",
       "shot": "shots-window",
       "platforms": [
         "Windows",
@@ -1531,7 +1531,8 @@
       "note": ["Shots and clicks", "brings its place in the side panel fully into view", "On the phone, the Counted and Left out switch",
         "The Shots list is now short rows",
         "Leaving a shot out no longer asks why",
-        "ends with the group's center"],
+        "ends with the group's center",
+        "headings now name their unit"],
       "reworded": "0.2.0-nightly.196",
       "tour": "analysis",
       "guide": "5-read-the-analysis",
