@@ -1900,6 +1900,22 @@ Wording by the docs helper (docs-sonnet), reviewed; sections 6, 7 and 11's last 
    the words, a drop of three 2 MOA copies with both answers) and `Entry460PhoneTests`; the entry 423 drop tests still pass. The guide's
    drop paragraph says it. Question 98 archived.
 
+## Entry 461 part 1: every research row that said "not yet" decided (2026-10-21)
+
+Ten rows of `docs/RESEARCH.md`'s "Worth an article?", each checked for whether its awaited data now exists:
+
+- **Written and published (two new articles and one update):** `/research/recognizing-store-bought-targets/` (entry 332 and question
+  87, decided on what exists as entry 341 says: the scale is measured only against the learned sheet, and the article shows the
+  warning a shooter checks; no maker's artwork); `/research/opencv-on-android-from-dotnet/` (entry 198: the build, its two traps and
+  the Fold 7's first run); and two new sections of `/research/wrong-bull/` (entries 374 and 376 Part A: a row higher fits exactly as
+  well, the shooting order breaks the tie, and a real tie is asked). Both new articles have a drawn thumbnail, are listed in
+  `website/research/PUBLISHED.md`, and are backed by rules in `docs/claims-backing.json`; the research card's sentence is backed alone.
+- **Not written, with the reason in the row:** entry 410 section 1 (already decided twice since, entries 415 and 434), entry 362
+  (five photographs on one counter; request 74 never came), entry 261 (still synthetic), entries 196 and 197 (synthetic; the only real
+  sheet is the orange commercial target), entry 344 (no real photo of a real poster), and entry 158 program A step 2 (the orange
+  commercial target, and a scan detector on photographs).
+- Checks: the site builds; `claims.py --check` all backed; consistency 0 findings; README checked.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

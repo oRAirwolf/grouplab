@@ -9,12 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-20, entry 460 done, questions 100 and 98 (before it: Phase 9's next step, entry 447 part 2, request 103).
+**Last rewritten:** 2026-10-21, entry 461 part 1 done (research rows decided); parts 2 and 3 next (before it: entry 460, questions 100 and 98).
 
 ---
 
 ## In flight
 
+- **Entry 461 (2026-10-21), Alan's queue for the rest of the week**: part 1 done, every "not yet" research row decided;
+  published `recognizing-store-bought-targets` and `opencv-on-android-from-dotnet`, and wrong-bull's October sections. Next: part 2
+  (screen reader audits on all three, then a phone photograph's codes faster), part 3 (sync option A's engine, nothing reachable).
 - **Entry 460 (2026-10-20)**: dark selection #f800f8 (question 100); copies of one single-page design asked once, "Pool these 3
   pictures as one group?", on both (question 98, `CopiesQuestion`).
 - **Request 103 answered by Alan (2026-10-20)**: Top Gun's group is five-shot extreme spread, averaged. Groups are set beside it as
@@ -26,8 +29,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entries 455 and 456 (2026-10-19)**: Ballistics' Point blank view (`PointBlankModel`, `PointBlankReport`, `PointBlankCard`); the rifle's
   Scope and mount (`ScopeMount`, `ScopeTracking`, `TopGun`), schema 5. Top Gun's comparison done (request 103). **Later idea**: tracking
   measured from a scanned tracking target (72 in tall at 20 mil and 100 yd: tiled pages or a plotter).
-- **Entries 454 and 452 (2026-10-19)**: each platform follows its own newest build (`platforms` in the second manifest). The website,
-  ships-list and release notes checks are in `checks.yml`, which no nightly waits for; a refused note publishes short notes with a warning.
 - **Entry 447 (2026-10-18 to 20)**: all four parts done; Real taps proved by 20 green runs. Part 2's remainder done 2026-10-20: six
   windows tabbed headless (`Entry447WindowsTests`; CSV mapping names and Fudd buster's focus fixed), the phones' deeper pages named. Left: a real screen reader.
 
@@ -60,7 +61,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **23**; waiting on him: 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **24**; waiting on him: 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -84,7 +85,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 461, parts 2 and 3.
 
 ## Things that would surprise somebody who was not here yesterday
 

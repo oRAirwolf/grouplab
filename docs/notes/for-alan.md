@@ -1,4 +1,19 @@
-**Open: 23.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 24.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**DESIGN NEEDED** (entry 461 section 3.2; not a request for you; planning, please): **the three screens of synchronization**, option A
+(a folder the person's own cloud client syncs). The engine is being built with nothing a person can reach; these three are drawn first.
+1. **Choosing the folder**, in Settings on the computer and the phone: the folder chosen (on the computer any folder, on Android the
+   system's folder picker, on iPhone and iPad a folder in Files), this device's name as the other devices will see it, when it last
+   synchronized and what it brought (for example "3 sessions in, 1 out, 2 minutes ago"), the other devices it has seen with when each
+   last wrote, and a way to stop. A folder that has gone missing (unplugged, signed out) has to say so plainly without losing anything.
+2. **Two devices changed the same session**: both versions side by side, with which device and when, what differs (marks added or
+   moved, the load, the notes), and three choices: keep this one, keep that one, keep both as two sessions. Nothing is decided without
+   the person; until they choose, both stay. It needs a place to be found later too (a count on Sessions, say).
+3. **"Also copy the original photographs"**, with its size: geometry is about 5 KB a target and the proof picture about 400 KB, so a
+   year of 200 targets is about 80 MB without originals; one 600 dpi scan is about 25 MB and a phone photograph 3 to 6 MB, so the same
+   year with originals is about 1 to 5 GB. The choice should show the size for this person's own records, measured, not these
+   estimates. Measured figures will replace these when the engine's tests have them.
+A good answer: a concept of each, for Alan to choose from.
+
 **Your drop, entry 423 section 0 (not a request):** dropping several scans onto a tab that held a sheet replaced that tab's picture. On
 nightly 190 and earlier a drop always opened only the first picture, over the tab dropped on. On nightlies 191 and 192 each picture was
 meant to get its own tab, but when a question was showing in the middle of the window (as when a scan's codes do not read), the new tab
@@ -278,6 +293,16 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 105. For later, not urgent: twenty minutes with a real screen reader (entry 461 section 2.1)
+
+**Why:** GroupLab's screens are now checked by machine on every build for what a screen reader needs (every control named, a role,
+large enough to tap, reachable with Tab). What a machine cannot judge is whether it makes sense aloud: the order things are read in,
+whether a result is announced when an analysis finishes, and whether a picture is described in words that help.
+**Steps,** whenever you have twenty minutes, on any one device (Narrator on Windows with Ctrl+Win+Enter, TalkBack on the Fold 7, or
+VoiceOver on the iPad): open a sample target, analyze it, read the result, and move through Settings, with your eyes closed or the
+screen dimmed. Note anything read in a strange order, anything silent, and anything you could not reach.
+**A good answer:** a few lines: the device, what read well, and what did not.
 
 ## 104. The point blank card on your M220, five minutes, once the nightly with it is out (entry 455)
 
