@@ -8221,6 +8221,17 @@
    "match": "^At 300 yards it hardly matters; at 1000 it is a miss\\.$|^And a scope's own travel decides|^And a scope&#x27;s own travel decides|^When a click is not what it says: the sight scale factor A scope that moves|^That is normal for many scopes, harmless at 300 yards|^How a tall target test measures it, and what GroupLab does",
    "kind": "measured",
    "where": "the research index cards repeat the descriptions of website/research/canted-scope-at-distance.md and when-a-click-is-not-a-click.md, whose numbers are held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs and whose sources are in their front matter (entry 462 section 2)"
+  },
+  {
+   "surface": "^site:research/how\\-much\\-vertical\\-is\\-velocity/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, worked 2026-10-21 by GroupLab's solver for one load and two rifles described by their own spread, seed 2026 for the five-shot height; every number held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TheVelocityArticlesFiguresHold (the height per ft/s, the vertical a velocity SD adds, the shares, the hot day, the time of flight, the five-shot height, the SD and share intervals), what GroupLab shows checked against src/GroupLab.Core/Ballistics/VelocityVertical.cs VelocityVertical (Analyze) and src/GroupLab.Core/Ballistics/Projection.cs Projection (DropPerFps) (entry 464 section 3)"
+  },
+  {
+   "surface": "^site:research/index\\.html$",
+   "match": "^A velocity SD of 10 ft/s adds two hundredths of an inch|^So a 100 yard group cannot show you your velocity",
+   "kind": "measured",
+   "where": "the research index card repeats the description of website/research/how-much-vertical-is-velocity.md, whose numbers are held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TheVelocityArticlesFiguresHold and whose sources are in its front matter (entry 464 section 3)"
   }
  ]
 }

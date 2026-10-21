@@ -11,7 +11,7 @@ no_figure: "The numbers are few and the article gives them as tables."
 found: "2 degrees of cant moves the shot 0.8 in sideways at 300 yd, 7.3 in at 800 and 12.5 in at 1000, while the height lost stays under a quarter of an inch. A scope with 60 MOA of travel on a flat rail runs out of elevation at 910 yd with this load; on a 20 MOA rail it reaches 1270."
 sure: "the geometry is exact for a rifle tilted about the line of sight, and the fall of the bullet comes from GroupLab's solver for one load in still air. It leaves out wind, which a cant also turns, and the error of reading a level."
 sources:
-  - "The bullet's path, the elevation and the zero's angle: GroupLab's ballistic solver, docs/BALLISTICS.md."
+  - "The bullet's path, the elevation and the zero's angle: GroupLab's ballistic solver, src/GroupLab.Core/Ballistics, checked as docs/BALLISTICS-VALIDATION.md describes."
   - "How far a scope's travel and a rail reach: the rifle's Scope and mount figures in GroupLab."
   - "Every figure in this article: tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs, TheCantArticlesFiguresHold."
 ---

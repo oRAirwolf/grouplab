@@ -158,4 +158,74 @@ public class ArticleFiguresTests(ITestOutputHelper output)
             Assert.InRange(c4, at4 - 0.01, at4 + 0.01);
         }
     }
+
+    /// <summary>
+    /// Entry 464 section 3, "How much of your vertical is your velocity?": the vertical SD a velocity SD of 5, 10 and 15 ft/s adds at each
+    /// distance (<see cref="Projection.DropPerFps"/>, the sight left where the mean velocity zeroes it), the share of the vertical it is for two
+    /// rifles whose own sigma is 0.25 and 0.5 MOA, the same at 90 F and 6000 ft, and how wide the share and the SD measured from 10 and 20
+    /// shots are at GroupLab's 90 percent (<see cref="VelocityVertical.Analyze"/>'s F and chi-squared intervals).
+    /// </summary>
+    [Fact]
+    public void TheVelocityArticlesFiguresHold()
+    {
+        var hot = Load with { TemperatureF = 90, AltitudeFt = 6000 };
+        foreach (var (yards, perFps, sd5, sd10, sd15, share25, share50, own25, total25) in new[]
+        {
+            (100, 0.0018, 0.01, 0.02, 0.03, 0.005, 0.001, 0.26, 0.26),
+            (300, 0.0180, 0.09, 0.18, 0.27, 0.050, 0.013, 0.79, 0.81),
+            (500, 0.0551, 0.28, 0.55, 0.83, 0.151, 0.042, 1.31, 1.42),
+            (800, 0.1658, 0.83, 1.66, 2.49, 0.385, 0.136, 2.09, 2.67),
+            (1000, 0.2926, 1.46, 2.93, 4.39, 0.555, 0.238, 2.62, 3.93),
+        })
+        {
+            double k = Math.Abs(Projection.DropPerFps(Load, yards)), inchesPerMoa = Math.Tan(MoaRadians) * yards * 36;
+            double Share(double sigmaMoa) => Math.Pow(10 * k, 2) / (Math.Pow(10 * k, 2) + Math.Pow(sigmaMoa * inchesPerMoa, 2));
+            Say($"{yards} yd: {k:0.0000} in per ft/s, SD 5 10 15 add {5 * k:0.00} {10 * k:0.00} {15 * k:0.00} in; share {Share(0.25):0.0000} {Share(0.5):0.0000}; vertical {Math.Sqrt(Math.Pow(10 * k, 2) + Math.Pow(0.25 * inchesPerMoa, 2)):0.00} in");
+            Assert.InRange(k, perFps - 0.00006, perFps + 0.00006);
+            Assert.InRange(5 * k, sd5 - 0.006, sd5 + 0.006);
+            Assert.InRange(10 * k, sd10 - 0.006, sd10 + 0.006);
+            Assert.InRange(15 * k, sd15 - 0.006, sd15 + 0.006);
+            Assert.InRange(Share(0.25), share25 - 0.002, share25 + 0.002);
+            Assert.InRange(Share(0.5), share50 - 0.002, share50 + 0.002);
+            Assert.InRange(0.25 * inchesPerMoa, own25 - 0.006, own25 + 0.006);
+            Assert.InRange(Math.Sqrt(Math.Pow(10 * k, 2) + Math.Pow(0.25 * inchesPerMoa, 2)), total25 - 0.006, total25 + 0.006);
+        }
+
+        // At 1000 yd the bullet is in the air about a second and a half and has lost close to half its speed.
+        var far = BallisticSolver.Solve(Load, 1000, 1000).Points[^1];
+        Say($"1000 yd: {far.TimeOfFlight:0.000} s, {far.VelocityFps:0} ft/s");
+        Assert.InRange(far.TimeOfFlight, 1.45, 1.55);
+        Assert.InRange(far.VelocityFps, 1450, 1530);
+
+        // A five-shot group's height, top to bottom, is on average about 2.3 times its vertical SD (the expected range of five normals, 2.326).
+        var heights = new Random(2026);
+        double height = Enumerable.Range(0, 200000).Average(_ =>
+        {
+            var five = Enumerable.Range(0, 5).Select(_ => Normal(heights)).ToList();
+            return five.Max() - five.Min();
+        });
+        Say($"five shots: height {height:0.000} times the SD");
+        Assert.InRange(height, 2.31, 2.34);
+
+        Assert.InRange(10 * Math.Abs(Projection.DropPerFps(hot, 1000)), 2.525, 2.54);
+        Assert.InRange(10 * Math.Abs(Projection.DropPerFps(hot, 800)), 1.485, 1.495);
+
+        // A rifle's sigma of 0.25 and 0.5 MOA is an average five-shot group of about 0.77 and 1.5 MOA.
+        double fiveShot = RangeStatisticsTable.Default.Lookup(RangeStatistic.ExtremeSpread, 5)!.Value.Mean;
+        Assert.InRange(0.25 * fiveShot, 0.76, 0.77);
+        Assert.InRange(0.5 * fiveShot, 1.52, 1.54);
+
+        // The share's interval from n readings and n shots is the share divided and multiplied by F's 95th percentile; the SD's from n readings.
+        foreach (var (n, factor, lowAt30, highAt30, sdLow, sdHigh) in new[] { (10, 3.18, 0.094, 0.954, 7.3, 16.5), (20, 2.17, 0.138, 0.650, 7.9, 13.7) })
+        {
+            double f = Distributions.FQuantile(0.95, n - 1, n - 1);
+            var (low, high) = GroupLab.Core.Records.Chronograph.SdInterval(n, 10, GroupLab.Core.Marking.VelocityBlocks.Confidence)!.Value;
+            Say($"{n} shots: share times or over {f:0.000}, 30 % is {0.3 / f:0.000} to {0.3 * f:0.000}; SD 10 is {low:0.0} to {high:0.0}");
+            Assert.InRange(f, factor - 0.006, factor + 0.006);
+            Assert.InRange(0.3 / f, lowAt30 - 0.0015, lowAt30 + 0.0015);
+            Assert.InRange(0.3 * f, highAt30 - 0.0015, highAt30 + 0.0015);
+            Assert.InRange(low, sdLow - 0.06, sdLow + 0.06);
+            Assert.InRange(high, sdHigh - 0.06, sdHigh + 0.06);
+        }
+    }
 }
