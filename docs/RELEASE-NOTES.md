@@ -12,6 +12,29 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.216
+
+**2026-10-21**, commit `4234a59`. Nightly.
+
+**What you will notice**
+
+- The scale badge on the analysis now sits at the top of the figures with a line saying how the scale was found, such as from the printed markers on all 3 sheets against your printer check, and the sheet's name at the top has its full room.
+- Which target is this? is now a short bar along the bottom of the picture, with the bullseye moved up whole above it so it is never covered; on the phone it is a sheet under the picture.
+- The guided demo's card now sits beside the part it describes, with a small pointer toward it, instead of covering the words it is about.
+- The first run now asks one question at a time, with Back, Skip for now and Next, so each question and its buttons fit on a small screen, and a skipped question is asked again next time.
+- On the marking picture each bull's number now sits outside its ring and each hole's number in a tag that covers no other number or hole, several holes on one bull fanned out in a column, and the shot you select is an open magenta ring that leaves the hole in sight, on the computer and in Fix holes on the phone.
+- On the phone, Scale markers on Targets now reads as plain text, with a button beside each marker's name that explains it, and at the largest text sizes Made for your optic puts one field to a row with its label above it.
+- On Compare loads, two loads now keep their group pictures at their size and the rest of the card says What the difference means: both loads' main figures side by side, whether these shots can tell them apart, and how many shots would.
+- On the analysis, the shots list's headings now name their unit, such as across, in, and the plot's key sits in a compact box under the plot instead of over it, in two columns where it fits; on the phone the key sits under its plot too.
+
+**Under the hood**
+
+- On the phone's tour, the step's number no longer sits on the card's words when the card has to cover part of the screen it describes.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.216)
+
+---
+
 ## 0.2.0-nightly.215
 
 **2026-10-21**, commit `29eee02`. Nightly.
