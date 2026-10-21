@@ -7876,6 +7876,34 @@
   "At the top of the figures on the right, the badge reads Scale checked when the sheet's own markers set the scale, and the line under it says how the scale was found, such as \"From the printed markers on all 3 sheets, against your printer check\"; Show work has the detail.": {
    "kind": "code",
    "where": "Entry 465 4B (Alan chose the pill at the top of the side panel): ScaleSaid.How in src/GroupLab.Core/Marking/ScaleSaid.cs, built from each sheet's own scale (SheetReference.ScaleFrom for a printer check, PrintScale for the scan's resolution), shown by MainWindow's scaleHow under the pill; held by ScaleSaidTests and ScalePillTests"
+  },
+  "Its gate, reading both on real pictures, has been met: on Alan's own scan and Fold 7 photograph of one sheet it reads both (a test on the test-data release).": {
+   "kind": "code",
+   "where": "PhotoComparisonTests.OnAlansOwnScanAndPhotographItReadsBothGates; docs/PROOF-CHECKLIST.md row 12 and entry 464 section 2"
+  },
+  "Performance** | **In progress** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed | Phases 5 and 9 are in progress in the nearest honest sense: parts of each are built, some proven and some not, and the rest is not started.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 275, the consistency audit of 2026-09-28, and entry 464 section 2, which moved grouplab bench to Done (docs/PROOF-CHECKLIST.md)"
+  },
+  "What it reads does not yet meet the registration gate, which is Phase 0's and not this tool's.": {
+   "kind": "code",
+   "where": "docs/PROOF-CHECKLIST.md row 1 (worst bull 0.0057 in on the pair against 0.005); entry 464 section 2"
+  },
+  "- **Done.** Session records in one SQLite database with a documented, versioned schema and full JSON export and import: Accept and analyze saves the session, with its marking, figures, definition and a 150 dpi proof image, and the Session records screen lists them newest first, filters by rifle and load, opens one back to its analysis with no image needed, and asks before deleting one.": {
+   "kind": "code",
+   "where": "RealSessionProofTests.AlansOwnSessionKeepsItsFiguresThroughSaveReopenExportAndImport; docs/PROOF-CHECKLIST.md row 15 and entry 464 section 2"
+  },
+  "- **Done.** The session report: a PDF from GroupLab's own writer with the particulars, the composite plot, every figure with its interval, without any shot left out and with every shot beside it, the zero correction and the two cards on page 1, and the shot table with bulls, exclusions with reasons, unmade decisions, registration, every \"why\", and the version and identifiers on page 2.": {
+   "kind": "code",
+   "where": "Entry170Tests.TheReportsZeroSentenceIsTheScreensLinesJoined and RealSessionProofTests.AlansOwnSessionsReportGivesTheScreensZeroVerdict; docs/PROOF-CHECKLIST.md row 16 and entry 464 section 2"
+  },
+  "Its gate, no figure more than a quarter and 20 ms slower than the baseline, has been met on the computer that set it.": {
+   "kind": "code",
+   "where": "BenchGate and docs/performance-baseline.json; the baseline gate's passes in docs/PERFORMANCE.md (entries 388, 415 and 433); docs/PROOF-CHECKLIST.md row 31 and entry 464 section 2"
+  },
+  "Where a Shoot-N-C bullseye could be the 6 in or the 8 in, a small window asks which.": {
+   "kind": "code",
+   "where": "NOTES-FROM-PLANNING.md entries 340 and 341 (Alan's decision: recognition ships, the printed size is the scale with a warning, a family asks which size); the five products in src/GroupLab.Core/StoreTargets/Fingerprints/library.json, recognition in StoreTargetRecognizer, on the desktop src/GroupLab.App/MainWindow.StoreTargets.cs and on the phone mobile/GroupLab.Mobile/PhoneAnalysis.cs Recognize; the warning StoreTargetMatch.Warning and CheckScale; the question FamilyQuestion (6 in and 8 in, the Shoot-N-C bullseye family); the picture is Entry109Tests' stand-in bullseye (docs/figures/screens/current/SOURCES.md)"
   }
  },
  "rules": [

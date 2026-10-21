@@ -14,6 +14,55 @@ they exist and on rendered sheets where they do not. Rows 6, 8, 13, 15, 21 and 2
 name; row 16 too, once question 91 decided the report's zero sentence (below). Every other row still needs the material
 in the checklist at the end, a change to detection, or a gate planning has not written.
 
+## Entry 464 section 2, 2026-10-21: what a machine has proven, and what the rest needs
+
+Planning's word this time: every row a machine can prove honestly (computer-made pictures with known answers, emulator and simulator
+runs, round trips through files) moves to proven with its evidence, and nothing that needs a real camera, printer, chronograph, range or
+person does. **Before: 27 of the 31 rows built, not proven** (7, 18, 22 and 26 were Done), 29 such lines in the README with the two
+outside the 31 (the rest of the desktop from the keyboard, and sync). **After: 16 of the 31, 18 lines in the README.** Each test named was
+run again on 2026-10-21 and passed, with the test-data release's files (checked against their SHA-256) where it needs them.
+
+**Moved to Done in the README**, the evidence a machine gives:
+
+| # | feature | evidence |
+|---|---|---|
+| 6 | Significance testing | `compareGroups` keys against `shotGroups` (Phase 2 fixtures); `SignificanceKnownTruthTests`, the MANOVA and the ratio interval on 20,000 simulated sheets each |
+| 8 | Subgroups within one sheet | `LadderSubgroupTests.EachRowOfALadderSheetReadsAsASheetOfItsOwn`, Alan's dominus-k scan read as a five-load ladder |
+| 11 | Shots per bull for doubles | `DoublesSheetTests`: a computer-made GL-CF25-LTR at 300 dpi, 20 holes of known place, through the real detector and matching |
+| 12 | `grouplab compare-photos` | `PhotoComparisonTests.OnAlansOwnScanAndPhotographItReadsBothGates`, Alan's scan and Fold 7 photograph from the test-data release; entry 399 read gate 2 with it on seven mounted frames |
+| 13 | The rounds fired as a check | `RoundsFiredOnARenderedSheetTests.TwoShotsThroughOneHoleAreFlaggedWhenTheRoundsFiredAreEntered`, a computer-made sheet through the real detector |
+| 15 | Session records | `RealSessionProofTests.AlansOwnSessionKeepsItsFiguresThroughSaveReopenExportAndImport`, through the window, a round trip through files |
+| 16 | The session report PDF | `Entry170Tests.TheReportsZeroSentenceIsTheScreensLinesJoined` and `RealSessionProofTests.AlansOwnSessionsReportGivesTheScreensZeroVerdict`, with the report tests on generated sessions |
+| 17 | The target library | No gate was written; the one held is every action the README names done through the window, with a session still opening after its sheet is deleted: `Entry112Tests.TheLibraryKeepsOwnSheetsBesideTheBuiltInOnesAndAsksBeforeDeleting`, and `OwnSheetsTests` for the files |
+| 21 | Garmin Xero import | `ChronographWorkbookTests.EveryOneOfAlansExportsReadsWhereTheyAreHere`, every one of Alan's exports on this computer (never on CI) |
+| 23 | Load against load on screen | `RealSessionProofTests.AlansTwoSuppressorSessionsCompareOnScreenAsTheComparisonSays` |
+| 31 | `grouplab bench` | The baseline gate passed on the computer that set it (entries 388, 415 and 433, docs/PERFORMANCE.md). Run again on 2026-10-21 while other builds and test runs shared the computer, its timings were from a third slower to four times as slow, which the gate rightly failed; that run measured the load, not GroupLab |
+
+**Left built, not proven**, and exactly what would prove each:
+
+| # | feature | what would prove it |
+|---|---|---|
+| 1 | Registration from an off-axis photograph | A shot GL-CF25-LTR-D sheet, kept flat, scanned at 600 dpi, then photographed with the Fold 7's main lens square on, at about 20 degrees and at about 35 (a camera and a range) |
+| 2 | Developable-surface model | A current sheet mounted as at the range, photographed, then scanned flat; and a change to the surface model first, since seven frames of one sheet cannot choose it |
+| 3 | Render-and-difference detection | No material: a change to detection that removes the 4 false marks on the corpus without a cause made up for those pictures; a computer-made sheet cannot stand in for the corpus's paper |
+| 4 | A mark much bigger than your bullet | A real sheet with two shots through one hole, the count written down; and on computer-made sheets one torn clean hole is ringed at 1.48 holes' area, so the rule or the proposed gate's second half has to change first |
+| 5 | The statistics engine against `shotGroups` | No material: point 2 cannot be met on `shotGroups`' own `DFcm` and `DFinch`, which put shot 242 in different series; planning would have to restate point 2 |
+| 9 | The review queue | Alan, at the computer, correcting the wrong-bull scan's misassignments in under two minutes, timed by `grouplab timing` (a person) |
+| 10 | Keyboard operation | The same sitting as 9, with the keyboard alone (a person) |
+| 14 | Printing from inside GroupLab on Windows | One sheet printed with GroupLab's own Print, scanned at 600 dpi and measured (a printer and paper) |
+| 19 | Volunteer print pack | A pack printed and its bull 1 to bull 5 distance measured with a ruler (a printer and paper) |
+| 20 | Chronograph strings by hand | A sheet shot bull 1 to bull 25 in order with the Garmin Xero recording, its string number on the load block (a range and a chronograph) |
+| 24 | Velocity regression | The same sheet and string as 20, paired shot for shot (a range and a chronograph) |
+| 25 | Hit probability at another distance | One load, a five shot group at 100 yards and another at 300, each on its own load sheet (a range with 300 yards) |
+| 27 | The result on the phone, shared sessions | One session shared from a phone through Android's share sheet and opened on the desktop (a phone sitting); the desktop's half is held by `SessionFileTests`, but no test carries a file from the phone's own Share this session to the desktop's window, and that would need the emulator run to share and hand the file back |
+| 28 | The Targets screen on the phone | A sheet printed from the phone's Targets screen, scanned and measured (a printer) |
+| 29 | Signed APK, development build, Play internal test | The Play internal test copy installed from Google Play beside the other two on one real phone (request 50) |
+| 30 | Marking by hand on the phone | A shot store-bought target marked by hand on both phones, against request 9's click noise (a person and the phones) |
+
+Outside the 31, the two lines the README adds: **the rest of the desktop from the keyboard** (entry 442) has no gate, and a person using
+it is what it is for; **sync between devices** (entries 461 and 463) needs two real devices, a computer and a phone, on one cloud folder,
+each changing a session and seeing the other's change, and a change made on both kept both ways.
+
 ## The 31
 
 Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gate nobody has written yet.
