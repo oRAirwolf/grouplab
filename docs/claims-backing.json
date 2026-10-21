@@ -8005,6 +8005,27 @@
    "match": "Nightly [0-9]+, built [0-9]{4}-[0-9]{2}-[0-9]{2} from commit [0-9a-f]{7,40} \\.$|^Every file in nightly [0-9]+, on GitHub The moving release on GitHub",
    "kind": "code",
    "where": "website/build.py newest_build(): the newest nightly's number, date and commit, read from its own entry in docs/RELEASE-NOTES.md, which the nightly writes as it publishes (entry 338); the stable file names are the ones .github/workflows/nightly.yml uploads to the moving release"
+  },
+  {
+   "surface": "^site:research/top\\-gun\\-and\\-your\\-groups/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, data from simulation with seed 2026, 2026-10-21; every number held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TopGunsArticleFiguresHold (the percentiles, the intervals, the false and true calls, the three rifles' trend), what GroupLab shows checked against src/GroupLab.Core/Ballistics/ScopeMount.cs TopGun (Note, WorseThanTrend, OnItsBasis) (entry 462 section 2)"
+  },
+  {
+   "surface": "^site:research/canted\\-scope\\-at\\-distance/",
+   "kind": "measured",
+   "where": "the article's own evidence: 3 sources, worked 2026-10-21 by GroupLab's solver for one load; every number held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TheCantArticlesFiguresHold (the dial, the sideways miss, the height lost, the zero's angle, the reach with and without a rail), the rail figures checked against src/GroupLab.Core/Ballistics/ScopeMount.cs ScopeMount (Figures, Farthest) (entry 462 section 2)"
+  },
+  {
+   "surface": "^site:research/when\\-a\\-click\\-is\\-not\\-a\\-click/",
+   "kind": "measured",
+   "where": "the article's own evidence: 4 sources (Gun Digest and The Firearm Blog for real error sizes, read 2026-10-21), worked 2026-10-21 by GroupLab's solver and hit probability, seed 2026; every number held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TheTrackingArticlesFiguresHold, the test's steps and the factor checked against src/GroupLab.Core/Ballistics/ScopeMount.cs ScopeTracking (Steps, Work, Applied) (entry 462 section 2)"
+  },
+  {
+   "surface": "^site:research/index\\.html$",
+   "match": "^At 300 yards it hardly matters; at 1000 it is a miss\\.$|^And a scope's own travel decides|^And a scope&#x27;s own travel decides|^When a click is not what it says: the sight scale factor A scope that moves|^That is normal for many scopes, harmless at 300 yards|^How a tall target test measures it, and what GroupLab does",
+   "kind": "measured",
+   "where": "the research index cards repeat the descriptions of website/research/canted-scope-at-distance.md and when-a-click-is-not-a-click.md, whose numbers are held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs and whose sources are in their front matter (entry 462 section 2)"
   }
  ]
 }

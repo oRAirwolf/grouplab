@@ -2029,6 +2029,29 @@ accessibility point is the link finding above.
 
 **In CI.** `checks.yml`'s website job now runs `site-audit.cjs --only a11y` (axe on every page, both themes, at phone width): 67 s here.
 
+## Entry 462 section 2: three new research articles, written and published (2026-10-21)
+
+Each meets entry 392 section 1: every number is worked out by GroupLab's own code and held by
+`tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs`, whose simulations are seeded (2026) and rerun to the same values; every
+checkable sentence is backed in `docs/claims-backing.json`; the developer is not named; the byline is the existing one; each has a drawn
+thumbnail and is listed in `website/research/PUBLISHED.md`. No link to any site but grouplab.org and the two sources named.
+
+1. **Does your rifle group as well as Top Gun says it should?** (`top-gun-and-your-groups`) One five-shot group is 0.67 to 1.36 times
+   the true average five-shot group, 8 times in 10; GroupLab's interval on Top Gun's basis is 0.82 to 1.29 times from 20 shots; a rifle
+   on the trend is called clearly wider 3 to 4 times in 100 at any size, and one 25 percent worse is caught 25, 35, 58, 73 and 90 percent
+   of the time from 5, 10, 20, 30 and 50 shots. The book is cited by title and chapter only; nothing is quoted.
+2. **What a canted scope costs at distance** (`canted-scope-at-distance`) For the point blank article's load, 2 degrees of cant moves the
+   shot 0.8 in sideways at 300 yd and 12.5 in at 1000 while losing under a quarter inch of height; a 60 MOA scope reaches 910 yd on a flat
+   rail and 1270 on a 20 MOA rail (`ScopeMount.Farthest`).
+3. **When a click is not what it says: the sight scale factor** (`when-a-click-is-not-a-click`) Error sizes from Gun Digest (about 2
+   percent typical, 5 a reason to return the scope) and The Firearm Blog (one scope at 110 percent); at 1000 yd a 2 percent error moves the
+   center 6.3 in and the first-round chance on a 10 in circle falls from 36 to 20 percent (GroupLab's hit probability for the centred
+   case, the same shots moved for the rest). Checking against the code changed one passage: GroupLab's test reads the turret with the
+   reticle on the lines and fires no shots.
+
+Candidate 4 found three investigations since entry 402 with no row: the screen reader audits, synchronization and the site audit, each
+decided not written in RESEARCH.md with its reason.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

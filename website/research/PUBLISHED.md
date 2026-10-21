@@ -49,3 +49,6 @@ Each line is the slug, then the date it went live, then which batch it came out 
 - point-blank-range-honestly  2026-10-19  entry 455, under entry 393's standing rule
 - recognizing-store-bought-targets  2026-10-21  entry 461, under entry 393's standing rule
 - opencv-on-android-from-dotnet  2026-10-21  entry 461, under entry 393's standing rule
+- top-gun-and-your-groups  2026-10-21  entry 462, under entry 393's standing rule
+- canted-scope-at-distance  2026-10-21  entry 462, under entry 393's standing rule
+- when-a-click-is-not-a-click  2026-10-21  entry 462, under entry 393's standing rule

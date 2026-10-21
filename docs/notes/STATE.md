@@ -9,12 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-21, entry 461 done (research rows decided; screen reader audits; codes measured; sync option A's engine).
+**Last rewritten:** 2026-10-21, entry 462 sections 0 to 2 done (question 106 answered; the site audited and fixed; three articles).
 
 ---
 
 ## In flight
 
+- **Entry 462 (2026-10-21), the overnight queue to 95% of the week**: 0 (question 106 answered, leave it), 1 (site audit,
+  `scripts/site-audit.cjs` in checks.yml; two colour findings DESIGN NEEDED) and 2 (three articles) done; 3 to 5 next, then entry 463.
 - **Entry 461 (2026-10-21), Alan's queue for the week**, done: three research pieces published; screen reader audits on all three
   (`ScreenReaderAudit`, `scripts/screen-reader-audit.py`), `SpokenNames`, Android's TalkBack boxes moved (`AccessibilityOnScreen`);
   codes measured (question 106); sync option A's engine, schema 6 (`SyncEngine`, `grouplab sync`), reached by nothing.
