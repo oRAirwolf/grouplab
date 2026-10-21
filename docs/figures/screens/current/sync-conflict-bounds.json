@@ -1,0 +1,181 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "2 versions": [
+      1207,
+      400,
+      87,
+      27
+    ],
+    "2026-10-14, GroupLab 5x5 Load Development, Letter, Test rifle, Second load, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
+      109,
+      436,
+      1187,
+      19
+    ],
+    "2026-10-21, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
+      109,
+      404,
+      1096,
+      19
+    ],
+    "24 holes": [
+      159,
+      305,
+      160,
+      160
+    ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
+    "Choose": [
+      276,
+      334,
+      71,
+      27
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
+    "Compare the chosen": [
+      79,
+      201,
+      149,
+      27
+    ],
+    "Compare the session Second load, GroupLab 5x5 Load Development, Letter": [
+      77,
+      430,
+      32,
+      32
+    ],
+    "Compare the session Test load, 41.7 gr, GroupLab 5x5 Load Development, Letter": [
+      77,
+      398,
+      32,
+      32
+    ],
+    "Decide later": [
+      701,
+      701,
+      106,
+      42
+    ],
+    "Delete": [
+      1298,
+      400,
+      76,
+      27
+    ],
+    "Dismiss": [
+      837,
+      157,
+      32,
+      32
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
+    ],
+    "Keep Desk computer's": [
+      159,
+      701,
+      170,
+      42
+    ],
+    "Keep Range laptop's": [
+      337,
+      701,
+      156,
+      42
+    ],
+    "Keep both as two sessions": [
+      501,
+      701,
+      192,
+      42
+    ],
+    "Load": [
+      337,
+      155,
+      180,
+      32
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Pool the chosen": [
+      79,
+      244,
+      121,
+      27
+    ],
+    "Rifle": [
+      112,
+      155,
+      180,
+      32
+    ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
+    ],
+    "This session was changed on two devices": [
+      134,
+      132,
+      760,
+      636
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

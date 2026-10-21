@@ -22,7 +22,7 @@ look decision fixes.** Everything else the accessibility audit found is fixed.
 2. **Amber words on the grey panels of "How it works"** in the light theme (the big numbers, the stage labels, the strip above each deep
    dive) are 4.19 to 1, just under the 4.5 asked for small text. Options: the white panel behind them, or a darker amber for text on grey.
    Picture: `docs/figures/site/entry-462/tour-amber-on-grey-light.webp`.
-**DESIGN NEEDED** (entry 461 section 3.2): **the three screens of synchronization. Answered 2026-10-21: 1A, 2A, 3B (entry 463), being built.** Option A
+**DESIGN NEEDED** (entry 461 section 3.2): **the three screens of synchronization. Answered 2026-10-21: 1A, 2A, 3B (entry 463), built 2026-10-21.** Option A
 (a folder the person's own cloud client syncs). The engine is being built with nothing a person can reach; these three are drawn first.
 1. **Choosing the folder**, in Settings on the computer and the phone: the folder chosen (on the computer any folder, on Android the
    system's folder picker, on iPhone and iPad a folder in Files), this device's name as the other devices will see it, when it last

@@ -21,6 +21,15 @@ internal static class PhoneStyles
 {
     public const string Card = "card";
 
+    /// <summary>Entry 463: a card that warns (the sync folder cannot be reached), in the amber of the canvas.</summary>
+    public const string Warn = "warn";
+
+    /// <summary>Entry 463: a small tag on a row that differs.</summary>
+    public const string Pill = "pill";
+
+    /// <summary>Entry 463 section 3: a size bar on the sync cards.</summary>
+    public const string SyncBar = "sync-bar";
+
     /// <summary>Entry 376 item B1: a page's own way back ("Back", "Back to the result"), which Android's back presses.</summary>
     public const string PageBack = "page-back";
 
@@ -110,8 +119,11 @@ internal static class PhoneStyles
             (TemplatedControl.ForegroundProperty, Brush(p.Text))),
 
         // Related things on one panel.
+        Rule(x => x.OfType<Border>().Class(Pill), (Border.BorderBrushProperty, Brush(p.Amber)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(8))),
+        Rule(x => x.OfType<Border>().Class(SyncBar), (Border.BackgroundProperty, Brush(p.Amber))),
         Rule(x => x.OfType<Border>().Class(Card), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line)),
             (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(CardRadius)), (Border.PaddingProperty, new Thickness(Tokens.Space16, Tokens.Space12))),
+        Rule(x => x.OfType<Border>().Class(Card).Class(Warn), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.Amber))),
 
         // A button a thumb hits: a pill, the desktop's colors, the body size.
         Rule(x => x.OfType<Button>(), (TemplatedControl.CornerRadiusProperty, new CornerRadius(PillRadius)), (Layoutable.MinHeightProperty, Screens.Touch),

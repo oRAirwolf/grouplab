@@ -158,6 +158,12 @@ public sealed class SettingsView : UserControl
         correcting.IsCheckedChanged += (_, _) => settings.SavePrinterCorrection(correcting.IsChecked == true);
         column.Children.Add(correcting);
         column.Children.Add(Screens.Choice("Add a printer", () => Shell.Current?.ShowPrinterCheck("")).Id("settings-add-printer"));
+        // Entry 463 section 1 (1A): synchronization, its own page under Settings.
+        column.Children.Add(Screens.Heading(GroupLab.Core.Sync.SyncScreens.Title));
+        var sync = PhoneSync.Setup;
+        column.Children.Add(Screens.Row(GroupLab.Core.Sync.SyncScreens.Title,
+            sync.On ? (PhoneSync.Unreachable ? GroupLab.Core.Sync.SyncScreens.UnreachableTitle : GroupLab.Core.Sync.SyncScreens.Status(sync, DateTime.UtcNow)) : "Off. Keep your devices the same through your own cloud folder.",
+            () => Shell.Current?.ShowSync()).Id("settings-sync"));
         column.Children.Add(Screens.Heading("Sharing"));
         // Entry 299: the page that says exactly what GroupLab sends, always in view; each section below shows its choice and one short line,
         // and the full explanation under "More".

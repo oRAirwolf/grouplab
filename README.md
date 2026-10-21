@@ -39,7 +39,7 @@ Mil or MOA, your choice: GroupLab asks which your scope is in and works in that 
 
 **Sharing and privacy:** [Send a target to the project](https://grouplab.org/features/#send-targets), [Error reports](https://grouplab.org/features/#error-reports), [The hardware survey](https://grouplab.org/features/#survey), [Words explained where they appear](https://grouplab.org/features/#explain-words), [A picture to share](https://grouplab.org/features/#share-picture), [The one-page report](https://grouplab.org/features/#one-page-report).
 
-**Updates and platforms:** [Updates that list what you skipped](https://grouplab.org/features/#updates), [Builds for the Mac](https://grouplab.org/features/#mac), [GroupLab Dev for testers](https://grouplab.org/features/#dev-build) (Android), [GroupLab updates itself on Android](https://grouplab.org/features/#android-updates) (Android).
+**Updates and platforms:** [Updates that list what you skipped](https://grouplab.org/features/#updates), [Builds for the Mac](https://grouplab.org/features/#mac), [GroupLab Dev for testers](https://grouplab.org/features/#dev-build) (Android), [GroupLab updates itself on Android](https://grouplab.org/features/#android-updates) (Android), [Sync between your devices](https://grouplab.org/features/#sync).
 
 Each one, with its picture, its platforms and the build it arrived in, is on the [Features page](https://grouplab.org/features/).
 <!-- /readme:features -->
@@ -50,7 +50,7 @@ Each one, with its picture, its platforms and the build it arrived in, is on the
 <summary><strong>Every screen, larger</strong></summary>
 
 These are the application as it is: the build renders every screen itself, in both themes at every size, every week, and
-`docs/figures/screens/current/` holds them all. The [tour](https://grouplab.org/tour/) walks through them. Not built yet: hole detection on blank paper, and synchronization between devices.
+`docs/figures/screens/current/` holds them all. The [tour](https://grouplab.org/tour/) walks through them. Not built yet: hole detection on blank paper.
 
 ![The analysis screen](docs/figures/screens/current/analysis-dark-1400x900.png)
 
@@ -69,6 +69,9 @@ These are the application as it is: the build renders every screen itself, in bo
 | **Light theme.** Dark, light, high contrast, or following the system. |
 
 </details>
+
+Your sessions, rifles, loads and sheets can now stay the same on your computer and phones, through a folder your own cloud app already
+keeps in step, with no GroupLab account: Settings, Sync between devices.
 
 Every split between panes can now be dragged to the size you want, on the computer and on a wide phone or tablet, and GroupLab
 remembers it; Settings has Reset layout to put them all back.
@@ -352,7 +355,7 @@ Since the phone was brought level with the desktop (entries 258 and 259):
 - On the phone, the camera's level works upright at a sheet left on its backer as well as flat over a table, names which under the
   crosshair, and follows the sheet's own angle once its markers are read; Guided takes the picture in either position.
 
-What does not exist yet: hole detection on blank paper, synchronization between devices, and a released iOS build (it is in testing through TestFlight).
+What does not exist yet: hole detection on blank paper and a released iOS build (it is in testing through TestFlight).
 
 #### Before the first beta or stable release
 
@@ -400,7 +403,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 | **4. Windows application** | **In progress** | target library, generation, printing, analysis, reporting and session records, in one application |
 | **5. Chronograph, solver, and comparison** | **In progress** | a ballistic solver validated against an independent implementation, and Garmin Xero import reconciled against marked shots |
 | **6. Android** | **In progress** | camera capture and lens distortion fitted on the device |
-| **7. Synchronization** | **Not started** | cloud provider adapters over three-tier storage |
+| **7. Synchronization** | **Built, not proven** | through a folder your own cloud app already keeps in step, with no GroupLab account, on the computer and the phones |
 | **8. iOS** | **In progress** | built and signed on CI |
 | **9. Performance** | **In progress** | not written yet: it is written from the baseline in `docs/PERFORMANCE.md`, in the times a person waits, per platform, rather than from a figure anybody guessed |
 
@@ -487,7 +490,10 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **Built, not proven.** Marking a target by hand on the phone: the scale, the aim points and the holes placed under a fixed crosshair, on Android and iOS (entry 279, Marking A).
 
 **Phase 7. Synchronization.**
-- **Not started.** Synchronization between devices: cloud provider adapters over three-tier storage.
+- **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app
+  already keeps in step (OneDrive, Dropbox, Google Drive, iCloud Drive); there is no GroupLab account and nothing goes anywhere but that
+  folder. A session changed on two devices is kept both ways and shown side by side until you choose, and the original photographs travel
+  only if you ask. Proving it needs two real devices on one cloud folder.
 
 **Phase 8. iOS.**
 - **In progress.** The plan, with sizes, is `docs/IOS-PLAN.md` (entry 278 section 6): the shared phone screens, OpenCV built for iOS, the camera on AVFoundation, and a nightly build signed on GitHub's Mac machines and sent to TestFlight. Submission to the App Store waits for Alan.

@@ -208,7 +208,8 @@ public class Entry109Tests
             // Entry 208 section 4 gathers sending targets, error reports and the survey under one section, "Sharing".
             // Entry 298 adds "Layout", with Reset layout.
             // Entry 314 adds "Caliber box shows", what the caliber box offers.
-            Assert.Equal(["Units", "Zero correction", "Caliber box shows", "Printers", "Saving", "Theme", "Layout", "This build", "Updates", "Sharing", "Your data", "Diagnostics", "Crash records"], settings);
+            // Entry 463 adds "Sync between devices", after Saving.
+            Assert.Equal(["Units", "Zero correction", "Caliber box shows", "Printers", "Saving", "Sync between devices", "Theme", "Layout", "This build", "Updates", "Sharing", "Your data", "Diagnostics", "Crash records"], settings);
             window.ShowSettings(false);
             window.Close();
         }
@@ -631,6 +632,67 @@ public class Entry109Tests
                         var yourData = window.GetLogicalDescendants().OfType<TextBlock>().First(t => t.Text == "Your data");
                         yourData.BringIntoView(new Avalonia.Rect(0, 0, 1, 4000));
                         Save(window, $"settings-data-{name}-{size}");
+
+                        // Entry 463: Sync between devices in Settings, a folder chosen and synced with another device in it (1A, with the
+                        // cards of 3B), and a session changed on both laid out side by side (2A). The other device is a second store the walk
+                        // makes, named "Range laptop"; the choice is settled after each theme's pictures, so no later picture shows a banner.
+                        string syncRoot = Path.Combine(Path.GetDirectoryName(path)!, $"sync-walk-{size}");
+                        string cloudFolder = Path.Combine(syncRoot, "OneDrive", "GroupLab");
+                        Directory.CreateDirectory(cloudFolder);
+                        var laptop = GroupLab.Core.Records.SessionStore.Open(Path.Combine(syncRoot, "laptop.db"));
+                        var laptopLocal = new GroupLab.Core.Sync.FileSyncLocal(Path.Combine(syncRoot, "sheets"), Path.Combine(syncRoot, "settings.json"));
+                        var cloud = new GroupLab.Core.Sync.DirectorySyncFolder(cloudFolder);
+                        void Synced(Task run)
+                        {
+                            var until = DateTime.UtcNow.AddMinutes(1);
+                            while (!run.IsCompleted && DateTime.UtcNow < until)
+                            {
+                                Dispatcher.UIThread.RunJobs();
+                                Thread.Sleep(5);
+                            }
+
+                            Dispatcher.UIThread.RunJobs();
+                        }
+
+                        if (window.SessionsToChoose().Count == 0)
+                        {
+                            window.NameSyncDevice("Desk computer");
+                            window.ChooseSyncFolder(cloudFolder);
+                            Synced(window.SyncNowAsync());
+                            GroupLab.Core.Sync.SyncEngine.Run(laptop, laptopLocal, cloud, "Range laptop", DateTime.UtcNow);
+                            var shared = window.Sessions!.List().First();
+                            window.Sessions.Save(window.Sessions.Get(shared.Id)! with { Load = name == "dark" ? "Test load, 41.5 gr" : "Test load, 41.7 gr" });
+                            var there = laptop.List().First(s => s.SheetName == shared.SheetName && s.CreatedUtc == shared.CreatedUtc);
+                            laptop.Save(laptop.Get(there.Id)! with { Barrel = "Bartlein", MeanRadiusInches = (there.MeanRadiusInches ?? 0.1) * 1.08 });
+                            Synced(window.SyncNowAsync());
+                            GroupLab.Core.Sync.SyncEngine.Run(laptop, laptopLocal, cloud, "Range laptop", DateTime.UtcNow);
+                            Synced(window.SyncNowAsync());
+                        }
+
+                        window.FillSync();
+                        Dispatcher.UIThread.RunJobs();
+                        var syncHeading = window.GetLogicalDescendants().OfType<TextBlock>().First(t => t.Text == GroupLab.Core.Sync.SyncScreens.Title);
+                        // The section from its heading down: the scroller is set so the heading is at the top of the view.
+                        if (Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<ScrollViewer>(syncHeading) is { Content: Avalonia.Visual inside } scroller
+                            && syncHeading.TranslatePoint(new Avalonia.Point(0, 0), inside) is { } at)
+                        {
+                            scroller.Offset = new Avalonia.Vector(0, Math.Max(0, at.Y - 8));
+                        }
+
+                        Dispatcher.UIThread.RunJobs();
+                        Save(window, $"sync-settings-{name}-{size}");
+                        window.ShowSessions();
+                        window.ShowSyncConflict(window.SessionsToChoose()[0].Conflict.Id);
+                        Dispatcher.UIThread.RunJobs();
+                        Save(window, $"sync-conflict-{name}-{size}");
+                        window.PressProblemChoice(GroupLab.Core.Sync.SyncScreens.KeepThis(window.Sync.DeviceName));
+                        window.StopSyncing();
+                        Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
+
+                        window.ShowSessions(false);
+                        window.ShowSettings();
+                        Dispatcher.UIThread.RunJobs();
+
                         // The other theme is photographed in this same window, and its Settings picture starts from the top.
                         Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<ScrollViewer>(yourData)?.ScrollToHome();
                         window.ShowSettings(false);

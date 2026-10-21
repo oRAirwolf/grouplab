@@ -2030,7 +2030,7 @@ def page_home() -> str:
 <div class="tp-intro tp-ease"><h2>No bragging numbers.</h2></div>
 <div class="tp-points">{points}</div>
 <p class="tp-today">Today GroupLab is test builds, rebuilt after every change that passes its tests, so one may be broken; the Windows and Linux downloads are unsigned.
-Not built yet: hole detection on plain paper, and synchronization between devices. <a href="/download/">What to expect</a>, and
+Not built yet: hole detection on plain paper. <a href="/download/">What to expect</a>, and
 <a href="{GITHUB}#planned">the full status on GitHub</a>.</p>
 </section>
 

@@ -817,6 +817,36 @@ public sealed class AppSettingsStore(string path)
     /// NOTES-FROM-PLANNING.md entry 416 section 4: whether the conditions on the day carry to the next sheet (on unless turned off), the day
     /// they were entered on, as this device's calendar day, and the conditions. Desktop and phone alike.
     /// </summary>
+    /// <summary>
+    /// Entry 463: this device's synchronization, its folder, its name as the others see it, whether originals travel, and its last run. It is
+    /// this device's own, so it is never among the settings synchronization carries. A device never named is named from the machine.
+    /// </summary>
+    public GroupLab.Core.Sync.SyncSetup LoadSync(string defaultName) => Read(file =>
+    {
+        var sync = file["sync"] as JsonObject;
+        return new GroupLab.Core.Sync.SyncSetup(
+            (string?)sync?["folder"],
+            (string?)sync?["deviceName"] is { Length: > 0 } name ? name : defaultName,
+            (bool?)sync?["originals"] ?? false,
+            (string?)sync?["lastUtc"],
+            (int?)sync?["lastIn"] ?? 0,
+            (int?)sync?["lastOut"] ?? 0);
+    }) ?? new GroupLab.Core.Sync.SyncSetup(null, defaultName);
+
+    public bool SaveSync(GroupLab.Core.Sync.SyncSetup setup) => Save(file =>
+    {
+        ArgumentNullException.ThrowIfNull(setup);
+        file["sync"] = new JsonObject
+        {
+            ["folder"] = setup.Folder,
+            ["deviceName"] = setup.DeviceName,
+            ["originals"] = setup.Originals,
+            ["lastUtc"] = setup.LastUtc,
+            ["lastIn"] = setup.LastIn,
+            ["lastOut"] = setup.LastOut,
+        };
+    });
+
     public (bool Remember, string? Day, SessionConditions? Conditions) LoadConditionsMemory() => Read<(bool, string?, SessionConditions?)?>(file =>
     {
         var day = file["conditionsMemory"] as JsonObject;

@@ -81,6 +81,8 @@ public static class Phone
         _ = Survey.SendDueAsync(Shell.SurveyOpen, DateTimeOffset.UtcNow, CancellationToken.None);
         // Entry 363 section 3.5: targets kept to send are tried again, on Wi-Fi unless mobile data is allowed; nothing while the switch is off.
         _ = PhoneSending.RetryAsync();
+        // Entry 463: synchronization through the person's own cloud folder, where one is chosen, every five minutes while GroupLab is open.
+        Avalonia.Threading.Dispatcher.UIThread.Post(PhoneSync.Start);
         if (application.ApplicationLifetime is ISingleViewApplicationLifetime single)
         {
             single.MainView = new Shell();

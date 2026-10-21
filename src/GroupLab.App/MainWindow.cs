@@ -24,6 +24,7 @@ using GroupLab.Core.Publication;
 using GroupLab.Core.Records;
 using GroupLab.Core.Registration;
 using GroupLab.Core.Statistics;
+using GroupLab.Core.Sync;
 using GroupLab.Core.StoreTargets;
 using GroupLab.Core.Reporting;
 
@@ -3800,6 +3801,15 @@ public sealed partial class MainWindow : Window
 
         var list = sessions.List(rifle, load);
         FillSessionTrend(load, list);
+
+        // Entry 463 section 2: a session changed on two devices waits here to be chosen between, banner first and its row tagged.
+        var toChoose = SessionsToChoose();
+        if (SyncChooseBanner(toChoose) is { } banner)
+        {
+            sessionRows.Children.Add(banner);
+        }
+
+        var twoVersions = toChoose.Where(w => w.Here is not null).ToDictionary(w => w.Here!.Id, w => w.Conflict.Id);
         if (list.Count == 0)
         {
             sessionRows.Children.Add(Line(all.Count == 0 ? "No sessions yet. Accept and analyze on a marked sheet saves one." : "No session matches the rifle and load chosen."));
@@ -3862,6 +3872,7 @@ public sealed partial class MainWindow : Window
             open.Click += (_, _) => Leaving(() => OpenSession(id));
             var delete = Button("Delete", () => { });
             delete.Width = SessionDeleteWidth;
+
             var row = new DockPanel();
             var choose = new CheckBox { IsChecked = sessionChosen.Contains(id), VerticalAlignment = VerticalAlignment.Center, Width = SessionBoxWidth };
             choose.IsCheckedChanged += (_, _) => ChooseSession(id, choose.IsChecked == true);
@@ -3871,6 +3882,16 @@ public sealed partial class MainWindow : Window
             DockPanel.SetDock(delete, Dock.Right);
             row.Children.Add(choose);
             row.Children.Add(delete);
+            if (twoVersions.TryGetValue(id, out long waitingConflict))
+            {
+                // Entry 463 section 2: this session is waiting to be chosen between; the tag opens the side by side.
+                var tag = Button(SyncScreens.TwoVersions, () => ShowSyncConflict(waitingConflict));
+                ToolTip.SetTip(tag, SyncScreens.ConflictTitle);
+                tag.Classes.Add(AppStyles.Warn);
+                DockPanel.SetDock(tag, Dock.Right);
+                row.Children.Add(tag);
+            }
+
             row.Children.Add(open);
             // Delete asks first: the button gives way to the question and its two answers.
             delete.Click += (_, _) =>
@@ -6011,6 +6032,9 @@ public sealed partial class MainWindow : Window
         };
         column.Children.Add(byItself);
         column.Children.Add(byHand);
+
+        // Entry 463 section 1 (1A): synchronization between devices, its own section.
+        BuildSyncSettings(column);
 
         column.Children.Add(Ruled("Theme"));
         column.Children.Add(themeChoice);

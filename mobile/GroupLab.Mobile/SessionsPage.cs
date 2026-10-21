@@ -46,6 +46,37 @@ public sealed class SessionsPage : UserControl
     {
         var column = new StackPanel { Spacing = 8 };
         column.Children.Add(Screens.Title("Sessions"));
+
+        // Entry 463 section 2: a session changed on two devices waits here to be chosen between, banner first and its row tagged.
+        IReadOnlyList<(SyncConflict Conflict, SessionRecord? Here, SessionRecord There)> toChoose;
+        try
+        {
+            toChoose = PhoneSync.ToChoose();
+        }
+        catch (Microsoft.Data.Sqlite.SqliteException)
+        {
+            toChoose = [];
+        }
+
+        if (toChoose.Count > 0)
+        {
+            long first = toChoose[0].Conflict.Id;
+            column.Children.Add(new Border
+            {
+                Child = new StackPanel
+                {
+                    Spacing = 8,
+                    Children =
+                    {
+                        Screens.Heading(GroupLab.Core.Sync.SyncScreens.ToChooseBanner(toChoose.Count)),
+                        Screens.Primary("Choose", () => PhoneSync.ShowConflict(this, first, ToList)).Id("sessions-sync-choose"),
+                    },
+                },
+                Classes = { PhoneStyles.Card, PhoneStyles.Warn },
+            }.Id("sessions-sync-banner"));
+        }
+
+        var twoVersions = toChoose.Where(w => w.Here is not null).Select(w => w.Here!.Id).ToHashSet();
         var said = Screens.Line("");
         column.Children.Add(Screens.Choice("Open a session file", () => _ = OpenFile(said)).Id("sessions-open-file"));
         column.Children.Add(Screens.Choice("Import shots from a CSV file", () => _ = ImportCsv(said)).Id("sessions-import-csv"));
@@ -72,7 +103,8 @@ public sealed class SessionsPage : UserControl
         var rows = new StackPanel();
         foreach (var (s, name) in Named(saved))
         {
-            rows.Children.Add(Screens.Row(name.Name, Detail(s, name, units), () => Open(s.Id), explain: false));
+            string detail = Detail(s, name, units);
+            rows.Children.Add(Screens.Row(name.Name, twoVersions.Contains(s.Id) ? GroupLab.Core.Sync.SyncScreens.TwoVersions + " · " + detail : detail, () => Open(s.Id), explain: false));
         }
 
         if (rows.Children.Count > 0)

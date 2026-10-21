@@ -37,6 +37,22 @@ internal sealed class TestPhone : IPhonePlatform
 
     public string DeviceWords => "GroupLab on a test phone";
 
+    /// <summary>Entry 463: the folder the next Choose sync folder picks, as the system picker would; null backs out.</summary>
+    internal static string? SyncFolderToPick { get; set; }
+
+    private static string? syncFolder;
+
+    public Task<string?> ChooseSyncFolder(Avalonia.Controls.TopLevel? top)
+    {
+        syncFolder = SyncFolderToPick;
+        return Task.FromResult(syncFolder is null ? null : Path.GetFileName(syncFolder));
+    }
+
+    public T? WithSyncFolder<T>(Func<GroupLab.Core.Sync.ISyncFolder, T> work) =>
+        syncFolder is null ? default : work(new GroupLab.Core.Sync.DirectorySyncFolder(syncFolder));
+
+    public void ForgetSyncFolder() => syncFolder = null;
+
     public GroupLab.Core.Survey.MachineFacts Machine() => GroupLab.Core.Survey.SurveyReport.ThisMachine(device: "test phone");
 
     public void CopyBundledTargets(string into)

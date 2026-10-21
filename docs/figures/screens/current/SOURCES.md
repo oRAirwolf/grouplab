@@ -333,43 +333,59 @@ source that is not on the list below, or if any test writing into this folder co
 | `paper-fold-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `paper-fold-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `paper-fold-light-2560x1440.png` | Entry109Tests synthetic sheet |
-| `conditions-dark-1280x720.png` | Entry109Tests synthetic sheet, Velocity and the vertical with Conditions on the day open (entry 462) |
-| `conditions-dark-1400x900.png` | Entry109Tests synthetic sheet, Velocity and the vertical with Conditions on the day open (entry 462) |
-| `conditions-dark-1920x1080.png` | Entry109Tests synthetic sheet, Velocity and the vertical with Conditions on the day open (entry 462) |
-| `conditions-dark-2560x1440.png` | Entry109Tests synthetic sheet, Velocity and the vertical with Conditions on the day open (entry 462) |
-| `conditions-light-1280x720.png` | Entry109Tests synthetic sheet, Velocity and the vertical with Conditions on the day open (entry 462) |
-| `conditions-light-1400x900.png` | Entry109Tests synthetic sheet, Velocity and the vertical with Conditions on the day open (entry 462) |
-| `conditions-light-1920x1080.png` | Entry109Tests synthetic sheet, Velocity and the vertical with Conditions on the day open (entry 462) |
-| `conditions-light-2560x1440.png` | Entry109Tests synthetic sheet, Velocity and the vertical with Conditions on the day open (entry 462) |
-| `word-explained-dark-1280x720.png` | Entry109Tests synthetic sheet, Mean radius's explanation open (entry 462) |
-| `word-explained-dark-1400x900.png` | Entry109Tests synthetic sheet, Mean radius's explanation open (entry 462) |
-| `word-explained-dark-1920x1080.png` | Entry109Tests synthetic sheet, Mean radius's explanation open (entry 462) |
-| `word-explained-dark-2560x1440.png` | Entry109Tests synthetic sheet, Mean radius's explanation open (entry 462) |
-| `word-explained-light-1280x720.png` | Entry109Tests synthetic sheet, Mean radius's explanation open (entry 462) |
-| `word-explained-light-1400x900.png` | Entry109Tests synthetic sheet, Mean radius's explanation open (entry 462) |
-| `word-explained-light-1920x1080.png` | Entry109Tests synthetic sheet, Mean radius's explanation open (entry 462) |
-| `word-explained-light-2560x1440.png` | Entry109Tests synthetic sheet, Mean radius's explanation open (entry 462) |
-| `shots-window-dark-1280x720.png` | Entry109Tests synthetic sheet, the Shots window with its first shot left out (entry 462) |
-| `shots-window-dark-1400x900.png` | Entry109Tests synthetic sheet, the Shots window with its first shot left out (entry 462) |
-| `shots-window-dark-1920x1080.png` | Entry109Tests synthetic sheet, the Shots window with its first shot left out (entry 462) |
-| `shots-window-dark-2560x1440.png` | Entry109Tests synthetic sheet, the Shots window with its first shot left out (entry 462) |
-| `shots-window-light-1280x720.png` | Entry109Tests synthetic sheet, the Shots window with its first shot left out (entry 462) |
-| `shots-window-light-1400x900.png` | Entry109Tests synthetic sheet, the Shots window with its first shot left out (entry 462) |
-| `shots-window-light-1920x1080.png` | Entry109Tests synthetic sheet, the Shots window with its first shot left out (entry 462) |
-| `shots-window-light-2560x1440.png` | Entry109Tests synthetic sheet, the Shots window with its first shot left out (entry 462) |
-| `zero-window-dark-1280x720.png` | Entry109Tests synthetic sheet, Zero from this group (entry 462) |
-| `zero-window-dark-1400x900.png` | Entry109Tests synthetic sheet, Zero from this group (entry 462) |
-| `zero-window-dark-1920x1080.png` | Entry109Tests synthetic sheet, Zero from this group (entry 462) |
-| `zero-window-dark-2560x1440.png` | Entry109Tests synthetic sheet, Zero from this group (entry 462) |
-| `zero-window-light-1280x720.png` | Entry109Tests synthetic sheet, Zero from this group (entry 462) |
-| `zero-window-light-1400x900.png` | Entry109Tests synthetic sheet, Zero from this group (entry 462) |
-| `zero-window-light-1920x1080.png` | Entry109Tests synthetic sheet, Zero from this group (entry 462) |
-| `zero-window-light-2560x1440.png` | Entry109Tests synthetic sheet, Zero from this group (entry 462) |
-| `share-window-dark-1280x720.png` | Entry109Tests synthetic sheet, Share a picture with its results box (entry 462) |
-| `share-window-dark-1400x900.png` | Entry109Tests synthetic sheet, Share a picture with its results box (entry 462) |
-| `share-window-dark-1920x1080.png` | Entry109Tests synthetic sheet, Share a picture with its results box (entry 462) |
-| `share-window-dark-2560x1440.png` | Entry109Tests synthetic sheet, Share a picture with its results box (entry 462) |
-| `share-window-light-1280x720.png` | Entry109Tests synthetic sheet, Share a picture with its results box (entry 462) |
-| `share-window-light-1400x900.png` | Entry109Tests synthetic sheet, Share a picture with its results box (entry 462) |
-| `share-window-light-1920x1080.png` | Entry109Tests synthetic sheet, Share a picture with its results box (entry 462) |
-| `share-window-light-2560x1440.png` | Entry109Tests synthetic sheet, Share a picture with its results box (entry 462) |
+| `conditions-dark-1280x720.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `conditions-dark-1400x900.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `conditions-dark-1920x1080.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `conditions-dark-2560x1440.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `conditions-light-1280x720.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `conditions-light-1400x900.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `conditions-light-1920x1080.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `conditions-light-2560x1440.png` | Entry109Tests plain sample target, drawn by GroupLab and marked by hand (entry 274) |
+| `word-explained-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `word-explained-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `word-explained-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `word-explained-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `word-explained-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `word-explained-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `word-explained-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `word-explained-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `shots-window-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `shots-window-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `shots-window-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `shots-window-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `shots-window-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `shots-window-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `shots-window-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `shots-window-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `zero-window-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `zero-window-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `zero-window-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `zero-window-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `zero-window-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `zero-window-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `zero-window-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `zero-window-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `share-window-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `share-window-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `share-window-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `share-window-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `share-window-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `share-window-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `share-window-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `share-window-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `sync-settings-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `sync-settings-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `sync-settings-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `sync-settings-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `sync-settings-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `sync-settings-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `sync-settings-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `sync-settings-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `sync-conflict-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `sync-conflict-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `sync-conflict-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `sync-conflict-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `sync-conflict-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `sync-conflict-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `sync-conflict-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `sync-conflict-light-2560x1440.png` | Entry109Tests synthetic sheet |

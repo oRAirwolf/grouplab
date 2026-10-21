@@ -136,6 +136,8 @@ read off a target, the three sharing choices (Settings, where they are made), an
 | The one-page report | the analysis | the one-page report itself | the report is a PDF and PNG file GroupLab writes, not a screen; its picture would be the file itself, which the walk does not render yet |
 | Several targets open at once | the marking screen | the tab row with two targets, one of them not saved | needs a second target opened unsaved beside the first; the walk keeps one target so every later picture is the same |
 
+**Sync between your devices** (entry 463) has its own picture, `sync-settings`: Settings at Sync between devices with a folder the walk makes and a second store, Range laptop, in it; and `sync-conflict`, a session changed on both, side by side. The phone's Sync page waits for the emulator's walk.
+
 **Store-bought targets recognized** (entries 340 and 341) has its own picture, `store-target`: a bullseye the walk draws itself, standing
 in for the Shoot-N-C since no maker's artwork is published, recognized with its bull placed and the scale warning, and the window that asks
 the 6 inch or the 8 inch laid over it.

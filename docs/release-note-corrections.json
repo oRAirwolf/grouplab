@@ -1,6 +1,23 @@
 {
   "about": "A pushed commit's Release-note trailer cannot be rewritten, because main is never force pushed. Where one was wrong, the note that replaces it is written here, by the commit's full hash, and scripts/release-notes.py reads it in the trailer's place. Each says why.",
   "corrections": {
+    "26dedfcca7a4442014053ae670e8f361a00a5a7d": {
+      "why": "Entry 462 section 3's third note named the speed unit, which the notes check reads as a file path; the note says it in words.",
+      "notes": [
+        {
+          "note": "Across the computer and the phone, nothing is cut off at small window sizes or the largest text any more: table headings, long choices and labels wrap, trimmed names show in full when you point at them, and the hint inside an empty box is easy to read. (Entry 462, 3)",
+          "kind": "fixed"
+        },
+        {
+          "note": "A save, a print or a file that will not open now says so in the middle of the window, as other failures do, instead of in a small line, on the computer and the phone. (Entry 462, 3)",
+          "kind": "changed"
+        },
+        {
+          "note": "Speeds read in feet a second everywhere, and the phone names distances and lengths as the computer does. (Entry 462, 3)",
+          "kind": "changed"
+        }
+      ]
+    },
     "f1d775ea501a92b9f98c0335192b0da02aca6f02": {
       "why": "Entry 266's README commit said the application did not change, but it also changed one word in the volunteer pack, which ships; nightly 120 refused it.",
       "notes": [

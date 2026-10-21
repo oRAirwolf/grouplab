@@ -109,19 +109,30 @@ internal static class LayoutAudit
     /// </summary>
     private static bool Covered(TopLevel top, Point at, Visual a, Visual b)
     {
-        var drawn = top.GetVisualsAt(at).ToList();
-        int ia = drawn.IndexOf(a), ib = drawn.IndexOf(b);
-        if (ia < 0 || ib < 0)
+        // The branch drawn later (a higher z-index, or later among its siblings) is on top; it covers the other where something on it, between
+        // the branching point and its words, has a solid background, as a dialog's card has.
+        var aPath = a.GetSelfAndVisualAncestors().Reverse().ToList();
+        var bPath = b.GetSelfAndVisualAncestors().Reverse().ToList();
+        int k = 0;
+        while (k < aPath.Count && k < bPath.Count && aPath[k] == bPath[k])
         {
-            return ia >= 0 || ib >= 0;
+            k++;
         }
 
-        var lower = ia < ib ? b : a;
-        for (int k = Math.Min(ia, ib) + 1; k < Math.Max(ia, ib); k++)
+        if (k == 0 || k >= aPath.Count || k >= bPath.Count)
         {
-            var v = drawn[k];
-            IBrush? back = v switch { Panel p => p.Background, Border o => o.Background, TemplatedControl tc => tc.Background, _ => null };
-            if (back is ISolidColorBrush { Color.A: 255, Opacity: >= 0.99 } && !v.IsVisualAncestorOf(lower))
+            return false;
+        }
+
+        var parent = aPath[k - 1];
+        var children = parent.GetVisualChildren().ToList();
+        static int Z(Visual v) => v.ZIndex;
+        bool aAbove = (Z(aPath[k]), children.IndexOf(aPath[k])).CompareTo((Z(bPath[k]), children.IndexOf(bPath[k]))) > 0;
+        var upper = aAbove ? aPath : bPath;
+        for (int i = k; i < upper.Count - 1; i++)
+        {
+            IBrush? back = upper[i] switch { Panel p => p.Background, Border o => o.Background, TemplatedControl tc => tc.Background, _ => null };
+            if (back is ISolidColorBrush { Color.A: 255, Opacity: >= 0.99 })
             {
                 return true;
             }

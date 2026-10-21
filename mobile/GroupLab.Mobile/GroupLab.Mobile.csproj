@@ -44,6 +44,8 @@
     <Compile Include="..\..\src\GroupLab.Cli\Library\TargetGenerator.cs" Link="Shared\Library\TargetGenerator.cs" />
     <!-- Entry 461 section 2.1: a button holding a panel is named by its words, not its type, for TalkBack and VoiceOver as for Narrator. -->
     <Compile Include="..\..\src\GroupLab.App\SpokenNames.cs" Link="Shared\SpokenNames.cs" />
+    <!-- Entry 463 section 2: a version's holes, small, for the side by side of a session changed on two devices. -->
+    <Compile Include="..\..\src\GroupLab.App\SyncHolesPlot.cs" Link="Shared\SyncHolesPlot.cs" />
     <Compile Include="..\..\src\GroupLab.Cli\Library\ParametricSheet.cs" Link="Shared\Library\ParametricSheet.cs" />
     <Compile Include="..\..\src\GroupLab.Cli\Library\LibraryBuilder.cs" Link="Shared\Library\LibraryBuilder.cs" />
     <!-- Entry 348: the fingerprint steps' work, the same as the desktop's: entry 344's engine and the session both screens drive. -->

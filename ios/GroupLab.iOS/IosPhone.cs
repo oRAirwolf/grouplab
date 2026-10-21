@@ -377,6 +377,47 @@ internal sealed class IosPhone : IPhonePlatform
         }
     }
 
+    /// <summary>Entry 463: the sync folder's security-scoped bookmark, kept beside the settings so the folder is reachable after a restart.</summary>
+    private string SyncBookmarkFile => Path.Combine(FilesFolder, "sync-folder.bookmark");
+
+    /// <summary>
+    /// Entry 463: a folder in Files (in iCloud Drive or a OneDrive folder, say), chosen once in the system's document picker; GroupLab keeps a
+    /// security-scoped bookmark to it (<see cref="BookmarkSyncFolder"/>), which is how iOS lets it back in later.
+    /// </summary>
+    public Task<string?> ChooseSyncFolder(Avalonia.Controls.TopLevel? top)
+    {
+        if (Top() is not { } front)
+        {
+            return Task.FromResult<string?>(null);
+        }
+
+        var chosen = new TaskCompletionSource<string?>();
+        var picker = new UIDocumentPickerViewController([UniformTypeIdentifiers.UTTypes.Folder], false);
+        picker.DidPickDocumentAtUrls += (_, e) =>
+        {
+            if (e.Urls.FirstOrDefault() is { } url && BookmarkSyncFolder.Bookmark(url) is { } bookmark)
+            {
+                File.WriteAllBytes(SyncBookmarkFile, bookmark);
+                DiagnosticLog.Info("sync.folder", ("picked", true));
+                chosen.TrySetResult(url.LastPathComponent ?? "the chosen folder");
+            }
+            else
+            {
+                chosen.TrySetResult(null);
+            }
+        };
+        picker.WasCancelled += (_, _) => chosen.TrySetResult(null);
+        front.PresentViewController(picker, true, null);
+        return chosen.Task;
+    }
+
+    public T? WithSyncFolder<T>(Func<GroupLab.Core.Sync.ISyncFolder, T> work) =>
+        File.Exists(SyncBookmarkFile)
+            ? BookmarkSyncFolder.With(File.ReadAllBytes(SyncBookmarkFile), work, fresh => File.WriteAllBytes(SyncBookmarkFile, fresh))
+            : default;
+
+    public void ForgetSyncFolder() => File.Delete(SyncBookmarkFile);
+
     /// <summary>The view controller in front, which a sheet is presented from.</summary>
     internal static UIViewController? Top()
     {

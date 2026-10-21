@@ -11,7 +11,7 @@
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
     "In Conditions on the day, the link",
-    "Speeds read ft/s everywhere",
+    "Speeds read in feet a second everywhere",
     "Across the computer and the phone, nothing is cut off",
     "A save, a print or a file that will not open now says so in the middle of the window",
     "Opening a rifle, barrel or load on the Equipment screen now starts at the top",
@@ -1404,6 +1404,30 @@
       "mobile": {
         "noPicture": "the Updates card in Settings is photographed at the next sitting with the phone, once a nightly with it is installed"
       }
+    },
+    {
+     "key": "sync",
+     "group": "Updates and platforms",
+     "name": "Sync between your devices",
+     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, and the original photographs travel only if you ask.",
+     "shot": "sync-settings",
+     "platforms": [
+      "Windows",
+      "macOS",
+      "Linux",
+      "Android",
+      "iPhone and iPad"
+     ],
+     "since": "next",
+     "note": [
+      "Sync between devices",
+      "stay the same on your computer and phones"
+     ],
+     "tour": "settings",
+     "guide": "sync-between-devices",
+     "mobile": {
+      "noPicture": "the phone's Sync page is pictured by the emulator's walk, which has not been run since it was built"
+     }
     },
     {
       "key": "big-screen",

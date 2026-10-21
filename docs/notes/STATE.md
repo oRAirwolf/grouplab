@@ -9,15 +9,16 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-21, entry 462 sections 0 to 2 done (question 106 answered; the site audited and fixed; three articles).
+**Last rewritten:** 2026-10-21, entries 462 and 463 done (the overnight queue; sync's three screens, reachable on every platform).
 
 ---
 
 ## In flight
 
-- **Entry 462 (2026-10-21), the overnight queue to 95% of the week**: 0 (question 106 answered), 1 (site audit, `site-audit.cjs`
-  in checks.yml), 2 (three articles) 3 (interface sweep, `LayoutAudit`; looks DESIGN NEEDED) and 5
-  (automation: `run-start.py`, `site-live.py`; requests 106 and 107 prepared, off) and 4 (pictures) done; entry 463 next.
+- **Entry 463 (2026-10-21)**, done: sync's screens 1A, 2A, 3B on the computer and the phone (`MainWindow.Sync`, `PhoneSync`,
+  `SyncScreens`), in the guide, Features, README; Phase 7 Built, not proven. Phone pictures wait on the emulator's walk.
+- **Entry 462 (2026-10-21)**, done: question 106 answered; site audit (`site-audit.cjs` in checks.yml); three articles; interface
+  sweep (`LayoutAudit`, weekly in screenshots.yml); automation (`run-start.py`, `site-live.py`, requests 106 and 107 off); pictures.
 - **Entry 461 (2026-10-21), Alan's queue for the week**, done: three research pieces published; screen reader audits on all three
   (`ScreenReaderAudit`, `scripts/screen-reader-audit.py`), `SpokenNames`, Android's TalkBack boxes moved (`AccessibilityOnScreen`);
   codes measured (question 106); sync option A's engine, schema 6 (`SyncEngine`, `grouplab sync`), reached by nothing.
@@ -26,9 +27,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Request 103 answered by Alan (2026-10-20)**: Top Gun's group is five-shot extreme spread, averaged. Groups are set beside it as
   the average five-shot spread their sigma implies (`TopGun.OnItsBasis`, `TopGun.Compared`), in Advanced and Compare loads on both.
 - **2026-10-20**: Phase 9, holes on a 600 dpi scan 492 to 378 ms, every result the same (`BinaryMorphology.Open`).
-- **Entries 455 and 456 (2026-10-19)**: Ballistics' Point blank view (`PointBlankModel`, `PointBlankReport`, `PointBlankCard`); the rifle's
-  Scope and mount (`ScopeMount`, `ScopeTracking`, `TopGun`), schema 5. Top Gun's comparison done (request 103). **Later idea**: tracking
-  measured from a scanned tracking target (72 in tall at 20 mil and 100 yd: tiled pages or a plotter).
 - **Entry 447 (2026-10-18 to 20)**: all four parts done; Real taps proved by 20 green runs. Part 2's remainder done 2026-10-20: six
   windows tabbed headless (`Entry447WindowsTests`; CSV mapping names and Fudd buster's focus fixed), the phones' deeper pages named. Left: a real screen reader.
 
@@ -42,7 +40,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   checking a proposal needs a sheet shot with its string.
 - **Velocity regression** (Phase 5): on both screens since entry 323, in the conditions entered on Ballistics since 329; a
   session's own conditions are entered under the block (entry 416); the phone's picture waits for request 50's sitting.
-- **Synchronization** (Phase 7): option A chosen 2026-10-20; the engine is built (entry 461); the screens wait on their design.
+- **Synchronization** (Phase 7): built on every platform (entries 461 and 463); proving it needs two real devices on one folder.
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
@@ -53,7 +51,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 2. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
-3. Sync's three screens once planning's concepts are chosen (DESIGN NEEDED of entry 461 section 3.2).
+3. The looks sent as DESIGN NEEDED by entry 462 (two site colours, eight interface lines), once planning draws them.
 
 ## Blocked, and on what
 

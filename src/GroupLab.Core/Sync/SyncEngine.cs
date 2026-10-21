@@ -35,8 +35,8 @@ public enum SyncChoice
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 461 section 3, option A of docs/notes/sync-options.md, chosen by Alan on 2026-10-20: GroupLab writes small
-/// change files into a folder the person's own cloud client already syncs and reads the other devices' change files from it. Nothing a
-/// person can reach starts it yet; <c>grouplab sync</c> does, for testing.
+/// change files into a folder the person's own cloud client already syncs and reads the other devices' change files from it. Settings,
+/// Sync between devices, starts it on the computer and the phone (entry 463); <c>grouplab sync</c> does from the command line.
 /// <list type="bullet">
 /// <item>The folder holds <c>GroupLab sync/devices/&lt;device&gt;.json</c>, each device's name and when it last wrote, and
 /// <c>GroupLab sync/changes/&lt;device&gt;/&lt;time&gt;-&lt;random&gt;.json</c>, written only by that device, so two devices never write the same file
@@ -676,4 +676,75 @@ public static class SyncEngine
     }
 
     private static string Utc(DateTime t) => t.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'", CultureInfo.InvariantCulture);
+
+    /// <summary>
+    /// Entry 463 section 2: the two versions of a session changed on two devices, this device's (null where it is gone) and the other's, for
+    /// the side by side; null where the waiting record is not a session.
+    /// </summary>
+    public static (SessionRecord? Here, SessionRecord There)? Versions(SessionStore store, SyncConflict conflict)
+    {
+        ArgumentNullException.ThrowIfNull(store);
+        ArgumentNullException.ThrowIfNull(conflict);
+        if (conflict.Kind != SessionKind || conflict.Payload is null)
+        {
+            return null;
+        }
+
+        var (there, _, _) = SessionFrom((JsonObject)JsonNode.Parse(conflict.Payload)!);
+        var keys = new HashSet<string>();
+        foreach (var summary in store.List().OrderBy(s => s.Id))
+        {
+            if (store.Get(summary.Id) is not { } s)
+            {
+                continue;
+            }
+
+            string key = DataExport.Identity(s);
+            for (int n = 2; !keys.Add(key); n++)
+            {
+                key = DataExport.Identity(s) + "#" + n.ToString(CultureInfo.InvariantCulture);
+            }
+
+            if (key == conflict.Key)
+            {
+                return (s, there);
+            }
+        }
+
+        return (null, there);
+    }
+
+    /// <summary>
+    /// Entry 463 section 3: what this device's sessions weigh as synchronization writes them, marks and proof pictures, and their original
+    /// photographs, with the first and last day they were made, for the two cards' sizes.
+    /// </summary>
+    public static (int Sessions, long MarksBytes, long OriginalsBytes, DateTime? First, DateTime? Last) Measure(SessionStore store)
+    {
+        ArgumentNullException.ThrowIfNull(store);
+        int sessions = 0;
+        long marks = 0, originals = 0;
+        DateTime? first = null, last = null;
+        foreach (var summary in store.List())
+        {
+            if (store.Get(summary.Id) is not { } s)
+            {
+                continue;
+            }
+
+            sessions++;
+            marks += Encoding.UTF8.GetByteCount(SessionPayload(s, store.ChronographStrings(s.Id), store.ShotVelocities(s.Id)).ToJsonString());
+            if (s.ImagePath is { } path && File.Exists(path))
+            {
+                originals += new FileInfo(path).Length;
+            }
+
+            if (DateTime.TryParse(s.CreatedUtc, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var made))
+            {
+                first = first is { } f && f <= made ? f : made;
+                last = last is { } l && l >= made ? l : made;
+            }
+        }
+
+        return (sessions, marks, originals, first, last);
+    }
 }

@@ -6,8 +6,8 @@ namespace GroupLab.iOS;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 461 section 3.1 item 5 on iPhone and iPad: the sync folder is a folder in Files (in iCloud Drive or a
 /// OneDrive folder, say) that the person picks once. iOS lets GroupLab back into it later only through a security-scoped bookmark, kept
-/// beside the settings; each run resolves it, starts access, works through the folder's own path, and stops access again. Nothing a person
-/// can reach picks the folder yet: the screen is waiting on its design (for-alan.md, DESIGN NEEDED of entry 461 section 3.2).
+/// beside the settings; each run resolves it, starts access, works through the folder's own path, and stops access again. Settings, Sync
+/// between devices, picks the folder (entry 463, <see cref="IosPhone.ChooseSyncFolder"/>).
 /// </summary>
 internal static class BookmarkSyncFolder
 {

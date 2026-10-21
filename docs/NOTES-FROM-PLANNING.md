@@ -25,6 +25,55 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-21, entry 463: the three sync screens, chosen by Alan (1A, 2A, 3B)
+
+**Status: actioned 2026-10-21. Not done: the phone's pictures of the Sync page and the side by side, which need the emulator's walk; sync is not proven on two real devices. The three screens were built in one commit rather than one each, because they share one Settings section, one engine and one set of words, and none works without the others.**
+
+From the planning session, 2026-10-21 07:45 UTC (01:45 Denver). Alan chose from the canvas "Sync screens"
+(claude.ai/artifact/GvxEFtzUCaDvPt6WgVgu9F), drawn for entry 461 section 3.2. Take this after entry 462; it counts toward entry 462's
+limit of 95% of the week, and after the reset (2026-10-22 02:00 UTC) the usual 85% guard. Main model (application code and UI). One
+commit per screen, STATE rewritten after each. The DESIGN NEEDED of entry 461 section 3.2 in for-alan.md is answered: mark it so.
+
+## 1. Choosing the folder: 1A, one Sync block in Settings
+
+On the computer, a "Sync between devices" section in Settings holding, top to bottom: the folder (shown in full, with Change folder);
+this device's name as the others see it (editable); a status line with Sync now ("Synced 2 minutes ago: 3 sessions in, 1 out.");
+the other devices seen in the folder, each with when it last wrote; "Also copy the original photographs" (screen 3); and Stop syncing,
+with the line "Stops on this device only. Nothing here or in the folder is deleted." The phone has the same items stacked on its own
+Sync page under Settings.
+
+A folder that cannot be reached shows, at the top of that page, a warning in the amber of the canvas: "The sync folder cannot be
+reached", the likely reason in plain words (signed out, unplugged), "Nothing is lost: changes made here wait on this device and go as
+soon as the folder is back.", and a button "Choose the folder again". Nothing is ever deleted or overwritten because the folder is
+missing. The warning is also raised as GroupLab's centered warning (Alan, 2026-10-02) the first time it happens in a run, not only on
+the Settings page.
+
+## 2. Two devices changed the same session: 2A, side by side
+
+A dialog headed "This session was changed on two devices", with the session's rifle or load, sheet and date, and "Both versions are
+kept until you choose." Two columns, one per version: the device name and time, a small plot of that version's holes, and its rows
+(holes, mean radius, the load's fields, notes), each row that differs carrying a small "differs" tag; where holes differ, say what
+(for example "26: one added, hole 14 moved 0.03 in"). Buttons: "Keep <device>'s" for each, "Keep both as two sessions", and "Decide
+later". Decide later leaves both kept; a waiting choice is found again from a banner on Sessions ("1 session to choose between") and
+a "2 versions" tag on that session's row, on the computer and the phone. On the phone the two columns stack. Keeping one version keeps
+the other where the person can get it back, as entry 461 section 3.1 point 6 requires.
+
+## 3. Also copy the original photographs: 3B, two cards with bars
+
+Two cards, one chosen: "Marks and proof pictures" (the default; "Every session, its sheet and a proof picture: enough to see and work
+with it anywhere.") and "Also the original photographs" ("The same, plus each photograph and scan as taken, so another device can open
+the full picture."). Each card shows, worked out from this device's own records: the size now ("Your N sessions now") and a year at
+the person's pace ("A year at your pace"), each with a bar, all bars on one scale per row, and a line under the cards saying the scale
+and that a session changed again is written again whole until old copies are tidied. The year figure uses the person's own rate of
+targets over their records, or 200 a year when there is too little history, and says which. On the phone the cards stack. The "Only
+on Wi-Fi" choice drawn on 3A was not chosen: do not build it.
+
+## 4. Then sync is something a person can reach
+
+With the three screens built and tested: the user guide gets a Sync part with marked pictures, Features gets its entry with its own
+pictures (entry 256), the README and site say sync exists and how it works (your own cloud folder, no GroupLab account), the claims
+backed, and the release note says what a person can now do. Option B stays undecided and unmentioned.
+
 ## 2026-10-21, entry 462: an overnight queue chosen by Alan (question 106; site audit; articles; interface sweep; screenshots; automation)
 
 **Status: actioned 2026-10-21. Not done: section 1's two colour findings and section 3's eight looks, which wait on Alan as DESIGN NEEDED; section 3's focus visibility and the phone's deeper pages, not checked by machine; section 4's fourteen Features entries still on a general screen (each says why in docs/figures/SCREENSHOTS.md) and the phone pictures beside the new ones; section 5's two automations that need Alan (requests 106 and 107, prepared and off) and the handoff task, which was not found and needs naming; section 6 had no work. Sections were taken 0 to 3, then 5, then 4, so the pictures showed the fixed screens.**

@@ -282,6 +282,39 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-451-475.md`](notes/archive/results-451-475.md), entries 451 to 475, 11 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 463: the three sync screens Alan chose (1A, 2A, 3B), and sync a person can reach (2026-10-21)
+
+**Shared.** `src/GroupLab.Core/Sync/SyncScreens.cs` holds the three screens' words and figures for the computer and the phone alike: the
+status line ("Synced 2 minutes ago: 3 changes in, 1 out."; the engine counts changes, not sessions, so the line says changes), the other
+devices seen from the folder's device files, the side by side of a session changed on two devices (rows for holes with what was added,
+taken away or moved, mean radius, rifle, barrel, load, caliber, distance and notes, each that differs marked), and the two cards' sizes,
+now and a year at the person's pace (their own rate where there are ten sessions over sixty days, else 200 a year, and it says which).
+`SyncEngine.Versions` finds a waiting session's two versions and `SyncEngine.Measure` what the records weigh. `SyncSetup` keeps this
+device's folder, name, originals choice and last run in the settings, never synchronized itself.
+
+**1A, the computer:** Settings has a "Sync between devices" section: the folder in full with Change folder, this device's name, the status
+line with Sync now, the other devices with when each last wrote, the two cards, and Stop syncing with "Stops on this device only. Nothing
+here or in the folder is deleted." It runs every five minutes while GroupLab is open and at once from Sync now. A folder that cannot be
+reached is said at the top of the section in amber with Choose the folder again, and the first time in a run in the centred warning;
+nothing is changed or deleted. **The phone:** the same items stacked on a Sync page under Settings; the folder through Android's folder
+picker (`SafSyncFolder`) or a folder in Files on iPhone and iPad (`BookmarkSyncFolder`), both from entry 461, now reached through the
+platform (`ChooseSyncFolder`, `WithSyncFolder`). **2A:** a centred dialog headed "This session was changed on two devices", the session's
+load, sheet and date, "Both versions are kept until you choose.", two columns (each device's name and time, a small plot of its holes on
+one scale, its rows), and Keep each device's, Keep both as two sessions and Decide later; on the phone the two stack. A waiting choice is
+found again from a banner on Sessions and a "2 versions" tag on its row, on both. **3B:** the two cards with bars on one scale a row and
+the line under them; the "Only on Wi-Fi" choice was not built.
+
+**Reachable:** the user guide's Settings part has Sync between devices and When a session was changed on two devices, each with a marked
+picture the walk renders (`sync-settings`, `sync-conflict`); Features has "Sync between your devices" with its own picture; the README and
+the home page no longer say synchronization is not built; Phase 7 reads Built, not proven. Option B is not mentioned anywhere.
+
+**Tests:** `SyncScreensTests` (Core, four), `Entry463Tests` (computer, three: a folder chosen, run and stopped with nothing deleted; a folder
+gone said in the section and once in the middle; a session changed on two devices found on Sessions and kept both ways), and
+`Entry463PhoneTests` (phone, three, the same, with the layout audit at a phone's width). The layout audit's overlap check now decides what
+covers what from the tree rather than a hit test, which missed a dialog's card at 1280 by 720. The Android head builds here; the iPhone's
+picker is proved by ios-app.yml on its next run. **Not done:** the phone's pictures of the Sync page and the side by side, which need the
+emulator's walk; and sync is not proven on two real devices.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

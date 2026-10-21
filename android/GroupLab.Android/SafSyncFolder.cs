@@ -9,8 +9,8 @@ namespace GroupLab.Android;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 461 section 3.1 item 5 on Android: the sync folder reached through Android's own folder picker, the Storage
 /// Access Framework, which reaches a OneDrive, Dropbox or Google Drive folder through their apps. The picker gives a tree address; GroupLab
-/// keeps its permission across restarts and reads and writes documents under it, never a path. Nothing a person can reach opens it yet:
-/// the screen that will is waiting on its design (for-alan.md, DESIGN NEEDED of entry 461 section 3.2).
+/// keeps its permission across restarts and reads and writes documents under it, never a path. Settings, Sync between devices, opens it
+/// (entry 463, <see cref="AndroidPhone.ChooseSyncFolder"/>).
 /// </summary>
 internal sealed class SafSyncFolder(Context context, Uri tree) : ISyncFolder
 {

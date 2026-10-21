@@ -75,6 +75,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | The C bull | `c-bull` | on the phone | | on iOS |
 | Large format on a home printer | `large-on-letter` | on the phone | | on a device |
 | GroupLab Dev for testers | `dev-build` | on the phone | | left out |
+| Sync between your devices | `sync` | on the phone | entry 463: Settings, Sync between devices, a page of its own with the same items stacked; the folder through Android's folder picker; a session changed on two devices stacked on a centred sheet | on iOS |
 | The sheet beside the numbers on a big screen | `big-screen` | on the phone | | on a device |
 | Print a sheet from the phone | `phone-targets` | on the phone | Android's print dialog or a PDF; on Android also straight to a Phomemo M834 over Bluetooth at true size, with Paper in the M834 for a roll or fanfold (requests 73 and 78, entries 381 and 382) | on a device |
 | Guided or Manual on the camera | `capture-modes` | on the phone | entry 291 section 3: the guidance follows what the picture will read, and "Move back" only when the printing leaves the frame; on iPhone and iPad the panel sits above the preview, not over it (entry 313 section 2) | on a device |

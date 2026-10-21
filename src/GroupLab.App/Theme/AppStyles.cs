@@ -85,6 +85,9 @@ public static class AppStyles
     /// <summary>A status pill, such as the scale's: mono, 11 point, a thin border; good in teal, a hand-drawn reference in amber.</summary>
     public const string Pill = "pill";
 
+    /// <summary>Entry 463 section 3: a size bar on the sync cards, in the amber the canvas drew it.</summary>
+    public const string SyncBar = "sync-bar";
+
     public const string PillText = "pill-text";
 
     /// <summary>Something that worked: teal. On a status line it marks success, so that red keeps meaning something (NOTES-FROM-PLANNING.md entry 70 section 6).</summary>
@@ -339,6 +342,7 @@ public static class AppStyles
         Rule(x => x.OfType<TextBlock>().Class(PillText), (TextBlock.FontFamilyProperty, Tokens.Mono), (TextBlock.FontSizeProperty, Tokens.DetailSize), (TextBlock.ForegroundProperty, Brush(p.Dim))),
         Rule(x => x.OfType<TextBlock>().Class(PillText).Class(Good), (TextBlock.ForegroundProperty, Brush(p.Teal))),
         Rule(x => x.OfType<TextBlock>().Class(PillText).Class(Warn), (TextBlock.ForegroundProperty, Brush(p.Amber))),
+        Rule(x => x.OfType<Border>().Class(SyncBar), (Border.BackgroundProperty, Brush(p.Amber))),
         Rule(x => x.OfType<Border>().Class(Pill), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, Tokens.SurfaceRadius), (Border.PaddingProperty, Tokens.PillPadding)),
         Rule(x => x.OfType<Border>().Class(Pill).Class(Good), (Border.BorderBrushProperty, Brush(p.TealTintBorder)), (Border.BackgroundProperty, Brush(p.TealTint))),
         Rule(x => x.OfType<Border>().Class(Pill).Class(Warn), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BackgroundProperty, Brush(p.AmberTint))),

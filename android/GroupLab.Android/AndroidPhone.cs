@@ -195,6 +195,41 @@ internal sealed class AndroidPhone : IPhonePlatform
         }
     }
 
+    /// <summary>Entry 463: where the sync folder's tree address is kept, beside the settings, so it is still reachable after a restart.</summary>
+    private string SyncFolderFile => Path.Combine(FilesFolder, "sync-folder.txt");
+
+    /// <summary>
+    /// Entry 463: Android's own folder picker (the Storage Access Framework), which reaches OneDrive, Dropbox or Google Drive through their
+    /// apps; its permission is kept across restarts (<see cref="SafSyncFolder.Remember"/>) and its address beside the settings.
+    /// </summary>
+    public async Task<string?> ChooseSyncFolder(TopLevel? top)
+    {
+        if (MainActivity.Current is not { } activity)
+        {
+            return null;
+        }
+
+        var data = await activity.ForResult(SafSyncFolder.PickIntent(), SafSyncFolder.PickRequest);
+        if (data?.Data is not { } tree)
+        {
+            return null;
+        }
+
+        SafSyncFolder.Remember(activity, tree);
+        File.WriteAllText(SyncFolderFile, tree.ToString());
+        DiagnosticLog.Info("sync.folder", ("picked", true));
+        // "primary:Documents/GroupLab" names the folder well enough to see which it is; a provider's own id is shown whole.
+        string id = global::Android.Provider.DocumentsContract.GetTreeDocumentId(tree) ?? "";
+        return id.Contains(':', StringComparison.Ordinal) ? id[(id.IndexOf(':', StringComparison.Ordinal) + 1)..] : id;
+    }
+
+    public T? WithSyncFolder<T>(Func<GroupLab.Core.Sync.ISyncFolder, T> work) =>
+        File.Exists(SyncFolderFile) && global::Android.Net.Uri.Parse(File.ReadAllText(SyncFolderFile).Trim()) is { } tree
+            ? work(new SafSyncFolder(Context, tree))
+            : default;
+
+    public void ForgetSyncFolder() => File.Delete(SyncFolderFile);
+
     /// <summary>
     /// Entry 292 sections 1.1, 1.2 and 4.3: the system photo picker, images only, or the chooser of every app that offers pictures, which is
     /// also where Choose a photograph goes on a phone with no photo picker. What comes back is fetched by the shared screens.

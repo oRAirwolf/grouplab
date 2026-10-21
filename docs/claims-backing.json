@@ -5,6 +5,66 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+ "Sync between devices in Settings, with another device in the folder: This device's name, Sync now, Stop syncing When a session was changed on two devices If the same session was changed on two devices before they synced, GroupLab never picks one by itself.": {
+  "kind": "code",
+  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"
+ },
+ "Both versions are kept, Sessions shows a banner, \"1 session to choose between\", and the session's row a 2 versions tag.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests and Entry463PhoneTests (entry 463)"
+ },
+ "Synchronization** | **Built, not proven** | through a folder your own cloud app already keeps in step, with no GroupLab account, on the computer and the phones | | **8.": {
+  "kind": "code",
+  "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
+ },
+ "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app already keeps in step (OneDrive, Dropbox, Google Drive, iCloud Drive); there is no GroupLab account and nothing goes anywhere but that folder.": {
+  "kind": "code",
+  "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
+ },
+ "![The settings](figures/screens/current/settings-light-1400x900.png) ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab sends](figures/screens/current/settings-data-light-1400x900.png) ### Sync between devices Your sessions, rifles, loads and designed sheets can stay the same on your computer and your phones.": {
+  "kind": "code",
+  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"
+ },
+ "![Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing](figures/screens/current/sync-settings-light-1400x900.png) ### When a session was changed on two devices If the same session was changed on two devices before they synced, GroupLab never picks one by itself.": {
+  "kind": "code",
+  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict-light-1400x900.png, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs, with the settings pictures as before (entry 463)"
+ },
+ "![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png) ### Walk me through a demo ![The demo tour on the phone, with Next and End the tour.](figures/screens/phone/fold-demo-light.png) A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests and Entry463PhoneTests (entry 463)"
+ },
+ "Synchronization** | **Built, not proven** | through a folder your own cloud app already keeps in step, with no GroupLab account, on the computer and the phones ": {
+  "kind": "code",
+  "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
+ },
+ "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app alre": {
+  "kind": "code",
+  "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
+ },
+ "![The settings](figures/screens/current/settings-light-1400x900.png) ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab send": {
+  "kind": "code",
+  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs; the settings pictures as before (entry 463)"
+ },
+ "GroupLab does it through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive.": {
+  "kind": "code",
+  "where": "src/GroupLab.Core/Sync/SyncEngine.cs (Run, the folder's devices and changes files) and SyncScreens.Explained; src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by tests/GroupLab.App.Tests/Entry463Tests.cs and tests/GroupLab.Mobile.Tests/Entry463PhoneTests.cs (entry 463)"
+ },
+ "Each card shows what your records weigh now and in a year at your own pace (or at 200 sessions a year where there are too few to tell), with bars on one scale.": {
+  "kind": "code",
+  "where": "src/GroupLab.Core/Sync/SyncScreens.cs Cards and ScaleLine, SyncEngine.Measure; held by tests/GroupLab.Core.Tests/Sync/SyncScreensTests.cs TheCardsUseTheOwnPaceWhereThereIsEnoughHistoryAnd200AYearOtherwise (entry 463)"
+ },
+ "![Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing](figures/screens/current/sync-settings-l": {
+  "kind": "code",
+  "where": "docs/figures/screens/current/sync-settings-light-1400x900.png and sync-conflict, rendered by Entry109Tests from src/GroupLab.App/MainWindow.Sync.cs; the settings pictures as before (entry 463)"
+ },
+ "Both versions are kept, Sessions shows a banner, \"1 session to choose between\", and the session's row a **2 versions** tag.": {
+  "kind": "code",
+  "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests.ASessionChangedOnTwoDevicesIsFoundOnSessionsAndKeptBothWays and Entry463PhoneTests (entry 463)"
+ },
+ "![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png) ### Wal": {
+  "kind": "code",
+  "where": "src/GroupLab.App/MainWindow.Sync.cs (SyncChooseBanner, ShowSyncConflict) and MainWindow.cs FillSessions' tag; mobile/GroupLab.Mobile/SessionsPage.cs and PhoneSync.ShowConflict; held by Entry463Tests.ASessionChangedOnTwoDevicesIsFoundOnSessionsAndKeptBothWays and Entry463PhoneTests (entry 463)"
+ },
  "A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Demo.cs (DemoSteps, StartDemo, DemoNext, EndDemo), held by Entry439Tests, shown in docs/figures/screens/current/demo-tour-light-1400x900.png (entry 462 section 4)"

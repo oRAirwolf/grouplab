@@ -327,6 +327,13 @@ public sealed class Shell : UserControl
         page.Content = new BallisticsPage(state, zeroOffset, open);
     }
 
+    /// <summary>Entry 463: the Sync page under Settings, and back to Settings.</summary>
+    internal void ShowSync()
+    {
+        Show(Place.Settings);
+        page.Content = new SyncPage(() => Show(Place.Settings));
+    }
+
     /// <summary>Entry 273: the printer check, under Settings, and back to Settings when it is done or skipped.</summary>
     internal void ShowPrinterCheck(string? name = null)
     {

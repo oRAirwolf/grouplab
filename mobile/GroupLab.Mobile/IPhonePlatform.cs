@@ -104,6 +104,20 @@ public interface IPhonePlatform
     string? SaveToGallery(string path, string mimeType) => "Saving to the gallery is not available on this device yet; use Share instead.";
 
     /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 463: the sync folder, chosen through the system's own picker (Android's folder picker, a folder in Files
+    /// on iPhone and iPad) and remembered across restarts; the name to show, or null where the person backed out or the phone has none.
+    /// </summary>
+    Task<string?> ChooseSyncFolder(TopLevel? top) => Task.FromResult<string?>(null);
+
+    /// <summary>Runs <paramref name="work"/> on the chosen sync folder, with access opened and closed around it where the platform asks; default where none is chosen.</summary>
+    T? WithSyncFolder<T>(Func<GroupLab.Core.Sync.ISyncFolder, T> work) => default;
+
+    /// <summary>Forgets the chosen sync folder on this phone; nothing in it is touched.</summary>
+    void ForgetSyncFolder()
+    {
+    }
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 292: opens the picker for <paramref name="source"/> and hands back the photographs chosen, unread, so
     /// the screens fetch each with a progress line that can be canceled. Android opens the system photo picker, or the apps that offer
     /// pictures by name; a head that has neither yet keeps this default, the system's file picker, so the screens build against every head.

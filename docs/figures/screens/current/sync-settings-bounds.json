@@ -1,0 +1,115 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Also the original photographs": [
+      89,
+      633,
+      205,
+      32
+    ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
+    "Change folder…": [
+      79,
+      248,
+      119,
+      27
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
+    ],
+    "Marks and proof pictures": [
+      89,
+      474,
+      178,
+      32
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Stop syncing": [
+      79,
+      831,
+      102,
+      27
+    ],
+    "Sync now": [
+      331,
+      352,
+      83,
+      27
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
+    ],
+    "This device's name, as the others see it": [
+      77,
+      310,
+      260,
+      32
+    ],
+    "With a Save button, and a question before an unsaved target is left or closed": [
+      77,
+      75,
+      470,
+      3
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

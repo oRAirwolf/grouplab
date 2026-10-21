@@ -754,6 +754,7 @@ The gear opens the settings:
 - **Theme:** dark, light, high contrast, or follow the system.
 - **Your data:** **Export all my data** (1) writes one file, ending `.grouplab`, holding every session with GroupLab's own picture of the sheet and its marks, your rifles, barrels and loads, your designed sheets, and your printers and units; **Import data** (2) reads one on any GroupLab, on the computer or the phone. Importing never overwrites or duplicates anything: before anything is written it says what it would add and lists anything here that differs from the file, which is kept as it is here, and you can cancel. The file follows GroupLab's rule for photographs (no location, no metadata, not where the original photograph is kept) and stays with you. On the phone, Export all my data opens the share sheet, so the file can be saved to Files or sent to your computer, and a `.grouplab` file opened with GroupLab from another app offers to import it.
 - **Layout:** every split between panes, on the marking and analysis screens, Targets (the list, the sheet's column and the preview), Equipment and Ballistics, can be dragged by its grip, and GroupLab remembers where you left each one. **Reset layout** puts every pane back to its default size at once. On a tablet or an unfolded phone held sideways, the line between the sheet and the numbers on a result is dragged the same way, and the phone's Settings has the same Reset layout.
+- **Sync between devices:** keeps your devices the same through your own cloud folder (see [Sync between devices](#sync-between-devices)).
 - **Sharing:** the three things GroupLab may send, in the order the first run screen asks them. Each shows its choice and one short line; **More** opens the full explanation of what it sends, and stays open once you have opened it. **What GroupLab sends** (3), above them, opens the page on grouplab.org that says exactly what leaves your device. **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them; on the computer also **Send everything I open**, which sends every picture you open, read or not, and stays off on the phones for now. **Error reports:** send them automatically, ask each time, or never, and what a report holds. **Hardware survey:** take part or not, what a report holds, the benchmark, and a button that gives this copy of GroupLab a new random number. The benchmark runs only when you start it, from **Run the benchmark now**; it shows how far it has got, can be canceled, and says when it finished and what it found. Settings says when it last ran. On the first run screen, Yes to the survey asks whether to run the benchmark now or later.
 - **Log:** how much the diagnostic log records, and where it is.
 - **Problems:** a way to report a problem, and any crash records not yet dealt with.
@@ -762,6 +763,43 @@ The gear opens the settings:
 
 ![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab sends](figures/screens/current/settings-data-light-1400x900.png)
 <!-- marks: Export all my data… | Import data… | What GroupLab sends -->
+
+### Sync between devices
+
+Your sessions, rifles, loads and designed sheets can stay the same on your computer and your phones. GroupLab does it through a folder
+your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive. There is no GroupLab account, and
+nothing goes anywhere but that folder: each device writes small files of its own changes there and reads the others'.
+
+In **Settings**, under **Sync between devices**, choose a folder inside your cloud app's folder; on the phone, **Settings**, **Sync between
+devices** opens the same items on a page of their own, and the folder is chosen through the phone's own folder picker (on iPhone and iPad,
+a folder in Files). Then:
+
+- **This device's name** (1) is what the other devices see it called.
+- The line beside **Sync now** (2) says when it last synced and what came in and went out. GroupLab syncs every five minutes while it is
+  open, and at once when you press it.
+- **Other devices in the folder** lists each with when it last wrote.
+- **Also copy the original photographs** is two cards: **Marks and proof pictures**, the usual choice, which is enough to see and work with
+  every session anywhere, or **Also the original photographs**, so another device can open the full picture. Each card shows what your
+  records weigh now and in a year at your own pace (or at 200 sessions a year where there are too few to tell), with bars on one scale.
+- **Stop syncing** (3) stops on this device only. Nothing here or in the folder is deleted.
+
+If the folder cannot be reached (the drive is unplugged, or the cloud app has signed out), the section says so at the top in amber, with
+**Choose the folder again**, and the first time it happens GroupLab says it in the middle of the window too. Nothing is lost: changes
+made here wait on this device and go as soon as the folder is back.
+
+![Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing](figures/screens/current/sync-settings-light-1400x900.png)
+<!-- marks: This device's name, as the others see it | Sync now | Stop syncing -->
+
+### When a session was changed on two devices
+
+If the same session was changed on two devices before they synced, GroupLab never picks one by itself. Both versions are kept, Sessions
+shows a banner, "1 session to choose between", and the session's row a **2 versions** tag. Either opens the two side by side: each
+device's name and time, its holes drawn small on one scale, and its figures, with **differs** beside every one that is not the same.
+**Keep** one device's version, **Keep both as two sessions** (1), or **Decide later** (2). The version you do not keep is kept aside too, so
+it can be got back. On the phone the two stack, one above the other.
+
+![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png)
+<!-- marks: Keep both as two sessions | Decide later -->
 
 ### Walk me through a demo
 

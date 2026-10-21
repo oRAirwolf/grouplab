@@ -810,6 +810,16 @@
    ],
    "moreShots": [
     [
+     "sync-settings",
+     "Settings scrolled to Sync between devices, a folder chosen and synced with a laptop",
+     "Sync between devices: the folder your own cloud app keeps in step, this device's name, when it last synced, the other devices seen, whether the original photographs travel too, and Stop syncing."
+    ],
+    [
+     "sync-conflict",
+     "A session changed on two devices, side by side",
+     "A session changed on two devices is kept both ways and laid out side by side, each with its holes and what differs, until you keep one, keep both or decide later."
+    ],
+    [
      "settings-data",
      "The lower half of Settings: Sharing, with what GroupLab sends, then Sending targets, Error reports and Hardware survey; Your data, with the Export all my data and Import data buttons; Diagnostics, with Detailed logging, Report a problem and Support GroupLab; and Crash records",
      "The lower half of Settings. Under Sharing you see what GroupLab may send and that each is still closed. Under Your data, Export all my data and Import data move everything you have kept between computers, and nothing is sent anywhere. Under Diagnostics are Detailed logging, Report a problem and Support GroupLab."
