@@ -1218,7 +1218,7 @@ def page_send() -> str:
 
 <h2 class="h3" id="photos-title">The photos</h2>
 <p class="small faint">Up to {limit["maxSetFiles"]} files, {limit["maxFileMegabytes"]} MB each and {limit["maxSetMegabytes"]} MB in total, so a set shot across several sheets goes in one go: the page sends it in parts of up to {limit["maxFiles"]} files and {limit["maxSubmissionMegabytes"]} MB by itself, and it arrives as one submission. {types}. Not {esc(limit["typesRefused"][0])}: it is not a photograph and the rebuild cannot handle it. Send them as they came off the camera, not cropped and not through a messaging app.</p>
-<input type="file" id="photos" aria-labelledby="photos-title" name="photos[]" multiple accept="image/jpeg,image/png,image/tiff,image/heic,image/heif,.jpg,.jpeg,.png,.tif,.tiff,.heic,.heif" required>
+<input type="file" id="photos" name="photos[]" aria-labelledby="photos-title" multiple accept="image/jpeg,image/png,image/tiff,image/heic,image/heif,.jpg,.jpeg,.png,.tif,.tiff,.heic,.heif" required>
 <div id="setLabels" class="stack tight" hidden>
 <p class="small faint">If these are several sheets of one set, say which sheet and which view each photo is. Leave any you are not sure of.</p>
 <label class="small">How many sheets? <select id="setSheets"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>
