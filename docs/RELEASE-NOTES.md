@@ -12,6 +12,26 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.218
+
+**2026-10-22**, commit `4882f86`. Nightly.
+
+**What you will notice**
+
+- Settings now says what a new target starts with, how the phone's camera starts and whether it makes a sound, and whether the analysis opens with every figure, and on the computer you can choose a larger text size; Reduce motion turns every flash into a still tint.
+- On the phone, opening a GroupLab data file from another app shows what importing it would add straight away again.
+- On the phone, a GroupLab data file opened from another app shows what importing it would add on Settings, Sync and your data, as before.
+- Settings is now a side menu of eight categories with a search box and one page at a time, and GroupLab keeps a daily copy of your records that you can restore from Settings.
+
+**Under the hood**
+
+- Opening a window no longer rebuilds GroupLab's styles when the text size is already the one chosen in Settings.
+- The guide, the tour and the Features page now describe Settings as its eight pages, with the daily copies of your records and the shooting defaults.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.218)
+
+---
+
 ## 0.2.0-nightly.217
 
 **2026-10-22**, commit `294ffe0`. Nightly.
