@@ -5,7 +5,7 @@
   "controls": {
     "Also the original photographs": [
       342,
-      601,
+      618,
       205,
       32
     ],
@@ -23,7 +23,7 @@
     ],
     "Change folder…": [
       332,
-      212,
+      229,
       119,
       27
     ],
@@ -65,7 +65,7 @@
     ],
     "Marks and proof pictures": [
       342,
-      438,
+      455,
       178,
       32
     ],
@@ -119,7 +119,7 @@
     ],
     "Stop syncing": [
       332,
-      788,
+      805,
       102,
       27
     ],
@@ -131,7 +131,7 @@
     ],
     "Sync now": [
       584,
-      316,
+      333,
       83,
       27
     ],
@@ -143,7 +143,7 @@
     ],
     "This device's name, as the others see it": [
       330,
-      274,
+      291,
       260,
       32
     ],
