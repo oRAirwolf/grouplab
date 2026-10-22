@@ -188,6 +188,81 @@ public sealed class AppSettingsStore(string path)
     public bool SaveTheme(ThemeChoice theme) => Save(file => file["theme"] = theme.ToString());
 
     /// <summary>Whether DEBUG lines are logged, NOTES-FROM-PLANNING.md entry 41 section 3. Off unless chosen.</summary>
+    /// <summary>Entry 468 section 2.2: the distance a new target starts with, or null for the last one used (today's behaviour).</summary>
+    public double? LoadNewTargetDistance() => Read(file => file["newTargetDistance"]?.GetValueKind() == JsonValueKind.Number ? (double?)file["newTargetDistance"]!.GetValue<double>() : null);
+
+    public bool SaveNewTargetDistance(double? inches) => Save(file =>
+    {
+        if (inches is { } fixedInches && fixedInches > 0)
+        {
+            file["newTargetDistance"] = fixedInches;
+        }
+        else
+        {
+            file.Remove("newTargetDistance");
+        }
+    });
+
+    /// <summary>Entry 468 section 2.2: what a new target's rounds fired start as on the computer; asked for, as today, unless chosen.</summary>
+    public RoundsStart LoadNewTargetRounds() => Read<RoundsStart?>(file => Enum.TryParse((string?)file["newTargetRounds"], out RoundsStart rounds) && Enum.IsDefined(rounds) ? rounds : null)
+        ?? RoundsStart.Ask;
+
+    public bool SaveNewTargetRounds(RoundsStart rounds) => Save(file => file["newTargetRounds"] = rounds.ToString());
+
+    /// <summary>Entry 468 section 2.2: whether a new target is given the last rifle and load used; none, as today, unless chosen.</summary>
+    public bool LoadNewTargetEquipment() => Read(file => (string?)file["newTargetEquipment"] == "LastUsed");
+
+    public bool SaveNewTargetEquipment(bool lastUsed) => Save(file => file["newTargetEquipment"] = lastUsed ? "LastUsed" : "None");
+
+    /// <summary>Entry 468 section 2.2: Letter or A4 for the sheets GroupLab prints and designs, or null for the region's own.</summary>
+    public bool? LoadPaperLetter() => Read(file => (string?)file["paper"] switch { "Letter" => (bool?)true, "A4" => false, _ => null });
+
+    public bool SavePaperLetter(bool letter) => Save(file => file["paper"] = letter ? "Letter" : "A4");
+
+    /// <summary>The paper back to the region's own, as "Put this page back as it came" does.</summary>
+    public bool ForgetPaper() => Save(file => file.Remove("paper"));
+
+    /// <summary>The paper chosen in the settings showing, set by the computer's window and the phone at their start.</summary>
+    public static Func<bool?>? PaperSource { get; set; }
+
+    /// <summary>Entry 468 section 2.2: whether GroupLab's sheets are Letter: the paper chosen in Settings, else the region's (entry 246).</summary>
+    public static bool LetterPaper() => PaperSource?.Invoke() ?? LetterRegion(Region());
+
+    /// <summary>
+    /// Entry 468 section 2.3: whether the camera starts in Manual. Until it is chosen the camera starts as it was last left, as it always
+    /// has, which is Guided on a new install.
+    /// </summary>
+    public bool LoadCameraStartsManual() => Read(file => (string?)file["cameraStarts"] switch
+    {
+        "Manual" => true,
+        "Guided" => false,
+        _ => file["captureManual"]?.GetValueKind() == JsonValueKind.True,
+    });
+
+    public bool SaveCameraStartsManual(bool manual) => Save(file => file["cameraStarts"] = manual ? "Manual" : "Guided");
+
+    /// <summary>Entry 468 section 2.3: a sound when the camera takes the picture; on unless turned off, and always where the phone requires it.</summary>
+    public bool LoadShutterSound() => Read(file => (bool?)file["shutterSound"]) ?? true;
+
+    public bool SaveShutterSound(bool on) => Save(file => file["shutterSound"] = on);
+
+    /// <summary>Entry 468 section 2.4: whether the analysis opens with every figure, the folded ones open too; the main figures, as today, unless chosen.</summary>
+    public bool LoadEveryFigure() => Read(file => (string?)file["analysisOpens"] == "Every");
+
+    public bool SaveEveryFigure(bool every) => Save(file => file["analysisOpens"] = every ? "Every" : "Main");
+
+    /// <summary>Entry 468 section 2.6: the computer's text size; Normal, today's fixed sizes, unless chosen.</summary>
+    public TextSizeChoice LoadTextSize() => Read<TextSizeChoice?>(file => Enum.TryParse((string?)file["textSize"], out TextSizeChoice size) && Enum.IsDefined(size) ? size : null)
+        ?? TextSizeChoice.Normal;
+
+    public bool SaveTextSize(TextSizeChoice size) => Save(file => file["textSize"] = size.ToString());
+
+    /// <summary>Entry 468 section 2.6: Reduce motion, following the system unless chosen.</summary>
+    public MotionChoice LoadReduceMotion() => Read<MotionChoice?>(file => Enum.TryParse((string?)file["reduceMotion"], out MotionChoice motion) && Enum.IsDefined(motion) ? motion : null)
+        ?? MotionChoice.System;
+
+    public bool SaveReduceMotion(MotionChoice motion) => Save(file => file["reduceMotion"] = motion.ToString());
+
     /// <summary>Entry 468 section 2.1: whether a daily copy of the records is made; on unless turned off, for new and existing installs alike.</summary>
     public bool LoadDailyCopies() => Read(file => (bool?)file["dailyCopies"]) ?? true;
 
@@ -1231,6 +1306,35 @@ public enum ScopeAnswer
 }
 
 /// <summary>The theme the window uses, NOTES-FROM-PLANNING.md entry 42 section 2. High contrast is DESIGN.md section 19's fourth theme, and later work.</summary>
+/// <summary>Entry 468 section 2.6: the computer's text size, applied through the type scale's tokens everywhere.</summary>
+public enum TextSizeChoice
+{
+    Normal,
+    Larger,
+    Largest,
+}
+
+/// <summary>Entry 468 section 2.6: Reduce motion, as the system asks, or on, or off.</summary>
+public enum MotionChoice
+{
+    System,
+    On,
+    Off,
+}
+
+/// <summary>Entry 468 section 2.2: what a new target's rounds fired start as on the computer.</summary>
+public enum RoundsStart
+{
+    /// <summary>Asked for, marked until it is answered: today's behaviour.</summary>
+    Ask,
+
+    /// <summary>One for each of the sheet's bulls, once they are found.</summary>
+    OneABull,
+
+    /// <summary>Not known, so nothing is asked.</summary>
+    NotKnown,
+}
+
 public enum ThemeChoice
 {
     /// <summary>Dark or light as the operating system is set.</summary>

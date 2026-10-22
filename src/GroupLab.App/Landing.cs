@@ -26,6 +26,17 @@ internal sealed class Landing
     /// <summary>Whether the system asks for less motion; set by each platform, and by the tests.</summary>
     internal static Func<bool> ReducedMotion { get; set; } = () => false;
 
+    /// <summary>Entry 468 section 2.6: Settings' Reduce motion, set by each platform from its settings; following the system until chosen.</summary>
+    internal static Func<MotionChoice> MotionChosen { get; set; } = () => MotionChoice.System;
+
+    /// <summary>Whether every flash and animation is to be a still tint: as chosen in Settings, else as the system asks.</summary>
+    internal static bool Still() => MotionChosen() switch
+    {
+        MotionChoice.On => true,
+        MotionChoice.Off => false,
+        _ => ReducedMotion(),
+    };
+
     private readonly ScrollViewer scroll;
     private readonly Control content;
     private readonly Border flash;
@@ -135,7 +146,7 @@ internal sealed class Landing
         flash.Margin = new Thickness(0, Math.Max(0, top.Y - (Margin / 2)), 0, 0);
         flash.Height = Math.Max(1, bottom.Y - top.Y + Margin);
         timer?.Stop();
-        bool steady = ReducedMotion();
+        bool steady = Still();
         Last = (true, !steady, steady);
         var steps = steady ? new[] { (1.0, Steady), (0.0, TimeSpan.Zero) }
             : new[] { (1.0, FlashOn), (0.0, FlashOff), (1.0, FlashOn), (0.0, TimeSpan.Zero) };

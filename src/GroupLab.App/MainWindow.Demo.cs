@@ -256,6 +256,12 @@ public sealed partial class MainWindow
             Go(step.Screen);
         }
 
+        // Entry 468 section 1: Report a problem is on Settings' Help and problems page.
+        if (step.Screen == Destination.Settings)
+        {
+            ShowSettingsPage(SettingsCategory.Help);
+        }
+
         demoCount.Text = DemoWords.Of(index + 1, DemoSteps.Count);
         demoTitle.Text = step.Title;
         demoSays.Text = step.Says;

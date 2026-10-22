@@ -65,7 +65,7 @@ internal sealed class OnePageReportPage : UserControl
     private const int PageWidth = 1600;
 
     /// <summary>Letter where the phone's region prints on Letter, A4 everywhere else, as the Targets screen starts.</summary>
-    private static GroupLab.Core.Gltd.Model.PageSize Paper => OnePageReports.PaperFor(AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
+    private static GroupLab.Core.Gltd.Model.PageSize Paper => OnePageReports.PaperFor(AppSettingsStore.LetterPaper());
 
     /// <summary>The PDF, made once; null with the reason said where it could not be.</summary>
     private (byte[] Pdf, OnePageReport Report)? Make()

@@ -253,8 +253,16 @@ internal sealed class CaptureScreen : UIView
     /// <summary>Entry 283: a white flash over the camera the moment the shutter is pressed, so the press is answered at once.</summary>
     public void Flash()
     {
-        var white = new UIView(camera.Bounds) { BackgroundColor = UIColor.White, Alpha = 0.85f, UserInteractionEnabled = false };
+        // Entry 468 section 2.6: with Reduce motion, a still tint held a moment rather than a fading flash.
+        bool still = GroupLab.App.Landing.Still();
+        var white = new UIView(camera.Bounds) { BackgroundColor = UIColor.White, Alpha = still ? 0.35f : 0.85f, UserInteractionEnabled = false };
         camera.AddSubview(white);
+        if (still)
+        {
+            CoreFoundation.DispatchQueue.MainQueue.DispatchAfter(new CoreFoundation.DispatchTime(CoreFoundation.DispatchTime.Now, TimeSpan.FromMilliseconds(400)), white.RemoveFromSuperview);
+            return;
+        }
+
         UIView.Animate(0.18, () => white.Alpha = 0, white.RemoveFromSuperview);
     }
 

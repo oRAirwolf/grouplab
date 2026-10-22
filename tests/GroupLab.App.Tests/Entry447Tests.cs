@@ -142,11 +142,16 @@ public class Entry447Tests
         try
         {
             window.CalibreAnswered();
-            foreach (string place in new[] { "marking", "analysis", "Sessions", "Library", "Ballistics", "Compare", "Equipment", "Settings" })
+            // Entry 468 section 1: every page of Settings, each tabbed round and audited as a screen of its own.
+            foreach (string place in new[] { "marking", "analysis", "Sessions", "Library", "Ballistics", "Compare", "Equipment" }.Concat(SettingsMenu.All.Select(c => "Settings, " + c)))
             {
                 if (place == "analysis")
                 {
                     window.Analyse();
+                }
+                else if (place.StartsWith("Settings, ", StringComparison.Ordinal))
+                {
+                    window.ShowSettings(Enum.Parse<SettingsCategory>(place["Settings, ".Length..]));
                 }
                 else if (place != "marking")
                 {
@@ -182,7 +187,7 @@ public class Entry447Tests
         try
         {
             window.OpenPrinterCheck();
-            window.Go(Destination.Settings);
+            window.ShowSettings(SettingsCategory.Help);
             Dispatcher.UIThread.RunJobs();
             window.GetVisualDescendants().OfType<Button>().First(b => b.Content is string words && words.StartsWith("Report a problem", StringComparison.Ordinal))
                 .RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));

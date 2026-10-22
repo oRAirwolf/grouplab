@@ -91,7 +91,7 @@ internal sealed class CameraSession : AVCaptureVideoDataOutputSampleBufferDelega
         this.device = device;
         this.session = session;
         this.screen = screen;
-        manual = Phone.Settings.LoadCaptureManual();
+        manual = Phone.Settings.LoadCameraStartsManual(); // entry 468 section 2.3: Settings' "Starts in"
         torchChoice = Phone.Settings.LoadCaptureTorch();
         showDiagnostics = DiagnosticsOverlay.On;
         screen.ShowMode(manual);

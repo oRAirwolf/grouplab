@@ -155,6 +155,7 @@ public sealed partial class MainWindow
         roundsFired.Text = "";
         calibreBox.Text = "";
         shotDistance.Text = "";
+        ApplyNewTargetDefaults();
         SetAnalysing(false);
         canvas.SetImage(null, null);
     }

@@ -300,3 +300,71 @@ public static class CopiesWords
         _ => $"{count} sessions",
     };
 }
+
+/// <summary>NOTES-FROM-PLANNING.md entry 468 sections 2.2 to 2.4: the new defaults' words, the same on the computer and the phones.</summary>
+public static class DefaultsWords
+{
+    public const string StartsWith = "A new target starts with";
+
+    public const string Distance = "Distance";
+
+    public const string DistanceSays = "The last one used, or always this one.";
+
+    public static IReadOnlyList<string> DistanceChoices { get; } = ["Last used", "Always this distance"];
+
+    public const string Rounds = "Rounds fired";
+
+    public const string RoundsSays = "Lets GroupLab catch a missing hole or one too many. Ask marks it until it is answered.";
+
+    public static IReadOnlyList<string> RoundsChoices { get; } = ["Ask", "One a bull", "Not known"];
+
+    public const string Equipment = "Rifle and load";
+
+    public const string EquipmentSays = "Filled in on each new target, and changed there as before.";
+
+    public static IReadOnlyList<string> EquipmentChoices { get; } = ["None", "Last used"];
+
+    public const string Paper = "Paper";
+
+    public const string PaperSays = "For the sheets GroupLab prints and designs.";
+
+    public static IReadOnlyList<string> PaperChoices { get; } = ["Letter", "A4"];
+
+    public const string Camera = "The camera";
+
+    public const string StartsIn = "Starts in";
+
+    public const string StartsInSays = "Guided takes the picture by itself when every check holds; Manual waits for you.";
+
+    public static IReadOnlyList<string> StartsInChoices { get; } = ["Guided", "Manual"];
+
+    public const string Sound = "A sound when it takes the picture";
+
+    public const string SoundRequired = "This phone makes the camera's sound itself, so it cannot be turned off here.";
+
+    public const string AnalysisOpens = "The analysis opens with";
+
+    public const string AnalysisOpensSays = "The main figures, or every figure with the folded ones open at once.";
+
+    public static IReadOnlyList<string> AnalysisChoices { get; } = ["The main figures", "Every figure"];
+
+    public const string OnTheComputer = "Rounds fired and the rifle and load are set for each target on the computer.";
+}
+
+/// <summary>NOTES-FROM-PLANNING.md entry 468 section 2.6: text size and Reduce motion, the same words on the computer and the phones.</summary>
+public static class GeneralWords
+{
+    public const string TextSize = "Text size";
+
+    public const string TextSizeSays = "Every word in GroupLab, larger; nothing is cut off at any size.";
+
+    public static IReadOnlyList<string> TextSizeChoices { get; } = ["Normal", "Larger", "Largest"];
+
+    public const string TextSizeOnThePhone = "GroupLab follows the phone's own text size, set in the phone's settings.";
+
+    public const string Motion = "Reduce motion";
+
+    public const string MotionSays = "On, every flash and animation is a still tint instead.";
+
+    public static IReadOnlyList<string> MotionChoices { get; } = ["Follow the system", "On", "Off"];
+}

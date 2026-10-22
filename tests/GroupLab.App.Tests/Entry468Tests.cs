@@ -6,6 +6,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Records;
+using GroupLab.Tests.Support;
 
 namespace GroupLab.App.Tests;
 
@@ -180,5 +181,157 @@ public sealed class Entry468Tests : IDisposable
         var third = Window();
         Assert.StartsWith("Daily copies are off.", third.CopiesLine, StringComparison.Ordinal);
         third.Close();
+    }
+
+    private string Picture()
+    {
+        string path = Path.Combine(folder, $"sheet-{Guid.NewGuid():N}.png");
+        using var image = new OpenCvSharp.Mat(600, 800, OpenCvSharp.MatType.CV_8UC3, new OpenCvSharp.Scalar(235, 235, 235));
+        OpenCvSharp.Cv2.Circle(image, new OpenCvSharp.Point(200, 200), 9, new OpenCvSharp.Scalar(30, 30, 30), -1);
+        OpenCvSharp.Cv2.ImWrite(path, image);
+        return path;
+    }
+
+    [AvaloniaFact]
+    public void ANewTargetStartsWithTheShootingDefaults()
+    {
+        var store = new AppSettingsStore(Path.Combine(folder, "settings.json"));
+        var window = Window();
+
+        // As before, until chosen: no distance, rounds fired asked for, no rifle or load.
+        window.OpenImage(Picture());
+        Dispatcher.UIThread.RunJobs();
+        Assert.Null(window.Session.State.ShotDistanceInches);
+        window.Session.SetEquipment(null, null, "Test load");
+        window.Session.SetShotDistance(3600);
+        window.Session.AddShot(new GroupLab.Core.Imaging.PointD(200, 200));
+
+        store.SaveNewTargetDistance(1800);
+        store.SaveNewTargetRounds(RoundsStart.NotKnown);
+        store.SaveNewTargetEquipment(true);
+        window.OpenImage(Picture());
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(1800, window.Session.State.ShotDistanceInches);
+        Assert.Equal("Test load", window.Session.State.Load);
+        window.Session.AddShot(new GroupLab.Core.Imaging.PointD(200, 200));
+        Assert.DoesNotContain("rounds fired", window.StillNeeded());
+
+        // Put back as it came, the next target starts as before.
+        window.PutSettingsPageBack(SettingsCategory.Shooting);
+        Assert.Null(store.LoadNewTargetDistance());
+        Assert.Equal(RoundsStart.Ask, store.LoadNewTargetRounds());
+        Assert.False(store.LoadNewTargetEquipment());
+        window.OpenImage(Picture());
+        Dispatcher.UIThread.RunJobs();
+        Assert.Null(window.Session.State.ShotDistanceInches);
+        Assert.Null(window.Session.State.Load);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void ThePaperIsOneSettingOnTwoPages()
+    {
+        var window = Window();
+        var store = window.SettingsStore;
+        Assert.Null(store.LoadPaperLetter());
+        Assert.Equal(AppSettingsStore.LetterRegion(AppSettingsStore.Region()), AppSettingsStore.LetterPaper());
+        window.ShowSettings(SettingsCategory.Printers);
+        Dispatcher.UIThread.RunJobs();
+        var papers = window.SettingsBody.GetLogicalDescendants().OfType<ComboBox>().Where(c => Avalonia.Automation.AutomationProperties.GetName(c) == DefaultsWords.Paper).ToList();
+        Assert.Equal(2, papers.Count);
+        int other = 1 - papers[0].SelectedIndex;
+        papers[0].SelectedIndex = other;
+        Assert.Equal(other == 0, store.LoadPaperLetter());
+        Assert.Equal(other == 0, AppSettingsStore.LetterPaper());
+        Assert.Equal(other, papers[1].SelectedIndex);
+        window.PutSettingsPageBack(SettingsCategory.Printers);
+        Assert.Null(store.LoadPaperLetter());
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void EveryFigureOpensTheFoldedOnes()
+    {
+        var (window, path) = AnalysisStateTests.Marked();
+        try
+        {
+            window.SettingsStore.SaveEveryFigure(true);
+            window.CalibreAnswered();
+            window.Analyse();
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(window.AdvancedPanel.IsExpanded);
+            Assert.True(window.FullFiguresPanel.IsExpanded);
+        }
+        finally
+        {
+            window.SettingsStore.SaveEveryFigure(false);
+            window.Close();
+            File.Delete(path);
+        }
+    }
+
+    [AvaloniaFact]
+    public void ReduceMotionAsChosenOverridesTheSystem()
+    {
+        var window = Window();
+        var was = Landing.ReducedMotion;
+        try
+        {
+            Landing.ReducedMotion = () => false;
+            Assert.False(Landing.Still());
+            window.SettingsStore.SaveReduceMotion(MotionChoice.On);
+            Assert.True(Landing.Still());
+            Landing.ReducedMotion = () => true;
+            window.SettingsStore.SaveReduceMotion(MotionChoice.Off);
+            Assert.False(Landing.Still());
+            window.SettingsStore.SaveReduceMotion(MotionChoice.System);
+            Assert.True(Landing.Still());
+        }
+        finally
+        {
+            Landing.ReducedMotion = was;
+            window.Close();
+        }
+    }
+
+    /// <summary>Entry 468 section 2.6: the layout audit at all three text sizes, on every screen and every Settings page; nothing cut off.</summary>
+    [AvaloniaFact]
+    public void NothingIsCutOffAtAnyTextSize()
+    {
+        var found = new List<string>();
+        foreach (var size in Enum.GetValues<TextSizeChoice>())
+        {
+            var (window, path) = AnalysisStateTests.Marked();
+            try
+            {
+                window.SettingsStore.SaveTextSize(size);
+                Theme.TextSize.Choose(size);
+                window.CalibreAnswered();
+                window.Analyse();
+                Dispatcher.UIThread.RunJobs();
+                found.AddRange(LayoutAudit.Findings(window).Select(f => $"{size}, analysis: {f}"));
+                foreach (var place in new[] { Destination.Sessions, Destination.Library, Destination.Ballistics, Destination.Compare })
+                {
+                    window.Go(place);
+                    Dispatcher.UIThread.RunJobs();
+                    found.AddRange(LayoutAudit.Findings(window).Select(f => $"{size}, {place}: {f}"));
+                }
+
+                foreach (var category in SettingsMenu.All)
+                {
+                    window.ShowSettings(category);
+                    Dispatcher.UIThread.RunJobs();
+                    found.AddRange(LayoutAudit.Findings(window).Select(f => $"{size}, settings {category}: {f}"));
+                }
+            }
+            finally
+            {
+                Theme.TextSize.Choose(TextSizeChoice.Normal);
+                window.Close();
+                File.Delete(path);
+            }
+        }
+
+        Assert.True(found.Count == 0, string.Join(Environment.NewLine, found));
     }
 }

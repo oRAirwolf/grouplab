@@ -55,6 +55,12 @@ public interface IPhonePlatform
     /// <summary>Whether the phone asks for less motion (Android's Remove animations, the iPhone's Reduce Motion): entry 422's flash is then a steady tint.</summary>
     bool ReduceMotion() => false;
 
+    /// <summary>
+    /// Entry 468 section 2.3: whether the phone itself requires the camera's sound, so GroupLab's setting cannot turn it off: the iPhone makes
+    /// it for every picture, and Android says where the law requires it.
+    /// </summary>
+    bool ShutterSoundRequired() => false;
+
     /// <summary>The camera screen: <paramref name="taken"/> hears the picture's path and whether the torch was on.</summary>
     Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null);
 

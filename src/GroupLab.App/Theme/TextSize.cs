@@ -31,6 +31,21 @@ public static class TextSize
         restyles.GetOrCreateValue(app).Add(restyle);
     }
 
+    /// <summary>Entry 468 section 2.6: how much larger the computer's text is at each choice; Normal is the type scale itself.</summary>
+    public static double Factor(TextSizeChoice choice) => choice switch
+    {
+        TextSizeChoice.Larger => 1.15,
+        TextSizeChoice.Largest => 1.3,
+        _ => 1.0,
+    };
+
+    /// <summary>Entry 468 section 2.6: the computer's text at <paramref name="choice"/>, every size from the tokens scaled alike.</summary>
+    public static void Choose(TextSizeChoice choice)
+    {
+        double factor = Factor(choice);
+        Follow(size => size * factor);
+    }
+
     /// <summary>Follows <paramref name="system"/>, which gives a size at the system's text size, and builds the styles again.</summary>
     public static void Follow(Func<double, double> system)
     {

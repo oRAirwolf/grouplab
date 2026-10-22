@@ -144,6 +144,7 @@ public class ScenarioTests
             var results = await Scenario.Run("""
                 { "name": "settings", "stopOnFailure": false, "steps": [
                   { "do": "open", "place": "settings" },
+                  { "do": "press", "name": "settings-help" },
                   { "do": "wait", "text": "Send diagnostics", "seconds": 5 },
                   { "do": "tree", "name": "settings" },
                   { "do": "screenshot", "name": "settings" },
@@ -153,7 +154,7 @@ public class ScenarioTests
                   { "do": "log", "lines": 20 } ] }
                 """);
             var steps = results["steps"]!.AsArray().Select(s => (s!["do"]!.GetValue<string>(), s["ok"]!.GetValue<bool>())).ToList();
-            (string, bool)[] expected = [("open", true), ("wait", true), ("tree", true), ("screenshot", true), ("press", true), ("press", false), ("fly", false), ("log", true)];
+            (string, bool)[] expected = [("open", true), ("press", true), ("wait", true), ("tree", true), ("screenshot", true), ("press", true), ("press", false), ("fly", false), ("log", true)];
             Assert.True(steps.SequenceEqual(expected), results.ToJsonString() + "\n" + File.ReadAllText(Path.Combine(Scenario.Results, "settings.json")));
             Assert.False(results["ok"]!.GetValue<bool>());
             Assert.Equal("done", File.ReadAllText(Path.Combine(Scenario.Results, "status")));

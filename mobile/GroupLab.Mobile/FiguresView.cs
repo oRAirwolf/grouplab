@@ -221,7 +221,8 @@ internal sealed class FiguresView : UserControl
                 rows.Children.Add(Screens.Dim(note));
             }
 
-            column.Children.Add(Section(section.Heading, section.Open, rows));
+            // Entry 468 section 2.4: "Every figure" opens the folded sections at once.
+            column.Children.Add(Section(section.Heading, section.Open || Phone.Settings.LoadEveryFigure(), rows));
             if (section.Key == "bulls" && shotsToZero is not null)
             {
                 column.Children.Add(Screens.Row("Shots Needed to Zero", "How many shots a zeroing group needs, from this group. Suggested by Jylee.", shotsToZero));

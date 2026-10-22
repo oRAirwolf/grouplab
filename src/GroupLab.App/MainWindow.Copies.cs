@@ -83,7 +83,12 @@ public partial class MainWindow
             ShowCopiesLine();
         };
         SettingRow(inside, card, CopiesWords.Keep, CopiesWords.KeepSays, keep, "backup back up daily");
-        page.OnPutBack(() => keep.IsChecked = true);
+        page.OnPutBack(() =>
+        {
+            keep.IsChecked = true;
+            settingsStore.SaveDailyCopies(true);
+            ShowCopiesLine();
+        });
         inside.Children.Add(copiesLine);
         inside.Children.Add(Row(
             Button(CopiesWords.BackUpNow, BackUpNow),

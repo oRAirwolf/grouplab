@@ -117,6 +117,8 @@ internal sealed class AndroidPhone : IPhonePlatform
     public bool ReduceMotion() => MainActivity.Current is { } activity
         && global::Android.Provider.Settings.Global.GetFloat(activity.ContentResolver, global::Android.Provider.Settings.Global.AnimatorDurationScale, 1f) == 0f;
 
+    public bool ShutterSoundRequired() => OperatingSystem.IsAndroidVersionAtLeast(33) && global::Android.Media.MediaActionSound.MustPlayShutterSound();
+
     public bool CameraGranted() => MainActivity.Current is { } activity
         && AndroidX.Core.Content.ContextCompat.CheckSelfPermission(activity, global::Android.Manifest.Permission.Camera) == global::Android.Content.PM.Permission.Granted;
 

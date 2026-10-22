@@ -331,7 +331,7 @@ public sealed class PrintPanel : UserControl
 
     /// <summary>The built-in library beside the application.</summary>
     internal static IReadOnlyList<LibrarySheet> BuiltIn() =>
-        TargetLibrary.Load(Path.Combine(AppContext.BaseDirectory, "targets"), AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
+        TargetLibrary.Load(Path.Combine(AppContext.BaseDirectory, "targets"), AppSettingsStore.LetterPaper());
 
     /// <summary>Raised when the designer saves a sheet into the person's own, so the target library can show it.</summary>
     internal event Action? SheetsChanged;

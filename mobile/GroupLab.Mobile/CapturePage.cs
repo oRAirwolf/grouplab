@@ -80,7 +80,8 @@ public sealed class CapturePage : UserControl
         var units = Phone.Settings.LoadUnits();
         // Entry 376 item B3, Alan: "I have used the wrong caliber many times because it was already filled in." The caliber starts empty for
         // every new target; the ones used recently are offered as one-tap choices when it is asked for, none chosen for the person.
-        var (_, inches) = Phone.Settings.LoadShotSetup();
+        // Entry 468 section 2.2: a fixed distance where one is chosen in Shooting defaults, else the last one used.
+        var inches = Phone.Settings.LoadNewTargetDistance() ?? Phone.Settings.LoadShotSetup().DistanceInches;
         calibre.Text = "";
         distance.PlaceholderText = $"Distance in {UnitSettings.Symbol(units.Distance)}";
         distance.Text = inches is { } d ? UnitSettings.DistanceFromInches(d, units.Distance).ToString("0.#", CultureInfo.CurrentCulture) : "";

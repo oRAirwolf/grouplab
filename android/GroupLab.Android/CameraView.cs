@@ -167,7 +167,7 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         this.owner = owner;
         this.preview = preview;
         this.screen = screen;
-        manual = Phone.Settings.LoadCaptureManual();
+        manual = Phone.Settings.LoadCameraStartsManual(); // entry 468 section 2.3: Settings' "Starts in"
         torchChoice = Phone.Settings.LoadCaptureTorch();
         showDiagnostics = DiagnosticsOverlay.On;
         screen.ShowMode(manual);
@@ -613,7 +613,12 @@ internal sealed class CameraSession : Java.Lang.Object, ImageAnalysis.IAnalyzer
         // Entry 283: the shutter answers at once, a sound and a flash, and the reading follows with its progress shown.
         screen.Post(() =>
         {
-            shutterSound.Play(global::Android.Media.MediaActionSoundType.ShutterClick);
+            // Entry 468 section 2.3: the sound unless turned off in Settings, and always where the phone requires it.
+            if (Phone.Settings.LoadShutterSound() || Phone.Platform.ShutterSoundRequired())
+            {
+                shutterSound.Play(global::Android.Media.MediaActionSoundType.ShutterClick);
+            }
+
             screen.Flash();
             screen.Say("Taking the picture…");
         });

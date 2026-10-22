@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using System.Globalization;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Core.Marking;
@@ -18,7 +19,7 @@ namespace GroupLab.App;
 public partial class MainWindow
 {
     private readonly SettingsPages settingsPages = new();
-    private readonly StackPanel settingsMenu = new() { Spacing = 2 };
+    private readonly StackPanel settingsMenu = new() { Spacing = Tokens.Space4 };
     private readonly List<Button> settingsMenuItems = [];
     private readonly TextBox settingsSearch = new() { PlaceholderText = SettingsMenu.FindHint };
     private readonly TextBlock settingsNothing = new() { Text = SettingsMenu.NothingFound, TextWrapping = TextWrapping.Wrap, IsVisible = false, Classes = { AppStyles.Secondary } };
@@ -222,11 +223,15 @@ public partial class MainWindow
         }
         else
         {
-            var left = new StackPanel { Spacing = 2, VerticalAlignment = VerticalAlignment.Center, Children = { label, Line(help) } };
+            var left = new StackPanel { Spacing = Tokens.Space4, VerticalAlignment = VerticalAlignment.Center, Children = { label, Line(help) } };
             row = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = Tokens.Space16, Children = { left, control } };
         }
 
-        Avalonia.Automation.AutomationProperties.SetName(control, Avalonia.Automation.AutomationProperties.GetName(control) ?? name);
+        // A box or a switch is named by its row; a button already says what it does.
+        if (control is not Avalonia.Controls.Button { Content: string } && Avalonia.Automation.AutomationProperties.GetName(control) is null)
+        {
+            Avalonia.Automation.AutomationProperties.SetName(control, name);
+        }
         var holder = new Border { Child = row, Padding = new Thickness(0, Tokens.Space4) };
         inside.Children.Add(holder);
         return card.Row(holder, name + " " + help + " " + words);
@@ -263,6 +268,31 @@ public partial class MainWindow
             }
         };
         page.OnPutBack(() => SetTheme(ThemeChoice.System));
+
+        // Entry 468 section 2.6: the text larger, through the type scale's tokens everywhere, and Reduce motion.
+        var size = new ComboBox { ItemsSource = GeneralWords.TextSizeChoices, SelectedIndex = (int)settingsStore.LoadTextSize(), MinWidth = 180 };
+        size.SelectionChanged += (_, _) =>
+        {
+            var chosen = (TextSizeChoice)Math.Max(0, size.SelectedIndex);
+            settingsStore.SaveTextSize(chosen);
+            TextSize.Choose(chosen);
+            DiagnosticLog.Info("settings.text-size", ("size", chosen.ToString()));
+        };
+        SettingRow(look, lookCard, GeneralWords.TextSize, GeneralWords.TextSizeSays, size, "font bigger larger zoom read accessibility");
+        page.OnPutBack(() =>
+        {
+            size.SelectedIndex = (int)TextSizeChoice.Normal;
+            settingsStore.SaveTextSize(TextSizeChoice.Normal);
+            TextSize.Choose(TextSizeChoice.Normal);
+        });
+        var motion = new ComboBox { ItemsSource = GeneralWords.MotionChoices, SelectedIndex = (int)settingsStore.LoadReduceMotion(), MinWidth = 180 };
+        motion.SelectionChanged += (_, _) => settingsStore.SaveReduceMotion((MotionChoice)Math.Max(0, motion.SelectedIndex));
+        SettingRow(look, lookCard, GeneralWords.Motion, GeneralWords.MotionSays, motion, "animation flash still accessibility");
+        page.OnPutBack(() =>
+        {
+            motion.SelectedIndex = (int)MotionChoice.System;
+            settingsStore.SaveReduceMotion(MotionChoice.System);
+        });
 
         // Entry 439 section 1.2: the guided demo, from the start or from where it was left.
         var (demo, demoCard) = SettingsCard(body, page, "Guided demo");
@@ -339,6 +369,16 @@ public partial class MainWindow
         SettingBlock(figures, figuresCard, AppSettingsStore.CaliberListLabel, AppSettingsStore.CaliberListSays, caliberChoices, "calibre caliber cartridge diameter");
         page.OnPutBack(() => caliberRadios.First(r => r.List == CaliberList.Both).Radio.IsChecked = true);
 
+        // Entry 468 section 2.4: the main figures, as before, or every figure with Advanced and the other folded ones open.
+        var opens = new ComboBox { ItemsSource = DefaultsWords.AnalysisChoices, SelectedIndex = settingsStore.LoadEveryFigure() ? 1 : 0, MinWidth = 180 };
+        opens.SelectionChanged += (_, _) => settingsStore.SaveEveryFigure(opens.SelectedIndex == 1);
+        SettingRow(figures, figuresCard, DefaultsWords.AnalysisOpens, DefaultsWords.AnalysisOpensSays, opens, "advanced folded expanded figures open");
+        page.OnPutBack(() =>
+        {
+            opens.SelectedIndex = 0;
+            settingsStore.SaveEveryFigure(false);
+        });
+
         // Entry 424 section 2, Alan's choice: what the zero correction says of an axis inside the scatter, the same setting as on the phone.
         var (zero, zeroCard) = SettingsCard(body, page, "Zero correction");
         var scatterRule = settingsStore.LoadInsideScatter();
@@ -368,7 +408,111 @@ public partial class MainWindow
     private void BuildShootingPage(StackPanel column)
     {
         var (body, page) = SettingsPageOf(column, SettingsCategory.Shooting);
+        var (start, card) = SettingsCard(body, page, DefaultsWords.StartsWith);
+
+        // Entry 468 section 2.2: the distance, the last one used (as before) or always the one typed here, in the distance unit chosen.
+        var fixedInches = settingsStore.LoadNewTargetDistance();
+        var distance = new ComboBox { ItemsSource = DefaultsWords.DistanceChoices, SelectedIndex = fixedInches is null ? 0 : 1, MinWidth = 180 };
+        var fixedBox = new TextBox { Width = 90, Text = fixedInches is { } shown ? UnitSettings.DistanceFromInches(shown, units.Distance).ToString("0.###", CultureInfo.InvariantCulture) : "" };
+        var fixedUnit = new TextBlock { Text = UnitSettings.Symbol(units.Distance), VerticalAlignment = VerticalAlignment.Center };
+        var fixedRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = Tokens.Space8, IsVisible = fixedInches is not null, Children = { fixedBox, fixedUnit } };
+        Avalonia.Automation.AutomationProperties.SetName(fixedBox, "Always this distance");
+        void SaveFixed()
+        {
+            fixedUnit.Text = UnitSettings.Symbol(units.Distance);
+            if (distance.SelectedIndex == 0)
+            {
+                settingsStore.SaveNewTargetDistance(null);
+            }
+            else if (double.TryParse(fixedBox.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double typed) && typed > 0)
+            {
+                settingsStore.SaveNewTargetDistance(UnitSettings.DistanceToInches(typed, units.Distance));
+            }
+        }
+
+        distance.SelectionChanged += (_, _) =>
+        {
+            fixedRow.IsVisible = distance.SelectedIndex == 1;
+            SaveFixed();
+        };
+        fixedBox.LostFocus += (_, _) => SaveFixed();
+        fixedBox.KeyDown += (_, e) =>
+        {
+            if (e.Key == Key.Enter)
+            {
+                SaveFixed();
+            }
+        };
+        SettingRow(start, card, DefaultsWords.Distance, DefaultsWords.DistanceSays, new StackPanel { Spacing = Tokens.Space4, Children = { distance, fixedRow } }, "range yards metres default new target");
+        Avalonia.Automation.AutomationProperties.SetName(distance, DefaultsWords.Distance);
+        page.OnPutBack(() =>
+        {
+            distance.SelectedIndex = 0;
+            fixedBox.Text = "";
+            settingsStore.SaveNewTargetDistance(null);
+        });
+
+        var rounds = new ComboBox { ItemsSource = DefaultsWords.RoundsChoices, SelectedIndex = (int)settingsStore.LoadNewTargetRounds(), MinWidth = 180 };
+        rounds.SelectionChanged += (_, _) => settingsStore.SaveNewTargetRounds((RoundsStart)Math.Max(0, rounds.SelectedIndex));
+        SettingRow(start, card, DefaultsWords.Rounds, DefaultsWords.RoundsSays, rounds, "shots count bulls missing default new target");
+        page.OnPutBack(() =>
+        {
+            rounds.SelectedIndex = (int)RoundsStart.Ask;
+            settingsStore.SaveNewTargetRounds(RoundsStart.Ask);
+        });
+
+        var equipment = new ComboBox { ItemsSource = DefaultsWords.EquipmentChoices, SelectedIndex = settingsStore.LoadNewTargetEquipment() ? 1 : 0, MinWidth = 180 };
+        equipment.SelectionChanged += (_, _) => settingsStore.SaveNewTargetEquipment(equipment.SelectedIndex == 1);
+        SettingRow(start, card, DefaultsWords.Equipment, DefaultsWords.EquipmentSays, equipment, "rifle barrel load equipment default new target");
+        page.OnPutBack(() =>
+        {
+            equipment.SelectedIndex = 0;
+            settingsStore.SaveNewTargetEquipment(false);
+        });
+
+        // Shown here too; it lives in Printers and paper.
+        SettingRow(start, card, DefaultsWords.Paper, DefaultsWords.PaperSays, PaperChoice(), "letter a4 sheet size print");
+        page.OnPutBack(PutPaperBack);
         EndSettingsPage(body, page);
+    }
+
+    private readonly List<ComboBox> paperChoices = [];
+    private bool showingPaper;
+
+    /// <summary>Entry 468 section 2.2: Letter or A4, one setting shown on two pages, each kept showing the other's choice.</summary>
+    private ComboBox PaperChoice()
+    {
+        var paper = new ComboBox { ItemsSource = DefaultsWords.PaperChoices, SelectedIndex = AppSettingsStore.LetterPaper() ? 0 : 1, MinWidth = 180 };
+        paper.SelectionChanged += (_, _) =>
+        {
+            if (showingPaper || paper.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            settingsStore.SavePaperLetter(paper.SelectedIndex == 0);
+            ShowPaper();
+        };
+        paperChoices.Add(paper);
+        return paper;
+    }
+
+    private void ShowPaper()
+    {
+        showingPaper = true;
+        foreach (var paper in paperChoices)
+        {
+            paper.SelectedIndex = AppSettingsStore.LetterPaper() ? 0 : 1;
+        }
+
+        showingPaper = false;
+    }
+
+    /// <summary>The paper back to the region's own.</summary>
+    private void PutPaperBack()
+    {
+        settingsStore.ForgetPaper();
+        ShowPaper();
     }
 
     private void BuildPrintersPage(StackPanel column)
@@ -377,6 +521,9 @@ public partial class MainWindow
         // Entry 271: which printer's measured scale photographs are corrected for.
         var (printers, _) = SettingsCard(body, page, "Printers", "printer scale check correction measured M834 M220");
         BuildPrinterSettings(printers, page);
+        var (paper, paperCard) = SettingsCard(body, page, DefaultsWords.Paper);
+        SettingRow(paper, paperCard, DefaultsWords.Paper, DefaultsWords.PaperSays, PaperChoice(), "letter a4 sheet size print");
+        page.OnPutBack(PutPaperBack);
         EndSettingsPage(body, page);
     }
 

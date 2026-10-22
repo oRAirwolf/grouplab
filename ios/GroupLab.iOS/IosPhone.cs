@@ -224,6 +224,9 @@ internal sealed class IosPhone : IPhonePlatform
 
     public bool ReduceMotion() => UIAccessibility.IsReduceMotionEnabled;
 
+    // Entry 468 section 2.3: AVFoundation makes the camera's sound for every picture taken, and GroupLab cannot turn it off.
+    public bool ShutterSoundRequired() => true;
+
     public bool CameraGranted() => AVCaptureDevice.GetAuthorizationStatus(AVAuthorizationMediaType.Video) == AVAuthorizationStatus.Authorized;
 
     public Avalonia.Controls.Control Camera(Action<string, bool> taken, Action back, Action choose, Action? result = null) => IosCamera.Screen(taken, back, choose, result);

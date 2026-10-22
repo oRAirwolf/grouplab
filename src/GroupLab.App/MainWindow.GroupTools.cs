@@ -373,7 +373,7 @@ public sealed partial class MainWindow
             + (state.SheetLabel is { Length: > 0 } label ? ", " + label : "");
         string date = saved?.ShotDate ?? DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         var picture = state.ImagePath is { } path ? ReportPicture.From(path, state.ViewQuarterTurns) : null;
-        var paper = OnePageReports.PaperFor(AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
+        var paper = OnePageReports.PaperFor(AppSettingsStore.LetterPaper());
         return OnePageReports.For(state, title, date, units, paper, picture, "GroupLab " + AppInfo.Version);
     }
 

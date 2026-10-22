@@ -56,7 +56,7 @@ public sealed class SettingsView : UserControl
 
         BuildGeneral(general);
         BuildUnits(unitsPage);
-        _ = shooting;
+        BuildShooting(shooting);
         BuildPrinters(printersPage);
         BuildData(data);
         BuildSharing(sharing);
@@ -85,6 +85,28 @@ public sealed class SettingsView : UserControl
 
     private void BuildGeneral((StackPanel Body, SettingsPages.Page Page) general)
     {
+        // Entry 468 section 2.6: the phones follow the system's text size, and say so; Reduce motion as the phone asks, or on, or off.
+        var look = Group(general, "Look", "text size font larger reduce motion animation flash still accessibility");
+        look.Children.Add(Screens.Line(GeneralWords.TextSize));
+        look.Children.Add(Screens.Dim(GeneralWords.TextSizeOnThePhone));
+        look.Children.Add(Screens.Line(GeneralWords.Motion));
+        var motion = settings.LoadReduceMotion();
+        foreach (var choice in Enum.GetValues<MotionChoice>())
+        {
+            var radio = Screens.Radio("reduceMotion", GeneralWords.MotionChoices[(int)choice], motion == choice);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true)
+                {
+                    settings.SaveReduceMotion(choice);
+                }
+            };
+            look.Children.Add(radio);
+        }
+
+        look.Children.Add(Screens.Dim(GeneralWords.MotionSays));
+        general.Page.OnPutBack(() => settings.SaveReduceMotion(MotionChoice.System));
+
         // Entry 446 section 1: the guided demo, any time, from the start or where it was left.
         var column = Group(general, "Guided demo", "tour demo walk through sample");
         column.Children.Add(PhoneDemo.SettingsCard(Shell.Current));
@@ -180,6 +202,25 @@ public sealed class SettingsView : UserControl
         column.Children.Add(Screens.Dim(AppSettingsStore.CaliberListSays));
         unitsPage.Page.OnPutBack(() => settings.SaveCaliberList(GroupLab.Core.Marking.CaliberList.Both));
 
+        // Entry 468 section 2.4: the main figures, as before, or every figure with the folded sections open at once.
+        column = Group(unitsPage, DefaultsWords.AnalysisOpens, "advanced folded expanded figures open");
+        bool every = settings.LoadEveryFigure();
+        foreach (var (words, isEvery) in new[] { (DefaultsWords.AnalysisChoices[0], false), (DefaultsWords.AnalysisChoices[1], true) })
+        {
+            var radio = Screens.Radio("analysisOpens", words, every == isEvery);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true)
+                {
+                    settings.SaveEveryFigure(isEvery);
+                }
+            };
+            column.Children.Add(radio);
+        }
+
+        column.Children.Add(Screens.Dim(DefaultsWords.AnalysisOpensSays));
+        unitsPage.Page.OnPutBack(() => settings.SaveEveryFigure(false));
+
         // Entry 424 section 2: what the zero correction says of an axis inside the scatter, the same setting as on the desktop.
         column = Group(unitsPage, "Zero correction", "zero clicks scatter correction dial leave it");
         column.Children.Add(Screens.Dim(GroupLab.Core.Marking.ZeroWords.SettingLabel));
@@ -199,6 +240,102 @@ public sealed class SettingsView : UserControl
 
         column.Children.Add(Screens.Dim(GroupLab.Core.Marking.ZeroWords.SettingSays));
         unitsPage.Page.OnPutBack(() => settings.SaveInsideScatter(GroupLab.Core.Marking.InsideScatter.LeaveIt));
+    }
+
+    private void BuildShooting((StackPanel Body, SettingsPages.Page Page) shooting)
+    {
+        // Entry 468 section 2.2: the distance a new target starts with, the last one used (as before) or always the one typed here.
+        var column = Group(shooting, DefaultsWords.StartsWith, "distance range yards metres paper letter a4 default new target");
+        var units = settings.LoadUnits();
+        var fixedInches = settings.LoadNewTargetDistance();
+        column.Children.Add(Screens.Line(DefaultsWords.Distance));
+        var lastUsed = Screens.Radio("newDistance", DefaultsWords.DistanceChoices[0], fixedInches is null);
+        var always = Screens.Radio("newDistance", DefaultsWords.DistanceChoices[1], fixedInches is not null);
+        var fixedBox = new TextBox
+        {
+            MinHeight = Screens.Touch,
+            PlaceholderText = "Distance in " + GroupLab.Core.Marking.UnitSettings.Symbol(units.Distance),
+            Text = fixedInches is { } shown ? GroupLab.Core.Marking.UnitSettings.DistanceFromInches(shown, units.Distance).ToString("0.#", System.Globalization.CultureInfo.CurrentCulture) : "",
+            IsVisible = fixedInches is not null,
+        }.Id("settings-new-distance");
+        void SaveDistance()
+        {
+            fixedBox.IsVisible = always.IsChecked == true;
+            if (always.IsChecked != true)
+            {
+                settings.SaveNewTargetDistance(null);
+            }
+            else if (double.TryParse(fixedBox.Text, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.CurrentCulture, out double typed) && typed > 0)
+            {
+                settings.SaveNewTargetDistance(GroupLab.Core.Marking.UnitSettings.DistanceToInches(typed, units.Distance));
+            }
+        }
+
+        lastUsed.IsCheckedChanged += (_, _) => SaveDistance();
+        always.IsCheckedChanged += (_, _) => SaveDistance();
+        fixedBox.TextChanged += (_, _) => SaveDistance();
+        column.Children.Add(lastUsed);
+        column.Children.Add(always);
+        column.Children.Add(fixedBox);
+        column.Children.Add(Screens.Dim(DefaultsWords.DistanceSays));
+        shooting.Page.OnPutBack(() => settings.SaveNewTargetDistance(null));
+
+        // Shown here too; it lives in Printers and paper.
+        PaperRadios(column, "paperShooting");
+        shooting.Page.OnPutBack(() => settings.ForgetPaper());
+        column.Children.Add(Screens.Dim(DefaultsWords.OnTheComputer));
+
+        // Entry 468 section 2.3: the camera starts in Guided or Manual, and makes a sound when it takes the picture unless turned off.
+        column = Group(shooting, DefaultsWords.Camera, "camera guided manual starts sound shutter click");
+        column.Children.Add(Screens.Line(DefaultsWords.StartsIn));
+        bool manual = settings.LoadCameraStartsManual();
+        foreach (var (words, isManual) in new[] { (DefaultsWords.StartsInChoices[0], false), (DefaultsWords.StartsInChoices[1], true) })
+        {
+            var radio = Screens.Radio("cameraStarts", words, manual == isManual);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true)
+                {
+                    settings.SaveCameraStartsManual(isManual);
+                    DiagnosticLog.Info("settings.camera-starts", ("manual", isManual));
+                }
+            };
+            column.Children.Add(radio.Id(isManual ? "settings-camera-manual" : "settings-camera-guided"));
+        }
+
+        column.Children.Add(Screens.Dim(DefaultsWords.StartsInSays));
+        shooting.Page.OnPutBack(() => settings.SaveCameraStartsManual(false));
+        bool required = Phone.Platform.ShutterSoundRequired();
+        var sound = new CheckBox { Content = DefaultsWords.Sound, IsChecked = required || settings.LoadShutterSound(), IsEnabled = !required, MinHeight = Screens.Touch }.Id("settings-shutter-sound");
+        sound.IsCheckedChanged += (_, _) => settings.SaveShutterSound(sound.IsChecked == true);
+        column.Children.Add(sound);
+        if (required)
+        {
+            column.Children.Add(Screens.Dim(DefaultsWords.SoundRequired));
+        }
+
+        shooting.Page.OnPutBack(() => settings.SaveShutterSound(true));
+    }
+
+    /// <summary>Entry 468 section 2.2: Letter or A4 for the sheets GroupLab prints, the region's own until one is chosen.</summary>
+    private void PaperRadios(StackPanel column, string group)
+    {
+        column.Children.Add(Screens.Line(DefaultsWords.Paper));
+        bool letter = AppSettingsStore.LetterPaper();
+        foreach (var (words, isLetter) in new[] { (DefaultsWords.PaperChoices[0], true), (DefaultsWords.PaperChoices[1], false) })
+        {
+            var radio = Screens.Radio(group, words, letter == isLetter);
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true && AppSettingsStore.LetterPaper() != isLetter)
+                {
+                    settings.SavePaperLetter(isLetter);
+                }
+            };
+            column.Children.Add(radio);
+        }
+
+        column.Children.Add(Screens.Dim(DefaultsWords.PaperSays));
     }
 
     private void BuildPrinters((StackPanel Body, SettingsPages.Page Page) printersPage)
@@ -254,6 +391,9 @@ public sealed class SettingsView : UserControl
         column.Children.Add(correcting);
         column.Children.Add(Screens.Choice("Add a printer", () => Shell.Current?.ShowPrinterCheck("")).Id("settings-add-printer"));
         printersPage.Page.OnPutBack(() => settings.SavePrinterCorrection(true));
+        column = Group(printersPage, "", "paper letter a4 sheet size print");
+        PaperRadios(column, "paperPrinters");
+        printersPage.Page.OnPutBack(() => settings.ForgetPaper());
     }
 
     private void BuildData((StackPanel Body, SettingsPages.Page Page) data)
@@ -709,12 +849,16 @@ public sealed class SettingsView : UserControl
         switch (category)
         {
             case SettingsCategory.General:
-                return "Guided demo · layout";
+                return "Motion: " + GeneralWords.MotionChoices[(int)settings.LoadReduceMotion()].ToLowerInvariant() + " · guided demo";
             case SettingsCategory.Units:
                 var units = settings.LoadUnits();
                 return string.Join(" · ", GroupLab.Core.Marking.UnitSettings.Symbol(units.Angular), GroupLab.Core.Marking.UnitSettings.Symbol(units.Linear), GroupLab.Core.Marking.UnitSettings.Symbol(units.Distance));
             case SettingsCategory.Shooting:
-                return "What a new target starts with";
+                var distanceUnit = settings.LoadUnits().Distance;
+                string distance = settings.LoadNewTargetDistance() is { } inches
+                    ? GroupLab.Core.Marking.UnitSettings.DistanceFromInches(inches, distanceUnit).ToString("0.#", System.Globalization.CultureInfo.CurrentCulture) + " " + GroupLab.Core.Marking.UnitSettings.Symbol(distanceUnit)
+                    : "Last distance";
+                return string.Join(" · ", distance, AppSettingsStore.LetterPaper() ? "Letter" : "A4", settings.LoadCameraStartsManual() ? "Manual" : "Guided");
             case SettingsCategory.Printers:
                 var printers = settings.LoadPrinters();
                 return printers.Count == 0 ? "No printer checked yet" : string.Join(" and ", printers.Select(p => p.Name)) + " checked";

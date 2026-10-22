@@ -26,8 +26,8 @@ public sealed class TargetsPage : UserControl
     private readonly TextBox magnification = Number("").Id("targets-magnification");
     private readonly TextBox dot = Number("").Id("targets-dot");
     private readonly TextBox shots = Number("25").Id("targets-shots");
-    private readonly RadioButton letter = Screens.Radio("page", "Letter", AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
-    private readonly RadioButton a4 = Screens.Radio("page", "A4", !AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
+    private readonly RadioButton letter = Screens.Radio("page", "Letter", AppSettingsStore.LetterPaper());
+    private readonly RadioButton a4 = Screens.Radio("page", "A4", !AppSettingsStore.LetterPaper());
     private readonly RadioButton disc = Screens.Radio("shape", "Disc", true);
     private readonly RadioButton diamond = Screens.Radio("shape", "Diamond", false);
     private readonly StackPanel said = new() { Spacing = 8 };
@@ -80,7 +80,7 @@ public sealed class TargetsPage : UserControl
         try
         {
             PhoneAnalysis.Library();
-            sheets = TargetLibrary.Load(Path.Combine(PhoneAnalysis.Files, "targets"), AppSettingsStore.LetterRegion(AppSettingsStore.Region()));
+            sheets = TargetLibrary.Load(Path.Combine(PhoneAnalysis.Files, "targets"), AppSettingsStore.LetterPaper());
         }
         catch (IOException e)
         {
@@ -237,7 +237,7 @@ public sealed class TargetsPage : UserControl
     /// </summary>
     private Control ScaleMarkers()
     {
-        var paper = AppSettingsStore.LetterRegion(AppSettingsStore.Region()) ? GroupLab.Core.ScaleMarkers.MarkerPaper.Letter : GroupLab.Core.ScaleMarkers.MarkerPaper.A4;
+        var paper = AppSettingsStore.LetterPaper() ? GroupLab.Core.ScaleMarkers.MarkerPaper.Letter : GroupLab.Core.ScaleMarkers.MarkerPaper.A4;
         var bars = paper == GroupLab.Core.ScaleMarkers.MarkerPaper.A4 ? GroupLab.Core.ScaleMarkers.MarkerKind.MetricBar : GroupLab.Core.ScaleMarkers.MarkerKind.InchBar;
         var said = Screens.Line("");
         var boards = new StackPanel { Spacing = 8 };

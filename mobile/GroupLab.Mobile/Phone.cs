@@ -64,6 +64,10 @@ public static class Phone
         // Entry 232: the phone's own region, since invariant globalization hides it from .NET and a US phone started in metric.
         AppSettingsStore.RegionSource = region;
         Settings = new AppSettingsStore(Path.Combine(files, "settings.json"));
+        // Entry 468 section 2.2: the paper chosen in Settings, else the region's, for every sheet GroupLab prints.
+        AppSettingsStore.PaperSource = () => Settings.LoadPaperLetter();
+        // Entry 468 section 2.6: Reduce motion as chosen in Settings, else as the phone asks.
+        GroupLab.App.Landing.MotionChosen = () => Settings.LoadReduceMotion();
         var (directory, described) = LogDirectory.Resolve(false, AppContext.BaseDirectory);
         var log = new DiagnosticLog(directory, Settings.LoadVerbose()) { DescribedDirectory = described };
         DiagnosticLog.Current = log;

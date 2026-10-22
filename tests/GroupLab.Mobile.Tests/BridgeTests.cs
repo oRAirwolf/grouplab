@@ -54,6 +54,9 @@ public class BridgeTests
             Assert.True(Ok(ping));
             Assert.Contains(ping["commands"]!.AsArray(), c => c!.GetValue<string>() == "reset");
             Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"open\", \"place\": \"settings\""))));
+            // Entry 468 section 1: Settings opens its list of categories; Send diagnostics is on Help and problems.
+            Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"wait\", \"text\": \"Help and problems\", \"seconds\": 5"))));
+            Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"press\", \"name\": \"settings-help\""))));
             Assert.False(Ok(await Bridge.Answer(Ask("\"do\": \"open\", \"place\": \"7\""))));
             var tree = await Bridge.Answer(Ask("\"do\": \"tree\""));
             Assert.Contains(tree["elements"]!.AsArray(), e => e!["id"]?.GetValue<string>() == "settings-send-diagnostics" && e["text"]?.GetValue<string>() == "Send diagnostics");
@@ -62,12 +65,19 @@ public class BridgeTests
             Assert.False(Ok(await Bridge.Answer(Ask("\"do\": \"press\", \"name\": \"Nothing like this\""))));
             Assert.False(Ok(await Bridge.Answer(Ask("\"do\": \"fly\""))));
 
-            // A check box by its id, turned off and on, as a finger would; the page scrolled to it first.
+            // A check box by its id, turned off and on, as a finger would; the page scrolled to it first. It is on Printers and paper.
+            Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"open\", \"place\": \"settings\""))));
+            Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"wait\", \"text\": \"Printers and paper\", \"seconds\": 5"))));
+            Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"press\", \"name\": \"settings-printers\""))));
             Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"scroll\", \"name\": \"settings-printer-correction\""))));
             Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"choose\", \"name\": \"settings-printer-correction\", \"on\": false"))));
             Assert.False(Phone.Settings.LoadPrinterCorrection());
             Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"choose\", \"name\": \"settings-printer-correction\""))));
             Assert.True(Phone.Settings.LoadPrinterCorrection());
+            // Scrolled on a page long enough to scroll, Sharing and privacy.
+            Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"open\", \"place\": \"settings\""))));
+            Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"wait\", \"text\": \"Sharing and privacy\", \"seconds\": 5"))));
+            Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"press\", \"name\": \"settings-sharing\""))));
             Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"scroll\", \"to\": \"bottom\""))));
             Assert.True(Ok(await Bridge.Answer(Ask("\"do\": \"scroll\", \"by\": -200"))));
 

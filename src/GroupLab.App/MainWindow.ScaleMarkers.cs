@@ -34,7 +34,7 @@ public partial class MainWindow
 
     private Control ScaleMarkersSection()
     {
-        var paper = new ComboBox { ItemsSource = new[] { "Letter", "A4" }, SelectedIndex = AppSettingsStore.LetterRegion(AppSettingsStore.Region()) ? 0 : 1, MinWidth = 100 };
+        var paper = new ComboBox { ItemsSource = new[] { "Letter", "A4" }, SelectedIndex = AppSettingsStore.LetterPaper() ? 0 : 1, MinWidth = 100 };
         Avalonia.Automation.AutomationProperties.SetName(paper, "Paper for scale markers");
         MarkerPaper Paper() => paper.SelectedIndex == 1 ? MarkerPaper.A4 : MarkerPaper.Letter;
         var body = new StackPanel { Spacing = 8 };

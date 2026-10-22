@@ -220,9 +220,17 @@ internal sealed class CaptureScreen : LinearLayout
     /// <summary>Entry 283: a white flash over the camera the moment the shutter is pressed, so the press is answered at once.</summary>
     public void Flash()
     {
-        var white = new View(Context) { Alpha = 0.85f };
+        // Entry 468 section 2.6: with Reduce motion, a still tint held a moment rather than a fading flash.
+        bool still = GroupLab.App.Landing.Still();
+        var white = new View(Context) { Alpha = still ? 0.35f : 0.85f };
         white.SetBackgroundColor(Color.White);
         cameraFrame.AddView(white, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent));
+        if (still)
+        {
+            white.PostDelayed(() => cameraFrame.RemoveView(white), 400);
+            return;
+        }
+
         white.Animate()!.Alpha(0).SetDuration(180).WithEndAction(new Java.Lang.Runnable(() => cameraFrame.RemoveView(white)))!.Start();
     }
 

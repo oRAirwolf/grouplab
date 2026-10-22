@@ -107,7 +107,7 @@ public sealed partial class MainWindow
             SettingRow(Measured("Length", BallisticMeasure.SmallLength), bulletLength),
             SettingRow(Measured("Diameter", BallisticMeasure.SmallLength), bulletDiameter),
             SettingRow(Measured("Least expansion velocity", BallisticMeasure.Speed), leastExpansion),
-            Row(Button("Keep these on the records", KeepBallistics))));
+            Row(WrappedButton("Keep these on the records", KeepBallistics))));
         sharedLeft.Children.Add(Section("air", "The air", false, AirSummary,
             SettingRow(Measured("Temperature", BallisticMeasure.Temperature), airTemperature),
             SettingRow(Measured("Station pressure", BallisticMeasure.Pressure), airPressure),

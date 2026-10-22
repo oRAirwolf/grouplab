@@ -119,4 +119,65 @@ public sealed class Entry468Tests : IDisposable
         Assert.NotNull(ById(view, "settings-restore"));
         window.Close();
     }
+
+    [AvaloniaFact]
+    public void TheShootingPageSetsWhatANewTargetAndTheCameraStartWith()
+    {
+        Start();
+        var store = new AppSettingsStore(Path.Combine(folder, "settings.json"));
+        store.SaveUnits(GroupLab.Core.Marking.UnitSettings.Imperial);
+        var view = new SettingsView(store, SettingsCategory.Shooting);
+        var window = new Window { Width = 412, Height = 915, Content = view };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        Assert.Null(store.LoadNewTargetDistance());
+        var radios = view.GetLogicalDescendants().OfType<RadioButton>().ToList();
+        radios.Single(r => r.GroupName == "newDistance" && ((TextBlock)r.Content!).Text == DefaultsWords.DistanceChoices[1]).IsChecked = true;
+        ((TextBox)ById(view, "settings-new-distance")!).Text = "100";
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(3600, store.LoadNewTargetDistance()!.Value, 6);
+        Assert.StartsWith("100 yd · ", view.Summary(SettingsCategory.Shooting), StringComparison.Ordinal);
+
+        Assert.False(store.LoadCameraStartsManual());
+        ((RadioButton)ById(view, "settings-camera-manual")!).IsChecked = true;
+        Assert.True(store.LoadCameraStartsManual());
+        var sound = (CheckBox)ById(view, "settings-shutter-sound")!;
+        Assert.True(sound.IsChecked);
+        Assert.True(sound.IsEnabled);
+        sound.IsChecked = false;
+        Assert.False(store.LoadShutterSound());
+
+        view.PutBack(SettingsCategory.Shooting);
+        Assert.Null(store.LoadNewTargetDistance());
+        Assert.False(store.LoadCameraStartsManual());
+        Assert.True(store.LoadShutterSound());
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void TheCameraStartsAsItWasLeftUntilTheSettingIsChosen()
+    {
+        var store = new AppSettingsStore(Path.Combine(folder, "settings.json"));
+        store.SaveCaptureManual(true);
+        Assert.True(store.LoadCameraStartsManual());
+        store.SaveCameraStartsManual(false);
+        store.SaveCaptureManual(true);
+        Assert.False(store.LoadCameraStartsManual());
+    }
+
+    [AvaloniaFact]
+    public void TheGeneralPageSaysTheTextFollowsThePhoneAndOffersReduceMotion()
+    {
+        Start();
+        var store = new AppSettingsStore(Path.Combine(folder, "settings.json"));
+        var view = new SettingsView(store, SettingsCategory.General);
+        var window = new Window { Width = 412, Height = 915, Content = view };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains(view.GetLogicalDescendants().OfType<TextBlock>(), t => t.Text == GeneralWords.TextSizeOnThePhone && t.IsEffectivelyVisible);
+        var on = view.GetLogicalDescendants().OfType<RadioButton>().Single(r => r.GroupName == "reduceMotion" && ((TextBlock)r.Content!).Text == "On");
+        on.IsChecked = true;
+        Assert.Equal(MotionChoice.On, store.LoadReduceMotion());
+        window.Close();
+    }
 }

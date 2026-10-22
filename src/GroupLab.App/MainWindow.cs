@@ -376,6 +376,8 @@ public sealed partial class MainWindow : Window
     /// Entry 169 section 1: everything on the analysis panel but the six things a shooter reads, in one collapsed section that remembers it
     /// was opened. Sigma, the strips, the order fired, the judgement cards, the flags, the full tables, the sighters and the carry.
     /// </summary>
+    private bool openingEveryFigure;
+
     private readonly Expander advancedPanel = new() { Header = "Advanced", HorizontalAlignment = HorizontalAlignment.Stretch };
 
     private readonly StackPanel advancedFigures = new() { Spacing = Tokens.Space12 };
@@ -657,11 +659,16 @@ public sealed partial class MainWindow : Window
         sizeOnPaperFirst = settings.LoadSizeOnPaperFirst();
         caliberList = settings.LoadCaliberList();
         calibreBox.ItemsSource = CaliberChoices.Suggest("", caliberList);
+        // Entry 468 section 2.2: the paper chosen in Settings, else the region's, for every sheet GroupLab prints.
+        AppSettingsStore.PaperSource = () => settingsStore.LoadPaperLetter();
+        // Entry 468 section 2.6: the text size and Reduce motion chosen in Settings, General.
+        TextSize.Choose(settings.LoadTextSize());
+        Landing.MotionChosen = () => settingsStore.LoadReduceMotion();
         moreFiguresPanel.Content = moreFigures;
         moreFiguresPanel.IsExpanded = settings.LoadMoreFigures();
         moreFiguresPanel.PropertyChanged += (_, e) =>
         {
-            if (e.Property == Expander.IsExpandedProperty)
+            if (e.Property == Expander.IsExpandedProperty && !openingEveryFigure)
             {
                 settingsStore.SaveMoreFigures(moreFiguresPanel.IsExpanded);
             }
@@ -1920,6 +1927,8 @@ public sealed partial class MainWindow : Window
             session.Load(session.State with { Paper = material.Paper, Backing = material.Backing });
         }
 
+        ApplyNewTargetDefaults();
+
         detectedState = null;
         plotDefinition = null;
         printerPanel.IsVisible = false;
@@ -2546,7 +2555,45 @@ public sealed partial class MainWindow : Window
             problem.Text = none;
         }
 
+        // Entry 468 section 2.2: "One a bull", the rounds fired one for each of the sheet's bulls, where nothing has said otherwise.
+        if (settingsStore.LoadNewTargetRounds() == RoundsStart.OneABull && session.State.ExpectedShots is null && !roundsNotKnown
+            && result.Bulls.Count(b => b.Scoring) is > 0 and var oneEach)
+        {
+            session.Load(session.State with { ExpectedShots = oneEach });
+            roundsFired.Text = oneEach.ToString(CultureInfo.InvariantCulture);
+        }
+
         status.Text = DetectedLine(result);
+    }
+
+    /// <summary>
+    /// Entry 468 section 2.2, Shooting defaults: what a new target starts with. A fixed distance where one is chosen (the last one used is
+    /// offered, as before, where none is); rounds fired not known where that is chosen; the last rifle and load where that is chosen. The
+    /// caliber is still asked for every target.
+    /// </summary>
+    private void ApplyNewTargetDefaults()
+    {
+        var start = session.State;
+        if (settingsStore.LoadNewTargetDistance() is { } inches)
+        {
+            start = start with { ShotDistanceInches = inches };
+            shotDistance.Text = UnitSettings.DistanceFromInches(inches, ChosenDistanceUnit()).ToString("0.###", CultureInfo.InvariantCulture);
+        }
+
+        if (settingsStore.LoadNewTargetRounds() == RoundsStart.NotKnown)
+        {
+            roundsNotKnown = true;
+        }
+
+        if (settingsStore.LoadNewTargetEquipment() && lastSetup is { } last && (last.Rifle is not null || last.Load is not null))
+        {
+            start = start with { Rifle = last.Rifle, Barrel = last.Barrel, Load = last.Load };
+        }
+
+        if (start != session.State)
+        {
+            session.Load(start);
+        }
     }
 
     /// <summary>
@@ -3609,6 +3656,16 @@ public sealed partial class MainWindow : Window
             ShowNeeded();
             calibreBox.Focus();
             return;
+        }
+
+        // Entry 468 section 2.4: "Every figure", the folded figures open at once; the one remembered is not changed by it.
+        if (settingsStore.LoadEveryFigure())
+        {
+            openingEveryFigure = true;
+            moreFiguresPanel.IsExpanded = true;
+            advancedPanel.IsExpanded = true;
+            fullFiguresPanel.IsExpanded = true;
+            openingEveryFigure = false;
         }
 
         // And rather than silently proceeding: the analysis is made, and the line says what it was made without.
@@ -5398,6 +5455,15 @@ public sealed partial class MainWindow : Window
         return button;
     }
 
+    /// <summary>Entry 468 section 2.6: a button whose words wrap in a narrow column rather than run past it at the larger text sizes.</summary>
+    private static Button WrappedButton(string label, Action action)
+    {
+        var button = new Button { Content = new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap }, Margin = new Thickness(2) };
+        Avalonia.Automation.AutomationProperties.SetName(button, label);
+        button.Click += (_, _) => action();
+        return button;
+    }
+
     private static Button Button(string label, Func<Task> action)
     {
         var button = new Button { Content = label, Margin = new Thickness(2) };
@@ -5930,7 +5996,7 @@ public sealed partial class MainWindow : Window
         Destination.Sessions => "Every analysis you have accepted, newest first. Open one to see it again, or compare two of them.",
         Destination.Ballistics => "Work out a trajectory from a load and a zero. Nothing here changes a marking or an analysis.",
         Destination.Compare => "Two sessions side by side, with the difference between them and what it is worth saying about.",
-        Destination.Settings => "Units, theme, updates and the log. Every choice here is remembered.",
+        Destination.Settings => "Choose a category on the left, or find a setting by name.",
         Destination.Equipment => "Your rifles, barrels and loads. Nothing here changes a marking; a sheet names which of these it was shot with.",
 
         // The marking screen's line belongs to the tool in hand, so coming back to it says what that tool says, not what the screen being

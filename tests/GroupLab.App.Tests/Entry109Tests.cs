@@ -218,8 +218,8 @@ public class Entry109Tests
             [
                 "General: Look, Guided demo, Layout",
                 "Units and figures: Units, How figures are shown, Zero correction",
-                "Shooting defaults: ",
-                "Printers and paper: Printers",
+                "Shooting defaults: A new target starts with",
+                "Printers and paper: Printers, Paper",
                 "Sync and your data: Daily copies of your records, Sync between devices, Saving, Your data",
                 "Sharing and privacy: ",
                 "Updates and about: Updates, This build, Support GroupLab",
@@ -617,10 +617,13 @@ public class Entry109Tests
                         // Entry 468 section 1: Settings as the side menu and one page, Units and figures, as concept A drew it.
                         window.ShowSettings(SettingsCategory.Units);
                         Save(window, $"settings-{name}-{size}");
+                        // Entry 468 section 2.2 (entry 256): Shooting defaults, a new page, with its own picture for the Features page.
+                        window.ShowSettings(SettingsCategory.Shooting);
+                        Save(window, $"settings-shooting-{name}-{size}");
                         // Entry 437 section 1.3, moved by entry 468: Your data, on the Sync and your data page the guide's section 12 describes.
+                        // Entry 468 section 2.1: the page from its top, the daily copies first and Your data beneath.
                         window.ShowSettings(SettingsCategory.Data);
                         var yourData = window.GetLogicalDescendants().OfType<TextBlock>().First(t => t.Text == "Your data");
-                        yourData.BringIntoView(new Avalonia.Rect(0, 0, 1, 4000));
                         Save(window, $"settings-data-{name}-{size}");
 
                         // Entry 463: Sync between devices in Settings, a folder chosen and synced with another device in it (1A, with the
