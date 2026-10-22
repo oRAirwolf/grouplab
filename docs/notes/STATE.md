@@ -68,8 +68,9 @@ Seven, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave i
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.217 (2026-10-22 00:58 UTC): entries 464 and 465 (the eleven looks, sync tidying, a faster photograph open, two articles); 216 carried 465 alone.
-- **The site** follows main by itself (website.yml) and the nightly publishes it; live at 294ffe01 (entries 464 and 465) on 2026-10-22.
+- **Last nightly:** 0.2.0-nightly.218 (2026-10-22 13:07 UTC): entry 468. ios-app.yml: the iPhone app passes; Apple's audit times out
+  on its result screen (PHASE1-RESULTS.md, entry 468), recorded, not changed.
+- **The site** follows main by itself (website.yml) and the nightly publishes it; live at 4882f861 (entry 468) on 2026-10-22.
 - Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox

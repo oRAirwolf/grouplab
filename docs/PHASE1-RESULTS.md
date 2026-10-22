@@ -407,7 +407,7 @@ into the next run, so every run now starts from an empty one.
 Alan found Settings "very cluttered" and chose concept A on the canvas, with every proposed new setting. The computer, Android and the
 iPhone and iPad changed together; every setting kept its stored key and meaning.
 
-**1. The structure (fa9f930f).** `SettingsMenu` and `SettingsPages` (`src/GroupLab.App/SettingsMenu.cs`, shared with the phones) hold the
+**1. The structure (c4e1ab07, 8aae8700, c01a659e).** `SettingsMenu` and `SettingsPages` (`src/GroupLab.App/SettingsMenu.cs`, shared with the phones) hold the
 eight categories, their one line, what each row is found by, and what putting a page back does. On the computer
 (`MainWindow.SettingsMenu.cs`) the side menu is a column of buttons reached by Tab and moved through with Up and Down, each named to a
 screen reader, with Find a setting above it, one page of cards at a time beside it, the status line under both, and the page shown last
@@ -420,7 +420,7 @@ section moved from a long column to its own page; the phone's About split into U
 read the old long page now open the page they mean; the control bench, the keyboard sweep, the screen reader and layout audits walk all
 eight pages (`Entry447Tests`, `DesktopSweepTests`, `ControlBenchTests`); the phone's scripted walks press the category first.
 
-**2.1 Daily copies (fa9f930f).** `RecordsCopies` (Core) makes a `VACUUM INTO` copy beside the database at the first open of a day, on by
+**2.1 Daily copies (c4e1ab07).** `RecordsCopies` (Core) makes a `VACUUM INTO` copy beside the database at the first open of a day, on by
 default (`dailyCopies`), keeps the newest 14 in `copies/`, moves older ones to `trash/copies/` named by the day they moved, and removes
 them 14 days later. Back up now, Restore a copy (each copy with its day, sessions and size) and, on the computer, Open the folder; a
 restore copies the records as they are first, so it can be undone the same way. GroupLab then reads the restored records afresh in place
@@ -429,7 +429,7 @@ of the old file survives, and the phones open the store each time anyway. `Recor
 written passes SQLite's integrity check, the restore round trip, the fourteen kept and the trash's fourteen days, and a full disk leaving
 nothing half written with the records and the earlier copy byte for byte unchanged. `docs/RESTORE.md` has the section.
 
-**2.2 to 2.6, the other new settings.**
+**2.2 to 2.6, the other new settings (7ce223ff, 4882f861).**
 - **Shooting defaults:** the distance (last used, or always this one; stored `newTargetDistance`), and on the computer rounds fired and
   rifle and load. Today's computer behaviour for rounds fired is that it is asked for and marked until answered, so the default is named
   **Ask**, as the entry's rule that today's behaviour is the default requires; One a bull fills the count from the sheet's bulls once
@@ -451,8 +451,16 @@ nothing half written with the records and the earlier copy byte for byte unchang
   so. **Reduce motion** (`reduceMotion`: follow the system, on, off) is read by `Landing.Still()`, which the landing flash and both phones'
   camera flash now use; the camera's flash becomes a still tint held a moment.
 
-**Tests.** Core 7 new (`RecordsCopiesTests`), App 10 new (`Entry468Tests`), Mobile 7 new (`Entry468Tests`); the App, Mobile and Core
-suites green (counts in the commit). The Android head builds; the iPhone head is proven by ios-app.yml after the push.
+**Tests.** Core 7 new (`RecordsCopiesTests`), App 10 new and Mobile 9 new (`Entry468Tests`). CI on 4882f861 is green on all three
+systems (Core 3138, App 649, Mobile 231). **What the pushes found.** The iPhone app's data round trip on ios-app.yml found that a
+`.grouplab` file opened from another app no longer showed its import plan: the hand-off opened Settings at its list, and
+`Shell.ShowSettings` built Settings twice so the first copy took the waiting file (8aae8700, c01a659e, with a test). Then the App suite
+took 48 minutes on macOS and 72 on Linux, where the job ran out of its 90 before the Mobile suite: every window asked
+`TextSize.Choose` for Normal and each call rebuilt the whole application's styles; it now does nothing when the size has not changed
+(4882f861), and the App suite went back to 21 minutes on macOS and 30 on Linux. The iPhone app's own screen-reader audit has timed out on Apple's side on the result
+screen in the last three runs (once on Targets as well), while Settings has no findings; the result screen took 67 s against 36 s in
+the last green run with every screen slower, so it is recorded here, not changed blind. Locally the two test-host stops in the full
+App run were the 10-minute hang limit dumping the screenshot walk, which takes 10.5 minutes, not crashes.
 
 **Documentation.** The guide's section 12 rewritten around the eight pages with a section for the daily copies, and its other references
 to Settings, About and the old headings moved to the new pages; the tour's Settings page; three Features entries (Settings in eight
