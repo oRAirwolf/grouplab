@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.217
+
+**2026-10-22**, commit `294ffe0`. Nightly.
+
+**What you will notice**
+
+- GroupLab now tidies old change files out of your sync folder once every device has read them, keeps them 14 days in the folder's trash, and says in Sync between devices what it tidied and freed.
+- A phone photograph is now opened and read a little sooner on the computer and the phone, with exactly the same result as before.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.217)
+
+---
+
 ## 0.2.0-nightly.216
 
 **2026-10-21**, commit `4234a59`. Nightly.
