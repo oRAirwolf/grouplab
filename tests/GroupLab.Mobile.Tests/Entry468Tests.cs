@@ -180,4 +180,20 @@ public sealed class Entry468Tests : IDisposable
         Assert.Equal(MotionChoice.On, store.LoadReduceMotion());
         window.Close();
     }
+
+    [AvaloniaFact]
+    public void AFileOpenedFromAnotherAppOpensSettingsAtItsPlan()
+    {
+        Start();
+        DataSection.Waiting = Path.Combine(folder, "missing.grouplab");
+        try
+        {
+            var view = new SettingsView(new AppSettingsStore(Path.Combine(folder, "settings.json")));
+            Assert.Equal(SettingsCategory.Data, view.Open);
+        }
+        finally
+        {
+            DataSection.Waiting = null;
+        }
+    }
 }

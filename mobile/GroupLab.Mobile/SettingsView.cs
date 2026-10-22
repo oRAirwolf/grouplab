@@ -34,6 +34,8 @@ public sealed class SettingsView : UserControl
     public SettingsView(AppSettingsStore settings, SettingsCategory? open = null)
     {
         this.settings = settings;
+        // A .grouplab file opened from another app waits for its plan on Sync and your data, whichever way Settings was opened.
+        open ??= DataSection.Waiting is not null ? SettingsCategory.Data : null;
         var whole = new StackPanel { Spacing = 12 };
         // Entry 246, look B: the page's title, each section's heading, its choices as cards and what it explains in the dim style.
         list.Children.Add(Screens.Title("Settings"));

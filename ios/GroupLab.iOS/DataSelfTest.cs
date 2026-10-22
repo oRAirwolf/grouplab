@@ -29,7 +29,7 @@ internal static class DataSelfTest
         var check = new SelfTestCheck("data round trip");
         try
         {
-            await SelfTest.OnUi(() => Shell.Current!.Show(Shell.Place.Settings));
+            await SelfTest.OnUi(() => Shell.Current!.ShowSettings(GroupLab.App.SettingsCategory.Data)); // entry 468: Your data's page
             await Task.Delay(TimeSpan.FromSeconds(1));
             var before = await SelfTest.OnUi(IosPhone.Top);
             DateTime started = DateTime.UtcNow.AddSeconds(-1);

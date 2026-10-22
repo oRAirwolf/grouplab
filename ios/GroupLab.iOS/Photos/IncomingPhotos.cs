@@ -106,7 +106,8 @@ internal static class IncomingPhotos
         Dispatcher.UIThread.Post(() => DispatcherTimer.RunOnce(() =>
         {
             DataSection.Waiting = copy;
-            Shell.Current?.Show(Shell.Place.Settings);
+            // Entry 468 section 1: the import's plan is on Settings' Sync and your data page.
+            Shell.Current?.ShowSettings(GroupLab.App.SettingsCategory.Data);
         }, TimeSpan.FromSeconds(1)));
     }
 
