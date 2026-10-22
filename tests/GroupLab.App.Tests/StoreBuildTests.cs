@@ -35,7 +35,7 @@ public class StoreBuildTests
             await window.CheckForUpdatesAsync(byHand: true);
             Assert.DoesNotContain(Outside.Asked, a => a.What == "get");
 
-            window.ShowSettings();
+            window.ShowSettings(SettingsCategory.Updates);
             Dispatcher.UIThread.RunJobs();
             var said = window.SettingsBody.GetVisualDescendants().OfType<TextBlock>().Where(b => b.IsEffectivelyVisible).Select(b => b.Text ?? "").ToList();
             Assert.Contains(MainWindow.StoreUpdateWords, said);

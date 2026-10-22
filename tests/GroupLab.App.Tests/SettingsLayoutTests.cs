@@ -42,7 +42,8 @@ public class SettingsLayoutTests(ITestOutputHelper output) : IDisposable
         var store = new AppSettingsStore(Path.Combine(Path.GetTempPath(), $"grouplab-settings-{Guid.NewGuid():N}.json"));
         var window = new MainWindow(store) { Width = width, Height = height };
         window.Show();
-        window.ShowSettings();
+        // Entry 468 section 1: Units and figures, the page with the most rows of a name beside its control.
+        window.ShowSettings(SettingsCategory.Units);
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
@@ -102,7 +103,7 @@ public class SettingsLayoutTests(ITestOutputHelper output) : IDisposable
 
         var window = new MainWindow(new AppSettingsStore(settings)) { Width = 1400, Height = 900 };
         window.Show();
-        window.ShowSettings();
+        window.ShowSettings(SettingsCategory.Updates);
         Dispatcher.UIThread.RunJobs();
         Assert.False(window.ShowingUpdateState);
 
@@ -116,7 +117,7 @@ public class SettingsLayoutTests(ITestOutputHelper output) : IDisposable
 
         var later = new MainWindow(new AppSettingsStore(settings)) { Width = 1400, Height = 900 };
         later.Show();
-        later.ShowSettings();
+        later.ShowSettings(SettingsCategory.Updates);
         Dispatcher.UIThread.RunJobs();
 
         Assert.True(later.ShowingUpdateState);

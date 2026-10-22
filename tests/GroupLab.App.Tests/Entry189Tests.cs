@@ -209,9 +209,9 @@ public class Entry189Tests
             Assert.All(new[] { "Extreme spread", "CEP 50", "CEP 90", "Center from aim" }, name =>
                 Assert.Contains("MOA", window.KeptFigures.Single(k => k.Name == name).Value, StringComparison.Ordinal));
 
-            window.ShowSettings();
+            window.ShowSettings(SettingsCategory.Units);
             Settle();
-            window.GetLogicalDescendants().OfType<CheckBox>().Single(c => MainWindow.WordsOf(c).StartsWith("Show a group's size on the paper first", StringComparison.Ordinal)).IsChecked = true;
+            window.GetLogicalDescendants().OfType<CheckBox>().Single(c => Avalonia.Automation.AutomationProperties.GetName(c) == "Size on the paper first").IsChecked = true;
             Settle();
             window.ShowSettings(false);
             Settle();

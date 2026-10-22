@@ -61,6 +61,7 @@
     <Compile Include="..\..\src\GroupLab.App\ConditionsWords.cs" Link="Shared\ConditionsWords.cs" />
     <Compile Include="..\..\src\GroupLab.App\CommandKey.cs" Link="Shared\CommandKey.cs" />
     <Compile Include="..\..\src\GroupLab.App\AppSettings.cs" Link="Shared\AppSettings.cs" />
+    <Compile Include="..\..\src\GroupLab.App\SettingsMenu.cs" Link="Shared\SettingsMenu.cs" />
     <Compile Include="..\..\src\GroupLab.App\UnitTap.cs" Link="Shared\UnitTap.cs" />
     <Compile Include="..\..\src\GroupLab.App\Landing.cs" Link="Shared\Landing.cs" />
     <Compile Include="..\..\src\GroupLab.App\SharingWords.cs" Link="Shared\SharingWords.cs" />

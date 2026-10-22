@@ -26,6 +26,7 @@ listed as one, and Code does not act on it until the gap is closed.**
 | `grouplab-crash-reports` files (TestFlight screenshots, entry 326; Discord attachments under `discord/`, entry 429) | the repository's tarball in the nightly backup; App Store Connect keeps the originals; the Discord ones are also in `C:\Dev\grouplab-discord` and on their posts | nightly | `grouplab-backups` | unpack `crash-reports-files.tar.gz` and push its `testflight/` or `discord/` folder back |
 | `grouplab` releases (the builds) | rebuilt from the tagged commit by the nightly workflow | on demand | GitHub Actions | run the workflow at the tag |
 | `grouplab-testdata` | its own git history, and the bundle of it in the nightly backup | nightly | `grouplab-backups` | as the repository |
+| A person's own GroupLab records (`grouplab.db`, the phone's `sessions.db`), entry 468 section 2.1 | GroupLab's daily copies beside it, the newest 14, older ones 14 days in GroupLab's trash; Export all my data | daily, at the first open; when asked | `copies/` beside the database, on that device only | "A person's own records" below |
 | `grouplab-backups` itself | the newest backups on this computer, until the next one succeeds | nightly | `C:\Dev\grouplab-local\backups` | copy back as a release asset |
 | Posts to the Discord by `scripts/tester-notes.py` and issues labelled `backups` by `oracle-backups.yml` (entry 462 section 5; both off until Alan adds their secrets) | a post is never edited or deleted by GroupLab; `.github/tester-notes-posted.txt` (in git) records each, so none goes twice | as each nightly publishes; Mondays | Discord; GitHub issues | a wrong post is deleted by hand in Discord; to stop either, delete its secret (`gh secret delete DISCORD_TESTERS_WEBHOOK`, or the five `OCI_*`) |
 | `C:\Dev\grouplab-discord`, the Discord worker's kept attachments (entry 419), and its `private/discord` state on the server | the attachments stay on Discord with their posts, and since entry 429 are committed under `discord/` in `grouplab-crash-reports`; the state file only says which posts are filed | as each is pulled | Discord; the issues and `discord/` in `grouplab-crash-reports` | fetch an attachment again from its post's link in the issue; a lost state file would file every post again, so it is rebuilt from the issues before the worker runs |
@@ -182,6 +183,18 @@ manifest lists every file with its SHA-256, so a copy can be checked before it i
 Open the session's folder), rename `grouplab.db` to `grouplab.after-upgrade.db`, and copy `grouplab.pre-v2.db` to `grouplab.db`. Open the
 older GroupLab that wrote it: a newer GroupLab opens it too, but upgrades it again, making a fresh copy first. Nothing in the copy is newer
 than the moment before the upgrade, so sessions saved after it are in `grouplab.after-upgrade.db`, which GroupLab can export from.
+
+**A person's own records, from GroupLab's daily copies** (entry 468 section 2.1). GroupLab keeps a copy of its database once a day, at
+the first open, on every platform, unless "Keep a daily copy of your records" is turned off in Settings, Sync and your data. The copies
+are `copies/grouplab-YYYY-MM-DD-HHmmss.db` beside the database (on the desktop, "Open the folder" on that page shows them; on a phone they
+are in the application's own storage, and Export all my data is the way off the device). The newest 14 are kept; older ones move to
+`trash/copies/`, their names starting with the day they were moved, and are removed 14 days after. Each is made by SQLite's own
+`VACUUM INTO` while GroupLab is open, so it is whole, never half written: a copy that cannot be finished, a full disk among them, leaves
+nothing behind and changes nothing. **To restore:** Settings, Sync and your data, "Restore a copy...", choose the day (each says how many
+sessions it holds), and answer the one question. GroupLab first copies the records as they are now, so the restore is itself undone the
+same way, then puts the chosen copy in place and opens it. By hand, with GroupLab closed: copy the chosen file over `grouplab.db` (the
+phone's is `sessions.db`). Tests: `RecordsCopiesTests` (a copy made while sessions are being written, the restore round trip, the 14 kept,
+a full disk) and `Entry468Tests`.
 
 **The whole server** (entries 224 and 225), pissinhot.com included. In the Oracle Cloud console, region US West (San Jose), compartment
 spetsnaz (root):

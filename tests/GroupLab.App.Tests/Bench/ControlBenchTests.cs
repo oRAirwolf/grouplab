@@ -30,7 +30,8 @@ public class ControlBenchTests(ITestOutputHelper output)
         ("target library", w => w.ShowLibrary()),
         ("ballistics", w => w.ShowBallistics()),
         ("compare loads", w => w.ShowCompare()),
-        ("settings", w => w.ShowSettings()),
+        // Entry 468 section 1: Settings is eight pages, each walked as its own screen.
+        .. SettingsMenu.All.Select(c => ("settings, " + SettingsMenu.Name(c).ToLowerInvariant(), (Action<MainWindow>)(w => w.ShowSettings(c)))),
     ];
 
     [AvaloniaFact]

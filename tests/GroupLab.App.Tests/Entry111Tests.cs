@@ -82,8 +82,11 @@ public partial class Entry111Tests
             window.Analyse();
             window.SetEveryWhy(true);
             Check("analysis");
-            window.ShowSettings();
-            Check("settings");
+            foreach (var category in SettingsMenu.All)
+            {
+                window.ShowSettings(category);
+                Check("settings, " + SettingsMenu.Name(category));
+            }
 
             // Entry 113 section 7: every screen entries 112 and 113 added, and the report's pages.
             window.ShowSessions();

@@ -30,6 +30,9 @@ public static class Phone
     /// <summary>The hardware survey's queue, the desktop's own; it keeps and sends nothing until the person says yes.</summary>
     internal static SurveyQueue? Survey { get; private set; }
 
+    /// <summary>Entry 468 section 2.1: the daily copies of the records, in the application's own storage.</summary>
+    internal static GroupLab.Core.Records.RecordsCopies? Copies { get; private set; }
+
     /// <summary>The application's styles: the desktop's look B with the phone's cards on top (entry 246, request 49).</summary>
     public static void Initialize(Avalonia.Application application)
     {
@@ -77,6 +80,24 @@ public static class Phone
         _ = RefreshLibraryAsync(DateTimeOffset.UtcNow);
         Errors = new ErrorQueue(Settings);
         Survey = new SurveyQueue(Settings, platform.Machine);
+
+        // Entry 468 section 2.1: today's copy of the records, at the first open of the day, away from the screen.
+        var copies = Copies = new GroupLab.Core.Records.RecordsCopies(Path.Combine(files, "sessions.db"), () => DateTime.Now);
+        if (Settings.LoadDailyCopies())
+        {
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    var made = copies.MakeIfDue();
+                    DiagnosticLog.Info("copies.daily", ("made", made.Made));
+                }
+                catch (Exception e) when (e is IOException or UnauthorizedAccessException or Microsoft.Data.Sqlite.SqliteException)
+                {
+                    DiagnosticLog.Exception(LogLevel.Warn, "copies.daily", e);
+                }
+            });
+        }
         _ = SendWaitingErrorsAsync();
         _ = Survey.SendDueAsync(Shell.SurveyOpen, DateTimeOffset.UtcNow, CancellationToken.None);
         // Entry 363 section 3.5: targets kept to send are tried again, on Wi-Fi unless mobile data is allowed; nothing while the switch is off.

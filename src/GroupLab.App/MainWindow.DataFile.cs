@@ -21,7 +21,6 @@ public sealed partial class MainWindow
 
     private void BuildDataSettings(StackPanel column)
     {
-        column.Children.Add(Ruled("Your data"));
         column.Children.Add(Line(DataPrivacyWords));
         column.Children.Add(Row(Button("Export all my data…", () => _ = ExportAllDialog()), Button("Import data…", () => _ = ImportDialog())));
         column.Children.Add(dataPanel);

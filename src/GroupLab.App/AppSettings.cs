@@ -188,6 +188,17 @@ public sealed class AppSettingsStore(string path)
     public bool SaveTheme(ThemeChoice theme) => Save(file => file["theme"] = theme.ToString());
 
     /// <summary>Whether DEBUG lines are logged, NOTES-FROM-PLANNING.md entry 41 section 3. Off unless chosen.</summary>
+    /// <summary>Entry 468 section 2.1: whether a daily copy of the records is made; on unless turned off, for new and existing installs alike.</summary>
+    public bool LoadDailyCopies() => Read(file => (bool?)file["dailyCopies"]) ?? true;
+
+    public bool SaveDailyCopies(bool on) => Save(file => file["dailyCopies"] = on);
+
+    /// <summary>Entry 468 section 1: the Settings category shown last, so Settings opens where it was left.</summary>
+    public SettingsCategory LoadSettingsPage() => Read<SettingsCategory?>(file => Enum.TryParse((string?)file["settingsPage"], out SettingsCategory page) && Enum.IsDefined(page) ? page : null)
+        ?? SettingsCategory.General;
+
+    public bool SaveSettingsPage(SettingsCategory page) => Save(file => file["settingsPage"] = page.ToString());
+
     public bool LoadVerbose() => Read(file => file["verboseLogging"]?.GetValueKind() == JsonValueKind.True);
 
     public bool SaveVerbose(bool verbose) => Save(file => file["verboseLogging"] = verbose);

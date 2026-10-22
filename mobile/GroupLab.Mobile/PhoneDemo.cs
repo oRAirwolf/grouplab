@@ -251,7 +251,12 @@ internal sealed class PhoneDemo
         at = index;
         var step = Steps[index];
         Phone.Settings.SaveDemoStep(index);
-        if (shell.Showing != step.Place)
+        if (step.Place == Shell.Place.Settings)
+        {
+            // Entry 468 section 1: the demo's row is on the General page of Settings.
+            shell.ShowSettings(GroupLab.App.SettingsCategory.General);
+        }
+        else if (shell.Showing != step.Place)
         {
             shell.Show(step.Place);
         }

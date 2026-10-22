@@ -95,9 +95,9 @@ public class Entry447Tests
                 Dispatcher.UIThread.RunJobs();
             }
 
-            foreach (var (place, id) in new[] { (Shell.Place.Targets, "targets-add-store"), (Shell.Place.Settings, "settings-add-printer") })
+            foreach (var (show, id) in new (Action Show, string Id)[] { (() => shell.Show(Shell.Place.Targets), "targets-add-store"), (() => shell.ShowSettings(GroupLab.App.SettingsCategory.Printers), "settings-add-printer") })
             {
-                shell.Show(place);
+                show();
                 Dispatcher.UIThread.RunJobs();
                 Open(id);
             }

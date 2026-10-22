@@ -66,7 +66,7 @@ public class Entry299Tests
                 Phone.Start(new TestPhone(), Avalonia.Application.Current!, () => "US", null);
             }
 
-            var view = new SettingsView(store);
+            var view = new SettingsView(store, GroupLab.App.SettingsCategory.Sharing);
             var window = new Window { Width = 412, Height = 915, Content = view };
             window.Show();
             Dispatcher.UIThread.RunJobs();

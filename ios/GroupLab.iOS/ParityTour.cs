@@ -57,10 +57,10 @@ internal static class ParityTour
         checks.Add(await LibrarySheet("c-bull", "GroupLab 5x5 Load Development, C Bull, Letter", null));
         checks.Add(await LibrarySheet("two-moa", "GroupLab 3x3 2 MOA, Letter", null));
         checks.Add(await LibrarySheet("large-sheets", "GroupLab Large Format 1.5 in Bulls, 2x2 Letter Sheets", "Share as one large page with cut lines, for a plotter"));
-        checks.Add(await Setting("scope-unit", UnitSettings.ScopeUnitLabel, () => Radios().Any(r => r.IsChecked == true && Words(r) == "MOA")));
-        checks.Add(await Setting("send-targets", "Sending targets", null));
-        checks.Add(await Setting("error-reports", "Error reports", null));
-        checks.Add(await Setting("survey", "Hardware survey", null));
+        checks.Add(await Setting("scope-unit", SettingsCategory.Units, UnitSettings.ScopeUnitLabel, () => Radios().Any(r => r.IsChecked == true && Words(r) == "MOA")));
+        checks.Add(await Setting("send-targets", SettingsCategory.Sharing, "Sending targets", null));
+        checks.Add(await Setting("error-reports", SettingsCategory.Sharing, "Error reports", null));
+        checks.Add(await Setting("survey", SettingsCategory.Sharing, "Hardware survey", null));
         checks.Add(Region());
 
         // A target GroupLab did not print, marked by hand: its aim points, and Marking A behind "+ Aim point".
@@ -476,10 +476,10 @@ internal static class ParityTour
         return check;
     });
 
-    /// <summary>A section of Settings brought into view and photographed; <paramref name="holds"/> checks it where given.</summary>
-    private static Task<SelfTestCheck> Setting(string key, string heading, Func<bool>? holds) => Guard(key, async check =>
+    /// <summary>A section of Settings, on its category's page (entry 468), brought into view and photographed; <paramref name="holds"/> checks it where given.</summary>
+    private static Task<SelfTestCheck> Setting(string key, SettingsCategory page, string heading, Func<bool>? holds) => Guard(key, async check =>
     {
-        await SelfTest.OnUi(() => Shell.Current!.Show(Shell.Place.Settings));
+        await SelfTest.OnUi(() => Shell.Current!.ShowSettings(page));
         await Task.Delay(TimeSpan.FromSeconds(1));
         bool found = await SelfTest.OnUi(() =>
         {

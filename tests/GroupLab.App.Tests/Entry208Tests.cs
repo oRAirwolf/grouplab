@@ -122,10 +122,10 @@ public class Entry208Tests
         var opened = Open(answeredBefore: true);
         try
         {
-            opened.Window.ShowSettings();
+            opened.Window.ShowSettings(SettingsCategory.Sharing);
             Settle();
             var said = Said(opened.Window.SettingsBody);
-            int sharing = said.IndexOf("Sharing"), targets = said.IndexOf("Sending targets"), errors = said.IndexOf("Error reports"), survey = said.IndexOf("Hardware survey");
+            int sharing = said.IndexOf(SettingsMenu.Name(SettingsCategory.Sharing)), targets = said.IndexOf("Sending targets"), errors = said.IndexOf("Error reports"), survey = said.IndexOf("Hardware survey");
             Assert.True(sharing >= 0 && sharing < targets && targets < errors && errors < survey, string.Join(" | ", said));
             Assert.Contains(SharingWords.BenchmarkButton, opened.Window.SettingsBody.GetVisualDescendants().OfType<Button>().Select(b => b.Content as string));
         }
@@ -199,7 +199,7 @@ public class Entry208Tests
             opened.Window.SettingsStore.SaveSurveyChoice(SurveyChoice.Yes);
             opened.Window.Survey.Record(Analysis());
             Assert.Single(opened.Window.Survey.Waiting());
-            opened.Window.ShowSettings();
+            opened.Window.ShowSettings(SettingsCategory.Sharing);
             Settle();
             var no = opened.Window.SettingsBody.GetVisualDescendants().OfType<RadioButton>().Single(r => r.GroupName == "surveyChoice" && ((TextBlock)r.Content!).Text == "No");
             no.IsChecked = true;
@@ -225,7 +225,7 @@ public class Entry208Tests
             store.SaveSurveyChoice(SurveyChoice.Yes);
             store.SaveSurveySent(DateTimeOffset.UtcNow);
             Outside.SurveyAnswer = _ => new PostAnswer(200, "{\"ok\":true}");
-            opened.Window.ShowSettings();
+            opened.Window.ShowSettings(SettingsCategory.Sharing);
             Settle();
             opened.Window.SettingsBenchmark!.Start();
             await opened.Window.BenchmarkTask!;

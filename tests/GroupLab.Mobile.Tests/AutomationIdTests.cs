@@ -82,11 +82,18 @@ public partial class AutomationIdTests
 
             Assert.Contains("capture-take-picture", capture);
             Assert.Contains("capture-choose-photo", capture);
+            // Entry 468 section 1: Settings opens the list of its eight categories, and each control is on its category's page.
             shell.Show(Shell.Place.Settings);
             Dispatcher.UIThread.RunJobs();
             var settings = Showing();
-            Assert.Contains("settings-send-diagnostics", settings);
-            Assert.Contains("settings-printer-correction", settings);
+            Assert.Contains("settings-find", settings);
+            Assert.All(GroupLab.App.SettingsMenu.All, c => Assert.Contains("settings-" + c.ToString().ToLowerInvariant(), settings));
+            shell.ShowSettings(GroupLab.App.SettingsCategory.Help);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Contains("settings-send-diagnostics", Showing());
+            shell.ShowSettings(GroupLab.App.SettingsCategory.Printers);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Contains("settings-printer-correction", Showing());
         }
         finally
         {

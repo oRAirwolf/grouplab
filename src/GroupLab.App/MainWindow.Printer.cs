@@ -119,13 +119,13 @@ public sealed partial class MainWindow
     /// Settings, under Printers (entry 273 section 4): every printer saved with its figures and date, which one photographs are corrected for,
     /// Check again, Delete, Add a printer, and a switch to turn correction off.
     /// </summary>
-    private void BuildPrinterSettings(StackPanel column)
+    private void BuildPrinterSettings(StackPanel column, SettingsPages.Page page)
     {
-        column.Children.Add(Ruled("Printers"));
         column.Children.Add(Line(DetectionAdvice.OncePerPrinter));
         column.Children.Add(printerList);
         var correcting = new CheckBox { Content = Wrapped("Correct photographs by the chosen printer's scale"), IsChecked = settingsStore.LoadPrinterCorrection() };
         correcting.IsCheckedChanged += (_, _) => settingsStore.SavePrinterCorrection(correcting.IsChecked == true);
+        page.OnPutBack(() => correcting.IsChecked = true);
         column.Children.Add(correcting);
         column.Children.Add(Row(Button("Add a printer", () => OpenPrinterCheck(""))));
         ShowPrinters();

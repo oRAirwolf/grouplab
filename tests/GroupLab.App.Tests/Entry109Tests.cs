@@ -127,8 +127,11 @@ public class Entry109Tests
             window.Analyse();
             window.SetEveryWhy(true);
             Check("analysis");
-            window.ShowSettings();
-            Check("settings");
+            foreach (var category in SettingsMenu.All)
+            {
+                window.ShowSettings(category);
+                Check("settings, " + SettingsMenu.Name(category));
+            }
             window.Close();
         }
         finally
@@ -200,16 +203,28 @@ public class Entry109Tests
 
             Assert.StartsWith($"Detected {result.Detections.Count} holes on {result.Bulls.Count(b => b.Scoring)} bulls", window.StatusText, StringComparison.Ordinal);
 
-            window.ShowSettings();
-            Dispatcher.UIThread.RunJobs();
-            var settings = window.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.Classes.Contains(AppStyles.Section) && Shown(t)).Select(t => t.Text).ToList();
-            // Entry 119 section 4 adds "This build", which is where a tester reads the version and the commit for a bug report.
-            // Entry 165 section 9 adds "Sending targets", its own section rather than a toggle among the others.
-            // Entry 208 section 4 gathers sending targets, error reports and the survey under one section, "Sharing".
-            // Entry 298 adds "Layout", with Reset layout.
-            // Entry 314 adds "Caliber box shows", what the caliber box offers.
-            // Entry 463 adds "Sync between devices", after Saving.
-            Assert.Equal(["Units", "Zero correction", "Caliber box shows", "Printers", "Saving", "Sync between devices", "Theme", "Layout", "This build", "Updates", "Sharing", "Your data", "Diagnostics", "Crash records"], settings);
+            // Entry 468 section 1: Settings is eight pages, one at a time, each its cards under their headings. Entry 119 section 4's
+            // "This build" is where a tester reads the version; entry 463's "Sync between devices" is with the rest of your data.
+            var pages = new List<string>();
+            foreach (var category in SettingsMenu.All)
+            {
+                window.ShowSettings(category);
+                Dispatcher.UIThread.RunJobs();
+                var cards = window.SettingsBody.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.Classes.Contains(AppStyles.Section) && Shown(t)).Select(t => t.Text);
+                pages.Add(SettingsMenu.Name(category) + ": " + string.Join(", ", cards));
+            }
+
+            Assert.Equal(
+            [
+                "General: Look, Guided demo, Layout",
+                "Units and figures: Units, How figures are shown, Zero correction",
+                "Shooting defaults: ",
+                "Printers and paper: Printers",
+                "Sync and your data: Daily copies of your records, Sync between devices, Saving, Your data",
+                "Sharing and privacy: ",
+                "Updates and about: Updates, This build, Support GroupLab",
+                "Help and problems: Reporting a problem, Crash records",
+            ], pages);
             window.ShowSettings(false);
             window.Close();
         }
@@ -599,9 +614,11 @@ public class Entry109Tests
                         Save(window, $"shots-to-zero-{name}-{size}");
                         window.FullFiguresPanel.IsExpanded = false;
                         window.AdvancedPanel.IsExpanded = false;
-                        window.ShowSettings();
+                        // Entry 468 section 1: Settings as the side menu and one page, Units and figures, as concept A drew it.
+                        window.ShowSettings(SettingsCategory.Units);
                         Save(window, $"settings-{name}-{size}");
-                        // Entry 437 section 1.3: the lower half of Settings, from Your data down, which the user guide's section 12 describes.
+                        // Entry 437 section 1.3, moved by entry 468: Your data, on the Sync and your data page the guide's section 12 describes.
+                        window.ShowSettings(SettingsCategory.Data);
                         var yourData = window.GetLogicalDescendants().OfType<TextBlock>().First(t => t.Text == "Your data");
                         yourData.BringIntoView(new Avalonia.Rect(0, 0, 1, 4000));
                         Save(window, $"settings-data-{name}-{size}");
@@ -642,6 +659,7 @@ public class Entry109Tests
                             Synced(window.SyncNowAsync());
                         }
 
+                        window.ShowSettings(SettingsCategory.Data);
                         window.FillSync();
                         Dispatcher.UIThread.RunJobs();
                         var syncHeading = window.GetLogicalDescendants().OfType<TextBlock>().First(t => t.Text == GroupLab.Core.Sync.SyncScreens.Title);

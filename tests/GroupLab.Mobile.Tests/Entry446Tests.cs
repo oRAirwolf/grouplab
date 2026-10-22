@@ -108,8 +108,8 @@ public class Entry446Tests
             Assert.Equal(0, shell.Targets.Count);
             Assert.Equal(2, Phone.Settings.LoadDemoStep());
 
-            // Settings offers it from the start and from where it was left.
-            shell.Show(Shell.Place.Settings);
+            // Settings offers it from the start and from where it was left, on its General page (entry 468).
+            shell.ShowSettings(GroupLab.App.SettingsCategory.General);
             Dispatcher.UIThread.RunJobs();
             var carry = shell.GetVisualDescendants().OfType<Button>().Single(b => AutomationProperties.GetAutomationId(b) == "settings-demo-carry-on");
             Assert.Equal(DemoWords.CarryOn(3, PhoneDemo.Steps.Count), ((TextBlock)carry.Content!).Text);

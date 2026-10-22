@@ -125,7 +125,7 @@ public class Entry241Tests
             var start = new DateTimeOffset(2026, 9, 27, 10, 0, 0, TimeSpan.Zero);
             store.SaveBenchmark(Result(1800), sent: true, ranAt: start);
             store.SaveBenchmark(Result(1750), sent: false, ranAt: start.AddDays(1));
-            opened.Window.ShowSettings();
+            opened.Window.ShowSettings(SettingsCategory.Sharing);
             Settle();
             var said = Said(opened.Window.SettingsBody);
             Assert.Contains(SharingWords.BenchmarkHistory, said);

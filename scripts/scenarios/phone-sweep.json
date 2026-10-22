@@ -30,6 +30,8 @@
     { "do": "sleep", "seconds": 1 },
     { "do": "screenshot", "name": "07-settings" },
     { "do": "tree", "name": "07-settings" },
+    { "do": "press", "name": "settings-printers" },
+    { "do": "sleep", "seconds": 1 },
     { "do": "press", "name": "settings-add-printer" },
     { "do": "sleep", "seconds": 1 },
     { "do": "screenshot", "name": "08-printer-check" },

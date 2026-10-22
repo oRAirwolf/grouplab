@@ -50,7 +50,6 @@ public partial class MainWindow
 
     private void BuildSyncSettings(StackPanel column)
     {
-        column.Children.Add(Ruled(SyncScreens.Title));
         column.Children.Add(syncSection);
         FillSync();
         if (Sync.On)

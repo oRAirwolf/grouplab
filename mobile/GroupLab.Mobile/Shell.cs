@@ -331,14 +331,21 @@ public sealed class Shell : UserControl
     internal void ShowSync()
     {
         Show(Place.Settings);
-        page.Content = new SyncPage(() => Show(Place.Settings));
+        page.Content = new SyncPage(() => ShowSettings(GroupLab.App.SettingsCategory.Data));
+    }
+
+    /// <summary>Entry 468 section 1: Settings open at <paramref name="category"/>'s page, as coming back from a page under it does.</summary>
+    internal void ShowSettings(GroupLab.App.SettingsCategory category)
+    {
+        Show(Place.Settings);
+        page.Content = new SettingsView(Phone.Settings, category);
     }
 
     /// <summary>Entry 273: the printer check, under Settings, and back to Settings when it is done or skipped.</summary>
     internal void ShowPrinterCheck(string? name = null)
     {
         Show(Place.Settings);
-        page.Content = new PrinterCheckPage(() => Show(Place.Settings), string.IsNullOrEmpty(name) ? (name is null ? null : PrinterProfileNewName()) : name);
+        page.Content = new PrinterCheckPage(() => ShowSettings(GroupLab.App.SettingsCategory.Printers), string.IsNullOrEmpty(name) ? (name is null ? null : PrinterProfileNewName()) : name);
     }
 
     /// <summary>A name for another printer: "My printer" where none has it, else "Printer 2" and on.</summary>

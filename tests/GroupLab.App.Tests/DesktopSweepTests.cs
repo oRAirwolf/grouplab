@@ -203,8 +203,7 @@ public class DesktopSweepTests
                 ("ballistics", () => window.ShowBallistics()),
                 ("compare loads", () => window.ShowCompare()),
                 ("equipment", () => window.ShowEquipment(EquipmentKind.Rifle)),
-                ("settings", () => window.ShowSettings()),
-            })
+            }.Concat(SettingsMenu.All.Select(c => ("settings, " + SettingsMenu.Name(c).ToLowerInvariant(), (Action)(() => window.ShowSettings(c))))))
             {
                 show();
                 found.AddRange(Problems(window, screen));
