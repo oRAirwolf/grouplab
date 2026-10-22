@@ -455,7 +455,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 
 - At Android's largest text sizes, the phone's bottom bar now shows its icons alone, larger, instead of squeezing the names; your phone still reads each one out by name.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.188)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
