@@ -39,11 +39,24 @@ public static class TextSize
         _ => 1.0,
     };
 
-    /// <summary>Entry 468 section 2.6: the computer's text at <paramref name="choice"/>, every size from the tokens scaled alike.</summary>
+    // The size chosen on the computer, while nothing else is followed; Normal is the type scale as it starts.
+    private static TextSizeChoice? chosen = TextSizeChoice.Normal;
+
+    /// <summary>
+    /// Entry 468 section 2.6: the computer's text at <paramref name="choice"/>, every size from the tokens scaled alike. Every window asks for
+    /// the size its settings hold, so the styles are built again only when that is a change: building them for every window opened took
+    /// the headless suites from half an hour to well over an hour.
+    /// </summary>
     public static void Choose(TextSizeChoice choice)
     {
+        if (chosen == choice)
+        {
+            return;
+        }
+
         double factor = Factor(choice);
         Follow(size => size * factor);
+        chosen = choice;
     }
 
     /// <summary>Follows <paramref name="system"/>, which gives a size at the system's text size, and builds the styles again.</summary>
@@ -51,6 +64,7 @@ public static class TextSize
     {
         ArgumentNullException.ThrowIfNull(system);
         follow = system;
+        chosen = null;
         foreach (var (app, actions) in restyles.ToList())
         {
             foreach (var restyle in actions.ToList())
