@@ -32,16 +32,25 @@ public sealed class RecordsCopiesTests : IDisposable
         var store = SessionStore.Open(Database);
         store.Save(Session(0));
         using var stop = new CancellationTokenSource();
+        int saved = 0;
         var writing = Task.Run(() =>
         {
             int n = 1;
             while (!stop.IsCancellationRequested)
             {
                 store.Save(Session(n++));
+                Interlocked.Increment(ref saved);
             }
 
             return n;
         });
+
+        // The copies start once the writing has, and the writing goes on through them.
+        var until = DateTime.UtcNow.AddSeconds(30);
+        while (Volatile.Read(ref saved) < 2 && DateTime.UtcNow < until)
+        {
+            await Task.Delay(10);
+        }
 
         var copies = Copies();
         var made = new List<RecordsCopy>();

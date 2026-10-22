@@ -25,6 +25,92 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-22, entry 468: Settings reorganized (concept A) and six new settings, chosen by Alan
+
+**Status: actioned 2026-10-22. Every section done on the computer, Android and the iPhone and iPad: the eight categories with search and put back; daily copies of the records with restore; shooting defaults, the camera's start and sound, the analysis opening with every figure, the computer's text size and Reduce motion. Decided along the way and said in PHASE1-RESULTS.md: Saving sits on Sync and your data; rounds fired and rifle and load are computer only, their default named Ask because that is today's behaviour; a restore opens the restored records in place rather than restarting the process. Waiting, not undone: the phone's pictures of the new pages, for the emulator's walk.**
+
+From the planning session, 2026-10-22 06:05 UTC (00:05 Denver). Alan: Settings "is very cluttered"; he asked for a menu with a side
+menu of categories, chose **concept A** on the canvas "Settings menu" (claude.ai/artifact/X9DXFCm9b3kUEmmGXvbTs3, boards "A. Grouped
+side menu, one page per category" and the two phone boards), and said yes to **all** the proposed new settings. Main model; one commit
+per section, STATE rewritten after each; the computer, Android and iPhone/iPad together. The usual 85% guard; one piece at a time (no
+helpers unless Alan asks again). Guide, Features, README and screenshots in the same change (entry 267). The canvas is a mockup: match
+its idea, keep GroupLab's own look. Every setting keeps its current stored value and meaning through the move; nothing a person chose is
+reset.
+
+## 1. The new structure (concept A)
+
+**The computer:** Settings becomes a side menu of eight categories on the left, a search box at its top ("Find a setting"), and one page
+at a time on the right. Each page is cards; each row is the name on the left, its control on the right, and at most one short line of
+help under the name (the longer explanations move behind the existing "why"/More links or the glossary). Each page ends with "Put this
+page back as it came", which resets only that page's settings after a confirmation, and never touches data. The status line stays
+("Every choice here is remembered as soon as it is made"). The last category shown is remembered. Keyboard: the side menu is a list
+reachable by Tab with Up and Down, and the screen reader names each category (ScreenReaderAudit and LayoutAudit cover the new page).
+
+**The phone (both phone boards):** Settings opens the list of the eight categories, each with its current choices in one line under its
+name (for example "MOA · in · yd"), the search box at the top; a tap opens that category's page with "‹ Settings" back. Same categories
+and same rows as the computer, except what is phone only or computer only.
+
+**The eight categories and what moves where** (every current setting has a home; say in STATE if one does not fit):
+1. **General:** Theme; Walk me through a demo; Reset layout (computer); NEW text size and reduce motion (section 2.6).
+2. **Units and figures:** Scope unit, Lengths, Distances; size on the paper first; what the caliber box offers; Zero correction (when an
+   axis is inside the scatter); NEW the analysis opens with (2.4).
+3. **Shooting defaults** (NEW page, section 2.2 and 2.3).
+4. **Printers and paper:** the printer checks and printers (now on the computer as well as the phone), NEW paper size (2.2).
+5. **Sync and your data:** Sync between devices; the session's folder; Export all my data and Import data; NEW backups (2.1).
+6. **Sharing and privacy:** the three sharing choices, as now.
+7. **Updates and about:** update train, Check now, this build, the project on GitHub, Support GroupLab.
+8. **Help and problems:** Report a problem, detailed logging and where the log is, crash records, and on the phone Show diagnostics on
+   the camera.
+
+**Search** matches setting names, their help lines and common other words (for example "metric", "MOA", "dark", "backup"), shows the
+matching rows across categories, and a choice made there is the same control as on its page.
+
+## 2. The new settings
+
+### 2.1 Backups on this device (first, Alan's priority)
+
+"Keep a daily copy of your records": on by default for new and existing installs, once a day at the first open, a consistent copy of
+grouplab.db (taken safely while open), the newest 14 kept, older ones moved to GroupLab's trash and removed after 14 days. "Back up now",
+"Restore a copy..." (lists the copies with their date and how many sessions each holds; restoring first backs up the current records,
+then asks once, then restarts GroupLab), and "Open the folder" on the computer. A line says when the last copy was made and its size.
+On the phone the copies stay in the app's own storage, with Export as the way off the device; say so on the page. Tests: copy while
+writing, restore round trip, the 14 kept, a full disk handled without losing anything. RESTORE.md gets a section.
+
+### 2.2 Shooting defaults
+
+What a new target starts with; the caliber is still asked for every target, as now (state it on the page).
+- **Distance:** "Last used" (today's behaviour, the default) or a fixed distance.
+- **Rounds fired:** "One a bull" (the sheet's bulls), "Ask", or "Not known" (today's behaviour is the default).
+- **Rifle and load:** "None" (default) or "Last used", filled in on each new target and changeable as now.
+- **Paper:** Letter or A4 for sheets GroupLab prints and designs (default from the system's region where it can tell, else Letter); it
+  lives in Printers and paper and is shown here too.
+
+### 2.3 The camera (phone)
+
+On the Shooting defaults page, under "The camera": **Starts in** Guided (default) or Manual, and **A sound when it takes the picture**
+(on by default; where the platform requires the shutter sound, say so and leave it on).
+
+### 2.4 The analysis opens with
+
+In Units and figures: "The main figures" (default, today's view) or "Every figure" (Advanced and the other folded figures open at once).
+
+### 2.5 Search and reset
+
+Section 1 above: the search box on both, and "Put this page back as it came" on every page.
+
+### 2.6 Text size and reduce motion
+
+- **Text size on the computer** (General): Normal (today's fixed sizes, the default), Larger and Largest, applied through the same
+  tokens everywhere; LayoutAudit runs at all three and nothing may be cut off. The phones keep following the system's text size, and say so.
+- **Reduce motion** (General, all platforms): "Follow the system" (default), "On" or "Off"; on, every flash and animation becomes the
+  still tint already used when the system asks for reduced motion.
+
+## 3. Done when
+
+Every current setting is in its category with its stored value kept; the new settings work on every platform they apply to; the tests,
+LayoutAudit, ScreenReaderAudit and the site checks are green; the guide's Settings section, Features, README and the screenshots show
+the new menu; STATE lists anything left.
+
 ## 2026-10-21, entry 467: helpers in parallel until 20:00 Denver tonight, to finish entries 464 to 466
 
 **Status: actioned 2026-10-21. Every part done: entries 464, 465 and 466 finished with helpers in their own worktrees, merged, tested and pushed before 20:00 Denver; every helper finished and its worktree compared with main. Nothing of 464 to 466 is left.**

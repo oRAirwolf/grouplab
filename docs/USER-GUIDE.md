@@ -14,7 +14,7 @@ If you are new, **Walk me through a demo** in Settings takes you through GroupLa
 
 GroupLab works in your scope's unit, mil or MOA, and neither is the default. The first time it starts, on the computer and on the phone,
 it asks **Is your scope in mil (1) or MOA (2)?**, with a third answer, **Both, I have rifles of each** (3), and whether you measure sizes on the paper
-in inches or millimeters. Your answer becomes the **Scope unit** at the top of Units in Settings, where you can change it at any time.
+in inches or millimeters. Your answer becomes the **Scope unit** at the top of Settings, Units and figures, where you can change it at any time.
 
 The first run asks one question at a time, on the computer and on the phone: **Question 1 of 4** over a bar with a part for each
 question, and **Back**, **Skip for now** and **Next** beneath it. Answering moves on to the next question. **Skip for now** records no
@@ -216,8 +216,8 @@ sheet within 37 degrees, steady, and the sheet read.
 
 A photograph has no ruler in it, so on its own it measures in the sheet's own inches: a sheet your
 printer printed at 97 percent makes every group read about 3 percent large. For real inches from a photograph, scan one sheet or measure one ruler distance, once per printer; GroupLab remembers it.
-The easiest way is the printer check, offered the first time GroupLab opens and the first time you print, and always in Settings under
-**Printers**. Name the printer, print the check page at actual size, and measure it one way: lay any bank, gift or ID card inside its
+The easiest way is the printer check, offered the first time GroupLab opens and the first time you print, and always in Settings,
+**Printers and paper**. Name the printer, print the check page at actual size, and measure it one way: lay any bank, gift or ID card inside its
 outline and take one photo (about 0.3 percent), measure between its crosshairs with a digital caliper (about 0.1 percent), measure its
 two long lines with a ruler or tape, or scan it. GroupLab shows how large the printer prints across and down and saves it. Photographs of
 that printer's sheets are then corrected, and each result says so in one line, such as "Corrected for My printer, 99.2 by 99.4%, checked
@@ -448,7 +448,7 @@ It says what to dial when the group's center is far enough from the aim to be to
 alone, with why: "Dial 1 click left, at 0.1 mil a click. Elevation: leave it. 0.08 mil low is within what these 20 shots can tell apart
 (about 0.11 mil either way)." When neither axis is, it says so for each and how many shots would settle it, and **Shots Needed to Zero**
 works the number out. Dialing an offset nobody can distinguish from zero only chases noise. If you would rather have both clicks always,
-Settings, **Zero correction**, has **When an axis is inside the scatter**: **Say leave it, and why** (the default) or **Give the clicks
+Settings, **Units and figures**, **Zero correction**, has **When an axis is inside the scatter**: **Say leave it, and why** (the default) or **Give the clicks
 anyway**, which rounds both axes to whole clicks and marks the uncertain one ("The up click is within the scatter; more shots would tell
 whether it is needed"). An axis that rounds to no click says "no click" either way. The same setting is on the phone.
 
@@ -701,7 +701,7 @@ every six hours, downloads it on Wi-Fi in the background, and checks both its SH
 you have before installing it. The first time, it asks for Android's "Install unknown apps" permission and opens that page for you, and
 Android asks you to confirm the first update; Google Play Protect asks to scan the new copy first, on the first install and on updates, as
 it does any app from outside the Play Store: it is Google's own check, takes a few seconds, and is expected. After that it installs by itself when you leave GroupLab, never while the camera is open, a
-sheet is being read or a change is unsaved, and your sessions and settings stay. Settings, About shows the version you have, the newest
+sheet is being read or a change is unsaved, and your sessions and settings stay. Settings, Updates and about, shows the version you have, the newest
 one, **Update now**, and **Install updates automatically**, which you can turn off. The copy from Google Play has none of this: Google Play
 updates it.
 
@@ -751,7 +751,7 @@ GroupLab can also send error reports by itself, once you say so: the first time 
 
 ### Send to GroupLab and Send diagnostics, on the phone
 
-With "Ask me each time", when an error is waiting, a note along the top of the phone offers **Send the error report**; it carries the error and what was done just before, never a picture. Settings, About, **Send to GroupLab** sends the two newest logs and any crash
+With "Ask me each time", when an error is waiting, a note along the top of the phone offers **Send the error report**; it carries the error and what was done just before, never a picture. Settings, Help and problems, **Send to GroupLab** sends the two newest logs and any crash
 record straight to GroupLab's maker by the same route as an error report, with a note if you write one, and says the reference it was
 given; nothing about where you are, no picture, no file names, and no name you typed goes with it. **Send diagnostics** puts GroupLab's newest logs, any crash records and the pictures
 kept of a sitting into one file and opens the share sheet, so you choose where it goes: AirDrop, Files, OneDrive, email or a message.
@@ -763,20 +763,71 @@ The page at `grouplab.org/targets/` takes scans and photographs of targets that 
 
 ## 12. Settings
 
-The gear opens the settings:
-- **Units:** first the **Scope unit: mil / MOA**, with a line saying what it changes (see [Mil or MOA](#mil-or-moa)), then lengths and distances, each chosen on its own. They change only how figures are shown. Beneath them, a box puts a group's size on the paper before its angle. The phone's Settings starts with the same Units.
-- **Theme:** dark, light, high contrast, or follow the system.
-- **Your data:** **Export all my data** (1) writes one file, ending `.grouplab`, holding every session with GroupLab's own picture of the sheet and its marks, your rifles, barrels and loads, your designed sheets, and your printers and units; **Import data** (2) reads one on any GroupLab, on the computer or the phone. Importing never overwrites or duplicates anything: before anything is written it says what it would add and lists anything here that differs from the file, which is kept as it is here, and you can cancel. The file follows GroupLab's rule for photographs (no location, no metadata, not where the original photograph is kept) and stays with you. On the phone, Export all my data opens the share sheet, so the file can be saved to Files or sent to your computer, and a `.grouplab` file opened with GroupLab from another app offers to import it.
-- **Layout:** every split between panes, on the marking and analysis screens, Targets (the list, the sheet's column and the preview), Equipment and Ballistics, can be dragged by its grip, and GroupLab remembers where you left each one. **Reset layout** puts every pane back to its default size at once. On a tablet or an unfolded phone held sideways, the line between the sheet and the numbers on a result is dragged the same way, and the phone's Settings has the same Reset layout.
-- **Sync between devices:** keeps your devices the same through your own cloud folder (see [Sync between devices](#sync-between-devices)).
-- **Sharing:** the three things GroupLab may send, in the order the first run screen asks them. Each shows its choice and one short line; **More** opens the full explanation of what it sends, and stays open once you have opened it. **What GroupLab sends** (3), above them, opens the page on grouplab.org that says exactly what leaves your device. **Sending targets:** send every target you analyze to the project, ask each time, or never, and which consent goes with them; on the computer also **Send everything I open**, which sends every picture you open, read or not, and stays off on the phones for now. **Error reports:** send them automatically, ask each time, or never, and what a report holds. **Hardware survey:** take part or not, what a report holds, the benchmark, and a button that gives this copy of GroupLab a new random number. The benchmark runs only when you start it, from **Run the benchmark now**; it shows how far it has got, can be canceled, and says when it finished and what it found. Settings says when it last ran. On the first run screen, Yes to the survey asks whether to run the benchmark now or later.
-- **Log:** how much the diagnostic log records, and where it is.
-- **Problems:** a way to report a problem, and any crash records not yet dealt with.
+The gear opens the settings. On the computer they are a menu of eight categories down the left, with **Find a setting** at its top, and
+one page at a time on the right; the menu is reached with Tab and moved through with the Up and Down keys. The page shown last is the
+one Settings opens at. On the phone, Settings opens the list of the same eight, each with its current choices in one line under its name
+(for example "MOA · in · yd"), and the search box at the top; a tap opens that page, and **‹ Settings** comes back. Every choice is
+remembered as soon as it is made. Each page ends with **Put this page back as it came**, which asks first and then puts only that page's
+choices back as GroupLab starts with them; it never touches your sessions, rifles, printers, copies or synchronization.
 
-![The settings](figures/screens/current/settings-light-1400x900.png)
+**Find a setting** finds rows by their names, their lines of help and other words a person might use, such as "metric", "MOA", "dark" or
+"backup", and shows the rows it found on every page, each under its page's name. A choice made there is the same as on its page.
 
-![The lower half of the settings: 1 Export all my data, 2 Import data, 3 What GroupLab sends](figures/screens/current/settings-data-light-1400x900.png)
-<!-- marks: Export all my data… | Import data… | What GroupLab sends -->
+- **General:** the **Theme** (dark, light, high contrast, or follow the system); on the computer, the **Text size** (Normal, Larger or
+  Largest, every word in GroupLab larger, with nothing cut off at any size; the phones follow the phone's own text size, and say so);
+  **Reduce motion** (follow the system, on or off: on, every flash and animation is a still tint instead); the guided demo; and **Reset
+  layout**. Every split between panes, on the marking and analysis screens, Targets, Equipment and Ballistics, can be dragged by its grip,
+  and GroupLab remembers where you left each one; Reset layout puts every pane back to its default size at once. On a tablet or an unfolded
+  phone held sideways, the line between the sheet and the numbers on a result is dragged the same way.
+- **Units and figures:** first the **Scope unit: mil / MOA**, with a line saying what it changes (see [Mil or MOA](#mil-or-moa)), then
+  lengths and distances, each chosen on its own. They change only how figures are shown. Then **Size on the paper first**, which puts a
+  group's size on the paper before its angle; what the caliber box offers; **The analysis opens with** the main figures, or every figure
+  with Advanced and the other folded ones open at once; and what the zero correction says when an axis is inside the scatter.
+- **Shooting defaults:** what a new target starts with. The **Distance** is the last one used, or always the one you type; on the computer,
+  **Rounds fired** is asked for (Ask), one for each of the sheet's bulls once they are found, or not known, and **Rifle and load** is none
+  or the last used, filled in on each new target and changed there as before. The **Paper**, Letter or A4, is shown here too. The caliber is
+  still asked for every target. On the phone, **The camera** **Starts in** Guided or Manual, and makes **A sound when it takes the
+  picture** unless you turn it off; where the phone makes the sound itself, as the iPhone and iPad do, the page says so and leaves it on.
+- **Printers and paper:** the printers GroupLab has checked, which one photographs are corrected for, Check again, Delete and Add a
+  printer, on the computer and the phone alike; and the **Paper** GroupLab prints and designs its sheets on, Letter or A4, which starts as
+  your region's.
+- **Sync and your data:** first **Daily copies of your records** (below), then **Sync between devices** (see [Sync between
+  devices](#sync-between-devices)), on the computer how a target is saved (by itself, or with a Save button), and **Your data**:
+  **Export all my data** writes one file, ending `.grouplab`, holding every session with GroupLab's own picture of the sheet and its marks,
+  your rifles, barrels and loads, your designed sheets, and your printers and units; **Import data** reads one on any GroupLab, on the
+  computer or the phone. Importing never overwrites or duplicates anything: before anything is written it says what it would add and lists
+  anything here that differs from the file, which is kept as it is here, and you can cancel. The file follows GroupLab's rule for
+  photographs (no location, no metadata, not where the original photograph is kept) and stays with you. On the phone, Export all my data
+  opens the share sheet, so the file can be saved to Files or sent to your computer, and a `.grouplab` file opened with GroupLab from
+  another app offers to import it.
+- **Sharing and privacy:** the three things GroupLab may send, in the order the first run screen asks them. Each shows its choice and one
+  short line; **More** opens the full explanation of what it sends, and stays open once you have opened it. **What GroupLab sends**, above
+  them, opens the page on grouplab.org that says exactly what leaves your device. **Sending targets:** send every target you analyze to the
+  project, ask each time, or never, and which consent goes with them; on the computer also **Send everything I open**, which sends every
+  picture you open, read or not, and stays off on the phones for now. **Error reports:** send them automatically, ask each time, or never,
+  and what a report holds. **Hardware survey:** take part or not, what a report holds, the benchmark, and a button that gives this copy of
+  GroupLab a new random number. The benchmark runs only when you start it, from **Run the benchmark now**; it shows how far it has got, can
+  be canceled, and says when it finished and what it found. On the first run screen, Yes to the survey asks whether to run the benchmark
+  now or later.
+- **Updates and about:** the update train, how often GroupLab looks and **Check now**; this build's version and commit, to copy into a
+  report; the project on GitHub; and Support GroupLab.
+- **Help and problems:** a way to report a problem, how much the diagnostic log records and where it is, and any crash records not yet
+  dealt with. On the phone, sending the diagnostics, and **Show diagnostics on the camera**.
+
+![Settings on the computer: the eight categories down the left, Find a setting above them, and the Units and figures page](figures/screens/current/settings-light-1400x900.png)
+
+### Daily copies of your records
+
+**Keep a daily copy of your records** is on unless you turn it off. Once a day, the first time GroupLab opens, it makes a whole copy of
+your records while it runs; the newest 14 are kept, and older ones wait 14 days in GroupLab's trash before they are removed. A line says
+when the last copy was made and how big it is. **Back up now** (1) makes one at once. **Restore a copy...** (2) lists the copies with
+their day and how many sessions each holds; choose one and answer the one question, and GroupLab first copies your records as they are
+now, then puts the chosen copy in their place and opens it, so a restore can itself be undone the same way. On the computer **Open the
+folder** shows where the copies are. On the phone they stay in GroupLab's own storage, and Export all my data is the way to keep one off
+the phone; the page says so. A copy that cannot be finished, on a full disk for example, leaves nothing behind and changes nothing.
+
+![Sync and your data: 1 Back up now, 2 Restore a copy..., 3 Export all my data](figures/screens/current/settings-data-light-1400x900.png)
+<!-- marks: Back up now | Restore a copy… | Export all my data… -->
 
 ### Sync between devices
 
@@ -784,7 +835,7 @@ Your sessions, rifles, loads and designed sheets can stay the same on your compu
 your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive. There is no GroupLab account, and
 nothing goes anywhere but that folder: each device writes small files of its own changes there and reads the others'.
 
-In **Settings**, under **Sync between devices**, choose a folder inside your cloud app's folder; on the phone, **Settings**, **Sync between
+In **Settings**, **Sync and your data**, under **Sync between devices**, choose a folder inside your cloud app's folder; on the phone, **Settings**, **Sync and your data**, **Sync between
 devices** opens the same items on a page of their own, and the folder is chosen through the phone's own folder picker (on iPhone and iPad,
 a folder in Files). Then:
 
@@ -826,12 +877,12 @@ it can be got back. On the phone the two stack, one above the other.
 
 ![The demo tour on the phone, with Next and End the tour.](figures/screens/phone/fold-demo-light.png)
 
-A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target. It is offered once after the first run's questions, and any time from the row near the top of Settings or the header's ... menu; Settings also says **Carry on from step N of 13** when you left one part way. Each step outlines the real control, with the step's card beside it on whichever side has room, never over it, and a small pointer toward it; where no side has room, as for the plot in a small window, the card waits at the bottom of the window. You can do the step yourself or press **Next** and GroupLab does it. **End the tour** or Esc stops it at any step. It stops at Print, because printing is always your own press. Nothing the demo makes (its tab, its session, its picture) is kept unless you tick **Keep this demo in Sessions** on the last step.
+A guided tour of thirteen steps on a sample sheet of 25 shots that GroupLab makes itself, so it is nobody's target. It is offered once after the first run's questions, and any time from Settings, **General**, or the header's ... menu; Settings also says **Carry on from step N of 13** when you left one part way. Each step outlines the real control, with the step's card beside it on whichever side has room, never over it, and a small pointer toward it; where no side has room, as for the plot in a small window, the card waits at the bottom of the window. You can do the step yourself or press **Next** and GroupLab does it. **End the tour** or Esc stops it at any step. It stops at Print, because printing is always your own press. Nothing the demo makes (its tab, its session, its picture) is kept unless you tick **Keep this demo in Sessions** on the last step.
 
 
 ![The demo tour at step 9 of 13, its card beside the zero correction: 1 Next, 2 End the tour](figures/screens/current/demo-tour-light-1400x900.png)
 <!-- marks: Next | End the tour -->
-**On the phone** (Android, iPhone and iPad) the tour is thirteen steps on the phone's own screens, with the same sample sheet: it opens it as a chosen picture from GroupLab's own files, never the camera, then shows the result, its figures, Fix holes, Shots, Zero from this group, Share a picture, Sessions, Ballistics, Targets and Settings. It is offered once after the first questions, and any time from Settings, **Guided demo**, **Walk me through a demo**, which also says **Carry on from step N of 13** when you left one part way. The card under or over each outlined control points at it and says the step's number, and scrolls when the phone's text is at its largest; a screen reader reads the card with its number. **Next** does the step for you; **End the tour**, or the phone's Back, stops it, and what it made is removed unless you tick **Keep this demo in Sessions** on the last step.
+**On the phone** (Android, iPhone and iPad) the tour is thirteen steps on the phone's own screens, with the same sample sheet: it opens it as a chosen picture from GroupLab's own files, never the camera, then shows the result, its figures, Fix holes, Shots, Zero from this group, Share a picture, Sessions, Ballistics, Targets and Settings. It is offered once after the first questions, and any time from Settings, **General**, **Walk me through a demo**, which also says **Carry on from step N of 13** when you left one part way. The card under or over each outlined control points at it and says the step's number, and scrolls when the phone's text is at its largest; a screen reader reads the card with its number. **Next** does the step for you; **End the tour**, or the phone's Back, stops it, and what it made is removed unless you tick **Keep this demo in Sessions** on the last step.
 
 ## 13. On the phone
 
@@ -884,7 +935,7 @@ by hand** first.
 
 ### Show diagnostics on the camera
 
-Settings, About, **Show diagnostics on the camera** is off until you turn it on, on Android, iPhone
+Settings, Help and problems, **Show diagnostics on the camera** is off until you turn it on, on Android, iPhone
 and iPad alike. With it on, a small block of numbers sits in the bottom corner of the camera: how many frames a second the camera is
 judging and how long each takes, the instruction and the check holding it back (the angle, the focus or the light, with its value), the
 tilt, and the torch's level. While a picture is read the same corner names the step being read, how long that step and the whole reading
@@ -910,7 +961,7 @@ question about access, and **From another app** opens Files, which reaches iClou
 app open another app's library, so a Google Photos picture is **shared** into GroupLab: in Google Photos, Share, then GroupLab. The same
 works from Photos and any other app, and **Open in GroupLab** from Files; the picture opens straight into analysis. A picture opened
 from Files is read where it lies and left there. **GroupLab's own folder is in the Files app**, under On My iPad (or On My iPhone),
-GroupLab: its log is in `logs`, and with **Keep every picture taken, on this device only** turned on in Settings, About, each picture of a
+GroupLab: its log is in `logs`, and with **Keep every picture taken, on this device only** turned on in Settings, Help and problems, each picture of a
 sitting is in `sitting` with what the camera read before it and how it was analyzed. That switch is off until you turn it on, and turning
 it off deletes what was kept. On the camera the panel with the instruction sits above the preview rather than
 over it, so the preview shows the whole of what the picture will hold.
@@ -972,7 +1023,7 @@ so it says so and points you to mean radius. In **All figures**, a value too lon
 tab of its own: the dope, the trajectory and the chance of a hit. Targets prints a sheet through Android's print dialog or shares its
 PDF, and prints the printer check page; on Android it also prints straight to a Phomemo M834 over Bluetooth at true size, without
 the Phomemo app, with **Paper in the M834** for a roll (fed 15.5 mm further so the sheet clears the tear bar) or fanfold sheets; thermal roll paper
-curls, so flatten a sheet (rolled the other way, or under a heavy book) before scanning it; at the range a clip or tape is enough; Settings, under **Printers**, checks your printer. On Targets, Scale markers is plain text: each marker's name is a heading with **What is this?** beside it, which opens the glossary's entry for that marker, and the library's rows are plain too. At the larger text sizes, where two fields side by side would wrap their labels, **Made for your optic** puts one field to a row with its label above it. On a large screen, such as the Tab S8 Ultra or
+curls, so flatten a sheet (rolled the other way, or under a heavy book) before scanning it; at the range a clip or tape is enough; Settings, **Printers and paper**, checks your printer. On Targets, Scale markers is plain text: each marker's name is a heading with **What is this?** beside it, which opens the glossary's entry for that marker, and the library's rows are plain too. At the larger text sizes, where two fields side by side would wrap their labels, **Made for your optic** puts one field to a row with its label above it. On a large screen, such as the Tab S8 Ultra or
 the Fold 7 opened, the result shows the sheet beside the numbers.
 
 ![Sessions on the phone held sideways, with Open a session file, Import shots from a CSV file and the one session just analyzed](figures/screens/phone/fold-sessions-landscape-light.png)

@@ -51,6 +51,7 @@ Store listing uses 1920x1080.
 | `scope-unit` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | no sheet at all |
 | `sessions` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/sessions/, README.md, docs/USER-GUIDE.md | Alan's own scans, entry 171; Entry109Tests synthetic sheet |
 | `settings` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/settings/, docs/USER-GUIDE.md | Entry109Tests synthetic sheet; no sheet at all |
+| `settings-shooting` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests synthetic sheet |
 | `shots-to-zero` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /tour/analysis-open/ | Entry109Tests synthetic sheet |
 | `velocity` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/ | Entry109Tests plain sample target, marked by hand with a 300 yd group, and readings made by the walk, each paired with its shot |
 | `targets` | 8: dark and light at 1280x720, 1400x900, 1920x1080, 2560x1440 | /features/, /guides/user-guide/, /tour/, /tour/targets/, README.md, docs/USER-GUIDE.md | built-in library sheet |
@@ -135,6 +136,10 @@ read off a target, the three sharing choices (Settings, where they are made), an
 | Several aim points on one target | the analysis | aim points placed by hand, each in its color with its figures | aim points are placed by clicks the walk does not make yet |
 | The one-page report | the analysis | the one-page report itself | the report is a PDF and PNG file GroupLab writes, not a screen; its picture would be the file itself, which the walk does not render yet |
 | Several targets open at once | the marking screen | the tab row with two targets, one of them not saved | needs a second target opened unsaved beside the first; the walk keeps one target so every later picture is the same |
+
+**Settings in eight categories, Daily copies of your records and Shooting defaults** (entry 468) have their own pictures: `settings`, the
+side menu with the Units and figures page; `settings-data`, Sync and your data with the daily copies first; and `settings-shooting`, the
+Shooting defaults page. The phone's list of categories and its pages wait for the emulator's walk.
 
 **Sync between your devices** (entry 463) has its own picture, `sync-settings`: Settings at Sync between devices with a folder the walk makes and a second store, Range laptop, in it; and `sync-conflict`, a session changed on both, side by side. The phone's Sync page waits for the emulator's walk.
 

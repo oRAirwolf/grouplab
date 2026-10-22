@@ -154,6 +154,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `settings-data-light-1400x900.png` | Entry109Tests synthetic sheet |
 | `settings-data-light-1920x1080.png` | Entry109Tests synthetic sheet |
 | `settings-data-light-2560x1440.png` | Entry109Tests synthetic sheet |
+| `settings-shooting-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `settings-shooting-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `settings-shooting-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `settings-shooting-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `settings-shooting-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `settings-shooting-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `settings-shooting-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `settings-shooting-light-2560x1440.png` | Entry109Tests synthetic sheet |
 | `demo-tour-dark-1280x720.png` | sheet made by the generator |
 | `demo-tour-dark-1400x900.png` | sheet made by the generator |
 | `demo-tour-dark-1920x1080.png` | sheet made by the generator |

@@ -4,8 +4,8 @@
   "height": 900,
   "controls": {
     "Also the original photographs": [
-      89,
-      637,
+      342,
+      601,
       205,
       32
     ],
@@ -22,8 +22,8 @@
       34
     ],
     "Change folder…": [
-      79,
-      248,
+      332,
+      212,
       119,
       27
     ],
@@ -45,9 +45,27 @@
       34,
       34
     ],
+    "Find a setting": [
+      65,
+      114,
+      215,
+      32
+    ],
+    "General": [
+      65,
+      158,
+      215,
+      31
+    ],
+    "Help and problems": [
+      65,
+      403,
+      215,
+      31
+    ],
     "Marks and proof pictures": [
-      89,
-      474,
+      342,
+      438,
       178,
       32
     ],
@@ -56,6 +74,12 @@
       6,
       30,
       22
+    ],
+    "Printers and paper": [
+      65,
+      263,
+      215,
+      31
     ],
     "Session records": [
       4,
@@ -69,6 +93,24 @@
       34,
       34
     ],
+    "Settings categories": [
+      65,
+      158,
+      215,
+      674
+    ],
+    "Sharing and privacy": [
+      65,
+      333,
+      215,
+      31
+    ],
+    "Shooting defaults": [
+      65,
+      228,
+      215,
+      31
+    ],
     "StatusLine": [
       69,
       881,
@@ -76,14 +118,20 @@
       15
     ],
     "Stop syncing": [
-      79,
-      839,
+      332,
+      788,
       102,
       27
     ],
+    "Sync and your data": [
+      65,
+      298,
+      215,
+      31
+    ],
     "Sync now": [
-      331,
-      352,
+      584,
+      316,
       83,
       27
     ],
@@ -94,16 +142,22 @@
       34
     ],
     "This device's name, as the others see it": [
-      77,
-      310,
+      330,
+      274,
       260,
       32
     ],
-    "With a Save button, and a question before an unsaved target is left or closed": [
-      77,
-      75,
-      470,
-      3
+    "Units and figures": [
+      65,
+      193,
+      215,
+      31
+    ],
+    "Updates and about": [
+      65,
+      368,
+      215,
+      31
     ],
     "gl-cf25-ltr-scan.png, Analysis": [
       61,

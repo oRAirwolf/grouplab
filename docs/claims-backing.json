@@ -7928,6 +7928,66 @@
   "Tidied files go to a `trash` folder inside the sync folder and are removed 14 days after they were moved there.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Sync/SyncTidy.cs (Run, Move, Empty; SyncEngine.TrashDays = 14) and SyncScreens.Tidied and TidyLine, shown by src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by SyncTidyTests, SyncTidyWindowTests and SyncTidyPhoneTests (entry 464 section 1); not proven on two real devices yet"
+  },
+  "GroupLab keeps a daily copy of your records, the newest 14, and Settings, Sync and your data, restores one.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/RecordsCopies.cs (Kept 14, TrashDays 14, MakeIfDue, Restore copying the records first), the start in MainWindow.Copies.cs StartCopies and Phone.Start, held by RecordsCopiesTests and Entry468Tests (entry 468 section 2.1)"
+  },
+  "Your answer becomes the **Scope unit** at the top of Settings, Units and figures, where you can change it at any time.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SettingsMenu.cs BuildUnitsPage, the scope unit the first row of Units and figures, held by Entry468Tests and SettingsLayoutTests (entry 468 section 1; entry 294 section 1)"
+  },
+  "Settings, Updates and about, shows the version you have, the newest one, **Update now**, and **Install updates automatically**, which you can turn off.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SettingsMenu.cs BuildUpdatesPage and the phone's SettingsView.BuildAbout with the updater's card, held by StoreBuildTests and ShortVersionTests (entry 468 section 1; entry 288)"
+  },
+  "- **Printers and paper:** the printers GroupLab has checked, which one photographs are corrected for, Check again, Delete and Add a printer, on the computer and the phone alike; and the **Paper** GroupLab prints and designs its sheets on, Letter or A4, which starts as your region's.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Printer.cs BuildPrinterSettings and mobile/GroupLab.Mobile/SettingsView.cs BuildPrinters, with PaperChoice and PaperRadios over AppSettingsStore.LetterPaper, held by Entry468Tests.ThePaperIsOneSettingOnTwoPages (entry 468 sections 1 and 2.2)"
+  },
+  "![Settings on the computer: the eight categories down the left, Find a setting above them, and the Units and figures page](figures/screens/current/settings-light-1400x900.png) ### Daily copies of your records **Keep a daily copy of your records** is on unless you turn it off.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/RecordsCopies.cs (Kept 14, TrashDays 14, MakeIfDue, Restore copying the records first), the start in MainWindow.Copies.cs StartCopies and Phone.Start, held by RecordsCopiesTests and Entry468Tests (entry 468 section 2.1)"
+  },
+  "Once a day, the first time GroupLab opens, it makes a whole copy of your records while it runs; the newest 14 are kept, and older ones wait 14 days in GroupLab's trash before they are removed.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/RecordsCopies.cs (Kept 14, TrashDays 14, MakeIfDue, Restore copying the records first), the start in MainWindow.Copies.cs StartCopies and Phone.Start, held by RecordsCopiesTests and Entry468Tests (entry 468 section 2.1)"
+  },
+  "![Sync and your data: 1 Back up now, 2 Restore a copy..., 3 Export all my data](figures/screens/current/settings-data-light-1400x900.png) ### Sync between devices Your sessions, rifles, loads and designed sheets can stay the same on your computer and your phones.": {
+   "kind": "code",
+   "where": "the picture docs/figures/screens/current/settings-data-*.png, made by Entry109Tests from the Sync and your data page, MainWindow.Copies.cs BuildCopiesCard (entry 468 section 2.1)"
+  },
+  "It is offered once after the first questions, and any time from Settings, **General**, **Walk me through a demo**, which also says **Carry on from step N of 13** when you left one part way.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/SettingsView.cs BuildGeneral with PhoneDemo.SettingsCard, held by Entry446Tests (entry 468 section 1; entry 446 section 1)"
+  },
+  "On the tour · In the user guide Daily copies of your records Once a day GroupLab keeps a whole copy of your records, the newest 14 kept and older ones 14 days in its trash, with Back up now, and Restore a copy, which lists each copy with its day and its sessions and copies your records as they are before it puts one back.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/RecordsCopies.cs (Kept 14, TrashDays 14, MakeIfDue, Restore copying the records first), the start in MainWindow.Copies.cs StartCopies and Phone.Start, held by RecordsCopiesTests and Entry468Tests (entry 468 section 2.1)"
+  },
+  "Your answer becomes the Scope unit at the top of Settings, Units and figures, where you can change it at any time.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SettingsMenu.cs BuildUnitsPage, the scope unit the first row of Units and figures, held by Entry468Tests and SettingsLayoutTests (entry 468 section 1; entry 294 section 1)"
+  },
+  "Settings, Updates and about, shows the version you have, the newest one, Update now , and Install updates automatically , which you can turn off.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.SettingsMenu.cs BuildUpdatesPage and the phone's SettingsView.BuildAbout with the updater's card, held by StoreBuildTests and ShortVersionTests (entry 468 section 1; entry 288)"
+  },
+  "Printers and paper: the printers GroupLab has checked, which one photographs are corrected for, Check again, Delete and Add a printer, on the computer and the phone alike; and the Paper GroupLab prints and designs its sheets on, Letter or A4, which starts as your region's.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Printer.cs BuildPrinterSettings and mobile/GroupLab.Mobile/SettingsView.cs BuildPrinters, with PaperChoice and PaperRadios over AppSettingsStore.LetterPaper, held by Entry468Tests.ThePaperIsOneSettingOnTwoPages (entry 468 sections 1 and 2.2)"
+  },
+  "It is offered once after the first questions, and any time from Settings, General , Walk me through a demo , which also says Carry on from step N of 13 when you left one part way.": {
+   "kind": "code",
+   "where": "mobile/GroupLab.Mobile/SettingsView.cs BuildGeneral with PhoneDemo.SettingsCard, held by Entry446Tests (entry 468 section 1; entry 446 section 1)"
+  },
+  "GroupLab keeps a daily copy of your records, the newest 14, and restores one after copying your records as they are; beneath it, sync, how a target is saved, and Export all my data and Import data.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/RecordsCopies.cs (Kept 14, TrashDays 14, MakeIfDue, Restore copying the records first), the start in MainWindow.Copies.cs StartCopies and Phone.Start, held by RecordsCopiesTests and Entry468Tests (entry 468 section 2.1)"
+  },
+  "A daily copy of your records, the newest 14 kept, with Back up now and Restore a copy; Sync between devices; how a target is saved; and Export all my data and Import data, which overwrites nothing.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Records/RecordsCopies.cs (Kept 14, TrashDays 14, MakeIfDue, Restore copying the records first), the start in MainWindow.Copies.cs StartCopies and Phone.Start, held by RecordsCopiesTests and Entry468Tests (entry 468 section 2.1)"
   }
  },
  "rules": [

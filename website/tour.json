@@ -771,51 +771,51 @@
   },
   "settings": {
    "name": "Settings",
-   "blurb": "Units, theme, which builds it offers you, and the log. Every choice here is remembered.",
-   "purpose": "Short by design. The units change how every figure is displayed and nothing that is stored, so you can switch between inches and millimeters without touching a single record. Printers lists every printer you have checked, with how large it prints across and down and when it was measured; the one chosen corrects photographs of its sheets to real inches, and Check again, Printer calibrated or serviced, Add a printer and a switch to turn the correction off are beside it. A check that may no longer hold, because the printer was calibrated or serviced since or the check is about six months old, says so under its printer. The rest is about this build: what it is, whether it looks for a newer one, and how to send a problem report.",
+   "blurb": "Eight categories down the left, a search box above them, and one page at a time. Every choice here is remembered as soon as it is made.",
+   "purpose": "Settings is a menu of eight categories, General, Units and figures, Shooting defaults, Printers and paper, Sync and your data, Sharing and privacy, Updates and about, and Help and problems, with Find a setting at its top and the chosen page on the right. Each page is cards of rows, the name on the left and its control on the right, and ends with Put this page back as it came, which asks first and puts back only that page's choices, never your records. Settings opens at the page you left it on.",
    "withoutASheet": "No difference. Nothing here depends on a sheet.",
    "parts": [
     [
-     "Units",
-     "The scope unit first, mil or MOA, with a line saying everything aiming follows it; then lengths and distances. Displayed only; nothing stored changes. A box beneath puts a group's size on the paper before its angle, for shooting at one distance."
+     "Find a setting",
+     "Finds rows by their names, their lines of help and other words for them, such as metric, MOA, dark or backup, and shows them on every page at once, each under its page's name."
     ],
     [
-     "Theme",
-     "Light, dark, or follow the system."
+     "General",
+     "The theme; the text size, Normal, Larger or Largest, with nothing cut off at any size; Reduce motion, following the system, on or off; the guided demo; and Reset layout."
     ],
     [
-     "Layout",
-     "Every split between panes on every screen can be dragged by its grip and is remembered; Reset layout puts them all back at once."
+     "Units and figures",
+     "The scope unit first, mil or MOA, then lengths and distances. Displayed only; nothing stored changes. Then the size on the paper first, what the caliber box offers, whether the analysis opens with the main figures or every figure, and what the zero correction says of an axis inside the scatter."
     ],
     [
-     "This build",
-     "The version and the commit it was made from. Copy that line into a bug report and it says exactly which build you were on."
+     "Shooting defaults",
+     "What a new target starts with: the last distance or always one you choose, rounds fired asked for, one a bull or not known, and the last rifle and load or none. The caliber is still asked for every target."
     ],
     [
-     "Updates",
-     "Which train to follow and how often to check. A check is one request for one public file, and it sends nothing about you, your rifles or your targets."
+     "Printers and paper",
+     "Every printer you have checked, how large it prints across and down and when it was measured, the one photographs are corrected by, Check again, Printer calibrated or serviced and Add a printer; and Letter or A4 for GroupLab's own sheets."
     ],
     [
-     "Sharing",
-     "The three things GroupLab may send, in the first run screen's order and words: every target you analyze, with which consent, or ask each time, or never; error reports, sent by themselves, asked about each time, or never; and the hardware survey, a weekly report of what your machine is and how fast GroupLab ran, with the benchmark, which runs only when you start it, shows its progress and says when it last ran. Each shows its choice and one short line; More opens exactly what it sends, and a link above them opens What GroupLab sends. Nothing goes unless you chose it."
+     "Sync and your data",
+     "A daily copy of your records, the newest 14 kept, with Back up now and Restore a copy; Sync between devices; how a target is saved; and Export all my data and Import data, which overwrites nothing."
     ],
     [
-     "Your data",
-     "Export all my data writes every session with its picture and marks, your rifles, barrels and loads, designed sheets and printers to one file; Import data reads one on any GroupLab, lists what it would add and anything that differs here, and overwrites nothing."
+     "Sharing and privacy",
+     "The three things GroupLab may send, in the first run screen's order and words: targets, error reports and the hardware survey, each with its choice, one short line, and More for exactly what it sends. Nothing goes unless you chose it."
     ],
     [
-     "Detailed logging",
-     "Off by default. Turn it on before reproducing a problem, then send the report."
+     "Updates and about",
+     "Which train to follow and how often to check, this build's version and commit to copy into a bug report, a link to the project's source, and Support GroupLab."
     ],
     [
-     "Report a problem",
-     "Collects what is useful and lets you look at it before anything leaves your machine."
+     "Help and problems",
+     "Report a problem, detailed logging and where the log is, and any crash records not yet dealt with."
     ]
    ],
    "moreShots": [
     [
      "sync-settings",
-     "Settings scrolled to Sync between devices, a folder chosen and synced with a laptop",
+     "Settings, Sync and your data, at Sync between devices, a folder chosen and synced with a laptop",
      "Sync between devices: the folder your own cloud app keeps in step, this device's name, when it last synced, the other devices seen, whether the original photographs travel too, and Stop syncing."
     ],
     [
@@ -825,8 +825,13 @@
     ],
     [
      "settings-data",
-     "The lower half of Settings: Sharing, with what GroupLab sends, then Sending targets, Error reports and Hardware survey; Your data, with the Export all my data and Import data buttons; Diagnostics, with Detailed logging, Report a problem and Support GroupLab; and Crash records",
-     "The lower half of Settings. Under Sharing you see what GroupLab may send and that each is still closed. Under Your data, Export all my data and Import data move everything you have kept between computers, and nothing is sent anywhere. Under Diagnostics are Detailed logging, Report a problem and Support GroupLab."
+     "Settings, Sync and your data: the daily copies first, with Back up now, Restore a copy and Open the folder, then Sync between devices, Saving and Your data",
+     "Sync and your data. GroupLab keeps a daily copy of your records, the newest 14, and restores one after copying your records as they are; beneath it, sync, how a target is saved, and Export all my data and Import data."
+    ],
+    [
+     "settings-shooting",
+     "Settings, Shooting defaults: Distance, Rounds fired, Rifle and load and Paper",
+     "Shooting defaults: what a new target starts with. The caliber is still asked for every target."
     ],
     [
      "demo-tour",
@@ -835,9 +840,9 @@
     ]
    ],
    "steps": [
+    "Pick a category on the left, or type what you are looking for in Find a setting.",
     "Set your units once. Everything on every screen follows.",
-    "Choose a theme, or leave it following the system.",
-    "If you are testing, set the train to nightly so you are offered new builds.",
+    "In Shooting defaults, say what a new target starts with, if you always shoot the same distance or rifle.",
     "Turn on detailed logging only while chasing a problem."
    ],
    "fits": "Reachable from the cog at the bottom of the sidebar on every screen.",
@@ -857,28 +862,29 @@
    ],
    "mobile": {
     "shot": "fold-settings",
-    "caption": "Settings on a phone-sized screen.",
+    "caption": "Settings on a phone: the eight categories, each with its current choices in one line, and the search box.",
     "parts": [
      [
-      "Sending targets",
-      "Every target automatically, ask each time, or never, and the consent that goes with them; on the computer, Send everything I open as well, every picture opened, read or not."
+      "The list",
+      "The same eight categories as the computer, each with its choices in a line under its name, such as MOA · in · yd. A tap opens the page; ‹ Settings comes back."
      ],
      [
-      "Error reports",
-      "Automatically, ask each time, or never."
+      "Shooting defaults",
+      "The distance a new target starts with, Letter or A4, and the camera: Guided or Manual to start in, and a sound when it takes the picture."
      ],
      [
-      "Hardware survey",
-      "Yes or no; the benchmark runs only when you tap it."
+      "Sync and your data",
+      "The daily copies, which stay in GroupLab's own storage on the phone, with Back up now and Restore a copy; sync; and export and import."
      ],
      [
-      "About",
-      "The version on this phone."
+      "Sharing and privacy",
+      "Targets, error reports and the hardware survey, each with its choice; the benchmark runs only when you tap it."
      ]
     ],
     "steps": [
      "Tap Settings in the bar at the bottom.",
-     "Tap the choice you want under each heading; it is kept at once."
+     "Tap a category, or type in Find a setting.",
+     "Tap the choice you want; it is kept at once."
     ]
    }
   },

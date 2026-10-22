@@ -9,20 +9,18 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-21, entries 464 to 467 done (helpers in parallel until 20:00 Denver; the eleven looks; sync tidying, proofs, two articles, speed, audit).
+**Last rewritten:** 2026-10-22, entry 468 done (Settings in eight categories, daily copies of the records, six new settings).
 
 ---
 
 ## In flight
 
-- **Entry 467 (2026-10-21)**, done: helpers in parallel until 20:00 Denver, paced by the five-hour window (nine helpers would have
-  spent it in under an hour; `usage-now.json` now records its reset). Every worktree finished and merged.
-- **Entry 464 (2026-10-21)**, done: sync tidying into the folder's `trash` (built, not proven); eleven checklist rows moved to Done;
-  two articles published; a JPEG's two decodes side by side (a photograph opens about a third sooner); audit 0 findings.
-- **Entry 465 (2026-10-21)**, done: all eleven looks (1A to 11A) on the computer and the phone; pictures follow from the screenshot jobs.
-- **Entry 466 (2026-10-21)**, done: request 107 answered "not for now"; `tester-notes.py` stays off, no webhook asked for.
-- **Entry 463 (2026-10-21)**, done: sync's screens 1A, 2A, 3B on the computer and the phone (`MainWindow.Sync`, `PhoneSync`,
-  `SyncScreens`), in the guide, Features, README; Phase 7 Built, not proven. Phone pictures wait on the emulator's walk.
+- **Entry 468 (2026-10-22)**, done: Settings is eight categories (side menu on the computer, a list on the phones) with Find a setting
+  and "Put this page back as it came"; daily copies of the records (`RecordsCopies`, 14 kept, restore); Shooting defaults, the camera's
+  start and sound, "The analysis opens with", the computer's text size and Reduce motion. Saving sits on Sync and your data; rounds
+  fired and rifle and load are computer only (default Ask, today's behaviour). The phone pictures of the new pages wait for the
+  emulator's walk.
+- **Entries 464 to 467 (2026-10-21)**, done: sync tidying, the eleven looks, two articles, a faster photograph open, the audit.
 
 ## The next three
 
@@ -85,6 +83,12 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **Settings is eight pages** (entry 468): a test opens the one it means with `ShowSettings(SettingsCategory.X)` on the computer or
+  `new SettingsView(store, category)` / `Shell.ShowSettings(category)` on the phone; scripted walks press `settings-<category>` first.
+  Search and put back go through `SettingsPages` in `src/GroupLab.App/SettingsMenu.cs`.
+- **The records are copied daily** beside the database in `copies/` (trash in `trash/copies/`); `RecordsCopies` makes and restores them.
+- **Paper is `AppSettingsStore.LetterPaper()`**, the chosen paper else the region's; **text size** is `TextSize.Choose`; **Reduce motion**
+  is `Landing.Still()`, which tests that fake the system still drive through `Landing.ReducedMotion`.
 - **The server's logs are in Denver time** (-0600, -0700 from 1 November), not UTC; a log paste converts its window (request 99).
 - **The zero's words are `ZeroWords`** (entry 424), read by the desktop panel, the report and the phone; `ZeroAxis.Rounded` has the
   clicks on every axis, `Clicks` only on one worth dialling.
@@ -111,6 +115,5 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   push that should make a nightly must not be one.
 - **A failing site check holds back only its pages** (entry 387): whole-site checks still stop it; held pages keep grouplab.org's copy and
   are listed in website.yml's summary and the weekly consistency issue; each gets one line in for-alan.md when it appears.
-- **The Phomemo app prints a Letter sheet at 94.7 percent** (request 73): only GroupLab's own direct print is true size.
 - **Tag36h11 470 to 549 are scale labels' and 555 to 586 scale markers' (entries 372 and 365)**: the sheets' markers must stay below; the sheet look and the validator know.
 - **A picture with a bank card in it is never sent**, and marking by hand works on a blanked copy (entry 365 section D).

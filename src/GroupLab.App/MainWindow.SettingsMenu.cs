@@ -259,7 +259,7 @@ public partial class MainWindow
         var (body, page) = SettingsPageOf(column, SettingsCategory.General);
         var (look, lookCard) = SettingsCard(body, page, "Look");
         Avalonia.Automation.AutomationProperties.SetName(themeChoice, "Theme");
-        SettingRow(look, lookCard, "Theme", null, themeChoice, "dark light colour color high contrast appearance");
+        SettingRow(look, lookCard, "Theme", null, themeChoice, "dark light colour color high contrast appearance"); // British on purpose: what a person may type in Find a setting
         themeChoice.SelectionChanged += (_, _) =>
         {
             if (!showingTheme && themeChoice.SelectedIndex >= 0)
@@ -317,9 +317,9 @@ public partial class MainWindow
         Avalonia.Automation.AutomationProperties.SetName(angularUnit, UnitSettings.ScopeUnitLabel);
         SettingRow(unitsCard, units, UnitSettings.ScopeUnitLabel, UnitSettings.ScopeUnitSays, angularUnit, "MOA mil mrad SMOA IPHY angle clicks metric imperial");
         Avalonia.Automation.AutomationProperties.SetName(linearUnit, "Lengths");
-        SettingRow(unitsCard, units, "Lengths", null, linearUnit, "inches millimetres millimeters centimetres metric imperial mm cm in size");
+        SettingRow(unitsCard, units, "Lengths", null, linearUnit, "inches millimetres millimeters centimetres metric imperial mm cm in size"); // British on purpose: what a person may type in Find a setting
         Avalonia.Automation.AutomationProperties.SetName(distanceUnit, "Distances");
-        SettingRow(unitsCard, units, "Distances", null, distanceUnit, "yards metres meters range metric imperial yd m");
+        SettingRow(unitsCard, units, "Distances", null, distanceUnit, "yards metres meters range metric imperial yd m"); // British on purpose: what a person may type in Find a setting
         foreach (var combo in new[] { angularUnit, linearUnit, distanceUnit })
         {
             combo.SelectionChanged += (_, _) => UnitsChosen();
@@ -366,7 +366,7 @@ public partial class MainWindow
             caliberRadios.Add((list, choice));
         }
 
-        SettingBlock(figures, figuresCard, AppSettingsStore.CaliberListLabel, AppSettingsStore.CaliberListSays, caliberChoices, "calibre caliber cartridge diameter");
+        SettingBlock(figures, figuresCard, AppSettingsStore.CaliberListLabel, AppSettingsStore.CaliberListSays, caliberChoices, "calibre caliber cartridge diameter"); // British on purpose: what a person may type in Find a setting
         page.OnPutBack(() => caliberRadios.First(r => r.List == CaliberList.Both).Radio.IsChecked = true);
 
         // Entry 468 section 2.4: the main figures, as before, or every figure with Advanced and the other folded ones open.
@@ -443,7 +443,7 @@ public partial class MainWindow
                 SaveFixed();
             }
         };
-        SettingRow(start, card, DefaultsWords.Distance, DefaultsWords.DistanceSays, new StackPanel { Spacing = Tokens.Space4, Children = { distance, fixedRow } }, "range yards metres default new target");
+        SettingRow(start, card, DefaultsWords.Distance, DefaultsWords.DistanceSays, new StackPanel { Spacing = Tokens.Space4, Children = { distance, fixedRow } }, "range yards metres default new target"); // British on purpose: what a person may type in Find a setting
         Avalonia.Automation.AutomationProperties.SetName(distance, DefaultsWords.Distance);
         page.OnPutBack(() =>
         {

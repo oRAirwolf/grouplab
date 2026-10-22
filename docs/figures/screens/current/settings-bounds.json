@@ -9,12 +9,6 @@
       38,
       38
     ],
-    "Angles": [
-      215,
-      238,
-      90,
-      32
-    ],
     "Ballistics": [
       4,
       122,
@@ -22,20 +16,20 @@
       34
     ],
     "Both": [
-      77,
-      814,
+      330,
+      598,
       56,
       32
     ],
     "Calibers": [
-      77,
-      726,
+      330,
+      526,
       76,
       32
     ],
     "Cartridges": [
-      77,
-      770,
+      330,
+      562,
       89,
       32
     ],
@@ -52,8 +46,8 @@
       34
     ],
     "Distances": [
-      238,
-      391,
+      1031,
+      310,
       70,
       32
     ],
@@ -63,15 +57,27 @@
       34,
       34
     ],
-    "Give the clicks anyway": [
-      77,
-      596,
-      159,
+    "Find a setting": [
+      65,
+      114,
+      215,
       32
     ],
+    "General": [
+      65,
+      158,
+      215,
+      31
+    ],
+    "Help and problems": [
+      65,
+      403,
+      215,
+      31
+    ],
     "Lengths": [
-      238,
-      351,
+      1031,
+      262,
       70,
       32
     ],
@@ -81,10 +87,22 @@
       30,
       22
     ],
+    "Printers and paper": [
+      65,
+      263,
+      215,
+      31
+    ],
     "Say leave it, and why": [
-      77,
-      552,
+      330,
+      814,
       150,
+      30
+    ],
+    "Scope unit: mil / MOA": [
+      1011,
+      205,
+      90,
       32
     ],
     "Session records": [
@@ -99,10 +117,28 @@
       34,
       34
     ],
-    "Show a group's size on the paper first, and its angle beneath, for shooting at one distance": [
-      77,
-      435,
-      545,
+    "Settings categories": [
+      65,
+      158,
+      215,
+      674
+    ],
+    "Sharing and privacy": [
+      65,
+      333,
+      215,
+      31
+    ],
+    "Shooting defaults": [
+      65,
+      228,
+      215,
+      31
+    ],
+    "Size on the paper first": [
+      1073,
+      421,
+      28,
       32
     ],
     "StatusLine": [
@@ -111,17 +147,35 @@
       1014,
       15
     ],
+    "Sync and your data": [
+      65,
+      298,
+      215,
+      31
+    ],
     "Targets": [
       4,
       46,
       34,
       34
     ],
-    "Walk me through a demo": [
-      79,
-      130,
-      175,
-      27
+    "The analysis opens with": [
+      921,
+      648,
+      180,
+      32
+    ],
+    "Units and figures": [
+      65,
+      193,
+      215,
+      31
+    ],
+    "Updates and about": [
+      65,
+      368,
+      215,
+      31
     ],
     "gl-cf25-ltr-scan.png, Analysis": [
       61,

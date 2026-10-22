@@ -127,7 +127,7 @@ public sealed class SettingsView : UserControl
     private void BuildUnits((StackPanel Body, SettingsPages.Page Page) unitsPage)
     {
         // Entry 294 section 1: Units at the top, the scope's unit first and said plainly, with one line on what it changes.
-        var column = Group(unitsPage, "Units", "scope unit MOA mil mrad SMOA angle clicks lengths inches mm cm distances yards metres meters metric imperial");
+        var column = Group(unitsPage, "Units", "scope unit MOA mil mrad SMOA angle clicks lengths inches mm cm distances yards metres meters metric imperial"); // British on purpose: what a person may type in Find a setting
         column.Children.Add(Screens.Line(GroupLab.Core.Marking.UnitSettings.ScopeUnitLabel));
         var now = settings.LoadUnits();
         foreach (var angle in GroupLab.Core.Marking.UnitSettings.AngularChoices)
@@ -183,7 +183,7 @@ public sealed class SettingsView : UserControl
         });
 
         // Entry 314 section 1: what the caliber box offers, the same setting as on the desktop.
-        column = Group(unitsPage, AppSettingsStore.CaliberListLabel, "calibre caliber cartridge diameter");
+        column = Group(unitsPage, AppSettingsStore.CaliberListLabel, "calibre caliber cartridge diameter"); // British on purpose: what a person may type in Find a setting
         var offered = settings.LoadCaliberList();
         foreach (var list in Enum.GetValues<GroupLab.Core.Marking.CaliberList>())
         {
@@ -245,7 +245,7 @@ public sealed class SettingsView : UserControl
     private void BuildShooting((StackPanel Body, SettingsPages.Page Page) shooting)
     {
         // Entry 468 section 2.2: the distance a new target starts with, the last one used (as before) or always the one typed here.
-        var column = Group(shooting, DefaultsWords.StartsWith, "distance range yards metres paper letter a4 default new target");
+        var column = Group(shooting, DefaultsWords.StartsWith, "distance range yards metres paper letter a4 default new target"); // British on purpose: what a person may type in Find a setting
         var units = settings.LoadUnits();
         var fixedInches = settings.LoadNewTargetDistance();
         column.Children.Add(Screens.Line(DefaultsWords.Distance));

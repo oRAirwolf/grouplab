@@ -9,23 +9,29 @@
       38,
       38
     ],
+    "Back up now": [
+      332,
+      268,
+      102,
+      27
+    ],
     "Ballistics": [
       4,
       122,
       34,
       34
     ],
-    "Check for updates": [
-      238,
-      75,
-      138,
-      13
+    "By itself, as soon as a target is changed or accepted": [
+      330,
+      529,
+      327,
+      32
     ],
-    "Check now": [
-      386,
-      75,
-      91,
-      10
+    "Choose a folder…": [
+      332,
+      406,
+      129,
+      27
     ],
     "Close this target": [
       280,
@@ -39,12 +45,6 @@
       34,
       34
     ],
-    "Detailed logging": [
-      77,
-      598,
-      122,
-      32
-    ],
     "Equipment": [
       4,
       198,
@@ -52,16 +52,40 @@
       34
     ],
     "Export all my data…": [
-      79,
-      501,
+      332,
+      725,
       145,
       27
     ],
+    "Find a setting": [
+      65,
+      114,
+      215,
+      32
+    ],
+    "General": [
+      65,
+      158,
+      215,
+      31
+    ],
+    "Help and problems": [
+      65,
+      403,
+      215,
+      31
+    ],
     "Import data…": [
-      236,
-      501,
+      489,
+      725,
       109,
       27
+    ],
+    "Keep a daily copy of your records": [
+      1094,
+      197,
+      28,
+      32
     ],
     "Open another target": [
       314,
@@ -69,10 +93,28 @@
       30,
       22
     ],
-    "Report a problem…": [
-      79,
-      671,
-      141,
+    "Open the folder": [
+      582,
+      268,
+      119,
+      27
+    ],
+    "Printers and paper": [
+      65,
+      263,
+      215,
+      31
+    ],
+    "Put this page back as it came": [
+      317,
+      791,
+      176,
+      17
+    ],
+    "Restore a copy…": [
+      446,
+      268,
+      124,
       27
     ],
     "Session records": [
@@ -87,17 +129,35 @@
       34,
       34
     ],
+    "Settings categories": [
+      65,
+      158,
+      215,
+      674
+    ],
+    "Sharing and privacy": [
+      65,
+      333,
+      215,
+      31
+    ],
+    "Shooting defaults": [
+      65,
+      228,
+      215,
+      31
+    ],
     "StatusLine": [
       69,
       881,
       1014,
       15
     ],
-    "Support GroupLab": [
-      79,
-      714,
-      136,
-      27
+    "Sync and your data": [
+      65,
+      298,
+      215,
+      31
     ],
     "Targets": [
       4,
@@ -105,11 +165,23 @@
       34,
       34
     ],
-    "What GroupLab sends": [
-      77,
-      186,
-      133,
-      17
+    "Units and figures": [
+      65,
+      193,
+      215,
+      31
+    ],
+    "Updates and about": [
+      65,
+      368,
+      215,
+      31
+    ],
+    "With a Save button, and a question before an unsaved target is left or closed": [
+      330,
+      565,
+      470,
+      32
     ],
     "gl-cf25-ltr-scan.png, Analysis": [
       61,

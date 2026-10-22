@@ -1,0 +1,163 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
+    "Distance": [
+      786,
+      197,
+      180,
+      32
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
+    ],
+    "Find a setting": [
+      65,
+      114,
+      215,
+      32
+    ],
+    "General": [
+      65,
+      158,
+      215,
+      31
+    ],
+    "Help and problems": [
+      65,
+      403,
+      215,
+      31
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Paper": [
+      846,
+      353,
+      120,
+      32
+    ],
+    "Printers and paper": [
+      65,
+      263,
+      215,
+      31
+    ],
+    "Put this page back as it came": [
+      317,
+      420,
+      176,
+      17
+    ],
+    "Rifle and load": [
+      786,
+      301,
+      180,
+      32
+    ],
+    "Rounds fired": [
+      786,
+      249,
+      180,
+      32
+    ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "Settings categories": [
+      65,
+      158,
+      215,
+      674
+    ],
+    "Sharing and privacy": [
+      65,
+      333,
+      215,
+      31
+    ],
+    "Shooting defaults": [
+      65,
+      228,
+      215,
+      31
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Sync and your data": [
+      65,
+      298,
+      215,
+      31
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
+    ],
+    "Units and figures": [
+      65,
+      193,
+      215,
+      31
+    ],
+    "Updates and about": [
+      65,
+      368,
+      215,
+      31
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

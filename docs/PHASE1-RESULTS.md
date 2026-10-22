@@ -402,6 +402,64 @@ tree's App suite is the test that counts, because no helper saw the others' work
 stopped helpers left shell processes running, ended by number; a temp folder reused across ended runs carried a "did not exit" marker
 into the next run, so every run now starts from an empty one.
 
+## Entry 468: Settings in eight categories, and six new settings (2026-10-22)
+
+Alan found Settings "very cluttered" and chose concept A on the canvas, with every proposed new setting. The computer, Android and the
+iPhone and iPad changed together; every setting kept its stored key and meaning.
+
+**1. The structure (fa9f930f).** `SettingsMenu` and `SettingsPages` (`src/GroupLab.App/SettingsMenu.cs`, shared with the phones) hold the
+eight categories, their one line, what each row is found by, and what putting a page back does. On the computer
+(`MainWindow.SettingsMenu.cs`) the side menu is a column of buttons reached by Tab and moved through with Up and Down, each named to a
+screen reader, with Find a setting above it, one page of cards at a time beside it, the status line under both, and the page shown last
+remembered (`settingsPage`). On the phone (`SettingsView`) Settings opens the list of the eight with their current choices in one line,
+the search box at the top, and each page with "‹ Settings" back (a page back, so Android's Back returns to the list). A search filters
+the same controls in place on every page, so a choice made among the results is the one on its page. "Put this page back as it came"
+asks first (the computer's centred question, the phone's inline one) and resets only that page's settings, never data, printers, copies or
+sync. **Saving** (by itself or with a Save button) had no category in the entry; it sits on Sync and your data. The desktop's Printers
+section moved from a long column to its own page; the phone's About split into Updates and about and Help and problems. The tests that
+read the old long page now open the page they mean; the control bench, the keyboard sweep, the screen reader and layout audits walk all
+eight pages (`Entry447Tests`, `DesktopSweepTests`, `ControlBenchTests`); the phone's scripted walks press the category first.
+
+**2.1 Daily copies (fa9f930f).** `RecordsCopies` (Core) makes a `VACUUM INTO` copy beside the database at the first open of a day, on by
+default (`dailyCopies`), keeps the newest 14 in `copies/`, moves older ones to `trash/copies/` named by the day they moved, and removes
+them 14 days later. Back up now, Restore a copy (each copy with its day, sessions and size) and, on the computer, Open the folder; a
+restore copies the records as they are first, so it can be undone the same way. GroupLab then reads the restored records afresh in place
+(the record book, Sessions and the library) rather than restarting the process: the session store holds no connection open, so nothing
+of the old file survives, and the phones open the store each time anyway. `RecordsCopiesTests`: a copy made while sessions are being
+written passes SQLite's integrity check, the restore round trip, the fourteen kept and the trash's fourteen days, and a full disk leaving
+nothing half written with the records and the earlier copy byte for byte unchanged. `docs/RESTORE.md` has the section.
+
+**2.2 to 2.6, the other new settings.**
+- **Shooting defaults:** the distance (last used, or always this one; stored `newTargetDistance`), and on the computer rounds fired and
+  rifle and load. Today's computer behaviour for rounds fired is that it is asked for and marked until answered, so the default is named
+  **Ask**, as the entry's rule that today's behaviour is the default requires; One a bull fills the count from the sheet's bulls once
+  detection finds them, and Not known pre-answers it. Rounds fired and rifle and load are computer only, because the phone asks for
+  neither per target; its page says so. **Paper** (Letter or A4, `paper`) is one setting shown on Shooting defaults and on Printers and
+  paper; every sheet, report and printer check that chose by region now asks `AppSettingsStore.LetterPaper()`, which is the region's
+  until one is chosen.
+- **The camera (phone):** Starts in Guided or Manual (`cameraStarts`); until it is chosen the camera starts as it was last left, as it
+  always has, which is Guided on a new install. The shutter sound is on unless turned off; the iPhone's AVFoundation makes its own sound for
+  every picture, and Android 13 and later say where the law requires one, so there the switch is shown on and cannot be changed, with a line
+  saying why.
+- **The analysis opens with** the main figures or every figure (`analysisOpens`): every figure opens More figures, Advanced and the full
+  CEP table on the computer and every folded section on the phone, without changing the fold the computer remembers.
+- **Search and reset** as in section 1.
+- **Text size on the computer** (Normal, Larger 1.15, Largest 1.3, `textSize`) through `TextSize.Choose`, the same path the phones use to
+  follow their system size, so every token-sized style grows alike. `Entry468Tests.NothingIsCutOffAtAnyTextSize` runs the layout audit on
+  the analysis, Sessions, Targets, Ballistics, Compare and all eight Settings pages at all three sizes: one finding at Largest, "Keep these
+  on the records" on Ballistics two pixels past its column, fixed by letting its words wrap. The phones keep following the system and say
+  so. **Reduce motion** (`reduceMotion`: follow the system, on, off) is read by `Landing.Still()`, which the landing flash and both phones'
+  camera flash now use; the camera's flash becomes a still tint held a moment.
+
+**Tests.** Core 7 new (`RecordsCopiesTests`), App 10 new (`Entry468Tests`), Mobile 7 new (`Entry468Tests`); the App, Mobile and Core
+suites green (counts in the commit). The Android head builds; the iPhone head is proven by ios-app.yml after the push.
+
+**Documentation.** The guide's section 12 rewritten around the eight pages with a section for the daily copies, and its other references
+to Settings, About and the old headings moved to the new pages; the tour's Settings page; three Features entries (Settings in eight
+categories, Daily copies, Shooting defaults) with their pictures; README; claims backed.
+
+**Is it worth an article?** No: a settings screen and a backup are ordinary engineering; nothing here changes what another shooter does.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
