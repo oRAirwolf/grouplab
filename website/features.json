@@ -11,6 +11,7 @@
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
     "On the phone, a GroupLab data file opened from another app shows what importing it would add",
+    "On the phone, opening a GroupLab data file from another app shows what importing it would add",
     "In Conditions on the day, the link",
     "Speeds read in feet a second everywhere",
     "Across the computer and the phone, nothing is cut off",

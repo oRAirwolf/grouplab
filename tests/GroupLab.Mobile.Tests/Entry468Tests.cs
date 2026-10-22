@@ -196,4 +196,29 @@ public sealed class Entry468Tests : IDisposable
             DataSection.Waiting = null;
         }
     }
+
+    /// <summary>The iPhone's data round trip found Settings built twice on the way to a page, the first copy taking the waiting file.</summary>
+    [AvaloniaFact]
+    public void TheShellOpensSettingsAtAPageOnceSoTheWaitingFileIsOnIt()
+    {
+        Start();
+        GroupLab.Mobile.Dev.Scenario.AnswerFirstRun(Phone.Settings);
+        var shell = new Shell();
+        var window = new Window { Width = 412, Height = 915, Content = shell };
+        window.Show();
+        DataSection.Waiting = Path.Combine(folder, "missing.grouplab");
+        try
+        {
+            shell.ShowSettings(SettingsCategory.Data);
+            Dispatcher.UIThread.RunJobs();
+            var view = shell.GetLogicalDescendants().OfType<SettingsView>().Single();
+            Assert.Equal(SettingsCategory.Data, view.Open);
+            Assert.Contains(view.GetLogicalDescendants().OfType<TextBlock>(), t => t.IsEffectivelyVisible && (t.Text ?? "").StartsWith("The file could not be read", StringComparison.Ordinal));
+        }
+        finally
+        {
+            DataSection.Waiting = null;
+            window.Close();
+        }
+    }
 }

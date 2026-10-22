@@ -335,11 +335,7 @@ public sealed class Shell : UserControl
     }
 
     /// <summary>Entry 468 section 1: Settings open at <paramref name="category"/>'s page, as coming back from a page under it does.</summary>
-    internal void ShowSettings(GroupLab.App.SettingsCategory category)
-    {
-        Show(Place.Settings);
-        page.Content = new SettingsView(Phone.Settings, category);
-    }
+    internal void ShowSettings(GroupLab.App.SettingsCategory category) => Show(Place.Settings, category);
 
     /// <summary>Entry 273: the printer check, under Settings, and back to Settings when it is done or skipped.</summary>
     internal void ShowPrinterCheck(string? name = null)
@@ -489,7 +485,10 @@ public sealed class Shell : UserControl
         nav.IsVisible = !immersive && !up;
     }
 
-    internal void Show(Place place)
+    internal void Show(Place place) => Show(place, null);
+
+    /// <summary>Shows <paramref name="place"/>; Settings at <paramref name="settingsPage"/>'s page where one is given, built once (entry 468).</summary>
+    private void Show(Place place, GroupLab.App.SettingsCategory? settingsPage)
     {
         Immersive(false);
         Showing = place;
@@ -501,7 +500,7 @@ public sealed class Shell : UserControl
         DiagnosticLog.Info("ui.place", ("place", place.ToString()));
         page.Content = place switch
         {
-            Place.Settings => new SettingsView(Phone.Settings),
+            Place.Settings => new SettingsView(Phone.Settings, settingsPage),
             Place.Sessions => new SessionsPage(),
             Place.Targets => new TargetsPage(),
             Place.Ballistics => new BallisticsPage(),
