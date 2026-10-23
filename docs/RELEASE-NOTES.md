@@ -463,7 +463,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 - GroupLab reads the square codes on a sheet one at a time again, because reading them all at once could make it close suddenly while reading a picture, on Linux and possibly on Android.
 - A 600 dpi scan now opens sooner, in about four fifths of the time, and the first ballistics tables after starting GroupLab no longer take longer than the rest; every result is the same.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.189)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
