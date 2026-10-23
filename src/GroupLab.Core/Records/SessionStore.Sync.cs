@@ -74,6 +74,29 @@ public sealed partial class SessionStore
         return command.ExecuteNonQuery();
     }
 
+    /// <summary>
+    /// Entry 471 section 2, question 109: every record is to be written out again, as in a different, empty sync folder, where the ones this
+    /// device already wrote to the last folder are not.
+    /// </summary>
+    public void MarkSyncUnwritten()
+    {
+        using var db = Connect();
+        Execute(db, "UPDATE sync_records SET written = NULL");
+    }
+
+    /// <summary>Entry 471 section 2: the identity of the sync folder this device's records were last written to, in the meta table; null before one.</summary>
+    public string? SyncFolderId()
+    {
+        using var db = Connect();
+        return Scalar(db, "SELECT value FROM meta WHERE key = 'sync_folder'") as string;
+    }
+
+    public void MarkSyncFolder(string id)
+    {
+        using var db = Connect();
+        Execute(db, "INSERT OR REPLACE INTO meta (key, value) VALUES ('sync_folder', $id)", ("$id", id));
+    }
+
     public bool SyncSeen(string file)
     {
         using var db = Connect();

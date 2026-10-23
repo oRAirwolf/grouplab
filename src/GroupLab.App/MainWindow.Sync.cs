@@ -41,6 +41,9 @@ public partial class MainWindow
         .Select(c => c switch { TextBlock t => t.Text, ContentControl { Content: string words } => words, _ => null })
         .OfType<string>().Where(t => t.Length > 0);
 
+    /// <summary>The sync section's buttons, for the headless tests.</summary>
+    internal IEnumerable<Button> SyncButtons => syncSection.GetLogicalDescendants().OfType<Button>();
+
     /// <summary>The words on Sessions, its buttons' included, for the headless tests.</summary>
     internal IEnumerable<string> SessionsText => sessionRows.GetLogicalDescendants()
         .Select(c => c switch { TextBlock t => t.Text, ContentControl { Content: string words } => words, _ => null })
@@ -237,9 +240,10 @@ public partial class MainWindow
             syncSection.Children.Add(Line(SyncScreens.NoOtherDevices));
         }
 
+        // Entry 471 section 2: each with Forget this device, which asks once on the page before it forgets.
         foreach (var device in syncOthers)
         {
-            syncSection.Children.Add(Line(SyncScreens.SeenLine(device, DateTime.UtcNow)));
+            syncSection.Children.Add(SyncDeviceRow(device));
         }
 
         // 3B: the two cards.
@@ -249,6 +253,53 @@ public partial class MainWindow
         // Stop syncing, and what it does.
         syncSection.Children.Add(Row(Button(SyncScreens.StopSyncing, StopSyncing)));
         syncSection.Children.Add(Line(SyncScreens.StopsHereOnly));
+    }
+
+    /// <summary>
+    /// Entry 471 section 2, question 109 (a): another device's line with "Forget this device", which asks once on the page, saying that
+    /// nothing in the folder is deleted, before it forgets.
+    /// </summary>
+    private Control SyncDeviceRow(SyncDeviceSeen device)
+    {
+        var ask = new StackPanel { Spacing = Tokens.Space4, IsVisible = false };
+        ask.Children.Add(Line(SyncScreens.ForgetAsks(device.Name)));
+        ask.Children.Add(Row(Button(SyncScreens.ForgetDevice, () => ForgetSyncDevice(device.Id)), Button(SyncScreens.LeaveIt, () => ask.IsVisible = false)));
+        var forget = new Button { Content = SyncScreens.ForgetDevice, Classes = { AppStyles.Link } };
+        Avalonia.Automation.AutomationProperties.SetName(forget, $"{SyncScreens.ForgetDevice}: {device.Name}");
+        forget.Click += (_, _) => ask.IsVisible = true;
+        var line = Line(SyncScreens.SeenLine(device, DateTime.UtcNow));
+        line.VerticalAlignment = VerticalAlignment.Center;
+        return new StackPanel { Spacing = Tokens.Space4, Children = { Row(line, forget), ask } };
+    }
+
+    /// <summary>Forgets another device in the folder, as its "Forget this device" does once answered; nothing in the folder is deleted.</summary>
+    internal void ForgetSyncDevice(string id)
+    {
+        if (sessions is null || Sync is not { On: true } setup)
+        {
+            return;
+        }
+
+        try
+        {
+            var folder = new DirectorySyncFolder(setup.Folder!);
+            if (!folder.Available)
+            {
+                SyncUnreachable();
+                return;
+            }
+
+            SyncForget.Forget(folder, sessions.SyncDevice(), id, DateTime.UtcNow);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            SyncUnreachable();
+            return;
+        }
+
+        syncOthers = [.. syncOthers.Where(d => d.Id != id)];
+        DiagnosticLog.Info("sync.forget", ("forgotten", true));
+        FillSync();
     }
 
     /// <summary>3B: the two cards side by side, one chosen, each with its size now and a year at the person's pace, the bars on one scale a row.</summary>

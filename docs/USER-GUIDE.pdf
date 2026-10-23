@@ -1856,7 +1856,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 126 0 R >> >> /Contents 81 0 R >>
 endobj
 81 0 obj
-<< /Length 3519 >>
+<< /Length 3437 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -1885,14 +1885,13 @@ BT /F1 71 Tf 1 0 0 -1 494 4259 Tm (old copies would otherwise) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4361 Tm (build up. A file is tidied only when every other device in the folder has said it has read it, a later file holds a newer) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4449 Tm (version of everything in it, and nothing in it is waiting for you to choose between two versions. While any device in) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4537 Tm (the folder has not yet said what it has read \(one that has not synced for a while, or an older GroupLab\), nothing is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4625 Tm (tidied. Tidied files go to a trash folder inside the sync folder and are removed 14 days after they were moved) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4713 Tm (there. A line under the status says what the last tidying did, for example "Tidied 2 hours ago: 12 old change files,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4801 Tm (3.4 MB, moved to the sync folder's trash for 14 days", and there is no line until there is something to say.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4924 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4924 Tm (Other devices in the folder lists each with when it last wrote.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 5026 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 5026 Tm (Also copy the original photographs is two cards: Marks and proof pictures, the usual choice, which is enough) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 5114 Tm (to see and work with) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4625 Tm (tidied, unless you forget it \(below\). Tidied files go to a trash folder inside the sync folder and are removed 14) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4713 Tm (days after they were moved there. A line under the status says what the last tidying did, for example "Tidied 2) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4801 Tm (hours ago: 12 old change files, 3.4 MB, moved to the sync folder's trash for 14 days", and there is no line until) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4889 Tm (there is something to say.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 5012 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 5012 Tm (Other devices in the folder lists each with when it last wrote. Forget this device beside one is for a device that) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 5100 Tm (will not) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 39 of 49) Tj ET
 Q
 endstream
@@ -1901,30 +1900,39 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 127 0 R >> >> /Contents 83 0 R >>
 endobj
 83 0 obj
-<< /Length 2326 >>
+<< /Length 3206 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (every session anywhere, or Also the original photographs, so another device can open the full picture. Each card) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (shows what your records weigh now and in a year at your own pace \(or at 200 sessions a year where there are) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (too few to tell\), with bars on one scale.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (sync again, such as a phone GroupLab was taken off, which would otherwise hold tidying back for good.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (GroupLab asks once on the page first. Nothing in the folder is deleted: that device's records stay, and if it ever) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (syncs again it is listed again.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 751 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 751 Tm (Stop syncing \(3\) stops on this device only. Nothing here or in the folder is deleted.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 853 Tm (If the folder cannot be reached \(the drive is unplugged, or the cloud app has signed out\), the section says so at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 941 Tm (the top in amber, with Choose the folder again, and the first time it happens GroupLab says it in the middle of the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1029 Tm (window too. Nothing is lost: changes made here wait on this device and go as soon as the folder is back.) Tj ET
-q 3556 0 0 -2286 381 3395 cm /Im0 Do Q
-BT /F1 56 Tf 1 0 0 -1 381 3451 Tm (Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 751 Tm (Change folder writes all your records to the new folder, so a new, empty folder starts with everything this) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 839 Tm (device has.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 941 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 941 Tm (Also copy the original photographs is two cards: Marks and proof pictures, the usual choice, which is enough) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1029 Tm (to see and work with) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1131 Tm (every session anywhere, or Also the original photographs, so another device can open the full picture. Each card) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1219 Tm (shows what your records weigh now and in a year at your own pace \(or at 200 sessions a year where there are) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1307 Tm (too few to tell\), with bars on one scale.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1430 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1430 Tm (Stop syncing \(3\) stops on this device only. Nothing here or in the folder is deleted.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1532 Tm (If the folder cannot be reached \(the drive is unplugged, or the cloud app has signed out\), the section says so at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1620 Tm (the top in amber, with Choose the folder again, and the first time it happens GroupLab says it in the middle of the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1708 Tm (window too. Nothing is lost: changes made here wait on this device and go as soon as the folder is back.) Tj ET
+q 3556 0 0 -2286 381 4074 cm /Im0 Do Q
+BT /F1 56 Tf 1 0 0 -1 381 4130 Tm (Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 3644 Tm (When a session was changed on two devices) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 4323 Tm (When a session was changed on two devices) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 3770 Tm (If the same session was changed on two devices before they synced, GroupLab never picks one by itself. Both) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3858 Tm (versions are kept, Sessions shows a banner, "1 session to choose between", and the session's row a 2 versions) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3946 Tm (tag. Either opens the two side by side: each device's name and time, its holes drawn small on one scale, and its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4034 Tm (figures, with differs beside every one that is not the same. Keep one device's version, Keep both as two sessions) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4122 Tm (\(1\), or Decide later \(2\). The version you do not keep is kept aside too, so it can be got back. On the phone the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4210 Tm (two stack, one above the other.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4449 Tm (If the same session was changed on two devices before they synced, GroupLab never picks one by itself. Both) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4537 Tm (versions are kept, Sessions shows a banner, "1 session to choose between", and the session's row a 2 versions) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4625 Tm (tag. Either opens the two side by side: each device's name and time, its holes drawn small on one scale, and its) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4713 Tm (figures, with differs beside every one that is not the same. Keep one device's version, Keep both as two sessions) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4801 Tm (\(1\), or Decide later \(2\). The version you do not keep is kept aside too, so it can be got back. On the phone the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4889 Tm (two stack, one above the other.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 40 of 49) Tj ET
 Q
 endstream
@@ -27715,7 +27723,7 @@ endobj
 << /Title (Sync between devices) /Parent 203 0 R /Prev 204 0 R /Next 206 0 R /Dest [80 0 R /XYZ 0 386.220472 null] >>
 endobj
 206 0 obj
-<< /Title (When a session was changed on two devices) /Parent 203 0 R /Prev 205 0 R /Next 207 0 R /Dest [82 0 R /XYZ 0 287.007874 null] >>
+<< /Title (When a session was changed on two devices) /Parent 203 0 R /Prev 205 0 R /Next 207 0 R /Dest [82 0 R /XYZ 0 190.771654 null] >>
 endobj
 207 0 obj
 << /Title (Walk me through a demo) /Parent 203 0 R /Prev 206 0 R /Dest [84 0 R /XYZ 0 386.220472 null] >>
@@ -27840,146 +27848,146 @@ xref
 0000156522 00000 n 
 0000159061 00000 n 
 0000159217 00000 n 
-0000162789 00000 n 
-0000162945 00000 n 
-0000165324 00000 n 
-0000165480 00000 n 
-0000165946 00000 n 
-0000166102 00000 n 
-0000167597 00000 n 
-0000167753 00000 n 
-0000171506 00000 n 
-0000171662 00000 n 
-0000174810 00000 n 
-0000174966 00000 n 
-0000178237 00000 n 
-0000178365 00000 n 
-0000184957 00000 n 
-0000185113 00000 n 
-0000189182 00000 n 
-0000189338 00000 n 
-0000191821 00000 n 
-0000191979 00000 n 
-0000195425 00000 n 
-0000297098 00000 n 
-0000399576 00000 n 
-0000519611 00000 n 
-0000786429 00000 n 
-0001056425 00000 n 
-0001198580 00000 n 
-0001406248 00000 n 
-0001558143 00000 n 
-0001762349 00000 n 
-0001972040 00000 n 
-0002170345 00000 n 
-0002294312 00000 n 
-0002514118 00000 n 
-0002781300 00000 n 
-0003025833 00000 n 
-0003297486 00000 n 
-0003389145 00000 n 
-0003530916 00000 n 
-0003743649 00000 n 
-0003945538 00000 n 
-0004202953 00000 n 
-0004438563 00000 n 
-0004713090 00000 n 
-0004829089 00000 n 
-0004964113 00000 n 
-0005099401 00000 n 
-0005199986 00000 n 
-0005297017 00000 n 
-0005555182 00000 n 
-0005639084 00000 n 
-0005702024 00000 n 
-0005777758 00000 n 
-0005847676 00000 n 
-0005900841 00000 n 
-0005900919 00000 n 
-0005901068 00000 n 
-0005901192 00000 n 
-0005901334 00000 n 
-0005901463 00000 n 
-0005901580 00000 n 
-0005901751 00000 n 
-0005901893 00000 n 
-0005902032 00000 n 
-0005902192 00000 n 
-0005902352 00000 n 
-0005902511 00000 n 
-0005902645 00000 n 
-0005902780 00000 n 
-0005902915 00000 n 
-0005903043 00000 n 
-0005903183 00000 n 
-0005903325 00000 n 
-0005903453 00000 n 
-0005903599 00000 n 
-0005903728 00000 n 
-0005903845 00000 n 
-0005903971 00000 n 
-0005904148 00000 n 
-0005904301 00000 n 
-0005904461 00000 n 
-0005904591 00000 n 
-0005904782 00000 n 
-0005904911 00000 n 
-0005905055 00000 n 
-0005905186 00000 n 
-0005905332 00000 n 
-0005905476 00000 n 
-0005905651 00000 n 
-0005905780 00000 n 
-0005905912 00000 n 
-0005906050 00000 n 
-0005906191 00000 n 
-0005906330 00000 n 
-0005906470 00000 n 
-0005906604 00000 n 
-0005906732 00000 n 
-0005906883 00000 n 
-0005907038 00000 n 
-0005907169 00000 n 
-0005907290 00000 n 
-0005907470 00000 n 
-0005907572 00000 n 
-0005907744 00000 n 
-0005907894 00000 n 
-0005908038 00000 n 
-0005908254 00000 n 
-0005908375 00000 n 
-0005908515 00000 n 
-0005908644 00000 n 
-0005908778 00000 n 
-0005908908 00000 n 
-0005909026 00000 n 
-0005909210 00000 n 
-0005909331 00000 n 
-0005909521 00000 n 
-0005909660 00000 n 
-0005909788 00000 n 
-0005909969 00000 n 
-0005910086 00000 n 
-0005910252 00000 n 
-0005910371 00000 n 
-0005910537 00000 n 
-0005910666 00000 n 
-0005910801 00000 n 
-0005910957 00000 n 
-0005911080 00000 n 
-0005911237 00000 n 
-0005911362 00000 n 
-0005911484 00000 n 
-0005911629 00000 n 
-0005911775 00000 n 
-0005911908 00000 n 
-0005912073 00000 n 
-0005912205 00000 n 
-0005912330 00000 n 
-0005912473 00000 n 
-0005912620 00000 n 
+0000162707 00000 n 
+0000162863 00000 n 
+0000166122 00000 n 
+0000166278 00000 n 
+0000166744 00000 n 
+0000166900 00000 n 
+0000168395 00000 n 
+0000168551 00000 n 
+0000172304 00000 n 
+0000172460 00000 n 
+0000175608 00000 n 
+0000175764 00000 n 
+0000179035 00000 n 
+0000179163 00000 n 
+0000185755 00000 n 
+0000185911 00000 n 
+0000189980 00000 n 
+0000190136 00000 n 
+0000192619 00000 n 
+0000192777 00000 n 
+0000196223 00000 n 
+0000297896 00000 n 
+0000400374 00000 n 
+0000520409 00000 n 
+0000787227 00000 n 
+0001057223 00000 n 
+0001199378 00000 n 
+0001407046 00000 n 
+0001558941 00000 n 
+0001763147 00000 n 
+0001972838 00000 n 
+0002171143 00000 n 
+0002295110 00000 n 
+0002514916 00000 n 
+0002782098 00000 n 
+0003026631 00000 n 
+0003298284 00000 n 
+0003389943 00000 n 
+0003531714 00000 n 
+0003744447 00000 n 
+0003946336 00000 n 
+0004203751 00000 n 
+0004439361 00000 n 
+0004713888 00000 n 
+0004829887 00000 n 
+0004964911 00000 n 
+0005100199 00000 n 
+0005200784 00000 n 
+0005297815 00000 n 
+0005555980 00000 n 
+0005639882 00000 n 
+0005702822 00000 n 
+0005778556 00000 n 
+0005848474 00000 n 
+0005901639 00000 n 
+0005901717 00000 n 
+0005901866 00000 n 
+0005901990 00000 n 
+0005902132 00000 n 
+0005902261 00000 n 
+0005902378 00000 n 
+0005902549 00000 n 
+0005902691 00000 n 
+0005902830 00000 n 
+0005902990 00000 n 
+0005903150 00000 n 
+0005903309 00000 n 
+0005903443 00000 n 
+0005903578 00000 n 
+0005903713 00000 n 
+0005903841 00000 n 
+0005903981 00000 n 
+0005904123 00000 n 
+0005904251 00000 n 
+0005904397 00000 n 
+0005904526 00000 n 
+0005904643 00000 n 
+0005904769 00000 n 
+0005904946 00000 n 
+0005905099 00000 n 
+0005905259 00000 n 
+0005905389 00000 n 
+0005905580 00000 n 
+0005905709 00000 n 
+0005905853 00000 n 
+0005905984 00000 n 
+0005906130 00000 n 
+0005906274 00000 n 
+0005906449 00000 n 
+0005906578 00000 n 
+0005906710 00000 n 
+0005906848 00000 n 
+0005906989 00000 n 
+0005907128 00000 n 
+0005907268 00000 n 
+0005907402 00000 n 
+0005907530 00000 n 
+0005907681 00000 n 
+0005907836 00000 n 
+0005907967 00000 n 
+0005908088 00000 n 
+0005908268 00000 n 
+0005908370 00000 n 
+0005908542 00000 n 
+0005908692 00000 n 
+0005908836 00000 n 
+0005909052 00000 n 
+0005909173 00000 n 
+0005909313 00000 n 
+0005909442 00000 n 
+0005909576 00000 n 
+0005909706 00000 n 
+0005909824 00000 n 
+0005910008 00000 n 
+0005910129 00000 n 
+0005910319 00000 n 
+0005910458 00000 n 
+0005910586 00000 n 
+0005910767 00000 n 
+0005910884 00000 n 
+0005911050 00000 n 
+0005911169 00000 n 
+0005911335 00000 n 
+0005911464 00000 n 
+0005911599 00000 n 
+0005911755 00000 n 
+0005911878 00000 n 
+0005912035 00000 n 
+0005912160 00000 n 
+0005912282 00000 n 
+0005912427 00000 n 
+0005912573 00000 n 
+0005912706 00000 n 
+0005912871 00000 n 
+0005913003 00000 n 
+0005913128 00000 n 
+0005913271 00000 n 
+0005913418 00000 n 
 trailer
 << /Size 220 /Root 1 0 R >>
 startxref
-5912753
+5913551
 %%EOF

@@ -845,11 +845,14 @@ a folder in Files). Then:
 - Once a day GroupLab tidies its own old change files: a session changed again is written again whole, so the old copies would otherwise
   build up. A file is tidied only when every other device in the folder has said it has read it, a later file holds a newer version of
   everything in it, and nothing in it is waiting for you to choose between two versions. While any device in the folder has not yet said
-  what it has read (one that has not synced for a while, or an older GroupLab), nothing is tidied. Tidied files go to a `trash` folder
+  what it has read (one that has not synced for a while, or an older GroupLab), nothing is tidied, unless you forget it (below). Tidied files go to a `trash` folder
   inside the sync folder and are removed 14 days after they were moved there. A line under the status says what the last tidying did, for
   example "Tidied 2 hours ago: 12 old change files, 3.4 MB, moved to the sync folder's trash for 14 days", and there is no line until
   there is something to say.
-- **Other devices in the folder** lists each with when it last wrote.
+- **Other devices in the folder** lists each with when it last wrote. **Forget this device** beside one is for a device that will not
+  sync again, such as a phone GroupLab was taken off, which would otherwise hold tidying back for good. GroupLab asks once on the page
+  first. Nothing in the folder is deleted: that device's records stay, and if it ever syncs again it is listed again.
+- **Change folder** writes all your records to the new folder, so a new, empty folder starts with everything this device has.
 - **Also copy the original photographs** is two cards: **Marks and proof pictures**, the usual choice, which is enough to see and work with
   every session anywhere, or **Also the original photographs**, so another device can open the full picture. Each card shows what your
   records weigh now and in a year at your own pace (or at 200 sessions a year where there are too few to tell), with bars on one scale.

@@ -64,6 +64,9 @@ public static class SyncEngine
 
     public const int Version = 1;
 
+    /// <summary>Entry 471 section 2: the folder's own identity file, <c>GroupLab sync/folder.json</c>.</summary>
+    public const string FolderFormat = "grouplab-sync-folder";
+
     /// <summary>How long a tidied change file is kept in the sync folder's trash before it is taken away: Alan's rule on deleting.</summary>
     public const int TrashDays = 14;
 
@@ -115,6 +118,10 @@ public static class SyncEngine
         var readHere = new Dictionary<string, List<string>>(StringComparer.Ordinal);
         try
         {
+            // Entry 471 section 2: in a different folder than last time, every record is written again, or a new, empty folder would never
+            // get the ones already written to the last.
+            SameFolder(store, folder, me);
+
             // 1. This device's own changes since the last run, each given a new revision.
             var current = Current(store, local);
             Scan(store, current, me, now);
@@ -159,9 +166,16 @@ public static class SyncEngine
             }
 
             store.PruneSyncDeletions(Utc(nowUtc.AddDays(-options.DeletionDays)));
-            if (written > 0 || !folder.Exists($"{Root}/devices/{me}.json"))
+            // Entry 471 section 2: a device another forgot says it has seen that, and is seen again.
+            string? forgotten = SyncForget.Marker(folder, me);
+            if (written > 0 || !folder.Exists($"{Root}/devices/{me}.json") || (forgotten is not null && SyncForget.Seen(folder, me) != forgotten))
             {
                 var device = new JsonObject { ["format"] = Format, ["version"] = Version, ["device"] = me, ["name"] = deviceName, ["lastWrittenUtc"] = now };
+                if (forgotten is not null)
+                {
+                    device["forgotten"] = forgotten;
+                }
+
                 folder.Write($"{Root}/devices/{me}.json", Encoding.UTF8.GetBytes(device.ToJsonString()));
             }
 
@@ -417,6 +431,47 @@ public static class SyncEngine
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Entry 471 section 2, question 109: the folder carries an identity, <c>GroupLab sync/folder.json</c>, made by the first device to use it,
+    /// and the database keeps the one its records were last written to. A different one means a different folder, so every record is to be
+    /// written again. A device that wrote before the identity existed, and has its change files here, takes it as its own folder.
+    /// </summary>
+    private static void SameFolder(SessionStore store, ISyncFolder folder, string me)
+    {
+        string path = $"{Root}/folder.json";
+        string? there;
+        try
+        {
+            there = folder.Read(path) is { Length: > 0 } bytes && JsonNode.Parse(bytes) is JsonObject file && (string?)file["format"] == FolderFormat
+                ? (string?)file["id"]
+                : null;
+        }
+        catch (Exception e) when (e is JsonException or InvalidOperationException)
+        {
+            // Not whole yet: read next time.
+            return;
+        }
+
+        if (there is null)
+        {
+            there = Convert.ToHexString(RandomNumberGenerator.GetBytes(8)).ToLowerInvariant();
+            folder.Write(path, Encoding.UTF8.GetBytes(new JsonObject { ["format"] = FolderFormat, ["id"] = there, ["end"] = true }.ToJsonString()));
+        }
+
+        string? known = store.SyncFolderId();
+        if (known == there)
+        {
+            return;
+        }
+
+        if (known is not null || !folder.Files($"{Root}/changes/{me}").Any(IsChangeFile))
+        {
+            store.MarkSyncUnwritten();
+        }
+
+        store.MarkSyncFolder(there);
     }
 
     private static int WriteChanges(SessionStore store, Dictionary<(string Kind, string Key), Here> current, ISyncFolder folder, string me, DateTime nowUtc)

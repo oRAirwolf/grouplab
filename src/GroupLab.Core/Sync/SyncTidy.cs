@@ -19,7 +19,7 @@ public sealed record SyncTidied(int Moved, long MovedBytes, int Removed, long Fr
 /// much-edited session costs a few times its size in the person's folder. Each device tidies only its own change files, as it is the only one
 /// that writes them, and a file of its own is moved only when all of these hold:
 /// <list type="bullet">
-/// <item>Every other device that has written to the folder (a change folder, a device file or a read position of its own) has a read position
+/// <item>Every other device that has written to the folder and is not forgotten (<see cref="SyncForget"/>) (a change folder, a device file or a read position of its own) has a read position
 /// that can be read whole, <c>GroupLab sync/read/&lt;device&gt;.json</c>, written by that device, and it lists this file among the files it has
 /// read. A device whose position is missing or cannot be read has not been seen, and then nothing is moved at all. Nothing is guessed: not
 /// from the time, not from the file's name.</item>
@@ -222,6 +222,9 @@ internal static class SyncTidy
         all.UnionWith(folder.Files($"{SyncEngine.Root}/devices").Select(Stem).OfType<string>());
         all.UnionWith(folder.Files($"{SyncEngine.Root}/read").Select(Stem).OfType<string>());
         all.Remove(me);
+
+        // Entry 471 section 2: a device the person forgot is not waited for.
+        all.RemoveWhere(d => SyncForget.IsForgotten(folder, d));
         return all;
     }
 

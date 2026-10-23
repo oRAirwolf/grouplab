@@ -14,14 +14,10 @@
       "notes": []
     },
     "6feb3f9a6c5432f22d8c50b2e0c61bb777651654": {
-      "why": "Entry 469 section 2: this commit's own note, and the correction of nightly 218's two notes about a data file opened from another app, carried by the next build's first shipping commit because a published build's notes are never edited.",
+      "why": "Entry 469 section 2 put the correction of nightly 218's two notes here, but entry 469 was pushed after nightly 219 had been built from this commit, so 219 published only this commit's own note; entry 471 carries the correction in nightly 220 instead and leaves this commit with the note 219 published.",
       "notes": [
         {
           "note": "On Android, the back gesture on Settings, Sync and your data now goes back to Settings. Before, it made a copy of your records instead. (Entry 470)",
-          "kind": "fixed"
-        },
-        {
-          "note": "Correction: on the phone, a GroupLab data file opened from another app works as it did in nightly 217 and shows what importing it would add on Settings, Sync and your data; nightly 218's notes wrongly listed two fixes for it. (Entry 469, 2)",
           "kind": "fixed"
         }
       ]

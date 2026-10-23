@@ -7909,9 +7909,13 @@
    "kind": "code",
    "where": "NOTES-FROM-PLANNING.md entries 340 and 341 (Alan's decision: recognition ships, the printed size is the scale with a warning, a family asks which size); the five products in src/GroupLab.Core/StoreTargets/Fingerprints/library.json, recognition in StoreTargetRecognizer, on the desktop src/GroupLab.App/MainWindow.StoreTargets.cs and on the phone mobile/GroupLab.Mobile/PhoneAnalysis.cs Recognize; the warning StoreTargetMatch.Warning and CheckScale; the question FamilyQuestion (6 in and 8 in, the Shoot-N-C bullseye family); the picture is Entry109Tests' stand-in bullseye (docs/figures/screens/current/SOURCES.md)"
   },
-  "Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder&#x27;s own trash, keeps it there 14 days, and says what it tidied.": {
+  "Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder&#x27;s own trash, keeps it there 14 days, and says what it tidied; a device that will not sync again can be forgotten, so tidying stops waiting for it, with nothing in the folder deleted.": {
    "kind": "code",
-   "where": "src/GroupLab.Core/Sync/SyncTidy.cs (Run, Move, Empty; SyncEngine.TrashDays = 14) and SyncScreens.Tidied and TidyLine, shown by src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by SyncTidyTests, SyncTidyWindowTests and SyncTidyPhoneTests (entry 464 section 1); not proven on two real devices yet"
+   "where": "src/GroupLab.Core/Sync/SyncTidy.cs (Run, Move, Empty; SyncEngine.TrashDays = 14) and SyncScreens.Tidied and TidyLine, shown by src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by SyncTidyTests, SyncTidyWindowTests and SyncTidyPhoneTests (entry 464 section 1). Forgetting: src/GroupLab.Core/Sync/SyncForget.cs (Forget, IsForgotten), left out by SyncTidy Devices and SyncScreens.Others, offered by MainWindow.SyncDeviceRow and SyncPage.DeviceRow; held by SyncForgetTests, Entry471SyncForgetWindowTests and Entry471SyncForgetPhoneTests (entry 471 section 2); not proven on two real devices yet"
+  },
+  "Size The computer downloads come precompiled, so the first photograph after GroupLab starts is read about a quarter sooner; that makes them about an eighth larger than before, the Windows zip about 103 MB rather than 91.": {
+   "kind": "measured",
+   "where": "docs/PERFORMANCE.md, Taken for the desktop builds, entry 471 (measured 2026-10-23 on this desktop: grouplab analyze on the Fold 7's picture-1 cold, median 1,534 ms before and 1,109 precompiled; the desktop app for win-x64 zipped 91.2 MB before and 102.8 precompiled); PublishReadyToRun in src/GroupLab.App/GroupLab.App.csproj"
   },
   "Tidied files go to a trash folder inside the sync folder and are removed 14 days after they were moved there.": {
    "kind": "code",

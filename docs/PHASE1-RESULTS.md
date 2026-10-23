@@ -40,247 +40,11 @@ Stated plainly, `docs/NOTES-FROM-PLANNING.md` entry 33 section 5, so that "not y
 | 6.2 | the redirect | SSH, and only after the new page is live and tested |
 | 8.2 | one real test submission through the live page, and one real crash report | the page is not live until the install has run |
 
-## Entry 461 part 1: every research row that said "not yet" decided (2026-10-21)
-
-Ten rows of `docs/RESEARCH.md`'s "Worth an article?", each checked for whether its awaited data now exists:
-
-- **Written and published (two new articles and one update):** `/research/recognizing-store-bought-targets/` (entry 332 and question
-  87, decided on what exists as entry 341 says: the scale is measured only against the learned sheet, and the article shows the
-  warning a shooter checks; no maker's artwork); `/research/opencv-on-android-from-dotnet/` (entry 198: the build, its two traps and
-  the Fold 7's first run); and two new sections of `/research/wrong-bull/` (entries 374 and 376 Part A: a row higher fits exactly as
-  well, the shooting order breaks the tie, and a real tie is asked). Both new articles have a drawn thumbnail, are listed in
-  `website/research/PUBLISHED.md`, and are backed by rules in `docs/claims-backing.json`; the research card's sentence is backed alone.
-- **Not written, with the reason in the row:** entry 410 section 1 (already decided twice since, entries 415 and 434), entry 362
-  (five photographs on one counter; request 74 never came), entry 261 (still synthetic), entries 196 and 197 (synthetic; the only real
-  sheet is the orange commercial target), entry 344 (no real photo of a real poster), and entry 158 program A step 2 (the orange
-  commercial target, and a scan detector on photographs).
-- Checks: the site builds; `claims.py --check` all backed; consistency 0 findings; README checked.
-
-## Entry 461 part 2.1: screen reader audits on all three platforms (2026-10-21)
-
-- **The computer** (`tests/Shared/ScreenReaderAudit.cs`): Avalonia hands Windows UI Automation its automation peers, so the peer tree
-  is what Narrator reads. Every window the entry 447 tests tab round (the eight places, the report, the printer check and the six
-  windows of `Entry447WindowsTests`) is walked: every control a person presses, types into or chooses, shown and enabled, must be in
-  the control view (not Raw), carry a name in words, a control type that says what it is, and be reached by Tab (a stop, or inside a
-  stop that takes it with the arrows). `Entry461AccessibilityTests` holds the audit to a window made to fail it.
-- **What it found and was fixed:** a button or choice holding a panel was named by Avalonia after the panel's type, so Narrator read
-  the printer check's four ways to print as "Avalonia.Controls.StackPanel" and three marking buttons as "Avalonia.Controls.DockPanel";
-  the old tab round missed it because the name was not empty. `SpokenNames` (desktop and phone) names each such control from the words
-  inside it unless the code named it, and keeps it current when the content changes; a type-shaped name now counts as no name in both
-  checks. On the phone, Settings' "Run the benchmark now" was 44 tall, now 48 (`BenchmarkPanel`'s `runHeight`).
-- **The phones, headless** (`Entry461PhoneAccessibilityTests`): the first run and every place, the same walk with a 48 by 48 touch
-  target: no other finding.
-- **The phones, on the platforms' own trees:** a scenario step `audit` (`Scenario.Audit`) stops on each of the sweep's 13 screens
-  (`scripts/scenarios/phone-audit.json`, held to the sweep by `ScreenReaderAuditTests`); `scripts/screen-reader-audit.py` reads
-  Android's accessibility node tree with uiautomator (every node that can be tapped named, with a role, 48 by 48 dp, and every control
-  GroupLab Dev says can be tapped present in the tree) and runs XCTest's `performAccessibilityAudit` through the XCUITest runner
-  (element detection, hit regions, descriptions and traits judged; contrast, Dynamic Type and clipped text kept in the artifact). New
-  steps "Screen reader audit" in android-emulator.yml (`scripts/android-audit.sh`) and ios-app.yml.
-- **The first runs (39539794514, 39539797209).** Android read all 13 screens: every node named, every role given, and two findings
-  that are GroupLab's, "More ▸" 47 dp wide (now at least as wide as tall, `MoreFold`) and the bull buttons of "How you shot this sheet"
-  44 dp tall (now 48, their gap 1 where it was 3, so the grid keeps its height). The rest was one fault: **every control's box in
-  Android's accessibility tree sat 128 pixels, the status bar, above where it is drawn**, because Avalonia 12.1.2's helper sets each
-  box on the screen from the control's place in GroupLab's view and never adds where the view is (it calls `SetBoundsInScreen` and never
-  `GetLocationOnScreen`); TalkBack's outline was drawn above what it read, and Android cut the top and bottom controls to slivers.
-  `AccessibilityOnScreen` wraps Avalonia's helper on the Android head, answering exactly as it does and moving each box by the view's
-  place before Android clips it. A scroll bar's own arrows are left out of the judging, as on the computer. iOS: the runner did not
-  build, because XCTest has no audit types for actions or parent and child; they were taken out.
-- **The second runs (39544356145, 39544358247).** Android: the wrapper installed (`accessibility.bounds installed=True` in GroupLab Dev's
-  log) and the 100 misplaced boxes were gone; the three left were controls cut off by the bottom of the scrolled view, whose box is the
-  sliver showing, now not judged for size, as the Accessibility Test Framework does not. iOS read all 13 screens: 20 issues. Fixed:
-  empty lines of text (a status line with nothing to say yet) were read as elements with no description, now kept out of the tree while
-  empty (`SpokenNames.Quiet`); "grouplab.org" alone was not a name a person can say, now "GroupLab's website, grouplab.org". Not
-  judged, kept in the artifact: the scroll bar, a 16 point strip down the right edge, and text XCTest found inside the photograph of
-  the sheet on Fix holes (its handwriting and printed labels), which no label can represent and the words above it say.
-- Request 105 in for-alan.md: a later twenty minutes with a real screen reader, for what a machine cannot judge. The guide's
-  keyboard part says what is checked and that no person using a screen reader has tried it yet.
-
-## Entry 461 part 2.2: a phone photograph's codes, measured (2026-10-21)
-
-- The bench's photograph reads its codes square on in 662 to 861 ms (`grouplab analyze`, three fresh runs): the marker search 68 to
-  92 ms, placing and cutting out the 8 places about 75, and about 450 ms in OpenCV's two readers failing in full on the 6 places with no
-  code (WeChat 44 to 68 ms each, the second reader 5 to 35), where the other sheets sharing the frozen sheet's markers print theirs.
-- **Nothing changed:** a failing read is the reader's fixed sequence, and reading fewer places changes how many codes a picture is said
-  to have read (entry 415's finding). Question 106 puts the one real option to planning, with what it would cost; the bench baseline is
-  unchanged. Detail in docs/PERFORMANCE.md. QR codes are still read on one thread.
-- Worth an article? Not written: ordinary engineering, and the table is in PERFORMANCE.md.
-
-## Entry 461 part 3: synchronization through the person's own cloud folder, option A, the engine (2026-10-21)
-
-- **Decided:** option A of docs/notes/sync-options.md (Alan, 2026-10-20); recorded there, in DESIGN.md section 18 and the decision log.
-  Option B is not decided and not built.
-- **Revisions (3.1 item 1):** schema 6 adds `sync_records`, `sync_seen`, `sync_conflicts` and `sync_kept` (docs/SESSION-SCHEMA.md); the
-  first open of the new build copies `grouplab.db` to `grouplab.pre-v5.db` before upgrading, as every schema change does. Each record
-  the export carries has a version vector (`VersionVector`); a device finds its own changes by each record's SHA-256 at every run.
-- **Change files (item 2):** whole records with their identity (`DataExport.Identity` for a session) and revision, in
-  `GroupLab sync/changes/<device>/`, written only by that device, beside their name and renamed into place, at most 25 sessions a file,
-  ending `"end": true`.
-- **Reading and merging (item 3):** `SyncEngine.Run`, at start and every five minutes once a screen calls it (`SyncEngine.Every`);
-  newer wins, the same record changed on two devices is kept both ways and listed, a deletion against a change keeps the change and
-  lists it on both, deletion markers kept 90 days in the database and always in the change files. `SyncEngine.Resolve`: keep this
-  one, keep the other, keep both (sessions), understood. Every record a merge replaces or takes away is kept whole first (`Kept`).
-- **Tiers (item 4):** geometry and the proof picture always; the originals only with `SyncOptions.Originals`, to
-  `GroupLab sync/originals/<sha256>.<ext>`; the photograph's path on a device never travels.
-- **Reaching the folder (item 5):** `DirectorySyncFolder` (the computer, and iOS once a bookmark has opened it), `SafSyncFolder`
-  (Android's folder picker, the Storage Access Framework, with its permission kept), `BookmarkSyncFolder` (a security-scoped bookmark
-  to a folder in Files). The two phone ones build in CI and are reached by nothing.
-- **Tests (item 6):** `SyncEngineTests`, twelve: two devices (a session with its strings, a rifle, a sheet, a setting), three devices,
-  the same session changed on two (listed both sides, chosen, settled everywhere), keep both, a deletion against an edit, a half-written
-  change file read once whole, a device back after 200 days (the deletion still reaches it), a folder that disappears (nothing changes),
-  nothing lost (a load and a sheet kept as they were), originals only when asked, each device only its own files.
-- **`grouplab sync <database> <folder>`**, with `--list` and `--choose`, for testing. Nothing on any screen, setting or menu; the
-  README and the site say nothing of sync.
-- **Measured for the screens (3.2):** on this computer's 22 sessions, a proof picture's median is 226 KB, a marking's 38 KB and a
-  design's 7 KB: about 350 KB a target in the folder, 70 MB for a year of 200. The DESIGN NEEDED in for-alan.md carries the figures.
-- **Not built:** tidying old change files; the three screens (DESIGN NEEDED).
-
 ## Entry 462 section 0: question 106 answered, a photograph's codes left as they are (2026-10-21)
 
 Alan chose (b): every place on a photograph is still read, so a picture showing two sheets is still caught. Question 106 is archived
 as answered in `docs/notes/archive/questions-answered.md`, the measurement stays in `docs/PERFORMANCE.md` with the answer under it, and
 Phase 9 has no next step queued. Nothing in the application changed.
-
-## Entry 462 section 1: a full audit of grouplab.org (2026-10-21)
-
-**How.** `scripts/site-audit.cjs`, new, opens every page the builder makes (79) in Chrome at 390 and 1440 px in both themes and reports
-what a reader would hit: the page wider than the screen, words cut off inside a box, words drawn over words, a picture or file that does
-not load, a link to a page that is not built, and every axe-core finding for WCAG 2.1 A and AA. Anything not on the site is refused, so a
-slow outside server cannot hold a page. External links were fetched one by one (165, all answer) and the download page's ten files were
-compared with the rolling nightly's assets (all there; nightly 214 named). Lighthouse 12.2.1 ran on six pages.
-
-**Found and fixed.** Eighteen research articles, What can be measured and the hole detection deep dive were wider than a phone (file names in sources and
-code did not wrap); two research articles offered JSON downloads the builder never copied (suppressor shift, photo hole size); the upload
-page's file field had no label; the tour diagram marked its chosen link "pressed", which a link cannot be (now "current"); ten tables and
-one listing scrolled sideways with no way to reach them by keyboard (each that scrolls now takes focus); the tour's cards skipped from the
-page title to a third level heading; a table caption on the hole detection page shrank to a word per line on a phone; two small lines
-under 4.5 to 1 now use the theme's existing dim and on-amber colours. The tour's words were checked against its pictures: five pages fixed
-(the key is bottom left, Compare's plots and figures, Fingerprint's five ways to give a length, the optic's "Save to your own sheets").
-Features' platform lists were checked against PHONE-PARITY.md and about 30 of its on-screen names against the source; none wrong
-(the demo tour does have thirteen steps). The release notes page names nightly 214; the research index has all 39 published articles,
-each with its picture. `claims.py --check`, `consistency.py` (with the live site) find nothing; the stale consistency issue was closed.
-
-**Waiting on a look decision** (for-alan.md, DESIGN NEEDED of entry 462 section 1, pictures in `docs/figures/site/entry-462/`): links
-inside sentences in the dark theme (about 2 to 1 against the text, no underline; 101 links) and amber words on How it works' grey panels
-in the light theme (4.19 to 1). `website/a11y-pending.json` lists them so the check prints them as waiting.
-
-**Lighthouse, after the fixes** (local build, light): accessibility, best practices, SEO. Home 95, 100, 100; Features 100, 100, 100;
-download 96, 100, 100; user guide 96, 100, 100; How many shots 96, 100, 100; tour 98 before its heading fix, 100, 100. Every remaining
-accessibility point is the link finding above.
-
-**In CI.** `checks.yml`'s website job now runs `site-audit.cjs --only a11y` (axe on every page, both themes, at phone width): 67 s here.
-
-## Entry 462 section 2: three new research articles, written and published (2026-10-21)
-
-Each meets entry 392 section 1: every number is worked out by GroupLab's own code and held by
-`tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs`, whose simulations are seeded (2026) and rerun to the same values; every
-checkable sentence is backed in `docs/claims-backing.json`; the developer is not named; the byline is the existing one; each has a drawn
-thumbnail and is listed in `website/research/PUBLISHED.md`. No link to any site but grouplab.org and the two sources named.
-
-1. **Does your rifle group as well as Top Gun says it should?** (`top-gun-and-your-groups`) One five-shot group is 0.67 to 1.36 times
-   the true average five-shot group, 8 times in 10; GroupLab's interval on Top Gun's basis is 0.82 to 1.29 times from 20 shots; a rifle
-   on the trend is called clearly wider 3 to 4 times in 100 at any size, and one 25 percent worse is caught 25, 35, 58, 73 and 90 percent
-   of the time from 5, 10, 20, 30 and 50 shots. The book is cited by title and chapter only; nothing is quoted.
-2. **What a canted scope costs at distance** (`canted-scope-at-distance`) For the point blank article's load, 2 degrees of cant moves the
-   shot 0.8 in sideways at 300 yd and 12.5 in at 1000 while losing under a quarter inch of height; a 60 MOA scope reaches 910 yd on a flat
-   rail and 1270 on a 20 MOA rail (`ScopeMount.Farthest`).
-3. **When a click is not what it says: the sight scale factor** (`when-a-click-is-not-a-click`) Error sizes from Gun Digest (about 2
-   percent typical, 5 a reason to return the scope) and The Firearm Blog (one scope at 110 percent); at 1000 yd a 2 percent error moves the
-   center 6.3 in and the first-round chance on a 10 in circle falls from 36 to 20 percent (GroupLab's hit probability for the centred
-   case, the same shots moved for the rest). Checking against the code changed one passage: GroupLab's test reads the turret with the
-   reticle on the lines and fires no shots.
-
-Candidate 4 found three investigations since entry 402 with no row: the screen reader audits, synchronization and the site audit, each
-decided not written in RESEARCH.md with its reason.
-
-## Entry 462 section 3: the interface sweep, faults fixed and looks sent to Alan (2026-10-21)
-
-**How.** `tests/Shared/LayoutAudit.cs`, new, shared by the desktop and phone suites, walks a window's controls and reports words cut off
-(trimmed with no tooltip, wider or taller than their box, or hidden by a box that clips and does not scroll that way), a control a person
-uses past the window's edge, words drawn over words (a dialog's solid card or a tooltip over them excepted), and words under WCAG AA
-contrast (4.5 to 1, 3 to 1 for large) with both colours named. On the desktop it runs in the every-screen walk (`Entry109Tests`) when
-`GROUPLAB_LAYOUT_AUDIT` names a file: every screen at 1280x720, 1400x900, 1920x1080 and 2560x1440 in both themes; the weekly screenshot job
-now fails on any finding, after committing the pictures. It also runs on every push beside the screen reader audit in the entry 447 window
-tests. On the phone, `Entry462PhoneLayoutTests` lays out every place at 360, 412 and 600 wide, both themes, at the ordinary and the
-largest text size (the iPhone's largest is held at Android's, so one pass covers both), headless, the same Avalonia code the emulator
-runs. A chores-haiku walk of 55 pictures found what a machine cannot judge.
-
-**First walk: 417 findings; after the fixes: none, desktop and phone.** Fixed: Ballistics' table headings cut off (they wrap), its
-Elevation figure running over its label in a narrow panel (it goes under), its right panel's last lines under the status bar with no way
-to scroll (it scrolls, the bar drawn in the padding so nothing narrows); the hit plot's key off its right edge and two long choices cut
-off in their boxes (they wrap); equipment labels with a long unit and the flagged-marks heading cut off (they wrap); the shot table's
-"center" cut off (its first column 52 px); every trimmed name (tabs, the path, session lists) now has its whole text as a tooltip
-(`TrimmedTips`); the hint inside an empty box was the base theme's grey at half strength, about 2 to 1 (now whole, in the faint text
-colour); faint notes inside an expander were 4.12 to 1 on its grey (now dim). **Failures as the centred warning** (Alan, 2026-10-02,
-entry 356): fifteen save, print and open failures still said in a small line now also raise it: the point blank card, the scale marker
-page, labels, check label and stickers, the session database at start, a marking or session that will not open, a session file, a
-chronograph file (twice), a scale rectangle that cannot be used, and on the phone the M220 card and labels. **Same thing, same words:**
-chronograph readings and the velocity block's step said "fps" where every other screen says "ft/s"; the phone's designer said "Distance,
-yards" and the computer "Distance, yd"; the phone's Settings said "Sizes on the paper" for what the computer calls "Lengths". The
-published Compare and Sessions pictures dated their second session 2099-01-01; it is now a week before. **Not checked by machine:** focus
-visibility (entry 447 holds the tab order and names) and screens deeper than the phone's bottom places.
-
-**Looks for Alan** (DESIGN NEEDED in for-alan.md, eight lines): marking labels stacking, the analysis key over the plot and unit-less
-headings, the store-target question over the bull, the set tab's pill, the first run taller than 720, the demo card over its text,
-Compare's half-empty card, and two phone pages.
-
-## Entry 462 section 5: what is still done by hand, automated where nothing from Alan is needed (2026-10-21)
-
-`docs/notes/AUTOMATION.md`, new: 24 recurring steps, who does each, how often, what already does it, and whether it can be automated
-with nothing from Alan; the "handoff task" the entry names was not found anywhere and is left for the planning session to name.
-
-**Built:** `scripts/run-start.py` does the start of every run (open requests, error reports, earlier scratch folders cleared by
-clean-scratch.py's own rule, external status in a line a store, the inbox, the week's usage, whether the logs need splitting);
-`scripts/site-live.py` asks grouplab.org's build tag once a minute until a commit is live or the time is up. With sections 1 and 3, the
-site's accessibility and every screen's layout are now checked by machine. **Prepared, off:** `scripts/tester-notes.py` and a nightly
-step post each new "For <tester>" note once its fix is published, opening "Hey <name>,", only once `DISCORD_TESTERS_WEBHOOK` exists
-(request 107; the notes already in for-alan.md are recorded as passed on); `scripts/oracle-backups.py` and `oracle-backups.yml` list the
-boot volume backups on Mondays with a read-only key and keep a `backups` issue while the newest Full is over eight days old or everything
-expires within a week, only once the five `OCI_*` secrets exist (request 106, replacing request 46's look). Both are in RESTORE.md with
-how to stop them. Self-tests pass; with no secrets both say so and do nothing. **Left by hand:** STATE, folding entries, release-note
-wording, publishing articles, merging tuning pull requests and the planning session's relay are judgements; the whole-server restore test
-needs more than read access.
-
-## Entry 462 section 4: more pictures in the guides and on Features (2026-10-21)
-
-**The user guide** has seven more pictures, five of them marked (entry 437's style), each from the walk's own renders: Scope and mount
-(three fields marked), the zeroing grids (Open as PDF), Shots Needed to Zero (two controls), Point blank range (three), Walk me through a
-demo (Next and End the tour, and the phone's demo), and the bar along the bottom at the largest text. Sections left without one say why
-in the docs pass: the keyboard picture shows nothing a keyboard does, the optic picture does not show the optic's fields, and the
-problem section already holds its one marked picture. The testing guide and the statistics primer never send the reader to a screen,
-so they have none added. The guide PDF is regenerated.
-
-**Features:** five entries that showed a general screen have their own picture, made by the screenshot walk: Conditions on the day
-(`conditions`), Every shot, and which count (`shots-window`, a shot left out), Zero from this group (`zero-window`), A picture to share
-(`share-window`) and Words explained where they appear (`word-explained`, Mean radius's explanation open). Each is in SOURCES.md,
-screens.json and the analysis tour page's further pictures. The fourteen still waiting each say why in `docs/figures/SCREENSHOTS.md`
-(mostly a click, a drag or a file the headless walk cannot make yet). Rendering the new Conditions picture found a fault the layout
-audit names: the link to change the rifle's figures ran past a wide window's edge; it wraps now. The rest of the pictures are re-rendered
-by the screenshot job from main (it runs when a screen's files change), so they show section 3's fixes; local renders matched CI's but for
-the status line's clock. **Not done:** phone pictures beside the new Features entries, which need the emulator's walk.
-
-## The archive
-
-Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
-
-- [`docs/notes/archive/results-026-050.md`](notes/archive/results-026-050.md), entries 026 to 050, 16 section(s).
-- [`docs/notes/archive/results-051-075.md`](notes/archive/results-051-075.md), entries 051 to 075, 10 section(s).
-- [`docs/notes/archive/results-076-100.md`](notes/archive/results-076-100.md), entries 076 to 100, 6 section(s).
-- [`docs/notes/archive/results-101-125.md`](notes/archive/results-101-125.md), entries 101 to 125, 26 section(s).
-- [`docs/notes/archive/results-126-150.md`](notes/archive/results-126-150.md), entries 126 to 150, 15 section(s).
-- [`docs/notes/archive/results-151-175.md`](notes/archive/results-151-175.md), entries 151 to 175, 25 section(s).
-- [`docs/notes/archive/results-176-200.md`](notes/archive/results-176-200.md), entries 176 to 200, 23 section(s).
-- [`docs/notes/archive/results-201-225.md`](notes/archive/results-201-225.md), entries 201 to 225, 21 section(s).
-- [`docs/notes/archive/results-226-250.md`](notes/archive/results-226-250.md), entries 226 to 250, 25 section(s).
-- [`docs/notes/archive/results-251-275.md`](notes/archive/results-251-275.md), entries 251 to 275, 27 section(s).
-- [`docs/notes/archive/results-276-300.md`](notes/archive/results-276-300.md), entries 276 to 300, 23 section(s).
-- [`docs/notes/archive/results-301-325.md`](notes/archive/results-301-325.md), entries 301 to 325, 15 section(s).
-- [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 17 section(s).
-- [`docs/notes/archive/results-351-375.md`](notes/archive/results-351-375.md), entries 351 to 375, 21 section(s).
-- [`docs/notes/archive/results-376-400.md`](notes/archive/results-376-400.md), entries 376 to 400, 30 section(s).
-- [`docs/notes/archive/results-401-425.md`](notes/archive/results-401-425.md), entries 401 to 425, 26 section(s).
-- [`docs/notes/archive/results-426-450.md`](notes/archive/results-426-450.md), entries 426 to 450, 26 section(s).
-- [`docs/notes/archive/results-451-475.md`](notes/archive/results-451-475.md), entries 451 to 475, 11 section(s).
-- [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
 ## Entry 463: the three sync screens Alan chose (1A, 2A, 3B), and sync a person can reach (2026-10-21)
 
@@ -519,6 +283,63 @@ sits between them); and a source check that every phone button whose words are a
 The emulator walk does not drive Back, so nothing was added to it.
 
 **Is it worth an article?** No: an ordinary fault in how a button was marked; nothing here changes what another shooter does.
+
+## Entry 471: Alan's answers to questions 107 to 110, and the push of entry 469 (2026-10-23)
+
+**Section 1.** `gh auth status` showed the GroupLab account active. Entry 469's commit was rebased onto nightly 219's notes commits
+(351e9918) and pushed; its site went live at 351e9918. Nightly 219 had been built from entry 470 alone, so its notes carry entry 470's line
+and not the "Correction:" line entry 469 had put on 6feb3f9a. That correction now leaves 6feb3f9a with the note 219 published and rides in
+this entry's commit instead, so nightly 220 says it once (question 111 (a)).
+
+**Question 107 (a).** On the phone, a found hole's tag fell back to its count where `ShotLabels` gives no text, which is every hole on a
+marking with no bulls; it now has no tag there, as on the computer (`MarkingAPage.Viewer`). `Entry471PhoneTagTests`: no hole tags on a
+marking with no bulls, one on a bull.
+
+**Question 108 (b).** Nothing built; `StatedResolutionScale.Offer` is still reached by no screen.
+
+**Question 109 (a).** "Forget this device" beside each device under Other devices in the folder, on the computer and the phones (Android
+and iPhone share the phone page), asks once on the page in the way "Put this page back as it came" does, saying nothing in the folder is
+deleted. Placed in the plainest place, the device's own line, inside the 1A look, so no look question was raised. `SyncForget.Forget`
+writes `GroupLab sync/forgotten/<device>.json`; tidying leaves a forgotten device out of the devices it waits for, and the list leaves it
+out. Nothing is deleted. A forgotten device that syncs again writes the forgetting's identity into its own device file and is seen again;
+tidying in the meantime is safe for it, because a change file is tidied only when a later one holds a newer version of all it carries.
+**The new folder fault** is fixed by an identity: the first device in a folder writes `GroupLab sync/folder.json`, the database keeps the
+identity its records were last written to (`SessionStore.SyncFolderId`), and a different one sets every record to be written again
+(`MarkSyncUnwritten`). A device upgrading from an older GroupLab whose change files are already in the folder takes it as its own and
+writes nothing again. `SyncForgetTests` (four), `Entry471SyncForgetWindowTests` and `Entry471SyncForgetPhoneTests`.
+
+**Question 110 (a).** `PublishReadyToRun` on any publish of the desktop app for a runtime; the phones are unchanged. Checked first, the
+command line published both ways for win-x64: the four local corpus scoreboards and the synthetic one identical but for their times, and
+the 600 dpi sample's marking identical in all 1,080 values. Cold, a fresh process on the Fold 7's picture-1, five runs alternated: median
+1,534 ms before and 1,109 precompiled. The desktop app for win-x64 zips to 102.8 MB against 91.2, said on the download page and in the
+notes. `docs/PERFORMANCE.md` has the figures.
+
+**Is it worth an article?** No: a forgetting button, a tag rule and a build switch; the precompiled measurement is in PERFORMANCE.md and
+would change nothing another shooter does.
+
+## The archive
+
+Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
+
+- [`docs/notes/archive/results-026-050.md`](notes/archive/results-026-050.md), entries 026 to 050, 16 section(s).
+- [`docs/notes/archive/results-051-075.md`](notes/archive/results-051-075.md), entries 051 to 075, 10 section(s).
+- [`docs/notes/archive/results-076-100.md`](notes/archive/results-076-100.md), entries 076 to 100, 6 section(s).
+- [`docs/notes/archive/results-101-125.md`](notes/archive/results-101-125.md), entries 101 to 125, 26 section(s).
+- [`docs/notes/archive/results-126-150.md`](notes/archive/results-126-150.md), entries 126 to 150, 15 section(s).
+- [`docs/notes/archive/results-151-175.md`](notes/archive/results-151-175.md), entries 151 to 175, 25 section(s).
+- [`docs/notes/archive/results-176-200.md`](notes/archive/results-176-200.md), entries 176 to 200, 23 section(s).
+- [`docs/notes/archive/results-201-225.md`](notes/archive/results-201-225.md), entries 201 to 225, 21 section(s).
+- [`docs/notes/archive/results-226-250.md`](notes/archive/results-226-250.md), entries 226 to 250, 25 section(s).
+- [`docs/notes/archive/results-251-275.md`](notes/archive/results-251-275.md), entries 251 to 275, 27 section(s).
+- [`docs/notes/archive/results-276-300.md`](notes/archive/results-276-300.md), entries 276 to 300, 23 section(s).
+- [`docs/notes/archive/results-301-325.md`](notes/archive/results-301-325.md), entries 301 to 325, 15 section(s).
+- [`docs/notes/archive/results-326-350.md`](notes/archive/results-326-350.md), entries 326 to 350, 17 section(s).
+- [`docs/notes/archive/results-351-375.md`](notes/archive/results-351-375.md), entries 351 to 375, 21 section(s).
+- [`docs/notes/archive/results-376-400.md`](notes/archive/results-376-400.md), entries 376 to 400, 30 section(s).
+- [`docs/notes/archive/results-401-425.md`](notes/archive/results-401-425.md), entries 401 to 425, 26 section(s).
+- [`docs/notes/archive/results-426-450.md`](notes/archive/results-426-450.md), entries 426 to 450, 27 section(s).
+- [`docs/notes/archive/results-451-475.md`](notes/archive/results-451-475.md), entries 451 to 475, 22 section(s).
+- [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
 ## Decision log
 

@@ -19,7 +19,7 @@ namespace GroupLab.Mobile;
 /// canvas, boards MarkA1 and MarkA2, and Alan's choice of entry 278 section 1. Three steps: the scale, the aim point, the holes. The picture
 /// pans and pinches under a crosshair fixed at the middle of the screen, and one button sets the point under it and counts ("Set end 2 of
 /// 2", "Add hole here (6)"), with Undo. Once the scale is known the crosshair's ring is the bullet's real size. Holes GroupLab found are
-/// rings with their number; holes added here are rings with a dot; a wrong mark is removed by putting the crosshair on it, when the button
+/// rings tagged with their bull's number; holes added here are rings with a dot; a wrong mark is removed by putting the crosshair on it, when the button
 /// says so. "Done: measure N shots" makes the result; "Keep as a template" keeps the aim points for the next sheet of the same target.
 /// Entry 318 section 2, in GroupLab Dev only: at the holes, "Find holes (Experimental)" proposes them from the scale, each a found hole to
 /// keep or remove here and move in Fix holes; one the finder is unsure of is ringed in amber and asked about on the result.
@@ -362,7 +362,7 @@ internal sealed class MarkingAPage : UserControl
 
     /// <summary>
     /// The picture under a fixed crosshair: one finger pans it, two pinch it about the crosshair. It draws the scale's ends, the aim
-    /// points, and the holes, found ones as numbered rings and added ones as rings with a dot, and the crosshair with the bullet's ring.
+    /// points, and the holes, found ones as rings tagged with their bull's number and added ones as rings with a dot, and the crosshair with the bullet's ring.
     /// Entry 291 section 2.2: Fix holes is built on it too, with the picture turned upright (<paramref name="turns"/>, as
     /// <see cref="ViewRotation"/>) and a hole being moved drawn under the crosshair.
     /// </summary>
@@ -721,10 +721,8 @@ internal sealed class MarkingAPage : UserControl
             var added = new Pen(Brushes.LimeGreen, 2);
             var tagHoles = new List<TagHole>();
             var tagWords = new Dictionary<int, (string Text, IBrush Ink)>();
-            int number = 0;
             foreach (var shot in session.State.Shots.Where(s => s.IsShot))
             {
-                number++;
                 bool moving = shot.Id == Held && HeldAt is not null;
                 var at = moving ? ToScreen(HeldAt!.Value) : ToScreen(shot.Image);
                 double radius = HoleRadius(moving ? HeldAt!.Value : shot.Image);
@@ -747,9 +745,10 @@ internal sealed class MarkingAPage : UserControl
                     context.DrawEllipse(Brushes.LimeGreen, null, at, 2.5, 2.5);
                 }
 
-                // Entry 376 section A6: a hole carries its bull's number, never a count. Entry 465 section 1A: in a dark tag placed with the
-                // computer's, outside the bull's ring where it lies on nothing else; a hole being moved keeps clear of its selection ring.
-                string? text = labels.GetValueOrDefault(shot.Id) ?? (byHand ? null : number.ToString(CultureInfo.CurrentCulture));
+                // Entry 376 section A6: a hole carries its bull's number, never a count, so a hole on a marking with no bulls has no tag, as on
+                // the computer (entry 471, question 107). Entry 465 section 1A: in a dark tag placed with the computer's, outside the bull's
+                // ring where it lies on nothing else; a hole being moved keeps clear of its selection ring.
+                string? text = labels.GetValueOrDefault(shot.Id);
                 var (w, h) = text is null ? (0, 0) : Marks.TagSize(text);
                 double clear = shot.Id == Held ? radius + GroupLab.App.Theme.Tokens.SelectionGap + GroupLab.App.Theme.Tokens.SelectionArm : radius;
                 tagHoles.Add(new TagHole(shot.Id, new PointD(at.X, at.Y), clear, shot.Bull, w, h));

@@ -5,6 +5,54 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-10-23, question 111: should a published build's notes be edited when a line in them was wrong?
+
+**Status: answered 2026-10-23 by Alan (entry 471 section 3): (a), keep it so. A published release's notes are never edited; the correction goes in the next build as one "Correction:" line through docs/release-note-corrections.json. Nightly 219 was built before entry 469 was pushed, so the line rides in nightly 220.** Entry 469 section 2 asked for three lines of nightly 218's notes to be removed (two fixes to a fault no build
+before 218 had, and a line about the guides). CLAUDE.md says a published release is never edited and the correction goes in the next
+one, so nightly 218's notes, its GitHub release and the releases page are left as published; docs/release-note-corrections.json now
+takes the three trailers out (a correction with no notes removes a commit, new in scripts/release-notes.py), and nightly 219 carries
+one line beginning "Correction:" saying the data file import works as it did in 217. **Options:** (a) keep it so; (b) for a line
+that describes a fault nobody could meet, edit the published entry too. **I would choose (a)**, the rule as it stands. Nothing waits
+on this.
+
+## 2026-10-21, question 110: should the builds be published precompiled?
+
+**Status: answered 2026-10-23 by Alan (entry 471 section 2): (a), ReadyToRun on the desktop builds only, checked against the corpus first; not Android for now. Built in entry 471: the corpus results are identical, the first photograph about a quarter sooner, the download about an eighth larger, said on the download page and in the notes.** Entry 464 section 4 measured the path from opening a picture to its analysis (`docs/PERFORMANCE.md`). In a fresh
+process the first picture is much slower than later ones, because .NET runs the code unoptimised until it has compiled it fully. A
+precompiled (ReadyToRun) copy of the command line read the Fold 7's picture-1 in 1,069 ms instead of 1,603, and the 600 dpi sample in
+2,307 instead of 2,646. **The cost:** a bigger download (the analysis library from 4.1 to 8.6 MB), a new start-up figure for the
+baseline gate, installer changes on every platform, and Android's ahead-of-time compiling as a separate decision; the precompiled
+copy's results were not yet checked against the corpus. **Options:** (a) ReadyToRun on the desktop builds, checked against the corpus
+first; (b) that and Android's AOT; (c) leave it. **I would choose (a)**, because a person's first picture is the one they wait for.
+Nothing waits on this.
+
+## 2026-10-21, question 109: a sync device that never comes back holds tidying back for ever
+
+**Status: answered 2026-10-23 by Alan (entry 471 section 2): (a), "Forget this device" on the Sync block on every platform, asking first and saying nothing in the folder is deleted, with the records rewritten to a new empty folder fixed. Built in entry 471.** Entry 464 section 1's tidying moves a change file only when every device that has written to the folder lists it as
+read (`GroupLab sync/read/<device>.json`). A device that stops for good, a phone GroupLab was taken off or a reinstall that becomes a
+new device, never reads again, so nothing is tidied after that, and the folder grows as before tidying. **Options:** (a) a "Forget this
+device" beside each device on the Sync block, which removes its read position after saying what it means; (b) forget a device unseen
+for, say, 90 days, by itself; (c) leave it. **I would choose (a)**, because a guess about a device a person may still use is the kind
+of thing GroupLab asks rather than decides. Also found, in code not changed: choosing a different, empty folder does not write a
+device's existing records there again, because the database already counts them as written; I would fix that with (a). Nothing waits.
+
+## 2026-10-21, question 108: the scan's own resolution as a scale has no words on the Set tab yet
+
+**Status: answered 2026-10-23 by Alan (entry 471 section 2): (b), leave it until the scan's own resolution is wired in, then (a), its own marker and line, in the same change. Nothing built now.** Entry 465 item 4B put a line under the Scale checked pill saying how the scale was found, built only from what each
+sheet's scale records (`ScaleSaid` in `src/GroupLab.Core`). A flatbed scan's stated resolution offered as the scale
+(`StatedResolutionScale.Offer`, entry 130 section 4.1) is reached by no screen today, so it has no case of its own; if it is ever wired
+in, it would read as "a length you measured", which is untrue. **Options:** (a) give it its own marker on the scale and its own line
+("From the scan's own resolution, 600 dpi") when it is wired; (b) leave it until then. **I would choose (b)**, with (a) done in the same
+change that first lets a person reach it. Nothing waits on this.
+
+## 2026-10-21, question 107: should the phone stop numbering found holes on a marking with no bulls?
+
+**Status: answered 2026-10-23 by Alan (entry 471 section 2): (a), the phone drops the numbers as the computer does. Built in entry 471.** Entry 465 item 1A placed every bull number and hole tag by one shared rule on the computer and the phone. On the phone,
+holes found on a marking with no bulls (Any target, found by Find holes) still carry the old count number (1, 2, 3); the computer shows
+none there, and entry 376 A6 says a hole never carries a count. **Options:** (a) the phone drops them, as the computer does; (b) both
+show the tag 1a, 1b, ... of the one bull that a no-bull marking has. **I would choose (a)**, a one-line change, because it is what entry
+376 A6 already decided; I left it because 1A did not ask for it. Nothing waits on this.
+
 ## 2026-10-21, question 106: a photograph's codes cannot be read sooner without reading fewer of them
 
 **Status: answered 2026-10-21 by Alan (entry 462 section 0): (b), leave it. Every place is still read, so a picture showing two sheets is still caught; the measurement stays in docs/PERFORMANCE.md.** Entry 461 section 2.2 asked for a phone photograph's codes faster "with every result identical". Measured on the

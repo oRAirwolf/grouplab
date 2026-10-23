@@ -88,6 +88,16 @@ is packaged (the analysis library alone grows from 4.1 to 8.6 MB) and to the sta
 equivalent (Android's AOT, off in its project) changes the download too, so it goes to planning as a question with these figures rather
 than being taken here.
 
+**Taken for the desktop builds, entry 471 (question 110 (a)).** `src/GroupLab.App/GroupLab.App.csproj` sets `PublishReadyToRun` on any
+publish for a runtime, which is how every desktop build is made (the Windows installer, zip and Store package, both macOS builds and the
+Linux tarball); the phones publish their own projects and are unchanged, Android's AOT left for later. **Checked against the corpus
+first, 2026-10-23**, the command line published both ways for win-x64: `scoreboard --corpus` on the four local corpus folders and
+`scoreboard --synthetic` are identical but for their `medianMilliseconds`, and `grouplab analyze` on the 600 dpi sample writes the same
+marking, all 1,080 values. **Cold**, `grouplab analyze` on the Fold 7's picture-1 in a fresh process, five runs each alternated: 1,531
+to 1,543 ms (median 1,534) before, 1,102 to 1,113 (median 1,109) precompiled, about a quarter sooner. **The cost**: the desktop app
+published for win-x64 is 219.4 MB unpacked and 91.2 MB zipped before, 245.7 and 102.8 precompiled, about an eighth more to download,
+said on the download page.
+
 **Taken: a JPEG's two decodes side by side** (the next commit). A JPEG's grey cannot be made from its colour decode (entry 130), so it
 is decoded twice; the two decodes are independent, so the grey is now decoded on another thread while the colour is decoded and reduced,
 and the phone reads its working copy with one read of the file rather than two.

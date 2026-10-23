@@ -77,6 +77,44 @@ internal static class PhoneSync
         Changed?.Invoke();
     }
 
+    /// <summary>Forgets another device in the folder, as its "Forget this device" does once answered; nothing in the folder is deleted.</summary>
+    internal static void Forget(string id)
+    {
+        if (Phone.Platform is not { } platform || !Setup.On)
+        {
+            return;
+        }
+
+        try
+        {
+            string me = PhoneAnalysis.Store().SyncDevice();
+            bool done = platform.WithSyncFolder(folder =>
+            {
+                if (!folder.Available)
+                {
+                    return false;
+                }
+
+                SyncForget.Forget(folder, me, id, DateTime.UtcNow);
+                return true;
+            });
+            Unreachable = !done;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "sync.forget", e);
+            Unreachable = true;
+        }
+
+        if (!Unreachable)
+        {
+            Others = [.. Others.Where(d => d.Id != id)];
+            DiagnosticLog.Info("sync.forget", ("forgotten", true));
+        }
+
+        Changed?.Invoke();
+    }
+
     /// <summary>One run now, or the one already running.</summary>
     internal static Task Now()
     {
@@ -317,12 +355,28 @@ internal sealed class SyncPage : UserControl
         column.Children.Add(Screens.Heading(SyncScreens.OtherDevicesHeading));
         column.Children.Add(PhoneSync.Others.Count == 0
             ? Screens.Line(SyncScreens.NoOtherDevices)
-            : Screens.Card([.. PhoneSync.Others.Select(d => (Control)Screens.Line(SyncScreens.SeenLine(d, DateTime.UtcNow)))]));
+            : Screens.Card([.. PhoneSync.Others.Select(DeviceRow)]));
         column.Children.Add(Screens.Heading(SyncScreens.OriginalsHeading));
         column.Children.Add(Cards(setup));
         column.Children.Add(Screens.Choice(SyncScreens.StopSyncing, PhoneSync.Stop).Id("sync-stop"));
         column.Children.Add(Screens.Dim(SyncScreens.StopsHereOnly));
         return Screens.Page(column);
+    }
+
+    /// <summary>
+    /// Entry 471 section 2, question 109 (a): another device's line with "Forget this device", which asks once on the page, saying that
+    /// nothing in the folder is deleted, before it forgets.
+    /// </summary>
+    private static Control DeviceRow(SyncDeviceSeen device)
+    {
+        var ask = new StackPanel { Spacing = 8, IsVisible = false };
+        ask.Children.Add(Screens.Dim(SyncScreens.ForgetAsks(device.Name)));
+        ask.Children.Add(Screens.Choice(SyncScreens.ForgetDevice, () => PhoneSync.Forget(device.Id)).Id("sync-forget-yes"));
+        ask.Children.Add(Screens.Choice(SyncScreens.LeaveIt, () => ask.IsVisible = false));
+        var forget = new Button { Content = SyncScreens.ForgetDevice, MinHeight = Screens.Touch, Classes = { GroupLab.App.Theme.AppStyles.Link } }.Id("sync-forget");
+        Avalonia.Automation.AutomationProperties.SetName(forget, $"{SyncScreens.ForgetDevice}: {device.Name}");
+        forget.Click += (_, _) => ask.IsVisible = true;
+        return new StackPanel { Spacing = 4, Children = { Screens.Line(SyncScreens.SeenLine(device, DateTime.UtcNow)), forget, ask } };
     }
 
     /// <summary>3B stacked: the two cards, one chosen, each with its size now and a year at the person's pace in bars on one scale a row.</summary>

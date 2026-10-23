@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "The computer downloads now come precompiled",
     "Correction: on the phone, a GroupLab data file opened from another app",
     "On the phone, a GroupLab data file opened from another app shows what importing it would add",
     "On the phone, opening a GroupLab data file from another app shows what importing it would add",
@@ -404,7 +405,7 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.28",
-      "note": ["You can now click a hole to edit it", "each bull's number now sits outside its ring", "On a crinkled sheet, GroupLab no longer marks a hole", "On a flatbed scan, GroupLab now finds the holes that show the scanner",
+      "note": ["You can now click a hole to edit it", "each bull's number now sits outside its ring", "On a crinkled sheet, GroupLab no longer marks a hole", "On a flatbed scan, GroupLab now finds the holes that show the scanner", "holes found on a target with no bulls",
         "Finding the holes in a photograph is about a sixth quicker"],
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue",
@@ -1424,7 +1425,7 @@
      "key": "sync",
      "group": "Updates and platforms",
      "name": "Sync between your devices",
-     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync and your data, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, and the original photographs travel only if you ask. Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder's own trash, keeps it there 14 days, and says what it tidied.",
+     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync and your data, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, and the original photographs travel only if you ask. Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder's own trash, keeps it there 14 days, and says what it tidied; a device that will not sync again can be forgotten, so tidying stops waiting for it, with nothing in the folder deleted.",
      "shot": "sync-settings",
      "platforms": [
       "Windows",
@@ -1438,7 +1439,9 @@
      "note": [
       "Sync between devices",
       "stay the same on your computer and phones",
-      "old change files"
+      "old change files",
+      "Forget this device",
+      "Choosing a different, empty sync folder"
      ],
      "tour": "settings",
      "guide": "sync-between-devices",

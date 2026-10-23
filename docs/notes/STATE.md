@@ -9,12 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-23, entries 470 (Android's back on Sync and your data) and 469 (the audit's wording) done.
+**Last rewritten:** 2026-10-23, entry 471 (Alan's answers to questions 107 to 111) done.
 
 ---
 
 ## In flight
 
+- **Entry 471 (2026-10-23)**, done: Forget this device on the Sync block everywhere, and a new empty sync folder gets every record;
+  the phone's found holes on a marking with no bulls carry no number; the desktop builds are published precompiled (identical corpus
+  results, first photograph about a quarter sooner, download about an eighth larger); nightly 218's correction rides in nightly 220.
 - **Entries 469 and 470 (2026-10-23)**, done: Settings' old page names fixed everywhere; Android's back on Sync and your data made a
   records copy, fixed for nightly 219; the phone's Shooting defaults and Sync and your data pictures wait for the walk.
 - **Entry 468 (2026-10-22)**, done: Settings is eight categories (side menu on the computer, a list on the phones) with Find a setting
@@ -44,7 +47,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 2. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
-3. Questions 107 to 110 once planning answers them (phone hole counts, the scan's resolution line, forgetting a sync device, precompiled builds).
+3. The scan's own resolution as a scale, once a screen reaches it, with its own marker and line in the same change (question 108 (b)).
 
 ## Blocked, and on what
 
@@ -58,21 +61,16 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Eight, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave it):
-- **111** whether a published build's notes are edited when a line was wrong (nightly 219 corrects 218; nothing waits)
-- **110** whether the builds are published precompiled, for a faster first picture (nothing waits)
-- **109** a sync device that never comes back holds tidying back for ever (nothing waits)
-- **108** the scan's own resolution as a scale has no words on the Set tab yet (nothing waits)
-- **107** whether the phone stops numbering found holes on a marking with no bulls (nothing waits)
+Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (107 to 111 answered 2026-10-23 in entry 471, all as recommended):
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **36** a light installer, measured
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.218 (2026-10-22 13:07 UTC): entry 468. ios-app.yml: the iPhone app passes; Apple's audit times out
-  on its result screen (PHASE1-RESULTS.md, entry 468), recorded, not changed.
-- **The site** follows main by itself (website.yml) and the nightly publishes it; live at 4882f861 (entry 468) on 2026-10-22.
+- **Last nightly:** 0.2.0-nightly.219 (2026-10-23 18:04 UTC): entry 470 only; entry 469 was pushed after it. Nightly 220 carries
+  entries 469 and 471, the first desktop builds published precompiled.
+- **The site** follows main by itself (website.yml) and the nightly publishes it; live at 351e9918 (entry 469) on 2026-10-23.
 - Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox

@@ -14,6 +14,12 @@
     <InvariantGlobalization>false</InvariantGlobalization>
     <!-- Entry 105 section 5: the executable's icon, drawn from the mark by `grouplab icons`, never exported by hand. -->
     <ApplicationIcon>Assets\icons\grouplab.ico</ApplicationIcon>
+    <!--
+      NOTES-FROM-PLANNING.md entry 471 section 2, question 110 (a): the desktop builds are published precompiled (ReadyToRun), so the first
+      picture after GroupLab starts is not read by code .NET is still compiling (docs/PERFORMANCE.md). Only on a publish for a runtime,
+      which is how every desktop build is made; the phones publish their own projects, which do not set it.
+    -->
+    <PublishReadyToRun Condition="'$(RuntimeIdentifier)' != ''">true</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>

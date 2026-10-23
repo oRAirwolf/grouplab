@@ -21,8 +21,8 @@ public sealed record SyncSetup(string? Folder, string DeviceName, bool Originals
     public bool On => !string.IsNullOrEmpty(Folder);
 }
 
-/// <summary>Another device seen in the folder, and when it last wrote.</summary>
-public sealed record SyncDeviceSeen(string Name, DateTime? LastWrittenUtc);
+/// <summary>Another device seen in the folder, by its name in the folder (<paramref name="Id"/>) and as it calls itself, and when it last wrote.</summary>
+public sealed record SyncDeviceSeen(string Id, string Name, DateTime? LastWrittenUtc);
 
 /// <summary>One row of the side by side: what it is, each version's value, and whether they differ.</summary>
 public sealed record SyncRow(string What, string Here, string There, bool Differs);
@@ -66,6 +66,16 @@ public static class SyncScreens
     public const string OtherDevicesHeading = "Other devices in the folder";
 
     public const string NoOtherDevices = "No other device has written to this folder yet. Choose the same folder on another device to start.";
+
+    /// <summary>Entry 471 section 2, question 109: beside each other device, for one that will not come back.</summary>
+    public const string ForgetDevice = "Forget this device";
+
+    public const string LeaveIt = "Leave it as it is";
+
+    /// <summary>What forgetting <paramref name="name"/> does, asked once on the page before it is done.</summary>
+    public static string ForgetAsks(string name) =>
+        $"Forget {name}? Use this for a device that will not sync again. GroupLab stops waiting for it before tidying old change files. " +
+        $"Nothing in the folder is deleted: {name}'s records stay, and if it syncs again it is listed here again.";
 
     public const string OriginalsHeading = "Also copy the original photographs";
 
@@ -175,7 +185,7 @@ public static class SyncScreens
             : Of((int)gone.TotalDays, "day");
     }
 
-    /// <summary>The other devices that have written to the folder, newest first; this one left out.</summary>
+    /// <summary>The other devices that have written to the folder, newest first; this one and the forgotten ones (entry 471) left out.</summary>
     public static IReadOnlyList<SyncDeviceSeen> Others(ISyncFolder folder, string me)
     {
         ArgumentNullException.ThrowIfNull(folder);
@@ -187,7 +197,8 @@ public static class SyncScreens
 
         foreach (string file in folder.Files($"{SyncEngine.Root}/devices"))
         {
-            if (!file.EndsWith(".json", StringComparison.OrdinalIgnoreCase) || Path.GetFileNameWithoutExtension(file) == me
+            string id = Path.GetFileNameWithoutExtension(file);
+            if (!file.EndsWith(".json", StringComparison.OrdinalIgnoreCase) || file.StartsWith('.') || id == me || SyncForget.IsForgotten(folder, id)
                 || folder.Read($"{SyncEngine.Root}/devices/{file}") is not { } bytes)
             {
                 continue;
@@ -196,10 +207,10 @@ public static class SyncScreens
             try
             {
                 var device = JsonNode.Parse(bytes)?.AsObject();
-                string name = (string?)device?["name"] is { Length: > 0 } n ? n : Path.GetFileNameWithoutExtension(file);
+                string name = (string?)device?["name"] is { Length: > 0 } n ? n : id;
                 DateTime? when = DateTime.TryParse((string?)device?["lastWrittenUtc"], CultureInfo.InvariantCulture,
                     DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var w) ? w : null;
-                seen.Add(new SyncDeviceSeen(name, when));
+                seen.Add(new SyncDeviceSeen(id, name, when));
             }
             catch (System.Text.Json.JsonException)
             {

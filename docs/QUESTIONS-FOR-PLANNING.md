@@ -14,60 +14,12 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 51 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 56 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
+> 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
-
-## 2026-10-23, question 111: should a published build's notes be edited when a line in them was wrong?
-
-**Status: open.** Entry 469 section 2 asked for three lines of nightly 218's notes to be removed (two fixes to a fault no build
-before 218 had, and a line about the guides). CLAUDE.md says a published release is never edited and the correction goes in the next
-one, so nightly 218's notes, its GitHub release and the releases page are left as published; docs/release-note-corrections.json now
-takes the three trailers out (a correction with no notes removes a commit, new in scripts/release-notes.py), and nightly 219 carries
-one line beginning "Correction:" saying the data file import works as it did in 217. **Options:** (a) keep it so; (b) for a line
-that describes a fault nobody could meet, edit the published entry too. **I would choose (a)**, the rule as it stands. Nothing waits
-on this.
-
-## 2026-10-21, question 110: should the builds be published precompiled?
-
-**Status: open.** Entry 464 section 4 measured the path from opening a picture to its analysis (`docs/PERFORMANCE.md`). In a fresh
-process the first picture is much slower than later ones, because .NET runs the code unoptimised until it has compiled it fully. A
-precompiled (ReadyToRun) copy of the command line read the Fold 7's picture-1 in 1,069 ms instead of 1,603, and the 600 dpi sample in
-2,307 instead of 2,646. **The cost:** a bigger download (the analysis library from 4.1 to 8.6 MB), a new start-up figure for the
-baseline gate, installer changes on every platform, and Android's ahead-of-time compiling as a separate decision; the precompiled
-copy's results were not yet checked against the corpus. **Options:** (a) ReadyToRun on the desktop builds, checked against the corpus
-first; (b) that and Android's AOT; (c) leave it. **I would choose (a)**, because a person's first picture is the one they wait for.
-Nothing waits on this.
-
-## 2026-10-21, question 109: a sync device that never comes back holds tidying back for ever
-
-**Status: open.** Entry 464 section 1's tidying moves a change file only when every device that has written to the folder lists it as
-read (`GroupLab sync/read/<device>.json`). A device that stops for good, a phone GroupLab was taken off or a reinstall that becomes a
-new device, never reads again, so nothing is tidied after that, and the folder grows as before tidying. **Options:** (a) a "Forget this
-device" beside each device on the Sync block, which removes its read position after saying what it means; (b) forget a device unseen
-for, say, 90 days, by itself; (c) leave it. **I would choose (a)**, because a guess about a device a person may still use is the kind
-of thing GroupLab asks rather than decides. Also found, in code not changed: choosing a different, empty folder does not write a
-device's existing records there again, because the database already counts them as written; I would fix that with (a). Nothing waits.
-
-## 2026-10-21, question 108: the scan's own resolution as a scale has no words on the Set tab yet
-
-**Status: open.** Entry 465 item 4B put a line under the Scale checked pill saying how the scale was found, built only from what each
-sheet's scale records (`ScaleSaid` in `src/GroupLab.Core`). A flatbed scan's stated resolution offered as the scale
-(`StatedResolutionScale.Offer`, entry 130 section 4.1) is reached by no screen today, so it has no case of its own; if it is ever wired
-in, it would read as "a length you measured", which is untrue. **Options:** (a) give it its own marker on the scale and its own line
-("From the scan's own resolution, 600 dpi") when it is wired; (b) leave it until then. **I would choose (b)**, with (a) done in the same
-change that first lets a person reach it. Nothing waits on this.
-
-## 2026-10-21, question 107: should the phone stop numbering found holes on a marking with no bulls?
-
-**Status: open.** Entry 465 item 1A placed every bull number and hole tag by one shared rule on the computer and the phone. On the phone,
-holes found on a marking with no bulls (Any target, found by Find holes) still carry the old count number (1, 2, 3); the computer shows
-none there, and entry 376 A6 says a hole never carries a count. **Options:** (a) the phone drops them, as the computer does; (b) both
-show the tag 1a, 1b, ... of the one bull that a no-bull marking has. **I would choose (a)**, a one-line change, because it is what entry
-376 A6 already decided; I left it because 1A did not ask for it. Nothing waits on this.
 
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 
