@@ -462,7 +462,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 
 - The command line's render can now draw a sheet's bulls in red or blue, as Print does in the application.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.190)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
