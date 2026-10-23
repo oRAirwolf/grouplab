@@ -12,6 +12,22 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.220
+
+**2026-10-23**, commit `497d9ee`. Nightly.
+
+**What you will notice**
+
+- In Settings, Sync and your data, each other device in the sync folder now has Forget this device, for one that will not sync again: tidying stops waiting for it and nothing in the folder is deleted.
+- Choosing a different, empty sync folder now writes all your records there, where before only changes made afterwards reached it.
+- Correction: on the phone, a GroupLab data file opened from another app works as it did in nightly 217 and shows what importing it would add on Settings, Sync and your data; nightly 218's notes wrongly listed two fixes for it.
+- On the phone, holes found on a target with no bulls no longer carry numbers, as on the computer, because a number beside a hole reads as the order the shots were fired.
+- The computer downloads now come precompiled, so the first photograph after GroupLab starts is read about a quarter sooner; the downloads are about an eighth larger.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.220)
+
+---
+
 ## 0.2.0-nightly.219
 
 **2026-10-23**, commit `6feb3f9`. Nightly.
