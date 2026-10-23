@@ -311,8 +311,9 @@ writes nothing again. `SyncForgetTests` (four), `Entry471SyncForgetWindowTests` 
 **Question 110 (a).** `PublishReadyToRun` on any publish of the desktop app for a runtime; the phones are unchanged. Checked first, the
 command line published both ways for win-x64: the four local corpus scoreboards and the synthetic one identical but for their times, and
 the 600 dpi sample's marking identical in all 1,080 values. Cold, a fresh process on the Fold 7's picture-1, five runs alternated: median
-1,534 ms before and 1,109 precompiled. The desktop app for win-x64 zips to 102.8 MB against 91.2, said on the download page and in the
-notes. `docs/PERFORMANCE.md` has the figures.
+1,534 ms before and 1,109 precompiled. The desktop app for win-x64 zips to 102.8 MB against 91.2; the published Windows zip went from
+114.4 MB in nightly 219 to 126.5 in nightly 220, the figures the download page gives (corrected the same evening: it first said 103
+rather than 91, the bare app's figures). `docs/PERFORMANCE.md` has the figures.
 
 **Is it worth an article?** No: a forgetting button, a tag rule and a build switch; the precompiled measurement is in PERFORMANCE.md and
 would change nothing another shooter does.

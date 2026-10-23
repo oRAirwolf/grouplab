@@ -68,9 +68,9 @@ Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (107 to 111 answered 2026-10-23 i
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.219 (2026-10-23 18:04 UTC): entry 470 only; entry 469 was pushed after it. Nightly 220 carries
-  entries 469 and 471, the first desktop builds published precompiled.
-- **The site** follows main by itself (website.yml) and the nightly publishes it; live at 351e9918 (entry 469) on 2026-10-23.
+- **Last nightly:** 0.2.0-nightly.220 (2026-10-23 20:25 UTC): entries 469 and 471, the first desktop builds published precompiled
+  (each download about an eighth larger, the Windows zip 114.4 to 126.5 MB); its notes carry the correction of nightly 218.
+- **The site** follows main by itself (website.yml) and the nightly publishes it; live at 497d9ee6 (entry 471) on 2026-10-23.
 - Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox

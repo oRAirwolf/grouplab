@@ -95,8 +95,10 @@ first, 2026-10-23**, the command line published both ways for win-x64: `scoreboa
 `scoreboard --synthetic` are identical but for their `medianMilliseconds`, and `grouplab analyze` on the 600 dpi sample writes the same
 marking, all 1,080 values. **Cold**, `grouplab analyze` on the Fold 7's picture-1 in a fresh process, five runs each alternated: 1,531
 to 1,543 ms (median 1,534) before, 1,102 to 1,113 (median 1,109) precompiled, about a quarter sooner. **The cost**: the desktop app
-published for win-x64 is 219.4 MB unpacked and 91.2 MB zipped before, 245.7 and 102.8 precompiled, about an eighth more to download,
-said on the download page.
+published for win-x64 is 219.4 MB unpacked and 91.2 MB zipped before, 245.7 and 102.8 precompiled, about an eighth more to download.
+The published downloads, which carry more than the app, grew alike from nightly 219 to 220, the first precompiled: the Windows zip 114.4
+to 126.5 MB, the installer 87.1 to 96.3, Linux 97.6 to 109.4, macOS 81.4 to 91.9 (Apple silicon) and 101.3 to 113.1 (Intel). The
+download page says it with the zip's own figures.
 
 **Taken: a JPEG's two decodes side by side** (the next commit). A JPEG's grey cannot be made from its colour decode (entry 130), so it
 is decoded twice; the two decodes are independent, so the grey is now decoded on another thread while the colour is decoded and reduced,

@@ -7913,9 +7913,9 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Sync/SyncTidy.cs (Run, Move, Empty; SyncEngine.TrashDays = 14) and SyncScreens.Tidied and TidyLine, shown by src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; held by SyncTidyTests, SyncTidyWindowTests and SyncTidyPhoneTests (entry 464 section 1). Forgetting: src/GroupLab.Core/Sync/SyncForget.cs (Forget, IsForgotten), left out by SyncTidy Devices and SyncScreens.Others, offered by MainWindow.SyncDeviceRow and SyncPage.DeviceRow; held by SyncForgetTests, Entry471SyncForgetWindowTests and Entry471SyncForgetPhoneTests (entry 471 section 2); not proven on two real devices yet"
   },
-  "Size The computer downloads come precompiled, so the first photograph after GroupLab starts is read about a quarter sooner; that makes them about an eighth larger than before, the Windows zip about 103 MB rather than 91.": {
+  "Size The computer downloads come precompiled, so the first photograph after GroupLab starts is read about a quarter sooner; that makes them about an eighth larger than before, the Windows zip about 127 MB rather than 114.": {
    "kind": "measured",
-   "where": "docs/PERFORMANCE.md, Taken for the desktop builds, entry 471 (measured 2026-10-23 on this desktop: grouplab analyze on the Fold 7's picture-1 cold, median 1,534 ms before and 1,109 precompiled; the desktop app for win-x64 zipped 91.2 MB before and 102.8 precompiled); PublishReadyToRun in src/GroupLab.App/GroupLab.App.csproj"
+   "where": "docs/PERFORMANCE.md, Taken for the desktop builds, entry 471 (measured 2026-10-23 on this desktop: grouplab analyze on the Fold 7's picture-1 cold, median 1,534 ms before and 1,109 precompiled; the published Windows zip 114.4 MB in nightly 219 and 126.5 MB in nightly 220, the first precompiled); PublishReadyToRun in src/GroupLab.App/GroupLab.App.csproj"
   },
   "Tidied files go to a trash folder inside the sync folder and are removed 14 days after they were moved there.": {
    "kind": "code",
