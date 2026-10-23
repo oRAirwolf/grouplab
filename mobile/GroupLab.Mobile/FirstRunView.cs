@@ -82,7 +82,7 @@ public sealed class FirstRunView : UserControl
         var bar = new Avalonia.Controls.Primitives.UniformGrid { Columns = asked.Count, Rows = 1, Margin = new Thickness(0, 4, 0, 0) };
         // The buttons are made before the step they show, so they reach it through this.
         Action show = () => { };
-        var back = Screens.Choice(FirstRunSteps.Back, () =>
+        var back = Screens.BackButton(FirstRunSteps.Back, () =>
         {
             flow.MoveBack();
             show();

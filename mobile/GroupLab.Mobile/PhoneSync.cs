@@ -264,7 +264,7 @@ internal sealed class SyncPage : UserControl
     {
         var setup = PhoneSync.Setup;
         var column = new StackPanel { Spacing = 10 };
-        column.Children.Add(Screens.Choice("Back to Settings", back).Id("sync-back"));
+        column.Children.Add(Screens.BackButton("Back to Settings", back).Id("sync-back"));
         column.Children.Add(Screens.Title(SyncScreens.Title));
         if (PhoneSync.Unreachable && setup.On)
         {

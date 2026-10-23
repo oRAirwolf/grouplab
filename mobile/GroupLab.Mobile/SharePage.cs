@@ -40,7 +40,7 @@ internal sealed class SharePage : UserControl
         if (state.ImagePath is not { } path || !File.Exists(path))
         {
             column.Children.Add(Screens.Line("This result has no picture on the phone to share."));
-            column.Children.Add(Screens.Choice("Back to the result", back));
+            column.Children.Add(Screens.BackButton("Back to the result", back));
             picture = null!;
             Content = Screens.Page(column);
             return;
@@ -94,7 +94,7 @@ internal sealed class SharePage : UserControl
         column.Children.Add(Screens.Primary("Save to gallery", () => Save(gallery: true)));
         column.Children.Add(Screens.Choice("Share", () => Save(gallery: false)));
         column.Children.Add(said);
-        column.Children.Add(Screens.Choice("Back to the result", back));
+        column.Children.Add(Screens.BackButton("Back to the result", back));
         Content = Screens.Page(column);
     }
 

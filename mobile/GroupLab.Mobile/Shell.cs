@@ -620,6 +620,17 @@ internal static class Screens
     /// <summary>The one thing a screen is for, in amber, as the desktop's primary action is.</summary>
     public static Button Primary(string words, Action chosen) => Pill(words, chosen, primary: true);
 
+    /// <summary>
+    /// A page's own way back, which Android's back presses (entry 376 item B1). Entry 470: said here, never guessed from the words, because
+    /// "Back up now" began with "Back" and the back gesture on Sync and your data made a copy of the records instead of leaving.
+    /// </summary>
+    public static Button BackButton(string words, Action chosen)
+    {
+        var button = Pill(words, chosen, primary: false);
+        button.Classes.Add(PhoneStyles.PageBack);
+        return button;
+    }
+
     private static Button Pill(string words, Action chosen, bool primary)
     {
         var button = new Button
@@ -630,11 +641,6 @@ internal static class Screens
         if (primary)
         {
             button.Classes.Add(PhoneStyles.Primary);
-        }
-
-        if (words.StartsWith("Back", StringComparison.Ordinal))
-        {
-            button.Classes.Add(PhoneStyles.PageBack);
         }
 
         button.Click += (_, _) => chosen();

@@ -176,7 +176,7 @@ public sealed class SessionsPage : UserControl
 
         column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
         column.Children.Add(compare);
-        column.Children.Add(Screens.Choice("Back to Sessions", () => Content = List()).Id("sessions-back"));
+        column.Children.Add(Screens.BackButton("Back to Sessions", () => Content = List()).Id("sessions-back"));
         return Screens.Page(column);
     }
 

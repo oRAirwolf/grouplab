@@ -82,7 +82,7 @@ internal sealed class ShotsPage : UserControl
         var shared = Screens.Line("");
         column.Children.Add(Screens.Choice("Share the table (CSV)", () => shared.Text = SessionFiles.ShareCsv(session.State, definition) ?? ""));
         column.Children.Add(shared);
-        column.Children.Add(Screens.Choice("Back to the result", back));
+        column.Children.Add(Screens.BackButton("Back to the result", back));
         Content = Screens.Page(column);
     }
 

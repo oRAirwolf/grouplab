@@ -25,6 +25,42 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-23, entry 470: Android back does not leave Settings, Sync and your data (it presses "Back up now")
+
+**Status: actioned 2026-10-23. Every section done.** Section 2.3's emulator walk: no scenario drives Back, so nothing was added there; the headless tests hold it instead. Section 2.4: the desktop has no word-based way back and its Escape handlers are each the field's or the sheet's own; iOS has no system back and Avalonia raises no BackRequested there, so only the guided demo's Back step used `WayBack` on the iPhone, and it is fixed by the same change. No device needs its copies put back (PHASE1-RESULTS.md, entry 470).
+
+From the planning session, 2026-10-23, Alan: "I noticed in the Android application that I can't use the back gesture back from settings >
+sync and your data". Take this ahead of entry 469; it is a bug a person hits, and it makes copies of the records each time.
+
+## 1. The cause (found in the code, not yet reproduced on a device)
+
+- `Shell.Back()` (mobile/GroupLab.Mobile/Shell.cs) presses `WayBack()`: the last visible, enabled button with `PhoneStyles.SheetDismiss`,
+  else the last one with `PhoneStyles.PageBack`.
+- `Screens.Pill` (Shell.cs, about line 633) adds `PhoneStyles.PageBack` to every button whose words start with "Back".
+- Entry 468 put `CopiesWords.BackUpNow` ("Back up now", src/GroupLab.App/SettingsMenu.cs line 265) on Sync and your data through
+  `Screens.Choice` (SettingsView.cs, BuildCopies). So that page has two PageBack buttons, "‹ Settings" at the top and "Back up now" below
+  it, and `WayBack()` takes the last: every back gesture makes a new copy of the records and the page stays where it is.
+- Side effect to check: `RecordsCopies.Make()` keeps 14 and moves older copies to `trash/copies` (kept 14 days). Repeated back gestures
+  can push real daily copies into the trash. Nothing is lost yet (the copies only began on 2026-10-22 and the trash holds them 14 days),
+  but say in the commit whether any device would need its copies put back.
+
+## 2. The fix
+
+1. Stop deciding "a way back" from a button's words. Remove the `words.StartsWith("Back")` rule from `Screens.Pill` and give
+   `PhoneStyles.PageBack` explicitly at each real way back: ComparePage ("Back to Sessions"), CsvImportPage (both "Back"), FixHolesPage,
+   FuddBusterPage, OnePageReportPage, PairingView, PhoneSync ("Back to Settings", `sync-back`), PrinterCheckPage ("Back"), SessionsPage,
+   and any other found by a search. (A small `Screens.BackButton(words, chosen)` is fine if it reads better.)
+2. If several PageBack buttons can be visible at once on nested pages, keep the "last one showing" rule from entry 376 item B1 but check it
+   still picks the innermost page's way back after the change.
+3. A test, phone side: on every Settings category page, `Shell.Back()` returns to the category list and makes no records copy; on the Sync
+   page it returns to Sync and your data; a second Back returns to Capture. A second test: no button carrying `PageBack` has words that are
+   not a way back (catches the next "Back up now"). Add both to the emulator walk if it already drives Back.
+4. Check the desktop and iPhone have nothing similar (Escape or the iPhone's edge swipe going through the same `WayBack`).
+5. Release note in plain words: "On Android, the back gesture on Settings, Sync and your data now goes back to Settings. Before, it made a
+   copy of your records instead."
+
+---
+
 ## 2026-10-22, entry 468: Settings reorganized (concept A) and six new settings, chosen by Alan
 
 **Status: actioned 2026-10-22. Every section done on the computer, Android and the iPhone and iPad: the eight categories with search and put back; daily copies of the records with restore; shooting defaults, the camera's start and sound, the analysis opening with every figure, the computer's text size and Reduce motion. Decided along the way and said in PHASE1-RESULTS.md: Saving sits on Sync and your data; rounds fired and rifle and load are computer only, their default named Ask because that is today's behaviour; a restore opens the restored records in place rather than restarting the process. Waiting, not undone: the phone's pictures of the new pages, for the emulator's walk.**

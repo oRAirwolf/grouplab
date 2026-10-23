@@ -57,7 +57,7 @@ internal sealed class OnePageReportPage : UserControl
         }
 
         column.Children.Add(Screens.Dim("The full report, every figure and every why on two pages or more, is on the computer."));
-        column.Children.Add(Screens.Choice("Back to the result", back));
+        column.Children.Add(Screens.BackButton("Back to the result", back));
         Content = Screens.Page(column);
     }
 

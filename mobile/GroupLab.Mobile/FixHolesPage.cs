@@ -103,7 +103,7 @@ internal sealed class FixHolesPage : UserControl
         }));
         column.Children.Add(closing);
         column.Children.Add(ask);
-        column.Children.Add(Screens.Choice("Back to the result", Leave).Id("fix-back"));
+        column.Children.Add(Screens.BackButton("Back to the result", Leave).Id("fix-back"));
         Content = new ScrollViewer { Content = column };
 
         // The picture takes most of the screen, the buttons under it within a thumb's reach.

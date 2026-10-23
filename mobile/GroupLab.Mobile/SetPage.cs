@@ -102,7 +102,7 @@ internal sealed class SetPage : UserControl
             column.Children.Add(Screens.Choice("See the pooled group", Pooled).Id("set-pooled-group"));
         }
 
-        column.Children.Add(Screens.Choice("Back to the result", back));
+        column.Children.Add(Screens.BackButton("Back to the result", back));
         Content = page;
         if (openPooled && pooled.Shots > 0)
         {

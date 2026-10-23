@@ -83,7 +83,7 @@ internal sealed class PairingView : UserControl
         var foot = new StackPanel { Spacing = 8, Margin = new Thickness(16, 12, 16, 16) };
         foot.Children.Add(Screens.Primary(ChronographMarks.KeepWords, () => keep(marks.Pairs())).Id("chrono-keep-paired"));
         foot.Children.Add(Screens.Choice(ChronographMarks.UnpairedWords, () => keep(null)).Id("chrono-keep-unpaired"));
-        foot.Children.Add(Screens.Choice("Back to the list", back).Id("chrono-pairing-back"));
+        foot.Children.Add(Screens.BackButton("Back to the list", back).Id("chrono-pairing-back"));
         var footBorder = new Border { Child = foot, BorderThickness = new Thickness(0, 1, 0, 0), BorderBrush = new SolidColorBrush(palette.Line) };
         var dock = new DockPanel();
         DockPanel.SetDock(footBorder, Dock.Bottom);

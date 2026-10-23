@@ -468,6 +468,31 @@ categories, Daily copies, Shooting defaults) with their pictures; README; claims
 
 **Is it worth an article?** No: a settings screen and a backup are ordinary engineering; nothing here changes what another shooter does.
 
+## Entry 470: Android's back on Settings, Sync and your data (2026-10-23)
+
+**The fault.** Alan: the back gesture did not leave Settings, Sync and your data. `Screens.Pill` marked every phone button whose words
+began with "Back" as the page's way back, and entry 468 put "Back up now" below "‹ Settings" on that page, so `Shell.WayBack()`, which
+takes the last way back showing (entry 376 item B1), pressed "Back up now": each back made a copy of the records and the page stayed.
+
+**The fix.** The rule is gone. `Screens.BackButton(words, chosen)` makes a way back and says so, and every real one uses it: Compare,
+the CSV import (two), Fix holes, the Fudd buster, the one page report, the chronograph pairing, Sync, the printer check, Sessions, the set,
+Share (two), Shots, Shots to zero, Targets, the velocity pages (three), Zero from, the first run's Back and each Settings page's
+"‹ Settings". On nested pages the last one showing is still the innermost page's: within Settings only the open page's "‹ Settings" is
+visible, and Sync replaces the Settings view rather than sitting over it. The desktop has no way back chosen by words, and on the iPhone
+nothing raises Avalonia's BackRequested, so only the guided demo's Back step used `WayBack` there, fixed by the same change.
+
+**The copies.** `RecordsCopies.Make` keeps the newest 14 and moves the rest to `trash/copies` for 14 days. The copies began with nightly
+218 on 2026-10-22, so on any phone the oldest a stray back could have pushed out is that day's own copy, of records that are still in
+place, and it waits in the trash until 5 November at the earliest. No device needs its copies put back.
+
+**Tests.** `Entry470Tests`: on every category page Back presses "‹ Settings", returns to the list and makes no copy; from Sync, Back
+returns to Sync and your data, then to the list, then to Capture (the entry's "a second Back returns to Capture" skips the list, which
+sits between them); and a source check that every phone button whose words are a way back is made with `BackButton` and that no
+`BackButton` has words that are not one. `BackEverywhereTests` now builds its inner page's way back the same way. Mobile suite 234 passed.
+The emulator walk does not drive Back, so nothing was added to it.
+
+**Is it worth an article?** No: an ordinary fault in how a button was marked; nothing here changes what another shooter does.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -45,7 +45,7 @@ internal sealed class ComparePage : UserControl
         var setup = CompareSessions.From(records, units);
         distance = setup.Distance;
         // Entry 312 section 1: a way back to Sessions at the top, which the iPad showed none of; Android's own Back goes to Capture.
-        column.Children.Add(Screens.Choice("Back to Sessions", sessions ?? back));
+        column.Children.Add(Screens.BackButton("Back to Sessions", sessions ?? back));
         column.Children.Add(Screens.Title("Compare loads"));
         string? refusal = setup.Refusal;
         if (refusal is null)

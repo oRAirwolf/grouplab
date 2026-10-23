@@ -39,7 +39,7 @@ internal sealed class FuddBusterPage : UserControl
             column.Children.Add(Section("Chasing the zero", [.. FuddBusterWords.Chase(lesson, units).Select(Screens.Line)]));
         }
 
-        column.Children.Add(Screens.Choice("Back to the result", back));
+        column.Children.Add(Screens.BackButton("Back to the result", back));
         Content = Screens.Page(column);
     }
 

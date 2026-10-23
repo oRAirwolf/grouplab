@@ -227,7 +227,7 @@ public sealed class TargetsPage : UserControl
         }
         column.Children.Add(result);
         column.Children.Add(Screens.Dim("In the print dialog, keep the scale at 100 percent, actual size. The line printed on the sheet says how to check it with a ruler."));
-        column.Children.Add(Screens.Choice("Back to the targets", () => Content = List()));
+        column.Children.Add(Screens.BackButton("Back to the targets", () => Content = List()));
         return Screens.Page(column);
     }
 

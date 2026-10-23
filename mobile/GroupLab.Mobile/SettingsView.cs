@@ -784,9 +784,8 @@ public sealed class SettingsView : UserControl
     private (StackPanel Body, SettingsPages.Page Page) Page(StackPanel whole, SettingsCategory category)
     {
         var body = new StackPanel { Spacing = 12 };
-        var back = Screens.Choice(SettingsMenu.BackToList, ShowList).Id("settings-back");
+        var back = Screens.BackButton(SettingsMenu.BackToList, ShowList).Id("settings-back");
         back.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
-        back.Classes.Add(PhoneStyles.PageBack);
         Avalonia.Automation.AutomationProperties.SetName(back, "Back to Settings");
         var intro = Screens.Dim(SettingsMenu.Intro(category));
         body.Children.Add(back);

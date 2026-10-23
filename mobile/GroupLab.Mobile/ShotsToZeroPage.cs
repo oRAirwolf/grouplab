@@ -70,7 +70,7 @@ internal sealed class ShotsToZeroPage : UserControl
         column.Children.Add(Screens.Dim("Suggested by Jylee."));
         column.Children.Add(new ContentControl());
         column.Children.Add(answer);
-        column.Children.Add(Screens.Choice("Back to the result", back));
+        column.Children.Add(Screens.BackButton("Back to the result", back));
         Content = Screens.Page(column);
         Build();
     }

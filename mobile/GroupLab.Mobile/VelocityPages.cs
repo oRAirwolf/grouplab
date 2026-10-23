@@ -29,7 +29,7 @@ internal static class VelocityPages
         if (sessionId is not { } id)
         {
             column.Children.Add(Screens.Line("This session could not be saved on the phone, so there is nowhere to keep readings for it."));
-            column.Children.Add(Screens.Choice("Back", done));
+            column.Children.Add(Screens.BackButton("Back", done));
             return Screens.Page(column);
         }
 
@@ -191,7 +191,7 @@ internal static class VelocityPages
         }).Id("chrono-import"));
         column.Children.Add(said);
         column.Children.Add(columns);
-        column.Children.Add(Screens.Choice("Back", done));
+        column.Children.Add(Screens.BackButton("Back", done));
         host.Content = Screens.Page(column);
         return host;
     }
@@ -235,7 +235,7 @@ internal static class VelocityPages
             kept(metres ? d / 0.0254 : d * 36);
         }).Id("velocity-distance-keep"));
         column.Children.Add(said);
-        column.Children.Add(Screens.Choice("Back", back));
+        column.Children.Add(Screens.BackButton("Back", back));
         return Screens.Page(column);
     }
 }

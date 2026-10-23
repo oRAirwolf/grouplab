@@ -147,7 +147,7 @@ internal sealed class CsvImportPage : UserControl
         }
 
         column.Children.Add(new Border { Child = card, Classes = { PhoneStyles.Card } });
-        column.Children.Add(Screens.Choice("Back", Show));
+        column.Children.Add(Screens.BackButton("Back", Show));
         Content = Screens.Page(column);
     }
 
@@ -186,7 +186,7 @@ internal sealed class CsvImportPage : UserControl
             column.Children.Add(Screens.Dim($"And {(table.Rows.Count - 500).ToString(CultureInfo.CurrentCulture)} more rows."));
         }
 
-        column.Children.Add(Screens.Choice("Back", Show));
+        column.Children.Add(Screens.BackButton("Back", Show));
         Content = Screens.Page(column);
     }
 

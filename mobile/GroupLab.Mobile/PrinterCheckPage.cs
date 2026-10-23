@@ -180,7 +180,7 @@ internal sealed class PrinterCheckPage : UserControl
         }
 
         column.Children.Add(said);
-        column.Children.Add(Screens.Choice("Back", () => Start(method)));
+        column.Children.Add(Screens.BackButton("Back", () => Start(method)));
         Content = Screens.Page(column);
     }
 

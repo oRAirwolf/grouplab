@@ -29,7 +29,7 @@ public class BackEverywhereTests
 
             // An inner page with its own way back, as Shots, Report and the rest have.
             bool wentBack = false;
-            var inner = Screens.Page(new StackPanel { Children = { Screens.Title("Inner"), Screens.Choice("Back to the result", () => wentBack = true) } });
+            var inner = Screens.Page(new StackPanel { Children = { Screens.Title("Inner"), Screens.BackButton("Back to the result", () => wentBack = true) } });
             var host = new ContentControl { Content = inner };
 
             var page = new UserControl { Content = host };

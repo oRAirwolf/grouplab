@@ -9,18 +9,18 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-22, entry 468 done (Settings in eight categories, daily copies of the records, six new settings).
+**Last rewritten:** 2026-10-23, entry 470 done (Android's back on Settings, Sync and your data); entry 469 next.
 
 ---
 
 ## In flight
 
+- **Entry 470 (2026-10-23)**, done: Android's back on Sync and your data made a records copy; fixed, in the next nightly.
 - **Entry 468 (2026-10-22)**, done: Settings is eight categories (side menu on the computer, a list on the phones) with Find a setting
   and "Put this page back as it came"; daily copies of the records (`RecordsCopies`, 14 kept, restore); Shooting defaults, the camera's
   start and sound, "The analysis opens with", the computer's text size and Reduce motion. Saving sits on Sync and your data; rounds
   fired and rifle and load are computer only (default Ask, today's behaviour). The phone pictures of the new pages wait for the
   emulator's walk.
-- **Entries 464 to 467 (2026-10-21)**, done: sync tidying, the eleven looks, two articles, a faster photograph open, the audit.
 
 ## The next three
 
@@ -84,6 +84,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words; `Entry470Tests` holds it.
 - **Settings is eight pages** (entry 468): a test opens the one it means with `ShowSettings(SettingsCategory.X)` on the computer or
   `new SettingsView(store, category)` / `Shell.ShowSettings(category)` on the phone; scripted walks press `settings-<category>` first.
   Search and put back go through `SettingsPages` in `src/GroupLab.App/SettingsMenu.cs`.
@@ -110,8 +111,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   A finished worker's subjects are compared with main before its worktree goes to the trash.
 - **`android/GroupLab.Android/` ships** (entry 275): a change to the Android application alone now starts a nightly and is in its notes.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
-- **Requests for Alan go in `docs/notes/for-alan.md`**, never only in the panel. It holds only open requests and the latest summary
-  (entry 317); answered ones are whole in `docs/notes/for-alan-archive.md`.
 - **Any push to main cancels the running build and nightly**, and a push headed `[notes] ` then builds nothing, so the last commit of a
   push that should make a nightly must not be one.
 - **A failing site check holds back only its pages** (entry 387): whole-site checks still stop it; held pages keep grouplab.org's copy and
