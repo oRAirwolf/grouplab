@@ -468,6 +468,33 @@ categories, Daily copies, Shooting defaults) with their pictures; README; claims
 
 **Is it worth an article?** No: a settings screen and a backup are ordinary engineering; nothing here changes what another shooter does.
 
+## Entry 469: the consistency audit of 2026-10-22 (2026-10-23)
+
+**Section 1, Settings' old page names.** Every place the audit listed now names the eight pages: the support page's three steps and
+"On a phone", the download page's Which build and GroupLab Dev lines, the README (Which build, GroupLab Dev, Phase 7), the Features
+`sync` sentence (reworded for nightly 219), the hardware survey block, what-grouplab-sends, the tour's first run, both guides and their
+PDFs, PHONE-PARITY, ANDROID and UPDATES. Two more found on the way: CONTRIBUTING (the Detailed logging box) and SURVEY (Sharing). The
+eight retired forms are in docs/RETIRED-WORDING.json with entry 468 as the reason, allowed in the release notes, features.json and the
+claims files that quote them; "top of Settings" is also allowed in three places where it means the first row of a page, which is still
+right. Wording by docs-sonnet, checked here.
+
+**Section 2, nightly 218's notes.** The two import lines fixed a fault that c4e1ab07 brought in and c01a659e and 8aae8700 took out inside
+the same build. The guide line got through because 457bc019 also touched two shipping files, though only their comments, so the generator
+rightly counted it and read its trailer: the trailer was the fault, not the generator. A correction with no notes now takes a commit out
+(scripts/release-notes.py), and the three are corrected that way. Nightly 218's published text is not edited (CLAUDE.md); nightly 219's
+notes carry one line, through the correction of 6feb3f9a, saying the import works as it did in 217. Question 111 asks planning whether
+that is right.
+
+**Section 3, the phone's pictures of Settings.** The audit missed a commit: the walk ran on nightly 218's code and 583a38fe (13:32 UTC on
+2026-10-22) replaced fold-settings and tab-settings-landscape with the list of categories, and made-from.json says 218. The walk pictured
+only the list, so it now also opens Shooting defaults and Sync and your data (`settings-shooting`, `settings-data`); the Settings feature
+uses `fold-settings` for its phone side, and the two pages wait in SCREENSHOTS.md for the walk's next run.
+
+**Section 4.** RESTORE.md says the Discord posts are off by Alan's decision (entry 466) and oracle-backups.yml is off until request 106's
+secrets are set.
+
+**Is it worth an article?** No: wording kept in step with the application.
+
 ## Entry 470: Android's back on Settings, Sync and your data (2026-10-23)
 
 **The fault.** Alan: the back gesture did not leave Settings, Sync and your data. `Screens.Pill` marked every phone button whose words

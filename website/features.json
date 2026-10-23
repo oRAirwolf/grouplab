@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "Correction: on the phone, a GroupLab data file opened from another app",
     "On the phone, a GroupLab data file opened from another app shows what importing it would add",
     "On the phone, opening a GroupLab data file from another app shows what importing it would add",
     "In Conditions on the day, the link",
@@ -1423,7 +1424,7 @@
      "key": "sync",
      "group": "Updates and platforms",
      "name": "Sync between your devices",
-     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, and the original photographs travel only if you ask. Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder's own trash, keeps it there 14 days, and says what it tidied.",
+     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync and your data, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, and the original photographs travel only if you ask. Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder's own trash, keeps it there 14 days, and says what it tidied.",
      "shot": "sync-settings",
      "platforms": [
       "Windows",
@@ -1433,6 +1434,7 @@
       "iPhone and iPad"
      ],
      "since": "next",
+     "reworded": "0.2.0-nightly.219",
      "note": [
       "Sync between devices",
       "stay the same on your computer and phones",
@@ -1672,8 +1674,8 @@
         "shot": "fold-targets-largest-text"
       }
     },
-    {"key": "settings-menu", "group": "Updates and platforms", "name": "Settings in eight categories", "sentence": "Settings is a menu of eight categories, from General to Help and problems, with Find a setting searching every page's rows by their names and other words for them, one page at a time, and Put this page back as it came on each; on the computer the text can be Larger or Largest with nothing cut off, and Reduce motion turns every flash into a still tint on every platform.", "shot": "settings", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "since": "next", "note": ["side menu of eight categories", "a larger text size", "the back gesture on Settings, Sync and your data"], "tour": "settings", "guide": "12-settings", "mobile": {"noPicture": "the phone's list of categories is pictured by the emulator's walk, which has not been run since it was built"}},
-    {"key": "daily-copies", "group": "Sharing and privacy", "name": "Daily copies of your records", "sentence": "Once a day GroupLab keeps a whole copy of your records, the newest 14 kept and older ones 14 days in its trash, with Back up now, and Restore a copy, which lists each copy with its day and its sessions and copies your records as they are before it puts one back.", "shot": "settings-data", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "since": "next", "note": ["keeps a daily copy of your records"], "tour": "settings", "guide": "daily-copies-of-your-records", "mobile": {"noPicture": "the phone's Sync and your data page is pictured by the emulator's walk, which has not been run since it was built"}},
-    {"key": "shooting-defaults", "group": "Reading a target", "name": "Shooting defaults", "sentence": "What a new target starts with: the last distance or always the one you choose, rounds fired asked for, one a bull or not known, and the last rifle and load or none, with the caliber still asked every time; on the phone, whether the camera starts in Guided or Manual and makes a sound; and whether the analysis opens with every figure.", "shot": "settings-shooting", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "since": "next", "note": ["what a new target starts with"], "tour": "settings", "guide": "12-settings", "mobile": {"noPicture": "the phone's Shooting defaults page is pictured by the emulator's walk, which has not been run since it was built"}}
+    {"key": "settings-menu", "group": "Updates and platforms", "name": "Settings in eight categories", "sentence": "Settings is a menu of eight categories, from General to Help and problems, with Find a setting searching every page's rows by their names and other words for them, one page at a time, and Put this page back as it came on each; on the computer the text can be Larger or Largest with nothing cut off, and Reduce motion turns every flash into a still tint on every platform.", "shot": "settings", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "since": "next", "note": ["side menu of eight categories", "a larger text size", "the back gesture on Settings, Sync and your data"], "tour": "settings", "guide": "12-settings", "mobile": {"shot": "fold-settings"}},
+    {"key": "daily-copies", "group": "Sharing and privacy", "name": "Daily copies of your records", "sentence": "Once a day GroupLab keeps a whole copy of your records, the newest 14 kept and older ones 14 days in its trash, with Back up now, and Restore a copy, which lists each copy with its day and its sessions and copies your records as they are before it puts one back.", "shot": "settings-data", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "since": "next", "note": ["keeps a daily copy of your records"], "tour": "settings", "guide": "daily-copies-of-your-records", "mobile": {"noPicture": "the phone's Sync and your data page is pictured by the emulator's walk from entry 469 on, and waits for its next run"}},
+    {"key": "shooting-defaults", "group": "Reading a target", "name": "Shooting defaults", "sentence": "What a new target starts with: the last distance or always the one you choose, rounds fired asked for, one a bull or not known, and the last rifle and load or none, with the caliber still asked every time; on the phone, whether the camera starts in Guided or Manual and makes a sound; and whether the analysis opens with every figure.", "shot": "settings-shooting", "platforms": ["Windows", "macOS", "Linux", "Android", "iPhone and iPad"], "since": "next", "note": ["what a new target starts with"], "tour": "settings", "guide": "12-settings", "mobile": {"noPicture": "the phone's Shooting defaults page is pictured by the emulator's walk from entry 469 on, and waits for its next run"}}
   ]
 }

@@ -9,13 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-23, entry 470 done (Android's back on Settings, Sync and your data); entry 469 next.
+**Last rewritten:** 2026-10-23, entries 470 (Android's back on Sync and your data) and 469 (the audit's wording) done.
 
 ---
 
 ## In flight
 
-- **Entry 470 (2026-10-23)**, done: Android's back on Sync and your data made a records copy; fixed, in the next nightly.
+- **Entries 469 and 470 (2026-10-23)**, done: Settings' old page names fixed everywhere; Android's back on Sync and your data made a
+  records copy, fixed for nightly 219; the phone's Shooting defaults and Sync and your data pictures wait for the walk.
 - **Entry 468 (2026-10-22)**, done: Settings is eight categories (side menu on the computer, a list on the phones) with Find a setting
   and "Put this page back as it came"; daily copies of the records (`RecordsCopies`, 14 kept, restore); Shooting defaults, the camera's
   start and sound, "The analysis opens with", the computer's text size and Reduce motion. Saving sits on Sync and your data; rounds
@@ -57,7 +58,8 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Seven, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave it):
+Eight, all in `docs/QUESTIONS-FOR-PLANNING.md` (106 answered 2026-10-21: leave it):
+- **111** whether a published build's notes are edited when a line was wrong (nightly 219 corrects 218; nothing waits)
 - **110** whether the builds are published precompiled, for a faster first picture (nothing waits)
 - **109** a sync device that never comes back holds tidying back for ever (nothing waits)
 - **108** the scan's own resolution as a scale has no words on the Set tab yet (nothing waits)
@@ -109,7 +111,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   at the start of a run (entries 335 and 336).
 - **Helpers only when Alan asks, ending at the week's reset; chores to chores-haiku, wording to docs-sonnet** (CLAUDE.md, 2026-10-08).
   A finished worker's subjects are compared with main before its worktree goes to the trash.
-- **`android/GroupLab.Android/` ships** (entry 275): a change to the Android application alone now starts a nightly and is in its notes.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.
 - **Any push to main cancels the running build and nightly**, and a push headed `[notes] ` then builds nothing, so the last commit of a
   push that should make a nightly must not be one.

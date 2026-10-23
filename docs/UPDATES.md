@@ -213,7 +213,7 @@ update asks once.
 imported). An automatic update that installs without a tap waits until GroupLab leaves the screen, so nothing closes under anybody; "Update
 now" installs at once unless something is open. It is an in-place update, so sessions, settings and pictures stay.
 
-**What it shows.** Settings, About: the installed version, the newest on its train and when that was checked, **Update now**, and the switch
+**What it shows.** Settings, Updates and about: the installed version, the newest on its train and when that was checked, **Update now**, and the switch
 **Install updates automatically**, on by default for GroupLab Dev. A notice when an update is downloaded, and after it installs,
 "Updated to nightly N" with a link to that build's notes.
 

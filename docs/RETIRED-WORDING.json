@@ -243,6 +243,97 @@
         "docs/RETIRED-WORDING.json",
         "docs/claims-backing.json"
       ]
+    },
+    {
+      "phrase": "Settings, About",
+      "why": "entry 468: Settings is eight pages now; this names a page or place that no longer exists",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "website/features.json",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "under Diagnostics",
+      "why": "entry 468: Settings is eight pages now; this names a page or place that no longer exists",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "website/features.json",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "top of the settings screen",
+      "why": "entry 468: Settings is eight pages now; this names a page or place that no longer exists",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "website/features.json",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "top of Settings",
+      "why": "entry 468: Settings is eight pages now; this names a page or place that no longer exists",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "website/features.json",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md",
+        "docs/USER-GUIDE.md",
+        "docs/PHONE-PARITY.md",
+        "website/tour.json"
+      ]
+    },
+    {
+      "phrase": "Settings, under Sharing",
+      "why": "entry 468: Settings is eight pages now; this names a page or place that no longer exists",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "website/features.json",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "Settings, under Saving",
+      "why": "entry 468: Settings is eight pages now; this names a page or place that no longer exists",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "website/features.json",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "Settings, Sync between devices",
+      "why": "entry 468: Settings is eight pages now; this names a page or place that no longer exists",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "website/features.json",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "Settings, Export all my data",
+      "why": "entry 468: Settings is eight pages now; this names a page or place that no longer exists",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "website/features.json",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
     }
   ],
   "settled": []

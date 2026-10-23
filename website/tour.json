@@ -41,7 +41,7 @@
   "firstrun": {
    "name": "The first run",
    "blurb": "The first time GroupLab opens it asks, one question at a time, whether your scope is in mil or MOA, then three more: whether to send your targets, whether to send error reports, and whether to take part in the hardware survey.",
-   "purpose": "GroupLab works in your scope's unit from the start, and nothing leaves your computer until you have said it may. Each sharing question says exactly what would be sent before you answer it, and each has a way to say no. The answers are kept and can be changed at any time in Settings, under Units and Sharing.",
+   "purpose": "GroupLab works in your scope's unit from the start, and nothing leaves your computer until you have said it may. Each sharing question says exactly what would be sent before you answer it, and each has a way to say no. The answers are kept and can be changed at any time in Settings, under Units and figures and Sharing and privacy.",
    "withoutASheet": "No difference. It appears before any sheet is opened.",
    "parts": [
     [
@@ -65,7 +65,7 @@
     "Open GroupLab for the first time.",
     "Say whether your scope is in mil or MOA, and whether you measure in inches or millimeters.",
     "Read each sharing question and answer it; No is always one of the answers, and Skip for now leaves one for the next start.",
-    "Change any answer later in Settings, under Units and Sharing."
+    "Change any answer later in Settings, under Units and figures and Sharing and privacy."
    ],
    "fits": "Shown once, over the marking screen, before anything else, one question at a time.",
    "links": [

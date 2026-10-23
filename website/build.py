@@ -932,7 +932,7 @@ def page_download() -> str:
         ["Updates itself from every nightly: no computer and no adb after the first install",
          "Installs beside the Google Play test copy without replacing it",
          "Its logs are easy to send with a problem report",
-         "Honestly: a nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Export all my data"],
+         "Honestly: a nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Sync and your data, Export all my data"],
         "Download GroupLab Dev", honest=False) + steady(
         "Google Play, by invitation",
         btn("Ask on the Discord", DISCORD),
@@ -978,7 +978,7 @@ def page_download() -> str:
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>
 <div><dt class="mono">Samples</dt><dd>The Windows zip and installer carry two sample sheets, so there is something to open in the first minute; the other downloads do not.</dd></div>
 <div><dt class="mono">Your data</dt><dd>Kept in <code>%APPDATA%\\GroupLab</code> on Windows, and under your home folder elsewhere. An update check sends nothing about you.</dd></div>
-<div><dt class="mono">Which build</dt><dd>The Settings screen names the version, the train and the commit. Put that line in any report.</dd></div>
+<div><dt class="mono">Which build</dt><dd>Settings, Updates and about names the version, the train and the commit. Put that line in any report.</dd></div>
 </dl>"""
 
     body = f"""
@@ -1308,19 +1308,19 @@ def page_support() -> str:
 </section>
 <section class="wrap grid-3">
 <div class="panel pad stack tight"><span class="mono amber">01</span><h2 class="h3">Check what is not done yet</h2><p>Some things are known to be missing or unproven. The testing guide lists them in one short section.</p><a href="/guides/testing-guide/#what-is-not-done-yet">What is not done yet</a></div>
-<div class="panel pad stack tight"><span class="mono amber">02</span><h2 class="h3">Send a report from GroupLab</h2><p>In GroupLab, open the settings from the gear at the bottom left and choose <strong>Report a problem</strong> under Diagnostics, or <strong>Make a report</strong> on an error's banner. A window lists what the report holds; write what happened and press <strong>Send</strong>: it goes to the project with the error and the logs, through the same route as the automatic error reports, with no location data and no photographs. <strong>Save only</strong> writes it as a zip instead.</p></div>
-<div class="panel pad stack tight"><span class="mono amber">03</span><h2 class="h3">If it cannot be sent</h2><p>Where sending is not open yet or a send fails, the window says so. Then open an issue on GitHub, attach the saved zip, and add a line about what you were doing, with the build line from the top of the settings screen.</p><a href="{GITHUB}/issues/new">Open an issue on GitHub</a></div>
+<div class="panel pad stack tight"><span class="mono amber">02</span><h2 class="h3">Send a report from GroupLab</h2><p>In GroupLab, open the settings from the gear at the bottom left and choose <strong>Report a problem</strong> in Settings, Help and problems, or <strong>Make a report</strong> on an error's banner. A window lists what the report holds; write what happened and press <strong>Send</strong>: it goes to the project with the error and the logs, through the same route as the automatic error reports, with no location data and no photographs. <strong>Save only</strong> writes it as a zip instead.</p></div>
+<div class="panel pad stack tight"><span class="mono amber">03</span><h2 class="h3">If it cannot be sent</h2><p>Where sending is not open yet or a send fails, the window says so. Then open an issue on GitHub, attach the saved zip, and add a line about what you were doing, with the build line from Settings, Updates and about, under This build.</p><a href="{GITHUB}/issues/new">Open an issue on GitHub</a></div>
 </section>
 <section class="wrap section-sm grid-2">
 <div class="panel pad stack tight"><h2 class="h3">No GitHub account?</h2><p>Email the report package instead, with the build line and a line about what you were doing.</p><p><a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a></p></div>
-<div class="panel pad stack tight"><h2 class="h3">On a phone</h2><p>On Android, iPhone and iPad, open Settings, then About: <strong>Send to GroupLab</strong> sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; <strong>Send diagnostics</strong> puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email. On the iPhone and iPad beta, <strong>Send Beta Feedback</strong> in TestFlight, or a screenshot shared to it, reaches the project too.</p></div>
+<div class="panel pad stack tight"><h2 class="h3">On a phone</h2><p>On Android, iPhone and iPad, open Settings, then Help and problems: <strong>Send to GroupLab</strong> sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; <strong>Send diagnostics</strong> puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email. On the iPhone and iPad beta, <strong>Send Beta Feedback</strong> in TestFlight, or a screenshot shared to it, reaches the project too.</p></div>
 <div class="panel pad stack tight"><h2 class="h3">If a new build will not start</h2><p>On Windows, nothing of yours is at risk: settings, sessions, your own sheets and the log live in <code>%APPDATA%\\GroupLab</code>, which no installer or uninstaller touches. To go back, download the build you were on from the releases list and install it over the broken one.</p><a href="{GITHUB}/releases">All builds on GitHub</a></div>
 </section>
 <section class="wrap section-sm" id="delete-your-data">
 <div class="panel pad stack tight">
 <h2 class="h3">Delete your data</h2>
 <p>GroupLab has no accounts, so nothing is kept against a name or a login. What the project can hold is only what you chose to send: targets you sent (the picture and what GroupLab worked out about it), error reports with their logs, and hardware survey reports, which are counted into totals and deleted, keyed by a random number GroupLab made for your installation.</p>
-<p>To have what you sent deleted, email <a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a> with the date and the build of what was sent (the build line is at the top of Settings), so it can be found. Survey reports need no email: Settings, under Sharing, has <strong>Delete my survey reports</strong>. <a href="/research/what-grouplab-sends/">What GroupLab sends</a> lists everything that can leave your computer or phone.</p>
+<p>To have what you sent deleted, email <a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a> with the date and the build of what was sent (the build line is in Settings, Updates and about, under This build), so it can be found. Survey reports need no email: Settings, Sharing and privacy, has <strong>Delete my survey reports</strong>. <a href="/research/what-grouplab-sends/">What GroupLab sends</a> lists everything that can leave your computer or phone.</p>
 </div>
 </section>
 <section class="wrap section-sm last">
@@ -3421,7 +3421,7 @@ def page_survey() -> str:
 <h1>What GroupLab runs on, and how fast</h1>
 <p class="lead">GroupLab asks once whether it may tell the project what it runs on and how long the built-in benchmark takes. These are the published figures: counts and medians, never one person's record.</p>
 <p class="small" id="survey-range">The figures from everybody's reports load from the survey's own count, updated every hour.</p>
-<p class="small"><a href="/research/what-grouplab-sends/">What a report holds, and what is never in it</a>. In GroupLab you can say yes or no, run the benchmark, see your own runs, reset your survey number and delete your reports in Settings, under Sharing.</p>
+<p class="small"><a href="/research/what-grouplab-sends/">What a report holds, and what is never in it</a>. In GroupLab you can say yes or no, run the benchmark, see your own runs, reset your survey number and delete your reports in Settings, Sharing and privacy.</p>
 </section>
 
 <section class="wrap stack">

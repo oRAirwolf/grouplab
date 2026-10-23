@@ -91,7 +91,7 @@ while read -r device size density rotation middle screens font <&3; do
     adb shell am force-stop "$PKG"
   done
 done 3<<'LAYOUTS'
-fold 1080x2520 420 0 - firstrun,capture,result,settings,targets,scale-markers,fingerprint,pairing,open-targets,demo
+fold 1080x2520 420 0 - firstrun,capture,result,settings,settings-shooting,settings-data,targets,scale-markers,fingerprint,pairing,open-targets,demo
 fold 2520x1080 420 0 landscape result,sessions
 fold 1080x2520 420 0 largest-text targets 2.0
 tab 2960x1848 340 0 landscape result,capture,sessions,targets,settings

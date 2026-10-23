@@ -497,7 +497,12 @@ def build_notes(version, head, previous, heading=True, new=True):
         subject = message.splitlines()[0] if message.splitlines() else ""
         if subject.startswith("[notes]") or subject.startswith("[screens]") or not ships(sha):
             continue
-        read_notes = corrected(sha) or reads(message)
+        # Entry 469 section 2: a correction with no notes takes the commit out of the notes, for a trailer that named a fault no
+        # build had or work that is not in the application.
+        replaced = corrected(sha)
+        if replaced == []:
+            continue
+        read_notes = replaced or reads(message)
         if not read_notes:
             # Entry 145 section 1: no build ever says nothing changed. A commit with no trailer still did something,
             # so its subject becomes a line rather than a number.

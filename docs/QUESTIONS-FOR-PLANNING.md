@@ -21,6 +21,16 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-10-23, question 111: should a published build's notes be edited when a line in them was wrong?
+
+**Status: open.** Entry 469 section 2 asked for three lines of nightly 218's notes to be removed (two fixes to a fault no build
+before 218 had, and a line about the guides). CLAUDE.md says a published release is never edited and the correction goes in the next
+one, so nightly 218's notes, its GitHub release and the releases page are left as published; docs/release-note-corrections.json now
+takes the three trailers out (a correction with no notes removes a commit, new in scripts/release-notes.py), and nightly 219 carries
+one line beginning "Correction:" saying the data file import works as it did in 217. **Options:** (a) keep it so; (b) for a line
+that describes a fault nobody could meet, edit the published entry too. **I would choose (a)**, the rule as it stands. Nothing waits
+on this.
+
 ## 2026-10-21, question 110: should the builds be published precompiled?
 
 **Status: open.** Entry 464 section 4 measured the path from opening a picture to its analysis (`docs/PERFORMANCE.md`). In a fresh

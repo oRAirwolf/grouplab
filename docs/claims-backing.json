@@ -73,7 +73,7 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
   },
-  "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app already keeps in step (OneDrive, Dropbox, Google Drive, iCloud Drive); there is no GroupLab account and nothing goes anywhere but that folder.": {
+  "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync and your data, Sync between devices, chooses a folder your own cloud app already keeps in step (OneDrive, Dropbox, Google Drive, iCloud Drive); there is no GroupLab account and nothing goes anywhere but that folder.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
   },
@@ -93,7 +93,7 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
   },
-  "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync between devices, chooses a folder your own cloud app alre": {
+  "Synchronization.** - **Built, not proven.** Sync between devices (entries 461 and 463): Settings, Sync and your data, Sync between devices, chooses a folder your own cloud app alre": {
    "kind": "code",
    "where": "src/GroupLab.Core/Sync (entry 461) and the screens of entry 463, src/GroupLab.App/MainWindow.Sync.cs and mobile/GroupLab.Mobile/PhoneSync.cs; not proven on two real devices yet (entry 463)"
   },
@@ -189,7 +189,7 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Ballistics/PointBlank.cs and mobile/GroupLab.Mobile/BallisticsPage.cs, the Point blank view (entry 459 section 11)"
   },
-  "What is not done yet 02 Send a report from GroupLab In GroupLab, open the settings from the gear at the bottom left and choose Report a problem under Diagnostics, or Make a report on an error's banner.": {
+  "What is not done yet 02 Send a report from GroupLab In GroupLab, open the settings from the gear at the bottom left and choose Report a problem in Settings, Help and problems, or Make a report on an error's banner.": {
    "kind": "code",
    "where": "src/GroupLab.App/Diagnostics/ReportWindow.cs ReportWindow.Send and NotOpen; src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync (entry 457)"
   },
@@ -1773,7 +1773,7 @@
    "kind": "measured",
    "where": "src/GroupLab.Core/Statistics/Angular.cs ToAngle: 0.422 in at 914.4 in is 1.587 MOA and 1.661 SMOA, 2026-09-24; UnitSettings default MOA"
   },
-  "GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings under **Error reports**, you choose automatically, ask each time, or never.": {
+  "GroupLab can also send error reports by itself, once you say so: the first time it can, and in Settings, Sharing and privacy, you choose automatically, ask each time, or never.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Errors.cs FillFirstRunErrors and FillErrorSettings; tests/GroupLab.App.Tests/Entry194Tests.cs"
   },
@@ -2489,7 +2489,7 @@
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entry 231, and the nightly workflow's android job"
   },
-  "In GroupLab you can say yes or no, run the benchmark, see your own runs, reset your survey number and delete your reports in Settings, under Sharing.": {
+  "In GroupLab you can say yes or no, run the benchmark, see your own runs, reset your survey number and delete your reports in Settings, Sharing and privacy.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Survey.cs FillSurveySettings and mobile/GroupLab.Mobile/SettingsView.cs (entry 241)"
   },
@@ -3745,7 +3745,7 @@
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Saving.cs and the Saving settings (entry 281 section 2)"
   },
-  "In Settings, under Saving , you can choose a Save button instead; then the bar says Not saved yet until you press it, and GroupLab asks before you leave or close a target with unsaved changes.": {
+  "In Settings, Sync and your data, under Saving , you can choose a Save button instead; then the bar says Not saved yet until you press it, and GroupLab asks before you leave or close a target with unsaved changes.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Saving.cs and the Saving settings (entry 281 section 2)"
   },
@@ -3769,7 +3769,7 @@
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Saving.cs (SavingAfterChange, ShowSaved, SavingOnClose) and the Saving section of BuildSettings; Entry278Tests.TheStatusBarSaysWhetherTheTargetIsSavedAndWhere (entry 279 section 3, entry 281 section 2)"
   },
-  "In Settings, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes.": {
+  "In Settings, Sync and your data, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes.": {
    "kind": "code",
    "where": "src/GroupLab.App/MainWindow.Saving.cs (SavingAfterChange, ShowSaved, SavingOnClose) and the Saving section of BuildSettings; Entry278Tests.TheStatusBarSaysWhetherTheTargetIsSavedAndWhere (entry 279 section 3, entry 281 section 2)"
   },
@@ -5757,7 +5757,7 @@
    "kind": "code",
    "where": "src/GroupLab.Core/ScaleMarkers/ScaleLabelCheck.cs Page and Measure, src/GroupLab.App/MainWindow.ScaleMarkers.cs; Entry365Tests.ThePrinterCheckLabelMeasuresAcrossAndAlong; entry 386 section 3"
   },
-  "support@grouplab.org On a phone On Android, iPhone and iPad, open Settings, then About: Send to GroupLab sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; Send diagnostics puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email.": {
+  "support@grouplab.org On a phone On Android, iPhone and iPad, open Settings, then Help and problems: Send to GroupLab sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; Send diagnostics puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email.": {
    "kind": "code",
    "where": "mobile/GroupLab.Mobile/SettingsView.cs settings-send-to-grouplab, src/GroupLab.App/Diagnostics/ErrorReports.cs SendDiagnosticsAsync, DiagnosticsPackage.Send; entry 386 section 4"
   },

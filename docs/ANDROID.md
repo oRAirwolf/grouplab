@@ -460,7 +460,7 @@ JSON each way, with the same code behind it, and the steps now include going bac
 in a list or turning a check box on or off, scrolling, setting one value in the settings file, and a reset that takes away the settings
 and the sessions so the next run starts as a first run (a sitting's kept pictures stay). The bridge also answers the controls showing,
 the newest log lines, the lines that carry a time, a screenshot and the memory held. A request needs this run's key, made at random when
-it starts, shown in Settings, About and written to `files/bridge/key`; a switch there turns it off. A request without the key, or longer
+it starts, shown in Settings, Updates and about and written to `files/bridge/key`; a switch there turns it off. A request without the key, or longer
 than 64 KiB, is refused and its connection closed. The controls a script needs carry automation ids that do not change with their words
 (`tab-capture`, `capture-take-picture`, `result-fix-holes`, `fix-done`, `settings-send-diagnostics` and the rest, which a test holds).
 `scripts/app-bridge.py --platform android` forwards the port, reads the key, can copy a picture into the scenario folder first with

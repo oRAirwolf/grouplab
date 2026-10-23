@@ -47,7 +47,7 @@ seed, analyzed as a photograph is, only the analysis timed. `SurveyReport.Keys` 
 `SurveyReport.WhatIsSent` is what the question says, in the same order.
 
 **Every run is sent, and the median counts** (entry 241 section 1). Each run is kept on the device with the date, the version that ran it
-and its time, and Settings, under Sharing, lists them all. Every run made while the survey is on goes with the next report, each with its
+and its time, and Settings, Sharing and privacy, lists them all. Every run made while the survey is on goes with the next report, each with its
 own version (`grouplab-survey-2`); a run the receiver's three reports a day held back goes with the next one. In the published figures a
 machine counts **once per version of GroupLab, by the median of its runs on that version**: not the best run, which is the same
 cherry-picking as quoting a shooter's best group and would make every machine look faster than it is, and not the mean, which one run

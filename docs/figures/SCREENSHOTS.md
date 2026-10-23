@@ -139,7 +139,12 @@ read off a target, the three sharing choices (Settings, where they are made), an
 
 **Settings in eight categories, Daily copies of your records and Shooting defaults** (entry 468) have their own pictures: `settings`, the
 side menu with the Units and figures page; `settings-data`, Sync and your data with the daily copies first; and `settings-shooting`, the
-Shooting defaults page. The phone's list of categories and its pages wait for the emulator's walk.
+Shooting defaults page. The phone's list of categories is `fold-settings`, taken on nightly 218 (entry 469 section 3), and the walk
+pictures its two pages from entry 469 on, until then each Features entry's Mobile side says so:
+`fold-settings-shooting-light.png` waits for the emulator's first run,
+`fold-settings-shooting-dark.png` waits for the emulator's first run,
+`fold-settings-data-light.png` waits for the emulator's first run, and
+`fold-settings-data-dark.png` waits for the emulator's first run.
 
 **Sync between your devices** (entry 463) has its own picture, `sync-settings`: Settings at Sync between devices with a folder the walk makes and a second store, Range laptop, in it; and `sync-conflict`, a session changed on both, side by side. The phone's Sync page waits for the emulator's walk.
 

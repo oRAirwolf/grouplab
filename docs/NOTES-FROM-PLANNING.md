@@ -25,6 +25,116 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-23, entry 469: consistency audit, 2026-10-22
+
+**Status: actioned 2026-10-23. Every section done, section 2 differently from how it was asked:** nightly 218's published notes are left as they are (CLAUDE.md: a published release is never edited, the correction goes in the next one); the three trailers are taken out through docs/release-note-corrections.json and nightly 219 carries a "Correction:" line; question 111 asks whether that is what planning wants. Section 3: the phone's list was already pictured on nightly 218 (583a38fe, 13:32 UTC); its two pages are added to the walk and wait for its next run.
+
+From the planning session's scheduled consistency audit (entry 267 section 2b), run 2026-10-22 about 16:00 UTC against main at
+751af639 and the live site (grouplab.org, built from 4882f861, nightly 218). Nothing here needs Alan. The open `consistency` issue on
+GitHub could not be read from the audit's session (no GitHub access), so some of this may repeat it; skip anything it already lists.
+
+Four findings. Section 1 is the largest: entry 468 renamed the Settings pages, and a number of public pages and guides still send people
+to pages that no longer exist.
+
+## 1. Old Settings page names after entry 468 (Settings in eight categories)
+
+The eight pages are General, Units and figures, Shooting defaults, Printers and paper, Sync and your data, Sharing and privacy, Updates and
+about, and Help and problems (src/GroupLab.App/SettingsMenu.cs, Name). There is no "About" page, no "Diagnostics" heading and no build line
+at the top of Settings any more: the build is the "This build" card on Updates and about (src/GroupLab.App/MainWindow.SettingsMenu.cs line
+660); Report a problem is the "Reporting a problem" card on Help and problems (same file, BuildHelpPage, line 695); on the phone, Send to
+GroupLab and Send diagnostics are on Help and problems (mobile/GroupLab.Mobile/SettingsView.cs, BuildHelp, line 726 onward), and the old
+About items (the automation bridge, the updates) are on Updates and about (BuildAbout, line 679; Page(whole, SettingsCategory.Updates),
+line 56). Saving is on Sync and your data (MainWindow.SettingsMenu.cs line 542).
+
+Each place below, with what it says now and what it should say:
+
+1.1 **Support page, step 02** (website/build.py line 1311; live at https://grouplab.org/support/): "choose Report a problem under
+    Diagnostics". Should say: open Settings, then Help and problems, and choose Report a problem.
+1.2 **Support page, step 03 and "Delete your data"** (website/build.py lines 1312 and 1323): "the build line from the top of the settings
+    screen" and "(the build line is at the top of Settings)". Should say the build line is in Settings, Updates and about, under This build.
+1.3 **Support page, "On a phone"** (website/build.py line 1316): "On Android, iPhone and iPad, open Settings, then About: Send to GroupLab
+    ... Send diagnostics". Should say Settings, then Help and problems.
+1.4 **Download page, "What you get", Which build** (website/build.py line 981) and **README.md line 125** ("the Settings screen names the
+    version, the train and the commit"). Should name Settings, Updates and about.
+1.5 **Download page, GroupLab Dev** (website/build.py line 935) and **README.md line 129**: "unless you move it with Settings, Export all
+    my data". Should be Settings, Sync and your data, Export all my data.
+1.6 **README.md line 504** (Phase 7) and **website/features.json line 1426** (the `sync` sentence, live on
+    https://grouplab.org/features/#sync): "Settings, Sync between devices, chooses a folder". Should be Settings, Sync and your data, Sync
+    between devices, as the README's own paragraph above Download already says. The Features sentence needs the `"reworded"` note naming
+    the nightly it ships in (entry 421).
+1.7 **Hardware survey block** (website/build.py line 3424) and **website/research/what-grouplab-sends.md line 29**: "in Settings, under
+    Sharing". Should be Settings, Sharing and privacy.
+1.8 **website/research/what-grouplab-sends.md line 46**: "Install updates automatically in Settings, About". Should be Settings,
+    Updates and about.
+1.9 **Tour, the first run** (website/tour.json lines 44 and 68; live at https://grouplab.org/tour/): "in Settings, under Units and
+    Sharing". Should be Units and figures, and Sharing and privacy.
+1.10 **Trying GroupLab** (docs/TESTING-GUIDE.md line 99, and its PDF, last made 2026-10-21 before entry 468): "The top of that screen
+    names the build ... Report a problem there, under Diagnostics". Should say the build is under Settings, Updates and about, This build,
+    and Report a problem is on Settings, Help and problems. Regenerate TESTING-GUIDE.pdf.
+1.11 **User guide** (docs/USER-GUIDE.md, and its PDF): line 748 "Report a problem is in the settings, under Diagnostics" (should be
+    Settings, Help and problems); line 488 "In Settings, under Saving" (should be Settings, Sync and your data, Saving); line 750 "in
+    Settings under Error reports" (the error reports card is on Settings, Sharing and privacy, and has no title of its own, so name the
+    page). Lines 754, 938 and 964 are already right.
+1.12 **docs/PHONE-PARITY.md**: line 104 "Settings, About, Send diagnostics" (should be Settings, Help and problems); line 78 "Settings, Sync
+    between devices" (should be Settings, Sync and your data, Sync between devices).
+1.13 **docs/ANDROID.md line 463** ("shown in Settings, About", the bridge key) and **docs/UPDATES.md line 216** ("Settings, About: the
+    installed version"): should be Settings, Updates and about.
+
+Leave as they are: the old release notes and the matching note phrases in website/features.json (lines 140, 185, 187, 188), which record
+what each build said at the time, and docs/PHASE1-RESULTS.md.
+
+So the weekly check finds this next time, add the retired forms to docs/RETIRED-WORDING.json with entry 468 as the reason, allowed only in
+docs/RELEASE-NOTES.md and website/features.json: "Settings, About", "under Diagnostics", "top of the settings screen", "top of Settings",
+"Settings, under Sharing", "Settings, under Saving", "Settings, Sync between devices", "Settings, Export all my data".
+
+## 2. Nightly 218's release notes: two fixes nobody could meet, and one website line
+
+docs/RELEASE-NOTES.md lines 22 and 23 (and so the README's What is new, https://grouplab.org/releases/ and the GitHub release page):
+
+- "On the phone, opening a GroupLab data file from another app shows what importing it would add straight away again."
+- "On the phone, a GroupLab data file opened from another app shows what importing it would add on Settings, Sync and your data, as
+  before."
+
+Both fix a fault that c4e1ab07 (entry 468 sections 1 and 2.1) brought in and c01a659e and 8aae8700 took out again, all three inside
+nightly 218 (294ffe0..4882f86). A person moving from nightly 217 to 218 saw no change here, but the two lines read as if 217 or an
+earlier build had the fault, and as two near repeats of one sentence. Should say: nothing, since the import plan works as it did in 217;
+remove both through docs/release-note-corrections.json, or, if a line is wanted, one line saying that a GroupLab data file opened from
+another app still shows what importing it would add, now on Settings, Sync and your data.
+
+Line 29, under Under the hood: "The guide, the tour and the Features page now describe Settings as its eight pages ...". The file's own
+introduction (line 9) says changes to the website and the guides are not listed, because they are not in the application. Remove it
+the same way. Check why scripts/release-notes.py let an internal trailer about the guides through.
+
+## 3. The phone's pictures of Settings still show the old single page
+
+docs/figures/screens/phone/fold-settings-dark.png (and its light twin, and tab-settings-landscape-*.png) was last changed in 9b8d3679 on
+2026-10-21 and shows the old Settings: "Units" first, then the mil, MOA and SMOA choices, then "Zero correction", with no list of
+categories. docs/figures/screens/phone/made-from.json says nightly 217. On the live tour (https://grouplab.org/tour/, Settings) it sits
+beside "Eight categories down the left, a search box above them, and one page at a time", and the tour says the phone pictures are
+"from nightly 217".
+
+After nightly 217 (00:58 UTC) the phone's screenshots were committed at 01:23 UTC; after nightly 218 (13:08 UTC) no
+"[screens] the phone's screenshots" commit had landed by about 16:00 UTC. STATE.md says the phone pictures of the new pages wait for the
+emulator's walk. Check whether android-emulator.yml ran for nightly 218 and whether scripts/scenarios/phone-sweep.json still reaches the
+Settings screens now that a walk must press `settings-<category>` first; fix it if not, run it, and let the pictures and made-from.json
+follow. If the walk is fine and only waiting, nothing to do beyond confirming the new pictures land.
+
+## 4. RESTORE.md still waits on a secret Alan decided not to add
+
+docs/RESTORE.md line 31: "Posts to the Discord by `scripts/tester-notes.py` ... (entry 462 section 5; both off until Alan adds their
+secrets)". Entry 466 made request 107 "not for now": the tester notes script stays off by Alan's choice and no webhook is needed. Should
+say the Discord posts are off by Alan's decision (entry 466), and that `oracle-backups.yml` is off until request 106's secrets are set.
+
+## Checked and found consistent
+
+README, home page, download page, platform statement and minimums (all at nightly 218, commit 4882f86); the Microsoft Store at
+0.2.217; TestFlight public beta wording; Android as GroupLab Dev, the plain APK and the Google Play internal test, with the closed test
+to come and no lawyer named anywhere; "What GroupLab is not" absent from the README; Thanks naming only people who agreed (Unholy, Jylee,
+Fenix, Quack); the Features page's platforms against docs/PHONE-PARITY.md; the donor pack (held by DonorPackTests); Reset layout and
+Export all my data still present in the application; the LICENSE's section 7 permission matching the README's License section.
+
+---
+
 ## 2026-10-23, entry 470: Android back does not leave Settings, Sync and your data (it presses "Back up now")
 
 **Status: actioned 2026-10-23. Every section done.** Section 2.3's emulator walk: no scenario drives Back, so nothing was added there; the headless tests hold it instead. Section 2.4: the desktop has no word-based way back and its Escape handlers are each the field's or the sheet's own; iOS has no system back and Avalonia raises no BackRequested there, so only the guided demo's Back step used `WayBack` on the iPhone, and it is fixed by the same change. No device needs its copies put back (PHASE1-RESULTS.md, entry 470).

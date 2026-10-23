@@ -26,7 +26,7 @@ sources:
    is and how fast GroupLab ran on it, at most once a week, and sooner after you run the benchmark, whose every run goes with the version
    that ran it. What a report holds is listed on that screen and in `docs/SURVEY.md`, and it never holds your name, a file name, a
    photograph or a location. It does hold a random number GroupLab made for this installation, so that your repeated runs count once:
-   it is not taken from your device, your account or your network, and Settings, under Sharing, can reset it or delete your reports.
+   it is not taken from your device, your account or your network, and Settings, Sharing and privacy, can reset it or delete your reports.
    The published figures are at [grouplab.org/survey/](/survey/).
 
 That is all of it. There is no analytics, no usage reporting, no license check and no phoning home. Nothing is sent while you are marking
@@ -43,7 +43,7 @@ You can turn it off, and then nothing is sent at all.
 
 **On Android, only GroupLab Dev checks**, the build installed from its APK: the same GET, for the same kind of file, when it starts and
 about every six hours, and the download itself only on Wi-Fi unless you tap Update now. The copy from Google Play never checks; Google
-Play updates it. "Install updates automatically" in Settings, About turns off the installing, not the looking.
+Play updates it. "Install updates automatically" in Settings, Updates and about turns off the installing, not the looking.
 
 ## An error report, and only as you chose
 

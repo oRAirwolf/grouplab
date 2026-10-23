@@ -41,7 +41,7 @@ Warnings are errors. Every test must pass, and none is skipped. The tests that r
 - **A Debug build run from this repository:** `out/logs`, which git ignores, so a log can be read without anybody pasting it.
 - **A Release build:** `%LOCALAPPDATA%\GroupLab\logs` on Windows, `~/Library/Logs/GroupLab` on macOS, and `$XDG_STATE_HOME/grouplab/logs` or `~/.local/state/grouplab/logs` on Linux.
 - **`GROUPLAB_LOG_DIR`** overrides both.
-- **Detailed lines:** `--verbose`, or the Detailed logging box under Diagnostics, adds DEBUG lines, including every stage record of a detection.
+- **Detailed lines:** `--verbose`, or the Detailed logging box in Settings, Help and problems, adds DEBUG lines, including every stage record of a detection.
 - **What a log never holds:** a location, a photograph's metadata, or a path. A file appears as its name and a hash.
 
 Three more checks belong in any change that touches the format, the library or the renderer:

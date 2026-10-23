@@ -56,7 +56,7 @@ public class PhoneScreensScenarioTests
             (Repo.PathTo("scripts", "scenarios", "stand-in-poster.jpg"), "stand-in-poster.jpg"));
         var failed = Failed(results);
         Assert.True(failed.Count == 0, string.Join(Environment.NewLine, failed));
-        foreach (string screen in new[] { "scale-markers", "fingerprint", "pairing", "open-targets" })
+        foreach (string screen in new[] { "scale-markers", "settings-shooting", "settings-data", "fingerprint", "pairing", "open-targets" })
         {
             Assert.True(File.Exists(Path.Combine(Scenario.Results, screen + ".png")), screen + " was not pictured");
             Assert.True(File.Exists(Path.Combine(Scenario.Results, screen + ".quality.json")), screen + " has no quality file");

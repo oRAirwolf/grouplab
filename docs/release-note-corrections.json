@@ -1,6 +1,31 @@
 {
   "about": "A pushed commit's Release-note trailer cannot be rewritten, because main is never force pushed. Where one was wrong, the note that replaces it is written here, by the commit's full hash, and scripts/release-notes.py reads it in the trailer's place. Each says why.",
   "corrections": {
+    "c01a659ef98760acb44dbf968b910d96325d7e5b": {
+      "why": "Entry 469 section 2: nightly 218's notes listed two fixes to a fault that c4e1ab07 brought in and this commit and its pair took out inside the same build, so nobody moving from 217 met it. Nightly 218's published notes are not edited; the correction is in the next build's notes.",
+      "notes": []
+    },
+    "8aae8700e09edb01f8bbee702cbd3c1f32f2b8ec": {
+      "why": "Entry 469 section 2: nightly 218's notes listed two fixes to a fault that c4e1ab07 brought in and this commit and its pair took out inside the same build, so nobody moving from 217 met it. Nightly 218's published notes are not edited; the correction is in the next build's notes.",
+      "notes": []
+    },
+    "457bc0190f3e09cecb2cb43520d862f710f5dcb1": {
+      "why": "Entry 469 section 2: the trailer described the guide, the tour and the Features page, which are not in the application; the commit's shipping files changed only comments.",
+      "notes": []
+    },
+    "6feb3f9a6c5432f22d8c50b2e0c61bb777651654": {
+      "why": "Entry 469 section 2: this commit's own note, and the correction of nightly 218's two notes about a data file opened from another app, carried by the next build's first shipping commit because a published build's notes are never edited.",
+      "notes": [
+        {
+          "note": "On Android, the back gesture on Settings, Sync and your data now goes back to Settings. Before, it made a copy of your records instead. (Entry 470)",
+          "kind": "fixed"
+        },
+        {
+          "note": "Correction: on the phone, a GroupLab data file opened from another app works as it did in nightly 217 and shows what importing it would add on Settings, Sync and your data; nightly 218's notes wrongly listed two fixes for it. (Entry 469, 2)",
+          "kind": "fixed"
+        }
+      ]
+    },
     "26dedfcca7a4442014053ae670e8f361a00a5a7d": {
       "why": "Entry 462 section 3's third note named the speed unit, which the notes check reads as a file path; the note says it in words.",
       "notes": [

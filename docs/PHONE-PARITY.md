@@ -75,7 +75,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | The C bull | `c-bull` | on the phone | | on iOS |
 | Large format on a home printer | `large-on-letter` | on the phone | | on a device |
 | GroupLab Dev for testers | `dev-build` | on the phone | | left out |
-| Sync between your devices | `sync` | on the phone | entry 463: Settings, Sync between devices, a page of its own with the same items stacked; the folder through Android's folder picker; a session changed on two devices stacked on a centred sheet | on iOS |
+| Sync between your devices | `sync` | on the phone | entry 463: Settings, Sync and your data, Sync between devices, a page of its own with the same items stacked; the folder through Android's folder picker; a session changed on two devices stacked on a centred sheet | on iOS |
 | Settings in eight categories | `settings-menu` | on the phone | entry 468: Settings opens the list of the same eight categories, each with its choices in one line and Find a setting at the top; a page has ‹ Settings back and Put this page back as it came; the text follows the phone's own size, as it always has, and Reduce motion is offered | on iOS |
 | Daily copies of your records | `daily-copies` | on the phone | entry 468: the copies stay in GroupLab's own storage, with Back up now and Restore a copy on Sync and your data; Export all my data is the way off the phone, and the page says so | on iOS |
 | Shooting defaults | `shooting-defaults` | on the phone | entry 468: the distance a new target starts with and the paper; the camera's Starts in and its sound, phone only; rounds fired and rifle and load are computer only, because the phone asks for neither per target | on iOS |
@@ -101,7 +101,7 @@ iOS Simulator. `docs/IOS-PLAN.md` has the plan, and `ios/GroupLab.iOS/SelfTest.c
 actually checks. The site build holds this column to those four words.
 
 **Diagnostics on the phone** (entry 311 section 3; entry 386 section 4 added **Send to GroupLab**, the logs and a note sent by the error
-reports' route, first, while the phones' senders are on). Settings, About, **Send diagnostics**, on Android and iOS alike: the newest logs, the
+reports' route, first, while the phones' senders are on). Settings, Help and problems, **Send diagnostics**, on Android and iOS alike: the newest logs, the
 crash records and the kept pictures in one zip through the share sheet. On iPhone and iPad, GroupLab's Documents folder shows in the
 Files app, with the log and, when **Keep every picture taken** is on (off until turned on there, on until turned off in GroupLab Dev), a
 sitting's pictures; `scripts/ipad-logs.py` streams GroupLab's own log from an iPad on a USB cable and copies that folder, touching
