@@ -12,6 +12,18 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.219
+
+**2026-10-23**, commit `6feb3f9`. Nightly.
+
+**What you will notice**
+
+- On Android, the back gesture on Settings, Sync and your data now goes back to Settings. Before, it made a copy of your records instead.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.219)
+
+---
+
 ## 0.2.0-nightly.218
 
 **2026-10-22**, commit `4882f86`. Nightly.
