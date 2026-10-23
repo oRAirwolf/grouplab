@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 217,
+  "afterNightly": 219,
   "screens": {
     "analysis": "61dcf77d661c098eaabf74c211b27b7bdd77c655a14e88801f6a0c9219db49ee",
     "analysis-open": "626e13d02b2edcd38ea74306a4d5929924fcb42ab69e0f660a3905910918c996",
@@ -57,8 +57,8 @@
     "shots-to-zero": "334ecf758d36f75376113d7be169af94aef9ca1abd0d737cef8877c9cba8b8c7",
     "shots-window": "141a8f0f72f66a204fcf45f4cf01c14e71208ba30d9bed1ed0e8d55a5e79e58d",
     "store-target": "c5cf269b8bd955c757c7f9a0768692e14fddf3dd69c1482f7cb33a0f5d1ae90f",
-    "sync-conflict": "efe22ebbf2b4d3261e8bb5755d3c2ed519f6856067b12d4bc89f48d9b4d4ebd1",
-    "sync-settings": "b2ed161e8709b0268f3a684cb286336da2f6ac5ca3ef3afd14f64d52d77170cd",
+    "sync-conflict": "240f516d3722a689c5067ef694983ff61901cc613cca6acabfe3746e6b1eccfd",
+    "sync-settings": "5f1de010d84f4543d3870aa5558c77507d2e5730ec5902acf8a5db77f35842fa",
     "targets": "2fe04d3941443a7e94680ac5c321a271de8356a7df9af81b74ad96d97338489e",
     "targets-zero": "74f341e9a454357b546f11a2d0ef29b3f53c7b1221204379172456074e318a0f",
     "velocity": "39023288ad751a502126dd511325d36729e6688cd93ef488f07252bd1b925d62",

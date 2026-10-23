@@ -5,7 +5,7 @@
   "controls": {
     "Also the original photographs": [
       342,
-      618,
+      620,
       205,
       32
     ],
@@ -51,6 +51,12 @@
       215,
       32
     ],
+    "Forget this device: Range laptop": [
+      509,
+      395,
+      107,
+      17
+    ],
     "General": [
       65,
       158,
@@ -65,7 +71,7 @@
     ],
     "Marks and proof pictures": [
       342,
-      455,
+      457,
       178,
       32
     ],
@@ -119,7 +125,7 @@
     ],
     "Stop syncing": [
       332,
-      805,
+      807,
       102,
       27
     ],
