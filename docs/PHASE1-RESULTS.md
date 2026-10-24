@@ -362,6 +362,23 @@ nested input. Each must end in what it read or in the refusal its callers catch,
 The CSV of shots, the chronograph exports (now with every line ending as well) and a photograph's Orientation (the values 0 to 9 and 255,
 missing, said as another type, and damaged) needed nothing. Nothing was unclear enough to need Alan.
 
+**Section 3, sync as close to proven as it can be without two devices.** `CloudClientTests` gives each of three simulated devices its own
+copy of the folder, as a cloud client does, and a simulated cloud moves files between the copies: up to six minutes late each way, in any
+order, a quarter of them arriving first as part of the file, now and then a file kept twice as a conflicted copy named the way OneDrive
+("name-PHONE.json"), Google Drive ("name (1).json") or Dropbox ("name (Alan's conflicted copy 2026-10-24).json") names it, and a write
+to a name another device changed meanwhile kept as such a copy. Over two simulated hours the devices make targets, change them, take some
+away, add rifles and change a setting, syncing after each; the phone's clock is five hours ahead and the tablet's three behind; the
+tablet's folder goes away for twenty minutes and later part way through a run; and the computer forgets the tablet while the tablet goes
+on writing. Then everything arrives, the questions are answered on one device at a time, and the test holds that every device has the same
+targets with the same marks, the same rifles and the same setting, and that every version anybody saved and did not change or take away
+themselves is still there, as a target or kept beside it. Six runs, two for each company's naming. A deliberate fault (a half-arrived file
+marked read) fails all six. **Found:** nothing wrong in GroupLab beyond section 2's change file fix. One thing a person could meet: the same
+question answered on two devices before they have synced makes each answer a new version the other device then asks about; answering on
+one device and letting it sync settles it. **Proven in tests now:** delays, order, half files, conflicted copies, the folder going and
+coming back, clocks hours wrong, three devices, and forgetting a device that is still writing. **Still needs Alan's two devices:** a real
+cloud client's own behaviour (OneDrive on Windows, Google Drive or Dropbox on Android, iCloud on the iPhone through Files), the phones'
+own folder access (Android's folder picker, the iPhone's bookmark) over weeks, and a device away for days.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
