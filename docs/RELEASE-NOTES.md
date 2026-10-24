@@ -12,6 +12,19 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.221
+
+**2026-10-24**, commit `70a3b0d`. Nightly.
+
+**What you will notice**
+
+- A damaged session file, marking or GroupLab data file is now refused with a plain reason instead of failing, a data file is imported whole or not at all, and a sync file a cloud service left damaged now waits until it arrives whole.
+- On Android, the back gesture now returns to the screen before on a result, the picture's check, How did you shoot this sheet, Add a store-bought target and the printer check, where it could close GroupLab or skip a page.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.221)
+
+---
+
 ## 0.2.0-nightly.220
 
 **2026-10-23**, commit `497d9ee`. Nightly.
