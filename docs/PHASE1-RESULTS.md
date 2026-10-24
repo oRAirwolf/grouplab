@@ -379,6 +379,12 @@ coming back, clocks hours wrong, three devices, and forgetting a device that is 
 cloud client's own behaviour (OneDrive on Windows, Google Drive or Dropbox on Android, iCloud on the iPhone through Files), the phones'
 own folder access (Android's folder picker, the iPhone's bookmark) over weeks, and a device away for days.
 
+**Section 4, the phone's new Settings pictures.** The emulator's walk of 2026-10-23 (run 40018305491, nightly 220) took
+`fold-settings-shooting` and `fold-settings-data` in both themes and committed them (0fc0fed8). The Features page now shows them as the
+phone's side of Shooting defaults and Daily copies of your records, in place of the line saying they waited; `docs/figures/SCREENSHOTS.md`
+says so. The README links the two features and shows no phone picture of Settings, so it needed nothing. The tour's Settings page names the
+computer's pages and is unchanged.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
