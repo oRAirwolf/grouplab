@@ -25,6 +25,60 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-24, entry 472: overnight queue, work that needs nobody
+
+**Status: actioned 2026-10-24. Every section done.** Section 1: five ways back Android's back could not see were found by a walk of every screen and fixed (a result, How did you shoot this sheet, the picture's check, Add a store-bought target, the printer check), and three behaviours chosen from words replaced with marks. Section 2: four importers fixed (session files, markings, data files imported whole or not at all, sync change files never applied in part). Section 3: sync held against a simulated cloud with three devices; no fault in GroupLab beyond section 2's. Section 4: the pictures were already taken; the Features page uses them. Section 5: no row moved on material; row 27's phone half got its test, and the checklist lists what is left smallest first. Usage stayed under half the week (12 percent at section 5).
+
+From the planning session, 2026-10-24 09:55 UTC. Alan is going to bed and asked what Code can work on. Nothing here needs him. Work the
+sections in order; each is its own commit and push. Stop starting new sections at **50% of the week** (usage-now.json), so the rest of the
+week stays free for his own requests; finish the section in hand within the usual finishing margin. Crash reports first, as always.
+
+Standing limits for this queue: no server changes, no store submissions, no published release beyond the usual nightly, no deletions
+without the trash and a backup, and no look decisions (post a DESIGN NEEDED line and go on).
+
+## 1. The class of bug entry 470 found, everywhere
+
+Entry 470 was a button doing something because of its words. Look for the same kind of fault across the apps:
+- On the Android emulator and the iOS simulator, walk every screen the parity tour reaches and press Back (Android's back, iOS's edge
+  swipe where it applies) on each one, including every Settings page, every sheet, Sync, the printer check and the first run. Each Back
+  goes to the screen before and changes nothing: no copy made, nothing saved, sent, deleted or printed. Hold it with a test that walks
+  them all, so a new screen is covered by itself.
+- On the computer, the same for Escape on every dialog and page that answers it.
+- Search the code for any other behaviour chosen from a control's words or a translated text, and replace it with an explicit mark.
+
+## 2. Every importer against bad files
+
+For each thing GroupLab opens (.grouplab files, CSV imports, each chronograph export, photographs and scans, the sync folder's change
+files): empty, truncated, wrong type with the right extension, very large, odd encodings and line endings, photographs with odd or
+missing orientation tags, and files a cloud client leaves half written. Nothing crashes, nothing is half imported, and each refusal says
+in plain words what was wrong. Add the cases as tests (a small fuzz set is fine). Fix what fails; anything that is not clear and safe
+goes to for-alan with a recommendation.
+
+## 3. Sync, as close to proven as possible without two real devices
+
+In tests, two and three simulated devices on one folder, with what real cloud clients do: delays of minutes, files arriving out of order,
+partial files, conflicted copies named the way OneDrive, Google Drive and Dropbox name them (for example "name (1)" and
+"name (conflicted copy)"), the folder disappearing mid-run and coming back, a device's clock hours wrong, and Forget this device
+(entry 471) used while the other device is still writing. Records end the same on every device and nothing is lost. Say in STATE what
+is now proven in tests and what still needs Alan's two devices.
+
+## 4. The phone's new Settings pictures
+
+If the emulator walk has not yet produced Shooting defaults and Sync and your data (entry 469 section 3), get them and update the
+README and site where they are used.
+
+## 5. The proof checklist
+
+Read docs/PROOF-CHECKLIST.md again. Prove anything that can now be proven with material already in the repository or grouplab-local.
+For every line that still needs Alan, write one line of exactly what it needs and how long, smallest first, so the planning session can
+hand him the quickest ones.
+
+## 6. In the morning
+
+Write one short panel entry and STATE: what was done, what was found and fixed, and anything that needs Alan, in plain words.
+
+---
+
 ## 2026-10-23, entry 471: Alan's answers to questions 107 to 110, and the push of entry 469
 
 **Status: actioned 2026-10-23. Every section done.** Section 1: gh was signed in as the GroupLab account; entry 469, rebased onto nightly 219's notes commits as 351e9918, was pushed and its site went live, but nightly 219 had already been built without it, so its "Correction:" line rides in nightly 220 from this entry's commit instead. Section 2: 107 built (the phone's found holes on a marking with no bulls carry no tag); 108 nothing built, as answered; 109 built on the computer and the phones, placed beside each device in the list (the plainest place, no look question raised), and a different folder now gets every record; 110 built for the desktop builds after the corpus check (PHASE1-RESULTS.md, entry 471). Section 3: question 111 closed.

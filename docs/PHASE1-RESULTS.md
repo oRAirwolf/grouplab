@@ -392,6 +392,9 @@ so no row moved on material. Row 27's two halves are each held by a machine (the
 phone. `docs/PROOF-CHECKLIST.md` now opens with one line per thing still needing Alan, what it proves and about how long, shortest first:
 fifteen lines, from five minutes at the phone sitting (row 27) to a range with 300 yards (row 25), and sync's real devices among them.
 
+**Section 6.** The panel note and `docs/notes/STATE.md` say what was done, found and fixed; nothing in this entry needs Alan. The week's usage
+was 12 percent after section 5, well under the 50 percent the entry set.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

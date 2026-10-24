@@ -9,22 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-23, entry 471 (Alan's answers to questions 107 to 111) done.
+**Last rewritten:** 2026-10-24, entry 472 (the overnight queue that needs nobody) done.
 
 ---
 
 ## In flight
 
-- **Entry 471 (2026-10-23)**, done: Forget this device on the Sync block everywhere, and a new empty sync folder gets every record;
-  the phone's found holes on a marking with no bulls carry no number; the desktop builds are published precompiled (identical corpus
-  results, first photograph about a quarter sooner, download about an eighth larger); nightly 218's correction rides in nightly 220.
-- **Entries 469 and 470 (2026-10-23)**, done: Settings' old page names fixed everywhere; Android's back on Sync and your data made a
-  records copy, fixed for nightly 219; the phone's Shooting defaults and Sync and your data pictures wait for the walk.
-- **Entry 468 (2026-10-22)**, done: Settings is eight categories (side menu on the computer, a list on the phones) with Find a setting
-  and "Put this page back as it came"; daily copies of the records (`RecordsCopies`, 14 kept, restore); Shooting defaults, the camera's
-  start and sound, "The analysis opens with", the computer's text size and Reduce motion. Saving sits on Sync and your data; rounds
-  fired and rifle and load are computer only (default Ask, today's behaviour). The phone pictures of the new pages wait for the
-  emulator's walk.
+- **Entry 472 (2026-10-24)**, done, five commits: Android's back now returns to the screen before on a result, the picture's check, How
+  did you shoot this sheet, Add a store-bought target and the printer check (`Entry472BackTests` walks every screen and presses Back);
+  damaged session files, markings and data files are refused in words and a data file imports whole or not at all; a sync change file is
+  taken only whole and new ones carry a checksum (`BadFilesTests`); sync held against a simulated OneDrive, Google Drive and Dropbox with
+  three devices (`CloudClientTests`); the phone's Settings pictures on the Features page; the proof checklist lists what Alan is needed
+  for, smallest first. Ships in the next nightly (221).
+- **Entry 471 (2026-10-23)**, done: Forget this device; a new sync folder gets every record; desktop builds precompiled (nightly 220).
+- **Entries 468 to 470 (2026-10-22 and 23)**, done: Settings in eight categories, daily copies, Shooting defaults; Android's back on Sync
+  and your data fixed for nightly 219.
 
 ## The next three
 
@@ -36,7 +35,9 @@ If something here disagrees with the logs, the logs are right and this file is o
   checking a proposal needs a sheet shot with its string.
 - **Velocity regression** (Phase 5): on both screens since entry 323, in the conditions entered on Ballistics since 329; a
   session's own conditions are entered under the block (entry 416); the phone's picture waits for request 50's sitting.
-- **Synchronization** (Phase 7): built on every platform with tidying (entries 461, 463, 464); proving it needs two real devices.
+- **Synchronization** (Phase 7): built on every platform with tidying (entries 461, 463, 464); in tests a simulated cloud with three
+  devices, late, out of order and half-written files, conflicted copies and wrong clocks (entry 472); a real cloud client over weeks
+  needs Alan's two devices (PROOF-CHECKLIST.md, line 4 of entry 472's list).
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
   61, an App Store release Alan's word.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
@@ -70,7 +71,7 @@ Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (107 to 111 answered 2026-10-23 i
 
 - **Last nightly:** 0.2.0-nightly.220 (2026-10-23 20:25 UTC): entries 469 and 471, the first desktop builds published precompiled
   (each download about an eighth larger, the Windows zip 114.4 to 126.5 MB); its notes carry the correction of nightly 218.
-- **The site** follows main by itself (website.yml) and the nightly publishes it; live at 497d9ee6 (entry 471) on 2026-10-23.
+- **The site** follows main by itself (website.yml) and the nightly publishes it; entry 472's Features pictures pushed in 1b31c6fb.
 - Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox
@@ -84,7 +85,9 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
-- **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words; `Entry470Tests` holds it.
+- **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words, or `Screens.LeavesPage` for a Done,
+  Cancel, Skip or "Another target" that is the page's way out (entry 472); `Entry472BackTests` fails on a new page Back was never pressed on.
+- **Sync change files carry `sha256`** of their records (entry 472); a file is taken only when it matches and every record applies.
 - **Settings is eight pages** (entry 468): a test opens the one it means with `ShowSettings(SettingsCategory.X)` on the computer or
   `new SettingsView(store, category)` / `Shell.ShowSettings(category)` on the phone; scripted walks press `settings-<category>` first.
   Search and put back go through `SettingsPages` in `src/GroupLab.App/SettingsMenu.cs`.
@@ -94,14 +97,10 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **The server's logs are in Denver time** (-0600, -0700 from 1 November), not UTC; a log paste converts its window (request 99).
 - **The zero's words are `ZeroWords`** (entry 424), read by the desktop panel, the report and the phone; `ZeroAxis.Rounded` has the
   clicks on every axis, `Clicks` only on one worth dialling.
-- **A tab can hold a set** (entry 423): `OpenTarget.Set` parks each picture of the set as a tab parks a target, and the pool is worked out
-  afresh whenever it is shown; a drop onto a tab holding a target always opens beside it. "Read these as one set" is gone.
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
-- **ios-app.yml's "Real taps" lost a first tap** (about 1 run in 4) because a field's Cut, Copy and Paste menu opened for a tap handled
-  late while the keyboard first came up; `KeyboardRoom.HoldOffForAFocusingPress` stops it (entry 447 section 3).
 - **The database is schema version 6** (entry 461): each upgrade's first open copies `grouplab.db` to `grouplab.pre-vN.db` first.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
