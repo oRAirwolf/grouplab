@@ -63,6 +63,34 @@ Outside the 31, the two lines the README adds: **the rest of the desktop from th
 it is what it is for; **sync between devices** (entries 461 and 463) needs two real devices, a computer and a phone, on one cloud folder,
 each changing a session and seeing the other's change, and a change made on both kept both ways.
 
+## Entry 472 section 5, 2026-10-24: each line still needing Alan, smallest first
+
+Read again on 2026-10-24. Nothing new has come into `grouplab-local` since entry 464 (the range kit in `range-next` is still waiting for
+its trip), so no row moved on material. Sync between devices, outside the 31, is now held in tests by two and three simulated devices on a
+cloud that behaves as OneDrive, Google Drive and Dropbox do (entry 472 section 3, `CloudClientTests`); what it still needs is below. Each
+line is one thing to do, what it proves, and about how long it takes, the shortest first, so the quickest can be handed over first.
+
+| # | What Alan does | Proves | About |
+|---|---|---|---|
+| 1 | At the phone sitting, share one session from the Fold 7 with Share this session and open the file on the computer (both ends are held by `SessionFileTests` and `Entry472ShareTests`; this is Android's share sheet between them) | 27 | 5 minutes |
+| 2 | At the phone sitting, install the Play internal test copy beside the signed APK and GroupLab Dev on one phone, and start each (request 50) | 29 | 10 minutes |
+| 3 | At the computer, correct the wrong-bull scan's misassignments with the keyboard alone, detailed logging on | 9 and 10 | 10 minutes |
+| 4 | Turn on sync on the computer and one phone, on one cloud folder, and change one session on each | sync, first half | 10 minutes, then weeks of ordinary use with one device away for some days |
+| 5 | Print one sheet with GroupLab's own Print on Windows and scan it at 600 dpi | 14 | 15 minutes |
+| 6 | Print one sheet from the phone's Targets screen and scan it at 600 dpi | 28 | 15 minutes |
+| 7 | Print a volunteer pack and measure bull 1 to bull 5 with a ruler | 19 | 20 minutes |
+| 8 | Photograph a shot sheet that has a scan with the iPhone and with the iPad | 26 on Apple's phones | 15 minutes, once a shot sheet is kept |
+| 9 | At the range, two shots through one hole on a spare load sheet, the count on the block; scan it at home | 4, and 13 on paper | 5 minutes there, 5 at home |
+| 10 | At the range, a doubles sheet: two shots on each of bulls 1 to 10; scan it | 11 on paper | 10 minutes there, 5 at home |
+| 11 | At the range, a ladder sheet: five or more loads, a few bulls each; scan it | 8 on paper | 20 minutes there, 5 at home |
+| 12 | At the range, one GL-CF25-LTR-D load sheet shot bull 1 to bull 25 in order with the Garmin Xero recording, string number on the block; kept flat, scanned at 600 dpi, then photographed square, at about 20 degrees and about 35 with the Fold 7's main lens | 1, 12, 20 and 24 | 30 minutes there, 20 at home |
+| 13 | A store-bought target shot with the count written down, scanned and photographed, then marked by hand on both phones at the sitting (request 58, with request 9) | 30 | a range trip, then 30 minutes |
+| 14 | One load shot as a five shot group at 100 yards and another at 300, each on its own sheet | 25 | a range with 300 yards |
+| 15 | One stapled, curled sheet photographed three times, once the surface model has changed | 2 | 10 minutes, later |
+
+Not for Alan: 3 (a change to detection), point 2 of 5 (cannot be met on `shotGroups`' own series), 17 (no gate) and the rest of the
+desktop from the keyboard (no gate).
+
 ## The 31
 
 Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gate nobody has written yet.

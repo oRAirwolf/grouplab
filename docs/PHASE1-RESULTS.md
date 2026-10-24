@@ -385,6 +385,13 @@ phone's side of Shooting defaults and Daily copies of your records, in place of 
 says so. The README links the two features and shows no phone picture of Settings, so it needed nothing. The tour's Settings page names the
 computer's pages and is unchanged.
 
+**Section 5, the proof checklist.** Read again. Nothing has come into `grouplab-local` since entry 464 (the range kit waits for its trip),
+so no row moved on material. Row 27's two halves are each held by a machine (the desktop opening a phone's session file in
+`SessionFileTests`; the phone's own Share this session writing a file that reader opens with every shot where it was, in the new
+`Entry472ShareTests`), and what is left is Android's share sheet carrying it across, which needs the
+phone. `docs/PROOF-CHECKLIST.md` now opens with one line per thing still needing Alan, what it proves and about how long, shortest first:
+fifteen lines, from five minutes at the phone sitting (row 27) to a range with 300 yards (row 25), and sync's real devices among them.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
