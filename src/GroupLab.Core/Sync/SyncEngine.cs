@@ -414,6 +414,12 @@ public static class SyncEngine
                 return null;
             }
 
+            // Entry 472 section 2: a file written with its records' checksum is taken only when they still match it; one written before had none.
+            if (file["sha256"] is { } sum && (string?)sum != RecordsHash(records))
+            {
+                return null;
+            }
+
             var all = new List<ChangeRecord>();
             foreach (var node in records.OfType<JsonObject>())
             {
@@ -425,12 +431,38 @@ public static class SyncEngine
                 all.Add(new ChangeRecord(kind, key, VersionVector.Parse(node["vector"]), (string?)node["deletedUtc"], node["data"] as JsonObject is { } data ? (JsonObject)data.DeepClone() : null));
             }
 
-            return all;
+            // Entry 472 section 2: every record is checked before any is taken, so a file is applied whole or left for later, never in part.
+            return all.All(Applicable) ? all : null;
         }
-        catch (Exception e) when (e is JsonException or InvalidOperationException or FormatException)
+        catch (Exception e) when (e is JsonException or InvalidOperationException or FormatException or NotSupportedException or ArgumentException or OverflowException or InvalidDataException)
         {
             return null;
         }
+    }
+
+    private static string RecordsHash(JsonArray records) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(records.ToJsonString()))).ToLowerInvariant();
+
+    /// <summary>
+    /// Whether a record can be applied as it is: a deletion, a setting, a kind this GroupLab does not know (left as it was), or a record with
+    /// everything the database needs. Throws where its words are not text, which the caller takes as the file not readable yet.
+    /// </summary>
+    private static bool Applicable(ChangeRecord record)
+    {
+        if (record.DeletedUtc is not null || record.Data is not { } data)
+        {
+            return true;
+        }
+
+        _ = data.ToJsonString();
+        return record.Kind switch
+        {
+            SessionKind => SessionFrom(data) is var (session, strings, velocities) && DataExport.Whole(session) && strings.All(DataExport.Whole) && velocities.All(v => v is not null),
+            RifleKind => data.Deserialize<Rifle>(Options) is { Name.Length: > 0 },
+            BarrelKind => data.Deserialize<Barrel>(Options) is { Name.Length: > 0 },
+            LoadKind => data.Deserialize<Load>(Options) is { Name.Length: > 0 },
+            SheetKind => DataExport.Whole(data.Deserialize<ExportedSheet>(Options)),
+            _ => true,
+        };
     }
 
     /// <summary>
@@ -497,7 +529,8 @@ public static class SyncEngine
                 records.Add(node);
             }
 
-            var file = new JsonObject { ["format"] = Format, ["version"] = Version, ["device"] = me, ["writtenUtc"] = Utc(nowUtc), ["records"] = records, ["end"] = true };
+            // Entry 472 section 2: the records' checksum, so a copy a cloud client damaged but left readable is not taken for the file.
+            var file = new JsonObject { ["format"] = Format, ["version"] = Version, ["device"] = me, ["writtenUtc"] = Utc(nowUtc), ["records"] = records, ["sha256"] = RecordsHash(records), ["end"] = true };
             string name = string.Create(CultureInfo.InvariantCulture, $"{nowUtc:yyyyMMdd'T'HHmmssfff'Z'}-{files:000}-{Convert.ToHexString(RandomNumberGenerator.GetBytes(3)).ToLowerInvariant()}.json");
             folder.Write($"{Root}/changes/{me}/{name}", Encoding.UTF8.GetBytes(file.ToJsonString()));
 

@@ -207,6 +207,20 @@ public static class MarkingFile
 
     public static (MarkingState State, IReadOnlyList<string> Notes) Read(string json)
     {
+        try
+        {
+            return ReadChecked(json);
+        }
+        catch (Exception e) when (e is ArgumentException or InvalidOperationException or FormatException or OverflowException or InvalidCastException
+            or KeyNotFoundException or NullReferenceException or IndexOutOfRangeException or JsonException or NotSupportedException)
+        {
+            // Entry 472 section 2: a file damaged so that a value is missing or of the wrong kind is refused in words, never a fault part way.
+            throw new MarkingFileException("This marking file is damaged: a value in it is missing or is not what GroupLab expects there, so it was not opened.");
+        }
+    }
+
+    private static (MarkingState State, IReadOnlyList<string> Notes) ReadChecked(string json)
+    {
         JsonNode? root;
         try
         {

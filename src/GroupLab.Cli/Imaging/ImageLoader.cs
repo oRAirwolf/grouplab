@@ -149,7 +149,22 @@ public static class ImageLoader
             _ => ImreadModes.Color,
         };
         NotTooLarge(metadata, path);
-        var mat = Cv2.ImDecode(bytes, mode | ImreadModes.IgnoreOrientation);
+        if (bytes.Length == 0)
+        {
+            // Entry 472 section 2: an empty file, as a cloud client leaves one before it has brought the picture down, says so.
+            throw new InvalidDataException($"{path} is empty, so there is no picture in it yet.");
+        }
+
+        Mat mat;
+        try
+        {
+            mat = Cv2.ImDecode(bytes, mode | ImreadModes.IgnoreOrientation);
+        }
+        catch (OpenCVException)
+        {
+            throw new InvalidDataException($"{path} is not an image OpenCV can decode.");
+        }
+
         if (mat.Empty())
         {
             mat.Dispose();

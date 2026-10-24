@@ -83,7 +83,28 @@ public static class SessionPackage
             throw new SessionPackageException("This is not a GroupLab session file.");
         }
 
-        using (zip)
+        try
+        {
+            return Contents(zip);
+        }
+        catch (MarkingFileException e)
+        {
+            throw new SessionPackageException("The session file's marking could not be read: " + e.Message);
+        }
+        catch (Exception e) when (e is InvalidDataException or InvalidOperationException or JsonException or FormatException or ArgumentException or IOException
+            or NotSupportedException or OverflowException or NullReferenceException)
+        {
+            // Entry 472 section 2: a part of the file damaged where the zip keeps it, or a value of the wrong kind, is refused in words.
+            throw new SessionPackageException("This session file is damaged, so it was not opened. Share it again from the device it came from.");
+        }
+        finally
+        {
+            zip.Dispose();
+        }
+    }
+
+    private static SessionPackageContents Contents(ZipArchive zip)
+    {
         {
             var session = Json(zip, "session.json") ?? throw new SessionPackageException("This is not a GroupLab session file: it has no session record.");
             if ((string?)session["schema"] != Schema)

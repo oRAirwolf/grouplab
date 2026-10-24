@@ -343,6 +343,25 @@ target question's Escape pressed the last button in its row and now names "Not s
 and replaced with explicit marks: the plot's key decided which sheet a tap showed alone by reading "Sheet N:" from the row's words; the
 benchmark's bar was hidden by comparing the status line's words; the phone's guided tour found the picture check's button by its words.
 
+**Section 2, every importer against bad files.** `BadFilesTests` gives a session file (.grouplab), a marking, a CSV of shots, a GroupLab
+data file, a picture (JPEG, PNG, TIFF and BMP) and its Orientation, and a sync change file nothing, one byte, about sixty truncations,
+120 changed bytes, 30 cut-out runs, a placeholder of zeros, a picture, words, a zip of something else, and the file twice; the text formats
+also in UTF-8 with and without a mark, UTF-16 both ways and Latin-1, each with LF, CRLF and CR line endings; and very large or deeply
+nested input. Each must end in what it read or in the refusal its callers catch, in words, inside 30 seconds. Found and fixed:
+- **A session file** damaged inside its zip, or with a value of the wrong kind, faulted (`InvalidDataException`, `InvalidOperationException`)
+  instead of being refused: now "This session file is damaged, so it was not opened. Share it again from the device it came from."
+- **A marking** with a damaged value faulted (an unknown name, a missing value): now refused as damaged in words.
+- **A GroupLab data file** that was not UTF-8 faulted, and one with a session's sheet name, a chronograph string's source or readings
+  missing passed the check and then **stopped part way through the import** on the database's rule, leaving the sessions before it
+  imported. Everything the database needs is now checked before anything is written, so it is imported whole or refused.
+- **A sync change file** damaged so that it still parsed was **applied in part** (one record of two), then marked read, so the whole copy
+  arriving later was never taken; others faulted the run on a missing value. A change file is now taken only when every record in it can
+  be applied, and files GroupLab writes now carry a checksum of their records (older files have none and are read as before), so a
+  damaged copy is left as still arriving and the whole one is taken when it comes.
+- **An empty picture** faulted inside OpenCV: now "is empty, so there is no picture in it yet".
+The CSV of shots, the chronograph exports (now with every line ending as well) and a photograph's Orientation (the values 0 to 9 and 255,
+missing, said as another type, and damaged) needed nothing. Nothing was unclear enough to need Alan.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

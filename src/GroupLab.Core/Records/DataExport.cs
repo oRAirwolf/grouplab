@@ -135,15 +135,29 @@ public static class DataExport
     public static DataFile Read(Stream input)
     {
         ArgumentNullException.ThrowIfNull(input);
-        JsonNode? root;
         try
         {
-            root = JsonNode.Parse(input);
+            return Checked(input);
         }
-        catch (JsonException)
+        catch (Exception e) when (e is JsonException or InvalidOperationException or NotSupportedException or FormatException or ArgumentException or OverflowException)
         {
+            // Entry 472 section 2: text that is not UTF-8, or a value of the wrong kind where the format and version are read, is damage too.
             throw new InvalidDataException("This file is damaged or is not a GroupLab data file, so nothing was imported.");
         }
+    }
+
+    /// <summary>What the database needs of a session: when it was made, its sheet's name and its marks.</summary>
+    internal static bool Whole(SessionRecord? s) => s is { CreatedUtc.Length: > 0, SheetName: not null, MarkingJson.Length: > 0 };
+
+    /// <summary>What the database needs of a chronograph string: where it came from and its readings.</summary>
+    internal static bool Whole(ChronographString? c) => c is { Source: not null, VelocitiesFps: not null };
+
+    /// <summary>What a designed sheet needs: its file name and its definition.</summary>
+    internal static bool Whole(ExportedSheet? s) => s is { File.Length: > 0, Definition: not null };
+
+    private static DataFile Checked(Stream input)
+    {
+        JsonNode? root = JsonNode.Parse(input);
 
         if (root is not JsonObject file || (string?)file["format"] != Format)
         {
@@ -166,7 +180,10 @@ public static class DataExport
             var book = file["book"]?.Deserialize<RecordBook>(Options) ?? RecordBook.Empty;
             var sessions = file["sessions"]?.Deserialize<List<ExportedSession>>(Options) ?? [];
             var sheets = file["sheets"]?.Deserialize<List<ExportedSheet>>(Options) ?? [];
-            if (sessions.Any(s => s.Session is null || string.IsNullOrEmpty(s.Session.MarkingJson) || string.IsNullOrEmpty(s.Session.CreatedUtc)))
+            // Entry 472 section 2: everything the database needs is checked here, so an import never stops part way through on a value missing.
+            if (sessions.Any(s => s is null || !Whole(s.Session) || s.Strings is null || !s.Strings.All(Whole) || s.Velocities is null || s.Velocities.Any(v => v is null))
+                || sheets.Any(s => !Whole(s))
+                || (book.Rifles ?? []).Any(r => r is not { Name.Length: > 0 }) || (book.Barrels ?? []).Any(b => b is not { Name.Length: > 0 }) || (book.Loads ?? []).Any(l => l is not { Name.Length: > 0 }))
             {
                 throw new InvalidDataException("A session in this file is incomplete, so the file is damaged, and nothing was imported.");
             }

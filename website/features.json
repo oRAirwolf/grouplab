@@ -46,6 +46,7 @@
     "On Android the button for printing straight to the Phomemo M834",
     "On Android, the back button now goes back one screen",
     "On Android, the back gesture now returns to the screen before",
+    "A damaged session file, marking or GroupLab data file is now refused",
     "On a tablet, every page now uses the whole width",
     "On the phone, the caliber now starts empty",
     "Marks to check are now listed in bull order",
