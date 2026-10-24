@@ -267,6 +267,8 @@ internal sealed class FingerprintPage : UserControl
         }.Id("fingerprint-back");
         AutomationProperties.SetName(backButton, step == FingerprintStep.Photo ? "Back to Targets" : FingerprintWords.Back);
         backButton.Click += (_, _) => GoBack();
+        // Entry 472 section 1: Android's back presses it, as every page's own way back.
+        backButton.Classes.Add(PhoneStyles.PageBack);
         var where = new TextBlock { Text = FingerprintWords.Of(step), TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center, Classes = { PhoneStyles.Dim } };
         var top = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), Children = { backButton, where } };
         Grid.SetColumn(where, 1);

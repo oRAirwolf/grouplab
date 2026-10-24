@@ -144,6 +144,9 @@ public sealed partial class MainWindow
     /// <summary>The question's answers in the order shown, then "Not sure", while it is open.</summary>
     private readonly List<Button> whichTargetChoices = [];
 
+    /// <summary>Entry 472 section 1: what Escape presses on the question, said rather than taken as the last button in the row.</summary>
+    private Button? whichTargetNotSure;
+
     /// <summary>The "Which target is this?" bar while it is open, for the headless tests.</summary>
     internal Border? WhichTargetBar => whichTargetBar.IsVisible ? whichTargetBar : null;
 
@@ -186,6 +189,7 @@ public sealed partial class MainWindow
         var notSure = Button(FamilyQuestion.NotSure, () => Answer(null));
         Avalonia.Automation.AutomationProperties.SetName(notSure, FamilyQuestion.NotSure);
         whichTargetChoices.Add(notSure);
+        whichTargetNotSure = notSure;
         whichTargetChoices[0].Classes.Add(AppStyles.Primary);
         foreach (var button in whichTargetChoices)
         {
@@ -237,7 +241,7 @@ public sealed partial class MainWindow
 
         var pick = e.Key switch
         {
-            Avalonia.Input.Key.Escape => whichTargetChoices[^1],
+            Avalonia.Input.Key.Escape => whichTargetNotSure,
             Avalonia.Input.Key.Enter when !(focusFromKeyboard && e.Source is Avalonia.Controls.Button) => whichTargetChoices[0],
             _ => null,
         };

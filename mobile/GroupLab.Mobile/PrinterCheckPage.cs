@@ -94,7 +94,7 @@ internal sealed class PrinterCheckPage : UserControl
             name = string.IsNullOrWhiteSpace(named.Text) ? PrinterProfile.DefaultName : named.Text.Trim();
             Measure(chosen);
         }));
-        column.Children.Add(Screens.Choice("Skip for now, run it later from Settings", done));
+        column.Children.Add(Screens.Choice("Skip for now, run it later from Settings", done).LeavesPage());
         Content = Screens.Page(column);
     }
 

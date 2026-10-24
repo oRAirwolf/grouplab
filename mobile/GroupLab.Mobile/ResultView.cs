@@ -554,7 +554,9 @@ public sealed class ResultView : UserControl, IOpenTarget
         actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? "").Id("result-share-session"));
         actions.Children.Add(Screens.Choice("Share the shots as CSV", () => shareSaid.Text = SessionFiles.ShareCsv(session.State, definition) ?? "").Id("result-share-csv"));
         actions.Children.Add(shareSaid);
-        actions.Children.Add(Screens.Choice("Another target", again).Id("result-another-target"));
+        // Entry 472 section 1: the result's own way out, to Capture's start or the list of sessions, is what Android's back presses; before,
+        // back on a result found no way back and closed GroupLab on Capture, or went to Capture from Sessions.
+        actions.Children.Add(Screens.Choice("Another target", again).Id("result-another-target").LeavesPage());
         Refresh();
 
         var host = new Grid { Margin = new Thickness(16) };

@@ -52,6 +52,7 @@ internal sealed class BullsPage : UserControl
         layout = SheetReading.LayoutOf(session.State);
         taps = SheetReading.PatternOf(session.State.Rule) == ShotPattern.SomeTookMore ? Taps.TookTwo : Taps.FiredAt;
         loadNames = ["No load", .. LoadNames()];
+        var opened = session.State;
 
         var column = new StackPanel
         {
@@ -68,9 +69,14 @@ internal sealed class BullsPage : UserControl
                 readBack,
                 Screens.Primary("Done", () =>
                 {
-                    changed();
+                    // Entry 472 section 1: Android's back presses Done, so a visit that changed nothing saves nothing.
+                    if (!ReferenceEquals(opened, session.State))
+                    {
+                        changed();
+                    }
+
                     back();
-                }).Id("bulls-done"),
+                }).Id("bulls-done").LeavesPage(),
             },
         };
         Content = Screens.Page(column);

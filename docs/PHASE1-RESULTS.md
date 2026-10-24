@@ -318,6 +318,31 @@ rather than 91, the bare app's figures). `docs/PERFORMANCE.md` has the figures.
 **Is it worth an article?** No: a forgetting button, a tag rule and a build switch; the precompiled measurement is in PERFORMANCE.md and
 would change nothing another shooter does.
 
+## Entry 472: the overnight queue, work that needs nobody (2026-10-24)
+
+**Section 1, the class of fault entry 470 found.** `Entry472BackTests` opens every place along the bottom, a result, each of the eight
+Settings pages, Sync and the printer check, presses each button on them as the phone sweep does, and then Back: it must go to the screen
+the press came from (to Capture where the press went to another place), and change nothing the phone keeps: every file under its folder
+by content, the copies of the records, and what was shared, printed or opened. A page class no button reaches fails `EveryPageIsWalked`
+until it is reached or named with its reason. It found five ways back Android's back could not see, all now fixed:
+- **A result** had no marked way back: on Capture, back closed GroupLab; on Sessions it went to Capture. "Another target" is now the
+  result's way back (to Capture's start, or to the list on Sessions).
+- **How did you shoot this sheet** had only Done, unmarked, so back closed GroupLab. Done is now its way back, and saves only when the
+  answer changed (before, Done saved the session every time).
+- **The picture's check** before a result had none; back now goes to Capture's start and keeps the reading, as it already is in Sessions.
+- **Add a store-bought target**'s own back arrow was unmarked, so back went to Capture; **the printer check**'s first step had only
+  "Skip for now", so back went to Capture rather than Printers. Both marked. Marking A's Cancel is marked too.
+- **A target switched to from another place** (Sessions' row for a target already open on Capture, or the open targets sheet) now returns
+  to that place on back, not to the start of Capture.
+The mark for a way out not worded as Back is `Screens.LeavesPage`. The iPhone has no system back and Avalonia raises none there (entry
+470), so on iOS the change is the same shared screens; the screen sweep both the emulator and the simulator run
+(`scripts/scenarios/phone-sweep.json`) now presses Back instead of each page's back button by name, six times, with a wait for the page
+it should land on, and `PhoneSweepScenarioTests` runs it headlessly. On the computer every Escape handler was read: each closes a
+dialog, ends a choosing or clears a field, and none saves or deletes beyond the guided tour's own sample (entry 439); the store-bought
+target question's Escape pressed the last button in its row and now names "Not sure". **Other behaviour chosen from words**, three found
+and replaced with explicit marks: the plot's key decided which sheet a tap showed alone by reading "Sheet N:" from the row's words; the
+benchmark's bar was hidden by comparing the status line's words; the phone's guided tour found the picture check's button by its words.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

@@ -264,7 +264,9 @@ public sealed class Shell : UserControl
             return;
         }
 
+        var from = Showing;
         Show(view.Home);
+        switchedFrom = from == view.Home ? null : from;
         switch (page.Content)
         {
             case CapturePage onCapture:
@@ -490,6 +492,7 @@ public sealed class Shell : UserControl
     /// <summary>Shows <paramref name="place"/>; Settings at <paramref name="settingsPage"/>'s page where one is given, built once (entry 468).</summary>
     private void Show(Place place, GroupLab.App.SettingsCategory? settingsPage)
     {
+        switchedFrom = null;
         Immersive(false);
         Showing = place;
         foreach (var (each, tab) in tabs)
@@ -531,6 +534,12 @@ public sealed class Shell : UserControl
     /// The button Android's back presses on the screen now, entry 376 item B1: a sheet's × where one is open, else the page's own Back,
     /// the last one showing where pages are nested; null where neither is on screen.
     /// </summary>
+    /// <summary>
+    /// Entry 472 section 1: the place a switch to an open target left, where the target lives in another, so back from that target returns
+    /// to where the person was rather than to the start of the target's own place. Any other move between places forgets it.
+    /// </summary>
+    private Place? switchedFrom;
+
     internal Button? WayBack()
     {
         var shown = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(this).OfType<Button>().Where(b => b.IsEffectivelyVisible && b.IsEffectivelyEnabled).ToList();
@@ -568,7 +577,20 @@ public sealed class Shell : UserControl
         // screen. A sheet over the page closes first, by its ×; then the page's own way back, the button every inner page has.
         if (WayBack() is { } way)
         {
+            if (switchedFrom is { } from && Avalonia.Automation.AutomationProperties.GetAutomationId(way) == "result-another-target")
+            {
+                Show(from);
+                return true;
+            }
+
             way.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            return true;
+        }
+
+        // Entry 472 section 1: the picture's check before a result has no way back of its own; back goes to Capture's start, the reading
+        // kept in Sessions as it already is, rather than closing GroupLab.
+        if (Content == frame && Showing == Place.Capture && capture?.LeaveCheck() == true)
+        {
             return true;
         }
 
@@ -627,6 +649,17 @@ internal static class Screens
     public static Button BackButton(string words, Action chosen)
     {
         var button = Pill(words, chosen, primary: false);
+        button.Classes.Add(PhoneStyles.PageBack);
+        return button;
+    }
+
+    /// <summary>
+    /// Entry 472 section 1: a page's only way out that is not worded as Back, a Done, a Cancel or a Skip for now that leaves and saves
+    /// nothing more than the page already has, said here as the way Android's back presses. Without it the back gesture on such a page
+    /// found no way back and closed GroupLab from an inner screen, or went past the page it came from.
+    /// </summary>
+    public static Button LeavesPage(this Button button)
+    {
         button.Classes.Add(PhoneStyles.PageBack);
         return button;
     }

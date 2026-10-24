@@ -51,7 +51,7 @@ public partial class MobileSweepTests
     [GeneratedRegex(@"^(‹|Back|Cancel|Close|Done|Not now|Skip|Later|No\b)", RegexOptions.IgnoreCase)]
     internal static partial Regex WayBack();
 
-    private static void Settle(Window window)
+    internal static void Settle(Window window)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -64,7 +64,7 @@ public partial class MobileSweepTests
 
     private static bool Inner(Control c) => c.GetVisualAncestors().OfType<Control>().Any(a => a is ComboBox or ListBox or TextBox or ScrollBar or Slider);
 
-    private static string NameOf(Control c) => ControlAutomationPeer.CreatePeerForElement(c).GetName() ?? "";
+    internal static string NameOf(Control c) => ControlAutomationPeer.CreatePeerForElement(c).GetName() ?? "";
 
     private static string Describe(Control c)
     {
@@ -76,7 +76,7 @@ public partial class MobileSweepTests
     private static PhoneResult? result;
 
     /// <summary>The committed sample scan read once, as Capture reads a picture, for the result's page.</summary>
-    private static PhoneResult Result()
+    internal static PhoneResult Result()
     {
         if (result is null)
         {
@@ -89,7 +89,7 @@ public partial class MobileSweepTests
     }
 
     /// <summary>The places along the bottom, and a result.</summary>
-    private static IEnumerable<(string Name, Action<Shell> Show)> Places() =>
+    internal static IEnumerable<(string Name, Action<Shell> Show)> Places() =>
     [
         .. Enum.GetValues<Shell.Place>().Select(p => (p.ToString(), (Action<Shell>)(s => s.Show(p)))),
         ("a result", s =>
@@ -284,10 +284,10 @@ public partial class MobileSweepTests
         Assert.True(found.Count == 0, $"at {width} by {height}:{Environment.NewLine}" + string.Join(Environment.NewLine, found.Distinct().Take(80)));
     }
 
-    private static List<Button> Buttons(Window window) =>
+    internal static List<Button> Buttons(Window window) =>
         [.. window.GetVisualDescendants().OfType<Button>().Where(b => b.IsEffectivelyVisible && b.IsEffectivelyEnabled && !Inner(b))];
 
-    private static string Key(Button b) => Avalonia.Automation.AutomationProperties.GetAutomationId(b) is { Length: > 0 } id ? id : NameOf(b);
+    internal static string Key(Button b) => Avalonia.Automation.AutomationProperties.GetAutomationId(b) is { Length: > 0 } id ? id : NameOf(b);
 
     /// <summary>Every field on every place and a result, and on each page one press away, stays above the keyboard (entry 328) at the two upright sizes.</summary>
     [AvaloniaTheory]

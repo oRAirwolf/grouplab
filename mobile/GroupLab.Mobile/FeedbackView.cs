@@ -44,8 +44,8 @@ internal sealed class FeedbackView : UserControl
         }
 
         column.Children.Add(Screens.Dim("Fine: " + string.Join(", ", check.Fine) + "."));
-        var retake = check.CanMeasure ? Screens.Choice("Take it again", again) : Screens.Primary("Take it again", again);
-        var keep = check.CanMeasure ? Screens.Primary("Use this picture", use) : Screens.Choice("Use it anyway", use);
+        var retake = (check.CanMeasure ? Screens.Choice("Take it again", again) : Screens.Primary("Take it again", again)).Id("feedback-retake");
+        var keep = (check.CanMeasure ? Screens.Primary("Use this picture", use) : Screens.Choice("Use it anyway", use)).Id("feedback-use");
         var buttons = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 12, Children = { retake, keep } };
         Grid.SetColumn(keep, 1);
         column.Children.Add(buttons);

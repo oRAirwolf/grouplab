@@ -122,7 +122,7 @@ internal sealed class MarkingAPage : UserControl
         column.Children.Add(viewer);
         column.Children.Add(length);
         column.Children.Add(buttons);
-        column.Children.Add(Screens.Choice("Cancel", cancel));
+        column.Children.Add(Screens.Choice("Cancel", cancel).LeavesPage());
         Content = new ScrollViewer { Content = column };
         Show();
     }

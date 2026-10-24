@@ -466,7 +466,8 @@ internal sealed class PhoneDemo
             // A picture check before the result, where one shows, is answered as the person would to see the result.
             if (shell.GetVisualDescendants().OfType<FeedbackView>().FirstOrDefault() is { } check)
             {
-                check.GetVisualDescendants().OfType<Button>().FirstOrDefault(b => b.Content is TextBlock { Text: "Use this picture" or "Use it anyway" })
+                // Entry 472 section 1: found by its mark, not its words.
+                check.GetVisualDescendants().OfType<Button>().FirstOrDefault(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "feedback-use")
                     ?.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
             }
 

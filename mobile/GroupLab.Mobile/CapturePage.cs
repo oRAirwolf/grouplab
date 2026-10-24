@@ -539,6 +539,18 @@ public sealed class CapturePage : UserControl
     }
 
     /// <summary>Whether the camera is showing; closes it and returns to the start where it was.</summary>
+    /// <summary>Entry 472 section 1: back on the picture's check, to the start; false where the check is not showing.</summary>
+    internal bool LeaveCheck()
+    {
+        if (Content is not FeedbackView)
+        {
+            return false;
+        }
+
+        ShowStart();
+        return true;
+    }
+
     internal bool CloseCamera()
     {
         if (!Phone.Platform.IsCamera(Content))

@@ -682,7 +682,8 @@ internal sealed class CompositePlot : Control
     private const double SelectedDot = 4.5;
 
     /// <summary>One entry of the key: its words, and how its swatch is drawn at a point.</summary>
-    private sealed record KeyEntry(string Text, Action<DrawingContext, Point> Swatch);
+    /// <summary>A row of the key; <paramref name="Sheet"/> is the pooled sheet a row stands for, which a tap on it shows alone (entry 472: said, never read from the words).</summary>
+    private sealed record KeyEntry(string Text, Action<DrawingContext, Point> Swatch, int? Sheet = null);
 
     /// <summary>
     /// The key, entry 105 section 3: each mark drawn as it is on the plot, then its name, since entry 465 item 2A in a compact box directly
@@ -710,7 +711,7 @@ internal sealed class CompositePlot : Control
             int n = Shots.Count(s => s.Sheet == sheet && !s.Excluded);
             string shown = OnlySheet == sheet ? ", shown alone: tap for all" : OnlySheet is null ? ", tap to show alone" : "";
             entries.Add(new KeyEntry(string.Create(CultureInfo.InvariantCulture, $"Sheet {sheet + 1}: {n} shot{(n == 1 ? "" : "s")}{shown}"),
-                (c, p) => Marks.Dot(c, new SolidColorBrush(colour, OnlySheet is null || OnlySheet == sheet ? 1 : OutlineOpacity), p, 4)));
+                (c, p) => Marks.Dot(c, new SolidColorBrush(colour, OnlySheet is null || OnlySheet == sheet ? 1 : OutlineOpacity), p, 4), sheet));
         }
 
         if (Selected.Count > 0)
@@ -931,11 +932,9 @@ internal sealed class CompositePlot : Control
         var inside = new Point(at.X - box.X, at.Y - box.Y);
         foreach (var (entry, _, cell) in arranged.Cells)
         {
-            string text = entry.Text;
-            if (cell.Contains(inside) && text.StartsWith("Sheet ", StringComparison.Ordinal)
-                && int.TryParse(text["Sheet ".Length..text.IndexOf(':', StringComparison.Ordinal)], NumberStyles.Integer, CultureInfo.InvariantCulture, out int k))
+            if (cell.Contains(inside) && entry.Sheet is { } sheet)
             {
-                return k - 1;
+                return sheet;
             }
         }
 

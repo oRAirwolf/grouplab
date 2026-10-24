@@ -114,6 +114,8 @@ public sealed class BenchmarkPanel : StackPanel
         async Task Go()
         {
             string ending;
+            // Entry 472 section 1: whether the bar stays is said here, not read back from the status line's words.
+            bool finished = false;
             try
             {
                 var result = await Task.Run(() => Benchmark.Run(definition, backend, token, _ => Dispatcher.UIThread.Post(() =>
@@ -127,6 +129,7 @@ public sealed class BenchmarkPanel : StackPanel
                 ending = SharingWords.BenchmarkDone(result, goes)
                     + string.Create(CultureInfo.CurrentCulture, $" Finished at {DateTime.Now:HH:mm}.");
                 bar.Value = 1;
+                finished = true;
                 status.Text = ending;
                 if (goes && afterRun is not null)
                 {
@@ -136,11 +139,13 @@ public sealed class BenchmarkPanel : StackPanel
             catch (OperationCanceledException)
             {
                 DiagnosticLog.Info("survey.benchmark.cancelled", ("seconds", (long)clock.Elapsed.TotalSeconds));
+                finished = false;
                 status.Text = SharingWords.BenchmarkCancelled;
             }
             catch (Exception ex) when (ex is not OutOfMemoryException)
             {
                 DiagnosticLog.Exception(LogLevel.Warn, "survey.benchmark.failed", ex, []);
+                finished = false;
                 status.Text = SharingWords.BenchmarkFailed;
                 Problem?.Invoke("The benchmark did not finish", status.Text);
             }
@@ -149,7 +154,7 @@ public sealed class BenchmarkPanel : StackPanel
                 timer.Stop();
                 cancel.IsVisible = false;
                 run.IsVisible = true;
-                bar.IsVisible = status.Text != SharingWords.BenchmarkCancelled && status.Text != SharingWords.BenchmarkFailed;
+                bar.IsVisible = finished;
                 cancellation?.Dispose();
                 cancellation = null;
                 Ended?.Invoke();
