@@ -12,6 +12,27 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.222
+
+**2026-10-26**, commit `c3bd808`. Nightly.
+
+**What you will notice**
+
+- Rifles, barrels and loads can now be deleted, in Equipment on the computer and in Ballistics on the phone; it asks first, and sessions saved with them keep the name. (Error report 38).
+- On the phone, a new sync folder names this phone by its maker and model instead of GroupLab's version line; Find a setting finds more settings by everyday words such as Dropbox or bigger; and at the larger text sizes the marking screen's field names wrap instead of running past their box.
+- A new sheet marked on the same picture as an earlier one is now saved as a session of its own instead of replacing the earlier session; any lost this way can be put back from a daily copy in Settings. (Error reports 39 and 40).
+
+**Under the hood**
+
+- On the phone, a sync still running when you stop syncing no longer records itself as the last sync afterwards.
+- Nothing changes for a person using GroupLab; the project can now make its own screen recordings for its videos.
+- Reading a target finds its holes about a fifth sooner on a large scan and on photographs, with every result exactly as before.
+- The phone's screen walk now pictures the Sync between devices page, using a sample folder in the app's own storage, for the website.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.222)
+
+---
+
 ## 0.2.0-nightly.221
 
 **2026-10-24**, commit `70a3b0d`. Nightly.
