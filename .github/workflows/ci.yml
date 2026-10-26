@@ -126,6 +126,8 @@ jobs:
               status=0
             fi
           fi
+          # Entry 474 section 3: which tests take the time, into the job's summary, before the results go.
+          "$py" scripts/slowest-tests.py "$results/first" --top 15 --summary "$GITHUB_STEP_SUMMARY" > /dev/null || true
           rm -rf "$runner_temp" "$results" retry-plan.txt
           exit $status
 

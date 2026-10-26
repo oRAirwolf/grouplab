@@ -59,8 +59,7 @@ OpenCV outlining and labelling the whole mask), about 466 in all.
 
 - **The sheet drawn in bands of rows at once** (`SceneRasterizer`): every fill touches only the rows it covers and each pixel sees the same
   items in the same order, so each band draws all items clipped to its rows. 81 to 19 ms. `SceneRasterizerBandsTests` holds the pixels to
-  the one thread's, on two sheets, at 600 dpi, with words, stretched, a region, scaled and the value channel, at 3, 7, 64 and the chosen
-  number of bands.
+  the one thread's at 600 dpi, with words, stretched, a region, scaled and the value channel, at 7, 64 and the chosen number of bands.
 - **The moved print check's darkest and lightest within the opening** (`DiscExtremes`): the disc taken row by row, each row's stretch
   grown from the one a pixel narrower, about three times the radius a pixel rather than the disc's area. 46 to 10 ms.
   `DiscExtremesTests` holds it to the disc walked whole on 300 random images, boxes and radii from 0 to 15.

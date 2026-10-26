@@ -78,7 +78,9 @@ public class PhoneTouchScenarioTests
     [AvaloniaFact]
     public async Task CloseFailsWhereAPickerItCannotSeeIsStillOpen()
     {
-        var failed = await TapThrough(noCamera: true, blind: true);
+        // Entry 474 section 3: only as far as the close it checks and one step after; the twenty after that each waited out their time
+        // behind the picker, 87 of the suite's seconds, and checked nothing here.
+        var failed = await TapThrough(noCamera: true, blind: true, through: 24);
         Assert.Contains(failed, f => f.StartsWith("23 close: the photo picker was opened", StringComparison.Ordinal) && f.Contains("does not see it", StringComparison.Ordinal));
     }
 
@@ -103,7 +105,7 @@ public class PhoneTouchScenarioTests
         }
     }
 
-    private static async Task<List<string>> TapThrough(bool noCamera, bool blind = false, TimeSpan pickerLate = default)
+    private static async Task<List<string>> TapThrough(bool noCamera, bool blind = false, TimeSpan pickerLate = default, int? through = null)
     {
         if (Phone.Platform is null)
         {
@@ -130,7 +132,17 @@ public class PhoneTouchScenarioTests
         Settle();
         try
         {
-            var run = Scenario.Run(File.ReadAllText(Repo.PathTo("scripts", "scenarios", "phone-touch.json")));
+            var scenario = JsonNode.Parse(File.ReadAllText(Repo.PathTo("scripts", "scenarios", "phone-touch.json")))!.AsObject();
+            if (through is { } last)
+            {
+                var steps = scenario["steps"]!.AsArray();
+                while (steps.Count > last)
+                {
+                    steps.RemoveAt(steps.Count - 1);
+                }
+            }
+
+            var run = Scenario.Run(scenario.ToJsonString());
             string hold = Path.Combine(Scenario.Results, Scenario.HoldFile);
             var taps = new List<string>();
             var clock = System.Diagnostics.Stopwatch.StartNew();
