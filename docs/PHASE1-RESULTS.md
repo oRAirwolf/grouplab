@@ -419,6 +419,34 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-451-475.md`](notes/archive/results-451-475.md), entries 451 to 475, 22 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 473: the consistency audit's five fixes, and error reports 38 to 40 (2026-10-26)
+
+**Before the entry: error reports 38, 39 and 40**, all from one Windows computer on nightly 221. 40 and 39 were the same fault: somebody
+marking each sheet by hand on copies of one clean picture of the target lost each sheet to the next, because entry 420 section 3 took
+the same picture (SHA-256 and design) for the same sheet. The logs showed a new picture's first save going to the existing session as
+the same sheet. Now the same picture is the same sheet only where at least half the holes of each match (`SessionRecords.SameHoles`, a
+quarter inch where the scale is known), and an updated record is kept first (60e60bc1, `Entry420Tests`). 38 asked to delete rifles and
+loads: Delete on a rifle, barrel or load, asked first, on the computer and the phone (1147821e, `EquipmentDeleteTests` in three suites).
+A fourth package, from an iPhone, showed the demo's session number reused after the demo deleted its own session: not a fault.
+
+**Section 1.** The sync card said "coming in the next build" because its phrase read "on your computer and phones" and nightly 215's
+note says "your phones". Copied exactly; the page now reads "Since nightly.215, changed in nightly.220". `never_published` in
+website/build.py holds the Features page back when a feature that has arrived has a phrase in no published note and in no commit since
+the newest nightly.
+
+**Section 2.** The phone walk now has a `sync-sample` step: a folder in GroupLab's own storage with a second device, Workshop computer,
+in it (`PhoneSync.Sample`), since Android's folder picker cannot be driven; it opens Sync between devices, takes `settings-sync` and puts
+everything back. `PhoneScreensScenarioTests` runs it headless. The picture comes from the emulator run dispatched on 2026-10-26.
+
+**Section 3.** Nightly 221's archives, their files summed: Windows 266.1, Linux 258.8, macOS 231.3 (Apple silicon) and 261.5 (Intel)
+MB, against nightly 103's 226, 219 and 185. The tables say 270, 260, and 240 on Apple silicon or 270 on Intel.
+
+**Section 4.** "In the settings" and "the top of Settings" now name the page: Updates and about (the update check and This build),
+General (the demo), Units and figures (the scope and length units), Help and problems (Report a problem).
+
+**Section 5.** The guide's sync section and the Features sentence say a change file still being copied, or damaged, is left alone until
+it is whole.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

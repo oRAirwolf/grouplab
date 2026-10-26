@@ -93,7 +93,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 6461 >>
+<< /Length 6486 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -107,7 +107,7 @@ BT /F1 71 Tf 1 0 0 -1 381 666 Tm (The installer's copy updates itself. It looks 
 BT /F1 71 Tf 1 0 0 -1 381 754 Tm (naming the version, with Update now, Later and Skip this version. Update now downloads it, checks it against the) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 842 Tm (build's signature, saves whatever you have open, says in one line that GroupLab will close and reopen, and) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 930 Tm (comes back on the screen you were on. No installer window and no administrator prompt appear at any point.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1018 Tm (You can change how often it looks, or turn it off, in the settings.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1018 Tm (You can change how often it looks, or turn it off, in Settings, Updates and about.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1141 Tm (The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1229 Tm (installed wherever you put them. They tell you a newer build exists and point you at the download.) Tj ET
 0.078431 0.078431 0.078431 rg
@@ -139,8 +139,8 @@ BT /F1 99 Tf 1 0 0 -1 381 3491 Tm (The first minute, with no rifle) Tj ET
 381 3521 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 3621 Tm (The easiest way is the guided demo. It is offered on the first run, and any time from Settings or the header's) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3709 Tm (menu as Walk me through a demo.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3621 Tm (The easiest way is the guided demo. It is offered on the first run, and any time from Settings, General, or the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3709 Tm (header's menu as Walk me through a demo.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 409 3832 Tm (1.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 508 3832 Tm (Choose Walk me through a demo \(about five minutes\). GroupLab makes its own sample, a sheet with 25) Tj ET
 BT /F1 71 Tf 1 0 0 -1 508 3920 Tm (shots that is nobody's target, and opens it in a tab called "Demo: sample sheet".) Tj ET
@@ -221,7 +221,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
 endobj
 11 0 obj
-<< /Length 5653 >>
+<< /Length 5665 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -272,12 +272,12 @@ BT /F1 99 Tf 1 0 0 -1 381 3072 Tm (Telling somebody when it is wrong) Tj ET
 381 3102 3556 3 re
 f
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 3202 Tm (The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3290 Tm (report, because a test build changes whenever the code does. Report a problem in Settings, Help and problems,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3378 Tm (opens a window that lists what the report holds, with a box for what happened and one for a way to reach you.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3466 Tm (Write what happened and press Send: the report goes to the project with the error and the logs of its run,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3554 Tm (carrying no location data and no photographs. Save only writes it as a zip instead. Only when sending is not) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3642 Tm (open yet, or a send fails, does the window say so and suggest sending the saved zip by opening an issue at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3202 Tm (The gear at the bottom left opens the settings. Updates and about names the build under This build: copy that) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3290 Tm (line into any report, because a test build changes whenever the code does. Report a problem in Settings, Help) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3378 Tm (and problems, opens a window that lists what the report holds, with a box for what happened and one for a way) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3466 Tm (to reach you. Write what happened and press Send: the report goes to the project with the error and the logs of) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3554 Tm (its run, carrying no location data and no photographs. Save only writes it as a zip instead. Only when sending is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3642 Tm (not open yet, or a send fails, does the window say so and suggest sending the saved zip by opening an issue at) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3730 Tm (<https://github.com/oRAirwolf/grouplab/issues> or by email to support@grouplab.org, with a line about what you) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3818 Tm (were doing. The support page at <https://grouplab.org/support/> explains the same and is easier to find again.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3941 Tm (GroupLab keeps everything in %APPDATA%\\GroupLab on Windows, and under your home folder on macOS) Tj ET
@@ -1362,25 +1362,25 @@ xref
 0000000448 00000 n 
 0000007070 00000 n 
 0000007196 00000 n 
-0000013709 00000 n 
-0000013862 00000 n 
-0000017459 00000 n 
-0000017587 00000 n 
-0000023293 00000 n 
-0000285308 00000 n 
-0000285382 00000 n 
-0000285508 00000 n 
-0000285628 00000 n 
-0000285750 00000 n 
-0000285923 00000 n 
-0000286047 00000 n 
-0000286173 00000 n 
-0000286314 00000 n 
-0000286449 00000 n 
-0000286591 00000 n 
-0000286722 00000 n 
+0000013734 00000 n 
+0000013887 00000 n 
+0000017484 00000 n 
+0000017612 00000 n 
+0000023330 00000 n 
+0000285345 00000 n 
+0000285419 00000 n 
+0000285545 00000 n 
+0000285665 00000 n 
+0000285787 00000 n 
+0000285960 00000 n 
+0000286084 00000 n 
+0000286210 00000 n 
+0000286351 00000 n 
+0000286486 00000 n 
+0000286628 00000 n 
+0000286759 00000 n 
 trailer
 << /Size 25 /Root 1 0 R >>
 startxref
-286853
+286890
 %%EOF

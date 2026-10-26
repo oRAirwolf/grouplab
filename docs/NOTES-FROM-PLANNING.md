@@ -25,6 +25,95 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-25, entry 473: consistency audit
+
+**Status: actioned 2026-10-26. Every section done.** Section 1: the sync feature's phrase copied exactly from nightly 215's note, so Features reads "Since nightly.215, changed in nightly.220", and the site build now holds Features back when an arrived feature has a phrase no published note and no commit to come says (`never_published`, tested in site-feature-dates-tests.py). Section 2: the phone walk opens Sync between devices with a sample folder and a second device (the `sync-sample` step) and takes `settings-sync`; the picture comes with the emulator run started today, and the noPicture line and SCREENSHOTS.md say so until it lands. Section 3: nightly 221 measured unpacked, Windows 266, Linux 259, macOS 231 (Apple silicon) and 262 (Intel) MB; the tables say 270, 260, and 240 or 270. Section 4: the testing guide, user guide, tour, README and PHONE-PARITY point at the Settings page by name. Section 5: the guide and the Features sync sentence say a half-written or damaged change file waits until it is whole.
+
+From the planning session's scheduled consistency audit (entry 267 section 2b). Read: README.md on GitHub (main, nightly 221), grouplab.org
+(home, /download/, /features/, /tour/ and /tour/settings/, /shoot-a-target/, /guides/ with the user guide and testing guide, /releases/,
+/support/), website/features.json, website/tour.json, docs/RELEASE-NOTES.md, docs/notes/STATE.md, docs/notes/for-alan.md,
+docs/PLATFORM-SUPPORT.md, docs/PHONE-PARITY.md, docs/ANDROID.md, the inbox (empty) and the commits since 2026-10-21. The open
+`consistency` issue could not be read from the planning session (GitHub refused the fetch), so some of this may repeat it; skip what it
+already lists. Nothing here needs Alan.
+
+Five findings, most visible first. Fix each where it is, with the README, site, guides and pictures in the same change as usual.
+
+## 1. The Features page says sync is coming in the next build, although all of it has shipped
+
+- **Where:** https://grouplab.org/features/, the Newest spotlight at the top, and the "Sync between your devices" card (#sync).
+- **What it says:** the spotlight heads it "COMING IN THE NEXT BUILD", and the card reads "Since nightly.215; its newest part is coming in
+  the next build."
+- **What it should say:** no "coming" at all. Sync arrived in nightly 215, tidying in a later nightly, and Forget this device and the new
+  empty folder in nightly 220 (docs/RELEASE-NOTES.md, the 0.2.0-nightly.220 section). The card should read "Since nightly.215, changed in
+  nightly.220" (or whatever the build works out once the phrase matches), and the spotlight should not put sync first as unreleased.
+- **Evidence and cause:** website/features.json, the `sync` feature's `note` list holds "stay the same on your computer and phones", but
+  nightly 215's note (docs/RELEASE-NOTES.md line 105) says "stay the same on your computer and your phones". That phrase matches no
+  published build, so `changed()` in website/build.py returns "next" and `newest()` sorts sync to the top as coming. It is the only feature
+  with a note phrase found in no release note.
+- **Also:** please add a check so this cannot happen silently again, for example the site build failing when a feature has arrived (its
+  first phrase is published) but another of its phrases is in no published note and in no unpublished commit's Release-note line.
+
+## 2. The phone's Sync page has no picture, and the reason given is no longer true
+
+- **Where:** website/features.json, the `sync` feature, `mobile.noPicture`: "the phone's Sync page is pictured by the emulator's walk, which
+  has not been run since it was built". docs/figures/SCREENSHOTS.md line 146: "The phone's Sync page waits for the emulator's walk."
+- **What is true now:** the emulator's walk has run (commits 0fc0fed8 and 5c814581 on 2026-10-23), and it took `fold-settings-data`, but
+  the walk has no Sync page shot at all: scripts/scenarios/phone-screens.json and scripts/android-screens.sh never mention sync. So the
+  card's Mobile side on https://grouplab.org/features/#sync shows no phone picture.
+- **What it should be:** add the phone's Sync between devices page (a folder chosen, another device listed) to the phone walk, as the
+  desktop's `sync-settings` does, and show it as the sync feature's `mobile.shot`. Until that picture exists, the noPicture line and
+  SCREENSHOTS.md line 146 should say the walk does not take the Sync page yet, not that the walk has not run.
+
+## 3. The Disk figures are from nightly 103, before the downloads grew by an eighth
+
+- **Where:** docs/PLATFORM-SUPPORT.md lines 33 to 35 (Windows "230 MB installed", macOS "190 MB installed", Linux "220 MB installed") and
+  line 47 ("Disk: the unpacked download of nightly 103, measured"); the same table in README.md (lines 208 to 210 on main) and on
+  https://grouplab.org/download/ under Minimums.
+- **What changed:** nightly 220's note says "The computer downloads now come precompiled ... the downloads are about an eighth larger"
+  (docs/RELEASE-NOTES.md, 0.2.0-nightly.220), and STATE.md says the Windows zip went from 114.4 to 126.5 MB. The installed sizes are
+  almost certainly larger too, so the minimums now understate the disk needed.
+- **What it should say:** each desktop figure measured again from nightly 221's unpacked download, with line 47 naming nightly 221 (or
+  whichever build is measured). If any figure is unchanged after measuring, say so in the commit.
+
+## 4. The testing guide sends people to the top of Settings for the build line, which is no longer there
+
+- **Where:** docs/TESTING-GUIDE.md line 99, live at https://grouplab.org/guides/testing-guide/ (section "Telling somebody when it is
+  wrong") and in testing-guide.pdf.
+- **What it says:** "The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any
+  report".
+- **What it should say:** the build line is in Settings, Updates and about, under This build
+  (src/GroupLab.App/MainWindow.SettingsMenu.cs, the "This build" card on the Updates page since entry 468), as the support page already
+  says.
+- **Same kind, smaller, in the same change:**
+  - docs/TESTING-GUIDE.md line 33, "in the settings", for how often updates are checked: Settings, Updates and about.
+  - docs/TESTING-GUIDE.md line 53, "any time from Settings or the header's menu as Walk me through a demo": Settings, General.
+  - website/tour.json, the `demo-tour` caption, "any time from the row near the top of Settings or the header's ... menu": Settings,
+    General (Settings now opens at the page shown last, so "near the top of Settings" no longer finds it).
+  - docs/PHONE-PARITY.md line 30, "Units at the top of Settings": the Scope unit at the top of Settings, Units and figures.
+- **Also:** entry 469 fixed old Settings page names "everywhere", but it searched for old names; these say "the top of Settings" or "in
+  the settings" with no name at all. Please search the guides, tour.json, features.json and the README for "the settings" and "top of
+  Settings" once more.
+
+## 5. Nightly 221's sync change is not where a user would look for it
+
+- **Where:** the user guide's "Sync between devices" section (https://grouplab.org/guides/user-guide/#sync-between-devices) and the
+  Features sync sentence.
+- **What is missing:** nightly 221's note says "a sync file a cloud service left damaged now waits until it arrives whole", and new
+  change files carry a checksum (entry 472 section 2). The guide explains a folder that cannot be reached, but not that a half-written or
+  damaged change file is left alone until the cloud app finishes it, which is what a person would wonder about when a change seems late.
+- **What it should say:** one plain sentence in the guide's sync section (and, if it fits, in the Features sentence, with `reworded` as
+  the site build requires): a change file the cloud app has not finished copying, or that arrived damaged, is waited for and taken only
+  once it is whole, so nothing half-written is ever applied.
+
+## Checked and found consistent
+
+The README's newest build (nightly 221), its What is new, the download page (nightly 221 everywhere, the Windows zip about 127 MB, the
+Store at 0.2.220, Android as GroupLab Dev, the plain APK and the Play internal test by invitation, iOS as a TestFlight public beta), the
+releases page, the support page's Settings names, the tour's Settings stop, the user guide's Settings and Sync sections, the home page,
+the credits (Unholy, Jylee and Quack, all with consent), no lawyer review mentioned anywhere, and no "What GroupLab is not" section.
+
+---
+
 ## 2026-10-24, entry 472: overnight queue, work that needs nobody
 
 **Status: actioned 2026-10-24. Every section done.** Section 1: five ways back Android's back could not see were found by a walk of every screen and fixed (a result, How did you shoot this sheet, the picture's check, Add a store-bought target, the printer check), and three behaviours chosen from words replaced with marks. Section 2: four importers fixed (session files, markings, data files imported whole or not at all, sync change files never applied in part). Section 3: sync held against a simulated cloud with three devices; no fault in GroupLab beyond section 2's. Section 4: the pictures were already taken; the Features page uses them. Section 5: no row moved on material; row 27's phone half got its test, and the checklist lists what is left smallest first. Usage stayed under half the week (12 percent at section 5).

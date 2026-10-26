@@ -316,7 +316,7 @@
     ],
     [
      "Shots, from their own bull",
-     "Every shot as numbers, across, up and down, and radius, each heading naming its unit (across, in), following the length unit chosen in Settings. The shot you pick on the plot or the picture has an amber bar down its row, a brighter row and bold numbers, and the table scrolls to it; clicking the red dashed line picks the widest pair. Shots and clicks beneath it lists each shot as a short row; open one to change its bull, say its place in the firing order, turn Counted off or choose Delete, not a hole. Share a picture puts a results box and the mean radius circle on the photograph."
+     "Every shot as numbers, across, up and down, and radius, each heading naming its unit (across, in), following the length unit chosen in Settings, Units and figures. The shot you pick on the plot or the picture has an amber bar down its row, a brighter row and bold numbers, and the table scrolls to it; clicking the red dashed line picks the widest pair. Shots and clicks beneath it lists each shot as a short row; open one to change its bull, say its place in the firing order, turn Counted off or choose Delete, not a hole. Share a picture puts a results box and the mean radius circle on the photograph."
     ],
     [
      "Own window, Show work, Report and Export",
@@ -836,7 +836,7 @@
     [
      "demo-tour",
      "Step 9 of the Walk me through a demo tour: an amber outline and a numbered badge around the zero correction, and a card beside it, pointing at it, with Back, Next and End the tour",
-     "Walk me through a demo, a thirteen step tour on a sample sheet GroupLab makes itself. It is offered once after the first run's questions, and any time from the row near the top of Settings or the header's ... menu. Do each step yourself or press Next and GroupLab does it. End the tour whenever you like, and carry on later from where you left off. It never prints by itself, and nothing it makes is kept unless you tick Keep this demo in Sessions on the last step."
+     "Walk me through a demo, a thirteen step tour on a sample sheet GroupLab makes itself. It is offered once after the first run's questions, and any time from Settings, General, or the header's ... menu. Do each step yourself or press Next and GroupLab does it. End the tour whenever you like, and carry on later from where you left off. It never prints by itself, and nothing it makes is kept unless you tick Keep this demo in Sessions on the last step."
     ]
    ],
    "steps": [

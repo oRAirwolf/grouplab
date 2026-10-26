@@ -2033,9 +2033,9 @@
    "kind": "measured",
    "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
   },
-  "Disk: the unpacked download of nightly 103, measured; each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
+  "Disk: the unpacked download of nightly 221, measured on 2026-10-26 (Windows 266, Linux 259, macOS 231 on Apple silicon and 262 on Intel, in MB); each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
    "kind": "measured",
-   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+   "where": "measured 2026-10-26: the file sizes inside nightly 221's published archives summed (win-x64 zip 266.1, linux-x64 258.8, macos-arm64 231.3, macos-x64 261.5 MB, rounded up to the next 10 in the table, entry 473 section 3); the proof image of the sample (220 KB), measured 2026-09-25"
   },
   "Screen: the analysis screen needs about 1060 units of width; narrower, its right column runs past the window, which is being worked on.": {
    "kind": "measured",
@@ -2045,9 +2045,9 @@
    "kind": "measured",
    "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
   },
-  "- **Disk:** the unpacked download of nightly 103, measured; each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
+  "- **Disk:** the unpacked download of nightly 221, measured on 2026-10-26 (Windows 266, Linux 259, macOS 231 on Apple silicon and 262 on Intel, in MB); each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
    "kind": "measured",
-   "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
+   "where": "measured 2026-10-26: the file sizes inside nightly 221's published archives summed (win-x64 zip 266.1, linux-x64 258.8, macos-arm64 231.3, macos-x64 261.5 MB, rounded up to the next 10 in the table, entry 473 section 3); the proof image of the sample (220 KB), measured 2026-09-25"
   },
   "- **Screen:** the analysis screen needs about 1060 units of width; narrower, its right column runs past the window, which is being worked on.": {
    "kind": "measured",
@@ -7992,6 +7992,22 @@
   "A daily copy of your records, the newest 14 kept, with Back up now and Restore a copy; Sync between devices; how a target is saved; and Export all my data and Import data, which overwrites nothing.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Records/RecordsCopies.cs (Kept 14, TrashDays 14, MakeIfDue, Restore copying the records first), the start in MainWindow.Copies.cs StartCopies and Phone.Start, held by RecordsCopiesTests and Entry468Tests (entry 468 section 2.1)"
+  },
+  "**With the shot distance set, each is an angle first,** in your scope's unit (the session's rifle's, or the one in Settings, Units and figures), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/Units.cs UnitSettings.Aiming, ScopeQuestion and Unanswered; src/GroupLab.App/AppSettings.cs SaveScopeAnswer; src/GroupLab.Core/Marking/Records.cs ScopeClicks; ResultWords.ZeroFrom; tests Entry294Tests in the Core, App and Mobile suites (entry 294 section 1)"
+  },
+  "With the shot distance set, each is an angle first, in your scope's unit (the session's rifle's, or the one in Settings, Units and figures), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group shot at 25 yards be compared with one shot at 100.": {
+   "kind": "code",
+   "where": "src/GroupLab.App/MainWindow.Sending.cs FillFirstRunScope, mobile/GroupLab.Mobile/FirstRunView.cs, UnitSettings.Aiming (entry 294 section 1)"
+  },
+  "A change file from another device that your cloud app has not finished copying, or that arrived damaged, is left alone and taken only once it is whole, so nothing half-written is ever applied.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncEngine.cs ReadChangeFile (a file without its end or whose sha256 does not match is left for a later run) and tests/GroupLab.Core.Tests BadFilesTests, entry 472 section 2; worded by entry 473 section 5"
+  },
+  "A change file the cloud app has not finished copying, or that arrived damaged, is waited for and taken only once it is whole.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncEngine.cs ReadChangeFile (a file without its end or whose sha256 does not match is left for a later run) and tests/GroupLab.Core.Tests BadFilesTests, entry 472 section 2; worded by entry 473 section 5"
   }
  },
  "rules": [

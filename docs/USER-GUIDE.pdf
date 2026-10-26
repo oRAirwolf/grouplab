@@ -13,7 +13,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 3474 >>
+<< /Length 3484 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -37,8 +37,8 @@ BT /F1 71 Tf 1 0 0 -1 395 1465 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 1465 Tm (then load comparison;) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 1567 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 1567 Tm (the gear at the foot is the settings.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1669 Tm (If you are new, Walk me through a demo in Settings takes you through GroupLab on a sample sheet it makes) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1757 Tm (itself, in about five minutes.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1669 Tm (If you are new, Walk me through a demo in Settings, General, takes you through GroupLab on a sample sheet it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1757 Tm (makes itself, in about five minutes.) Tj ET
 0.078431 0.078431 0.078431 rg
 BT /F1 99 Tf 1 0 0 -1 381 1964 Tm (Mil or MOA) Tj ET
 0.745098 0.745098 0.745098 rg
@@ -820,7 +820,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 41 0 R >>
 endobj
 41 0 obj
-<< /Length 6539 >>
+<< /Length 6558 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -852,13 +852,13 @@ BT /F1 71 Tf 1 0 0 -1 381 1897 Tm (The analysis has three columns:) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 2020 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 2020 Tm (On the left: the sheet small, drawn from its definition with every shot on it, then the load and the shot table,) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 2108 Tm (whose headings name the unit its numbers are in \(across, in; up/down, in; radius, in\), following the length unit) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2196 Tm (chosen in Settings. A click on a bull in the small sheet selects the shots given to that bull, and a click on a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2284 Tm (shot wide of every bull selects that shot. For a pooled set, every sheet's shots are drawn over the one sheet,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2372 Tm (each sheet in its own color, and a click on a bull selects its shot from every sheet. A shot picked anywhere,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2460 Tm (on the plot, the picture or a row of the table, is ringed in all three places, in magenta, with a cross through it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2548 Tm (on the plot and four short ticks outside the ring on the picture, a color nothing else in GroupLab uses, edged) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2636 Tm (in black on the dark theme and white on the light, over every other mark, and its row has an amber bar, a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2724 Tm (brighter fill and bold numbers; the table scrolls to it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2196 Tm (chosen in Settings, Units and figures. A click on a bull in the small sheet selects the shots given to that bull,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2284 Tm (and a click on a shot wide of every bull selects that shot. For a pooled set, every sheet's shots are drawn over) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2372 Tm (the one sheet, each sheet in its own color, and a click on a bull selects its shot from every sheet. A shot) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2460 Tm (picked anywhere, on the plot, the picture or a row of the table, is ringed in all three places, in magenta, with a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2548 Tm (cross through it on the plot and four short ticks outside the ring on the picture, a color nothing else in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2636 Tm (GroupLab uses, edged in black on the dark theme and white on the light, over every other mark, and its row) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2724 Tm (has an amber bar, a brighter fill and bold numbers; the table scrolls to it.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 395 2826 Tm (-) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 2826 Tm (In the center: the composite plot. Every scoring shot is drawn on one bull, each from its own bull's center,) Tj ET
 BT /F1 71 Tf 1 0 0 -1 494 2914 Tm (over the bull's rings drawn as wide gray bands. The key, saying what each mark is, sits in a compact box) Tj ET
@@ -938,7 +938,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 45 0 R >>
 endobj
 45 0 obj
-<< /Length 6897 >>
+<< /Length 6916 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -991,14 +991,14 @@ BT /F1 81 Tf 1 0 0 -1 381 4107 Tm (Six figures stay in view) Tj ET
 0.27451 0.27451 0.27451 rg
 BT /F1 71 Tf 1 0 0 -1 381 4233 Tm (Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4321 Tm (90. With the shot distance set, each is an angle first, in your scope's unit \(the session's rifle's, or the one in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4409 Tm (Settings\), and its size on the paper at that distance is beneath it in smaller type: an angle is what lets a group) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4497 Tm (shot at 25 yards be compared with one shot at 100. Mil and MOA are the two a scope is marked in; SMOA, an) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4585 Tm (inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards reads 0.46 mil, 1.59 MOA) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4673 Tm (or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel says an angle needs the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4761 Tm (distance, with a button to set it. A setting puts the size on the paper first, for a shooter who only shoots one) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4849 Tm (distance. Every figure carries its interval, the range the true value is likely to lie in, and the percentage it covers:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4937 Tm (hold the pointer over a figure to see it, with its angle at the distance shot. When you have excluded a shot, the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5025 Tm (tooltip also gives the figure without the exclusion, so an exclusion is never hidden.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4409 Tm (Settings, Units and figures\), and its size on the paper at that distance is beneath it in smaller type: an angle is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4497 Tm (what lets a group shot at 25 yards be compared with one shot at 100. Mil and MOA are the two a scope is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4585 Tm (marked in; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4673 Tm (reads 0.46 mil, 1.59 MOA or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4761 Tm (says an angle needs the distance, with a button to set it. A setting puts the size on the paper first, for a shooter) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4849 Tm (who only shoots one distance. Every figure carries its interval, the range the true value is likely to lie in, and the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4937 Tm (percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5025 Tm (excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 5148 Tm (Advanced holds everything else, closed until you open it: sigma, the strips across and up and down, the order the) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 21 of 49) Tj ET
 Q
@@ -1903,7 +1903,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 127 0 R >> >> /Contents 83 0 R >>
 endobj
 83 0 obj
-<< /Length 3206 >>
+<< /Length 3601 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -1925,17 +1925,20 @@ BT /F1 71 Tf 1 0 0 -1 494 1430 Tm (Stop syncing \(3\) stops on this device only.
 BT /F1 71 Tf 1 0 0 -1 381 1532 Tm (If the folder cannot be reached \(the drive is unplugged, or the cloud app has signed out\), the section says so at) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1620 Tm (the top in amber, with Choose the folder again, and the first time it happens GroupLab says it in the middle of the) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1708 Tm (window too. Nothing is lost: changes made here wait on this device and go as soon as the folder is back.) Tj ET
-q 3556 0 0 -2286 381 4074 cm /Im0 Do Q
-BT /F1 56 Tf 1 0 0 -1 381 4130 Tm (Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1831 Tm (A change file from another device that your cloud app has not finished copying, or that arrived damaged, is left) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1919 Tm (alone and taken only once it is whole, so nothing half-written is ever applied. A change that seems late is usually) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2007 Tm (still on its way through the cloud app.) Tj ET
+q 3556 0 0 -2286 381 4373 cm /Im0 Do Q
+BT /F1 56 Tf 1 0 0 -1 381 4429 Tm (Sync between devices in Settings, with another device in the folder: 1 This device's name, 2 Sync now, 3 Stop syncing) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 4323 Tm (When a session was changed on two devices) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 4622 Tm (When a session was changed on two devices) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 4449 Tm (If the same session was changed on two devices before they synced, GroupLab never picks one by itself. Both) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4537 Tm (versions are kept, Sessions shows a banner, "1 session to choose between", and the session's row a 2 versions) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4625 Tm (tag. Either opens the two side by side: each device's name and time, its holes drawn small on one scale, and its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4713 Tm (figures, with differs beside every one that is not the same. Keep one device's version, Keep both as two sessions) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4801 Tm (\(1\), or Decide later \(2\). The version you do not keep is kept aside too, so it can be got back. On the phone the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4889 Tm (two stack, one above the other.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4748 Tm (If the same session was changed on two devices before they synced, GroupLab never picks one by itself. Both) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4836 Tm (versions are kept, Sessions shows a banner, "1 session to choose between", and the session's row a 2 versions) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4924 Tm (tag. Either opens the two side by side: each device's name and time, its holes drawn small on one scale, and its) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5012 Tm (figures, with differs beside every one that is not the same. Keep one device's version, Keep both as two sessions) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5100 Tm (\(1\), or Decide later \(2\). The version you do not keep is kept aside too, so it can be got back. On the phone the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5188 Tm (two stack, one above the other.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 40 of 49) Tj ET
 Q
 endstream
@@ -27684,7 +27687,7 @@ endobj
 << /Title (Sync between devices) /Parent 203 0 R /Prev 204 0 R /Next 206 0 R /Dest [80 0 R /XYZ 0 386.220472 null] >>
 endobj
 206 0 obj
-<< /Title (When a session was changed on two devices) /Parent 203 0 R /Prev 205 0 R /Next 207 0 R /Dest [82 0 R /XYZ 0 190.771654 null] >>
+<< /Title (When a session was changed on two devices) /Parent 203 0 R /Prev 205 0 R /Next 207 0 R /Dest [82 0 R /XYZ 0 148.393701 null] >>
 endobj
 207 0 obj
 << /Title (Walk me through a demo) /Parent 203 0 R /Prev 206 0 R /Dest [84 0 R /XYZ 0 386.220472 null] >>
@@ -27733,222 +27736,222 @@ xref
 0000000543 00000 n 
 0000000640 00000 n 
 0000000766 00000 n 
-0000004292 00000 n 
-0000004446 00000 n 
-0000005681 00000 n 
-0000005835 00000 n 
-0000007079 00000 n 
-0000007235 00000 n 
-0000011064 00000 n 
-0000011192 00000 n 
-0000016675 00000 n 
-0000016831 00000 n 
-0000020434 00000 n 
-0000020562 00000 n 
-0000024507 00000 n 
-0000024663 00000 n 
-0000028508 00000 n 
-0000028664 00000 n 
-0000032560 00000 n 
-0000032716 00000 n 
-0000036832 00000 n 
-0000036988 00000 n 
-0000040279 00000 n 
-0000040407 00000 n 
-0000045237 00000 n 
-0000045393 00000 n 
-0000046926 00000 n 
-0000047082 00000 n 
-0000050414 00000 n 
-0000050570 00000 n 
-0000054276 00000 n 
-0000054432 00000 n 
-0000058368 00000 n 
-0000058524 00000 n 
-0000062401 00000 n 
-0000062529 00000 n 
-0000068651 00000 n 
-0000068779 00000 n 
-0000075371 00000 n 
-0000075527 00000 n 
-0000079102 00000 n 
-0000079230 00000 n 
-0000086180 00000 n 
-0000086308 00000 n 
-0000091324 00000 n 
-0000091480 00000 n 
-0000095368 00000 n 
-0000095496 00000 n 
-0000101507 00000 n 
-0000101663 00000 n 
-0000105190 00000 n 
-0000105346 00000 n 
-0000108254 00000 n 
-0000108410 00000 n 
-0000111566 00000 n 
-0000111722 00000 n 
-0000115711 00000 n 
-0000115867 00000 n 
-0000119025 00000 n 
-0000119153 00000 n 
-0000123240 00000 n 
-0000123396 00000 n 
-0000124474 00000 n 
-0000124630 00000 n 
-0000128152 00000 n 
-0000128280 00000 n 
-0000134562 00000 n 
-0000134690 00000 n 
-0000138574 00000 n 
-0000138730 00000 n 
-0000142551 00000 n 
-0000142679 00000 n 
-0000149482 00000 n 
-0000149610 00000 n 
-0000156740 00000 n 
-0000156896 00000 n 
-0000159435 00000 n 
-0000159591 00000 n 
-0000163081 00000 n 
-0000163237 00000 n 
-0000166496 00000 n 
-0000166652 00000 n 
-0000167118 00000 n 
-0000167274 00000 n 
-0000168769 00000 n 
-0000168925 00000 n 
-0000172678 00000 n 
-0000172834 00000 n 
-0000175982 00000 n 
-0000176138 00000 n 
-0000179409 00000 n 
-0000179537 00000 n 
-0000186129 00000 n 
-0000186285 00000 n 
-0000190354 00000 n 
-0000190510 00000 n 
-0000192993 00000 n 
-0000193151 00000 n 
-0000196597 00000 n 
-0000298270 00000 n 
-0000400748 00000 n 
-0000520783 00000 n 
-0000787601 00000 n 
-0001057597 00000 n 
-0001199752 00000 n 
-0001407420 00000 n 
-0001559315 00000 n 
-0001763521 00000 n 
-0001973212 00000 n 
-0002171521 00000 n 
-0002295407 00000 n 
-0002515209 00000 n 
-0002782391 00000 n 
-0003026924 00000 n 
-0003298574 00000 n 
-0003390252 00000 n 
-0003532002 00000 n 
-0003744729 00000 n 
-0003946618 00000 n 
-0004204021 00000 n 
-0004439624 00000 n 
-0004714151 00000 n 
-0004830150 00000 n 
-0004965231 00000 n 
-0005104507 00000 n 
-0005205113 00000 n 
-0005302144 00000 n 
-0005560309 00000 n 
-0005644211 00000 n 
-0005707137 00000 n 
-0005782871 00000 n 
-0005852789 00000 n 
-0005907231 00000 n 
-0005907309 00000 n 
-0005907458 00000 n 
-0005907582 00000 n 
-0005907724 00000 n 
-0005907853 00000 n 
-0005907970 00000 n 
-0005908141 00000 n 
-0005908283 00000 n 
-0005908422 00000 n 
-0005908582 00000 n 
-0005908742 00000 n 
-0005908901 00000 n 
-0005909035 00000 n 
-0005909170 00000 n 
-0005909305 00000 n 
-0005909433 00000 n 
-0005909573 00000 n 
-0005909715 00000 n 
-0005909843 00000 n 
-0005909989 00000 n 
-0005910118 00000 n 
-0005910235 00000 n 
-0005910361 00000 n 
-0005910538 00000 n 
-0005910691 00000 n 
-0005910851 00000 n 
+0000004302 00000 n 
+0000004456 00000 n 
+0000005691 00000 n 
+0000005845 00000 n 
+0000007089 00000 n 
+0000007245 00000 n 
+0000011074 00000 n 
+0000011202 00000 n 
+0000016685 00000 n 
+0000016841 00000 n 
+0000020444 00000 n 
+0000020572 00000 n 
+0000024517 00000 n 
+0000024673 00000 n 
+0000028518 00000 n 
+0000028674 00000 n 
+0000032570 00000 n 
+0000032726 00000 n 
+0000036842 00000 n 
+0000036998 00000 n 
+0000040289 00000 n 
+0000040417 00000 n 
+0000045247 00000 n 
+0000045403 00000 n 
+0000046936 00000 n 
+0000047092 00000 n 
+0000050424 00000 n 
+0000050580 00000 n 
+0000054286 00000 n 
+0000054442 00000 n 
+0000058378 00000 n 
+0000058534 00000 n 
+0000062411 00000 n 
+0000062539 00000 n 
+0000068661 00000 n 
+0000068789 00000 n 
+0000075400 00000 n 
+0000075556 00000 n 
+0000079131 00000 n 
+0000079259 00000 n 
+0000086228 00000 n 
+0000086356 00000 n 
+0000091372 00000 n 
+0000091528 00000 n 
+0000095416 00000 n 
+0000095544 00000 n 
+0000101555 00000 n 
+0000101711 00000 n 
+0000105238 00000 n 
+0000105394 00000 n 
+0000108302 00000 n 
+0000108458 00000 n 
+0000111614 00000 n 
+0000111770 00000 n 
+0000115759 00000 n 
+0000115915 00000 n 
+0000119073 00000 n 
+0000119201 00000 n 
+0000123288 00000 n 
+0000123444 00000 n 
+0000124522 00000 n 
+0000124678 00000 n 
+0000128200 00000 n 
+0000128328 00000 n 
+0000134610 00000 n 
+0000134738 00000 n 
+0000138622 00000 n 
+0000138778 00000 n 
+0000142599 00000 n 
+0000142727 00000 n 
+0000149530 00000 n 
+0000149658 00000 n 
+0000156788 00000 n 
+0000156944 00000 n 
+0000159483 00000 n 
+0000159639 00000 n 
+0000163129 00000 n 
+0000163285 00000 n 
+0000166939 00000 n 
+0000167095 00000 n 
+0000167561 00000 n 
+0000167717 00000 n 
+0000169212 00000 n 
+0000169368 00000 n 
+0000173121 00000 n 
+0000173277 00000 n 
+0000176425 00000 n 
+0000176581 00000 n 
+0000179852 00000 n 
+0000179980 00000 n 
+0000186572 00000 n 
+0000186728 00000 n 
+0000190797 00000 n 
+0000190953 00000 n 
+0000193436 00000 n 
+0000193594 00000 n 
+0000197040 00000 n 
+0000298713 00000 n 
+0000401191 00000 n 
+0000521226 00000 n 
+0000788044 00000 n 
+0001058040 00000 n 
+0001200195 00000 n 
+0001407863 00000 n 
+0001559758 00000 n 
+0001763964 00000 n 
+0001973655 00000 n 
+0002171964 00000 n 
+0002295850 00000 n 
+0002515652 00000 n 
+0002782834 00000 n 
+0003027367 00000 n 
+0003299017 00000 n 
+0003390695 00000 n 
+0003532445 00000 n 
+0003745172 00000 n 
+0003947061 00000 n 
+0004204464 00000 n 
+0004440067 00000 n 
+0004714594 00000 n 
+0004830593 00000 n 
+0004965674 00000 n 
+0005104950 00000 n 
+0005205556 00000 n 
+0005302587 00000 n 
+0005560752 00000 n 
+0005644654 00000 n 
+0005707580 00000 n 
+0005783314 00000 n 
+0005853232 00000 n 
+0005907674 00000 n 
+0005907752 00000 n 
+0005907901 00000 n 
+0005908025 00000 n 
+0005908167 00000 n 
+0005908296 00000 n 
+0005908413 00000 n 
+0005908584 00000 n 
+0005908726 00000 n 
+0005908865 00000 n 
+0005909025 00000 n 
+0005909185 00000 n 
+0005909344 00000 n 
+0005909478 00000 n 
+0005909613 00000 n 
+0005909748 00000 n 
+0005909876 00000 n 
+0005910016 00000 n 
+0005910158 00000 n 
+0005910286 00000 n 
+0005910432 00000 n 
+0005910561 00000 n 
+0005910678 00000 n 
+0005910804 00000 n 
 0005910981 00000 n 
-0005911172 00000 n 
-0005911301 00000 n 
-0005911445 00000 n 
-0005911576 00000 n 
-0005911722 00000 n 
-0005911866 00000 n 
-0005912041 00000 n 
-0005912170 00000 n 
-0005912302 00000 n 
-0005912440 00000 n 
-0005912581 00000 n 
-0005912720 00000 n 
-0005912860 00000 n 
-0005912994 00000 n 
-0005913122 00000 n 
-0005913273 00000 n 
-0005913428 00000 n 
-0005913559 00000 n 
-0005913680 00000 n 
-0005913860 00000 n 
-0005913962 00000 n 
-0005914134 00000 n 
-0005914284 00000 n 
-0005914428 00000 n 
-0005914644 00000 n 
-0005914765 00000 n 
-0005914905 00000 n 
-0005915034 00000 n 
-0005915168 00000 n 
-0005915298 00000 n 
-0005915416 00000 n 
-0005915600 00000 n 
-0005915721 00000 n 
-0005915911 00000 n 
-0005916050 00000 n 
-0005916178 00000 n 
-0005916359 00000 n 
-0005916476 00000 n 
-0005916642 00000 n 
-0005916761 00000 n 
-0005916927 00000 n 
-0005917056 00000 n 
-0005917191 00000 n 
-0005917347 00000 n 
-0005917470 00000 n 
-0005917627 00000 n 
-0005917752 00000 n 
-0005917874 00000 n 
-0005918019 00000 n 
-0005918165 00000 n 
-0005918298 00000 n 
-0005918463 00000 n 
-0005918595 00000 n 
-0005918720 00000 n 
-0005918863 00000 n 
-0005919010 00000 n 
+0005911134 00000 n 
+0005911294 00000 n 
+0005911424 00000 n 
+0005911615 00000 n 
+0005911744 00000 n 
+0005911888 00000 n 
+0005912019 00000 n 
+0005912165 00000 n 
+0005912309 00000 n 
+0005912484 00000 n 
+0005912613 00000 n 
+0005912745 00000 n 
+0005912883 00000 n 
+0005913024 00000 n 
+0005913163 00000 n 
+0005913303 00000 n 
+0005913437 00000 n 
+0005913565 00000 n 
+0005913716 00000 n 
+0005913871 00000 n 
+0005914002 00000 n 
+0005914123 00000 n 
+0005914303 00000 n 
+0005914405 00000 n 
+0005914577 00000 n 
+0005914727 00000 n 
+0005914871 00000 n 
+0005915087 00000 n 
+0005915208 00000 n 
+0005915348 00000 n 
+0005915477 00000 n 
+0005915611 00000 n 
+0005915741 00000 n 
+0005915859 00000 n 
+0005916043 00000 n 
+0005916164 00000 n 
+0005916354 00000 n 
+0005916493 00000 n 
+0005916621 00000 n 
+0005916802 00000 n 
+0005916919 00000 n 
+0005917085 00000 n 
+0005917204 00000 n 
+0005917370 00000 n 
+0005917499 00000 n 
+0005917634 00000 n 
+0005917790 00000 n 
+0005917913 00000 n 
+0005918070 00000 n 
+0005918195 00000 n 
+0005918317 00000 n 
+0005918462 00000 n 
+0005918608 00000 n 
+0005918741 00000 n 
+0005918906 00000 n 
+0005919038 00000 n 
+0005919163 00000 n 
+0005919306 00000 n 
+0005919453 00000 n 
 trailer
 << /Size 220 /Root 1 0 R >>
 startxref
-5919143
+5919586
 %%EOF

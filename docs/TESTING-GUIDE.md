@@ -30,7 +30,7 @@ units; Sessions compares loads, Ballistics is a tab of its own, and Targets prin
 
 ## It keeps itself up to date
 
-The installer's copy updates itself. It looks for a newer nightly when it starts, and a bar appears under the header naming the version, with **Update now**, **Later** and **Skip this version**. Update now downloads it, checks it against the build's signature, saves whatever you have open, says in one line that GroupLab will close and reopen, and comes back on the screen you were on. No installer window and no administrator prompt appear at any point. You can change how often it looks, or turn it off, in the settings.
+The installer's copy updates itself. It looks for a newer nightly when it starts, and a bar appears under the header naming the version, with **Update now**, **Later** and **Skip this version**. Update now downloads it, checks it against the build's signature, saves whatever you have open, says in one line that GroupLab will close and reopen, and comes back on the screen you were on. No installer window and no administrator prompt appear at any point. You can change how often it looks, or turn it off, in Settings, Updates and about.
 
 The zip, the Linux tarball and the Mac builds cannot replace themselves, because they were unpacked or installed wherever you put them. They tell you a newer build exists and point you at the download.
 
@@ -50,7 +50,7 @@ If that happens, say so in a report. It is the kind of thing that should be rare
 
 ## The first minute, with no rifle
 
-The easiest way is the guided demo. It is offered on the first run, and any time from Settings or the header's menu as **Walk me through a demo**.
+The easiest way is the guided demo. It is offered on the first run, and any time from Settings, General, or the header's menu as **Walk me through a demo**.
 
 1. Choose **Walk me through a demo (about five minutes)**. GroupLab makes its own sample, a sheet with 25 shots that is nobody's target, and opens it in a tab called "Demo: sample sheet".
 2. GroupLab reads the sheet's printed codes, registers the page from the corner markers, finds the holes and puts each on its bull. Watch the status line.
@@ -96,6 +96,6 @@ The repository's README is the authority on what works; this is the short versio
 
 ## Telling somebody when it is wrong
 
-The gear at the bottom left opens the settings. The top of that screen names the build: copy that line into any report, because a test build changes whenever the code does. **Report a problem** in Settings, Help and problems, opens a window that lists what the report holds, with a box for what happened and one for a way to reach you. Write what happened and press **Send**: the report goes to the project with the error and the logs of its run, carrying no location data and no photographs. **Save only** writes it as a zip instead. Only when sending is not open yet, or a send fails, does the window say so and suggest sending the saved zip by opening an issue at <https://github.com/oRAirwolf/grouplab/issues> or by email to support@grouplab.org, with a line about what you were doing. The support page at <https://grouplab.org/support/> explains the same and is easier to find again.
+The gear at the bottom left opens the settings. **Updates and about** names the build under This build: copy that line into any report, because a test build changes whenever the code does. **Report a problem** in Settings, Help and problems, opens a window that lists what the report holds, with a box for what happened and one for a way to reach you. Write what happened and press **Send**: the report goes to the project with the error and the logs of its run, carrying no location data and no photographs. **Save only** writes it as a zip instead. Only when sending is not open yet, or a send fails, does the window say so and suggest sending the saved zip by opening an issue at <https://github.com/oRAirwolf/grouplab/issues> or by email to support@grouplab.org, with a line about what you were doing. The support page at <https://grouplab.org/support/> explains the same and is easier to find again.
 
 GroupLab keeps everything in `%APPDATA%\GroupLab` on Windows, and under your home folder on macOS and Linux: settings, your sessions database, any sheet you design, and the log. To remove it, uninstall or delete the folder you unzipped, and delete that folder when you want the data gone.

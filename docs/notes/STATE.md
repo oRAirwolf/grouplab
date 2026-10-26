@@ -9,21 +9,24 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-24, entry 472 (the overnight queue that needs nobody) done.
+**Last rewritten:** 2026-10-26, entry 473 (the consistency audit) done; entry 474, the overnight queue, next.
 
 ---
 
 ## In flight
 
+- **Entry 473 (2026-10-26)**, done: the sync card no longer "coming" and a site check against it; the phone walk pictures Sync (emulator
+  run of 2026-10-26); disk figures from nightly 221; Settings directions name their page; the guide on half-written sync files.
+- **Error reports 38 to 40 (2026-10-25)**, fixed for nightly 222: a new sheet on a reused clean picture replaced the earlier session
+  (60e60bc1); Delete for rifles, barrels and loads on both (1147821e).
 - **Entry 472 (2026-10-24)**, done, five commits: Android's back now returns to the screen before on a result, the picture's check, How
   did you shoot this sheet, Add a store-bought target and the printer check (`Entry472BackTests` walks every screen and presses Back);
   damaged session files, markings and data files are refused in words and a data file imports whole or not at all; a sync change file is
   taken only whole and new ones carry a checksum (`BadFilesTests`); sync held against a simulated OneDrive, Google Drive and Dropbox with
   three devices (`CloudClientTests`); the phone's Settings pictures on the Features page; the proof checklist lists what Alan is needed
   for, smallest first. Ships in the next nightly (221).
-- **Entry 471 (2026-10-23)**, done: Forget this device; a new sync folder gets every record; desktop builds precompiled (nightly 220).
-- **Entries 468 to 470 (2026-10-22 and 23)**, done: Settings in eight categories, daily copies, Shooting defaults; Android's back on Sync
-  and your data fixed for nightly 219.
+- **Entries 468 to 471 (2026-10-22 and 23)**, done: Settings in eight categories, daily copies, Shooting defaults (219); Forget this
+  device, a new sync folder gets every record, desktop builds precompiled (220).
 
 ## The next three
 
@@ -72,7 +75,7 @@ Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (107 to 111 answered 2026-10-23 i
 - **Last nightly:** 0.2.0-nightly.220 (2026-10-23 20:25 UTC): entries 469 and 471, the first desktop builds published precompiled
   (each download about an eighth larger, the Windows zip 114.4 to 126.5 MB); its notes carry the correction of nightly 218.
 - **The site** follows main by itself (website.yml) and the nightly publishes it; entry 472's Features pictures pushed in 1b31c6fb.
-- Crash reports: none open; 9, 36 and 37 closed with nightly 206; assessed in `docs/notes/error-reports.md`.
+- Crash reports: none open; 38 to 40 closed 2026-10-26 for nightly 222; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox
 
