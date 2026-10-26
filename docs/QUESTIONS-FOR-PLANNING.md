@@ -136,6 +136,30 @@ The guess snaps to Alan's lists and offers the neighbours it cannot separate. On
 
 **Status: open**
 
+### Measured again, 2026-10-26 (entry 474 section 4), against nightly 221
+
+The app published for win-x64 from main both ways, precompiled as every desktop build has been since nightly 220, on this machine:
+
+| | unpacked | zipped | files | start-up to a usable window, median of 7, twice, alternated |
+|---|---|---|---|---|
+| self-contained, as published | 245.8 MB | 102.8 MB | 306 | 682 and 679 ms |
+| framework-dependent, the light one | 165.3 MB | 67.2 MB | 119 | 679 and 672 ms |
+
+**Against nightly 221's zip of 126.5 MB** (which also carries the samples, the notices and the README), the light one would be about
+**91 MB**, 35.6 MB less, about 28 percent. **Start-up is the same**: precompiled, the runtime being in the folder or on the machine makes
+no measurable difference. **What is missing from it** is the .NET runtime itself, 185 of the 187 files only the self-contained one has
+(the other two are the debugger's symbol reader and Visual Basic's support library, both part of the runtime too): without a .NET 10
+runtime on the machine it does not start, and Windows offers to download one.
+
+**Found while measuring:** `opencv_videoio_ffmpeg4130_64.dll`, OpenCV's video reader, is still in every desktop download, 28.6 MB unpacked
+and 11.9 MB of the zip, and nothing in `src/` opens a video (no `VideoCapture` or `VideoWriter`). Leaving it out is a third of the light
+installer's saving with no second package, no runtime to keep patched and nothing a person has to install; it would need the corpus and
+the suites run before and after, as any change to what ships does.
+
+**Recommendation, unchanged in kind:** not the light installer. Its 36 MB costs a second package on every release, an updater that keeps
+each install on its own kind, and a runtime nobody patches (sections 4 to 6 below still hold). Leave out the video reader first (12 MB of
+the zip for nothing), which is point 2 below, now measured. Nothing published was changed; that is Alan's decision.
+
 ### 1. What was asked
 
 Entry 133: measure a framework-dependent build, say what a light installer would cost and gain, and recommend. Measure and propose only.

@@ -234,9 +234,11 @@ log; request 70 asks for it. The words in GroupLab's settings and on the "What G
 *What happens to a submission afterwards.* The server's receiver puts it in quarantine; within minutes the intake worker rebuilds the
 picture from its pixels (dropping everything else) and moves it to a ready folder; the archive worker copies it into the private
 archive on GitHub (never public), proves the copy, and deletes it from the server. Your pull also copies it to this computer. One the
-server refuses is deleted after 7 days, one never archived after 60. **What Code does with them today:** reads them by hand when an
-entry names them, and adds them to the scoreboard as test cases (Fenix's two are being added now). **Not built yet:** the automatic
-comparison of GroupLab's marks with the person's corrections (DETECTION-LEARNING-STUDY.md section 6 describes it as planned).
+server refuses is deleted after 7 days, one never archived after 60. **What happens next, by itself** (built in entries 394 and 395): a
+worker on the server reads each new one with the newest GroupLab and compares its marks with the person's corrections, every night reads
+the corrected ones again with that night's build, and writes the real scoreboard to the private archive. On 26 October: 72 read, 26 with
+corrections to score against, 380 of 383 holes found. Once a month it tunes GroupLab's settings, but only from 50 corrected submissions,
+so the 1 November run will say it is waiting (26 of 50) and change nothing.
 **Published:** nothing so far; a "may be published" target could be, by Code with your approval, after a look at it.
 
 
