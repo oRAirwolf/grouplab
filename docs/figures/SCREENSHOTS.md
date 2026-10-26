@@ -143,7 +143,7 @@ Shooting defaults page. The phone's list of categories is `fold-settings`, taken
 pages are `fold-settings-shooting` and `fold-settings-data`, first taken by the emulator's walk on 2026-10-23 (nightly 220) and shown on
 the Features page beside the computer's since entry 472 section 4.
 
-**Sync between your devices** (entry 463) has its own picture, `sync-settings`: Settings at Sync between devices with a folder the walk makes and a second store, Range laptop, in it; and `sync-conflict`, a session changed on both, side by side. The phone's Sync page, `settings-sync`, is in the emulator's walk from entry 473 on (a sample folder with a second device, Workshop computer, in it); its picture comes with the walk's next run.
+**Sync between your devices** (entry 463) has its own picture, `sync-settings`: Settings at Sync between devices with a folder the walk makes and a second store, Range laptop, in it; and `sync-conflict`, a session changed on both, side by side. The phone's Sync page is `fold-settings-sync`, taken by the emulator's walk since entry 473 with a sample folder and a second device, Workshop computer, in it.
 
 **Store-bought targets recognized** (entries 340 and 341) has its own picture, `store-target`: a bullseye the walk draws itself, standing
 in for the Shoot-N-C since no maker's artwork is published, recognized with its bull placed and the scale warning, and the window that asks

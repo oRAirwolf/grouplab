@@ -598,7 +598,7 @@ internal static class Scenario
         await OnUi(() =>
         {
             PhoneSync.Sample = folder;
-            PhoneSync.Save(GroupLab.Core.Sync.SyncScreens.InFolder(PhoneSync.Setup, "GroupLab sync"));
+            PhoneSync.Save(GroupLab.Core.Sync.SyncScreens.InFolder(PhoneSync.Setup with { DeviceName = "My phone" }, "GroupLab sync"));
             return true;
         });
         await await OnUi(PhoneSync.Now);

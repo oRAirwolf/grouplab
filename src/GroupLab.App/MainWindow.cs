@@ -6203,14 +6203,16 @@ public sealed partial class MainWindow : Window
     }
 
     /// <summary>A field's name above it, in the label style.</summary>
-    private static TextBlock FieldLabel(string text) => new() { Text = text, Classes = { AppStyles.Label } };
+    private static TextBlock FieldLabel(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Label } };
 
     private static TextBlock NeededWord() => new() { Text = "needed", Margin = new Thickness(Tokens.Space8, 0, 0, 0), IsVisible = false, Classes = { AppStyles.Alert } };
 
     /// <summary>A setup field: its label with the word "needed" beside it, what it unlocks in a line, and the field inside an outline.</summary>
     private static Control Needed(string label, TextBlock word, string unlocks, Border frame, Control field)
     {
-        var heading = new StackPanel { Orientation = Orientation.Horizontal };
+        // Entry 474 section 2: a row that wraps, so at a larger text size in a narrow column "needed" goes under the name rather than past
+        // the edge.
+        var heading = new WrapPanel { Orientation = Orientation.Horizontal };
         heading.Children.Add(FieldLabel(label));
         heading.Children.Add(word);
         frame.BorderThickness = new Thickness(2);

@@ -307,15 +307,29 @@ public sealed class Entry468Tests : IDisposable
                 window.SettingsStore.SaveTextSize(size);
                 Theme.TextSize.Choose(size);
                 window.CalibreAnswered();
+                Dispatcher.UIThread.RunJobs();
+                // Entry 474 section 2: the marking screen too, before Accept.
+                found.AddRange(LayoutAudit.Findings(window).Select(f => $"{size}, marking: {f}"));
                 window.Analyse();
                 Dispatcher.UIThread.RunJobs();
                 found.AddRange(LayoutAudit.Findings(window).Select(f => $"{size}, analysis: {f}"));
-                foreach (var place in new[] { Destination.Sessions, Destination.Library, Destination.Ballistics, Destination.Compare })
+                foreach (var place in new[] { Destination.Sessions, Destination.Library, Destination.Ballistics, Destination.Compare, Destination.Equipment })
                 {
                     window.Go(place);
                     Dispatcher.UIThread.RunJobs();
                     found.AddRange(LayoutAudit.Findings(window).Select(f => $"{size}, {place}: {f}"));
                 }
+
+                // Entry 474 section 2: a rifle's page with its Delete question.
+                window.Book = GroupLab.Core.Marking.RecordBook.Empty.With(new GroupLab.Core.Marking.Rifle("Sample rifle, 6.5 Creedmoor", 0.1, GroupLab.Core.Statistics.AngularUnit.Mrad))
+                    .With(new GroupLab.Core.Marking.Barrel("Its barrel", "Sample rifle, 6.5 Creedmoor", 0));
+                window.EditRifle("Sample rifle, 6.5 Creedmoor");
+                Dispatcher.UIThread.RunJobs();
+                found.AddRange(LayoutAudit.Findings(window).Select(f => $"{size}, a rifle's page: {f}"));
+                var delete = window.GetLogicalDescendants().OfType<Avalonia.Controls.Button>().First(b => b.Name == "equipment-delete");
+                delete.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
+                Dispatcher.UIThread.RunJobs();
+                found.AddRange(LayoutAudit.Findings(window).Select(f => $"{size}, a rifle's Delete question: {f}"));
 
                 foreach (var category in SettingsMenu.All)
                 {

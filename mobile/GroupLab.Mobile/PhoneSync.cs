@@ -41,7 +41,22 @@ internal static class PhoneSync
     /// <summary>Said whenever a run starts or finishes, so a page showing it fills again.</summary>
     internal static event Action? Changed;
 
-    internal static SyncSetup Setup => Phone.Settings.LoadSync(Phone.Platform?.DeviceWords is { Length: > 0 } d ? d : "This phone");
+    internal static SyncSetup Setup => Phone.Settings.LoadSync(DefaultName(Phone.Platform?.DeviceWords));
+
+    /// <summary>
+    /// The name this phone is first given in the sync folder: its maker and model, from the diagnostics line "GroupLab &lt;version&gt; on
+    /// &lt;maker&gt; &lt;model&gt;". Entry 473's picture showed the whole line, version and commit, as the name the other devices would see.
+    /// </summary>
+    internal static string DefaultName(string? words)
+    {
+        if (words is not { Length: > 0 })
+        {
+            return "This phone";
+        }
+
+        int on = words.LastIndexOf(" on ", StringComparison.Ordinal);
+        return on >= 0 && words[(on + 4)..].Trim() is { Length: > 0 } device ? device : words;
+    }
 
     internal static void Save(SyncSetup setup) => Phone.Settings.SaveSync(setup);
 

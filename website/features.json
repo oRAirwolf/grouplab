@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On the phone, a new sync folder names this phone by its maker and model",
     "A new sheet marked on the same picture as an earlier one",
     "The computer downloads now come precompiled",
     "Correction: on the phone, a GroupLab data file opened from another app",
@@ -1451,7 +1452,7 @@
      "tour": "settings",
      "guide": "sync-between-devices",
      "mobile": {
-      "noPicture": "the emulator's walk takes the phone's Sync page from entry 473 on, with a folder chosen and another device in it; its picture comes with the walk's next run"
+      "shot": "fold-settings-sync"
      }
     },
     {

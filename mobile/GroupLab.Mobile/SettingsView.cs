@@ -21,6 +21,9 @@ public sealed class SettingsView : UserControl
 {
     private readonly AppSettingsStore settings;
     private readonly SettingsPages pages = new();
+
+    /// <summary>The pages and their rows, for the search audit (entry 474 section 2).</summary>
+    internal SettingsPages Pages => pages;
     private readonly StackPanel list = new() { Spacing = 12 };
     private readonly StackPanel categories = new() { Spacing = 0 };
     private readonly Border categoriesCard;
@@ -88,7 +91,7 @@ public sealed class SettingsView : UserControl
     private void BuildGeneral((StackPanel Body, SettingsPages.Page Page) general)
     {
         // Entry 468 section 2.6: the phones follow the system's text size, and say so; Reduce motion as the phone asks, or on, or off.
-        var look = Group(general, "Look", "text size font larger reduce motion animation flash still accessibility");
+        var look = Group(general, "Look", "text size font larger bigger smaller reduce motion animation flash still accessibility");
         look.Children.Add(Screens.Line(GeneralWords.TextSize));
         look.Children.Add(Screens.Dim(GeneralWords.TextSizeOnThePhone));
         look.Children.Add(Screens.Line(GeneralWords.Motion));
@@ -129,7 +132,7 @@ public sealed class SettingsView : UserControl
     private void BuildUnits((StackPanel Body, SettingsPages.Page Page) unitsPage)
     {
         // Entry 294 section 1: Units at the top, the scope's unit first and said plainly, with one line on what it changes.
-        var column = Group(unitsPage, "Units", "scope unit MOA mil mrad SMOA angle clicks lengths inches mm cm distances yards metres meters metric imperial"); // British on purpose: what a person may type in Find a setting
+        var column = Group(unitsPage, "Units", "scope unit MOA mil mrad SMOA angle clicks lengths inches mm millimeters millimetres cm distances yards metres meters metric imperial"); // British on purpose: what a person may type in Find a setting
         column.Children.Add(Screens.Line(GroupLab.Core.Marking.UnitSettings.ScopeUnitLabel));
         var now = settings.LoadUnits();
         foreach (var angle in GroupLab.Core.Marking.UnitSettings.AngularChoices)
@@ -247,7 +250,7 @@ public sealed class SettingsView : UserControl
     private void BuildShooting((StackPanel Body, SettingsPages.Page Page) shooting)
     {
         // Entry 468 section 2.2: the distance a new target starts with, the last one used (as before) or always the one typed here.
-        var column = Group(shooting, DefaultsWords.StartsWith, "distance range yards metres paper letter a4 default new target"); // British on purpose: what a person may type in Find a setting
+        var column = Group(shooting, DefaultsWords.StartsWith, "distance range yards metres paper letter a4 default new target rifle load rounds fired"); // British on purpose: what a person may type in Find a setting
         var units = settings.LoadUnits();
         var fixedInches = settings.LoadNewTargetDistance();
         column.Children.Add(Screens.Line(DefaultsWords.Distance));
@@ -404,7 +407,7 @@ public sealed class SettingsView : UserControl
         BuildCopies(data);
 
         // Entry 463 section 1 (1A): synchronization, its own page under Settings.
-        var column = Group(data, GroupLab.Core.Sync.SyncScreens.Title, "sync synchronize devices cloud folder phone computer");
+        var column = Group(data, GroupLab.Core.Sync.SyncScreens.Title, "sync synchronize devices cloud folder phone computer onedrive dropbox google drive icloud");
         var sync = PhoneSync.Setup;
         column.Children.Add(Screens.Row(GroupLab.Core.Sync.SyncScreens.Title,
             sync.On ? (PhoneSync.Unreachable ? GroupLab.Core.Sync.SyncScreens.UnreachableTitle : GroupLab.Core.Sync.SyncScreens.Status(sync, DateTime.UtcNow)) : "Off. Keep your devices the same through your own cloud folder.",
@@ -725,7 +728,7 @@ public sealed class SettingsView : UserControl
 
     private void BuildHelp((StackPanel Body, SettingsPages.Page Page) helpPage)
     {
-        var column = Group(helpPage, "Reporting a problem", "report a problem send diagnostics log crash");
+        var column = Group(helpPage, "Reporting a problem", "report a problem send diagnostics log crash bug issue");
         var helpCard = Screens.Card();
         var help = (StackPanel)helpCard.Child!;
         column.Children.Add(helpCard);

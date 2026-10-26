@@ -28,6 +28,9 @@ public partial class MainWindow
     /// <summary>The category whose page is shown, for the headless tests.</summary>
     internal SettingsCategory SettingsPage => settingsPages.Current;
 
+    /// <summary>The pages and their rows, for the search audit (entry 474 section 2).</summary>
+    internal SettingsPages SettingsPagesShown => settingsPages;
+
     /// <summary>Shows Settings at <paramref name="category"/>'s page, as choosing it in the side menu does.</summary>
     internal void ShowSettings(SettingsCategory category)
     {
@@ -535,7 +538,7 @@ public partial class MainWindow
         BuildCopiesCard(body, page);
 
         // Entry 463 section 1 (1A): synchronization between devices, its own card.
-        var (sync, _) = SettingsCard(body, page, Core.Sync.SyncScreens.Title, "sync synchronize devices cloud folder phone computer");
+        var (sync, _) = SettingsCard(body, page, Core.Sync.SyncScreens.Title, "sync synchronize devices cloud folder phone computer onedrive dropbox google drive icloud");
         BuildSyncSettings(sync);
 
         // Entry 281 section 2: how a target is saved, A by itself (the default) or B with a Save button.
