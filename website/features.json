@@ -249,6 +249,7 @@
       ],
       "since": "next",
       "note": [
+        "Rifles, barrels and loads can now be deleted",
         "Barrels now sit under their rifle",
         "A barrel's length and twist, a rifle's cartridge and scope"
       ],

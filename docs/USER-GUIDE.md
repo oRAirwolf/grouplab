@@ -31,6 +31,9 @@ A rifle's record has its scope unit (1) and one click (2): 0.1 mil, 0.05 mil, 1/
 value you type. When a session names a rifle, that rifle's unit wins over Settings; when it names none, Settings decides. If you answered
 Both, a session with no rifle asks which rifle it was.
 
+**Delete**, on a rifle, barrel or load already saved, asks first and then takes it away: a rifle goes with the barrels on it, and sessions
+saved with any of them keep its name. On the phone the rifle and load forms in Ballistics have the same Delete.
+
 ![A rifle's record in Equipment: 1 Scope unit, 2 Click value](figures/screens/current/equipment-light-1400x900.png)
 <!-- marks: EquipmentField_clickUnit | EquipmentField_clickValue -->
 

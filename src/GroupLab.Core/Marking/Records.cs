@@ -319,6 +319,19 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
 
     public RecordBook With(Load load) => this with { Loads = [.. Loads.Where(l => !Same(l.Name, load.Name)), load] };
 
+    /// <summary>
+    /// Error report 38, 2026-10-25: a rifle taken away, with the barrels on it. Sessions keep the rifle's name as they were saved with it.
+    /// </summary>
+    public RecordBook WithoutRifle(string name) =>
+        this with { Rifles = [.. Rifles.Where(r => !Same(r.Name, name))], Barrels = [.. Barrels.Where(b => !Same(b.Rifle, name))] };
+
+    /// <summary>A barrel taken away; a rifle it was on now has none on, and keeps the length and twist it had.</summary>
+    public RecordBook WithoutBarrel(string name) =>
+        this with { Barrels = [.. Barrels.Where(b => !Same(b.Name, name))], Rifles = [.. Rifles.Select(r => Same(r.BarrelOn, name) ? r with { BarrelOn = null } : r)] };
+
+    /// <summary>A load taken away. Sessions keep the load's name as they were saved with it.</summary>
+    public RecordBook WithoutLoad(string name) => this with { Loads = [.. Loads.Where(l => !Same(l.Name, name))] };
+
     public Rifle? FindRifle(string? name) => Rifles.FirstOrDefault(r => Same(r.Name, name));
 
     public Barrel? FindBarrel(string? name) => Barrels.FirstOrDefault(b => Same(b.Name, name));

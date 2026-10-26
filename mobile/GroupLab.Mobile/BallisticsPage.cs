@@ -37,6 +37,7 @@ internal sealed class BallisticsPage : UserControl
     private string? loadName;
     private AirInput air = new();
     private string open = "";
+    private string? deleting;
     private string tab = "Dope";
     private readonly TextBox to = Screens.Numeric(Field("1000"));
     private readonly TextBox every = Screens.Numeric(Field("100"));
@@ -162,6 +163,7 @@ internal sealed class BallisticsPage : UserControl
     private void Toggle(string which)
     {
         open = open == which ? "" : which;
+        deleting = null;
         Build();
     }
 
@@ -692,7 +694,7 @@ internal sealed class BallisticsPage : UserControl
             },
         };
 
-        return Screens.Card(Screens.Heading("The rifle"), Picker(book.Rifles.Select(x => x.Name), n => { rifleName = n; Build(); }),
+        return Screens.Card([Screens.Heading("The rifle"), Picker(book.Rifles.Select(x => x.Name), n => { rifleName = n; Build(); }),
             Labeled("Name", name), Labeled("Sight height, in", sight), Labeled("Zero distance, yd", zero), Screens.Dim("Scope unit and one click"), unitChips,
             Labeled("One click, or any other", click), typedUnit,
             Screens.Heading("Scope and mount"),
@@ -721,7 +723,7 @@ internal sealed class BallisticsPage : UserControl
                 rifleName = rifle.Name;
                 open = "";
                 Build();
-            }));
+            }), .. Deleting("rifle", r?.Name, r is null ? 0 : book.BarrelsOf(r.Name).Count)]);
     }
 
     private Control LoadForm()
@@ -734,7 +736,7 @@ internal sealed class BallisticsPage : UserControl
         var expansion = Screens.Numeric(Field(l?.MinExpansionFps?.ToString("0", CultureInfo.InvariantCulture) ?? ""));
         var weight = Screens.Numeric(Field(l?.BulletWeightGrains?.ToString("0.#", CultureInfo.InvariantCulture) ?? ""));
         var g7 = new CheckBox { Content = "G7 (off: G1)", IsChecked = l?.DragModel == DragModel.G7, MinHeight = Screens.Touch };
-        return Screens.Card(Screens.Heading("The load"), Picker(book.Loads.Select(x => x.Name), n => { loadName = n; Build(); }),
+        return Screens.Card([Screens.Heading("The load"), Picker(book.Loads.Select(x => x.Name), n => { loadName = n; Build(); }),
             Labeled("Name", name), Labeled("Muzzle velocity, ft/s", speed), Labeled("Velocity SD, ft/s", sd), Labeled("Ballistic coefficient", bc), g7,
             Labeled("Bullet weight, gr", weight),
             Labeled("Least expansion velocity, ft/s", expansion),
@@ -754,7 +756,40 @@ internal sealed class BallisticsPage : UserControl
                 loadName = load.Name;
                 open = "";
                 Build();
-            }));
+            }), .. Deleting("load", l?.Name, 0)]);
+    }
+
+    /// <summary>
+    /// Error report 38, 2026-10-25: Delete on a rifle or load already kept, asked first; sessions keep its name. The computer's Equipment has
+    /// the same.
+    /// </summary>
+    private Control[] Deleting(string kind, string? name, int barrels)
+    {
+        if (name is null)
+        {
+            return [];
+        }
+
+        if (deleting != kind)
+        {
+            return [Screens.Choice($"Delete this {kind}", () => { deleting = kind; Build(); }).Id($"ballistics-{kind}-delete")];
+        }
+
+        string question = $"Delete the {kind} {name}" + (barrels > 0 ? $" and its {barrels} barrel{(barrels == 1 ? "" : "s")}" : "") + "? Sessions saved with it keep its name.";
+        return
+        [
+            Screens.Dim(question),
+            Screens.Choice("Delete " + name, () =>
+            {
+                Keep(kind == "rifle" ? book.WithoutRifle(name) : book.WithoutLoad(name));
+                DiagnosticLog.Info("equipment.delete", ("kind", kind));
+                rifleName = kind == "rifle" ? null : rifleName;
+                loadName = kind == "load" ? null : loadName;
+                deleting = null;
+                Build();
+            }).Id($"ballistics-{kind}-delete-yes"),
+            Screens.Choice("Keep it", () => { deleting = null; Build(); }),
+        ];
     }
 
     private Control AirForm()

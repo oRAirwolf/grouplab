@@ -28,7 +28,8 @@ hourly while waiting on CI, and writes each new one here.
 - **Said:** rifles and loads can be made but not deleted.
 - **Cause:** not a fault; Equipment had no Delete. A request a person hit, so it is built ahead of the queue: Delete on a rifle, barrel or
   load, asked first, on the computer and the phone.
-- **Status:** being built 2026-10-26.
+- **Status:** built 2026-10-26: Delete in Equipment on the computer and on the phone's rifle and load forms in Ballistics, asked first;
+  a rifle goes with its barrels (`EquipmentDeleteTests` in all three suites). Ships in nightly 222.
 
 ## 37, 2026-10-19, nightly 204 on Windows (automatic, 4 times in one session; also Alan's own, saved as a report package)
 

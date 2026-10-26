@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
+using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Core.Ballistics;
 using GroupLab.Core.Marking;
@@ -270,7 +271,7 @@ public sealed partial class MainWindow
             }
         }
 
-        equipmentForm.Children.Add(Row(
+        var buttons = Row(
             Primary("Save", SaveEquipment),
             Button("Cancel", () =>
             {
@@ -285,7 +286,16 @@ public sealed partial class MainWindow
                 }
 
                 ShowEquipmentScreen();
-            })));
+            }));
+        // Error report 38: a record already saved can be deleted, asked first.
+        if (equipmentEditing is { } saved && EquipmentSaved(saved))
+        {
+            var delete = Button("Delete", () => AskDeleteEquipment(buttons, saved));
+            delete.Name = "equipment-delete";
+            buttons.Children.Add(delete);
+        }
+
+        equipmentForm.Children.Add(buttons);
 
         if (equipmentKind == EquipmentKind.Rifle && equipmentEditing is { } rifle && book.FindRifle(rifle) is not null)
         {
@@ -566,6 +576,55 @@ public sealed partial class MainWindow
             equipmentEditing = name;
         }
 
+        ShowEquipmentScreen();
+        Refresh();
+    }
+
+    private bool EquipmentSaved(string name) => equipmentKind switch
+    {
+        EquipmentKind.Rifle => book.FindRifle(name) is not null,
+        EquipmentKind.Barrel => book.FindBarrel(name) is not null,
+        _ => book.FindLoad(name) is not null,
+    };
+
+    /// <summary>Error report 38: what deleting takes away, said in one line, with Delete and Keep it in place of the form's buttons.</summary>
+    private void AskDeleteEquipment(WrapPanel buttons, string name)
+    {
+        int barrels = equipmentKind == EquipmentKind.Rifle ? book.BarrelsOf(name).Count : 0;
+        string kind = equipmentKind.ToString().ToLowerInvariant();
+        string question = $"Delete the {kind} {name}" + (barrels > 0 ? $" and its {barrels} barrel{(barrels == 1 ? "" : "s")}" : "") + "? Sessions saved with it keep its name.";
+        buttons.Children.Clear();
+        buttons.Children.Add(new TextBlock { Text = question, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Warn } });
+        var yes = Button("Delete", () => DeleteEquipment(name));
+        yes.Name = "equipment-delete-yes";
+        buttons.Children.Add(yes);
+        buttons.Children.Add(Button("Keep it", () => ShowEquipmentScreen()));
+    }
+
+    /// <summary>Deletes the record being edited, which the daily copy and the sync folder's kept versions can still bring back.</summary>
+    internal void DeleteEquipment(string name)
+    {
+        string? home = equipmentKind == EquipmentKind.Barrel ? book.FindBarrel(name)?.Rifle : null;
+        book = equipmentKind switch
+        {
+            EquipmentKind.Rifle => book.WithoutRifle(name),
+            EquipmentKind.Barrel => book.WithoutBarrel(name),
+            _ => book.WithoutLoad(name),
+        };
+        SaveBook();
+        DiagnosticLog.Info("equipment.delete", ("kind", equipmentKind.ToString()));
+        toaster.Show(new Confirmation($"Deleted the {equipmentKind.ToString().ToLowerInvariant()} {name}.", null));
+        if (home is not null && book.FindRifle(home) is not null)
+        {
+            equipmentKind = EquipmentKind.Rifle;
+            equipmentEditing = home;
+        }
+        else
+        {
+            equipmentEditing = null;
+        }
+
+        barrelRifle = null;
         ShowEquipmentScreen();
         Refresh();
     }
