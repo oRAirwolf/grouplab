@@ -16,6 +16,7 @@ how often, and whether it can be automated with nothing from Alan. Kept current:
 | Keep docs/RELEASE-NOTES.md current | Code | when behind | Yes: nightly.yml writes and pushes each build's entry | n/a | CLAUDE.md, "Release notes" |
 | Write a `Release-note:` trailer on every commit | Code | every commit | Checked by `scripts/release-notes.py` in nightly.yml | no, needs a judgement | CLAUDE.md, entries 132 and 145 |
 | Fix the weekly consistency findings | Code | weekly | Found by consistency.yml (issue labelled `consistency`) | no, needs a judgement | `scripts/consistency.py`, CLAUDE.md entry 267 |
+| App clips for the launch videos (`scripts/video-clips/make-clips.ps1`) | Code, by hand | when the videos are remade | Yes: one command makes every clip, its last frame and clips.csv; never in CI (each clip skips itself unless GROUPLAB_VIDEO_CLIPS names a folder) | yes | Entry 475; Windows only (Windows' H.264 encoder) |
 | Tour words against a changed screenshot | Code | after screens change | Pictures: screenshots.yml, Mondays | no, needs a judgement | CLAUDE.md, entry 146 section 4.4 |
 | Split the logs when they grow back (`scripts/split-logs.py`) | Code | when live files grow | Script only | yes | CLAUDE.md, entry 160 |
 | Publish a ready research article | Code | per article | no | no, needs a judgement | CLAUDE.md, entries 158 and 393; PUBLISHED.md by hand |

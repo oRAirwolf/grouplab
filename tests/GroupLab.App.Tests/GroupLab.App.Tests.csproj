@@ -28,6 +28,7 @@
     <Compile Include="..\Shared\StandInPoster.cs" Link="Support\StandInPoster.cs" />
     <Compile Include="..\Shared\ScreenReaderAudit.cs" Link="Support\ScreenReaderAudit.cs" />
     <Compile Include="..\Shared\LayoutAudit.cs" Link="Support\LayoutAudit.cs" />
+    <Compile Include="..\Shared\ScreenClip.cs" Link="Support\ScreenClip.cs" />
   </ItemGroup>
 
 </Project>

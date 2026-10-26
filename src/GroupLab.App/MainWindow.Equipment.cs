@@ -638,6 +638,11 @@ public sealed partial class MainWindow
     internal IReadOnlyList<string> EquipmentFieldKeys => [.. EquipmentForm.For(equipmentKind).Select(f => f.Key)];
 
     /// <summary>Types into one of the form's fields, for the headless tests.</summary>
+    /// <summary>One of the form's text fields, for the clips that type into it (entry 475).</summary>
+    internal TextBox EquipmentBox(string key) => equipmentFields.TryGetValue(key, out var c) && c is TextBox box
+        ? box
+        : throw new InvalidOperationException($"the form has no text field \"{key}\"");
+
     internal void TypeEquipment(string key, string value)
     {
         if (equipmentFields.TryGetValue(key, out var c) && c is TextBox t)
