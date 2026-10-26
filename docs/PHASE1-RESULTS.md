@@ -474,6 +474,20 @@ OpenCV's unused video reader (11.9 MB of every zip) instead.
 **Section 5, learning loop.** Score every three minutes, nightly at 13:45 UTC and tune on the 1st at 16:00 UTC, every run finishing;
 72 submissions read, 26 corrected of the 50 tuning needs, 15 with marks moved (54), added (37) or removed (9); 380 of 383 holes found.
 
+## Entry 475: app clips for the launch videos (2026-10-26)
+
+40 clips in `C:\Dev\grouplab-local\video-clips\` with `clips.csv` (file, video and chapter, what it shows, length, size, build) and each
+clip's last frame as a PNG; nothing committed but the means of making them. `tests/Shared/ScreenClip.cs` draws GroupLab headless, frame by
+frame, redrawing only when the screen changes, with a pointer gliding eased between targets on the computer and a widening ring where a
+finger taps on the phone, and encodes H.264 at 60 frames a second through OpenCV with Windows' own encoder, reopening each clip to see it
+plays. The computer is 2560 by 1440, dark, at the larger text size, on GroupLab's 25 shot sample with "Sample rifle, .308 Win", Load A and
+Load B (Load B the same sheet's holes a third further from their bulls, saved as a sheet of its own); the phone is the Fold 7's 1080 by 2520.
+Made: video 1's analysis, compare, zero, phone result and photo to holes, and three montage pieces; video 2's chapters 3, 5, 6, 7, 8 (compare,
+Fudd buster, velocity, sessions), 9, 11 (share, sync, restore) and 12; video 3's steps 2, 3, 4, 5, 8, 9 (the phone's half) and help. A
+chores-haiku pass on the last frames found 10 clips wrong at first, every one the script's fault (the loads lacked their reference
+atmosphere, three buttons open windows of their own, Hit probability waits for its Work out button, the first run's answers are buttons);
+all fixed and checked again. What was not made and why is in NOTES-FROM-PLANNING.md's entry 475 status.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

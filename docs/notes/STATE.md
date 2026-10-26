@@ -9,23 +9,22 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-26, entry 474 (the overnight queue) done, every section, none stopped by the budget; entry 475 next.
+**Last rewritten:** 2026-10-26, entry 475 (app clips) done in part; entries 473 and 474 done; the inbox is empty.
 
 ---
 
 ## In flight
 
+- **Entry 475 (2026-10-26)**, in part: 40 app clips (`scripts/video-clips/make-clips.ps1`, clips.csv in grouplab-local); not made: the
+  camera, the pooled set, ch08's Xero and Top Gun, ch10, the report, the tablet, step 9's computer half (NOTES entry 475 says why).
 - **Entry 474 (2026-10-26)**, done: hole finding a fifth sooner, every result the same (PERFORMANCE.md); Settings search and largest
   text audited on both, field names wrapping, a phone's sync name its maker and model; the slowest tests in every CI leg's summary;
   question 36 measured (not the light installer; leave out OpenCV's unused video reader, 11.9 MB a zip). **The learning loop**: score
   every 3 min, nightly 13:45 UTC and tune on the 1st 16:00 UTC all finishing; 72 submissions read, 26 corrected of the 50 tuning needs,
   15 with marks moved, added or removed; the 1 November tune will say it waits (26 of 50) and change nothing.
-- **Entry 473 (2026-10-26)**, done: the sync card no longer "coming" and a site check against it; the phone walk pictures Sync (emulator
-  run of 2026-10-26); disk figures from nightly 221; Settings directions name their page; the guide on half-written sync files.
-- **Error reports 38 to 40 (2026-10-25)**, fixed for nightly 222: a new sheet on a reused clean picture replaced the earlier session
-  (60e60bc1); Delete for rifles, barrels and loads on both (1147821e).
-- **Entries 468 to 472 (2026-10-22 to 24)**, done and in nightlies 219 to 221: Settings in eight categories, daily copies, sync tidying
-  and Forget this device, Android's back everywhere (`Entry472BackTests`), damaged files refused, sync against a simulated cloud.
+- **Entries 468 to 473 and error reports 38 to 40**, done: 468 to 472 in nightlies 219 to 221; 473 (sync no longer "coming", the phone
+  walk's Sync picture, disk figures, Settings directions) and the reports' fixes (a sheet on a reused clean picture replaced the earlier
+  session, 60e60bc1; Delete for rifles, barrels and loads, 1147821e) go out in nightly 222.
 
 ## The next three
 
@@ -83,7 +82,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 475 (app clips).
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -108,6 +107,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
 - **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it
   at the start of a run (entries 335 and 336).
+- **App clips are tests that skip themselves** unless GROUPLAB_VIDEO_CLIPS names a folder (`ScreenClip.SkipUnlessAsked`).
 - **Alan allowed ssh to the server, standing, 2026-10-26**; it is still announced in panel.md, and sudo's rules are unchanged.
 - **Helpers only when Alan asks, ending at the week's reset; chores to chores-haiku, wording to docs-sonnet** (CLAUDE.md, 2026-10-08).
   A finished worker's subjects are compared with main before its worktree goes to the trash.

@@ -25,6 +25,88 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-26, entry 475: app clips for the launch videos
+
+**Status: actioned 2026-10-26, in part: 40 clips made; the rest listed below with why.** Made by script (`scripts/video-clips/make-clips.ps1`, the VideoClips tests): GroupLab's own headless drawing frame by frame with a drawn pointer or tap rings, 2560 by 1440 on the computer (4K is not possible without scaling the whole window, so the entry's other size was used) and 1080 by 2520 on the phone, 60 frames a second, H.264 MP4 from Windows' own encoder through OpenCV at the bit rate it chooses (an outside ffmpeg download was refused by the session's permission check), no lossless master. The phone is GroupLab's phone screens drawn headless at the Fold 7's size, not the emulator. A chores-haiku pass checked every clip's last frame against clips.csv. **Not made, and why:** the camera clips (ch04, step 7), because the headless camera only replays recordings of Alan's sittings, which the entry rules out; the pooled set (v1 montage), the Xero file and Top Gun (ch08), the store-bought target, marking under the crosshair and two aim points (ch10), the one-page report (ch11), the tablet's side by side, and step 9's computer half: left for a later run. **Partial:** the word explained (ch06) shows the analysis but not the explanation; sessions over time (ch08) has one session a load; step 5 stops short of the print dialog's buttons.
+
+From the planning session, Alan's word on 2026-10-26: "Yes go ahead and make the app clips. Use cheaper models if possible." Take it after
+entry 474. The storyboards are in the planning session's doc "GroupLab launch and video plan"; the clips each one needs are listed below,
+so this entry is all Code needs.
+
+**Models:** Alan asks for cheaper models. Give the recording runs, file moves and checking of clips to `chores-haiku`, and any wording
+(captions, the manifest's descriptions) to `docs-sonnet`; the main session only writes the scripts and reviews. Helpers are allowed for
+this entry at Alan's word, and stop at the week's reset.
+
+**Budget:** inside entry 474's limit of 70% of the week. If it is reached first, stop cleanly, note in STATE which clips are done, and
+carry on in the next run.
+
+## What to make
+
+Clean, repeatable screen recordings of GroupLab, made by script (the way the screenshot walks drive the app), so they can be made again
+from any later build.
+
+- **Computer:** the Windows desktop app, 3840 by 2160 if the window can be that large, else 2560 by 1440; 60 frames a second; dark theme;
+  the larger text size; no taskbar, desktop icons or anything outside the window; a visible mouse pointer that moves slowly and smoothly
+  between targets (a drawn pointer overlay is fine if the capture has none). If true video capture of the window is not practical,
+  render frames headless and join them with ffmpeg; say which was used.
+- **Phone:** the Android emulator, portrait, the phone walk's device size, 60 frames a second where it allows, with taps shown as
+  touches. Also one tablet or unfolded landscape clip for the side-by-side result.
+- **Each clip:** 5 to 25 seconds, one action, one still second at the start and at the end, no sound. H.264 MP4 at a high bit rate
+  (about 40 Mbit/s for 4K), plus the lossless or near-lossless master if the method makes one.
+- **Data:** only GroupLab's own sample sheets and demo data, never Alan's records or anything personal: no user name in a window title or
+  path, no tester names, no location. Rifles and loads named plainly ("Sample rifle, 6.5 Creedmoor", "Load A", "Load B"). Alan will
+  replace the figures with his own real groups where the narration names numbers, so the sample numbers just need to be realistic.
+- **Where:** `C:\Dev\grouplab-local\video-clips\` (never committed; video files stay out of the repository). The scripts that make them
+  may be committed under `scripts/video-clips/`, with a line in docs/notes/AUTOMATION.md, and must not run in CI by default.
+- **Manifest:** `video-clips\clips.csv` with file name, video and chapter, what it shows, length, resolution and the build it came from.
+- **Name:** `v1-` / `v2-chNN-` / `v3-stepN-` then a few words, for example `v2-ch05-next-unsure-hole.mp4`.
+
+## The clips
+
+Video 1 (the one minute introduction):
+- v1 photo to holes: on the phone, a sample sheet photographed or opened, the holes appearing with their numbers (the phone's own result)
+- v1 analysis: the desktop analysis, group, mean radius circle and the figures with ranges; hold 3 seconds on the figures
+- v1 compare: Compare loads with two loads and their ranges
+- v1 zero: the zero correction with the clicks, desktop
+- v1 phone result: the phone's result screen
+- v1 montage (2 to 3 seconds each): the Targets screen choosing a sheet; Ballistics hit chance; a pooled set of sheets; the share picture
+  with its results box
+
+Video 2 (feature tour), by chapter:
+- ch03: Targets screen; Made for your optic filling in distance and magnification; the C3 zeroing grid; the large format tiles; a thermal
+  label sheet; the printer check page and entering a measurement
+- ch04: the phone camera screen with the level and the quality bar (the emulator's camera feed or a chosen picture is fine; say which)
+- ch05: How did you shoot this sheet with its three cards; the found holes; Next unsure hole; moving a hole; adding and removing one; the
+  same from the keyboard on the desktop (Tab and arrow keys)
+- ch06: the analysis; a slow zoom-worthy hold on one figure and its range; tapping a number to switch mil and MOA; Every figure explained
+  opening for mean radius; a dotted word explained on hover
+- ch07: Zero from this group; Shots Needed to Zero
+- ch08: a set of three sheets pooling into one group; Compare loads; a Garmin Xero file dropped in and Match to shots; Velocity and the
+  vertical; Sessions over time; Top Gun trend; Fudd buster mode
+- ch09: Ballistics trajectory; hit chance; Point blank range; the rifle's Scope and mount part
+- ch10: a store-bought sample target recognized; marking by hand under the fixed crosshair on the phone; two aim points with their colors
+- ch11: the share picture, moving and resizing its box; the one-page report; Settings, Sync and your data, Sync between devices; Restore a
+  copy listing the daily copies
+- ch12: Settings, Sharing and privacy (what GroupLab sends); Report a problem
+
+Video 3 (getting started), by step:
+- step2: the first run's four questions, one at a time, then the demo tour offer (a fresh profile, computer and phone)
+- step3: Equipment: adding a rifle with scope unit and click value, a barrel's length and twist, then a load
+- step4: Settings, Printers and paper, the printer check
+- step5: Targets, Made for your optic, to the print dialog (stop at the dialog)
+- step7: the phone camera with the level, quality bar and Guided
+- step8: How did you shoot this sheet, one hole moved, Next unsure hole
+- step9: the phone result, the zero correction, then the same session opened on the computer
+- help: Settings, Help and problems, Report a problem
+
+## At the end
+
+Check every clip plays and shows what its line says (a `chores-haiku` pass with a frame from each clip is enough), list in STATE which
+clips exist and any that could not be made and why, and add one line to for-alan.md, not a request: "App clips for the launch videos are
+in C:\Dev\grouplab-local\video-clips\ (N clips, see clips.csv)."
+
+---
+
 ## 2026-10-26, entry 474: the overnight queue, needs nobody
 
 **Status: actioned 2026-10-26. Every section done; none stopped by the budget.** Section 1: hole finding about a fifth sooner with every result the same (the sheet drawn in bands, the moved print check's disc row by row, the paper level's places once); the first trajectory left, already warmed and precompiled. Section 2: Settings search audited on both (every row by its own words, and everyday words), the largest text on the marking screen, Equipment and the phone's pages under its places; fixed field names running past their box, six words that found nothing, and a phone named in the sync folder by GroupLab's version line. Section 3: the slowest tests now reported on every CI leg; two made quicker; the screenshot walk measured and left. Section 4: question 36 measured again, recommendation unchanged, and OpenCV's unused video reader found (11.9 MB of every zip). Section 5: the learning loop running, 26 of 50 corrected, for-alan's passage corrected.
