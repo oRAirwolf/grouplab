@@ -9,24 +9,23 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-10-26, entry 473 (the consistency audit) done; entry 474, the overnight queue, next.
+**Last rewritten:** 2026-10-26, entry 474 (the overnight queue) done, every section, none stopped by the budget; entry 475 next.
 
 ---
 
 ## In flight
 
+- **Entry 474 (2026-10-26)**, done: hole finding a fifth sooner, every result the same (PERFORMANCE.md); Settings search and largest
+  text audited on both, field names wrapping, a phone's sync name its maker and model; the slowest tests in every CI leg's summary;
+  question 36 measured (not the light installer; leave out OpenCV's unused video reader, 11.9 MB a zip). **The learning loop**: score
+  every 3 min, nightly 13:45 UTC and tune on the 1st 16:00 UTC all finishing; 72 submissions read, 26 corrected of the 50 tuning needs,
+  15 with marks moved, added or removed; the 1 November tune will say it waits (26 of 50) and change nothing.
 - **Entry 473 (2026-10-26)**, done: the sync card no longer "coming" and a site check against it; the phone walk pictures Sync (emulator
   run of 2026-10-26); disk figures from nightly 221; Settings directions name their page; the guide on half-written sync files.
 - **Error reports 38 to 40 (2026-10-25)**, fixed for nightly 222: a new sheet on a reused clean picture replaced the earlier session
   (60e60bc1); Delete for rifles, barrels and loads on both (1147821e).
-- **Entry 472 (2026-10-24)**, done, five commits: Android's back now returns to the screen before on a result, the picture's check, How
-  did you shoot this sheet, Add a store-bought target and the printer check (`Entry472BackTests` walks every screen and presses Back);
-  damaged session files, markings and data files are refused in words and a data file imports whole or not at all; a sync change file is
-  taken only whole and new ones carry a checksum (`BadFilesTests`); sync held against a simulated OneDrive, Google Drive and Dropbox with
-  three devices (`CloudClientTests`); the phone's Settings pictures on the Features page; the proof checklist lists what Alan is needed
-  for, smallest first. Ships in the next nightly (221).
-- **Entries 468 to 471 (2026-10-22 and 23)**, done: Settings in eight categories, daily copies, Shooting defaults (219); Forget this
-  device, a new sync folder gets every record, desktop builds precompiled (220).
+- **Entries 468 to 472 (2026-10-22 to 24)**, done and in nightlies 219 to 221: Settings in eight categories, daily copies, sync tidying
+  and Forget this device, Android's back everywhere (`Entry472BackTests`), damaged files refused, sync against a simulated cloud.
 
 ## The next three
 
@@ -72,9 +71,9 @@ Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (107 to 111 answered 2026-10-23 i
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.220 (2026-10-23 20:25 UTC): entries 469 and 471, the first desktop builds published precompiled
-  (each download about an eighth larger, the Windows zip 114.4 to 126.5 MB); its notes carry the correction of nightly 218.
-- **The site** follows main by itself (website.yml) and the nightly publishes it; entry 472's Features pictures pushed in 1b31c6fb.
+- **Last nightly:** 0.2.0-nightly.221 (2026-10-24 12:55 UTC): entry 472. **Nightly 222** (tonight) carries entries 473 and 474 and the
+  fixes for error reports 38 to 40.
+- **The site** follows main by itself (website.yml); entries 473 and 474 published with their pushes.
 - Crash reports: none open; 38 to 40 closed 2026-10-26 for nightly 222; assessed in `docs/notes/error-reports.md`.
 
 ## The inbox
@@ -84,7 +83,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 475 (app clips).
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -109,6 +108,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
 - **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it
   at the start of a run (entries 335 and 336).
+- **Alan allowed ssh to the server, standing, 2026-10-26**; it is still announced in panel.md, and sudo's rules are unchanged.
 - **Helpers only when Alan asks, ending at the week's reset; chores to chores-haiku, wording to docs-sonnet** (CLAUDE.md, 2026-10-08).
   A finished worker's subjects are compared with main before its worktree goes to the trash.
 - **Inbox files are moved to `C:\Dev\grouplab-trash\<date>\`**, not deleted (entry 222); the Holds line never lists them.

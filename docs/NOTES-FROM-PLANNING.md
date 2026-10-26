@@ -25,6 +25,68 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-10-26, entry 474: the overnight queue, needs nobody
+
+**Status: actioned 2026-10-26. Every section done; none stopped by the budget.** Section 1: hole finding about a fifth sooner with every result the same (the sheet drawn in bands, the moved print check's disc row by row, the paper level's places once); the first trajectory left, already warmed and precompiled. Section 2: Settings search audited on both (every row by its own words, and everyday words), the largest text on the marking screen, Equipment and the phone's pages under its places; fixed field names running past their box, six words that found nothing, and a phone named in the sync folder by GroupLab's version line. Section 3: the slowest tests now reported on every CI leg; two made quicker; the screenshot walk measured and left. Section 4: question 36 measured again, recommendation unchanged, and OpenCV's unused video reader found (11.9 MB of every zip). Section 5: the learning loop running, 26 of 50 corrected, for-alan's passage corrected.
+
+From the planning session, Alan's choice at 2026-10-26 10:50 UTC before bed. Take entry 473 (the consistency audit's five fixes) first,
+then this entry's sections in order. Nothing here needs Alan tonight; anything that turns out to need him goes into for-alan.md as one
+line and Code moves on to the next section.
+
+**Budget:** Alan allowed this queue up to **70%** of the week (it was 13% at the start). Stop starting new work at 70%, finish or
+back out cleanly what is in progress, rewrite STATE.md and end. The usual 85% guard is unchanged for anything else.
+
+**Usual rules:** error reports checked before each section as entry 457 says; README, site, guides and pictures in the same change as
+any behaviour change; backups before anything deleted; one commit per finished piece; the last commit of the night must make a nightly
+(not a `[notes]` commit).
+
+## 1. Speed work (Phase 9)
+
+Take the slowest steps still measured in docs/PERFORMANCE.md, largest saving first: finding the holes on the 600 dpi scan (the threshold
+mask's closing and the alignment's phase correlations), each mark's moments on a photograph (72 ms typical, up to 590 ms with a large
+mark), and the first trajectory's cost (about 100 ms, then 4). Keep a change only when every result is identical (or within the
+tolerance the existing gates already allow) and the baseline gate passes; record before and after in docs/PERFORMANCE.md. Nothing on
+the screen changes. OpenCV's QR detectors stay on one thread (entry 414).
+
+## 2. Full-app audits on the computer and the phone
+
+Walk every screen and fix what fails:
+- a screen reader name on every control (`ScreenReaderAudit`, `SpokenNames`), and a reading order that makes sense;
+- every page at the largest text size on both (`TextSize`), nothing cut off or overlapping (`LayoutAudit`);
+- Back on every phone page (`Entry472BackTests` covers it; add any page it misses);
+- Settings search finds every setting on all eight pages, by its own words and its obvious other words.
+Anything that is a look question rather than a clear fault goes into for-alan.md as "DESIGN NEEDED:" and is not decided by Code.
+
+## 3. Tests
+
+flaky-tests.md lists nothing to fix, so: find the slowest CI jobs and tests and make them faster without losing what they check, and add
+tests where a shipped feature has none (start with the ones in docs/PROOF-CHECKLIST.md marked "built, not proven" that a test can at
+least partly cover). No test is deleted or weakened to make a run pass.
+
+## 4. Light installer (question 36), measure only
+
+Build a smaller Windows download as question 36 describes and measure it against nightly 221's zip: size, first start time, and what is
+missing from it. Record the numbers in docs/QUESTIONS-FOR-PLANNING.md under question 36 with a recommendation. Do not switch what is
+published; that is Alan's decision.
+
+## 5. The learning loop: is it running, and how far from tuning
+
+Added by the planning session at Alan's word, 2026-10-26. Read the newest `learning/summary.md` and `learning/tuning.md` in
+oRAirwolf/grouplab-submissions-archive, and the learning timers' last runs and the worker's log on the server if Code can reach them
+(if the permission check refuses ssh, say so and leave the server part as one paste for Alan in for-alan.md, checked as usual). Record in
+STATE.md, in plain numbers: when the score, nightly and tune runs last ran and whether each finished, how many submissions are on the real
+scoreboard, how many are corrected (of the 50 tuning needs), how many of those have any mark moved, added or removed, and what the 1
+November tune run is expected to do. Anything broken is fixed (backup first) or written up for Alan. Also correct the out-of-date
+passage in for-alan.md ("What happens to a submission afterwards") that still says the comparison with a person's corrections is not
+built: it was built in entries 394 and 395.
+
+## At the end
+
+Rewrite STATE.md, and leave for-alan.md with only what truly needs Alan. Say in STATE which sections were finished and which were
+stopped by the budget.
+
+---
+
 ## 2026-10-25, entry 473: consistency audit
 
 **Status: actioned 2026-10-26. Every section done.** Section 1: the sync feature's phrase copied exactly from nightly 215's note, so Features reads "Since nightly.215, changed in nightly.220", and the site build now holds Features back when an arrived feature has a phrase no published note and no commit to come says (`never_published`, tested in site-feature-dates-tests.py). Section 2: the phone walk opens Sync between devices with a sample folder and a second device (the `sync-sample` step) and takes `settings-sync`; the picture comes with the emulator run started today, and the noPicture line and SCREENSHOTS.md say so until it lands. Section 3: nightly 221 measured unpacked, Windows 266, Linux 259, macOS 231 (Apple silicon) and 262 (Intel) MB; the tables say 270, 260, and 240 or 270. Section 4: the testing guide, user guide, tour, README and PHONE-PARITY point at the Settings page by name. Section 5: the guide and the Features sync sentence say a half-written or damaged change file waits until it is whole.

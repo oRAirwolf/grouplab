@@ -447,6 +447,33 @@ General (the demo), Units and figures (the scope and length units), Help and pro
 **Section 5.** The guide's sync section and the Features sentence say a change file still being copied, or damaged, is left alone until
 it is whole.
 
+## Entry 474: the overnight queue (2026-10-26)
+
+**Section 1, speed.** Finding the holes on the 600 dpi scan 403 to 310 ms, the generated sheet 189 to 117, a phone photograph 125 to
+97, one sheet from file to figures 327 to 267, a batch of ten 2,755 to 2,126 (`grouplab bench --runs 5`). Three exact changes: the
+sheet drawn in bands of rows at once (`SceneRasterizer`, 81 to 19 ms), the moved print check's darkest and lightest taken row by row
+(`DiscExtremes`, 46 to 10), the residual's paper level placed once per row and column (44 to 30). The four corpus scoreboards, the
+synthetic and any-target boards and `analyze --json` on 16 pictures are identical before and after; the bench gate passed; the window's
+gate fails on "a new window ready to use" before and after alike (docs/PERFORMANCE.md).
+
+**Section 2, audits.** New: `SettingsSearchAuditTests` on both platforms (every Settings row found by the words on it, and 25 everyday
+words), `PagesUnderPlacesAuditTests` (every phone Settings page, Sync, the rifle and load forms and their Delete question at the largest
+text, layout and screen reader), and the marking screen and Equipment added to the computer's every-text-size audit. Fixed: field names
+on the marking screen ran past their box at Larger and Largest; OneDrive found nothing on either, and bigger, millimeters, bug and rifle
+nothing on the phone; a phone's default name in a sync folder was GroupLab's version line, now its maker and model. Back was already
+walked on every phone page. The phone's Sync picture, taken by the emulator walk, is on Features.
+
+**Section 3, tests.** `scripts/slowest-tests.py` writes each suite's 15 slowest tests into every CI leg's summary. The phone's blind close
+test 87 to 21 s, the band test 115 to 7 s. The desktop screenshot walk (291 s, a quarter of the App suite) was measured without writing
+its pictures and took the same time, so nothing was changed there. The proof checklist's open rows all need hardware or a person.
+
+**Section 4, light installer.** Framework-dependent: 165.3 MB unpacked, 67.2 MB zipped against 245.8 and 102.8; start-up the same (679
+and 672 ms against 682 and 679); missing only the .NET runtime. Recommendation in question 36: not the light installer; leave out
+OpenCV's unused video reader (11.9 MB of every zip) instead.
+
+**Section 5, learning loop.** Score every three minutes, nightly at 13:45 UTC and tune on the 1st at 16:00 UTC, every run finishing;
+72 submissions read, 26 corrected of the 50 tuning needs, 15 with marks moved (54), added (37) or removed (9); 380 of 383 holes found.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
