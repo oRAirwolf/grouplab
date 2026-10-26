@@ -514,15 +514,24 @@ public sealed partial class SessionStore
     }
 
     /// <summary>
-    /// NOTES-FROM-PLANNING.md entry 420 section 3: the session already saved from the same picture of the same design, the first where there
-    /// are several, or null. Accepting a picture opened afresh found no session and made a second record of the same sheet each time.
+    /// NOTES-FROM-PLANNING.md entry 420 section 3: the sessions already saved from the same picture of the same design, oldest first. Accepting a
+    /// picture opened afresh found no session and made a second record of the same sheet each time. Error report 40 (2026-10-25): one clean
+    /// picture of a target marked by hand for several sheets is several sessions, so the caller decides by the holes which one, if any, it is.
     /// </summary>
-    public long? WithImage(string sha256, string? definitionId)
+    public IReadOnlyList<long> WithImage(string sha256, string? definitionId)
     {
         ArgumentNullException.ThrowIfNull(sha256);
         using var db = Connect();
-        return Scalar(db, "SELECT id FROM sessions WHERE image_sha256 = $hash AND IFNULL(definition_id, '') = IFNULL($defid, '') ORDER BY id LIMIT 1",
-            [("$hash", sha256), ("$defid", definitionId)]) is long id ? id : null;
+        using var command = Command(db, "SELECT id FROM sessions WHERE image_sha256 = $hash AND IFNULL(definition_id, '') = IFNULL($defid, '') ORDER BY id",
+            [("$hash", sha256), ("$defid", definitionId)]);
+        using var r = command.ExecuteReader();
+        var ids = new List<long>();
+        while (r.Read())
+        {
+            ids.Add(r.GetInt64(0));
+        }
+
+        return ids;
     }
 
     /// <summary>One session, with its marking and proof image, or null when there is none with that id.</summary>

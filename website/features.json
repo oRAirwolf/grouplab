@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "A new sheet marked on the same picture as an earlier one",
     "The computer downloads now come precompiled",
     "Correction: on the phone, a GroupLab data file opened from another app",
     "On the phone, a GroupLab data file opened from another app shows what importing it would add",

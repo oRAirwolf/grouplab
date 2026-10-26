@@ -3713,10 +3713,14 @@ public sealed partial class MainWindow : Window
         var existing = currentSession is { } saved ? sessions.Get(saved) : null;
         var record = SessionRecords.Build(state, plotDefinition, units, analyseSighters, existing, hash, proof, proofType, DateTime.UtcNow, DateTime.Now);
         string? sameSheet = null;
-        if (existing is null && hash is not null && sessions.WithImage(hash, record.DefinitionId) is { } earlier && sessions.Get(earlier) is { } before)
+        // Error report 40: only where its holes are the same too, since one clean picture marked by hand can be many sheets; and the record as
+        // it was is kept first, as synchronization keeps one it changes.
+        if (existing is null && hash is not null && SameSheetSaved(hash, record.DefinitionId, state) is { } before)
         {
             record = SessionRecords.Build(state, plotDefinition, units, analyseSighters, before, hash, proof, proofType, DateTime.UtcNow, DateTime.Now);
-            sameSheet = $" This picture was saved before, on {before.ShotDate ?? before.CreatedUtc[..10]}, so that record was brought up to date rather than made twice.";
+            sessions.Keep(SyncEngine.SessionKind, DataExport.Identity(before), before.MarkingJson, "brought up to date by the same picture accepted again",
+                DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture));
+            sameSheet = $" This picture was saved before, on {before.ShotDate ?? before.CreatedUtc[..10]}, with the same holes, so that record was brought up to date rather than made twice.";
         }
 
         try
@@ -3737,6 +3741,34 @@ public sealed partial class MainWindow : Window
             Failed("The session could not be saved", "The session could not be saved: " + ex.Message);
             DiagnosticLog.Exception(LogLevel.Warn, "session.save", ex);
         }
+    }
+
+    /// <summary>The session saved before from this picture whose holes are this marking's (error report 40), or null.</summary>
+    private SessionRecord? SameSheetSaved(string hash, string? definitionId, MarkingState state)
+    {
+        // A quarter of an inch where the scale is known; on a picture with no scale, 25 pixels, about a hole's width on a phone picture.
+        double tolerance = state.Scale is { } scale && state.Shots.FirstOrDefault() is { } first ? 0.25 * HoleSize.PixelsPerInch(scale, first.Image) : 25;
+        foreach (long id in sessions!.WithImage(hash, definitionId))
+        {
+            if (sessions.Get(id) is not { } before)
+            {
+                continue;
+            }
+
+            try
+            {
+                if (SessionRecords.SameHoles(state, MarkingFile.Read(before.MarkingJson).State, tolerance))
+                {
+                    return before;
+                }
+            }
+            catch (MarkingFileException)
+            {
+                // A marking that cannot be read is no reason to write over it.
+            }
+        }
+
+        return null;
     }
 
     private static string Sha256(string path)

@@ -21,6 +21,45 @@ public static class SessionRecords
     }
 
     /// <summary>
+    /// Error report 40, 2026-10-25: whether a marking is the same sheet as one saved before from the same picture, by its holes. Entry 420
+    /// section 3 took the same picture for the same sheet, and somebody who marks every sheet by hand on copies of one clean picture of the
+    /// target lost each sheet to the next. It is the same sheet where at least half the shots of each are within
+    /// <paramref name="tolerancePixels"/> of a shot of the other, paired one to one; the picture is the same, so the pixels are comparable.
+    /// </summary>
+    public static bool SameHoles(MarkingState now, MarkingState before, double tolerancePixels)
+    {
+        ArgumentNullException.ThrowIfNull(now);
+        ArgumentNullException.ThrowIfNull(before);
+        var here = now.Shots.Where(s => s.IsShot).Select(s => s.Image).ToList();
+        var there = before.Shots.Where(s => s.IsShot).Select(s => s.Image).ToList();
+        if (here.Count == 0 || there.Count == 0)
+        {
+            return here.Count == there.Count;
+        }
+
+        // The closest pairs first, each shot used once.
+        var pairs = (from i in Enumerable.Range(0, here.Count)
+                     from j in Enumerable.Range(0, there.Count)
+                     let d = Math.Sqrt(Math.Pow(here[i].X - there[j].X, 2) + Math.Pow(here[i].Y - there[j].Y, 2))
+                     where d <= tolerancePixels
+                     orderby d
+                     select (i, j)).ToList();
+        var usedHere = new HashSet<int>();
+        var usedThere = new HashSet<int>();
+        foreach (var (i, j) in pairs)
+        {
+            if (!usedHere.Contains(i) && !usedThere.Contains(j))
+            {
+                usedHere.Add(i);
+                usedThere.Add(j);
+            }
+        }
+
+        int matched = usedHere.Count;
+        return matched * 2 >= here.Count && matched * 2 >= there.Count;
+    }
+
+    /// <summary>
     /// The record for this marking. A second save of the same session passes the first as <paramref name="existing"/>, which keeps its id and
     /// the day it was first saved.
     /// </summary>

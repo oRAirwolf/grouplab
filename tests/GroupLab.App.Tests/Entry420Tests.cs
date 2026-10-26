@@ -77,6 +77,46 @@ public class Entry420Tests
             Assert.Equal(first, window.CurrentSession);
             Assert.Equal(records, window.Sessions.List().Count);
             Assert.Contains("brought up to date rather than made twice", window.StatusText, StringComparison.Ordinal);
+            // And the record as it was is kept before it is brought up to date.
+            Assert.Contains(window.Sessions.Kept(), k => k.Why.Contains("same picture", StringComparison.Ordinal));
+        }
+        finally
+        {
+            window.Close();
+            GroupLab.Tests.Support.Temp.Delete(folder);
+        }
+    }
+
+    /// <summary>
+    /// Error report 40, 2026-10-25: somebody marking each sheet by hand on copies of one clean picture of the target lost every sheet to the
+    /// next, because the same picture was taken for the same sheet. A different set of holes on the same picture is a session of its own.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheSamePictureWithOtherHolesIsANewSession()
+    {
+        var set = TargetGenerator.Generate(new GeneratorRequest(100, 4, null, 25, "letter")).Design!.Definition!;
+        string folder = Path.Combine(Path.GetTempPath(), $"grouplab-420b-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(folder);
+        var store = new AppSettingsStore(Path.Combine(folder, "settings.json"));
+        var window = new MainWindow(store) { Width = 1400, Height = 900, DetectOnOpen = false };
+        window.Show();
+        try
+        {
+            var (path, result) = Sheet(set, folder, 2);
+            window.OpenImage(path);
+            Accept(window, result);
+            long first = Assert.IsType<long>(window.CurrentSession);
+            string firstMarking = window.Sessions!.Get(first)!.MarkingJson;
+
+            // The same picture again, with the holes somewhere else, as another sheet marked on the same clean picture would have them.
+            window.OpenImage(path);
+            Assert.Null(window.CurrentSession);
+            Accept(window, result with { Detections = [.. result.Detections.Select(d => d with { Image = new PointD(d.Image.X + 150, d.Image.Y + 120) })] });
+            long second = Assert.IsType<long>(window.CurrentSession);
+            Assert.NotEqual(first, second);
+            Assert.Equal(2, window.Sessions.List().Count);
+            Assert.Equal(firstMarking, window.Sessions.Get(first)!.MarkingJson);
+            Assert.DoesNotContain("brought up to date", window.StatusText, StringComparison.Ordinal);
         }
         finally
         {
