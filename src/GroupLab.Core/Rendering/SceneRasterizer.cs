@@ -54,7 +54,15 @@ public static class SceneRasterizer
     /// <param name="level">An ink's level, 0 to 255; by its luminance where not given.</param>
     /// <param name="stretchY">Rows per row down the page, for a printer that feeds short (entry 391); 1 everywhere else.</param>
     public static GrayImage Rasterize(Scene page, double dpi, double scale = 1.0, PixelRegion? region = null, bool words = false, Func<Gltd.Binary.Rgb, double>? level = null,
-        double stretchY = 1.0)
+        double stretchY = 1.0) => Rasterize(page, dpi, scale, region, words, level, stretchY, bands: 0);
+
+    /// <summary>
+    /// Entry 474 section 1: a large page is drawn in bands of rows at once. Every fill touches only the rows it covers and each pixel sees
+    /// the same items in the same order, so the pixels are the one band's to the bit (<c>SceneRasterizerBandsTests</c>); <paramref name="bands"/>
+    /// 0 chooses, 1 draws on one thread.
+    /// </summary>
+    internal static GrayImage Rasterize(Scene page, double dpi, double scale, PixelRegion? region, bool words, Func<Gltd.Binary.Rgb, double>? level,
+        double stretchY, int bands)
     {
         ArgumentNullException.ThrowIfNull(page);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(dpi);
@@ -68,37 +76,63 @@ public static class SceneRasterizer
         double k = scale * pixelsPerUnit, ky = k * stretchY;
         double originX = ((1 - scale) * page.Width * pixelsPerUnit / 2) - r.Left;
         double originY = ((1 - scale) * page.Height * pixelsPerUnit * stretchY / 2) - r.Top;
-        var canvas = new Canvas(pixels, r.Width, r.Height, stretchY);
-        foreach (var item in page.Items)
+        // Each item's level and, for words, its outlines, worked out once for every band.
+        var items = page.Items;
+        var levels = items.Select(item => (level ?? Luminance)(item.Colour)).ToArray();
+        var glyphs = items.Select(item => item is TextRun text && words
+            ? (IReadOnlyList<(double X, double Y)[]>)[.. SheetGlyphs.Contours(text).Select(c => c.Select(p => (originX + (p.X * k), originY + (p.Y * ky))).ToArray())]
+            : null).ToArray();
+        if (bands <= 0)
         {
-            double luminance = (level ?? Luminance)(item.Colour);
-            switch (item)
+            bands = (long)r.Width * r.Height >= BandedFrom ? Math.Clamp(Environment.ProcessorCount, 1, Math.Max(1, r.Height / 64)) : 1;
+        }
+
+        void Draw(int from, int to)
+        {
+            var canvas = new Canvas(pixels, r.Width, r.Height, stretchY, from, to);
+            for (int n = 0; n < items.Count; n++)
             {
-                case RectFill rect:
-                    canvas.FillRect(originX + (rect.X * k), originY + (rect.Y * ky), originX + ((rect.X + rect.Width) * k), originY + ((rect.Y + rect.Height) * ky), luminance);
-                    break;
-                case DiscBand band:
-                    // A DiscBand radius in half-dmm is the disc's diameter in dmm, so it scales like any other length.
-                    canvas.FillBand(originX + (band.CentreX * k), originY + (band.CentreY * ky), band.Outer with { Radius = band.OuterRadius * k },
-                        band.Inner with { Radius = band.InnerRadius * k }, luminance);
-                    break;
-                case TextRun text when words:
-                    canvas.FillContours([.. SheetGlyphs.Contours(text).Select(c => c.Select(p => (originX + (p.X * k), originY + (p.Y * ky))).ToArray())], luminance);
-                    break;
+                switch (items[n])
+                {
+                    case RectFill rect:
+                        canvas.FillRect(originX + (rect.X * k), originY + (rect.Y * ky), originX + ((rect.X + rect.Width) * k), originY + ((rect.Y + rect.Height) * ky), levels[n]);
+                        break;
+                    case DiscBand band:
+                        // A DiscBand radius in half-dmm is the disc's diameter in dmm, so it scales like any other length.
+                        canvas.FillBand(originX + (band.CentreX * k), originY + (band.CentreY * ky), band.Outer with { Radius = band.OuterRadius * k },
+                            band.Inner with { Radius = band.InnerRadius * k }, levels[n]);
+                        break;
+                    case TextRun when glyphs[n] is { } contours:
+                        canvas.FillContours(contours, levels[n]);
+                        break;
+                }
             }
+        }
+
+        if (bands == 1)
+        {
+            Draw(0, r.Height);
+        }
+        else
+        {
+            Parallel.For(0, bands, b => Draw((int)((long)r.Height * b / bands), (int)((long)r.Height * (b + 1) / bands)));
         }
 
         return new GrayImage(r.Width, r.Height, pixels);
     }
 
+    /// <summary>The pixel count from which a page is drawn in bands: about a 150 dpi Letter page.</summary>
+    private const long BandedFrom = 2_000_000;
+
     /// <param name="StretchY">Rows per row down the page: a band is decided in the unstretched frame, so a circle prints as one, stretched.</param>
-    private readonly record struct Canvas(byte[] Pixels, int Width, int Height, double StretchY = 1.0)
+    /// <param name="RowFrom">The first row this canvas draws; with <paramref name="RowTo"/>, the band it owns (entry 474 section 1).</param>
+    private readonly record struct Canvas(byte[] Pixels, int Width, int Height, double StretchY = 1.0, int RowFrom = 0, int RowTo = int.MaxValue)
     {
         /// <summary>Exact area coverage of an axis-aligned rectangle.</summary>
         public void FillRect(double x0, double y0, double x1, double y1, double luminance)
         {
             int u0 = Math.Max(0, (int)Math.Floor(x0)), u1 = Math.Min(Width, (int)Math.Ceiling(x1));
-            int v0 = Math.Max(0, (int)Math.Floor(y0)), v1 = Math.Min(Height, (int)Math.Ceiling(y1));
+            int v0 = Math.Max(RowFrom, (int)Math.Floor(y0)), v1 = Math.Min(Math.Min(Height, RowTo), (int)Math.Ceiling(y1));
             for (int v = v0; v < v1; v++)
             {
                 double cy = Math.Min(v + 1, y1) - Math.Max(v, y0);
@@ -117,7 +151,7 @@ public static class SceneRasterizer
         public void FillBand(double cx, double cy, Outline outer, Outline inner, double luminance)
         {
             double reach = outer.Radius + 1, rows = reach * StretchY;
-            int v0 = Math.Max(0, (int)Math.Floor(cy - rows)), v1 = Math.Min(Height, (int)Math.Ceiling(cy + rows));
+            int v0 = Math.Max(RowFrom, (int)Math.Floor(cy - rows)), v1 = Math.Min(Math.Min(Height, RowTo), (int)Math.Ceiling(cy + rows));
             for (int v = v0; v < v1; v++)
             {
                 // Entry 391: down the page in the unstretched frame, so a pixel there is no more than 0.71 of one from its corners.
@@ -223,7 +257,7 @@ public static class SceneRasterizer
 
             double top = contours.Min(c => c.Min(p => p.Y)), bottom = contours.Max(c => c.Max(p => p.Y));
             double left = contours.Min(c => c.Min(p => p.X)), right = contours.Max(c => c.Max(p => p.X));
-            int v0 = Math.Max(0, (int)Math.Floor(top)), v1 = Math.Min(Height, (int)Math.Ceiling(bottom));
+            int v0 = Math.Max(RowFrom, (int)Math.Floor(top)), v1 = Math.Min(Math.Min(Height, RowTo), (int)Math.Ceiling(bottom));
             int u0 = Math.Max(0, (int)Math.Floor(left)), u1 = Math.Min(Width, (int)Math.Ceiling(right));
             if (v0 >= v1 || u0 >= u1)
             {

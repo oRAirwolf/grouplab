@@ -293,8 +293,14 @@ public static partial class RenderDifferenceHoleDetector
         double threshold = options.ResidualFraction * 255;
         var residual = new byte[width * height];
         var over = new byte[width * height];
+        // Entry 474 section 1: the paper level's place along a row is the same on every row, so it is worked out once, and the level itself
+        // by the same sum PaperAt makes.
+        int paperWidth = (width + block - 1) / block;
+        var columns = PaperPlaces(block, width, paperWidth);
+        var rows = PaperPlaces(block, height, (height + block - 1) / block);
         Parallel.For(0, height, y =>
         {
+            var (j0, j1, ty) = rows[y];
             for (int x = 0; x < width; x++)
             {
                 int i = (y * width) + x;
@@ -304,7 +310,9 @@ public static partial class RenderDifferenceHoleDetector
                     continue;
                 }
 
-                double p = Math.Max(1, PaperAt(paper, block, width, height, x, y));
+                var (i0, i1, tx) = columns[x];
+                double p = Math.Max(1, ((1 - ty) * (((1 - tx) * paper[(j0 * paperWidth) + i0]) + (tx * paper[(j0 * paperWidth) + i1])))
+                    + (ty * (((1 - tx) * paper[(j1 * paperWidth) + i0]) + (tx * paper[(j1 * paperWidth) + i1]))));
                 double e = 1 - ((1 - (expected.Pixels[i] / 255.0)) * (1 - inkFraction));
                 double n = observed.Pixels[i] / p;
                 residual[i] = (byte)Math.Clamp(Math.Round(255 * Math.Abs(e - n) / range), 0, 255);
@@ -695,30 +703,7 @@ public static partial class RenderDifferenceHoleDetector
         int left = Math.Max(0, blob.Left - r), top = Math.Max(0, blob.Top - r);
         int right = Math.Min(width - 1, blob.Left + blob.Width - 1 + r), bottom = Math.Min(height - 1, blob.Top + blob.Height - 1 + r);
         int bw = right - left + 1, bh = bottom - top + 1;
-        var darkest = new byte[bw * bh];
-        var lightest = new byte[bw * bh];
-        for (int y = top; y <= bottom; y++)
-        {
-            for (int x = left; x <= right; x++)
-            {
-                byte lo = 255, hi = 0;
-                for (int v = Math.Max(0, y - open); v <= Math.Min(height - 1, y + open); v++)
-                {
-                    for (int u = Math.Max(0, x - open); u <= Math.Min(width - 1, x + open); u++)
-                    {
-                        if (((u - x) * (u - x)) + ((v - y) * (v - y)) <= open * open)
-                        {
-                            byte e = expected.Pixels[(v * width) + u];
-                            lo = Math.Min(lo, e);
-                            hi = Math.Max(hi, e);
-                        }
-                    }
-                }
-
-                darkest[((y - top) * bw) + (x - left)] = lo;
-                lightest[((y - top) * bw) + (x - left)] = hi;
-            }
-        }
+        var (darkest, lightest) = DiscExtremes(expected, left, top, bw, bh, open);
 
         int step = Math.Max(1, r / 8);
         for (int dy = -r; dy <= r; dy += step)
@@ -750,6 +735,90 @@ public static partial class RenderDifferenceHoleDetector
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// The darkest and lightest of <paramref name="image"/> within <paramref name="radius"/> of each pixel of a box, the disc clipped to the
+    /// image. Entry 474 section 1: the disc is taken row by row, each of its rows a stretch along an image row, and each image row's stretches
+    /// of every half width come from the one before by two more pixels, so a pixel costs about three times the radius rather than the
+    /// disc's area; the extremes are the disc's own (<c>DiscExtremesTests</c> holds them to the pixel against the disc walked whole).
+    /// </summary>
+    internal static (byte[] Darkest, byte[] Lightest) DiscExtremes(GrayImage image, int left, int top, int bw, int bh, int radius)
+    {
+        int width = image.Width, height = image.Height, right = left + bw - 1, bottom = top + bh - 1;
+        var darkest = new byte[bw * bh];
+        var lightest = new byte[bw * bh];
+        Array.Fill(darkest, (byte)255);
+
+        // A disc's half width d rows from its centre.
+        var half = new int[radius + 1];
+        for (int d = 0; d <= radius; d++)
+        {
+            while (((half[d] + 1) * (half[d] + 1)) + (d * d) <= radius * radius)
+            {
+                half[d]++;
+            }
+        }
+
+        var lo = new byte[bw];
+        var hi = new byte[bw];
+        for (int v = Math.Max(0, top - radius); v <= Math.Min(height - 1, bottom + radius); v++)
+        {
+            int row = v * width;
+            for (int w = 0; w <= radius; w++)
+            {
+                // The stretch of half width w about each x of the box, from the one of half width w - 1.
+                for (int x = left; x <= right; x++)
+                {
+                    int k = x - left;
+                    if (w == 0)
+                    {
+                        lo[k] = hi[k] = image.Pixels[row + x];
+                        continue;
+                    }
+
+                    if (x - w >= 0)
+                    {
+                        byte e = image.Pixels[row + x - w];
+                        lo[k] = Math.Min(lo[k], e);
+                        hi[k] = Math.Max(hi[k], e);
+                    }
+
+                    if (x + w <= width - 1)
+                    {
+                        byte e = image.Pixels[row + x + w];
+                        lo[k] = Math.Min(lo[k], e);
+                        hi[k] = Math.Max(hi[k], e);
+                    }
+                }
+
+                // Every pixel of the box this image row is d rows from, where the disc's row there is this half width.
+                for (int d = 0; d <= radius; d++)
+                {
+                    if (half[d] != w)
+                    {
+                        continue;
+                    }
+
+                    foreach (int y in d == 0 ? (ReadOnlySpan<int>)[v] : [v - d, v + d])
+                    {
+                        if (y < top || y > bottom)
+                        {
+                            continue;
+                        }
+
+                        int at = (y - top) * bw;
+                        for (int k = 0; k < bw; k++)
+                        {
+                            darkest[at + k] = Math.Min(darkest[at + k], lo[k]);
+                            lightest[at + k] = Math.Max(lightest[at + k], hi[k]);
+                        }
+                    }
+                }
+            }
+        }
+
+        return (darkest, lightest);
     }
 
     /// <summary>Image pixels per page inch at an image point, from the registration's local area scale.</summary>
@@ -1242,6 +1311,20 @@ public static partial class RenderDifferenceHoleDetector
                 }
             }
         }
+    }
+
+    /// <summary>Along one axis, the two blocks either side of each pixel and the second's share, exactly as <see cref="PaperAt"/> works them out.</summary>
+    private static (int A, int B, double T)[] PaperPlaces(int block, int length, int blocks)
+    {
+        var places = new (int A, int B, double T)[length];
+        for (int x = 0; x < length; x++)
+        {
+            double f = ((x + 0.5) / block) - 0.5;
+            int a = Math.Clamp((int)Math.Floor(f), 0, blocks - 1);
+            places[x] = (a, Math.Min(a + 1, blocks - 1), Math.Clamp(f - a, 0, 1));
+        }
+
+        return places;
     }
 
     private static double PaperAt(double[] level, int block, int width, int height, int x, int y)

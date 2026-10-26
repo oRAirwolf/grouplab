@@ -48,6 +48,42 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 474 section 1, 2026-10-26: finding the holes, a fifth sooner, every result the same
+
+**Measured first** (timers put into `RenderDifferenceHoleDetector.Detect` for this and taken out after; Release, this desktop, the 600
+dpi sample with 25 holes, six warm runs, median ms): drawing the sheet at 600 dpi 81, mapping it onto the picture 37, the alignment 125,
+the residual 44, the open 11, the close 10, the marks one by one 122 (of which the moved print check 46 and the moments 13; the rest is
+OpenCV outlining and labelling the whole mask), about 466 in all.
+
+**Taken, three changes, none of which can move a pixel:**
+
+- **The sheet drawn in bands of rows at once** (`SceneRasterizer`): every fill touches only the rows it covers and each pixel sees the same
+  items in the same order, so each band draws all items clipped to its rows. 81 to 19 ms. `SceneRasterizerBandsTests` holds the pixels to
+  the one thread's, on two sheets, at 600 dpi, with words, stretched, a region, scaled and the value channel, at 3, 7, 64 and the chosen
+  number of bands.
+- **The moved print check's darkest and lightest within the opening** (`DiscExtremes`): the disc taken row by row, each row's stretch
+  grown from the one a pixel narrower, about three times the radius a pixel rather than the disc's area. 46 to 10 ms.
+  `DiscExtremesTests` holds it to the disc walked whole on 300 random images, boxes and radii from 0 to 15.
+- **The residual's paper level**: the blocks either side of each column and row worked out once, and the level by the same sum as
+  `PaperAt`. 44 to 30 ms.
+
+| `grouplab bench --runs 5` | before | after |
+|---|---|---|
+| a 600 dpi scan: S5-S8.holes | 403 | 310 |
+| the generated sheet: S5-S8.holes | 189 | 117 |
+| a phone photograph: S5-S8.holes | 125 | 97 |
+| one sheet from file to figures | 327 | 267 |
+| a batch of ten sheets | 2,755 | 2,126 |
+
+**Nothing moved:** the command line built before and after: `scoreboard --corpus` on the four local corpus folders, `scoreboard
+--synthetic` and `scoreboard --any-target` are line for line the same but for their time columns, and `grouplab analyze --json` on the
+600 dpi sample and the 15 local corpus photographs is the same file to the last digit once times are left out. **The bench gate passed**;
+start-up 1,162 ms against 1,081, within it. **The window's gate** (`Phase9BaselineTests`) fails on "a new window ready to use", 172 ms
+here against 147, and fails the same on the code before this change (184 and 187 in two runs), so it is older than this and is written
+down here for the next round rather than chased now. **Not changed:** the alignment's phase correlations (entry 433 says why), OpenCV's
+outlining and labelling of the mask, which cannot be cut down without risking a mark joined differently, and the first trajectory, already
+warmed in the background (entry 414) and precompiled in every desktop build since nightly 220. Nothing reads QR codes on several threads.
+
 ## Entry 464 section 4, 2026-10-21: from opening a picture to its analysis, stage by stage, on the desktop and the phone's path
 
 **Measured** on this desktop (Release, commit 88f8aeb4) while other work was building on the machine, so every figure is a median and
