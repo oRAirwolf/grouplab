@@ -3113,6 +3113,28 @@ def published_sentences() -> dict[str, str]:
         return {}
 
 
+def unpublished_notes() -> list[str] | None:
+    """The Release-note lines of the commits since the newest published nightly, or None where git cannot say (a shallow checkout)."""
+    versions = sorted(release_sections(), key=build_number)
+    if not versions:
+        return None
+    try:
+        out = subprocess.run(["git", "log", f"v{versions[-1]}..HEAD", "--format=%B"], cwd=REPO, capture_output=True, text=True,
+                             encoding="utf-8", timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    return [line for line in out.stdout.splitlines() if line.startswith("Release-note:")]
+
+
+def never_published(f: dict, sections: dict[str, str], pending: list[str]) -> list[str]:
+    """Entry 473 section 1: the phrases of a feature that has arrived which no published note and no commit still to be published says."""
+    if arrived(f) is None:
+        return []
+    return [n for n in notes_of(f) if not any(n in s for s in sections.values()) and not any(n in p for p in pending)]
+
+
 def feature_problems() -> list[str]:
     """Entry 242 section 2.2, as a build failure: nothing is listed that is not what it says."""
     found = []
@@ -3124,6 +3146,7 @@ def feature_problems() -> list[str]:
     # Entry 436 section 4.3: a feature may point at a subsection, so every id the page carries counts.
     anchors = guide_ids(render_guide(need(REPO / "docs" / "USER-GUIDE.md"))[1])
     published = published_sentences()
+    pending = unpublished_notes()
     keys = set()
     for f in data["features"]:
         where = f"website/features.json: {f.get('key')}"
@@ -3144,6 +3167,12 @@ def feature_problems() -> list[str]:
             found.append(f"{where}: no build {f.get('since')} in docs/RELEASE-NOTES.md")
         elif notes_of(f) and not any(n in section for n in notes_of(f)):
             found.append(f"{where}: the {f['since']} notes do not say {notes_of(f)[0]!r}, so that is not where it arrived")
+        # Entry 473 section 1: a feature that has arrived and has a phrase no published note and no commit since says, which would keep
+        # it "coming in the next build" for ever (sync's "your phones" written as "phones").
+        if pending is not None:
+            for n in never_published(f, sections, pending):
+                found.append(f"{where}: its note phrase {n!r} is in no published build's notes and no commit since the newest nightly "
+                             "says it, so the page would call it coming for ever; copy the phrase from the note exactly")
         if f.get("shot") is not None and f["shot"] not in shots:
             found.append(f"{where}: there is no screenshot {f['shot']!r}")
         for name, _ in f.get("sheets", []):

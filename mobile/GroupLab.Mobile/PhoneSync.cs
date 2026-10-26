@@ -30,6 +30,14 @@ internal static class PhoneSync
 
     internal static bool Running => running is { IsCompleted: false };
 
+    /// <summary>
+    /// Entry 473 section 2: a folder in GroupLab's own storage that the phone walk's Sync picture uses in place of the platform's, since
+    /// Android's folder picker cannot be driven; null everywhere else.
+    /// </summary>
+    internal static ISyncFolder? Sample { get; set; }
+
+    private static T? With<T>(IPhonePlatform platform, Func<ISyncFolder, T> work) => Sample is { } sample ? work(sample) : platform.WithSyncFolder(work);
+
     /// <summary>Said whenever a run starts or finishes, so a page showing it fills again.</summary>
     internal static event Action? Changed;
 
@@ -88,7 +96,7 @@ internal static class PhoneSync
         try
         {
             string me = PhoneAnalysis.Store().SyncDevice();
-            bool done = platform.WithSyncFolder(folder =>
+            bool done = With(platform, folder =>
             {
                 if (!folder.Available)
                 {
@@ -138,7 +146,7 @@ internal static class PhoneSync
         try
         {
             var store = PhoneAnalysis.Store();
-            var result = await Task.Run(() => platform.WithSyncFolder(folder =>
+            var result = await Task.Run(() => With(platform, folder =>
             {
                 var report = folder.Available ? SyncEngine.Run(store, Local(), folder, setup.DeviceName, DateTime.UtcNow, new SyncOptions(setup.Originals)) : null;
                 return new Ran(report, SyncScreens.Others(folder, store.SyncDevice()));
@@ -197,9 +205,9 @@ internal static class PhoneSync
 
     /// <summary>The other device's name as it wrote it in the folder, where it can be read now.</summary>
     internal static string DeviceName(string code) =>
-        Phone.Platform?.WithSyncFolder(folder =>
+        (Phone.Platform is { } platform ? With(platform, folder =>
             folder.Available && folder.Read($"{SyncEngine.Root}/devices/{code}.json") is { } bytes
-                && System.Text.Json.Nodes.JsonNode.Parse(bytes)?["name"]?.GetValue<string>() is { Length: > 0 } name ? name : null) ?? "the other device";
+                && System.Text.Json.Nodes.JsonNode.Parse(bytes)?["name"]?.GetValue<string>() is { Length: > 0 } name ? name : null) : null) ?? "the other device";
 
     /// <summary>
     /// 2A on the phone: the two versions stacked, each with its device, time, small plot and rows, every row that differs tagged; then Keep

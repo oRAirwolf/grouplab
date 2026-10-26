@@ -557,6 +557,8 @@ internal static class Scenario
                 return await Close(TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 15), 1, 120)));
             case "demo":
                 return await Demo(TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 20), 1, 600)), (int)step.Number("screenshotAt", 0), Name(step.Text("name"), "demo"));
+            case "sync-sample":
+                return await SyncSample(step.Text("text") != "off");
             case "log":
                 int lines = (int)Math.Clamp(step.Number("lines", 200), 1, 100_000);
                 string file = Path.Combine(Results, Name(step.Text("name"), "log") + ".txt");
@@ -564,6 +566,43 @@ internal static class Scenario
             default:
                 return (false, $"\"{step.Do}\" is not a step this build knows");
         }
+    }
+
+    /// <summary>
+    /// Entry 473 section 2: the Sync page as a person sees it with a folder chosen and another device in it, for the walk's picture, in a
+    /// folder in GroupLab's own storage (<see cref="PhoneSync.Sample"/>). "off" forgets it again.
+    /// </summary>
+    private static async Task<(bool, string)> SyncSample(bool on)
+    {
+        if (!on)
+        {
+            await OnUi(() =>
+            {
+                PhoneSync.Sample = null;
+                PhoneSync.Stop();
+                return true;
+            });
+            return (true, "off");
+        }
+
+        string root = Path.Combine(Folder, "sync-sample");
+        var folder = new GroupLab.Core.Sync.DirectorySyncFolder(root);
+        Directory.CreateDirectory(root);
+        string when = DateTime.UtcNow.AddMinutes(-12).ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'", System.Globalization.CultureInfo.InvariantCulture);
+        var device = new JsonObject
+        {
+            ["format"] = GroupLab.Core.Sync.SyncEngine.Format, ["version"] = GroupLab.Core.Sync.SyncEngine.Version, ["device"] = "sample-computer",
+            ["name"] = "Workshop computer", ["lastWrittenUtc"] = when,
+        };
+        folder.Write($"{GroupLab.Core.Sync.SyncEngine.Root}/devices/sample-computer.json", System.Text.Encoding.UTF8.GetBytes(device.ToJsonString()));
+        await OnUi(() =>
+        {
+            PhoneSync.Sample = folder;
+            PhoneSync.Save(GroupLab.Core.Sync.SyncScreens.InFolder(PhoneSync.Setup, "GroupLab sync"));
+            return true;
+        });
+        await await OnUi(PhoneSync.Now);
+        return (PhoneSync.Others.Count > 0, $"{PhoneSync.Others.Count} other device(s) in the sample folder");
     }
 
     /// <summary>A file name made safe: letters, digits, dashes and dots only.</summary>

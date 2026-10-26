@@ -49,6 +49,18 @@ def main() -> int:
     fresh = {"since": "next", "note": "something nobody has published"}
     check("a feature in no build yet is coming", build.since_words(fresh) == build.spotlight_words(fresh) == "Coming in the next build")
 
+    # Entry 473 section 1: sync's phrase said "phones" where the note said "your phones", and the page called it coming for ever.
+    sections.clear()
+    sections["0.2.0-nightly.215"] = "0.2.0-nightly.215 - Sync: can now stay the same on your computer and your phones."
+    sync = {"since": "next", "note": ["Sync", "stay the same on your computer and phones"]}
+    check("a phrase in no note and no commit to come is found", build.never_published(sync, sections, []) == ["stay the same on your computer and phones"],
+          str(build.never_published(sync, sections, [])))
+    check("a phrase a commit still to be published says is not", build.never_published(
+        sync, sections, ["Release-note: Sync can stay the same on your computer and phones."]) == [])
+    sync["note"][1] = "stay the same on your computer and your phones"
+    check("the phrase copied exactly is fine", build.never_published(sync, sections, []) == [])
+    check("a feature not arrived yet is left to its first build", build.never_published(fresh, sections, []) == [])
+
     print(f"{passed} passed, {len(failed)} failed")
     return 1 if failed else 0
 

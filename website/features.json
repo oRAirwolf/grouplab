@@ -1442,7 +1442,7 @@
      "reworded": "0.2.0-nightly.219",
      "note": [
       "Sync between devices",
-      "stay the same on your computer and phones",
+      "stay the same on your computer and your phones",
       "old change files",
       "Forget this device",
       "Choosing a different, empty sync folder"
@@ -1450,7 +1450,7 @@
      "tour": "settings",
      "guide": "sync-between-devices",
      "mobile": {
-      "noPicture": "the phone's Sync page is pictured by the emulator's walk, which has not been run since it was built"
+      "noPicture": "the emulator's walk takes the phone's Sync page from entry 473 on, with a folder chosen and another device in it; its picture comes with the walk's next run"
      }
     },
     {
