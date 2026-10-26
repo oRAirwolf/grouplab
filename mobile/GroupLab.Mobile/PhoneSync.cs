@@ -41,7 +41,7 @@ internal static class PhoneSync
     /// <summary>Said whenever a run starts or finishes, so a page showing it fills again.</summary>
     internal static event Action? Changed;
 
-    internal static SyncSetup Setup => Phone.Settings.LoadSync(DefaultName(Phone.Platform?.DeviceWords));
+    internal static SyncSetup Setup => Sample is not null && sampleSetup is { } sample ? sample : Phone.Settings.LoadSync(DefaultName(Phone.Platform?.DeviceWords));
 
     /// <summary>
     /// The name this phone is first given in the sync folder: its maker and model, from the diagnostics line "GroupLab &lt;version&gt; on
@@ -58,7 +58,30 @@ internal static class PhoneSync
         return on >= 0 && words[(on + 4)..].Trim() is { Length: > 0 } device ? device : words;
     }
 
-    internal static void Save(SyncSetup setup) => Phone.Settings.SaveSync(setup);
+    /// <summary>The setup, kept on the phone; while the walk's sample folder is in use, kept in memory only, so the phone's settings never change.</summary>
+    internal static void Save(SyncSetup setup)
+    {
+        if (Sample is not null)
+        {
+            sampleSetup = setup;
+            return;
+        }
+
+        Phone.Settings.SaveSync(setup);
+    }
+
+    private static SyncSetup? sampleSetup;
+
+    /// <summary>The walk's sample folder put away: nothing of it was ever written to the phone's settings.</summary>
+    internal static void EndSample()
+    {
+        timer?.Stop();
+        Sample = null;
+        sampleSetup = null;
+        Others = [];
+        Unreachable = false;
+        Changed?.Invoke();
+    }
 
     private static ISyncLocal Local() => new FileSyncLocal(Phone.Settings.SheetsFolder, Phone.Settings.Path);
 
@@ -166,6 +189,12 @@ internal static class PhoneSync
                 var report = folder.Available ? SyncEngine.Run(store, Local(), folder, setup.DeviceName, DateTime.UtcNow, new SyncOptions(setup.Originals)) : null;
                 return new Ran(report, SyncScreens.Others(folder, store.SyncDevice()));
             }));
+            // A run that finishes after sync was stopped here, or after the walk's sample folder was put away, says nothing of itself.
+            if (!Setup.On)
+            {
+                return;
+            }
+
             Cards = await Task.Run(() => SyncScreens.Cards(SyncEngine.Measure(store)));
             if (result?.Report is not { Reached: true } report)
             {

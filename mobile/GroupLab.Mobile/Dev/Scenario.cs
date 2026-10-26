@@ -570,7 +570,7 @@ internal static class Scenario
 
     /// <summary>
     /// Entry 473 section 2: the Sync page as a person sees it with a folder chosen and another device in it, for the walk's picture, in a
-    /// folder in GroupLab's own storage (<see cref="PhoneSync.Sample"/>). "off" forgets it again.
+    /// folder in GroupLab's own storage (<see cref="PhoneSync.Sample"/>), its setup kept in memory so the phone's settings never change. "off" puts it away.
     /// </summary>
     private static async Task<(bool, string)> SyncSample(bool on)
     {
@@ -578,8 +578,7 @@ internal static class Scenario
         {
             await OnUi(() =>
             {
-                PhoneSync.Sample = null;
-                PhoneSync.Stop();
+                PhoneSync.EndSample();
                 return true;
             });
             return (true, "off");
