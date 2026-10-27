@@ -3,9 +3,9 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-10-27 16:02 UTC
+## TestFlight, 2026-10-27 17:19 UTC
 
-- TestFlight: App Store Connect refused a request (404 There is no resource of type 'buildBetaDetails' with id 'a10700a6-a8e3-4dd0-aa8a-f8ce127dc9b3'); nothing further was done this run.
+- Both groups have build 222.
 <!-- /status:testflight -->
 
 <!-- status:store -->
