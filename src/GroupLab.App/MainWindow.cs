@@ -2660,6 +2660,27 @@ public sealed partial class MainWindow : Window
             scaleInputs.Children.Add(Row(Button("Find the paper's edges", FindPaper)));
         }
 
+        // Entry 481 part E (question 108): a flatbed scan with no scale yet offers the resolution its file states, shown with its number and
+        // never applied by itself (entry 130 section 4.1); a scan stretched one way says so and offers nothing.
+        if (tool is MarkingTool.Length or MarkingTool.Rectangle && canvas.AwaitingTaps.Count == 0 && session.State.Scale is null
+            && grey is not null && metadata is not null && StatedResolutionScale.Offer(metadata, grey.Width) is { } offer)
+        {
+            if (tool == MarkingTool.Length)
+            {
+                scaleInputs.Children.Clear();
+            }
+
+            if (StatedResolutionScale.Stretched(metadata) is { } stretched)
+            {
+                scaleInputs.Children.Add(new TextBlock { Text = stretched, TextWrapping = TextWrapping.Wrap });
+            }
+            else
+            {
+                scaleInputs.Children.Add(new TextBlock { Text = offer.Says, TextWrapping = TextWrapping.Wrap });
+                scaleInputs.Children.Add(Row(Button(StatedResolutionScale.Use(offer), () => UseStatedScale(offer))));
+            }
+        }
+
         // Entry 189 section 5: the scale in use can be given a new size at any time, without tapping it out again.
         if (tool is MarkingTool.Length or MarkingTool.Rectangle && canvas.AwaitingTaps.Count == 0)
         {
@@ -2673,6 +2694,16 @@ public sealed partial class MainWindow : Window
                 scaleInputs.Children.Add(Row(Button("Change the size of the scale in use", () => canvas.PlaceRectangle(rectangle.Corners))));
             }
         }
+    }
+
+    /// <summary>Entry 481 part E: the scan's own stated resolution accepted as the scale, then on to the point of aim as after a length.</summary>
+    internal void UseStatedScale(StatedScale offer)
+    {
+        session.SetScale(offer.Reference);
+        scaleInputs.Children.Clear();
+        DiagnosticLog.Info("scale.stated", ("dpi", offer.DotsPerInch));
+        SetTool(MarkingTool.Aim);
+        status.Text = string.Create(CultureInfo.InvariantCulture, $"The scale is the scan's own {offer.DotsPerInch:0} dpi. Tap the point of aim.");
     }
 
     /// <summary>

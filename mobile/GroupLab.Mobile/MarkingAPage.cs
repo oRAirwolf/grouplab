@@ -52,6 +52,16 @@ internal sealed class MarkingAPage : UserControl
 
     /// <summary>Entry 341 section 2: under a store-bought target's printed size as the scale, the warning and the scale check.</summary>
     private readonly TextBlock storeWarning = Screens.Dim(GroupLab.Core.StoreTargets.StoreTargetMatch.Warning);
+
+    /// <summary>
+    /// Entry 481 part E (question 108): a flatbed scan's own stated resolution, offered at the scale with its number and never applied by
+    /// itself (entry 130 section 4.1); null for a photograph or a file that states nothing believable.
+    /// </summary>
+    private readonly StatedScale? statedOffer;
+
+    private readonly TextBlock statedSays = Screens.Dim("");
+
+    private readonly Button statedUse = Screens.Choice("", () => { }).Id("marking-stated-scale");
     private readonly Button checkScale = Screens.Choice(GroupLab.Core.StoreTargets.StoreTargetMatch.CheckScale, () => { }).Id("marking-check-scale");
     private readonly TextBlock intro = Screens.Line("");
     private readonly string imagePath;
@@ -98,7 +108,24 @@ internal sealed class MarkingAPage : UserControl
         }
 
         opened = session.State;
-        viewer = new Viewer(new Bitmap(imagePath), session, ends) { Height = 420 };
+        var bitmap = new Bitmap(imagePath);
+        viewer = new Viewer(bitmap, session, ends) { Height = 420 };
+        try
+        {
+            var metadata = ImageMetadataReader.Read(File.ReadAllBytes(imagePath));
+            statedOffer = StatedResolutionScale.Stretched(metadata) is null ? StatedResolutionScale.Offer(metadata, bitmap.PixelSize.Width) : null;
+        }
+        catch (IOException)
+        {
+            statedOffer = null;
+        }
+
+        if (statedOffer is { } offer)
+        {
+            statedSays.Text = offer.Says;
+            statedUse.Content = new TextBlock { Text = StatedResolutionScale.Use(offer), TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Center };
+            statedUse.Click += (_, _) => UseStatedScale(offer);
+        }
         viewer.Moved += Show;
         length.PlaceholderText = $"The length between the two ends, in {UnitSettings.Symbol(units.Linear)}";
         main.Click += (_, _) => Press();
@@ -110,7 +137,7 @@ internal sealed class MarkingAPage : UserControl
         intro.Text = said ?? "";
         intro.IsVisible = said is not null;
 
-        var buttons = new StackPanel { Spacing = 8, Children = { main, new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { undo, next } }, findHoles, template, storeWarning, checkScale } };
+        var buttons = new StackPanel { Spacing = 8, Children = { statedSays, statedUse, main, new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8, Children = { undo, next } }, findHoles, template, storeWarning, checkScale } };
         Grid.SetColumn(next, 1);
         var column = new StackPanel { Spacing = 10, Margin = new Thickness(16, 12, 16, 12) };
         // Several targets open at once (Alan, 2026-10-07): the target's name above the step, the way to the others open; hidden where this
@@ -144,6 +171,7 @@ internal sealed class MarkingAPage : UserControl
     private void Show()
     {
         viewer.RingInches = step == Step.Holes ? session.State.Calibre?.DiameterInches : null;
+        statedSays.IsVisible = statedUse.IsVisible = statedOffer is not null && step == Step.Scale && ends.Count == 0;
         length.IsVisible = step == Step.Scale && ends.Count == 2;
         template.IsVisible = step == Step.Holes && session.State.Bulls.Count >= 2;
 
@@ -278,6 +306,19 @@ internal sealed class MarkingAPage : UserControl
 
         Show();
     }
+
+    /// <summary>Entry 481 part E: the scan's own stated resolution accepted as the scale, then on to the aim point as after a length.</summary>
+    internal void UseStatedScale(StatedScale offer)
+    {
+        ends.Clear();
+        session.SetScale(offer.Reference);
+        DiagnosticLog.Info("scale.stated", ("dpi", offer.DotsPerInch));
+        step = Step.Aim;
+        Show();
+    }
+
+    /// <summary>Whether the scan's own resolution is offered at the scale, for a test.</summary>
+    internal bool StatedScaleOffered => statedUse.IsVisible;
 
     /// <summary>Whether a store-bought target's printed size is the scale, past the scale step, where the warning is shown.</summary>
     internal bool StoreScaleInPlay => step != Step.Scale && GroupLab.Core.StoreTargets.StoreTargetMatch.InPlay(session.State);

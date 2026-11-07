@@ -516,6 +516,31 @@ point height, the form opened, Back, and the search. The back walk (`Entry472Bac
 going back to Capture; it now expects the screen before when the place was opened with its own way back. Phone suite 262, 258 passed
 and 3 skipped before that change, the walk and 482's tests passing after it.
 
+## Entry 481: the week's queue, parts A to E (2026-11-07)
+
+**A, the clips.** `DesktopMoreClips` and `PhoneMoreClips` (skipped unless `GROUPLAB_VIDEO_CLIPS` is set) made ten clips, 50 in
+`C:\Dev\grouplab-local\video-clips\` with clips.csv. A chores-haiku pass on the last frames found three wrong (Match to shots pressed off
+screen, a tap on Aim 2 below the screen opening Ballistics, Show work in red); the first two were the scripts, now checked in the clip
+itself, and the third a real fault: a recognized store-bought target counted its unread codes as a failed stage. `recognizedPicture` in
+MainWindow.StoreTargets.cs leaves that stage listed but uncounted. The phone's report clip draws the PDF through PDFtoImage, added to
+the phone tests for it; the camera clips (ch04, step 7) went into request 50's sitting.
+
+**B, the video reader.** `LeaveOutOpenCvVideoReader` in Directory.Build.targets drops `opencv_videoio_ffmpeg*` from every build and
+publish (Windows only carries it as a file). `scripts/package-windows.ps1`'s zip 114,384,706 bytes against nightly 223's 126,565,994;
+227 MB unpacked; the Core suite 3163 passed and the App suite 655 passed with the file gone, and a clip still encodes.
+
+**C, research.** All articles but `aim-points-by-optic-class` (request 86) were already published; RESEARCH.md's table said otherwise
+for eighteen and now follows PUBLISHED.md. `smaller-installer` gains "Found the same way again, six weeks later".
+
+**D, speed.** Window.Levels in BullLocators.cs counts each row's run inside the bull's page circle from its two ends (homography and
+lens mappings only). Bench, median ms: 600 dpi scan P0.bulls 117 to 35, photograph 45 to 21, generated sheet 21 to 8, a batch of ten
+2,173 to 2,083. Scoreboards and 21 analyses identical but for times; BullLevelsTests holds the histogram. Details in PERFORMANCE.md.
+
+**E, the scan's own resolution.** `StatedResolutionScale.Offer` is reached at last: under the length and rectangle tools on the computer
+and at the phone's scale step, with the number, used only when chosen; `DotsPerInchOf` recognizes it afterwards, so `ScaleSaid` gives it
+"⚠ Scale from the scan's resolution" and "From the scan's own resolution, 600 dpi, ...". Held by StatedResolutionScaleTests,
+Entry481StatedScaleTests and Entry481StatedScalePhoneTests; the guide says so.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

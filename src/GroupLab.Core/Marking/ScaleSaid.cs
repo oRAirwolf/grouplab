@@ -23,6 +23,9 @@ public static class ScaleSaid
 
     public const string FromImport = "⚠ Scale from the imported numbers";
 
+    /// <summary>Question 108 (a), entry 481 part E: a flatbed scan's own stated resolution, offered and accepted, never a length measured.</summary>
+    public const string FromScanResolution = "⚠ Scale from the scan's resolution";
+
     public const string MoreThanOneKind = "⚠ Scales of more than one kind";
 
     /// <summary>Whether the pill is the checked one, teal: every sheet's scale came from its own printed markers.</summary>
@@ -37,6 +40,7 @@ public static class ScaleSaid
         RectangleReference { PrintedTarget: not null } => PrintedSize,
         MarkerReference => FromMarkers,
         LengthReference length when ShotCsv.IsImported(length) => FromImport,
+        LengthReference length when StatedResolutionScale.DotsPerInchOf(length) is not null => FromScanResolution,
         _ => ByHand,
     };
 
@@ -95,6 +99,8 @@ public static class ScaleSaid
         RectangleReference { Printed: { } printed } => $"From the printed size of the {printed.ShortName}, which GroupLab recognized; not checked against a ruler or a GroupLab sheet.",
         RectangleReference rectangle => $"From a {units.Number(rectangle.WidthInches)} by {units.Length(rectangle.HeightInches)} rectangle you measured on the picture.",
         LengthReference length when ShotCsv.IsImported(length) => "From the shot coordinates you imported, in the unit you gave them.",
+        LengthReference length when StatedResolutionScale.DotsPerInchOf(length) is { } dpi =>
+            string.Create(CultureInfo.InvariantCulture, $"From the scan's own resolution, {dpi:0} dpi, as the file states it; not checked against a ruler or a GroupLab sheet."),
         LengthReference length => $"From a {units.Length(length.Inches)} length you measured on the picture.",
         MarkerReference markers => FromMarkerSummary(markers.Summary),
         PerBullReference perBull => perBull.Scales.Count == 1
@@ -138,6 +144,7 @@ public static class ScaleSaid
         RectangleReference { PrintedTarget: not null } => "a store-bought target's printed size",
         RectangleReference => "a rectangle you measured",
         LengthReference length when ShotCsv.IsImported(length) => "imported shot coordinates",
+        LengthReference length when StatedResolutionScale.DotsPerInchOf(length) is not null => "a scan's own resolution",
         LengthReference => "a length you measured",
         MarkerReference => "scale markers in the photo",
         PerBullReference => "lengths you measured at each bull",

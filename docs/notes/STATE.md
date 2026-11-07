@@ -9,15 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-07, entry 482 done (Rifles and loads in the phones' Settings; the Duo's bar kept); entry 481 next.
+**Last rewritten:** 2026-11-07, entries 481 and 482 done; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 481 (2026-11-07)**, next: the week's queue in order, A the remaining app clips (the two camera clips added to
-  request 50's sitting), B leaving out OpenCV's video reader (question 36), C the research rows marked not yet, D performance, E a
-  scan's dpi as its scale (question 108 (b)). Each part its own commit.
+- **Entry 481 (2026-11-07)**, done: ten more launch clips (50 in all; the two camera clips wait for request 50's sitting), OpenCV's
+  video reader left out (Windows zip 114.4 MB, question 36 closed), research table caught up, the bulls found three times sooner, and a
+  scan's own dpi offered as the scale with its own pill and line (question 108 (a)).
 - **Entry 482 (2026-11-07)**, done: "Rifles and loads" in the phones' Settings opens Ballistics, with "‹ Settings" back (question 112
   answered, 2A); the Duo's bar kept as it is (1A).
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Dated check, from 2026-11-11 (.NET's November release):** is there an iOS
@@ -49,7 +49,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 1. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 2. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
-3. The scan's own resolution as a scale, once a screen reaches it, with its own marker and line in the same change (question 108 (b)).
+3. Request 50's sitting, when Alan has it: the device checks and the two camera clips for the launch videos.
 
 ## Blocked, and on what
 
@@ -65,15 +65,13 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (112 answered 2026-11-07 in entry 482, as recommended):
+Two, both in `docs/QUESTIONS-FOR-PLANNING.md` (36 answered in entry 481 and 112 in entry 482, 2026-11-07):
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
-- **36** a light installer, measured
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.222 (2026-10-26 15:22 UTC), on TestFlight (both groups) and the Store (0.2.222.0). Nightly 223
-  will carry the fixes for error reports 42 and 43 and entry 480's two (the crosshair and side by side when turned).
+- **Last nightly:** 0.2.0-nightly.223 (2026-11-07 09:17 UTC), sent to TestFlight and the Store; nightly 224 carries entries 481 and 482.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 - Crash reports: none open (41 to 44 closed 2026-11-07; `docs/notes/error-reports.md`).
 
@@ -84,10 +82,12 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 481.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **A one-inch LengthReference on the diagonal is a scan's stated dpi** (`StatedResolutionScale.DotsPerInchOf`, entry 481 E), as
+  imported shots are recognized by theirs; `Directory.Build.targets` drops `opencv_videoio_ffmpeg*` from every build (481 B).
 - **Ballistics can be opened from Settings** (`Shell.ShowRiflesAndLoads`, entry 482) with "‹ Settings" back; the back walk expects a
   place opened with its own way back to return there, not to Capture.
 - **Every phone sheet closes through `ProblemSheet.PutBack`** (error report 43), and a choice handed to `ProblemSheet.Over` that the

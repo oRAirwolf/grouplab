@@ -100,4 +100,31 @@ public class StatedResolutionScaleTests
         Assert.Null(StatedResolutionScale.Stretched(Scan(600, 600.5)));
         Assert.Null(StatedResolutionScale.Stretched(Scan(null)));
     }
+
+    /// <summary>
+    /// Entry 481 part E, question 108 (a): an accepted offer is recognized as the scan's own resolution, so its pill and its line say so
+    /// rather than calling it a length somebody measured; a measured length and imported shot coordinates are never taken for it.
+    /// </summary>
+    [Fact]
+    public void AnAcceptedOfferHasItsOwnPillAndLine()
+    {
+        var offer = StatedResolutionScale.Offer(Scan(600), 5100)!;
+        Assert.Equal(600, StatedResolutionScale.DotsPerInchOf(offer.Reference));
+        Assert.Equal(ScaleSaid.FromScanResolution, ScaleSaid.Pill(offer.Reference));
+        Assert.False(ScaleSaid.AllChecked([offer.Reference]));
+        Assert.Equal("From the scan's own resolution, 600 dpi, as the file states it; not checked against a ruler or a GroupLab sheet.",
+            ScaleSaid.How([offer.Reference], UnitSettings.Imperial));
+        Assert.Equal("Use the scan's 600 dpi as the scale", StatedResolutionScale.Use(offer));
+
+        var measured = new LengthReference(new PointD(102.4, 340.7), new PointD(702.1, 345.2), 1);
+        Assert.Null(StatedResolutionScale.DotsPerInchOf(measured));
+        Assert.Equal(ScaleSaid.ByHand, ScaleSaid.Pill(measured));
+
+        var imported = new LengthReference(ShotCsv.Aim, new PointD(ShotCsv.Aim.X + ShotCsv.PixelsPerInch, ShotCsv.Aim.Y), 1);
+        Assert.Null(StatedResolutionScale.DotsPerInchOf(imported));
+        Assert.Equal(ScaleSaid.FromImport, ScaleSaid.Pill(imported));
+
+        // A pool of two scans, one by its resolution and one by a length, says each.
+        Assert.Equal("From a scan's own resolution on 1 sheet; a length you measured on 1 sheet.", ScaleSaid.How([offer.Reference, measured], UnitSettings.Imperial));
+    }
 }

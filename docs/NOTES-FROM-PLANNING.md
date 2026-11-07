@@ -25,6 +25,50 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-07, entry 481: the week's queued work (A to E), in this order
+
+**Status: actioned 2026-11-07. Every part done; two clips of part A wait for request 50's sitting.** A: ten more clips made by script (pooled set, Xero file, Top Gun, store-bought target, marking under the crosshair, two aim points, the one-page report, the tablet side by side, step 9's computer half), each checked by a chores-haiku pass on its last frame; the two camera clips (ch04, step 7) need a real camera and are added to request 50's sitting. Making them found Show work marking a recognized store-bought target as a failed stage, fixed. B: OpenCV's video reader left out of every build (Windows zip 126.6 to 114.4 MB, every suite and the clips' encoder the same without it), sizes updated, question 36 answered. C: every article but aim points by optic class is published; the research table brought up to date from PUBLISHED.md, and the installer article gains the video reader. D: finding the bulls about three times sooner (600 dpi scan 117 to 35 ms), every result the same, recorded in PERFORMANCE.md; stopped there. E: a flatbed scan's own stated resolution offered as the scale on the computer and the phones, with its own pill and line (question 108 (a)); no new look was needed.
+
+From the planning session, 2026-11-07 (Alan's decision of 2026-11-07 03:42 Denver: "Yes to everything and all of the extra work").
+The week resets Friday 2026-11-13 06:00 UTC. Keep the usual guard (stop at 85 percent, 88 for a finishing block). One worker; helpers
+only as Alan has allowed before (chores to chores-haiku, wording to docs-sonnet) if a part clearly needs one. Each part is its own
+commit with its own release note. Fix any new error report first, as always.
+
+Two design questions stay with Alan and are not part of this entry: the iPhone Duo crease under the bottom bar (entry 480 section 6) and
+question 112 (where a phone keeps its rifles and loads). The planning session is drawing both on one concept canvas; the choice comes back
+as a later entry. Change nothing for them meanwhile.
+
+## A. The remaining app clips (entry 475)
+
+Make the clips entry 475 listed as not made, as far as headless capture allows: the camera, the pooled set, chapter 8's Xero and Top Gun,
+chapter 10, the report, the tablet clip, and step 9's computer half. Use the existing `scripts/video-clips/make-clips.ps1` way of working,
+clips in `C:\Dev\grouplab-local\video-clips\`, never committed, each added to `clips.csv`. Anything that truly needs a real device or a
+camera in a hand: write it as one line in for-alan.md, grouped into a single short sitting, not one request each.
+
+## B. Leave out OpenCV's unused video reader (question 36)
+
+Alan's yes, 2026-11-07, to the recommendation measured in entry 474: drop the video reader from the OpenCV builds GroupLab ships (about
+11.9 MB a zip). Every test and gate must give the same results. Update the download sizes everywhere they are written (site, README,
+PLATFORM-SUPPORT.md) in the same change, and close question 36.
+
+## C. The research rows still marked "not yet"
+
+Take the rows in docs/RESEARCH.md that are not done and need no new range data or hardware. Write them, with figures and committed data,
+check every number, and publish them under the standing rule (entry 393: ready articles are published without asking). Rows that need
+range results stay as they are, with a line saying what they wait on.
+
+## D. Performance (Phase 9)
+
+More speed work on hole finding and on photographs, as in entries 392, 433, 447 and 474: measure first, change only what measurement
+shows, every result identical, record before and after in docs/PERFORMANCE.md. Stop at a sensible point rather than chase small gains.
+
+## E. A scan's own resolution as its scale (question 108 (b))
+
+Use the scan's own resolution (its dpi) as a scale source, with its own marker and line where the scale is shown, in the same change.
+If this needs a new look on any screen, write a `DESIGN NEEDED:` line in for-alan.md and build the rest; do not settle the look.
+
+When done, record the entry and fold it in as usual. Nothing here needs Alan except any device sitting from part A.
+
 ## 2026-11-07, entry 482: Alan's picks for the iPhone Duo crease and for where a phone keeps rifles and loads
 
 **Status: actioned 2026-11-07. Every section done.** Section 1: 1A, no layout changed; the DESIGN NEEDED line in for-alan.md marked answered and docs/IOS-PLAN.md says the crease is decided. Section 2: the phones' Settings list has "Rifles and loads" between Shooting defaults and Printers and paper, "Kept in Ballistics. Tap to open them there." beneath and "Open Ballistics" on the right; it opens Ballistics at the rifle form with "‹ Settings" back (the phone's Back with it); Find a setting finds it by rifle, rifles, load, loads, barrel and equipment; a screen reader reads both lines as one control; the user guide, Features and question 112 (answered and moved) in the same commit. Held by Entry482Tests, and the back walk now knows a place opened with its own way back returns there.

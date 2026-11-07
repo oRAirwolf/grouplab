@@ -275,6 +275,12 @@ behind it, still draggable, and offers a standard paper size when the photograph
 paper from the board, and you tap the corners. A photograph taken more than 37 degrees off square to the sheet is refused, with the angle
 named, and every photograph you open keeps how far off square it was and how good it is: good, usable or poor.
 
+A flatbed scan usually says its own resolution, and on a sheet with no scale yet the length and rectangle tools offer it, with its
+number: **Use the scan's 600 dpi as the scale**, or measure a known distance yourself instead. It is never used unless you choose it;
+a photograph, a file stating 72 or 96 dpi (what a program writes when it has nothing to say) or a scan stretched one way offers nothing.
+On the phone the same offer is at the first step of marking by hand, the scale. Once chosen, the scale's line says **From the scan's own
+resolution**, never a length you measured.
+
 ![The marking screen, with the review queue in the side panel](figures/screens/current/marking-light-1400x900.png)
 
 On the picture, each bull's number stands outside its outer ring at the top left, in plain gray, and each hole's number sits in a dark

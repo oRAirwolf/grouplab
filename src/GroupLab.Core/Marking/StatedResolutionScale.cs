@@ -66,6 +66,29 @@ public static class StatedResolutionScale
         return new StatedScale(dpi, says, reference);
     }
 
+    /// <summary>The offer's button, on the computer and the phones: "Use the scan's 600 dpi as the scale".</summary>
+    public static string Use(StatedScale offer)
+    {
+        ArgumentNullException.ThrowIfNull(offer);
+        return string.Create(CultureInfo.InvariantCulture, $"Use the scan's {offer.DotsPerInch:0} dpi as the scale");
+    }
+
+    /// <summary>
+    /// The resolution a scale accepted from <see cref="Offer"/> was taken from, or null for any other scale: question 108 (a), entry 481 part
+    /// E, so the scale's pill and line say "the scan's own resolution" rather than "a length you measured". Recognized by the offer's own
+    /// shape, an inch along one row starting on the diagonal, as imported shot coordinates are by theirs; those are never taken for it.
+    /// </summary>
+    public static double? DotsPerInchOf(ScaleReference? scale)
+    {
+        if (scale is not LengthReference length || ShotCsv.IsImported(length) || length.Inches != 1 || length.A.X != length.A.Y || length.A.Y != length.B.Y)
+        {
+            return null;
+        }
+
+        double dpi = length.B.X - length.A.X;
+        return dpi is >= LowestBelievable and <= HighestBelievable ? dpi : null;
+    }
+
     /// <summary>
     /// Whether the two axes disagree enough to be worth saying so. A scan whose horizontal and vertical resolutions differ has been
     /// stretched, and one number cannot describe it.
