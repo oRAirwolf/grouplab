@@ -12,6 +12,27 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.223
+
+**2026-11-07**, commit `c5db920`. Nightly.
+
+**What you will notice**
+
+- On a phone or tablet turned on its side, or a folding phone opened, mid-result, the result now puts the sheet and the numbers side by side as it should, and Fix holes keeps the crosshair on the same spot of the target.
+- Giving a rifle, barrel or load a new name now renames it instead of keeping a second one beside it, on the computer and the phone, and a name already in use is refused. (Error report 42) (found from an error report sent from GroupLab).
+- Correction: nightly 222's fixes for deleting rifles, barrels and loads and for a session replaced by a new sheet on the same picture came from three error reports people sent from GroupLab; its notes did not say so.
+- On the phone, the question of which bulls you fired at now shows its answers, and closing it no longer raises an error and leaves you stuck on the question. (Error report 43) (found from an automatic error report).
+
+**Under the hood**
+
+- The iPhone and iPad app's built-in self-check now works with Apple's newest tools.
+
+From your reports and targets in this build: 2 fixes from 2 error reports.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.223)
+
+---
+
 ## 0.2.0-nightly.222
 
 **2026-10-26**, commit `c3bd808`. Nightly.
