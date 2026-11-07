@@ -210,6 +210,10 @@ public class StoreTargetScreenTests
             Assert.Equal(EightInch, Assert.IsType<RectangleReference>(window.Session.State.Scale).PrintedTarget);
             Assert.Single(window.Session.State.Bulls);
             Assert.Contains(StoreTargetMatch.Warning, Words(window.ScaleInputs));
+
+            // Entry 481 part A: the codes a store-bought target never had are not a failure on Show work, though the stage is still listed.
+            Assert.Contains(window.Stages, r => r.Stage == "S0.identify" && r.Status == GroupLab.Core.Trace.StageStatus.Failed);
+            Assert.True(window.WorkBar.Label == "Show work", window.WorkBar.Label + " / " + string.Join(", ", window.Stages.Where(r => r.Status != GroupLab.Core.Trace.StageStatus.Ok).Select(r => r.Stage + " " + r.Status)));
         }
         finally
         {

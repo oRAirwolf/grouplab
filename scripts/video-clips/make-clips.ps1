@@ -2,6 +2,8 @@
 #
 #   pwsh scripts/video-clips/make-clips.ps1 [-Out C:\Dev\grouplab-local\video-clips] [-Only v2-ch05]
 #
+# Entry 481 part A added DesktopMoreClips and PhoneMoreClips; the camera clips need a real phone (request 50).
+#
 # Each clip is a test in tests/GroupLab.App.Tests/VideoClips (the computer, 2560 by 1440) or tests/GroupLab.Mobile.Tests/VideoClips (the
 # phone, the Fold 7's 1080 by 2520), skipped everywhere unless GROUPLAB_VIDEO_CLIPS names the folder the clips go to, so CI never makes them.
 # Frames are GroupLab's own drawing in the headless platform with a drawn pointer, or a ring where a finger taps on the phone, encoded at 60

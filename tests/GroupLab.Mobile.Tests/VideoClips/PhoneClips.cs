@@ -26,8 +26,8 @@ public class PhoneClips
     internal static string Repository([System.Runtime.CompilerServices.CallerFilePath] string here = "") =>
         Path.GetFullPath(Path.Combine(Path.GetDirectoryName(here)!, "..", "..", ".."));
 
-    /// <summary>A phone at the Fold 7's size, dark, its first run answered, showing <paramref name="place"/>.</summary>
-    internal static (Window Window, Shell Shell) Phone(Shell.Place place = Shell.Place.Capture, double wide = Wide, double tall = Tall)
+    /// <summary>A phone at the Fold 7's size, or <paramref name="wide"/> by <paramref name="tall"/> drawn at <paramref name="scale"/>, dark, its first run answered, showing <paramref name="place"/>.</summary>
+    internal static (Window Window, Shell Shell) Phone(Shell.Place place = Shell.Place.Capture, double wide = Wide, double tall = Tall, double scale = Scale)
     {
         if (GroupLab.Mobile.Phone.Platform is null)
         {
@@ -40,10 +40,10 @@ public class PhoneClips
         var shell = new Shell();
         var window = new Window
         {
-            Width = Math.Ceiling(wide * Scale / 2) * 2,
-            Height = Math.Ceiling(tall * Scale / 2) * 2,
+            Width = Math.Ceiling(wide * scale / 2) * 2,
+            Height = Math.Ceiling(tall * scale / 2) * 2,
             RequestedThemeVariant = ThemeVariant.Dark,
-            Content = new LayoutTransformControl { LayoutTransform = new ScaleTransform(Scale, Scale), Child = shell },
+            Content = new LayoutTransformControl { LayoutTransform = new ScaleTransform(scale, scale), Child = shell },
         };
         window.Show();
         shell.Show(place);

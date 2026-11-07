@@ -189,6 +189,14 @@ internal sealed class TestPhone : IPhonePlatform
         return null;
     }
 
+    /// <summary>
+    /// How a PDF's pages are drawn as pictures, where a phone shows a PDF itself (the one-page report); none by default, as on a phone that
+    /// cannot, and set by the launch video's clip of the report (entry 481 part A) to draw them.
+    /// </summary>
+    internal Func<byte[], int, IReadOnlyList<byte[]>>? DrawPdf { get; set; }
+
+    public IReadOnlyList<byte[]> PdfPages(byte[] pdf, int width) => DrawPdf?.Invoke(pdf, width) ?? [];
+
     public Task<string?> PastePicture(string folder) => Task.FromResult<string?>(null);
 
     public Control? UpdateCard() => null;

@@ -4122,7 +4122,9 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private void ShowWorkAttention()
     {
-        int failed = stages.Count(r => r.Status == StageStatus.Failed), degraded = stages.Count(r => r.Status == StageStatus.Degraded);
+        // A store-bought target has no codes to read: on a picture recognized as one, the codes' stage is expected to fail and is not counted.
+        bool storeBought = recognizedPicture is not null && recognizedPicture == session.State.ImagePath;
+        int failed = stages.Count(r => r.Status == StageStatus.Failed && !(storeBought && r.Stage == "S0.identify")), degraded = stages.Count(r => r.Status == StageStatus.Degraded);
         // Entry 356 section 2: a dismissed problem is named by Show work, the way back to what went wrong.
         failed = sheetProblem is not null ? Math.Max(1, failed) : failed;
         string label = !workShown && sheetProblem is not null ? OpeningWords.ShowWorkSays

@@ -23,6 +23,12 @@ public sealed partial class MainWindow
     /// <summary>What recognition decided about the picture open now, for the headless tests.</summary>
     internal StoreTargetRecognition? LastRecognition { get; private set; }
 
+    /// <summary>
+    /// The picture a store-bought target was recognized on, so Show work does not call its unread codes a failure (entry 481 part A: every
+    /// recognized store-bought target said "Show work: 1 stage failed" in red, though nothing had gone wrong). The stage is still listed.
+    /// </summary>
+    private string? recognizedPicture;
+
     /// <summary>The tool chosen now, for the headless tests.</summary>
     internal MarkingTool ToolNow => canvas.Tool;
 
@@ -96,6 +102,7 @@ public sealed partial class MainWindow
     {
         ArgumentNullException.ThrowIfNull(seen);
         LastRecognition = seen;
+        recognizedPicture = seen.Found ? session.State.ImagePath : null;
         var asked = grey;
         StoreTargetMatch? match;
         if (seen.AsksWhichSize)
@@ -126,6 +133,7 @@ public sealed partial class MainWindow
             status.Text = FamilyQuestion.NotSureSaid;
             DiagnosticLog.Info("storetarget.answer", ("answer", "not sure"));
             Refresh();
+            ShowWorkAttention();
             return;
         }
 
@@ -133,6 +141,7 @@ public sealed partial class MainWindow
         status.Text = match.Said(session.State.Bulls.Count);
         DiagnosticLog.Info("storetarget.placed", ("product", match.Target.Id), ("bulls", session.State.Bulls.Count));
         Refresh();
+        ShowWorkAttention();
     }
 
     /// <summary>"Which target is this?" along the bottom of the picture while it is asked; hidden otherwise.</summary>
