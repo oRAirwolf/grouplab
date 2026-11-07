@@ -80,7 +80,10 @@ public static class StatedResolutionScale
     /// </summary>
     public static double? DotsPerInchOf(ScaleReference? scale)
     {
-        if (scale is not LengthReference length || ShotCsv.IsImported(length) || length.Inches != 1 || length.A.X != length.A.Y || length.A.Y != length.B.Y)
+        // The offer starts its inch at least a pixel in on the diagonal; a length drawn from the origin, as code and tests often draw one,
+        // is never taken for it (build and test, 2026-11-07).
+        if (scale is not LengthReference length || ShotCsv.IsImported(length) || length.Inches != 1 || length.A.X < 1 || length.A.X != length.A.Y
+            || length.A.Y != length.B.Y)
         {
             return null;
         }

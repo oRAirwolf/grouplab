@@ -118,6 +118,7 @@ public class StatedResolutionScaleTests
 
         var measured = new LengthReference(new PointD(102.4, 340.7), new PointD(702.1, 345.2), 1);
         Assert.Null(StatedResolutionScale.DotsPerInchOf(measured));
+        Assert.Null(StatedResolutionScale.DotsPerInchOf(new LengthReference(new PointD(0, 0), new PointD(600, 0), 1)));
         Assert.Equal(ScaleSaid.ByHand, ScaleSaid.Pill(measured));
 
         var imported = new LengthReference(ShotCsv.Aim, new PointD(ShotCsv.Aim.X + ShotCsv.PixelsPerInch, ShotCsv.Aim.Y), 1);
