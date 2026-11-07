@@ -461,7 +461,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 - A change made earlier today to how GroupLab applies its look after a change of text size is taken back, as the fault it answered was in the checks rather than the application.
 - The ballistic solver's warm-up when GroupLab starts is now checked to run in the background by where it runs, not by how long it took on a busy computer.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.193)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
