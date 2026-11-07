@@ -6,7 +6,9 @@ using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
 using GroupLab.Tests.Support;
 using OpenCvSharp;
+#if GROUPLAB_PDF_PAGES
 using SkiaSharp;
+#endif
 using Window = Avalonia.Controls.Window;
 using static GroupLab.Mobile.Tests.VideoClips.PhoneClips;
 
@@ -154,6 +156,7 @@ public class PhoneMoreClips
     public void V2Ch11OnePageReport()
     {
         ScreenClip.SkipUnlessAsked();
+#if GROUPLAB_PDF_PAGES
         var (window, shell) = Phone();
         var phone = (TestPhone)GroupLab.Mobile.Phone.Platform!;
         phone.DrawPdf = (pdf, width) =>
@@ -179,6 +182,9 @@ public class PhoneMoreClips
             phone.DrawPdf = null;
             Close(window);
         }
+#else
+        Xunit.Assert.Skip("The clips are made on Windows, where the PDF's page can be drawn.");
+#endif
     }
 
     /// <summary>The tablet held sideways: the result with the sheet on the left and the numbers beside it.</summary>

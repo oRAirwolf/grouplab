@@ -83,6 +83,17 @@ public class Entry472BackTests
 
                 if (read is not null)
                 {
+                    // Entry 481: the survey's report goes in the background from Phone.Start on its own clock, and when its answer lands it
+                    // writes when it went, the installation number it named and the runs it took (survey.sent, windows-latest, 2026-11-07,
+                    // during Back on the printer check). That is not Back's doing; the person's own choice and its wording still count.
+                    if (read["survey"] is System.Text.Json.Nodes.JsonObject survey)
+                    {
+                        survey.Remove("sent");
+                        survey.Remove("installation");
+                        survey.Remove("benchmark");
+                        survey.Remove("runs");
+                    }
+
                     return read.Select(kv => $"{name}:{kv.Key}=" + Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(kv.Value?.ToJsonString() ?? "null")))[..12]);
                 }
             }

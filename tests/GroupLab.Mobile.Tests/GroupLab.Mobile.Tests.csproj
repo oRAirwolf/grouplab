@@ -11,14 +11,16 @@
     <OutputType>Exe</OutputType>
     <!-- PDFtoImage marks its API per operating system; the clip that uses it is made on Windows only. -->
     <NoWarn>$(NoWarn);CA1416</NoWarn>
+    <DefineConstants Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(DefineConstants);GROUPLAB_PDF_PAGES</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Headless.XUnit" Version="12.1.2" />
     <PackageReference Include="Avalonia.Skia" Version="12.1.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <!-- Entry 481 part A: the one-page report's clip draws the PDF's page as a phone shows it; the Core tests use the same package. -->
-    <PackageReference Include="PDFtoImage" Version="5.4.0" />
+    <!-- Entry 481 part A: the one-page report's clip draws the PDF's page as a phone shows it. Windows only, where the clips are made: on
+         Linux its own older Skia library replaced Avalonia's and no phone test could draw (build and test, 2026-11-07). -->
+    <PackageReference Include="PDFtoImage" Version="5.4.0" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
     <PackageReference Include="xunit.v3" Version="3.2.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20260627" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
