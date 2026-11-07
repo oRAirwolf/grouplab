@@ -64,7 +64,32 @@ public class Entry472BackTests
         var files = Directory.GetFiles(phone.FilesFolder, "*", SearchOption.AllDirectories)
             .Where(f => !f.Contains(Path.DirectorySeparatorChar + "logs" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
             .Order(StringComparer.Ordinal)
-            .Select(f => Path.GetRelativePath(phone.FilesFolder, f) + "=" + Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(f)))[..12]);
+            .SelectMany(Parts);
+        IEnumerable<string> Parts(string f)
+        {
+            string name = Path.GetRelativePath(phone.FilesFolder, f);
+            // The settings file by each setting, so a change names the setting (build and test, 2026-10-26 and 2026-11-07: a write on the
+            // printer check landed during Back on Windows CI, and the whole file's hash could not say which).
+            if (Path.GetFileName(f) == "settings.json")
+            {
+                System.Text.Json.Nodes.JsonObject? read = null;
+                try
+                {
+                    read = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(f)) as System.Text.Json.Nodes.JsonObject;
+                }
+                catch (System.Text.Json.JsonException)
+                {
+                }
+
+                if (read is not null)
+                {
+                    return read.Select(kv => $"{name}:{kv.Key}=" + Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(kv.Value?.ToJsonString() ?? "null")))[..12]);
+                }
+            }
+
+            return [name + "=" + Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(f)))[..12]];
+        }
+
         return $"copies {Phone.Copies?.List().Count ?? 0}; asked {phone.Asked.Count}; {string.Join("; ", files)}";
     }
 

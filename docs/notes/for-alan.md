@@ -2,6 +2,7 @@
 App clips for the launch videos are in C:\Dev\grouplab-local\video-clips\ (40 clips, see clips.csv).
 **iPhone Duo** (entry 480, not a request): nothing to do, waiting on Microsoft. Apple's and GitHub's side are ready, but Microsoft's first iOS 27.1 tools drop parts of the keyboard code GroupLab relies on; their fix comes with the next .NET 10 release, and the build moves then by itself. Until then the Duo's inner screen shows GroupLab in an iPhone-sized window.
 **DESIGN NEEDED** (entry 480 section 6): on the iPhone Duo's inner screen held upright, the crease runs down the middle, through the middle of the five places along the bottom (Ballistics sits under the crease), as on the Galaxy Z Fold 7 open. Keep it as it is, or leave a gap at the crease? Nothing is changed meanwhile.
+**Usage, 7 November** (not a request): about 78 million tokens, $21.88 by ccusage, for entries 476 to 480; one docs-sonnet helper.
 **Error report 44** (not a request): your answer, more suggestions welcome, is recorded; no reply can reach the sender, because Send to GroupLab carries no contact address, so it can only be said in a later build's notes or on Discord if they post there.
 **DESIGN NEEDED** (entry 462 section 3): **Answered 2026-10-21: 1A, 2A, 3B, 4B, 5A, 6A, 7B, 8A, 9A (entry 465), all built 2026-10-21.** The lines as they were: **looks found in the interface sweep, one line a
 screen.** The faults are fixed and held by tests (words cut off, controls past the edge, words over words, contrast, failures now in the
