@@ -291,12 +291,7 @@ internal static class PhoneSync
 
         void Close()
         {
-            if (page.Content is Panel layer)
-            {
-                layer.Children.Remove(behind);
-            }
-
-            page.Content = behind;
+            ProblemSheet.PutBack(page, behind);
             done();
         }
 

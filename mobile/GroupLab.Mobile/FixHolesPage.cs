@@ -283,12 +283,7 @@ internal sealed class FixHolesPage : UserControl
         // putting it back while the layer still held it left Fix holes blank, with nothing to see, fix or keep.
         void Back()
         {
-            if (Content is Panel layer)
-            {
-                layer.Children.Remove(behind);
-            }
-
-            Content = behind;
+            ProblemSheet.PutBack(this, behind);
             Show();
         }
 

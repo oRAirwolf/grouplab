@@ -82,12 +82,7 @@ internal static class OpenTargetsSheet
     }
 
     /// <summary>The screen behind the sheet put back as it was, out of the layer it sat in.</summary>
-    private static void Restore(UserControl host, Control behind)
-    {
-        host.Content = null;
-        (behind.Parent as Panel)?.Children.Remove(behind);
-        host.Content = behind;
-    }
+    private static void Restore(UserControl host, Control behind) => ProblemSheet.PutBack(host, behind);
 
     private static void Show(Shell shell, UserControl host, Control behind, ResultView owner)
     {

@@ -316,6 +316,74 @@ public class ResultScreenTests
         (long)typeof(ResultView).GetField("sessionId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.GetValue(view)!;
 
     /// <summary>
+    /// A GL-CF25-LTR-C rendered at 300 dpi with fifteen holes at bulls 11 to 25, a third of an inch low and right, so they fit bulls 1 to 15
+    /// two rows low just as well and the result asks which bulls were fired at (WhichBullsTests has the same sheet on the computer).
+    /// </summary>
+    private static string TwoWaysSheet()
+    {
+        var read = GroupLab.Core.Gltd.Json.GltdJsonReader.Read(File.ReadAllBytes(Repo.PathTo("targets", "GL-CF25-LTR-C.gltd.json")));
+        var definition = read.Definition!;
+        var render = GroupLab.Core.Rendering.SceneRasterizer.Rasterize(GroupLab.Core.Rendering.SceneBuilder.Build(definition).Pages[0], 300);
+        var random = new Random(376);
+        var scoring = definition.Bulls.Where(b => b.Scoring).ToList();
+        double shift = 0.35 * 254;
+        var holes = Enumerable.Range(10, 15).Select(k => GroupLab.Core.Detection.SyntheticSheet.SampleHole(random, scoring[k].X + shift + random.Next(-40, 41),
+            scoring[k].Y + shift + random.Next(-40, 41), onInk: false, GroupLab.Core.Detection.HoleBacking.ScannerLid, 0.871)).ToList();
+        double s = 254 / 300.0;
+        var image = GroupLab.Core.Detection.SyntheticSheet.Compose(render, 300,
+            new GroupLab.Core.Registration.HomographyMapping(new Homography([s, 0, 0.5 * s, 0, s, 0.5 * s, 0, 0, 1])), render.Width, render.Height, holes, [], random);
+        string path = Path.Combine(ThePhone.CacheFolder, "two-ways.png");
+        using (var mat = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels))
+        {
+            Cv2.ImWrite(path, mat);
+        }
+
+        return path;
+    }
+
+    /// <summary>
+    /// Error report 43 (nightly 222, iOS): on a sheet whose holes fit two sets of bulls, the × on "Which bulls did you fire at?" threw, because the
+    /// result was put back while the question's layer still held it, and the person was left on the question. Every answer, GroupLab's guess,
+    /// "Choose the bulls myself" and the ×, now takes the question away and leaves the result or How you shot this sheet on screen.
+    /// </summary>
+    [AvaloniaFact]
+    public void EveryAnswerToWhichBullsPutsTheResultBackWithoutAnError()
+    {
+        var window = Started();
+        var photo = TwoWaysSheet();
+        foreach (string answer in new[] { "dismiss", "guess", "mine" })
+        {
+            var view = new ResultView(Analyzed(photo), new ShotSetup(Calibre.Of(0.308), 3600), UnitSettings.Imperial, () => { });
+            window.Content = view;
+            Dispatcher.UIThread.RunJobs();
+            var buttons = Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(view).OfType<Button>().ToList();
+            Assert.True(buttons.Any(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "which-bulls-mine"), "the sheet did not ask which bulls were fired at");
+            Assert.All(buttons.Where(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b)?.StartsWith("which-bulls-", StringComparison.Ordinal) == true),
+                b => Assert.True(b.IsEffectivelyVisible, "an answer to which bulls is not shown"));
+            var button = answer switch
+            {
+                "dismiss" => buttons.First(b => b.Content as string == "×"),
+                "guess" => buttons.First(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "which-bulls-0"),
+                _ => buttons.First(b => Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "which-bulls-mine"),
+            };
+            button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.DoesNotContain(Avalonia.LogicalTree.LogicalExtensions.GetLogicalDescendants(view).OfType<Button>(), b => Avalonia.Automation.AutomationProperties.GetAutomationId(b) == "which-bulls-mine");
+            if (answer == "mine")
+            {
+                Assert.IsType<BullsPage>(view.Content);
+            }
+            else
+            {
+                Assert.NotEmpty(view.GetVisualDescendants().OfType<ResultView.SheetPicture>());
+            }
+        }
+
+        window.Close();
+    }
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 407 section 1 on the phone: in Fix holes a tap on a bull chooses it, a tap on another bull's hole gives the
     /// hole to it and a second tap takes it away, Done ends the choosing before it ends the page, and a tap on a hole with no bull chosen changes
     /// nothing, as Alan asked of this page.

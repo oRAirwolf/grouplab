@@ -136,9 +136,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         void Back()
         {
             // The choices behind the sheet come back as the screen, out of the layer they sat in.
-            Content = null;
-            (behind.Parent as Panel)?.Children.Remove(behind);
-            Content = behind;
+            ProblemSheet.PutBack(this, behind);
         }
 
         var byHand = Screens.Row(GroupLab.Core.Registration.OpeningWords.ByHand.Label, GroupLab.Core.Registration.OpeningWords.ByHand.Says, async () =>
@@ -167,9 +165,7 @@ public sealed class ResultView : UserControl, IOpenTarget
     {
         void Back()
         {
-            Content = null;
-            (behind.Parent as Panel)?.Children.Remove(behind);
-            Content = behind;
+            ProblemSheet.PutBack(this, behind);
         }
 
         int of = Math.Max(GroupLab.Core.Registration.OpeningWords.CornerCodes, result.Look?.Codes.Count ?? 0);
@@ -671,11 +667,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         }
 
         askedWhichBulls = true;
-        void Back()
-        {
-            Content = null;
-            Content = behind;
-        }
+        void Back() => ProblemSheet.PutBack(this, behind);
 
         var choices = question.Choices.Select((c, k) => ProblemSheet.Choice(c.Guess ? c.Words + " (GroupLab's guess)" : c.Words, () =>
         {

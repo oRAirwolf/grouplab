@@ -34,6 +34,13 @@ internal static class ProblemSheet
         heading.Children.Add(titleText);
         heading.Children.Add(dismiss);
         var column = new StackPanel { Spacing = 11, Children = { heading, body } };
+        // Error report 43: a choice handed to the sheet and placed nowhere was taken by Enter and never shown, so "Which bulls did you fire
+        // at?" showed only its ×. A choice the caller has not put in the body goes under it, in the order given.
+        foreach (var choice in choices.Where(c => c.Parent is null))
+        {
+            column.Children.Add(choice);
+        }
+
         var card = new Border
         {
             Child = new ScrollViewer { Content = column },
@@ -85,12 +92,7 @@ internal static class ProblemSheet
         page.Content = null;
         void Close()
         {
-            if (page.Content is Panel layer)
-            {
-                layer.Children.Remove(behind);
-            }
-
-            page.Content = behind;
+            PutBack(page, behind);
         }
 
         var all = choices.Length == 0 ? [("Close", () => { })] : choices;
@@ -107,6 +109,20 @@ internal static class ProblemSheet
 
         page.Content = Over(behind, title, body, buttons, Close);
         DiagnosticLog.Info("problem.sheet", ("title", title));
+    }
+
+    /// <summary>
+    /// The page behind a sheet given back to <paramref name="host"/>: the sheet's layer holds the page, so it is taken out of the layer
+    /// first. Error report 27 (Fix holes went blank) and error report 43 (the × on "Which bulls" threw, iOS, nightly 222) were both a page
+    /// put back while the layer still held it; every sheet on the phone closes through here, and a test holds that.
+    /// </summary>
+    public static void PutBack(ContentControl host, Control behind)
+    {
+        ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(behind);
+        host.Content = null;
+        (behind.Parent as Panel)?.Children.Remove(behind);
+        host.Content = behind;
     }
 
     /// <summary>A choice on a sheet: a big button with its name for a screen reader.</summary>
