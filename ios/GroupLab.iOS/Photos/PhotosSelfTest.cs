@@ -113,8 +113,13 @@ internal static class PhotosSelfTest
             await SelfTest.OnUi(() =>
             {
                 using var address = new NSUrl(Handoff.Address);
-                bool can = UIApplication.SharedApplication.CanOpenUrl(address);
-                check.Numbers["canOpen"] = can ? 1 : 0;
+                // Entry 480: iOS 27 retires canOpenURL ("prefer attempting to open URLs and handling any failures"), so from 27 on only the
+                // opening itself is checked, below; on 26 the question is still recorded, -1 where it was not asked.
+                check.Numbers["canOpen"] = -1;
+                if (!OperatingSystem.IsIOSVersionAtLeast(27) && !OperatingSystem.IsMacCatalystVersionAtLeast(27))
+                {
+                    check.Numbers["canOpen"] = UIApplication.SharedApplication.CanOpenUrl(address) ? 1 : 0;
+                }
                 UIApplication.SharedApplication.OpenUrl(address, new UIApplicationOpenUrlOptions(), success => opened.TrySetResult(success));
             });
             Console.WriteLine("GroupLab SELFTEST OPENURL " + Handoff.Address);
