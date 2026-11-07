@@ -320,6 +320,48 @@ public sealed record RecordBook(ImmutableList<Rifle> Rifles, ImmutableList<Barre
     public RecordBook With(Load load) => this with { Loads = [.. Loads.Where(l => !Same(l.Name, load.Name)), load] };
 
     /// <summary>
+    /// Error report 42, 2026-10-28: a rifle kept from the form it was opened in, under <paramref name="was"/>, its name before. A new name
+    /// renames it rather than keeping a second rifle beside the first, and its barrels go with it. Sessions keep the name they were saved with.
+    /// </summary>
+    public RecordBook With(Rifle rifle, string? was)
+    {
+        ArgumentNullException.ThrowIfNull(rifle);
+        if (was is null || Same(was, rifle.Name) || FindRifle(was) is null)
+        {
+            return With(rifle);
+        }
+
+        return (this with
+        {
+            Rifles = [.. Rifles.Where(r => !Same(r.Name, was))],
+            Barrels = [.. Barrels.Select(b => Same(b.Rifle, was) ? b with { Rifle = rifle.Name } : b)],
+        }).With(rifle);
+    }
+
+    /// <summary>Error report 42: a barrel renamed from <paramref name="was"/>; a rifle it was on keeps it on under its new name.</summary>
+    public RecordBook With(Barrel barrel, string? was)
+    {
+        ArgumentNullException.ThrowIfNull(barrel);
+        if (was is null || Same(was, barrel.Name) || FindBarrel(was) is null)
+        {
+            return With(barrel);
+        }
+
+        return (this with
+        {
+            Barrels = [.. Barrels.Where(b => !Same(b.Name, was))],
+            Rifles = [.. Rifles.Select(r => Same(r.BarrelOn, was) ? r with { BarrelOn = barrel.Name } : r)],
+        }).With(barrel);
+    }
+
+    /// <summary>Error report 42: a load renamed from <paramref name="was"/> rather than kept twice. Sessions keep the name they were saved with.</summary>
+    public RecordBook With(Load load, string? was)
+    {
+        ArgumentNullException.ThrowIfNull(load);
+        return was is null || Same(was, load.Name) || FindLoad(was) is null ? With(load) : (this with { Loads = [.. Loads.Where(l => !Same(l.Name, was))] }).With(load);
+    }
+
+    /// <summary>
     /// Error report 38, 2026-10-25: a rifle taken away, with the barrels on it. Sessions keep the rifle's name as they were saved with it.
     /// </summary>
     public RecordBook WithoutRifle(string name) =>

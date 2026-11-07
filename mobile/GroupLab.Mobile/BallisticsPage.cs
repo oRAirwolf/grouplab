@@ -706,6 +706,11 @@ internal sealed class BallisticsPage : UserControl
             new Expander { Header = new TextBlock { Text = "Work it out from a tracking test", TextWrapping = TextWrapping.Wrap }, Content = tracking, MinHeight = Screens.Touch, HorizontalAlignment = HorizontalAlignment.Stretch },
             Screens.Primary("Keep this rifle", () =>
             {
+                if (Refused(EquipmentKind.Rifle, name.Text, r?.Name))
+                {
+                    return;
+                }
+
                 var rifle = (r ?? new Rifle(name.Text ?? "My rifle", usual.Item1, usual.Item2)) with
                 {
                     Name = name.Text is { Length: > 0 } n ? n : "My rifle",
@@ -719,7 +724,7 @@ internal sealed class BallisticsPage : UserControl
                     SightScaleFactor = Number(factor),
                     WeightAsFiredLb = Number(weight),
                 };
-                Keep(book.With(rifle));
+                Keep(book.With(rifle, r?.Name));
                 rifleName = rifle.Name;
                 open = "";
                 Build();
@@ -742,6 +747,11 @@ internal sealed class BallisticsPage : UserControl
             Labeled("Least expansion velocity, ft/s", expansion),
             Screens.Primary("Keep this load", () =>
             {
+                if (Refused(EquipmentKind.Load, name.Text, l?.Name))
+                {
+                    return;
+                }
+
                 var load = (l ?? new Load(name.Text ?? "My load", null)) with
                 {
                     Name = name.Text is { Length: > 0 } n ? n : "My load",
@@ -752,7 +762,7 @@ internal sealed class BallisticsPage : UserControl
                     BulletWeightGrains = Number(weight),
                     MinExpansionFps = Number(expansion),
                 };
-                Keep(book.With(load));
+                Keep(book.With(load, l?.Name));
                 loadName = load.Name;
                 open = "";
                 Build();
@@ -804,6 +814,21 @@ internal sealed class BallisticsPage : UserControl
                 open = "";
                 Build();
             }));
+    }
+
+    /// <summary>
+    /// Error report 42: a name another rifle or load already has is refused in the middle of the screen, as the computer's Equipment refuses
+    /// it, rather than the one kept replacing the other. A name left empty is kept as "My rifle" or "My load", as before.
+    /// </summary>
+    private bool Refused(EquipmentKind kind, string? typed, string? was)
+    {
+        if (string.IsNullOrWhiteSpace(typed) || EquipmentForm.WhyNotSaveable(book, kind, typed, was) is not { } why)
+        {
+            return false;
+        }
+
+        ProblemSheet.Stop(this, null, "That name is taken", why);
+        return true;
     }
 
     private void Keep(RecordBook next)

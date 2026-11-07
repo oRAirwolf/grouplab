@@ -501,10 +501,10 @@ $again = error_request($root, $errorSource, $good);
 check('the same report sent twice is taken once and says so', ($again['json']['again'] ?? false) === true
     && count(glob($incoming . '/*_' . $good['report_id'] . '.json') ?: []) === 1, $again['raw']);
 
-$byHand = error_report(['made' => 'by hand', 'description' => str_repeat('x', 900)]);
+$byHand = error_report(['made' => 'by hand', 'description' => str_repeat('x', 2400)]);
 $r = error_request($root, $errorSource, $byHand);
 $kept = json_decode((string) file_get_contents((glob($incoming . '/*_' . $byHand['report_id'] . '.json') ?: [''])[0] ?: '{}'), true);
-check('a report made by hand keeps its description, cut to 500 characters', mb_strlen($kept['description'] ?? '') === 500, $r['raw']);
+check('a report made by hand keeps its description, cut to 2000 characters', mb_strlen($kept['description'] ?? '') === 2000, $r['raw']);
 
 foreach ([
     'a report of another schema' => error_report(['schema' => 'something-else']),

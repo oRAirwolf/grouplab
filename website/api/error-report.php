@@ -44,7 +44,7 @@ const MAX_STACK       = 20000;
 const MAX_MESSAGE     = 2000;
 const MAX_ACTIONS     = 20;
 const MAX_ACTION      = 100;
-const MAX_DESCRIPTION = 500;
+const MAX_DESCRIPTION = 2000; // error report 42: Send to GroupLab takes 2000 (ErrorReports.MostNote); 500 cut a tester's words off
 
 /**
  * Entry 357 section 2: whether a report may name the log package sent with it to crash-report.php, and the picture code of a picture

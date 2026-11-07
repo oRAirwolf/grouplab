@@ -295,4 +295,17 @@ public class Entry194Tests
             Assert.Contains($"'{field}'", php, StringComparison.Ordinal);
         }
     }
+
+    /// <summary>
+    /// Error report 42, 2026-10-28: Send to GroupLab takes a note of up to 2000 characters, and the receiver kept 500 of it, so a tester's
+    /// suggestion stopped mid-sentence. The receiver keeps at least what the application sends.
+    /// </summary>
+    [Fact]
+    public void TheReceiverKeepsTheWholeNoteTheApplicationSends()
+    {
+        string php = File.ReadAllText(Path.Combine(Entry109Tests.Repository(), "website", "api", "error-report.php"));
+        var limit = System.Text.RegularExpressions.Regex.Match(php, @"const MAX_DESCRIPTION\s*=\s*(\d+);");
+        Assert.True(limit.Success, "the receiver's MAX_DESCRIPTION was not found");
+        Assert.True(int.Parse(limit.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture) >= ErrorReports.MostNote);
+    }
 }

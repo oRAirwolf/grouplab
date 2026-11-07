@@ -492,6 +492,8 @@ public sealed partial class MainWindow
                 // Entry 407 section 5.2: the barrel's length and twist are the barrel's now, and come to the rifle from the one on it, so they
                 // are kept from the rifle as it was rather than read off a form that no longer has them.
                 var was = equipmentEditing is { } editing ? book.FindRifle(editing) : null;
+
+                // Error report 42: a rifle opened and given a new name is renamed, with its barrels, rather than kept twice.
                 book = book.With(new Rifle(name, click, unit)
                 {
                     BarrelOn = was?.BarrelOn,
@@ -516,7 +518,7 @@ public sealed partial class MainWindow
                     RailCant = Number(Typed("railCant")),
                     SightScaleFactor = Number(Typed("sightScaleFactor")),
                     WeightAsFiredLb = Number(Typed("weightAsFiredLb")),
-                });
+                }, was?.Name);
                 break;
 
             case EquipmentKind.Barrel:
@@ -527,7 +529,7 @@ public sealed partial class MainWindow
                     TwistDirection = Typed("twistDirection") is "left" ? -1 : Typed("twistDirection") is "right" ? 1 : null,
                     Installed = DateOnly.TryParse(Typed("installed"), CultureInfo.InvariantCulture, out var day) ? day : null,
                     Notes = Blank(Typed("notes")),
-                });
+                }, equipmentEditing);
 
                 // A rifle's first barrel is the one on it until another is chosen.
                 if (Blank(Typed("rifle")) is { } on && book.OnNow(on) is null)
@@ -557,7 +559,7 @@ public sealed partial class MainWindow
                     MuzzleVelocitySdFps = Number(Typed("muzzleVelocitySdFps")),
                     MinExpansionFps = Number(Typed("minExpansionFps")),
                     Notes = Blank(Typed("notes")),
-                });
+                }, equipmentEditing);
                 break;
         }
 
