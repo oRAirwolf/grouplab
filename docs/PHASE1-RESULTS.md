@@ -488,6 +488,14 @@ chores-haiku pass on the last frames found 10 clips wrong at first, every one th
 atmosphere, three buttons open windows of their own, Hit probability waits for its Work out button, the first run's answers are buttons);
 all fixed and checked again. What was not made and why is in NOTES-FROM-PLANNING.md's entry 475 status.
 
+## Entries 476 to 479: four consistency audits, and error reports 41 to 44 (2026-11-07)
+
+Error reports first (entry 457). **43** (iOS, automatic): "Which bulls did you fire at?" was handed its answers only for a keyboard's Enter, so the phone showed the question with only its ×, and the × put the result back while the question's layer still held it, which threw. Every phone sheet now shows answers it is given and closes through `ProblemSheet.PutBack`; `ResultScreenTests.EveryAnswerToWhichBullsPutsTheResultBackWithoutAnError` threw the reported error on the old code. **42** (iOS, sent by a person): renaming a rifle or load kept a second one, on the computer and the phone alike, because records are kept by name; `RecordBook.With(record, was)` renames, a rifle's barrels going with it, and a name in use is refused (`EquipmentRenameTests`, the phone's `EquipmentDeleteTests`). The person's words stopped at 500 characters because the receiver kept 500 of the 2000 the application sends; it keeps 2000 now (`Entry194Tests.TheReceiverKeepsTheWholeNoteTheApplicationSends`). Where the phone keeps rifles and loads is question 112. **41** and **44**: thanks and a question for Alan, no fault.
+
+**Entry 476.** The site fell behind three times in a fortnight because three jobs push what it is built from with their own token, which starts no workflow: the Store's version on /download/, the phone's screenshots and (entry 479 section 7) the weekly screenshots. Each now dispatches website.yml after its push, the Store's only when the version line changed. Nightly 222's notes were not edited (CLAUDE.md: a published release is corrected in the next one); `attributions` in docs/release-note-corrections.json count its two fixes from three reports in the running total on the site and in the README, and `CLOSES_REPORT` now matches "error report" too. The prose findings of 476 to 479 were made by docs-sonnet and checked here: claims all backed, readme current, the site builds, the guide PDFs regenerated.
+
+**Entries 477 to 479.** As their status lines say. Phase 4 in the README is now "Built, not proven", since Find holes (Experimental) ships; ReadmeTests holds only the four state names, so no test changed for it. A feature the phone leaves out on purpose now says why on the Features page's Mobile side (`mobile.words`), and `feature_problems` refuses words on a feature the phone has.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

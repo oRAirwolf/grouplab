@@ -4,7 +4,7 @@ description: Five things leave your computer or phone, all of them only when you
 group: How GroupLab is built
 number: 26
 written: 2026-09-22
-data_date: 2026-10-07
+data_date: 2026-11-06
 samples: not a measurement: an account of the code, with the test that keeps it true
 state: published
 no_figure: "A list of network calls has no picture. The one thing a reader could look at, the crash report contents, is quoted in full in the article."
@@ -75,6 +75,10 @@ GroupLab can also send one itself, and it asks first. After you press **Accept a
 
 **Location is never read.** Not stripped on the way out: never read in the first place, at any point, by any part of GroupLab. A photograph taken on a phone usually carries where it was taken, and a target photograph usually means somewhere you shoot. That is not information this project wants to hold, so the code does not look at it.
 
+## Sync between devices
+
+If you turn on Sync between devices in Settings, GroupLab writes your records to a folder you choose, and only there. It sends nothing over the network for it, so it is not a sixth item on the list. Your own cloud app, such as OneDrive, Google Drive, Dropbox or iCloud Drive, is what moves that folder, and the project never holds it. The original photographs go into the folder only if you ask.
+
 ## Where it is kept, and for how long
 
 NOTES-FROM-PLANNING.md entries 215 to 217. Nothing people send stays on the web server longer than it is needed, and every place it
@@ -126,8 +130,8 @@ which carries no metadata at all.
 
 ## What this means
 
-**You can read this list and then check it.** The point of the test that fails the build is that the list stays four items long without anybody remembering to keep it that way. If you would rather verify than trust, the test is named in the sources and it is short.
+**You can read this list and then check it.** The point of the test that fails the build is that the list stays five items long without anybody remembering to keep it that way. If you would rather verify than trust, the test is named in the sources and it is short.
 
 **Nothing here is a promise about your network.** It is a statement about what this program does. If something on your machine is watching what it talks to, this article tells you what it should see and nothing more.
 
-**The part worth carrying away:** a program that reaches the outside world in four places can be described in a paragraph, and one that reaches it in forty cannot be described at all. That is the reason for the rule, rather than any particular one of the four.
+**The part worth carrying away:** a program that reaches the outside world in five places can be described in a paragraph, and one that reaches it in forty cannot be described at all. That is the reason for the rule, rather than any particular one of the five.

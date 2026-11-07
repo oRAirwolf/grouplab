@@ -25,6 +25,352 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-04, entry 479: consistency audit
+
+**Status: actioned 2026-11-07 with entry 476, every finding done.** Plain paper is "Built, not proven" with Find holes (Experimental) named; the guide's Send everything I open, pooling and 25 shot gate corrected; six features say on the Mobile side why the phone leaves them out (build.py reads mobile.words); PHONE-PARITY's label printer row checked against the code; the weekly screenshots job asks for a site publish; the testing guide's release and data lines; iOS in the README's developer sections; the survey line.
+
+From the planning session's scheduled consistency audit (entry 267 section 2b). Read only: README.md, grouplab.org (home, /download/,
+/features/, /tour/, /shoot-a-target/, /guides/, /releases/, /support/), website/features.json, website/build.py, website/api/limits.json,
+docs/RELEASE-NOTES.md, docs/notes/STATE.md, docs/notes/for-alan.md, docs/PLATFORM-SUPPORT.md, docs/PHONE-PARITY.md, docs/ANDROID.md,
+docs/USER-GUIDE.md, docs/TESTING-GUIDE.md, docs/PROOF-CHECKLIST.md, docs/RELEASE-PLAN.md, docs/SURVEY.md, the inbox, the git log and
+GitHub's public API. No open issue is labelled `consistency` (issue 1 closed 2026-10-21; the weekly check last ran 2026-11-02 and passed).
+
+**Take entries 476, 477 and 478 first.** All three are still waiting, and their findings still hold on the live site today: /download/
+"Version 0.2.221 today" for the Microsoft Store, /features/ and /tour/ "from nightly 221", and /releases/ "1 fix from 5 error reports".
+Nothing below repeats them. Findings 7 and 8 add to them, so they can go in the same change.
+
+**Pull first.** This clone is 10 commits behind GitHub's main (local 61ed8e95, GitHub 53b47d49, 2026-11-02 14:41 UTC). README.md is the same
+on both apart from line endings, so its line numbers below hold.
+
+Each finding: where, what it says, what it should say, and the evidence.
+
+## 1. Hole finding with no sheet definition is called not built and not started, while Find holes (Experimental) ships
+
+- **Where:** grouplab.org home page (website/build.py line 2034): "Not built yet: hole detection on plain paper." README.md line 53: "Not
+  built yet: hole detection on blank paper." README.md line 365: "What does not exist yet: hole detection on blank paper". README.md line
+  472 (Phase 4): "**Not started.** Hole detection on blank paper, with no definition to difference against." docs/TESTING-GUIDE.md line
+  92: "**Hole detection on plain paper**, with no sheet definition, is not built."
+- **Why it is wrong:** README.md line 284, /features/#other-targets (website/features.json line 285), docs/USER-GUIDE.md lines 153 to 155
+  and docs/RELEASE-NOTES.md line 1250 all say Find holes (Experimental) proposes holes on a target GroupLab did not print, once the scale
+  is set, on the computer and in GroupLab Dev. README.md line 396 defines Not started as "no code". A reader sees both on one page.
+- **Should say:** in each place, for example: "Not finished: finding holes by itself on plain paper. Find holes (Experimental) proposes
+  them once the scale is set, for you to check one by one; its gate still needs a photograph of plain paper with real holes at a known
+  scale." Give README.md line 472 the state that fits its table (Built, not proven, or In progress), keep ReadmeTests and DESIGN.md
+  section 21 in agreement, and add GroupLab Dev to the /features/ sentence, which names only the computer. If a real difference remains
+  between blank paper and what Find holes does, say that difference in those words rather than "not built".
+
+## 2. The user guide says Send everything I open stays off on the phones
+
+- **Where:** docs/USER-GUIDE.md lines 809 and 810: "on the computer also **Send everything I open**, which sends every picture you open,
+  read or not, and stays off on the phones for now."
+- **Why it is wrong:** website/api/limits.json line 76 has `sendEverythingOpenPhones` true. docs/RELEASE-NOTES.md line 782 (nightly 173),
+  README.md line 354, /features/#send-targets ("on the computer and the phones") and docs/PHONE-PARITY.md line 64 all say it is offered.
+  This is a privacy statement, so it matters that it is exact.
+- **Should say:** "**Send everything I open**, which sends every picture you open, read or not; a phone sends over Wi-Fi unless you allow
+  mobile data." Regenerate the PDF.
+
+## 3. The user guide says reading other sheets of one load as one group is not built
+
+- **Where:** docs/USER-GUIDE.md line 743: "Reading other sheets of one load as one group is **not built yet**."
+- **Why it is wrong as written:** the same section (lines 733 to 737) pools pictures with no codes in one tab and copies of one single-page
+  design as one group. README.md line 338 lists "shots from many sheets of any kind in one analysis", /features/#csv imports several files
+  as one group, and docs/USER-GUIDE.md line 602 fills Rifle precision from every saved session of a load pooled.
+- **Should say:** exactly what is still missing, checked against the code, for example choosing saved sessions of one load that are not one
+  set and pooling them on the analysis screen, with the reason the guide already gives about each sheet's center. Regenerate the PDF.
+
+## 4. "A 25-shot target that nobody has shot yet" is no longer true
+
+- **Where:** README.md line 401: "its gate needs a 25-shot target that nobody has shot yet." docs/TESTING-GUIDE.md line 94: "Two of the
+  project's own gates have no material yet: no 25-shot editor timing".
+- **Why it is wrong:** README.md line 123 ships "a real 600 dpi scan of a 25 shot sheet", and docs/PROOF-CHECKLIST.md lines 50, 77 and 108
+  say the wrong-bull scan exists and the gate is a person's timed correction ("Not measurable without a person").
+- **Should say:** README.md: "its gate needs a person's timed correction of a 25-shot target, which has not been run yet." Testing guide:
+  the editor gate waits on that timing, and only the blank-paper gate has no material. The same line of the guide says the mounted gate has
+  "one day's material" and then names a second range day; word it so the two agree. Regenerate the PDF.
+
+## 5. /features/ says "On the desktop only, for now." on six features that docs/PHONE-PARITY.md leaves out on purpose or has in another form
+
+- **Where:** the Mobile view of /features/, from the fixed words in website/build.py line 3344, on Barrels under their rifle, Several
+  targets open at once, Work it from the keyboard, Updates that list what you skipped, Builds for the Mac, and Label targets for a thermal
+  printer. (website/tour.json line 670 is entry 476 finding 3.)
+- **Why it is wrong:** "for now" promises they are coming, and "desktop only" is not true of three. docs/PHONE-PARITY.md lines 28, 54, 70,
+  72, 87 and 88 mark all six left out, each with a reason: the phone keeps several targets open through Open targets, Android has its own
+  updater, the label targets are in the phone's Targets library, and a Mac build is not something a phone can do.
+- **Should say:** one short line per feature from its PHONE-PARITY reason (`mobile.words` in website/features.json, as the tour has), with
+  the fixed words used only where a feature really is coming.
+
+## 6. docs/PHONE-PARITY.md says no platform prints to a label printer by itself
+
+- **Where:** docs/PHONE-PARITY.md line 88: "no platform prints to a label printer by itself yet".
+- **Why it is wrong:** mobile/GroupLab.Mobile/TargetsPage.cs line 504 has "Print two scale labels on the Phomemo M220 (Bluetooth)", README
+  says two labels were printed from the phone on a real M220, /features/#label-targets says the M220 has printed its scale labels, and line
+  50 of the same file (`point-blank`) prints the card on the M220.
+- **Should say:** what is true of the label targets themselves: the phone prints scale labels and the point blank card on the M220 over
+  Bluetooth, a label target goes through a label printer's own app, and the preview of the dots is on the computer only. Confirm against
+  the code which of these apply before writing it.
+
+## 7. The weekly screenshots do not reach the site either (adds to entry 476 finding 1b)
+
+- **Where:** /tour/: "The pictures are regenerated every week from the newest build, so what you see here is the version you would
+  install." The home page: "REAL SCREENS, RENDERED FROM THE CURRENT BUILD".
+- **Why it is wrong:** the weekly job committed 160 changed pictures on 2026-11-02 (5d28297f, then 53b47d49 for the README), but website.yml
+  last ran 2026-10-26 15:23 UTC. .github/workflows/screenshots.yml lines 8 to 10 say the pictures wait for the next push that touches the
+  site or a publish by hand, and WebsiteWorkflowTests holds that, so in any quiet week the site lags and those words do not hold.
+- **Should say:** when fixing entry 476 finding 1, cover this job as well as the Store status and the Android screenshots, changing
+  WebsiteWorkflowTests and the comment with it. If it stays as it is, soften the words: "regenerated every week, and published with the
+  site's next change".
+
+## 8. Two more lines in the testing guide (adds to entries 476 and 477)
+
+- **docs/TESTING-GUIDE.md line 11:** "every nightly also keeps a release of its own at `v<version>`, so a build you named in a report still
+  exists later." Only the newest thirty do (/download/; commit 69df68be removed older ones). Should say the newest thirty builds keep a
+  release of their own, and older ones keep only their notes. Entry 477 finding 1 covers lines 45 to 47, not this one.
+- **docs/TESTING-GUIDE.md line 5:** "it keeps everything on your own machine". Same gap as entry 476 finding 4: add "unless you turn on Sync
+  between devices, which also writes to the folder you choose".
+
+## 9. The README is missing iOS in its developer sections
+
+- **Where:** README.md line 579 ("a GroupLab build of OpenCV on Android; on both the markers are read"), line 606 (the architecture chart's
+  imaging box says Android only), line 643 ("Every nightly build is published for Windows, Linux and macOS, and for Android as the APK and
+  GroupLab Dev"), and lines 652 to 661 (Repository layout, which lists `android/` but not `ios/` or `mobile/GroupLab.Mobile`).
+- **Why it is wrong:** `ios/opencv` holds the iOS build of OpenCV, the shared phone screens are in `mobile/GroupLab.Mobile`, and each nightly
+  also goes to TestFlight and Google Play's internal test (README.md lines 102 and 104 of the download table say so, and the platform
+  statement).
+- **Should say:** "a GroupLab build of OpenCV on Android and iOS", the same in the chart, a nightly sentence that names TestFlight and the
+  Play bundle, and two rows in the layout table.
+
+## 10. "The hardware survey, once open" (small)
+
+- **Where:** docs/RELEASE-PLAN.md line 14, generated into README.md line 375: "the hardware survey, once open, has not contradicted it."
+- **Why it is wrong:** docs/SURVEY.md line 4 says entry 223 opened it, `surveyOpen` is true, and the site links it from every footer.
+- **Should say:** "and the hardware survey has not contradicted it."
+
+When these are done, record the entry and fold it in as usual. Nothing here needs Alan.
+
+## 2026-11-01, entry 478: consistency audit
+
+**Status: actioned 2026-11-07 with entry 476, every finding done.** Sync's Features sentence says it is not yet proven on two real devices; removing the Play copy or the APK says it deletes the phone's records, so export first; ANDROID.md opens with where Android stands now; PLATFORM-SUPPORT.md says the project joined Apple's program; for-alan.md's drop note carries the correction.
+
+From the planning session's scheduled consistency audit (entry 267 section 2b). Read only: README.md, grouplab.org (home, /download/,
+/features/, /tour/, /shoot-a-target/, /guides/, /releases/, /support/), website/features.json, website/build.py, docs/RELEASE-NOTES.md,
+docs/notes/STATE.md, docs/notes/for-alan.md, docs/PLATFORM-SUPPORT.md, docs/PHONE-PARITY.md, docs/ANDROID.md, docs/USER-GUIDE.md,
+docs/TESTING-GUIDE.md, the inbox, the git log and GitHub's public API. No open issue is labelled `consistency` (issue 1 closed
+2026-10-21; the weekly check last ran 2026-10-26 and passed).
+
+**Take entries 476 and 477 first.** Both are still waiting, and nothing has reached main since: GitHub's newest commit is still 2246d846
+(2026-10-27 17:19 UTC) and this clone is still at 61ed8e95. Their findings still hold on the live site today (/download/ "Version 0.2.221
+today" for the Microsoft Store; /features/ and /tour/ "these are from nightly 221", while docs/figures/screens/phone/made-from.json on
+main says 222). Nothing below repeats them; findings 1 and 2 sit well with entry 476 findings 4 and 7 and entry 477, so they can go in the
+same change.
+
+Each finding: where, what it says, what it should say, and the evidence.
+
+## 1. The Features entry for sync does not say it is built but not proven
+
+- **Where:** grouplab.org/features/#sync (website/features.json, key `sync`, line 1430), also first in the Newest list as "Changed in
+  nightly.221".
+- **What it says:** "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder
+  your own cloud app already keeps in step ...", with no word on how far it is proven.
+- **Why it is wrong:** README.md line 413 and lines 499 to 501 call Phase 7, synchronization, "Built, not proven", and
+  docs/PROOF-CHECKLIST.md (row 4) and STATE.md say it has run only against simulated cloud clients, never for weeks on two real devices.
+  The same page gives the label printer feature its own caveat ("this is 'should work'"), so readers will take the sync entry as proven.
+- **Should say:** add one sentence, for example: "It is held in tests against simulated OneDrive, Google Drive and Dropbox folders but has
+  not yet run for weeks on two real devices, so keep the daily copies on."
+- **Also, /download/, "What you get", "Your data"** (website/build.py line 981): "Kept in %APPDATA%\GroupLab on Windows, and under your
+  home folder elsewhere." Same gap as entry 476 finding 4 (README line 124 and the footer): add the phone's own storage, and, only if
+  Sync between devices is on, the folder you chose.
+
+## 2. Moving between the Play copy and the APK deletes the phone's records, and only ANDROID.md says so
+
+- **Where:** grouplab.org/download/, Android (website/build.py line 947: "Remove the Google Play copy first, if you have it: the two are
+  signed with different keys", and line 951: "Take either the Play copy or the APK, not both: remove one before installing the other");
+  README.md line 129 ("remove the Play copy before installing the plain APK, because the two are signed with different keys");
+  docs/USER-GUIDE.md line 903 and docs/TESTING-GUIDE.md line 24 ("Remove one before installing the other").
+- **What is missing:** docs/ANDROID.md lines 380 to 382 say "Uninstalling deletes the sessions and settings kept on the phone, so move
+  anything worth keeping off it first." None of the public places says this, so a tester who follows the download page loses every
+  session on the phone.
+- **Should say,** in each of those places, in one short clause: removing GroupLab from the phone deletes its sessions and settings, so
+  first use Settings, Sync and your data, Export all my data (or turn on Sync between devices), then Import data in the new copy.
+  GroupLab Dev needs no removal, as the pages already say.
+
+## 3. docs/ANDROID.md opens with the spike, as if that were where Android stands
+
+- **Where:** docs/ANDROID.md line 7, "Where it stands": "The spike and its build are written: `android/GroupLab.Android.Spike/` ...",
+  and lines 3 to 5, "This is the plan and what the first stage found ... the rest of this document is the plan that report decides."
+  Section 1, line 17: "Printing, the target designer and Ballistics stay on the desktop at first."
+- **Why it is wrong:** the phone has had Ballistics as its own tab with Point blank, the Targets screen with Made for your optic, and
+  printing through Android's dialog and straight to the M834 for some time (docs/PHONE-PARITY.md lines 49, 56, 57 and 83; README.md
+  lines 355 to 358; /features/ "Print a sheet from the phone"). README.md line 230 and the download page ("docs/ANDROID.md has the plan
+  and what each stage found") send readers here, and the first thing they read is the September spike.
+- **Should say:** a short "Where it stands now" at the top: a signed APK, GroupLab Dev and Google Play's internal test with every
+  nightly; the phone does what docs/PHONE-PARITY.md lists, including Ballistics, Targets and printing; the public Play listing waits only
+  on Google's closed test (12 testers, 14 days); then "The sections below are the plan and what each stage found, in order." Keep section
+  1 as the record of the decision, with one line saying that phone parity (entry 258) has since brought printing and Ballistics to the
+  phone. This goes with entry 476 finding 6 (section 8 and sync), so do both together.
+
+## 4. Internal notes (not public, small)
+
+- **docs/PLATFORM-SUPPORT.md line 14** (the note above the published statement): "distribution needs the paid Apple developer program,
+  which Alan is joining." He joined: the same file, line 65, says the macOS build is signed and notarized "using the Apple developer
+  program the project joined", and the iPhone and iPad beta is on TestFlight. Should say "which the project joined". The statement below
+  the rule line is Alan's wording and is not to be touched; this line is above it.
+- **docs/notes/for-alan.md, "Your drop, entry 423 section 0"** (about line 50): "since nightly 113 a newly opened picture always starts
+  a record of its own". Error reports 39 and 40 showed that a new sheet marked on a copy of the same clean picture replaced the earlier
+  session, as reported on nightly 221 and fixed in nightly 222 (60e60bc1). Add one line saying so, so the note does not tell Alan that
+  could not happen.
+
+When these are done, record the entry and fold it in as usual. Nothing here needs Alan.
+
+## 2026-10-31, entry 477: consistency audit
+
+**Status: actioned 2026-11-07 with entry 476, both findings done.** The testing guide and Support say what a fault can change, the daily copies, Restore a copy and the newest thirty builds; What is not done yet names sync and the iPhone and iPad beta.
+
+From the planning session's scheduled consistency audit (entry 267 section 2b). Read only: README.md, grouplab.org (home, /download/,
+/features/, /tour/, /shoot-a-target/, /guides/, /releases/, /support/), website/features.json, website/tour.json, website/build.py,
+docs/RELEASE-NOTES.md, docs/notes/STATE.md, docs/notes/for-alan.md, docs/notes/error-reports.md, docs/TESTING-GUIDE.md,
+docs/PROOF-CHECKLIST.md, docs/PLATFORM-SUPPORT.md, docs/ANDROID.md, the inbox, the git log and GitHub's public API. No open issue is
+labelled `consistency` (issue 1 closed 2026-10-21).
+
+**Take entry 476 first.** It is still waiting, and nothing has reached main since it was written: GitHub's newest commit is still
+2246d846 (2026-10-27 17:19 UTC), and this clone is still at 61ed8e95. Its findings still hold on the live site today: /download/ still says
+"Version 0.2.221 today" for the Microsoft Store, and /features/ and /tour/ still say the phone pictures are "from nightly 221". Nothing
+below repeats entry 476; these two are new, and both are in the guide the Support page sends people to ("Check what is not done yet",
+and the home page's "What to expect").
+
+Each finding: where, what it says, what it should say, and the evidence.
+
+## 1. "A bad build cannot lose a session" no longer holds, and going back to an old build may not be possible
+
+- **Where:** docs/TESTING-GUIDE.md lines 43 to 49 ("If a new build will not start", published as Trying GroupLab on /guides/), and the
+  matching panel on grouplab.org/support/ (website/build.py line 1318).
+- **What it says:** TESTING-GUIDE.md line 45: "No installer and no uninstaller touches that folder, so a bad build cannot lose a
+  session." Line 47: "The build you were on still exists at its own address: open the releases list, find the `v<version>` release you
+  were on". The Support panel: "To go back, download the build you were on from the releases list". Both speak of Windows only.
+- **Why it is wrong:** nightly 221 did lose sessions without any installer involved: error reports 39 and 40 (docs/notes/error-reports.md,
+  "a new session overwrites the one before"), fixed in nightly 222. And /download/ says only the newest thirty builds keep a release
+  ("older ones are removed with their tags", website/build.py line 1014; commit 69df68be removed some), so the build a person was on may
+  no longer exist.
+- **Should say:** no installer or uninstaller touches the folder; a fault in a build can still change your records, and GroupLab keeps a
+  daily copy of them, the newest 14 (README.md line 77), so Settings, Sync and your data, Restore a copy puts them back as they were on a
+  day before the fault (docs/USER-GUIDE.md line 826). To go back to an earlier build, take one of the newest thirty from the releases
+  list; an older one is gone, and the newest is usually the fix. Say where the folder is on macOS, Linux and the phones too, and that the
+  Microsoft Store copy goes back only by uninstalling it and installing the zip or the installer. This sits well with entry 476 finding 7
+  (a "If sessions are missing" part on /support/): do both in one change.
+
+## 2. "What is not done yet" leaves out sync between devices
+
+- **Where:** docs/TESTING-GUIDE.md lines 87 to 95 ("What is not done yet"), which /support/ names as the list of what "is known to be
+  missing or unproven".
+- **What it says:** five items (printing from inside GroupLab, plain paper, chronograph files, the gates with no material, Linux and
+  macOS). Sync between devices is not among them.
+- **Why it is wrong:** README.md line 413 and lines 499 to 500 call Phase 7, synchronization, "Built, not proven", and docs/notes/STATE.md
+  ("Synchronization (Phase 7)") and docs/PROOF-CHECKLIST.md line 63 and row 4 (line 78) say it has been held only by simulated cloud
+  clients and still needs two real devices on one cloud folder for some weeks. Since nightly 215 a person can turn it on.
+- **Should say:** add a line, for example: "**Sync between devices** is built on every platform and held in tests with simulated cloud
+  services, but it has not yet run for weeks on two real devices on one cloud folder; keep the daily copies on, and say in a report if
+  anything goes missing or comes back twice." Also check the iPhone and iPad line: README.md line 365 lists "a released iOS build" as not
+  existing yet, and this list does not mention it.
+
+When these are done, record the entry and fold it in as usual. Nothing here needs Alan.
+
+## 2026-10-28, entry 476: consistency audit
+
+**Status: actioned 2026-11-07, every finding done.** 1a and 1b: the Store status job (when the Store's version changes) and the Android emulator job now ask for a site publish after they push, since a push with a workflow's own token starts no workflow; WebsiteWorkflowTests allows exactly the four jobs that push site content. 2: nightly 222's published notes are left as published (CLAUDE.md); its two fixes from three error reports are counted from docs/release-note-corrections.json's attributions, so the running total reads "3 fixes from 8 error reports", nightly 223 carries a Correction line, and a commit naming an error report without Reported-via now fails. 3 to 7: Features, tour, README, footer, Support, the article and ANDROID.md, by docs-sonnet. 8: STATE.md and error-reports.md.
+
+From the planning session's scheduled consistency audit (entry 267 section 2b). Read only: README.md, grouplab.org (home, /download/,
+/features/, /tour/, /shoot-a-target/, /guides/, /releases/, /support/), website/features.json, website/tour.json, docs/RELEASE-NOTES.md,
+docs/notes/STATE.md, docs/notes/for-alan.md, docs/PLATFORM-SUPPORT.md, docs/PHONE-PARITY.md, docs/ANDROID.md, the inbox, the git log and
+GitHub's public API. No open issue is labelled `consistency` (issue 1 closed 2026-10-21), so nothing below repeats it.
+
+**First:** this clone is 8 commits behind GitHub's main (local 61ed8e95, GitHub 2246d846: the Store submission note d7466022, the phone
+screenshots f9f85bbf and 84fe2a2e, and five external status commits). Pull before starting. Findings 1a and 1b come from those commits.
+
+Each finding: where, what it says, what it should say, and the evidence.
+
+## 1. The live site is behind GitHub's main (needs a publish and a workflow change)
+
+a. **The Microsoft Store version on /download/.** The Windows section says "Version 0.2.221 today". The Store has carried 0.2.222.0 since
+   2026-10-26 22:41 UTC (docs/notes/external-status.md on GitHub's main, commit ccd12171). The cause: `docs/notes/external-status.md` is
+   not in the `paths` of .github/workflows/website.yml (lines 27 to 37), so a change in the Store's version never republishes the page that
+   quotes it (website/build.py `store_version()`, line 77, and line 883). Should say: "Version 0.2.222 today", and stay current by itself:
+   add the file to the paths, or have the store status workflow dispatch the website when the version changes.
+b. **The phone pictures on /features/ and /tour/.** Both say "the pictures are taken on the Android emulator ... after each nightly (these
+   are from nightly 221)". Commit f9f85bbf (2026-10-26 15:42 UTC) put nightly 222's 17 phone and tablet pictures on main, including
+   fold-settings-sync, and docs/figures/screens/phone/made-from.json now says 222. The last website run was 15:23 UTC on d7c631b1; none
+   has run since, although `docs/figures/screens/**` is in its paths. Most likely the push was made with the workflow's own token, which
+   starts no other workflow. Should say "from nightly 222", with the new pictures. Fix: publish the site once, and have the Android
+   screenshots workflow dispatch the website after it pushes (as the nightly's announcement does).
+
+## 2. The running total of fixes from people's reports leaves out nightly 222
+
+- **Where:** README.md line 183 and grouplab.org/releases/#from-you: "Since nightly 206: 1 fix from 5 error reports."
+- **What happened:** nightly 222 fixed error reports 38, 39 and 40 (commits 1147821e and 60e60bc1), but neither commit carries a
+  `Reported-via:` trailer, so 222's notes have no "From your reports and targets in this build" line and no "found from ..." clause, and
+  `from_you()` in scripts/readme.py (line 140) counts only build 206. 222's two notes end "(Error report 38)." and "(Error reports 39 and
+  40)." instead of the house form.
+- **Should say:** about "Since nightly 206: 3 fixes from 8 error reports" (two fixes from three error reports sent from GroupLab, as
+  docs/notes/error-reports.md records each one: "sent by a person, with their diagnostics"), with 222's notes ending in the same form as
+  206's. Put it right through docs/release-note-corrections.json, as for nightly 218.
+- **Why CI did not catch it:** `CLOSES_REPORT` in scripts/release-notes.py (line 317) matches only "crash report" and
+  "grouplab-crash-reports#", and these commits say "Error report 38". Widen it to "error reports?" as well, so a commit naming an error
+  report without `Reported-via:` fails.
+
+## 3. Delete for rifles, barrels and loads (nightly 222) is missing where people look for it
+
+- **/features/, "Barrels under their rifle"** (website/features.json, key `barrels-under-rifles`): it heads the Newest list as "Changed in
+  nightly.222", but its sentence says nothing about deleting; the change is only in its `note`. Should add, for example: "Any rifle, barrel
+  or load can be deleted, asked first: a rifle goes with its barrels, and sessions saved with them keep the name."
+- **The phone's Delete** in Ballistics' rifle and load forms (release notes 222, docs/USER-GUIDE.md lines 34 and 35) is in no Features
+  entry: the feature lists Windows, macOS and Linux only, and docs/PHONE-PARITY.md line 28 says only that the phone has no barrel screens.
+  Should say somewhere on /features/ that the phone keeps rifles and loads, with Delete, on Ballistics.
+- **/tour/equipment/** (website/tour.json, from line 616): neither "The form on the right" nor the steps mention Delete, and the mobile
+  note says "On the desktop only, for now." Should name Delete, and the mobile note should say that on the phone the rifle and load
+  forms are in Ballistics.
+
+## 4. "Nowhere else" and "on your own computer" no longer hold once sync is on
+
+- **README.md line 124** ("Where it keeps things"): "%APPDATA%\GroupLab on Windows ... and on a phone in the app's own storage, and nowhere
+  else."
+- **The footer on every page of grouplab.org** (website/build.py line 526): "The application keeps everything on your own computer and
+  sends nothing you have not agreed to".
+- **docs/TESTING-GUIDE.md line 101:** lists the data folder's contents without the daily copies or a sync folder.
+- **Should say:** on your own computer or phone, and, only if you turn on Sync between devices, in the folder you choose, which your own
+  cloud app copies. Since nightly 215 (Features, "Sync between your devices") the records are also written to that folder.
+
+## 5. The article "What GroupLab sends" says five, then four, and does not mention sync
+
+- **Where:** website/research/what-grouplab-sends.md. Line 3 and the `found:` line say five things leave the device; line 129 says "the
+  list stays four items long" and line 133 "a program that reaches the outside world in four places". The list itself has five.
+- **Missing:** sync. The Support page sends readers here ("What GroupLab sends lists everything that can leave your computer or phone").
+- **Should say:** five throughout, and a short part on sync: GroupLab writes only to the folder you choose and sends nothing over the
+  network for it; your own cloud app moves that folder; the original photographs go only if you ask. Update `data_date`.
+
+## 6. docs/ANDROID.md section 8 still treats the sync folder as an open question
+
+- **Where:** docs/ANDROID.md lines 293 to 300 (section 8, "Sessions between phone and desktop"): Stage B "is the next question for this
+  stage", "If that holds, Stage B works on the desktop side only", and Stage C, sign in, "only if B falls short". README.md and /download/
+  both point readers to ANDROID.md.
+- **Should say:** Stage B was built on every platform as option A (entries 461, 463, 464, 471 to 473; nightlies 215 to 222), with the
+  Android folder picker in Settings, Sync and your data, Sync between devices, held in tests against simulated cloud clients and not yet
+  proven on two real devices (docs/PROOF-CHECKLIST.md); Stage C is not needed.
+
+## 7. /support/ says nothing about getting lost records back
+
+- **Where:** grouplab.org/support/ ("If a new build will not start", "Delete your data"). Nightly 222's notes tell people that sessions
+  lost to error reports 39 and 40 "can be put back from a daily copy in Settings", but the Support page never names Restore a copy.
+- **Should say:** a short part such as "If sessions are missing": Settings, Sync and your data, Restore a copy, choose a copy from
+  before they went missing; your records as they are now are copied first. "Delete your data" could add that a sync folder you chose is
+  yours to delete, since the project never holds it.
+
+## 8. Internal notes (not public, small)
+
+- **docs/notes/STATE.md, "Builds and the site":** "Last nightly: 0.2.0-nightly.221 ... Nightly 222 (tonight)". Nightly 222 was published
+  2026-10-26 15:22 UTC, and TestFlight (both groups, 2026-10-27 17:19 UTC) and the Store (0.2.222.0) now carry it.
+- **docs/notes/error-reports.md line 18:** "Settings, Your data, Restore a copy". The category is "Sync and your data" (entry 468).
+
+When these are done, record the entry and fold it in as usual. Nothing here needs Alan, except that the planning session's message for
+the tester in error reports 38 to 40 should use "Settings, Sync and your data, Restore a copy".
+
 ## 2026-10-26, entry 475: app clips for the launch videos
 
 **Status: actioned 2026-10-26, in part: 40 clips made; the rest listed below with why.** Made by script (`scripts/video-clips/make-clips.ps1`, the VideoClips tests): GroupLab's own headless drawing frame by frame with a drawn pointer or tap rings, 2560 by 1440 on the computer (4K is not possible without scaling the whole window, so the entry's other size was used) and 1080 by 2520 on the phone, 60 frames a second, H.264 MP4 from Windows' own encoder through OpenCV at the bit rate it chooses (an outside ffmpeg download was refused by the session's permission check), no lossless master. The phone is GroupLab's phone screens drawn headless at the Fold 7's size, not the emulator. A chores-haiku pass checked every clip's last frame against clips.csv. **Not made, and why:** the camera clips (ch04, step 7), because the headless camera only replays recordings of Alan's sittings, which the entry rules out; the pooled set (v1 montage), the Xero file and Top Gun (ch08), the store-bought target, marking under the crosshair and two aim points (ch10), the one-page report (ch11), the tablet's side by side, and step 9's computer half: left for a later run. **Partial:** the word explained (ch06) shows the analysis but not the explanation; sessions over time (ch08) has one session a load; step 5 stops short of the print dialog's buttons.

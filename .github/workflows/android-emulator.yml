@@ -22,9 +22,11 @@ concurrency:
   group: android-emulator-${{ github.ref }}
   cancel-in-progress: true
 
-# Question 90 (b): write, for the phone's screenshots it commits; nothing else here writes.
+# Question 90 (b): write, for the phone's screenshots it commits; nothing else here writes. Entry 476 finding 1b: actions, to ask for a
+# publish of the site once they are pushed, since a push with this job's token starts no workflow.
 permissions:
   contents: write
+  actions: write
 
 jobs:
   sweep:
@@ -247,6 +249,8 @@ jobs:
             exit 0
           fi
           git push origin main
+          GH_TOKEN="${{ github.token }}" gh workflow run website.yml --ref main -f reason="the phone's new screenshots" \
+            || echo "::warning::the site could not be asked to publish; the next push that touches it will"
 
       - name: Summary
         if: success()

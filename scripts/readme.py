@@ -137,6 +137,20 @@ def whats_new() -> str:
     return "\n".join(lines)
 
 
+def attributed(fixes: int, reports: int, first: str) -> tuple[int, int, str]:
+    """Entry 476 finding 2: fixes from people's reports in a published build whose commits did not say so, kept in
+    docs/release-note-corrections.json under "attributions" and added to the running total; the build's published notes are not edited."""
+    import json
+    try:
+        data = json.loads((Path(__file__).resolve().parent.parent / "docs" / "release-note-corrections.json").read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return fixes, reports, first
+    for a in data.get("attributions", []):
+        fixes, reports = fixes + int(a["fixes"]), reports + int(a["reports"])
+        first = first or a["build"]
+    return fixes, reports, first
+
+
 def from_you() -> str | None:
     """ "Since nightly 206: 3 fixes from 8 error reports and 1 detection update from 48 targets people sent.", or None before any build counted."""
     import re
@@ -150,6 +164,7 @@ def from_you() -> str | None:
                 fixes, reports = fixes + int(f.group(1)), reports + int(f.group(2))
             elif (u := re.fullmatch(r"(\d+) detection updates? from (\d+) targets people sent", part)) is not None:
                 updates, targets = updates + int(u.group(1)), targets + int(u.group(2))
+    fixes, reports, first = attributed(fixes, reports, first)
     if not first:
         return None
     said = ([f"{fixes} fix{'es' if fixes > 1 else ''} from {reports} error report{'s' if reports > 1 else ''}"] if fixes else []) + \

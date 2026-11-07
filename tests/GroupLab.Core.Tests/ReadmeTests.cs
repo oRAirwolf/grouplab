@@ -216,7 +216,7 @@ public partial class ReadmeTests
         // Entry 266 folded the Screens section under What it does.
         string paragraph = string.Join(" ", Section("## What it does", "## Download"));
         var match = NotBuiltYet().Match(paragraph);
-        Assert.True(match.Success, "the Screens section no longer says what is not built in one sentence beginning \"Not built yet:\", so this test cannot check it.");
+        Assert.True(match.Success, "the Screens section no longer says what is not built in one sentence beginning \"Not built yet:\" or \"Not finished:\" (entry 479 finding 1), so this test cannot check it.");
         var absent = match.Groups["list"].Value.Split([", and ", ", ", " and "], StringSplitOptions.RemoveEmptyEntries)
             .Select(item => item.Trim())
             .Select(item => item.StartsWith("the ", StringComparison.Ordinal) ? item[4..] : item)
@@ -232,7 +232,7 @@ public partial class ReadmeTests
         }
     }
 
-    [GeneratedRegex(@"Not built yet: (?<list>[^.]+)\.")]
+    [GeneratedRegex(@"(?:Not built yet|Not finished): (?<list>[^.]+)\.")]
     private static partial Regex NotBuiltYet();
 
     /// <summary>The lines of one README section, from its heading to the next one named.</summary>

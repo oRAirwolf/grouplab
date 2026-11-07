@@ -5,9 +5,9 @@
 # visible to anybody reading the site. Nothing had gone wrong. Nobody had run the walk, because running it was a thing a person remembered.
 #
 # **What it does.** Renders every screen from the code on main, in both themes at the three sizes the site and the reports use, and commits
-# them when they differ. A push made with this job's token starts no workflow, and nothing but a push touching the site or a person may
-# start website.yml (WebsiteWorkflowTests), so the new pictures are published by the next push that touches the site, or by
-# a publish started by hand. Entry 253 corrected this paragraph, which said the site followed by itself.
+# them when they differ. A push made with this job's token starts no workflow, so after pushing it asks for a publish of the site in so
+# many words, the one start that token may make (entry 479 section 7; WebsiteWorkflowTests lists the four jobs allowed to). Entry 253
+# corrected this paragraph once, when it said the site followed by itself and it did not.
 #
 # **What it never does.** No real printer, no paper, no network: every render is headless and everything that reaches outside the process
 # goes through IOutsideWorld, which the tests replace with a recorder. Every sheet and every figure in these screenshots is generated, never
@@ -32,6 +32,8 @@ on:
 
 permissions:
   contents: write
+  # Entry 479 section 7: to ask for a publish of the site once the pictures are pushed.
+  actions: write
 
 # One at a time: two runs committing the same twenty images would conflict, and the newer render is the one worth keeping.
 concurrency:
@@ -113,7 +115,9 @@ jobs:
           git add docs/figures/readme
           git diff --cached --quiet -- docs/figures/readme || git commit -m "[screens] the README's pictures, from the new screenshots" -m "Entry 266."
           git push origin main
-          echo "committed $count changed images; the next push that touches the site publishes them"
+          GH_TOKEN="${{ github.token }}" gh workflow run website.yml --ref main -f reason="the weekly screenshots, $count images changed" \
+            || echo "::warning::the site could not be asked to publish; the next push that touches it will"
+          echo "committed $count changed images and asked the site to publish them"
 
       # Entry 462 section 3: the pictures are committed first, so a finding never holds back the website's screenshots; then the job fails
       # on any finding, at any size, in either theme, naming the screen.

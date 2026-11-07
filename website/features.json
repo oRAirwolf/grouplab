@@ -10,6 +10,8 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On the phone, the question of which bulls you fired at now shows its answers",
+    "Correction: nightly 222's fixes",
     "On the phone, a new sync folder names this phone by its maker and model",
     "A new sheet marked on the same picture as an earlier one",
     "The computer downloads now come precompiled",
@@ -241,16 +243,18 @@
       "key": "barrels-under-rifles",
       "group": "Sheets and printing",
       "name": "Barrels under their rifle",
-      "sentence": "Equipment has two tabs, Rifles and Loads. Each rifle lists its barrels with the one on now, and takes its length and twist from it. Setup names rifle and barrel together, and a barrel's length and twist, a rifle's cartridge and scope and a load's powder, charge and primer are kept when you close GroupLab.",
+      "sentence": "Equipment has two tabs, Rifles and Loads. Each rifle lists its barrels with the one on now, and takes its length and twist from it. Setup names rifle and barrel together, and a barrel's length and twist, a rifle's cartridge and scope and a load's powder, charge and primer are kept when you close GroupLab. Any rifle, barrel or load can be deleted, asked first: a rifle goes with its barrels, and sessions saved with them keep the name. Giving one a new name renames it, a rifle's barrels going with it.",
       "shot": "equipment",
       "platforms": [
         "Windows",
         "macOS",
         "Linux"
       ],
+      "mobile": {"words": "The phone keeps rifles and loads, with Delete and rename, in Ballistics' rifle and load forms; barrels are chosen on the computer."},
       "since": "next",
       "note": [
         "Rifles, barrels and loads can now be deleted",
+    "Giving a rifle, barrel or load a new name now renames it",
         "Barrels now sit under their rifle",
         "A barrel's length and twist, a rifle's cartridge and scope"
       ],
@@ -282,7 +286,7 @@
       "key": "other-targets",
       "group": "Reading a target",
       "name": "Any target you already shoot",
-      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or on the phone under a crosshair that stays in the middle; place several bulls and keep the layout as a template for the next sheet. On the computer, Find holes (Experimental) proposes the holes for you to check; finding them reliably on any target is still the goal.",
+      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or on the phone under a crosshair that stays in the middle; place several bulls and keep the layout as a template for the next sheet. On the computer and in GroupLab Dev, Find holes (Experimental) proposes the holes for you to check; finding them reliably on any target is still the goal.",
       "shot": "marking-other",
       "platforms": [
         "Windows",
@@ -295,6 +299,7 @@
         "noPicture": "marking by hand on the phone is photographed at the next sitting with the phone"
       },
       "since": "0.2.0-nightly.111",
+      "reworded": "0.2.0-nightly.222",
       "note": "On a target GroupLab did not print, you can now place each bull by hand",
       "tour": "marking",
       "guide": "3-photograph-or-scan-it",
@@ -598,6 +603,7 @@
         "macOS",
         "Linux"
       ],
+      "mobile": {"words": "The phone keeps several targets open through Open targets; the tab strip and its shortcuts are for the computer's wide window."},
       "since": "next",
       "note": [
         "each in its own tab across the top of the window",
@@ -931,6 +937,7 @@
         "macOS",
         "Linux"
       ],
+      "mobile": {"words": "A phone is worked by touch, so this is for the computer."},
       "since": "next",
       "note": [
         "On the computer the arrow keys now work",
@@ -1239,6 +1246,7 @@
         "macOS",
         "Linux"
       ],
+      "mobile": {"words": "Google Play updates the phone's app; Android's sideloaded GroupLab Dev and the plain APK update themselves."},
       "since": "0.2.0-nightly.49",
       "note": "the update bar now lists every build you skipped",
       "guide": "9-keeping-grouplab-up-to-date",
@@ -1253,6 +1261,7 @@
       "platforms": [
         "macOS"
       ],
+      "mobile": {"words": "A Mac build is a platform, not something a phone can do."},
       "since": "0.2.0-nightly.91",
       "note": "GroupLab now publishes Mac builds",
       "noPicture": "the Mac builds look like the others; it is a platform, not a screen"
@@ -1384,6 +1393,7 @@
       "shot": "targets",
       "sheets": [["x6-4x6", "A six-bull label on 4x6, as it prints"], ["x6-4x6-thermal", "The same label as a 203 dpi thermal printer makes it, one dot to a pixel"]],
       "platforms": ["Windows", "macOS", "Linux"],
+      "mobile": {"words": "The phone's Targets library has the label targets and prints scale labels on the Phomemo M220; the preview of the dots is on the computer."},
       "since": "next",
       "note": ["Six-bull label targets for thermal label printers", "Targets can now be laid out on 4x6, A6 and 100 x 150 mm labels", "When printing for a thermal printer, GroupLab now warns", "for a thermal label printer's own app", "On Windows, Targets can now print a sheet straight to a Phomemo M834", "Pages printed straight to the Phomemo M834", "Connecting to a label printer now starts each way of connecting at once"],
       "tour": "targets",
@@ -1430,7 +1440,7 @@
      "key": "sync",
      "group": "Updates and platforms",
      "name": "Sync between your devices",
-     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync and your data, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, and the original photographs travel only if you ask. Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder's own trash, keeps it there 14 days, and says what it tidied; a device that will not sync again can be forgotten, so tidying stops waiting for it, with nothing in the folder deleted. A change file the cloud app has not finished copying, or that arrived damaged, is waited for and taken only once it is whole.",
+     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync and your data, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, and the original photographs travel only if you ask. Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder's own trash, keeps it there 14 days, and says what it tidied; a device that will not sync again can be forgotten, so tidying stops waiting for it, with nothing in the folder deleted. A change file the cloud app has not finished copying, or that arrived damaged, is waited for and taken only once it is whole. It is held in tests against simulated OneDrive, Google Drive and Dropbox folders but has not yet run for weeks on two real devices, so keep the daily copies on.",
      "shot": "sync-settings",
      "platforms": [
       "Windows",
@@ -1440,7 +1450,7 @@
       "iPhone and iPad"
      ],
      "since": "next",
-     "reworded": "0.2.0-nightly.221",
+     "reworded": "0.2.0-nightly.222",
      "note": [
       "Sync between devices",
       "stay the same on your computer and your phones",

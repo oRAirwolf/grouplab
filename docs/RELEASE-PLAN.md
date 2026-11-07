@@ -11,7 +11,7 @@ Each line is checked, and says where, before Alan is asked whether to release.
    none may be open from a build newer than the one before the release, and every reported crash from the last two nightlies is explained.
 2. **CI green on all three systems** on the commit to be released, and the phase 0 gate record passing.
 3. **The minimums table** in `docs/PLATFORM-SUPPORT.md` is the one the release notes and the download page state, generated from one place
-   (`scripts/platform-support.py`), and the hardware survey, once open, has not contradicted it.
+   (`scripts/platform-support.py`), and the hardware survey has not contradicted it.
 4. **The privacy text is true**: the article what-grouplab-sends lists everything the build can send, and the build sends nothing else
    (`OneWayOutTests`).
 5. **The user guide describes this build**: every screen it names is on screen, the guide's PDF is regenerated, and the tour pages match the

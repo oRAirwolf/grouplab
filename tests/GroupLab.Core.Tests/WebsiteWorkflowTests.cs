@@ -76,15 +76,15 @@ public partial class WebsiteWorkflowTests
     }
 
     /// <summary>
-    /// Nothing else may start it, which is the other half of the same rule, with one exception: entry 459 section 7, the nightly's notes and
-    /// README, which are content the site is built from. Entry 144 meant their push to start it through the paths filter, but a push made
-    /// with a workflow's own token starts no workflow, so the site stayed a nightly behind; the nightly's publish job dispatches it once,
-    /// in the step named here, and still through the same group, so a burst still publishes once.
+    /// Nothing else may start it, which is the other half of the same rule, with four exceptions, each a job that pushes content the site
+    /// is built from with its own token, which starts no workflow, so the paths filter never sees it: entry 459 section 7, the nightly's
+    /// notes and README; entry 476 finding 1, the Store's version on /download/ and the phone's screenshots; entry 479 section 7, the
+    /// weekly screenshots. Each dispatches it once, after its push, and still through the same group, so a burst still publishes once.
     /// </summary>
     [Fact]
     public void NoOtherWorkflowStartsTheWebsiteWorkflow()
     {
-        const string Allowed = "nightly.yml: gh workflow run website.yml";
+        string[] allowed = ["nightly.yml", "screenshots.yml", "android-emulator.yml", "store-status.yml"];
         var found = new List<string>();
         foreach (string file in OtherWorkflows())
         {
@@ -96,8 +96,9 @@ public partial class WebsiteWorkflowTests
             }
         }
 
-        Assert.True(found.Count(f => f != Allowed) == 0 && found.Count(f => f == Allowed) <= 1,
-            "only a person, a change to its content, and the nightly's notes may publish the website, so no other workflow may start it: "
+        bool Allowed(string f) => allowed.Any(a => f == a + ": gh workflow run website.yml");
+        Assert.True(found.Count(f => !Allowed(f)) == 0 && found.GroupBy(f => f).All(g => g.Count() <= 1),
+            "only a person, a change to its content, and the four jobs that push its content with their own token may publish the website: "
             + string.Join(", ", found));
     }
 

@@ -46,7 +46,9 @@ meant to get its own tab, but when a question was showing in the middle of the w
 could not be shown and every picture opened over the same tab instead: one picture open, the rest gone. **No saved session record was
 overwritten by either:** since nightly 113 a newly opened picture always starts a record of its own, so your earlier sheet's record is as
 you saved it (only builds before nightly 113 could save a new picture over the record before it). From nightly 193 a drop never replaces
-a tab holding a target: it opens beside it.
+a tab holding a target: it opens beside it. **Correction (entry 478, 7 November):** one case did overwrite: a new sheet marked on a copy of the same clean
+picture replaced the earlier session in nightly 221 (error reports 39 and 40); fixed in nightly 222, and any lost that way come back from
+a daily copy, Settings, Sync and your data, Restore a copy.
 
 **For Quack** (entry 442, not a request; pass on whenever suits): thank you for the keyboard report and the marked-up screenshot.
 In 0.2.0-nightly.199, out now, on the computer: choosing a shot in the table with Space, Enter or a click keeps the focus
@@ -82,7 +84,7 @@ Working from the terminal, 18 October: entries 441, 442 and 443 taken; nothing i
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
-**This week, by itself** (not a request): backed up on 25 October (2885 MB, backup-2026-10-25); the restore test passed on 25 October; 0 archived submissions copied here; cleanup freed 30 MB; on the server, workers deleted or archived: archive 4; the server's own backup is from 2026-10-24; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
+**This week, by itself** (not a request): backed up on 1 November (3199 MB, backup-2026-11-01); the restore test passed on 1 November; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: archive 29; the server's own backup is from 2026-10-31; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
 <!-- /automation-week -->
 **About that restore test** (Code, 11 October): the bundle's head ac0c1ff was entry 409's commit as first made on this computer; it was rebased onto the screenshot job's commit before it was pushed, and is on GitHub as e740a25a. Nothing is missing; the next weekly run tests a pushed head.
 

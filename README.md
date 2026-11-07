@@ -50,7 +50,7 @@ Each one, with its picture, its platforms and the build it arrived in, is on the
 <summary><strong>Every screen, larger</strong></summary>
 
 These are the application as it is: the build renders every screen itself, in both themes at every size, every week, and
-`docs/figures/screens/current/` holds them all. The [tour](https://grouplab.org/tour/) walks through them. Not built yet: hole detection on blank paper.
+`docs/figures/screens/current/` holds them all. The [tour](https://grouplab.org/tour/) walks through them. Not finished: hole detection on blank paper. Find holes (Experimental) proposes them once the scale is set, for you to check one by one; its gate still needs a photograph of plain paper with real holes at a known scale.
 
 ![The analysis screen](docs/figures/screens/current/analysis-dark-1400x900.png)
 
@@ -121,12 +121,12 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 
 - **Nothing else is needed:** the download carries its own .NET runtime and everything else it uses.
 - **The Windows zip and installer bring two sample sheets** (the macOS and Linux downloads and the phones do not), so there is something to open in the first minute: a real 600 dpi scan of a 25 shot sheet, published with [its consent record](samples/PROVENANCE.md), and an unshot sheet beside it.
-- **Where it keeps things:** `%APPDATA%\GroupLab` on Windows and under your home folder on macOS and Linux, and on a phone in the app's own storage, and nowhere else. It sends nothing you have not agreed to: sending a target, error reports and the hardware survey each ask first, and an update check sends nothing about you; [docs/UPDATES.md](docs/UPDATES.md) says exactly what it does.
+- **Where it keeps things:** `%APPDATA%\GroupLab` on Windows and under your home folder on macOS and Linux, and on a phone in the app's own storage, and nowhere else unless you turn on Sync between devices, which also writes your records to the folder you choose, for your own cloud app to copy. It sends nothing you have not agreed to: sending a target, error reports and the hardware survey each ask first, and an update check sends nothing about you; [docs/UPDATES.md](docs/UPDATES.md) says exactly what it does.
 - **Which build you have:** Settings, Updates and about names the version, the train and the commit, which is what a bug report should carry.
 - **What is not finished** is in [Planned](#planned) below, which is the authority on what works today. [docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md) is one page for somebody trying it for the first time.
 - **On a Mac**, move `GroupLab.app` into Applications and open it. The first time, macOS checks it with Apple and opens it.
 - **Questions, or somewhere to say it did not work:** the [GroupLab Discord](https://grouplab.org/discord). A post in the bug-reports forum becomes a bug report for the developer, and the pictures you post there go on that report and nowhere else. For anything private, the support address is better.
-- **On Android**, the APK is signed. **GroupLab Dev, `grouplab-android-dev.apk`, is the recommended download for testing until GroupLab is on the Play Store**: after the first install it updates itself from every nightly with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day. A nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Sync and your data, Export all my data. Google Play's internal test is open by invitation, with a closed test to come; the plain APK keeps itself current as GroupLab Dev does (one from before nightly 177 has no updater, so install one newer APK by hand once), the Play copy gets every nightly through Google Play, and GroupLab Dev installs beside either with no uninstall; remove the Play copy before installing the plain APK, because the two are signed with different keys. Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates; it is Google's own check, takes a few seconds and is expected. **In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google**; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027. [docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.
+- **On Android**, the APK is signed. **GroupLab Dev, `grouplab-android-dev.apk`, is the recommended download for testing until GroupLab is on the Play Store**: after the first install it updates itself from every nightly with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy to send with a problem report, and gets fixes the same day. A nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Sync and your data, Export all my data. Google Play's internal test is open by invitation, with a closed test to come; the plain APK keeps itself current as GroupLab Dev does (one from before nightly 177 has no updater, so install one newer APK by hand once), the Play copy gets every nightly through Google Play, and GroupLab Dev installs beside either with no uninstall; remove the Play copy before installing the plain APK, because the two are signed with different keys. Removing GroupLab from a phone deletes its sessions and settings, so first use Settings, Sync and your data, Export all my data (or turn on Sync between devices), then Import data in the new copy. Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates; it is Google's own check, takes a few seconds and is expected. **In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google**; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027. [docs/ANDROID.md](docs/ANDROID.md) section 12 has the details.
 - **Of the computer downloads, only the Windows installer updates itself.** The zip, the tarball and both Mac builds tell you a newer build exists and leave the downloading to you.
 - **[What is supported, and what is not](#what-is-supported-and-what-is-not)** is below, and on the [download page](https://grouplab.org/download/#supported): why the Windows and Linux builds are unsigned, what happens once the application settles, and how to ask for another Linux target.
 
@@ -180,7 +180,7 @@ What the newest builds changed that you would notice, from their release notes.
 
 Every build's notes are in [docs/RELEASE-NOTES.md](docs/RELEASE-NOTES.md) and at <https://grouplab.org/releases/>.
 
-Since nightly 206: 1 fix from 5 error reports. [What your reports and targets changed](https://grouplab.org/releases/#from-you).
+Since nightly 206: 3 fixes from 8 error reports. [What your reports and targets changed](https://grouplab.org/releases/#from-you).
 <!-- /readme:whats-new -->
 
 </details>
@@ -362,7 +362,7 @@ Since the phone was brought level with the desktop (entries 258 and 259):
 - On the phone, the camera's level works upright at a sheet left on its backer as well as flat over a table, names which under the
   crosshair, and follows the sheet's own angle once its markers are read; Guided takes the picture in either position.
 
-What does not exist yet: hole detection on blank paper and a released iOS build (it is in testing through TestFlight).
+What is not finished yet: finding holes by itself on blank paper (Find holes (Experimental) proposes them once the scale is set, for you to check, but its gate still needs a photograph of plain paper with real holes at a known scale), and a released iOS build (it is in testing through TestFlight).
 
 #### Before the first beta or stable release
 
@@ -372,7 +372,7 @@ No beta or stable release happens until Alan asks for one by name. Each of these
 <!-- readme:plan: generated by scripts/readme.py from docs/RELEASE-PLAN.md; do not edit between these markers -->
 1. **No open defect that loses work or gives a wrong figure.** The issues in `grouplab-crash-reports` are read at the start of every run; none may be open from a build newer than the one before the release, and every reported crash from the last two nightlies is explained.
 2. **CI green on all three systems** on the commit to be released, and the phase 0 gate record passing.
-3. **The minimums table** in `docs/PLATFORM-SUPPORT.md` is the one the release notes and the download page state, generated from one place (`scripts/platform-support.py`), and the hardware survey, once open, has not contradicted it.
+3. **The minimums table** in `docs/PLATFORM-SUPPORT.md` is the one the release notes and the download page state, generated from one place (`scripts/platform-support.py`), and the hardware survey has not contradicted it.
 4. **The privacy text is true**: the article what-grouplab-sends lists everything the build can send, and the build sends nothing else (`OneWayOutTests`).
 5. **The user guide describes this build**: every screen it names is on screen, the guide's PDF is regenerated, and the tour pages match the week's screenshots (entry 146 section 4.4).
 6. **The release notes** are written for a person who shoots, from the builds' own notes since the last numbered release.
@@ -398,7 +398,7 @@ Every phase below is `DESIGN.md` section 21's, with its gate. A phase is not don
 | **Built, not proven** | the code exists and works, and its gate has not been met or cannot yet be run |
 | **Done** | its gate has been met and recorded |
 
-**"Built, not proven" carries its weight here.** The assignment editor works and its gate needs a 25-shot target that nobody has shot yet. Calling that done would make this page untrue, and calling it in progress would be untrue the other way.
+**"Built, not proven" carries its weight here.** The assignment editor works and its gate needs a person's timed correction of a 25-shot target, which has not been run yet. Calling that done would make this page untrue, and calling it in progress would be untrue the other way.
 
 | Phase | State | Gate |
 |---|---|---|
@@ -469,7 +469,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
 - **Done.** Diagnostic logging, crash records and a report package, with no location data in any of them.
 - **Done.** The three-axis unit setting: inches, centimeters and millimeters, MOA, mil and SMOA, yards and meters, each chosen independently and display only.
 - **Done.** The analysis screen shown above: the editor and the analysis as two states of one document, forward by Accept and analyze and back by the sheet crumb with every edit intact; the composite plot of every scoring shot on one bull, with the caliber, the excluded shots drawn hollow, CEP 50 and 90 and the extreme spread's two shots; CEP and width by height in the figure stack; the two judgment cards, round and flyer, each naming its test; the sheet's thumbnail, drawn from its definition with every shot on it, where a click on a bull selects its shots; and the full CEP table and bivariate fit behind one disclosure that remembers it was opened.
-- **Not started.** Hole detection on blank paper, with no definition to difference against. Its gate names the material it needs, one photograph at a known scale of plain paper with real holes in it, and no image in the corpus is that.
+- **Built, not proven.** Hole detection on blank paper, with no definition to difference against: Find holes (Experimental) proposes the holes once the scale is set, for you to check one by one. Its gate names the material it needs, one photograph at a known scale of plain paper with real holes in it, and no image in the corpus is that.
 - **Done.** Session records in one SQLite database with a documented, versioned schema and full JSON export and import: Accept and analyze saves the session, with its marking, figures, definition and a 150 dpi proof image, and the Session records screen lists them newest first, filters by rifle and load, opens one back to its analysis with no image needed, and asks before deleting one. Its gate has been met on Alan's own session: saved, reopened, exported and imported on another computer, it shows the same figures, cards and zero, line for line.
 - **Done.** The session report: a PDF from GroupLab's own writer with the particulars, the composite plot, every figure with its interval, without any shot left out and with every shot beside it, the zero correction and the two cards on page 1, and the shot table with bulls, exclusions with reasons, unmade decisions, registration, every "why", and the version and identifiers on page 2. Every line on it is one the analysis screen shows, and that, its gate, has been met on generated sessions and on Alan's own.
 - **Done.** The target library: the built-in sheets, read only, and your own sheets from the designer, saved as GLTD files in the data folder, renamed, duplicated from any sheet, and deleted after asking. The print screen lists both. A session keeps its own copy of the sheet it was analyzed against, so deleting a sheet never makes a session unreadable. Its gate, every one of these done through the window with a session still opening after its sheet is deleted, has been met.
@@ -576,7 +576,7 @@ data. Linux and macOS are held correct continuously so that neither turns into a
 |---|---|
 | **Language** | C#, on <!--framework-->.NET 10<!--/framework-->. One language across the core and every platform shell, so the desktop and the phone cannot disagree about a measurement. |
 | **Interface** | [Avalonia](https://avaloniaui.net/) 12, MIT licensed and GPL-compatible, rendering through Skia. |
-| **Imaging** | OpenCV, through [OpenCvSharp](https://github.com/shimat/opencvsharp) on the desktop, and a GroupLab build of OpenCV on Android; on both the markers are read with OpenCV's ArUco module and the AprilTag 36h11 dictionary. |
+| **Imaging** | OpenCV, through [OpenCvSharp](https://github.com/shimat/opencvsharp) on the desktop, and a GroupLab build of OpenCV on Android and iOS; on both the markers are read with OpenCV's ArUco module and the AprilTag 36h11 dictionary. |
 | **Fiducials** | AprilTag `tag36h11`. |
 | **Reference tooling** | R and Python, in `tools/`. These generate the geometry and statistics fixtures the C# is validated against. **None of it ships or runs at runtime.** |
 
@@ -603,7 +603,7 @@ flowchart TB
     subgraph img["Imaging backend"]
         direction LR
         CV["OpenCvSharp<br/>desktop"]
-        AT["GroupLab's OpenCV build<br/>Android"]
+        AT["GroupLab's OpenCV build<br/>Android and iOS"]
     end
 
     subgraph core["GroupLab.Core: no UI, no OpenCV, no platform code"]
@@ -640,7 +640,7 @@ dotnet test
 dotnet run --project src/GroupLab.Cli -- render targets/GL-CF25-LTR.gltd.json -o out/GL-CF25-LTR.pdf
 ```
 
-GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. Every nightly build is published for Windows, Linux and macOS, and for Android as the APK and GroupLab Dev, whose files are added to the same release when the Android build finishes, so a slow phone build never holds back the desktop ones; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
+GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!--/platforms-->, and every push runs the suite on all three. Every nightly build is published for Windows, Linux and macOS, and for Android as the APK and GroupLab Dev, whose files are added to the same release when the Android build finishes, so a slow phone build never holds back the desktop ones. Each nightly also goes to TestFlight for the iPhone and iPad and to Google Play's internal test as a bundle; what each one is, and what is and is not tested on real hardware, is in the platform statement above.
 
 </details>
 
@@ -653,6 +653,8 @@ GroupLab builds and its tests pass on <!--platforms-->Windows, Linux and macOS<!
 | `src/GroupLab.Cli` | The `grouplab` command line, and the OpenCV imaging backend |
 | `src/GroupLab.App` | The Avalonia desktop shell |
 | `android/` | The Android shell, GroupLab Dev, and the Android build of OpenCV |
+| `ios/` | The iPhone and iPad shell, and the iOS build of OpenCV |
+| `mobile/GroupLab.Mobile` | The screens the Android and iOS apps share |
 | `website/` | The source of grouplab.org and the script that builds it |
 | `tests/`, `test/fixtures/` | Conformance tests, and the `shotGroups` reference fixtures |
 | `targets/` | The built-in definitions, generated from `tools/layout/layouts.json` |

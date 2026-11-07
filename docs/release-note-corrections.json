@@ -1,5 +1,15 @@
 {
   "about": "A pushed commit's Release-note trailer cannot be rewritten, because main is never force pushed. Where one was wrong, the note that replaces it is written here, by the commit's full hash, and scripts/release-notes.py reads it in the trailer's place. Each says why.",
+  "attributions_about": "Entry 476 finding 2: a published build whose fixes came from people's reports but whose commits did not say so. Its published notes are not edited; the running total on the site and in the README counts it from here, and the next build's notes carry a Correction line.",
+  "attributions": [
+    {
+      "build": "0.2.0-nightly.222",
+      "fixes": 2,
+      "reports": 3,
+      "via": "error reports sent from GroupLab",
+      "why": "Entry 476 finding 2: 1147821e (Delete for rifles, barrels and loads, error report 38) and 60e60bc1 (a sheet on a reused clean picture replaced the earlier session, error reports 39 and 40) carry no Reported-via trailer, so nightly 222's notes did not count them."
+    }
+  ],
   "corrections": {
     "c01a659ef98760acb44dbf968b910d96325d7e5b": {
       "why": "Entry 469 section 2: nightly 218's notes listed two fixes to a fault that c4e1ab07 brought in and this commit and its pair took out inside the same build, so nobody moving from 217 met it. Nightly 218's published notes are not edited; the correction is in the next build's notes.",

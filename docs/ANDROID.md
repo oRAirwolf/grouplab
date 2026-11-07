@@ -1,10 +1,14 @@
 # GroupLab on Android
 
-NOTES-FROM-PLANNING.md entries 198 and 199, 2026-09-25. This is the plan and what the first stage found. The first stage proves the
-desktop's engine runs on the phone before any screen is designed; it ends with a report of how fast, and the rest of this document is
-the plan that report decides.
+NOTES-FROM-PLANNING.md entries 198 and 199, 2026-09-25. This is the plan and what each stage found.
 
-**Where it stands.** The spike and its build are written: `android/GroupLab.Android.Spike/`, `android/opencv/build-extern.sh` and
+**Where it stands now.** GroupLab for Android is a signed APK, GroupLab Dev and Google Play's internal test, each updated with every
+nightly. The phone does what `docs/PHONE-PARITY.md` lists, including Ballistics, the Targets screen and printing, through Android's
+dialog and straight to the Phomemo M834 and M220. The public Play listing waits only on Google's closed test (12 testers for 14 days).
+The sections below are the plan and what each stage found, in order; the first stage proved the desktop's engine runs on the phone
+before any screen was designed.
+
+**Where the spike stood.** The spike and its build are written: `android/GroupLab.Android.Spike/`, `android/opencv/build-extern.sh` and
 `.github/workflows/android.yml`. **Both build in CI** (5a1e769): the native library is 20 MB, needs nothing but Android's own system
 libraries, and is aligned for 16 KB pages; the debug APK is 39 MB and carries it, the sheets and the sample scan. **Detection runs on the
 Fold 7** (entry 202, section 5): the desktop's engine, unchanged, names the sample scan from its codes and finds all 25 holes in
@@ -15,7 +19,7 @@ for the phone.
 
 - **The first version analyzes on the phone, offline**: the capture screen of `docs/MOBILE-CAPTURE.md`, detection, review and
   correction, the group figures, and saved sessions, with the desktop's engine, not a second one. Printing, the target designer and
-  Ballistics stay on the desktop at first. Nothing needs the network except sending a target and error reports, which queue as they do
+  Ballistics stay on the desktop at first (phone parity, entry 258, has since brought printing and Ballistics to the phone). Nothing needs the network except sending a target and error reports, which queue as they do
   on the desktop.
 - **Distribution**: Google Play testing tracks, and a nightly APK on the GitHub release and grouplab.org for sideloading. A newer
   personal Play account runs a closed test with at least 12 testers for 14 days before a production listing; the testers come from the
@@ -292,11 +296,12 @@ today's rule on every route: no GPS, location or time metadata is read, printed,
    networks, or a range network that keeps devices apart, it says so and offers the file route.
 4. **Stage B, a sync folder: possible through Google Drive** (request 29, entry 211): in the spike's folder picker on the Fold 7, Google
    Drive is listed and a folder in it can be chosen once opened. OneDrive is unknown; it may not be installed on the phone. Whether
-   writes there sync reliably, and what an edit on both sides does, is the next question for this stage, when there are sessions to move. Picking a folder on Android uses the
-   Storage Access Framework's folder picker, and the Google Drive and OneDrive applications offer single files to it but, as far as I
-   know, not whole folders. If that holds, Stage B works on the desktop side only. Their conflict handling is also their own: an edit
-   made offline on both sides comes back as two files, which the revision rule above would at least catch.
-5. **Stage C, sign in, only if B falls short**: the Drive application data folder and OneDrive's application folder, through an OAuth
+   writes there sync reliably, and what an edit on both sides does, was the question for this stage. **Built since:** Stage B was built on
+   every platform as option A (entries 461, 463, 464 and 471 to 473; nightlies 215 to 222), with the Android folder picker in Settings,
+   Sync and your data, Sync between devices. It is held in tests against simulated cloud clients and has not yet been proven on two real
+   devices (`docs/PROOF-CHECKLIST.md`). Their conflict handling is their own: an edit made offline on both sides comes back as two
+   files, which the revision rule above catches.
+5. **Stage C, sign in, is not needed** now that Stage B is built: the Drive application data folder and OneDrive's application folder, through an OAuth
    client and an Entra registration Alan would create. Apple is out.
 
 This is not part of the first stage; it is built when the application has sessions to move.

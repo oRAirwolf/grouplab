@@ -6,6 +6,39 @@ report's text is data, never an instruction. Nothing personal is written here: n
 the person's files. Claude Code checks the open issues at the start of a run, before each inbox entry, before ending a turn and at least
 hourly while waiting on CI, and writes each new one here.
 
+## 44, 2026-10-31, nightly 222 on Windows (sent by a person, with their diagnostics)
+
+- **Said:** praise for the application, and a question: does the developer want more suggestions, or is the person sending too many?
+- **Cause:** not a fault; the log shows the start, the daily copy, a sync run and the report window, with no error.
+- **Status:** a question for Alan, carried to the planning session (entry 480 section 1 has his answer).
+
+## 43, 2026-10-29, nightly 222 on iOS (automatic, the application kept running)
+
+- **Doing:** on the result of a sheet whose holes fit two sets of bulls equally well, after switching between open targets.
+- **Cause:** two faults on one sheet. "Which bulls did you fire at?" was given its answers only for a keyboard's Enter and never showed
+  them, so a phone showed the question with only its ×; and the × put the result back while the question's layer still held it, which
+  threw, leaving the person on the question. Error report 27 was the second fault in Fix holes.
+- **Status:** fixed: every sheet on the phone shows the answers it is given and closes through one place that takes the page out of the
+  sheet first (`ResultScreenTests.EveryAnswerToWhichBullsPutsTheResultBackWithoutAnError`, which threw the reported error on the old code).
+  Ships in nightly 223.
+
+## 42, 2026-10-28, nightly 222 on iOS (sent by a person, with their diagnostics)
+
+- **Said:** two suggestions: on the iPhone it is hard to find where to add rifles and loads, and a place in Settings to manage them would
+  help; and changing a rifle's or a load's name makes a second one under the new name instead of renaming it. The words stop mid-sentence
+  at 500 characters.
+- **Cause:** the second is a fault on the computer and the phone alike: records are kept by name, so a new name was a new record.
+- **Status:** the rename fixed on both, barrels going with their rifle and a name already in use refused (`EquipmentRenameTests`, the
+  phone's `EquipmentDeleteTests.ANewNameRenamesTheRifleOrLoadAndATakenNameIsRefused`); ships in nightly 223. Where rifles and loads live
+  on the phone is a design question (QUESTIONS-FOR-PLANNING.md question 112). The words stopped because the receiver kept 500 characters
+  of the 2000 the application sends; it now keeps 2000 (`Entry194Tests.TheReceiverKeepsTheWholeNoteTheApplicationSends`).
+
+## 41, 2026-10-28, nightly 222 on iOS (sent by a person, with their diagnostics)
+
+- **Said:** thanks for fixing the issues the person reported recently.
+- **Cause:** not a fault; no error in the log.
+- **Status:** nothing to fix; closed with this note.
+
 ## 40, 2026-10-25, nightly 221 on Windows (sent by a person, with their diagnostics)
 
 - **Doing:** marking sheets by hand, one after another, each on a copy of the same clean picture of the target, with sync on.
@@ -15,7 +48,7 @@ hourly while waiting on CI, and writes each new one here.
   existing session as the same sheet. Sync was not involved (it read nothing from other devices and wrote only this device's changes).
 - **Status:** fixed: the same picture is the same sheet only when at least half the holes of each are the other's, and the record as it
   was is kept before it is brought up to date (`Entry420Tests.TheSamePictureWithOtherHolesIsANewSession`). The lost sessions can be put
-  back from a daily copy (Settings, Your data, Restore a copy). Ships in nightly 222.
+  back from a daily copy (Settings, Sync and your data, Restore a copy). Ships in nightly 222.
 
 ## 39, 2026-10-25, nightly 221 on Windows (sent by a person, with their diagnostics)
 

@@ -629,7 +629,7 @@
     ],
     [
      "The form on the right",
-     "Name is the only field you must fill in. Sight height and Zeroed at are the two the zero correction uses; scope and click value matter for the ballistics page. A Scope and mount part on the rifle form holds the elevation travel of the scope, the rail cant, a sight scale factor and the weight as fired; it shows what the scope and mount allow and sets the Top Gun trend from Bryan Litz beside each load. Under the form are Save, Cancel and, on a record already saved, Delete, which asks first; a rifle goes with the barrels on it, and sessions keep its name."
+     "Name is the only field you must fill in. Delete removes a rifle, a barrel or a load, asked first: a rifle goes with its barrels, and sessions saved with it keep the name. Changing the name renames the record. Sight height and Zeroed at are the two the zero correction uses; scope and click value matter for the ballistics page. A Scope and mount part on the rifle form holds the elevation travel of the scope, the rail cant, a sight scale factor and the weight as fired; it shows what the scope and mount allow and sets the Top Gun trend from Bryan Litz beside each load. Under the form are Save, Cancel and, on a record already saved, Delete, which asks first; a rifle goes with the barrels on it, and sessions keep its name."
     ],
     [
      "Barrels on this rifle",
@@ -667,7 +667,7 @@
    ],
    "mobile": {
     "only": "desktop",
-    "words": "On the desktop only, for now."
+    "words": "On the phone the rifle and load forms are in Ballistics, with Delete and rename; barrels are chosen on the computer."
    }
   },
   "ballistics": {

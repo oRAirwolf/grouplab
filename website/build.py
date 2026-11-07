@@ -523,7 +523,7 @@ def site_footer() -> str:
     return f"""<footer class="tp-footer">
 <div class="tp-footer-about">
 <a class="tp-brand cond" href="/" aria-label="GroupLab home">{HOME_MARK}<span>GROUP<span class="tp-amber">LAB</span></span></a>
-<p>Free and open source under GPL-3.0. No account, no ads, no paid tier. The application keeps everything on your own computer and sends nothing you have not agreed to: targets, error reports and the survey each ask first.</p>
+<p>Free and open source under GPL-3.0. No account, no ads, no paid tier. The application keeps everything on your own computer or phone, and in a folder you choose only if you turn on Sync between devices. It sends nothing you have not agreed to: targets, error reports and the survey each ask first.</p>
 </div>
 <nav class="tp-footer-links" aria-label="Footer">
 <a href="/download/">Download</a><a href="{GITHUB}">Source on GitHub</a>
@@ -944,11 +944,11 @@ def page_download() -> str:
             "Android", "grouplab-android.apk",
             "The same app under GroupLab's own name, signed, with a different key from the Google Play copy. It keeps itself on the newest nightly, as GroupLab Dev does. An APK from before nightly 177 has no updater, so install one newer plain APK by hand once; it keeps itself current after that.",
             ["Open the file on the phone; allow your browser to install apps when Android asks",
-             "Remove the Google Play copy first, if you have it: the two are signed with different keys",
+             "Remove the Google Play copy first, if you have it: the two are signed with different keys, and removing GroupLab deletes its sessions and settings, so use Export all my data (or Sync between devices) first",
              "Marking a target by hand is on the phone, as on the computer"], "Download for Android")),
          fold("In Brazil, Indonesia, Singapore or Thailand", "<p>In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027.</p>"),
          fold("When Android says Google Play Protect is scanning the app", """<p>Android asks to scan an app installed from outside the Play Store, the first time you install it and when it updates. It is Google's own check, it takes a few seconds, and the scan is expected: let it finish, then carry on.</p>""")],
-        keep='<p class="small dl-keep">Take either the Play copy or the APK, not both: remove one before installing the other. GroupLab Dev is different: it installs beside either.</p>')
+        keep='<p class="small dl-keep">Take either the Play copy or the APK, not both: remove one before installing the other, and use Settings, Sync and your data, Export all my data (or turn on Sync between devices) first, because removing GroupLab deletes its sessions and settings. GroupLab Dev is different: it installs beside either.</p>')
 
     linux = section("linux", "Linux", newest(
         "Linux tarball", "grouplab-linux-x64.tar.gz", "Self-contained, built on Ubuntu, and tested on every change.",
@@ -978,7 +978,7 @@ def page_download() -> str:
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>
 <div><dt class="mono">Size</dt><dd>The computer downloads come precompiled, so the first photograph after GroupLab starts is read about a quarter sooner; that makes them about an eighth larger than before, the Windows zip about 127 MB rather than 114.</dd></div>
 <div><dt class="mono">Samples</dt><dd>The Windows zip and installer carry two sample sheets, so there is something to open in the first minute; the other downloads do not.</dd></div>
-<div><dt class="mono">Your data</dt><dd>Kept in <code>%APPDATA%\\GroupLab</code> on Windows, and under your home folder elsewhere. An update check sends nothing about you.</dd></div>
+<div><dt class="mono">Your data</dt><dd>Kept in <code>%APPDATA%\\GroupLab</code> on Windows, under your home folder on a Mac or Linux, and in the app's own storage on a phone; if you turn on Sync between devices, also in the folder you choose. An update check sends nothing about you.</dd></div>
 <div><dt class="mono">Which build</dt><dd>Settings, Updates and about names the version, the train and the commit. Put that line in any report.</dd></div>
 </dl>"""
 
@@ -1315,13 +1315,14 @@ def page_support() -> str:
 <section class="wrap section-sm grid-2">
 <div class="panel pad stack tight"><h2 class="h3">No GitHub account?</h2><p>Email the report package instead, with the build line and a line about what you were doing.</p><p><a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a></p></div>
 <div class="panel pad stack tight"><h2 class="h3">On a phone</h2><p>On Android, iPhone and iPad, open Settings, then Help and problems: <strong>Send to GroupLab</strong> sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; <strong>Send diagnostics</strong> puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email. On the iPhone and iPad beta, <strong>Send Beta Feedback</strong> in TestFlight, or a screenshot shared to it, reaches the project too.</p></div>
-<div class="panel pad stack tight"><h2 class="h3">If a new build will not start</h2><p>On Windows, nothing of yours is at risk: settings, sessions, your own sheets and the log live in <code>%APPDATA%\\GroupLab</code>, which no installer or uninstaller touches. To go back, download the build you were on from the releases list and install it over the broken one.</p><a href="{GITHUB}/releases">All builds on GitHub</a></div>
+<div class="panel pad stack tight"><h2 class="h3">If a new build will not start</h2><p>No installer or uninstaller touches your records: on Windows they live in <code>%APPDATA%\\GroupLab</code>, under your home folder on a Mac or Linux, and in the app's own storage on a phone. A fault in a build can still change them, so GroupLab keeps a daily copy, the newest 14. To go back, take one of the newest thirty builds from the releases list and install it over the broken one; an older build is gone, and the newest is usually the fix. The Microsoft Store copy goes back only by uninstalling it and installing the zip or the installer.</p><a href="{GITHUB}/releases">All builds on GitHub</a></div>
+<div class="panel pad stack tight"><h2 class="h3">If sessions are missing</h2><p>Open Settings, Sync and your data, then <strong>Restore a copy</strong>, and choose a copy from before they went missing. Your records as they are now are copied first, so nothing is lost by trying one.</p></div>
 </section>
 <section class="wrap section-sm" id="delete-your-data">
 <div class="panel pad stack tight">
 <h2 class="h3">Delete your data</h2>
 <p>GroupLab has no accounts, so nothing is kept against a name or a login. What the project can hold is only what you chose to send: targets you sent (the picture and what GroupLab worked out about it), error reports with their logs, and hardware survey reports, which are counted into totals and deleted, keyed by a random number GroupLab made for your installation.</p>
-<p>To have what you sent deleted, email <a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a> with the date and the build of what was sent (the build line is in Settings, Updates and about, under This build), so it can be found. Survey reports need no email: Settings, Sharing and privacy, has <strong>Delete my survey reports</strong>. <a href="/research/what-grouplab-sends/">What GroupLab sends</a> lists everything that can leave your computer or phone.</p>
+<p>To have what you sent deleted, email <a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a> with the date and the build of what was sent (the build line is in Settings, Updates and about, under This build), so it can be found. Survey reports need no email: Settings, Sharing and privacy, has <strong>Delete my survey reports</strong>. <a href="/research/what-grouplab-sends/">What GroupLab sends</a> lists everything that can leave your computer or phone. A sync folder you chose is yours to delete, since the project never holds it.</p>
 </div>
 </section>
 <section class="wrap section-sm last">
@@ -2031,7 +2032,7 @@ def page_home() -> str:
 <div class="tp-intro tp-ease"><h2>No bragging numbers.</h2></div>
 <div class="tp-points">{points}</div>
 <p class="tp-today">Today GroupLab is test builds, rebuilt after every change that passes its tests, so one may be broken; the Windows and Linux downloads are unsigned.
-Not built yet: hole detection on plain paper. <a href="/download/">What to expect</a>, and
+Not finished: finding holes by itself on plain paper (Find holes, Experimental, proposes them once the scale is set). <a href="/download/">What to expect</a>, and
 <a href="{GITHUB}#planned">the full status on GitHub</a>.</p>
 </section>
 
@@ -2719,6 +2720,20 @@ HEAD4 = '<h4 class="h3">'
 FROM_YOU = re.compile(r"From your reports and targets in this build: (.+)\.")
 
 
+def attributed(fixes: int, reports: int, first: str) -> tuple[int, int, str]:
+    """Entry 476 finding 2: fixes from people's reports in a published build whose commits did not say so, kept in
+    docs/release-note-corrections.json under "attributions" and added to the running total; the build's published notes are not edited."""
+    import json
+    try:
+        data = json.loads((REPO / "docs" / "release-note-corrections.json").read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return fixes, reports, first
+    for a in data.get("attributions", []):
+        fixes, reports = fixes + int(a["fixes"]), reports + int(a["reports"])
+        first = first or a["build"]
+    return fixes, reports, first
+
+
 def from_you_total(text: str) -> tuple[str, int, int, int, int] | None:
     """The running total over every build in docs/RELEASE-NOTES.md: the first build that counted, fixes, reports, updates and targets."""
     first, fixes, reports, updates, targets = "", 0, 0, 0, 0
@@ -2732,6 +2747,7 @@ def from_you_total(text: str) -> tuple[str, int, int, int, int] | None:
                 fixes, reports = fixes + int(f.group(1)), reports + int(f.group(2))
             elif (u := re.fullmatch(r"(\d+) detection updates? from (\d+) targets people sent", part)) is not None:
                 updates, targets = updates + int(u.group(1)), targets + int(u.group(2))
+    fixes, reports, first = attributed(fixes, reports, first)
     return (first, fixes, reports, updates, targets) if first else None
 
 
@@ -3187,8 +3203,11 @@ def feature_problems() -> list[str]:
             found.append(f"{where}: the phone has it and there is no phone picture, nor a reason; take one in the next device sitting")
         if mobile.get("shot") and not phone_themes(mobile["shot"]):
             found.append(f"{where}: there is no phone screenshot {mobile['shot']!r} in docs/figures/screens/phone")
-        if mobile and "Android" not in f.get("platforms", []):
+        # Entry 479 finding 5: a feature the phone leaves out may say why on the Mobile side in words, and nothing else.
+        if set(mobile) - {"words"} and "Android" not in f.get("platforms", []):
             found.append(f"{where} has a Mobile side and Android is not one of its platforms")
+        if mobile.get("words") and "Android" in f.get("platforms", []):
+            found.append(f"{where}: the phone has it, so its Mobile side shows the phone, not words saying it is left out")
         if f.get("tour") and f["tour"] not in tours:
             found.append(f"{where}: no tour stop {f['tour']!r}")
         if f.get("guide") and f["guide"] not in anchors:
@@ -3341,7 +3360,9 @@ def feature_card(f: dict, compact: bool = False) -> str:
         desktop = (f'<a class="plain" href="/assets/screens/{f["shot"]}-dark-1400x900.webp">{screen(f["shot"], f["name"] + " in GroupLab")}</a>'
                    if f.get("shot") else "" if on_desktop else only_note("On the phone only."))
         phone = (f'<a class="plain" href="/assets/screens/phone/{phone_themes(mobile["shot"])[0]}.webp">{phone_screen(mobile["shot"], f["name"] + " in GroupLab on a phone")}</a>'
-                 if mobile.get("shot") else "" if "Android" in f["platforms"] else only_note("On the desktop only, for now."))
+                 if mobile.get("shot") else "" if "Android" in f["platforms"]
+                 # Entry 479 finding 5: "for now" promises it is coming, so a feature left out on purpose says why, in its own words.
+                 else only_note(mobile.get("words", "On the desktop only, for now.")))
         picture = sheet_pictures(f) + shown("desktop", desktop) + shown("mobile", phone)
     platforms = " · ".join(f["platforms"])
     return (f'<article class="panel pad stack tight feature" id="{f["key"]}">{picture}<h3 class="h4">{esc(f["name"])}</h3>'

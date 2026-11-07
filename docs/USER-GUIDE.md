@@ -740,7 +740,7 @@ choose the sheets of a set together, or share them into GroupLab together, and t
 the checklist also has **See the pooled group**. Copies of one single-page design chosen together on the phone are asked the same
 question, and pooled they open as one group.
 
-Reading other sheets of one load as one group is **not built yet**. It is not a matter of adding the numbers up: separate sheets shot at one
+Choosing saved sessions of one load that are not one set, and pooling them on the analysis screen as one group, is **not built yet**: **Pool the chosen** in Session records takes only the sheets of one set, and says so when you tick sheets of different designs. It is not a matter of adding the numbers up: separate sheets shot at one
 aim point each have their own center, and what a pooled figure means depends on which center you measure from, which is still being decided.
 Meanwhile **Compare loads** puts the sessions of two or more loads side by side, each with its own figures and intervals, and Bryan Litz's Top Gun trend for each load where the rifle's weight is known, with each group of that load beside it on the same five-shot basis.
 
@@ -806,8 +806,8 @@ choices back as GroupLab starts with them; it never touches your sessions, rifle
 - **Sharing and privacy:** the three things GroupLab may send, in the order the first run screen asks them. Each shows its choice and one
   short line; **More** opens the full explanation of what it sends, and stays open once you have opened it. **What GroupLab sends**, above
   them, opens the page on grouplab.org that says exactly what leaves your device. **Sending targets:** send every target you analyze to the
-  project, ask each time, or never, and which consent goes with them; on the computer also **Send everything I open**, which sends every
-  picture you open, read or not, and stays off on the phones for now. **Error reports:** send them automatically, ask each time, or never,
+  project, ask each time, or never, and which consent goes with them; **Send everything I open**, which sends every
+  picture you open, read or not; a phone sends over Wi-Fi unless you allow mobile data. **Error reports:** send them automatically, ask each time, or never,
   and what a report holds. **Hardware survey:** take part or not, what a report holds, the benchmark, and a button that gives this copy of
   GroupLab a new random number. The benchmark runs only when you start it, from **Run the benchmark now**; it shows how far it has got, can
   be canceled, and says when it finished and what it found. On the first run screen, Yes to the survey asks whether to run the benchmark
@@ -900,7 +900,7 @@ testing until GroupLab is on the Play Store**: from the [download page](https://
 nightly after the first install with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy
 to send with a problem report, and gets fixes the same day. A nightly can occasionally break something, and Dev's data stays in Dev unless
 you move it with Settings, **Export all my data** and **Import data**. The
-plain APK and the Google Play internal test (if you are invited) are signed with different keys, so remove one before installing the other.
+plain APK and the Google Play internal test (if you are invited) are signed with different keys, so remove one before installing the other. Removing GroupLab from a phone deletes its sessions and settings, so first use Settings, Sync and your data, Export all my data (or turn on Sync between devices), then Import data in the new copy.
 Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates: it is Google's
 own check, takes a few seconds, and is expected. It uses the same engine as the computer, so the same picture gives the same numbers.
 

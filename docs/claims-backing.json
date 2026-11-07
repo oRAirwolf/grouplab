@@ -3725,7 +3725,7 @@
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 278 section 6 (Alan, 2026-09-28) replacing entry 147's Apple mobile paragraph; entry 206 section 4 for the facts"
   },
-  "The floor is an iPhone 11 on iOS 26 or later; Avalonia runs on iOS; the engine needs OpenCV built for iOS, which GitHub's macOS build machines do without anyone owning a Mac; and distribution needs the paid Apple developer program, which Alan is joining.": {
+  "The floor is an iPhone 11 on iOS 26 or later; Avalonia runs on iOS; the engine needs OpenCV built for iOS, which GitHub's macOS build machines do without anyone owning a Mac; and distribution needs the paid Apple developer program, which the project joined.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 278 section 6 (Alan, 2026-09-28) replacing entry 147's Apple mobile paragraph; entry 206 section 4 for the facts"
   },
@@ -8008,6 +8008,78 @@
   "A change file the cloud app has not finished copying, or that arrived damaged, is waited for and taken only once it is whole.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Sync/SyncEngine.cs ReadChangeFile (a file without its end or whose sha256 does not match is left for a later run) and tests/GroupLab.Core.Tests BadFilesTests, entry 472 section 2; worded by entry 473 section 5"
+  },
+  "Your data Kept in %APPDATA%\\GroupLab on Windows, under your home folder on a Mac or Linux, and in the app's own storage on a phone; if you turn on Sync between devices, also in the folder you choose.": {
+   "kind": "decided",
+   "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
+  },
+  "On the tour · In the user guide A six-bull label on 4x6, as it prints The same label as a 203 dpi thermal printer makes it, one dot to a pixel The phone&#x27;s Targets library has the label targets and prints scale labels on the Phomemo M220; the preview of the dots is on the computer.": {
+   "kind": "decided",
+   "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
+  },
+  "Everything you have made lives in %APPDATA%\\GroupLab on Windows (under your home folder on macOS and Linux, and in the app's own storage on a phone): the settings, your sessions, any sheet you designed and the log.": {
+   "kind": "decided",
+   "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
+  },
+  "A fault in a build can still change your records, as one did in nightly 221, so GroupLab keeps a daily copy of them, the newest 14: Settings, Sync and your data, Restore a copy puts them back as they were on a day before the fault, and your records as they are now are copied first.": {
+   "kind": "decided",
+   "where": "README.md daily copies, the newest 14, and Settings, Sync and your data, Restore a copy (docs/USER-GUIDE.md); error reports 39 and 40 fixed in nightly 222 (entry 477 finding 1)"
+  },
+  "Two of the project's own gates are not met yet : the editor's gate waits on a person's timed correction of a 25-shot target, and the blank-paper gate has no photograph.": {
+   "kind": "decided",
+   "where": "docs/PROOF-CHECKLIST.md lines 50, 77 and 108 and docs/notes/archive entries for the 4 October range day (entry 479 finding 4)"
+  },
+  "The mounted photograph gate began with 59 photographs from the first range day, 2026-09-20, and GroupLab could not read about half of them; the second range day, 4 October, gave 137 of 145 holes found from GroupLab's own sheets with no false mark, and the gates still wait on more scans and photographs.": {
+   "kind": "decided",
+   "where": "docs/PROOF-CHECKLIST.md lines 50, 77 and 108 and docs/notes/archive entries for the 4 October range day (entry 479 finding 4)"
+  },
+  "GroupLab keeps everything in %APPDATA%\\GroupLab on Windows, and under your home folder on macOS and Linux (in the app's own storage on a phone): settings, your sessions database, the daily copies of your records, any sheet you design, and the log.": {
+   "kind": "decided",
+   "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
+  },
+  "If a new build will not start No installer or uninstaller touches your records: on Windows they live in %APPDATA%\\GroupLab , under your home folder on a Mac or Linux, and in the app's own storage on a phone.": {
+   "kind": "decided",
+   "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
+  },
+  "A fault in a build can still change them, so GroupLab keeps a daily copy, the newest 14.": {
+   "kind": "decided",
+   "where": "README.md daily copies, the newest 14, and Settings, Sync and your data, Restore a copy (docs/USER-GUIDE.md); error reports 39 and 40 fixed in nightly 222 (entry 477 finding 1)"
+  },
+  "- **Where it keeps things:** `%APPDATA%\\GroupLab` on Windows and under your home folder on macOS and Linux, and on a phone in the app's own storage, and nowhere else unless you turn on Sync between devices, which also writes your records to the folder you choose, for your own cloud app to copy.": {
+   "kind": "decided",
+   "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
+  },
+  "| | **Imaging** | OpenCV, through [OpenCvSharp](https://github.com/shimat/opencvsharp) on the desktop, and a GroupLab build of OpenCV on Android and iOS; on both the markers are read with OpenCV's ArUco module and the AprilTag 36h11 dictionary.": {
+   "kind": "decided",
+   "where": "ios/opencv, mobile/GroupLab.Mobile and the nightly workflow (entry 479 finding 9)"
+  },
+  "Every nightly build is published for Windows, Linux and macOS, and for Android as the APK and GroupLab Dev, whose files are added to the same release when the Android build finishes, so a slow phone build never holds back the desktop ones.": {
+   "kind": "decided",
+   "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
+  },
+  "The public Play listing waits only on Google's closed test (12 testers for 14 days).": {
+   "kind": "decided",
+   "where": "docs/ANDROID.md section on Google's rule for a new personal account (entry 267) and README.md; entry 478 finding 3"
+  },
+  "Printing, the target designer and Ballistics stay on the desktop at first (phone parity, entry 258, has since brought printing and Ballistics to the phone).": {
+   "kind": "decided",
+   "where": "docs/PHONE-PARITY.md and docs/PROOF-CHECKLIST.md; entries 258, 461, 463, 464, 471 to 473 (entry 476 finding 6, entry 478 finding 3)"
+  },
+  "**Built since:** Stage B was built on every platform as option A (entries 461, 463, 464 and 471 to 473; nightlies 215 to 222), with the Android folder picker in Settings, Sync and your data, Sync between devices.": {
+   "kind": "decided",
+   "where": "docs/PHONE-PARITY.md and docs/PROOF-CHECKLIST.md; entries 258, 461, 463, 464, 471 to 473 (entry 476 finding 6, entry 478 finding 3)"
+  },
+  "### If a new build will not start **Nothing of yours is at risk.** Everything you have made lives in `%APPDATA%\\GroupLab` on Windows (under your home folder on macOS and Linux, and in the app's own storage on a phone): the settings, your sessions, any sheet you designed and the log.": {
+   "kind": "decided",
+   "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
+  },
+  "- **Two of the project's own gates are not met yet**: the editor's gate waits on a person's timed correction of a 25-shot target, and the blank-paper gate has no photograph.": {
+   "kind": "decided",
+   "where": "docs/PROOF-CHECKLIST.md lines 50, 77 and 108 and docs/notes/archive entries for the 4 October range day (entry 479 finding 4)"
+  },
+  "GroupLab keeps everything in `%APPDATA%\\GroupLab` on Windows, and under your home folder on macOS and Linux (in the app's own storage on a phone): settings, your sessions database, the daily copies of your records, any sheet you design, and the log.": {
+   "kind": "decided",
+   "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
   }
  },
  "rules": [

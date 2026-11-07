@@ -314,7 +314,7 @@ SUBMISSION_SOURCES = ("from grouplab", "from grouplab.org", "from discord", "sen
 CONSENTED = ("Quack", "Jylee", "Unholy", "Fenix", "Justin")
 
 # A commit that closes a crash report issue says where it came from; CI fails it otherwise.
-CLOSES_REPORT = re.compile(r"\b(?:crash reports?|grouplab-crash-reports#)\s*#?(\d+)", re.IGNORECASE)
+CLOSES_REPORT = re.compile(r"\b(?:crash reports?|error reports?|grouplab-crash-reports#)\s*#?(\d+)", re.IGNORECASE)
 
 
 def parts(value):
@@ -517,7 +517,7 @@ def build_notes(version, head, previous, heading=True, new=True):
         reported, submitted, bad = sources(message)
         wrong += [f"{sha}: {b}" for b in bad]
         if new and CLOSES_REPORT.search(message) and not reported:
-            wrong.append(f"{sha}: it closes a crash report and has no Reported-via trailer saying where the report came from (entry 458)")
+            wrong.append(f"{sha}: it closes a crash or error report and has no Reported-via trailer saying where the report came from (entries 458 and 476)")
         if reported:
             counted["fixes"] += 1
             counted["reports"] += sum(c for _, c in reported)
@@ -703,6 +703,7 @@ def self_test():
     check("no total line when nobody's report or target went in", total_line(0, 0, 0, 0) == "")
     _, _, named = sources("\n".join(["Subject", "", "Reported-via: email from Bob"]))
     check("a name in Reported-via is refused", len(named) == 1 and "never named" in named[0])
+    check("a fix naming an error report is recognized too (entry 476 finding 2)", CLOSES_REPORT.search("(Error reports 39 and 40)") is not None)
     check("a fix that closes a crash report is recognized", CLOSES_REPORT.search("Crash report 37 (nightly 204)") is not None
           and CLOSES_REPORT.search("grouplab-crash-reports#36") is not None and CLOSES_REPORT.search("an error report") is None)
     print("release-notes self-test: " + ("passed" if not failed else f"{failed} failed"))
