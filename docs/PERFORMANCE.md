@@ -48,6 +48,36 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 481 part D, 2026-11-07: finding the bulls, about three times sooner, every result the same
+
+**Measured first** (timers put into `SheetMeasurer.LocateBulls` and the locators' `Window.Levels` for this and taken out after; Release,
+this desktop, `grouplab analyze` on the 600 dpi scan `scans/phase0/gl-cf25-ltr-1-600-dpi.png`, three runs): the bull stage about 195 ms
+cold, and `Window.Levels`, the grey levels inside each bull's page circle, about 2,000 ms of it summed over the threads that locate the
+bulls at once: 81 calls, about three passes for each of 25 bulls, mapping 31.7 million pixels back to the page one at a time, about 63 ns
+each, to ask whether each is inside the circle. Each pass asks again about nearly the same window.
+
+**Taken, one change, which cannot move a pixel:** a page circle seen through a homography is convex, so on each row of the window the
+pixels inside it are one run. `Window.Levels` now finds the run's two ends by testing pixels inward from each side of the window with
+the same test as before, and counts the pixels between them without mapping them. Only for a homography, with or without a lens's radial
+distortion; a marker mesh, a bent sheet or a curved surface is still mapped pixel by pixel. `BullLevelsTests` holds the histogram to the
+pixel-by-pixel one on up to 860 windows, from a flat scan to a steep photograph and with radial distortion well past a phone's.
+
+| `grouplab bench --runs 5`, median ms | before | after |
+|---|---|---|
+| a 600 dpi scan: P0.bulls | 117 | 35 |
+| a 600 dpi scan, stage by stage | 849 | 774 |
+| a phone photograph: P0.bulls | 45 | 21 |
+| the generated sheet: P0.bulls | 21 | 8 |
+| one sheet from file to figures | 280 | 259 |
+| a batch of ten sheets | 2,173 | 2,083 |
+
+**Nothing moved:** the command line built before and after: `scoreboard --corpus` on the four local corpus folders, `scoreboard
+--synthetic` and `scoreboard --any-target` are the same but for their time columns, and `grouplab analyze --calibre .308 --json` on the
+600 dpi sample, the 600 dpi phase 0 scan and the 19 local corpus photographs gives the same marking file and the same printed stages,
+bull for bull and hole for hole, once times are left out. **Stopped here, on purpose:** what is left is the photograph's codes (S0.identify,
+about 450 ms, question 106's (b) leaves it), decoding a 600 dpi PNG (about 330 ms, libpng's own), and the hole stage, measured and taken
+down in entry 474; nothing else in the bench is a tenth of a second.
+
 ## Entry 474 section 1, 2026-10-26: finding the holes, a fifth sooner, every result the same
 
 **Measured first** (timers put into `RenderDifferenceHoleDetector.Detect` for this and taken out after; Release, this desktop, the 600

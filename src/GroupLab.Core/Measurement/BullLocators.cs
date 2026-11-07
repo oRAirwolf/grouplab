@@ -570,27 +570,84 @@ internal static class Window
         return left < 0 || top < 0 || right >= image.Width || bottom >= image.Height ? null : new PixelBox(left, top, right, bottom);
     }
 
-    /// <summary>The 3rd and 97th percentile grey levels of the pixels inside the page circle.</summary>
+    /// <summary>
+    /// The 3rd and 97th percentile grey levels of the pixels inside the page circle.
+    /// <para>
+    /// Entry 481 part D: a page circle seen through the sheet's mapping is convex, so on each row the pixels inside it are one run. The run's
+    /// two ends are found by testing pixels inward from each side of the box with the same test as before, and the pixels between them are
+    /// counted without being mapped. Only for a homography, with or without a lens's radial distortion: a mesh or a bent sheet is mapped
+    /// pixel by pixel as before. `BullLevelsTests` holds the histogram to the pixel-by-pixel one.
+    /// </para>
+    /// </summary>
     public static (double Low, double High) Levels(GrayImage image, IPageMapping map, PixelBox box, PointD centre, double radius, int[] histogram)
     {
+        // A mesh or a bent sheet promises no convex circle, so it is mapped pixel by pixel as it always was.
+        if (map is not (HomographyMapping or RadialHomographyMapping))
+        {
+            Array.Copy(EveryPixel(image, map, box, centre, radius), histogram, histogram.Length);
+            int all = histogram.Sum();
+            return (Percentile(histogram, all, 0.03), Percentile(histogram, all, 0.97));
+        }
+
         Array.Clear(histogram);
         int count = 0;
         double limit = radius * radius;
+        var pixels = image.Pixels;
+        bool Inside(int u, int v)
+        {
+            var p = map.ToPage(new PointD(u, v));
+            return Math.Pow(p.X - centre.X, 2) + Math.Pow(p.Y - centre.Y, 2) <= limit;
+        }
+
         for (int v = box.Top; v <= box.Bottom; v++)
         {
+            int first = box.Left;
+            while (first <= box.Right && !Inside(first, v))
+            {
+                first++;
+            }
+
+            if (first > box.Right)
+            {
+                continue;
+            }
+
+            int last = box.Right;
+            while (last > first && !Inside(last, v))
+            {
+                last--;
+            }
+
             int row = v * image.Width;
+            for (int u = first; u <= last; u++)
+            {
+                histogram[pixels[row + u]]++;
+            }
+
+            count += last - first + 1;
+        }
+
+        return (Percentile(histogram, count, 0.03), Percentile(histogram, count, 0.97));
+    }
+
+    /// <summary>The histogram <see cref="Levels"/> fills, every pixel of the box mapped and tested on its own, for the test that holds the two equal.</summary>
+    internal static int[] EveryPixel(GrayImage image, IPageMapping map, PixelBox box, PointD centre, double radius)
+    {
+        var histogram = new int[256];
+        double limit = radius * radius;
+        for (int v = box.Top; v <= box.Bottom; v++)
+        {
             for (int u = box.Left; u <= box.Right; u++)
             {
                 var p = map.ToPage(new PointD(u, v));
                 if (Math.Pow(p.X - centre.X, 2) + Math.Pow(p.Y - centre.Y, 2) <= limit)
                 {
-                    histogram[image.Pixels[row + u]]++;
-                    count++;
+                    histogram[image.Pixels[(v * image.Width) + u]]++;
                 }
             }
         }
 
-        return (Percentile(histogram, count, 0.03), Percentile(histogram, count, 0.97));
+        return histogram;
     }
 
     private static double Percentile(int[] histogram, int count, double q)
