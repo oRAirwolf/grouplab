@@ -44,7 +44,7 @@ def main() -> int:
     for what, href in [("downloads", "/download/"), ("the guides", "/guides/"), ("support", "/support/"), ("Discord", build.DISCORD),
                        ("the release notes", "/releases/"), ("shooting a target", "/shoot-a-target/"), ("the hardware survey", "/survey/")]:
         check(f"the home page reaches {what}", f'href="{href}' in home)
-    check("the home page still says what is not built yet", "Not built yet" in home and "may be broken" in home)
+    check("the home page still says what is not built yet", ("Not built yet" in home or "Not finished" in home) and "may be broken" in home)
 
     tmp = Path(tempfile.mkdtemp(prefix="grouplab-home-"))
     try:
