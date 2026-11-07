@@ -14,22 +14,12 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 56 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 57 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
+> 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 34.
 
 ---
-
-## 2026-11-07, question 112: where a phone keeps its rifles and loads
-
-**Status: open.** Error report 42 (2026-10-28, iOS): "using the iPhone I find it difficult thee find the possibility in the menu to add
-loads and rifles. perhaps it would make sense to add a topic in the settings menu where users can manage their rifles and loads." On
-the phone they are in Ballistics, in the rifle and load forms (entry 476 finding 3 asks the site to say so). Options: (a) leave them in
-Ballistics and say so where a person looks first (Settings could have a row "Rifles and loads are in Ballistics" that opens it); (b) an
-Equipment page under Settings, as the person suggests, with the same forms; (c) both, Ballistics' forms staying for the solver. This is a
-look and a place, so it waits for Alan. **Recommended: (a) now, as words and a link, which changes no screen's layout.** The rename the
-same report asked for is fixed (error report 42 in docs/notes/error-reports.md).
 
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 

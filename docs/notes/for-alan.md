@@ -1,7 +1,7 @@
 **Open: 25.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 App clips for the launch videos are in C:\Dev\grouplab-local\video-clips\ (40 clips, see clips.csv).
 **iPhone Duo** (entry 480, not a request): nothing to do, waiting on Microsoft. Apple's and GitHub's side are ready, but Microsoft's first iOS 27.1 tools drop parts of the keyboard code GroupLab relies on; their fix comes with the next .NET 10 release, and the build moves then by itself. Until then the Duo's inner screen shows GroupLab in an iPhone-sized window.
-**DESIGN NEEDED** (entry 480 section 6): on the iPhone Duo's inner screen held upright, the crease runs down the middle, through the middle of the five places along the bottom (Ballistics sits under the crease), as on the Galaxy Z Fold 7 open. Keep it as it is, or leave a gap at the crease? Nothing is changed meanwhile.
+**DESIGN NEEDED** (entry 480 section 6): **Answered 2026-11-07: 1A, keep the bar as it is (entry 482); no layout changed.** The line as it was: on the iPhone Duo's inner screen held upright, the crease runs down the middle, through the middle of the five places along the bottom (Ballistics sits under the crease), as on the Galaxy Z Fold 7 open. Keep it as it is, or leave a gap at the crease? Nothing is changed meanwhile.
 **Usage, 7 November** (not a request): about 78 million tokens, $21.88 by ccusage, for entries 476 to 480; one docs-sonnet helper.
 **Error report 44** (not a request): your answer, more suggestions welcome, is recorded; no reply can reach the sender, because Send to GroupLab carries no contact address, so it can only be said in a later build's notes or on Discord if they post there.
 **DESIGN NEEDED** (entry 462 section 3): **Answered 2026-10-21: 1A, 2A, 3B, 4B, 5A, 6A, 7B, 8A, 9A (entry 465), all built 2026-10-21.** The lines as they were: **looks found in the interface sweep, one line a
@@ -636,6 +636,12 @@ phone. The steps come in the panel and at the top of this file when the sitting 
 
 **Added 2026-10-01 (entry 323), one more look, about two minutes:** the new Velocity and the vertical card on the Fold 7's cover screen,
 with readings pasted in, to see that nothing in it is squeezed and its band chip turns the band off.
+
+**Added 2026-11-07 (entry 481 part A), two launch video clips at that sitting, about five minutes:** the camera screen is the one part
+of the videos that cannot be drawn without a real camera. With the phone connected for the sitting, GroupLab records its own screen
+while you hold the Fold 7 over the printed sheet twice: once moving slowly until the level and the quality bar settle (video 2, chapter
+4), once with Guided on until it takes the picture (video 3, step 7). The steps come in the panel when the sitting starts; nothing to
+prepare beyond the sheet already asked for above.
 
 **Opened 2026-09-28 (entries 250 and 252).** **Needed:** the phone and the tablet on the charger, unlocked, Wireless debugging off and on,
 Stay awake on, for about twenty minutes, **once a line at the top of this file starting "READY FOR THE PHONE AND TABLET:" says so**; not

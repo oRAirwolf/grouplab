@@ -329,6 +329,16 @@ public sealed class Shell : UserControl
         page.Content = new BallisticsPage(state, zeroOffset, open);
     }
 
+    /// <summary>
+    /// Entry 482 section 2 (question 112, 2A): Settings' "Rifles and loads" row opens Ballistics at the rifle form, with "‹ Settings" back
+    /// to the Settings list. A link, not a page: Ballistics stays the one place rifles, barrels and loads are added, renamed and deleted.
+    /// </summary>
+    internal void ShowRiflesAndLoads()
+    {
+        Show(Place.Ballistics);
+        page.Content = new BallisticsPage(openForm: "rifle", backToSettings: () => Show(Place.Settings));
+    }
+
     /// <summary>Entry 463: the Sync page under Settings, and back to Settings.</summary>
     internal void ShowSync()
     {
@@ -680,8 +690,11 @@ internal static class Screens
         return button;
     }
 
-    /// <summary>A row of a list on a card: what it is, a dim line beneath, and a chevron that says it opens.</summary>
-    public static Button Row(string words, string? detail, Action chosen, bool explain = true)
+    /// <summary>
+    /// A row of a list on a card: what it is, a dim line beneath, and a chevron that says it opens; <paramref name="trailing"/>, where
+    /// given, is a word or two before the chevron saying where it goes, such as "Open Ballistics" (entry 482 section 2).
+    /// </summary>
+    public static Button Row(string words, string? detail, Action chosen, bool explain = true, string? trailing = null)
     {
         var text = new StackPanel { Spacing = 2, Children = { Line(words) } };
         if (detail is not null)
@@ -690,10 +703,20 @@ internal static class Screens
         }
 
         var chevron = new TextBlock { Text = "›", VerticalAlignment = VerticalAlignment.Center, Classes = { PhoneStyles.Heading } };
-        Grid.SetColumn(chevron, 1);
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto"), ColumnSpacing = 8, Children = { text, chevron } };
+        Grid.SetColumn(chevron, 2);
+        if (trailing is not null)
+        {
+            // Wraps rather than squeezing the row's own words at the largest text, so it is kept to at most a third of the row.
+            var where = new TextBlock { Text = trailing, TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Right, VerticalAlignment = VerticalAlignment.Center, Classes = { PhoneStyles.Dim } };
+            grid.ColumnDefinitions = new ColumnDefinitions("2*,*,Auto");
+            Grid.SetColumn(where, 1);
+            grid.Children.Add(where);
+        }
+
         var button = new Button
         {
-            Content = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 8, Children = { text, chevron } },
+            Content = grid,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Classes = { PhoneStyles.Row },
         };

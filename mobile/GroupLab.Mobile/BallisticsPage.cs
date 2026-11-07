@@ -69,8 +69,12 @@ internal sealed class BallisticsPage : UserControl
 
     /// <param name="carried">The result's group, carried in from a result's section list, for the hit chance; null from the tab.</param>
     /// <param name="useZeroOffset">Carry the group's offset from its aim point into the dope as the zero offset.</param>
-    public BallisticsPage(MarkingState? carried = null, bool useZeroOffset = false, string? openForm = null)
+    /// <param name="openForm">"rifle", "load" or "air": the form open when the page appears.</param>
+    /// <param name="backToSettings">Where the page was opened from Settings' "Rifles and loads" row (entry 482 section 2), "‹ Settings"
+    /// at the top goes back there, and the phone's Back with it; null from the tab and from a result.</param>
+    public BallisticsPage(MarkingState? carried = null, bool useZeroOffset = false, string? openForm = null, Action? backToSettings = null)
     {
+        this.backToSettings = backToSettings;
         // Entry 280 section 2: the offset and its sentence are the desktop's own (ResultWords.ZeroOffsetFor).
         if (useZeroOffset && carried is not null && ResultWords.ZeroOffsetFor(carried, units) is { } offset)
         {
@@ -105,6 +109,8 @@ internal sealed class BallisticsPage : UserControl
         Build();
     }
 
+    private readonly Action? backToSettings;
+
     private Rifle? RifleChosen => book.FindRifle(rifleName);
 
     /// <summary>Entry 294 section 1: the angle this page aims in, the chosen rifle's scope unit, or Settings' where there is none.</summary>
@@ -118,6 +124,14 @@ internal sealed class BallisticsPage : UserControl
     private void Build()
     {
         column.Children.Clear();
+        if (backToSettings is not null)
+        {
+            var back = Screens.BackButton(SettingsMenu.BackToList, backToSettings).Id("ballistics-back-to-settings");
+            back.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
+            Avalonia.Automation.AutomationProperties.SetName(back, "Back to Settings");
+            column.Children.Add(back);
+        }
+
         column.Children.Add(Screens.Title("Ballistics"));
         var chips = new WrapPanel
         {

@@ -9,20 +9,22 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-07, entries 476 to 480 done (480 in part, waiting on Microsoft); the inbox is empty.
+**Last rewritten:** 2026-11-07, entry 482 done (Rifles and loads in the phones' Settings; the Duo's bar kept); entry 481 next.
 
 ---
 
 ## In flight
 
+- **Entry 481 (2026-11-07)**, next: the week's queue in order, A the remaining app clips (the two camera clips added to
+  request 50's sitting), B leaving out OpenCV's video reader (question 36), C the research rows marked not yet, D performance, E a
+  scan's dpi as its scale (question 108 (b)). Each part its own commit.
+- **Entry 482 (2026-11-07)**, done: "Rifles and loads" in the phones' Settings opens Ballistics, with "‹ Settings" back (question 112
+  answered, 2A); the Duo's bar kept as it is (1A).
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Dated check, from 2026-11-11 (.NET's November release):** is there an iOS
   workload set after 10.0.402.1 with dotnet/macios issue 26969 fixed? If so, `python scripts/ios-xcode27.py` on ios-app.yml with its
   version, prove it, then nightly.yml and IosSigningTests (docs/IOS-PLAN.md, The iPhone Duo). Fold tests and two phone fixes are in.
-- **Entries 476 to 479 (2026-11-07)**, done: the site now republishes after the Store's version, the phone's screenshots and the weekly
-  screenshots change; nightly 222's two fixes from three reports counted from `attributions` in docs/release-note-corrections.json;
-  the README, guides, Features, tour, Support and ANDROID.md brought in step with sync, Delete, Find holes and iOS.
-- **Error reports 41 to 44**, assessed: 43 (the which-bulls question's × threw, iOS) and 42 (a rename kept a second rifle or load; the
-  receiver cut a report's words at 500) fixed for nightly 223; 41 and 44 no fault. Question 112 (where a phone keeps rifles and loads).
+- **Entries 476 to 479 and error reports 41 to 44 (2026-11-07)**, done: the site's dispatches, the notes counting, four consistency
+  audits; 42 and 43 fixed for nightly 223, 41 and 44 no fault.
 
 ## The next three
 
@@ -63,8 +65,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (107 to 111 answered 2026-10-23 in entry 471, all as recommended):
-- **112** where a phone keeps its rifles and loads (error report 42; recommended: words and a link from Settings)
+Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (112 answered 2026-11-07 in entry 482, as recommended):
 - **67** the printer check page as grid style 4 (with Alan)
 - **51** which hole center GroupLab should report; waits on request 9
 - **36** a light installer, measured
@@ -74,8 +75,7 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (107 to 111 answered 2026-10-23 in
 - **Last nightly:** 0.2.0-nightly.222 (2026-10-26 15:22 UTC), on TestFlight (both groups) and the Store (0.2.222.0). Nightly 223
   will carry the fixes for error reports 42 and 43 and entry 480's two (the crosshair and side by side when turned).
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
-- Crash reports: 41 to 44 assessed 2026-11-07 in `docs/notes/error-reports.md`; 41 closed, 42 and 43 closed for nightly 223, 44
-  waits for entry 480 section 1's answer to be recorded.
+- Crash reports: none open (41 to 44 closed 2026-11-07; `docs/notes/error-reports.md`).
 
 ## The inbox
 
@@ -84,10 +84,12 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 481.
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **Ballistics can be opened from Settings** (`Shell.ShowRiflesAndLoads`, entry 482) with "‹ Settings" back; the back walk expects a
+  place opened with its own way back to return there, not to Capture.
 - **Every phone sheet closes through `ProblemSheet.PutBack`** (error report 43), and a choice handed to `ProblemSheet.Over` that the
   caller did not place is shown under the body.
 - **A rifle, barrel or load kept from its form renames** (`RecordBook.With(record, was)`, error report 42); a name in use is refused.

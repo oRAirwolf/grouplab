@@ -8084,6 +8084,12 @@
  },
  "rules": [
   {
+   "surface": "^docs/IOS-PLAN\\.md$",
+   "match": "The crease, decided",
+   "kind": "decided",
+   "where": "Entry 482 section 1 (2026-11-07): Alan's 1A from the planning session's concept canvas, keep the bar as it is on the iPhone Duo's inner screen; nothing was changed for it"
+  },
+  {
     "surface": "^docs/IOS-PLAN\\.md$|^docs/PLATFORM-SUPPORT\\.md$",
     "match": "iPhone Duo|Duo's|iOS 27\\.1|Xcode 2[67]|xcode-27|10\\.0\\.402\\.1|26969|IL2037|ios-xcode27|Entry480FoldTests|without the new SDK|TestFlight only|April 2027",
     "kind": "measured",

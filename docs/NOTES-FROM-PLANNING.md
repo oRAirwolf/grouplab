@@ -25,6 +25,39 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-07, entry 482: Alan's picks for the iPhone Duo crease and for where a phone keeps rifles and loads
+
+**Status: actioned 2026-11-07. Every section done.** Section 1: 1A, no layout changed; the DESIGN NEEDED line in for-alan.md marked answered and docs/IOS-PLAN.md says the crease is decided. Section 2: the phones' Settings list has "Rifles and loads" between Shooting defaults and Printers and paper, "Kept in Ballistics. Tap to open them there." beneath and "Open Ballistics" on the right; it opens Ballistics at the rifle form with "‹ Settings" back (the phone's Back with it); Find a setting finds it by rifle, rifles, load, loads, barrel and equipment; a screen reader reads both lines as one control; the user guide, Features and question 112 (answered and moved) in the same commit. Held by Entry482Tests, and the back walk now knows a place opened with its own way back returns there.
+
+From the planning session, 2026-11-07 (Alan's choices of 2026-11-07 03:47 Denver, from the concept canvas "iPhone Duo crease and
+rifles", claude.ai/artifact/D2hnrtFtY34XUaY1Bxk7io). Take after entry 481 if 481 is already under way; otherwise either order is fine.
+Alan is away until later today: work unattended, ask him nothing, and put anything that truly needs him in for-alan.md.
+
+## 1. The iPhone Duo crease: 1A, keep the bar as it is
+
+On the Duo's inner screen held upright, the five places along the bottom stay evenly spaced, with Ballistics on the fold, exactly as on
+the Galaxy Z Fold 7 opened. Change no layout. Mark entry 480 section 6's `DESIGN NEEDED:` line in for-alan.md as answered (1A, entry 482).
+If entry 480's iOS 27.1 build later shows a real problem at the fold (a control the system will not let a person tap, for example),
+report it rather than changing the layout.
+
+## 2. Where a phone keeps rifles and loads: 2A, a row in Settings that opens Ballistics (question 112, option (a))
+
+- On the phones (Android and iOS, and GroupLab Dev), add one row to the Settings list, between Shooting defaults and Printers and paper:
+  title "Rifles and loads", second line "Kept in Ballistics. Tap to open them there.", and on the right "Open Ballistics". Tapping it
+  opens Ballistics at the rifle and load forms. It is a link, not a new page: Ballistics stays the one place where rifles, barrels and
+  loads are added, renamed and deleted.
+- On the canvas the row has the amber tint only to show which row is new; build it as an ordinary Settings row in the existing style.
+  The 48 point touch target, Dynamic Type and TextSize.Of rules apply as everywhere.
+- Find a setting finds it by "rifle", "rifles", "load", "loads", "barrel" and "equipment".
+- The screen reader reads it as one control with both lines (ScreenReaderAudit, SpokenNames).
+- Back from Ballistics, when it was opened this way, returns to Settings (entry 472's back rules).
+- The desktop is not changed: it already has Equipment.
+- Public material in the same change: the user guide's phone section and the /features/ line on rifles and loads, the release note
+  (`Release-note-kind: new`, crediting the suggestion from an error report), and close question 112 with Alan's answer.
+- Screenshots for the site follow by themselves (entry 476).
+
+When done, record the entry and fold it in as usual. Nothing here needs Alan.
+
 ## 2026-11-07, entry 480: GroupLab on the iPhone Duo, and Alan's answer to error report 44
 
 **Status: actioned 2026-11-07, in part. Not done: sections 2.2 to 2.4 on the real iOS 27.1 build, and 2.7's "fills both screens from nightly N", because the build cannot yet be made safely.** Section 1: Alan's answer recorded in error-reports.md, issue 44 closed; no route reaches the sender (Send to GroupLab carries no contact), said in for-alan.md. Section 2.1: it can be built today on Apple's and GitHub's side (xcode-27 image, Xcode 27.1, iPhone Duo simulator), but Microsoft's workload 10.0.402.1 trims away explicitly implemented members of Avalonia's iOS types (IL2037, dotnet/macios issue 26969, fix promised in the next .NET 10 release), which could break typing; so per this section the change waits, recorded in IOS-PLAN.md, for-alan.md and STATE.md with a dated check. ios-app.yml was tried on it (runs 42343772140 and 42344190162) and put back on Xcode 26; the change is kept as scripts/ios-xcode27.py; the one call iOS 27 retired is guarded. Sections 3 and 4 done headless: Entry480FoldTests and the layout audit at the Duo's sizes, with two faults fixed (the crosshair moving on a size change, and the result staying one column when turned). Section 5 noted in IOS-PLAN.md. Section 6: one DESIGN NEEDED line (the crease under Ballistics). Section 7: PLATFORM-SUPPORT.md and IOS-PLAN.md say what is true now; README and site list no iOS devices by name, so unchanged. Section 8: PROOF-CHECKLIST row 9.

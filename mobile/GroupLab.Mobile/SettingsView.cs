@@ -29,6 +29,20 @@ public sealed class SettingsView : UserControl
     private readonly Border categoriesCard;
     private readonly TextBox search = new() { PlaceholderText = SettingsMenu.Find, MinHeight = Screens.Touch };
     private readonly TextBlock nothing = Screens.Dim(SettingsMenu.NothingFound);
+    private readonly Border riflesFound;
+
+    /// <summary>
+    /// Entry 482 section 2 (question 112, Alan's 2A): the row between Shooting defaults and Printers and paper that opens Ballistics at the
+    /// rifle and load forms, because a person looking in Settings for their rifles did not find them (error report 42).
+    /// </summary>
+    internal const string RiflesTitle = "Rifles and loads";
+
+    internal const string RiflesLine = "Kept in Ballistics. Tap to open them there.";
+
+    internal const string RiflesWhere = "Open Ballistics";
+
+    /// <summary>What "Find a setting" finds the row by, besides its own words.</summary>
+    internal const string RiflesWords = RiflesTitle + " " + RiflesLine + " rifle rifles load loads barrel barrels equipment scope bullet ammunition";
     private readonly ScrollViewer scroll;
 
     /// <summary>The category whose page is open, or null while the list is shown.</summary>
@@ -46,6 +60,8 @@ public sealed class SettingsView : UserControl
         list.Children.Add(search.Id("settings-find"));
         nothing.IsVisible = false;
         list.Children.Add(nothing);
+        riflesFound = new Border { Child = RiflesRow().Id("settings-rifles-found"), Classes = { PhoneStyles.Card }, IsVisible = false };
+        list.Children.Add(riflesFound);
         categoriesCard = new Border { Child = categories, Classes = { PhoneStyles.Card } };
         list.Children.Add(categoriesCard);
         whole.Children.Add(list);
@@ -844,8 +860,19 @@ public sealed class SettingsView : UserControl
         {
             categories.Children.Add(Screens.Row(SettingsMenu.Name(category), Summary(category), () => Show(category), explain: false)
                 .Id("settings-" + category.ToString().ToLowerInvariant()));
+            if (category == SettingsCategory.Shooting)
+            {
+                categories.Children.Add(RiflesRow().Id("settings-rifles"));
+            }
         }
     }
+
+    /// <summary>"Rifles and loads": a link to Ballistics, read by a screen reader as one control with both lines.</summary>
+    private static Button RiflesRow() => Screens.Row(RiflesTitle, RiflesLine, () =>
+    {
+        DiagnosticLog.Info("ui.settings", ("page", "RiflesAndLoads"));
+        Shell.Current?.ShowRiflesAndLoads();
+    }, explain: false, trailing: RiflesWhere);
 
     /// <summary>A category's current choices, in the line under its name in the list.</summary>
     internal string Summary(SettingsCategory category)
@@ -925,8 +952,9 @@ public sealed class SettingsView : UserControl
 
         int found = pages.Filter(search.Text);
         bool searching = pages.Query is not null;
+        riflesFound.IsVisible = searching && SettingsMenu.Matches(pages.Query, RiflesWords);
         categoriesCard.IsVisible = !searching;
-        nothing.IsVisible = searching && found == 0;
+        nothing.IsVisible = searching && found == 0 && !riflesFound.IsVisible;
         if (!searching && Open is null)
         {
             foreach (var page in pages.Pages)
@@ -941,7 +969,7 @@ public sealed class SettingsView : UserControl
     {
         search.Text = words;
         Filter();
-        return pages.Query is null ? 0 : pages.Pages.Sum(p => p.Cards.Count(c => c.Root.IsVisible));
+        return pages.Query is null ? 0 : pages.Pages.Sum(p => p.Cards.Count(c => c.Root.IsVisible)) + (riflesFound.IsVisible ? 1 : 0);
     }
 
     /// <summary>What the diagnostics overlay shows, in a line under its switch.</summary>

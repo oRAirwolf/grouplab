@@ -210,6 +210,10 @@ fixed: the crosshair moved to another part of the target when the screen changed
 column, because it read the window's shape before the window had taken its new size. `Entry462PhoneLayoutTests` lays out every place
 at the three Duo sizes, in both themes and at the largest text, with nothing cut off or past the edge.
 
+**The crease, decided (entry 482 section 1, Alan's 1A):** on the inner screen held upright the five places along the bottom stay evenly
+spaced, with Ballistics on the fold, as on the Galaxy Z Fold 7 opened. No layout changes for it. If the iOS 27.1 build shows a real
+problem at the fold, such as a control the system will not let a person tap there, it is reported rather than the layout changed.
+
 **An idea, not built:** if the Duo lets the outer screen show the camera's preview while GroupLab runs on the inner screen, a person
 could see the target framed from the front. Capture only has to work on whichever screen is open, and it does.
 

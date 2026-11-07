@@ -791,6 +791,9 @@ choices back as GroupLab starts with them; it never touches your sessions, rifle
   or the last used, filled in on each new target and changed there as before. The **Paper**, Letter or A4, is shown here too. The caliber is
   still asked for every target. On the phone, **The camera** **Starts in** Guided or Manual, and makes **A sound when it takes the
   picture** unless you turn it off; where the phone makes the sound itself, as the iPhone and iPad do, the page says so and leaves it on.
+- **Rifles and loads**, on the phone only: not a page of its own but a row that says where they are kept and opens them, **Open
+  Ballistics**, at the rifle and load forms; **‹ Settings** or the phone's back brings you back. Ballistics is still the one place on the
+  phone where rifles and loads are added, renamed and deleted. On the computer they are in Equipment.
 - **Printers and paper:** the printers GroupLab has checked, which one photographs are corrected for, Check again, Delete and Add a
   printer, on the computer and the phone alike; and the **Paper** GroupLab prints and designs its sheets on, Letter or A4, which starts as
   your region's.

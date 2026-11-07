@@ -5,6 +5,16 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-11-07, question 112: where a phone keeps its rifles and loads
+
+**Status: answered 2026-11-07 by Alan (entry 482 section 2): (a), as recommended, drawn as 2A: a "Rifles and loads" row in the phone's Settings, between Shooting defaults and Printers and paper, that opens Ballistics at the rifle and load forms; Ballistics stays the one place they are kept. Built in entry 482.** The question as it was: Error report 42 (2026-10-28, iOS): "using the iPhone I find it difficult thee find the possibility in the menu to add
+loads and rifles. perhaps it would make sense to add a topic in the settings menu where users can manage their rifles and loads." On
+the phone they are in Ballistics, in the rifle and load forms (entry 476 finding 3 asks the site to say so). Options: (a) leave them in
+Ballistics and say so where a person looks first (Settings could have a row "Rifles and loads are in Ballistics" that opens it); (b) an
+Equipment page under Settings, as the person suggests, with the same forms; (c) both, Ballistics' forms staying for the solver. This is a
+look and a place, so it waits for Alan. **Recommended: (a) now, as words and a link, which changes no screen's layout.** The rename the
+same report asked for is fixed (error report 42 in docs/notes/error-reports.md).
+
 ## 2026-10-23, question 111: should a published build's notes be edited when a line in them was wrong?
 
 **Status: answered 2026-10-23 by Alan (entry 471 section 3): (a), keep it so. A published release's notes are never edited; the correction goes in the next build as one "Correction:" line through docs/release-note-corrections.json. Nightly 219 was built before entry 469 was pushed, so the line rides in nightly 220.** Entry 469 section 2 asked for three lines of nightly 218's notes to be removed (two fixes to a fault no build

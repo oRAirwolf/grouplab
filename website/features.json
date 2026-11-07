@@ -251,10 +251,11 @@
         "macOS",
         "Linux"
       ],
-      "mobile": {"words": "The phone keeps rifles and loads, with Delete and rename, in Ballistics' rifle and load forms; barrels are chosen on the computer."},
+      "mobile": {"words": "The phone keeps rifles and loads, with Delete and rename, in Ballistics' rifle and load forms, and Settings has a Rifles and loads row that opens them there; barrels are chosen on the computer."},
       "since": "next",
       "note": [
         "Rifles, barrels and loads can now be deleted",
+        "Settings on the phone now has a Rifles and loads row",
     "Giving a rifle, barrel or load a new name now renames it",
         "Barrels now sit under their rifle",
         "A barrel's length and twist, a rifle's cartridge and scope"

@@ -176,8 +176,10 @@ public class Entry472BackTests
                         continue;
                     }
 
-                    // A press that went to another place leaves Back to return to Capture, as it does from any place.
-                    bool atPlace = placeRoots.Contains(after);
+                    // A press that went to another place leaves Back to return to Capture, as it does from any place, unless the place was
+                    // opened with a way back of its own (entry 482: Settings' Rifles and loads opens Ballistics with "‹ Settings"), when
+                    // Back returns to the screen the press was made on.
+                    bool atPlace = placeRoots.Contains(after) && shell.WayBack() is null;
                     if (after == capture)
                     {
                         continue;

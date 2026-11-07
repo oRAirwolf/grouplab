@@ -502,6 +502,20 @@ Error reports first (entry 457). **43** (iOS, automatic): "Which bulls did you f
 
 **What holds now.** `Entry480FoldTests` changes the window between the Duo's reported sizes (466 by 678 outer, 626 by 890 and 890 by 626 inner) on the result, Fix holes, Capture and Ballistics: session, marks, zoom, the place under the crosshair and half-typed words stay. It found two faults, both fixed: the crosshair stood over another part of the target after a size change (it moved about 200 pixels on unfolding), and the result read the window's shape from its Bounds, which a window sets after laying out its children, so turned on its side it stayed one column; it now reads ClientSize. The same fault hit any phone or tablet turned mid-result, so it has a release note. `Entry462PhoneLayoutTests` now includes the three Duo sizes, and is clean. On the inner screen upright the crease runs under Ballistics, the middle place, as on the Fold 7 open: a DESIGN NEEDED line, nothing changed.
 
+## Entry 482: the iPhone Duo crease kept, and Rifles and loads in the phones' Settings (2026-11-07)
+
+**Section 1.** Alan's 1A: the Duo's bottom bar stays evenly spaced with Ballistics on the fold; nothing changed, recorded in
+docs/IOS-PLAN.md (The iPhone Duo) and for-alan.md.
+
+**Section 2.** `SettingsView` puts a "Rifles and loads" row between Shooting defaults and Printers and paper, built by `Screens.Row` with
+its new trailing words ("Open Ballistics", a third of the row at most, wrapping at the largest text); `Shell.ShowRiflesAndLoads` opens
+`BallisticsPage` at the rifle form with a "‹ Settings" way back, so the phone's Back returns to the Settings list. While searching, the
+row shows above the results when every word typed is in its words (rifle, load, barrel, equipment and its own lines). Same code on
+Android, iOS and GroupLab Dev; the desktop keeps Equipment. `Entry482Tests` (3) hold the place in the list, the spoken name, the 48
+point height, the form opened, Back, and the search. The back walk (`Entry472BackTests`) treated every press that landed on a place as
+going back to Capture; it now expects the screen before when the place was opened with its own way back. Phone suite 262, 258 passed
+and 3 skipped before that change, the walk and 482's tests passing after it.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
