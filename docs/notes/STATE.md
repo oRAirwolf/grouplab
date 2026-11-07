@@ -9,14 +9,15 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-07, entries 476 to 479 (four consistency audits) done, with error reports 41 to 44; entry 480 next.
+**Last rewritten:** 2026-11-07, entries 476 to 480 done (480 in part, waiting on Microsoft); the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 480 (2026-11-07)**: the iPhone Duo. Step 1 answered: it can be built today (GitHub's `xcode-27` image, macOS 27 arm64,
-  has Xcode 27.1 as default and an iPhone Duo simulator under iOS 27.1; Microsoft's iOS workload 10.0.402.1 builds for iOS 27.1).
+- **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Dated check, from 2026-11-11 (.NET's November release):** is there an iOS
+  workload set after 10.0.402.1 with dotnet/macios issue 26969 fixed? If so, `python scripts/ios-xcode27.py` on ios-app.yml with its
+  version, prove it, then nightly.yml and IosSigningTests (docs/IOS-PLAN.md, The iPhone Duo). Fold tests and two phone fixes are in.
 - **Entries 476 to 479 (2026-11-07)**, done: the site now republishes after the Store's version, the phone's screenshots and the weekly
   screenshots change; nightly 222's two fixes from three reports counted from `attributions` in docs/release-note-corrections.json;
   the README, guides, Features, tour, Support and ANDROID.md brought in step with sync, Delete, Find holes and iOS.
@@ -50,6 +51,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Blocked, and on what
 
+- **The iPhone Duo's inner screen**: Microsoft's iOS 27.1 workload (dotnet/macios issue 26969); nothing needed from Alan.
+
 - **Entry 380 section 3**: measuring the M220 labels waits on request 77's photos in `m220-labels`.
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
@@ -69,7 +72,7 @@ Four, all in `docs/QUESTIONS-FOR-PLANNING.md` (107 to 111 answered 2026-10-23 in
 ## Builds and the site
 
 - **Last nightly:** 0.2.0-nightly.222 (2026-10-26 15:22 UTC), on TestFlight (both groups) and the Store (0.2.222.0). Nightly 223
-  will carry the fixes for error reports 42 and 43.
+  will carry the fixes for error reports 42 and 43 and entry 480's two (the crosshair and side by side when turned).
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 - Crash reports: 41 to 44 assessed 2026-11-07 in `docs/notes/error-reports.md`; 41 closed, 42 and 43 closed for nightly 223, 44
   waits for entry 480 section 1's answer to be recorded.
@@ -95,8 +98,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   Cancel, Skip or "Another target" that is the page's way out (entry 472); `Entry472BackTests` fails on a new page Back was never pressed on.
 - **Sync change files carry `sha256`** of their records (entry 472); a file is taken only when it matches and every record applies.
 - **The records are copied daily** beside the database in `copies/` (trash in `trash/copies/`); `RecordsCopies` makes and restores them.
-- **Paper is `AppSettingsStore.LetterPaper()`**, the chosen paper else the region's; **text size** is `TextSize.Choose`; **Reduce motion**
-  is `Landing.Still()`, which tests that fake the system still drive through `Landing.ReducedMotion`.
 - **The server's logs are in Denver time** (-0600, -0700 from 1 November), not UTC; a log paste converts its window (request 99).
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
@@ -115,4 +116,3 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   push that should make a nightly must not be one.
 - **A failing site check holds back only its pages** (entry 387): whole-site checks still stop it; held pages keep grouplab.org's copy and
   are listed in website.yml's summary and the weekly consistency issue; each gets one line in for-alan.md when it appears.
-- **A picture with a bank card in it is never sent**, and marking by hand works on a blanked copy (entry 365 section D).

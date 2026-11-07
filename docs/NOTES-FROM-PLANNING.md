@@ -25,6 +25,63 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-07, entry 480: GroupLab on the iPhone Duo, and Alan's answer to error report 44
+
+**Status: actioned 2026-11-07, in part. Not done: sections 2.2 to 2.4 on the real iOS 27.1 build, and 2.7's "fills both screens from nightly N", because the build cannot yet be made safely.** Section 1: Alan's answer recorded in error-reports.md, issue 44 closed; no route reaches the sender (Send to GroupLab carries no contact), said in for-alan.md. Section 2.1: it can be built today on Apple's and GitHub's side (xcode-27 image, Xcode 27.1, iPhone Duo simulator), but Microsoft's workload 10.0.402.1 trims away explicitly implemented members of Avalonia's iOS types (IL2037, dotnet/macios issue 26969, fix promised in the next .NET 10 release), which could break typing; so per this section the change waits, recorded in IOS-PLAN.md, for-alan.md and STATE.md with a dated check. ios-app.yml was tried on it (runs 42343772140 and 42344190162) and put back on Xcode 26; the change is kept as scripts/ios-xcode27.py; the one call iOS 27 retired is guarded. Sections 3 and 4 done headless: Entry480FoldTests and the layout audit at the Duo's sizes, with two faults fixed (the crosshair moving on a size change, and the result staying one column when turned). Section 5 noted in IOS-PLAN.md. Section 6: one DESIGN NEEDED line (the crease under Ballistics). Section 7: PLATFORM-SUPPORT.md and IOS-PLAN.md say what is true now; README and site list no iOS devices by name, so unchanged. Section 8: PROOF-CHECKLIST row 9.
+
+From the planning session, 2026-11-07 (Alan's decision of 2026-11-06 17:42 Denver). **Take entries 476, 477, 478 and 479 first.**
+
+## 1. Alan's answer to error report 44
+
+Error report 44 (2026-10-31, nightly 222, Windows) asks whether Alan wants more suggestions or whether the person is sending too many.
+**Alan's answer: yes, more suggestions are welcome.** Record it in docs/notes/error-reports.md. If the report came in by a route where a
+reply reaches the sender (for example a Discord bug-reports post), say so in for-alan.md with the route, in plain words, so Alan can reply
+there himself. Do not write the person's name or email into any file. If no route reaches the sender, say that in one line.
+
+## 2. Make GroupLab fill the iPhone Duo's inner screen
+
+### Background (from the planning session's research, 2026-11-06; check before relying on it)
+
+- Apple's iPhone Duo went on sale 2026-10-23: a 5.4 in outer screen and a 7.6 in inner screen that unfolds like a book.
+- Reported sizes in points: outer 466 x 678, compact width like other iPhones; inner 626 x 890 portrait and 890 x 626 landscape, regular
+  width and height. One source gives the inner screen as 669 x 951 instead, so take the real figures from the simulator, not from here.
+- Reported by MacRumors (via Notebookcheck): existing apps run without an update but only apps built with the **iOS 27.1 SDK or later**
+  fill the inner screen; older builds are letterboxed in a narrow iPhone-shaped window. From April 2027, App Store submissions need iPhone
+  Duo screenshots (not a concern while GroupLab is TestFlight only, but note it in docs/RELEASE-PLAN.md).
+- GroupLab today: .github/workflows/ios-app.yml selects Xcode 26 on macos-26 and holds the .NET iOS workload at 26.5.10318, because the
+  newer workload (27.0.10722) refused Xcode 26.6. So every current build, nightly 222 included, is letterboxed on the Duo's inner screen.
+- The shared phone screens already lay out by width (`ResultView.ExpandedWidth` = 840, entry 243 section 3.3), and keeping state through
+  folding is proven on the Galaxy Z Fold 7 (entry 199), not on iOS.
+
+### What to do
+
+1. **Find out whether it can be built today.** Is a .NET iOS workload available that builds against the iOS 27.1 SDK (or newer) with a
+   released Xcode 27.x, and does GitHub's macOS runner image carry that Xcode? Search Microsoft's and GitHub's release notes and the
+   dotnet/macios issues before guessing. If it cannot be built yet, stop here, record what is missing and what to watch for in
+   docs/IOS-PLAN.md and for-alan.md (plain words, "nothing to do, waiting on Microsoft or GitHub"), and add a dated check to STATE.md.
+2. **Move the iOS build forward** if it can: ios-app.yml (both jobs) and the nightly's ios job to that Xcode and workload. **Keep iOS 26
+   as the lowest version** (PLATFORM-SUPPORT.md: iPhone 11 or newer on iOS 26). Remove the workload rollback only if the new pair works.
+   Keep GroupLab Dev building the same way. The simulator self-test must stay green.
+3. **Check every phone screen at the Duo's sizes** in the simulator (an iPhone Duo simulator if Xcode has one): outer screen portrait,
+   inner screen portrait and landscape. Use the existing parity tour and LayoutAudit; nothing clipped, no bottom control sitting on the
+   fold line, 44 point touch targets, Dynamic Type still followed. On the inner screen in landscape the result should show the sheet and
+   the numbers side by side.
+4. **Folding and unfolding mid-task keeps everything,** as on Android: changing window size between the outer and inner sizes on the
+   result screen, the marking screens, Capture and Ballistics must keep the session, the marks, the zoom and any half-typed text. Write a
+   test that drives the size change, like the Android fold tests.
+5. **The camera:** if the Duo's camera lets the outer screen show a preview while the app runs on the inner screen, do not build that now;
+   note it in docs/IOS-PLAN.md as an idea. Capture must simply work on whichever screen is open.
+6. **Visual decisions:** if a screen needs a new layout for the near-square inner screen rather than the existing wide layout, do not
+   settle it; write a `DESIGN NEEDED:` line in for-alan.md and keep the existing wide layout meanwhile.
+7. **Public material in the same change:** docs/PLATFORM-SUPPORT.md (a line for the iPhone Duo: fills both screens from nightly N, tested
+   in the simulator only, not on a real Duo), docs/IOS-PLAN.md, README and site only where they list iOS devices, release note
+   (`Release-note-kind: new`, only what a tester can reach). Nobody on the project owns a Duo: say "tested in the simulator" and never
+   claim it was tested on the phone.
+8. **Proof list:** add "open GroupLab on a real iPhone Duo, outer and inner screens, fold and unfold on a result" to
+   docs/PROOF-CHECKLIST.md as waiting for a tester with a Duo.
+
+When done, record the entry and fold it in as usual. Nothing here needs Alan unless step 1 or 6 says so.
+
 ## 2026-11-04, entry 479: consistency audit
 
 **Status: actioned 2026-11-07 with entry 476, every finding done.** Plain paper is "Built, not proven" with Find holes (Experimental) named; the guide's Send everything I open, pooling and 25 shot gate corrected; six features say on the Mobile side why the phone leaves them out (build.py reads mobile.words); PHONE-PARITY's label printer row checked against the code; the weekly screenshots job asks for a site publish; the testing guide's release and data lines; iOS in the README's developer sections; the survey line.

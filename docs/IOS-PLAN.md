@@ -183,6 +183,38 @@ decides, and a missing or malformed profile is a warning, never a failed nightly
 
 Alan installs from TestFlight on the iPad mini. iPhone testers come later, by TestFlight invitation.
 
+## The iPhone Duo (entry 480, 2026-11-07)
+
+Apple's iPhone Duo, on sale since 2026-10-23, has a 5.4 in outer screen and a 7.6 in inner screen that opens like a book. Only an
+application built with the iOS 27.1 SDK or later fills the inner screen; an older one is shown there in an iPhone-shaped window. Every
+GroupLab build so far, nightly 222 included, is built with Xcode 26 and so is shown that way.
+
+**What is ready.** GitHub's `xcode-27` image (macOS 27, arm64) has Xcode 27.1 as its default and an iPhone Duo simulator under iOS 27.1.
+Microsoft's first workload set for Xcode 27.1, 10.0.402.1, compiles GroupLab (the one call iOS 27 retired, `CanOpenUrl` in the
+self-test, is asked only below 27 now). `scripts/ios-xcode27.py` makes the whole change to a workflow: the runner, Xcode 27.1, the
+workload set it is given in place of the rollback to 26.5.10318, the iOS 27 simulators, and a leg on the iPhone Duo that runs the tour
+upright and on its side and records each screen's size. The lowest iOS stays 26.
+
+**What it waits on, and what to watch for.** The 10.0.402.1 workload trims away properties and events a library implements explicitly
+(IL2037, ios app run 42344190162), here Avalonia's application delegate, view controller and text input, which is what typing uses.
+That is [dotnet/macios issue 26969](https://github.com/dotnet/macios/issues/26969): fixed upstream, and its maintainer said on
+2026-10-22 it will be in the next .NET 10 release. Silencing the error could ship a TestFlight build where the keyboard does not work,
+so nothing is moved until a workload set after 10.0.402.1 carries the fix. Then: `python scripts/ios-xcode27.py
+.github/workflows/ios-app.yml <version>`, start ios-app.yml, and once it is green the same on `nightly.yml`, with `IosSigningTests`'
+runs-on line changed in the same commit. Nothing is needed from Alan.
+
+**What is held already, without the new SDK.** `Entry480FoldTests` folds and unfolds at the Duo's reported sizes (outer 466 by 678
+points, inner 626 by 890 and 890 by 626; the simulator leg will record the real ones) on the result, in Fix holes, on Capture and in
+Ballistics: the session, the marks, the zoom, the place under the crosshair and half-typed words all stay. Two faults it found are
+fixed: the crosshair moved to another part of the target when the screen changed size, and a result turned on its side stayed one
+column, because it read the window's shape before the window had taken its new size. `Entry462PhoneLayoutTests` lays out every place
+at the three Duo sizes, in both themes and at the largest text, with nothing cut off or past the edge.
+
+**An idea, not built:** if the Duo lets the outer screen show the camera's preview while GroupLab runs on the inner screen, a person
+could see the target framed from the front. Capture only has to work on whichever screen is open, and it does.
+
+**The App Store:** from April 2027 a submission needs iPhone Duo screenshots. Nothing to do while GroupLab is in TestFlight only.
+
 ## 4. The App Store, and the licence
 
 Entry 279 section 1 adds to LICENSE a GPLv3 section 7 additional permission for distribution through Apple's App Store and TestFlight

@@ -20,6 +20,11 @@ Each line is checked, and says where, before Alan is asked whether to release.
 7. **The Windows build is signed**, or the download page says plainly, as it does today, why it is not and what the warning means.
 8. **The installed update path works from the previous nightly**, checked on one clean machine (entries 119 to 123).
 
+## The App Store and the iPhone Duo (entry 480)
+
+From April 2027 an App Store submission needs iPhone Duo screenshots. GroupLab is in TestFlight only, so nothing is needed
+until it is submitted; docs/IOS-PLAN.md says what the Duo build waits on.
+
 ## The Microsoft Store (entry 224 section 3)
 
 Alan wants GroupLab in the Microsoft Store, with new releases pushed to it automatically. **Built:**

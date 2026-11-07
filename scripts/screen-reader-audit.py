@@ -161,6 +161,10 @@ def judged(issue):
     named (the photograph of a sheet, with its handwriting and printed labels), which no label can represent and the words around it say."""
     kind = issue.get("type")
     frame = issue.get("frame") or []
+    # XCTest's own audit running out of time (code -56, "Audit failed to complete in time", ios app run 40347804482) says nothing about
+    # the screen: the runner tries once more, and a second timeout is listed, not judged. Any other failure to run is still judged.
+    if kind == "timeout":
+        return False
     if kind == "error":
         return True
     if kind not in IOS_JUDGED:
@@ -285,6 +289,7 @@ def self_test():
         {"type": "Button", "name": "Gone", "enabled": True, "screen": {"x": 100, "y": 1000, "width": 400, "height": 126}},
         {"type": "Button", "name": "Off", "enabled": False, "screen": {"x": 100, "y": 1200, "width": 400, "height": 126}},
         {"type": "TextBlock", "name": "Words", "enabled": True, "screen": {"x": 100, "y": 1400, "width": 400, "height": 126}}]}
+    assert not judged({"type": "timeout", "summary": "the audit ran out of time twice"}) and judged({"type": "error", "summary": "x"})
     found = android_findings(audit, xml_text, 420, "org.grouplab.app.dev")
     assert not any("Analyze" in f for f in found), found
     assert "android.widget.Button \"\" at 100,400: no name" in found, found

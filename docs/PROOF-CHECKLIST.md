@@ -80,6 +80,7 @@ line is one thing to do, what it proves, and about how long it takes, the shorte
 | 6 | Print one sheet from the phone's Targets screen and scan it at 600 dpi | 28 | 15 minutes |
 | 7 | Print a volunteer pack and measure bull 1 to bull 5 with a ruler | 19 | 20 minutes |
 | 8 | Photograph a shot sheet that has a scan with the iPhone and with the iPad | 26 on Apple's phones | 15 minutes, once a shot sheet is kept |
+| 9 | A tester with an iPhone Duo, once a build fills its inner screen (entry 480): open GroupLab on the outer and inner screens, and fold and unfold on a result | the Duo, beyond the simulator | 10 minutes, waiting for a tester with a Duo |
 | 9 | At the range, two shots through one hole on a spare load sheet, the count on the block; scan it at home | 4, and 13 on paper | 5 minutes there, 5 at home |
 | 10 | At the range, a doubles sheet: two shots on each of bulls 1 to 10; scan it | 11 on paper | 10 minutes there, 5 at home |
 | 11 | At the range, a ladder sheet: five or more loads, a few bulls each; scan it | 8 on paper | 20 minutes there, 5 at home |

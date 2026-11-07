@@ -11,7 +11,9 @@ Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears 
 **iPhone and iPad, in a public beta through TestFlight** (entry 278 section 6, Alan's decision of 2026-09-28; entry 206 section 4 recorded the facts). iPhone is
 about 60 percent of phones in the United States and half in the United Kingdom (StatCounter, August 2026). The floor is an iPhone 11 on
 iOS 26 or later; Avalonia runs on iOS; the engine needs OpenCV built for iOS, which GitHub's macOS build machines do without anyone owning
-a Mac; and distribution needs the paid Apple developer program, which the project joined. `docs/IOS-PLAN.md` is the plan.
+a Mac; and distribution needs the paid Apple developer program, which the project joined. `docs/IOS-PLAN.md` is the plan. **The iPhone Duo** (entry 480): GroupLab runs on it, but until it is built with Apple's iOS 27.1 tools its inner screen shows
+GroupLab in an iPhone-sized window; that build waits on a fix in Microsoft's iOS tools (dotnet/macios issue 26969). The Duo's sizes are
+held in GroupLab's own tests only, and nobody on the project has one.
 
 **Old builds still exist** (entry 306 section 4). A macOS build before nightly 135 was not signed, and still needs `xattr -dr com.apple.quarantine /Applications/GroupLab.app` in Terminal, after moving `GroupLab.app` into Applications. This sentence stays here only: the README and the download page describe the current, signed build.
 

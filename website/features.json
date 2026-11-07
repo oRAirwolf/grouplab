@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "On a phone or tablet turned on its side, or a folding phone opened",
     "On the phone, the question of which bulls you fired at now shows its answers",
     "Correction: nightly 222's fixes",
     "On the phone, a new sync folder names this phone by its maker and model",

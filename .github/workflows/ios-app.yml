@@ -1,7 +1,7 @@
 name: ios app
 
-# NOTES-FROM-PLANNING.md entry 290 section 2 items 3 and 4: the iPhone and iPad application (ios/GroupLab.iOS) built on GitHub's xcode-27
-# machine with Xcode 27.1 (entry 480), and proved on the iOS Simulator: it starts, every place along the bottom opens and is photographed, the imaging works
+# NOTES-FROM-PLANNING.md entry 290 section 2 items 3 and 4: the iPhone and iPad application (ios/GroupLab.iOS) built on GitHub's macos-26
+# machine with Xcode 26, and proved on the iOS Simulator: it starts, every place along the bottom opens and is photographed, the imaging works
 # on a rendered GroupLab sheet, and the committed sample scan gives the same shots and figures as the desktop, which runs the same checks from
 # the same code in this job (ios/SelfTestReference). The device build is made too, unsigned, to prove it compiles and links; nothing is
 # signed or published here. OpenCV for iOS comes from the newest successful run of the workflow "ios" (ios/opencv/build-extern.sh); where
@@ -23,7 +23,7 @@ permissions:
 jobs:
   simulator:
     name: iOS Simulator
-    runs-on: xcode-27
+    runs-on: macos-26
     timeout-minutes: 120
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
@@ -31,14 +31,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Entry 480 section 2: Xcode 27.1, the first that builds an application filling the iPhone Duo's inner screen. GitHub's xcode-27
-      # image carries it; the lowest iOS the application runs on stays 26 (SupportedOSPlatformVersion).
-      - name: Xcode 27.1
+      - name: Xcode 26
         run: |
-          xcode=$(ls -d /Applications/Xcode_27.1*.app | grep -iv -e beta -e release_candidate | head -1)
-          test -n "$xcode" || { ls -d /Applications/Xcode*.app; echo "::error::No Xcode 27.1 on this runner"; exit 1; }
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
           sudo xcode-select -s "$xcode"
-          xcodebuild -version | head -1 | grep -q '^Xcode 27\.1' || { echo "::error::No Xcode 27.1 on this runner"; exit 1; }
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
           xcodebuild -version | head -1
 
       # The repository has no global.json; the desktop's workflows take the newest .NET 10, and so does this.
@@ -46,13 +43,14 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # Entry 480 section 2: the workload set Microsoft made for Xcode 27.1 (dotnet/macios dotnet-10.0.1xx-xcode27.1-10018, iOS SDK
-      # 27.1.10018). It replaces the rollback that held the workload at 26.5.10318 for Xcode 26.
+      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
+      # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
       - name: The .NET iOS workload
         run: |
-          dotnet --version
-          dotnet workload config --update-mode workload-set > /dev/null
-          dotnet workload install ios --version 10.0.402.1 > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          ls -d /Applications/Xcode_26*.app | tr '\n' ' '; echo
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 
       # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
@@ -139,15 +137,15 @@ jobs:
           if [ -n "$dll" ] && grep -q "GroupLab.Mobile.Dev" "$dll"; then echo "::error::GroupLab carries GroupLab Dev's developer tools"; exit 1; fi
           test -n "$dll" && echo "GroupLab.Mobile.dll carries no developer tools" || echo "::notice::No GroupLab.Mobile.dll in the bundle to look into"
 
-      - name: Boot an iOS 27 simulator
+      - name: Boot an iOS 26 simulator
         run: |
           udid=$(xcrun simctl list devices available -j | python3 -c '
           import json, sys
           devices = json.load(sys.stdin)["devices"]
-          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-27" in runtime for d in ds if d["name"].startswith("iPhone") and "Duo" not in d["name"]]
+          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-26" in runtime for d in ds if d["name"].startswith("iPhone")]
           found.sort(key=lambda p: (p[0], "Pro" in p[1]["name"], p[1]["name"]))
           print(found[-1][1]["udid"] if found else "")')
-          test -n "$udid" || { xcrun simctl list runtimes; echo "::error::No iOS 27 iPhone simulator"; exit 1; }
+          test -n "$udid" || { xcrun simctl list runtimes; echo "::error::No iOS 26 iPhone simulator"; exit 1; }
           xcrun simctl list devices | grep "$udid"
           xcrun simctl boot "$udid"
           xcrun simctl bootstatus "$udid" -b > /dev/null
@@ -159,14 +157,14 @@ jobs:
           ipad=$(xcrun simctl list devices available -j | python3 -c '
           import json, sys
           devices = json.load(sys.stdin)["devices"]
-          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-27" in runtime for d in ds if d["name"].startswith("iPad")]
+          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-26" in runtime for d in ds if d["name"].startswith("iPad")]
           found.sort(key=lambda p: ("mini" in p[1]["name"], p[0], p[1]["name"]))
           print(found[-1][1]["udid"] if found else "")')
           if [ -n "$ipad" ]; then
             xcrun simctl list devices | grep "$ipad"
             echo "IPAD=$ipad" >> "$GITHUB_ENV"
           else
-            echo "::warning::No iOS 27 iPad simulator on this runner"
+            echo "::warning::No iOS 26 iPad simulator on this runner"
           fi
 
       - name: Install and start
@@ -299,37 +297,6 @@ jobs:
             tour "$IPAD" shots/ipad-landscape --screens --landscape || failed=1
             xcrun simctl shutdown "$IPAD" || true
           fi
-          # Entry 480 section 3: the iPhone Duo, in the simulator only (nobody on the project owns one). The same tour upright and on its side,
-          # and the size of the screen each shows, so its outer and inner screens' sizes come from the simulator rather than from reports.
-          duo=$(xcrun simctl list devices available -j | python3 -c '
-          import json, sys
-          devices = json.load(sys.stdin)["devices"]
-          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-27" in runtime for d in ds if "Duo" in d["name"]]
-          found.sort(key=lambda p: p[0])
-          print(found[-1][1]["udid"] if found else "")')
-          if [ -n "$duo" ]; then
-            xcrun simctl shutdown "$UDID" || true
-            xcrun simctl boot "$duo"
-            xcrun simctl bootstatus "$duo" -b > /dev/null
-            xcrun simctl status_bar "$duo" override --time 9:41 --batteryState charged --batteryLevel 100 || true
-            xcrun simctl install "$duo" "$APP"
-            mkdir -p shots/duo
-            xcrun simctl launch "$duo" org.grouplab.app
-            sleep 20
-            xcrun simctl io "$duo" screenshot shots/duo/00-first-start.png > /dev/null
-            xcrun simctl terminate "$duo" org.grouplab.app || true
-            data=$(xcrun simctl get_app_container "$duo" org.grouplab.app data)
-            mkdir -p "$data/Documents/selftest"
-            cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
-            tour "$duo" shots/duo --screens || failed=1
-            tour "$duo" shots/duo-landscape --screens --landscape || failed=1
-            for shot in shots/duo/00-first-start.png shots/duo/*result*.png shots/duo-landscape/*result*.png; do
-              [ -f "$shot" ] && echo "$shot: $(sips -g pixelWidth -g pixelHeight "$shot" | awk '/pixel/ {printf "%s ", $2}')pixels"
-            done | tee shots/duo/sizes.txt
-            xcrun simctl shutdown "$duo" || true
-          else
-            echo "::warning::No iPhone Duo simulator on this runner"
-          fi
           [ "$failed" = 0 ] || { echo "::error::A tour did not reach the sample's result"; exit 1; }
 
       - name: The desktop's numbers
@@ -369,7 +336,7 @@ jobs:
   # The device build in its own job, beside the simulator's, since each takes a quarter of an hour.
   device:
     name: iOS device, unsigned
-    runs-on: xcode-27
+    runs-on: macos-26
     timeout-minutes: 90
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
@@ -377,14 +344,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Entry 480 section 2: Xcode 27.1, the first that builds an application filling the iPhone Duo's inner screen. GitHub's xcode-27
-      # image carries it; the lowest iOS the application runs on stays 26 (SupportedOSPlatformVersion).
-      - name: Xcode 27.1
+      - name: Xcode 26
         run: |
-          xcode=$(ls -d /Applications/Xcode_27.1*.app | grep -iv -e beta -e release_candidate | head -1)
-          test -n "$xcode" || { ls -d /Applications/Xcode*.app; echo "::error::No Xcode 27.1 on this runner"; exit 1; }
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
           sudo xcode-select -s "$xcode"
-          xcodebuild -version | head -1 | grep -q '^Xcode 27\.1' || { echo "::error::No Xcode 27.1 on this runner"; exit 1; }
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
           xcodebuild -version | head -1
 
       # The repository has no global.json; the desktop's workflows take the newest .NET 10, and so does this.
@@ -392,13 +356,14 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # Entry 480 section 2: the workload set Microsoft made for Xcode 27.1 (dotnet/macios dotnet-10.0.1xx-xcode27.1-10018, iOS SDK
-      # 27.1.10018). It replaces the rollback that held the workload at 26.5.10318 for Xcode 26.
+      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
+      # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
       - name: The .NET iOS workload
         run: |
-          dotnet --version
-          dotnet workload config --update-mode workload-set > /dev/null
-          dotnet workload install ios --version 10.0.402.1 > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          ls -d /Applications/Xcode_26*.app | tr '\n' ' '; echo
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 
       # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
@@ -486,7 +451,7 @@ jobs:
   # sources with -p:GroupLabDev=true, checked to be its own application beside GroupLab, and made to run a scenario with nobody's hands.
   dev-simulator:
     name: GroupLab Dev on the iOS Simulator
-    runs-on: xcode-27
+    runs-on: macos-26
     timeout-minutes: 120
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
@@ -494,14 +459,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Entry 480 section 2: Xcode 27.1, the first that builds an application filling the iPhone Duo's inner screen. GitHub's xcode-27
-      # image carries it; the lowest iOS the application runs on stays 26 (SupportedOSPlatformVersion).
-      - name: Xcode 27.1
+      - name: Xcode 26
         run: |
-          xcode=$(ls -d /Applications/Xcode_27.1*.app | grep -iv -e beta -e release_candidate | head -1)
-          test -n "$xcode" || { ls -d /Applications/Xcode*.app; echo "::error::No Xcode 27.1 on this runner"; exit 1; }
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
           sudo xcode-select -s "$xcode"
-          xcodebuild -version | head -1 | grep -q '^Xcode 27\.1' || { echo "::error::No Xcode 27.1 on this runner"; exit 1; }
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
           xcodebuild -version | head -1
 
       # The repository has no global.json; the desktop's workflows take the newest .NET 10, and so does this.
@@ -509,13 +471,14 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # Entry 480 section 2: the workload set Microsoft made for Xcode 27.1 (dotnet/macios dotnet-10.0.1xx-xcode27.1-10018, iOS SDK
-      # 27.1.10018). It replaces the rollback that held the workload at 26.5.10318 for Xcode 26.
+      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
+      # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
       - name: The .NET iOS workload
         run: |
-          dotnet --version
-          dotnet workload config --update-mode workload-set > /dev/null
-          dotnet workload install ios --version 10.0.402.1 > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          ls -d /Applications/Xcode_26*.app | tr '\n' ' '; echo
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 
       # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
@@ -593,15 +556,15 @@ jobs:
             echo "::notice::No GroupLab.Mobile.dll in the bundle to look into"
           fi
 
-      - name: Boot an iOS 27 simulator
+      - name: Boot an iOS 26 simulator
         run: |
           udid=$(xcrun simctl list devices available -j | python3 -c '
           import json, sys
           devices = json.load(sys.stdin)["devices"]
-          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-27" in runtime for d in ds if d["name"].startswith("iPhone") and "Duo" not in d["name"]]
+          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-26" in runtime for d in ds if d["name"].startswith("iPhone")]
           found.sort(key=lambda p: (p[0], "Pro" in p[1]["name"], p[1]["name"]))
           print(found[-1][1]["udid"] if found else "")')
-          test -n "$udid" || { xcrun simctl list runtimes; echo "::error::No iOS 27 iPhone simulator"; exit 1; }
+          test -n "$udid" || { xcrun simctl list runtimes; echo "::error::No iOS 26 iPhone simulator"; exit 1; }
           xcrun simctl boot "$udid"
           xcrun simctl bootstatus "$udid" -b > /dev/null
           echo "UDID=$udid" >> "$GITHUB_ENV"

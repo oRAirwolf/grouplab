@@ -573,6 +573,16 @@ internal sealed class MarkingAPage : UserControl
                 offset = new Point((Bounds.Width - (Shown.Width * zoom)) / 2, (Bounds.Height - (Shown.Height * zoom)) / 2);
                 Moved?.Invoke();
             }
+            else if (zoom > 0 && e.PreviousSize.Width > 0 && e.PreviousSize.Height > 0)
+            {
+                // Entry 480 section 4: a phone folded or unfolded, or turned, keeps the zoom and the place under the crosshair; before, the
+                // crosshair moved with the screen's middle and stood over another part of the target.
+                var before = new Point(e.PreviousSize.Width / 2, e.PreviousSize.Height / 2);
+                var now = new Point(Bounds.Width / 2, Bounds.Height / 2);
+                offset += now - before;
+                InvalidateVisual();
+                Moved?.Invoke();
+            }
         }
 
         private void ZoomAboutCentre(double factor)

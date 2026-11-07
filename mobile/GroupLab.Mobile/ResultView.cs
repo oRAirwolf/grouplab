@@ -565,7 +565,9 @@ public sealed class ResultView : UserControl, IOpenTarget
             // Entry 342, the phone sweep: which way up is the screen's, not the page's. On an iPad upright the keyboard took 400 points off
             // the page's height, the page became wider than tall, and the result changed to its side-by-side layout under the person's
             // finger, losing the field being typed in under the keyboard.
-            var screen = TopLevel.GetTopLevel(this)?.Bounds.Size is { Width: > 0 } whole ? whole : size;
+            // Entry 480 section 3: the window's ClientSize, which changes before the layout pass, not its Bounds, which a window sets only
+            // after laying out what is in it, so a phone turned or a Duo unfolded on its side still read as upright here.
+            var screen = TopLevel.GetTopLevel(this)?.ClientSize is { Width: > 0 } whole ? whole : size;
             bool now = Shell.Across(size.Width) >= ExpandedWidth && screen.Width > screen.Height && picture.Children.Count > 0;
             if (wide == now)
             {

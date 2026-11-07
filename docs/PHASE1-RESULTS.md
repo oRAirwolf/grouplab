@@ -496,6 +496,12 @@ Error reports first (entry 457). **43** (iOS, automatic): "Which bulls did you f
 
 **Entries 477 to 479.** As their status lines say. Phase 4 in the README is now "Built, not proven", since Find holes (Experimental) ships; ReadmeTests holds only the four state names, so no test changed for it. A feature the phone leaves out on purpose now says why on the Features page's Mobile side (`mobile.words`), and `feature_problems` refuses words on a feature the phone has.
 
+## Entry 480: the iPhone Duo, waiting on Microsoft's iOS tools (2026-11-07)
+
+**Can it be built?** Apple's and GitHub's halves are there: the `xcode-27` image has Xcode 27.1 (27A9275) as default and an iPhone Duo simulator under iOS 27.1, and Microsoft's workload set 10.0.402.1 targets the iOS 27.1 SDK. Tried on ios-app.yml: run 42343772140 stopped on CA1422 (`UIApplication.CanOpenUrl`, retired in iOS 27; the self-test now asks it only below 27), and run 42344190162 on IL2037, the trimmer resolving no members for explicitly implemented properties and events of Avalonia 12.1.2's app delegate, view controller and text input responder. That is dotnet/macios issue 26969, fixed upstream and promised for the next .NET 10 release; its maintainer says such members could be trimmed away, and for the text input that is typing, so the error was not silenced. Avalonia 12.1.3 to 12.1.5 say nothing about it. ios-app.yml is back on Xcode 26 as it was; `scripts/ios-xcode27.py <workflow> <workload set>` makes the change when a fixed workload ships.
+
+**What holds now.** `Entry480FoldTests` changes the window between the Duo's reported sizes (466 by 678 outer, 626 by 890 and 890 by 626 inner) on the result, Fix holes, Capture and Ballistics: session, marks, zoom, the place under the crosshair and half-typed words stay. It found two faults, both fixed: the crosshair stood over another part of the target after a size change (it moved about 200 pixels on unfolding), and the result read the window's shape from its Bounds, which a window sets after laying out its children, so turned on its side it stayed one column; it now reads ClientSize. The same fault hit any phone or tablet turned mid-result, so it has a release note. `Entry462PhoneLayoutTests` now includes the three Duo sizes, and is clean. On the inner screen upright the crease runs under Ballistics, the middle place, as on the Fold 7 open: a DESIGN NEEDED line, nothing changed.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

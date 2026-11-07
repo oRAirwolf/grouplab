@@ -15,7 +15,8 @@ namespace GroupLab.Mobile.Tests;
 /// </summary>
 public class Entry462PhoneLayoutTests
 {
-    private static readonly (int Width, int Height)[] Sizes = [(360, 780), (412, 915), (600, 900)];
+    // Entry 480 section 3: the iPhone Duo's outer screen and its inner screen upright and on its side, in points as reported.
+    private static readonly (int Width, int Height)[] Sizes = [(360, 780), (412, 915), (600, 900), (466, 678), (626, 890), (890, 626)];
 
     [AvaloniaFact]
     public void EveryPlaceIsLaidOutWholeAtEveryWidthThemeAndTextSize()

@@ -61,19 +61,30 @@ final class TouchTests: XCTestCase {
 enum Audit {
     static func run(_ app: XCUIApplication) -> [[String: Any]] {
         var issues: [[String: Any]] = []
-        do {
-            try app.performAccessibilityAudit(for: .all) { issue in
-                var row: [String: Any] = ["type": name(issue.auditType), "summary": issue.compactDescription, "detail": issue.detailedDescription]
-                if let element = issue.element {
-                    row["label"] = element.label
-                    let frame = element.frame
-                    row["frame"] = [frame.minX, frame.minY, frame.width, frame.height]
+        // XCTest's audit can run out of time on a busy runner (code -56, ios app run 40347804482): tried once more, and a second timeout
+        // is reported as one, which screen-reader-audit.py lists without judging; any other failure is still an error.
+        for attempt in 0..<2 {
+            issues = []
+            do {
+                try app.performAccessibilityAudit(for: .all) { issue in
+                    var row: [String: Any] = ["type": name(issue.auditType), "summary": issue.compactDescription, "detail": issue.detailedDescription]
+                    if let element = issue.element {
+                        row["label"] = element.label
+                        let frame = element.frame
+                        row["frame"] = [frame.minX, frame.minY, frame.width, frame.height]
+                    }
+                    issues.append(row)
+                    return true
                 }
-                issues.append(row)
-                return true
+                return issues
+            } catch let error as NSError where error.code == -56 {
+                if attempt == 1 {
+                    issues.append(["type": "timeout", "summary": "the audit ran out of time twice: \(error.localizedDescription)"])
+                }
+            } catch {
+                issues.append(["type": "error", "summary": "the audit did not run: \(error)"])
+                return issues
             }
-        } catch {
-            issues.append(["type": "error", "summary": "the audit did not run: \(error)"])
         }
         return issues
     }
