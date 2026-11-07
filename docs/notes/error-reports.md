@@ -10,7 +10,9 @@ hourly while waiting on CI, and writes each new one here.
 
 - **Said:** praise for the application, and a question: does the developer want more suggestions, or is the person sending too many?
 - **Cause:** not a fault; the log shows the start, the daily copy, a sync run and the report window, with no error.
-- **Status:** a question for Alan, carried to the planning session (entry 480 section 1 has his answer).
+- **Status:** answered by Alan on 2026-11-06 (entry 480 section 1): yes, more suggestions are welcome. No route reaches the sender:
+  Send to GroupLab carries no contact address (a contact stays in a saved report only), and nothing marks this as a Discord post.
+  Closed with this note.
 
 ## 43, 2026-10-29, nightly 222 on iOS (automatic, the application kept running)
 
