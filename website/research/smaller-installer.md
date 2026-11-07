@@ -13,6 +13,7 @@ sure: One build on one machine, measured directly rather than estimated, and che
 sources:
   - "The measurement and the check that nothing changed: `docs/PHASE1-RESULTS.md`, \"Entry 132 section 2, and the largest single win of the night\"."
   - "What was being measured when it turned up: the same document, \"Entry 133, the light installer, measured\"."
+  - "The video reader, found and left out: `docs/notes/archive/questions-answered.md`, question 36, and `docs/PHASE1-RESULTS.md`, \"Entry 481\"."
 ---
 
 ## It was found while measuring something else
@@ -62,6 +63,20 @@ The specific finding is worth 128 MB to anyone downloading GroupLab. The general
 **Nobody was looking for this.** It was found because a different question forced somebody to list what was actually in the package, file by file, rather than reasoning about what ought to be in it. The reasoning would never have found it: the runtime *is* large, the graphics libraries *are* large, and a 332 MB install for a program with a bundled runtime is entirely plausible. Every step of that argument is correct and the conclusion was wrong by a third.
 
 That is what measuring is for, and it is why this project tries to measure things that seem obvious. The times it has paid off have almost all been like this one: not a surprise about the thing being measured, but something else entirely, sitting in plain sight in the numbers nobody had written down before.
+
+## Found the same way again, six weeks later
+
+On 2026-10-26 the files were listed once more, for a different question: whether a light installer, without the .NET runtime, was
+worth making. It was not, but the list turned up `opencv_videoio_ffmpeg4130_64.dll`, the video reader that comes with OpenCV, the image
+library GroupLab reads targets with. It is FFmpeg wrapped for reading and writing video, 28.6 MB unpacked and 11.9 MB of the Windows zip,
+and GroupLab never opens a video. OpenCV loads it only when a video is opened, so it had been carried in every Windows download
+without ever running.
+
+It was left out on 2026-11-07. The Windows zip went from 126.6 MB, in nightly 223, to 114.4 MB, and the test suites gave the same
+results with the file gone as with it. Linux and macOS were not affected: their OpenCV is a single library with no separate video
+reader file.
+
+Nobody was looking for it the second time either.
 
 ## What this means
 

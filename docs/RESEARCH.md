@@ -4,6 +4,10 @@ NOTES-FROM-PLANNING.md entry 142. Thirty articles for <https://grouplab.org/rese
 
 ## Batch 1 is ready for review, and nothing is published
 
+**As it was on 2026-09-22; kept as written (entry 481 part C).** All eighteen went live on 2026-09-23 with batches 1 to 3, as
+`website/research/PUBLISHED.md` records; of the thirty below, only `aim-points-by-optic-class` is not published, and it waits on request
+86's range sitting (the red dot, prism and medium power classes).
+
 The Research page, the navigation link, the article format, the build and its checks are in, with **articles 1, 3, 5 and 6 written**. Nothing is on grouplab.org: entry 142 section 4 publishes a batch only after Alan sends "publish research batch 1".
 
 **To review it**, the pages are rendered under `docs/figures/research/`, one narrow and one desktop for each. **All eighteen of my own articles are written and rendered as of 2026-09-22**, in three batches; the twelve planning drafts are imported. Nothing is published: the whole section waits for Alan's review. The site also builds locally with `python website/build.py`, and `website/_site` can be served with `python -m http.server` from inside it.
@@ -30,34 +34,34 @@ Each one ends with a list of what to check against the repository before it goes
 
 | # | Slug | Title | Group | Writer | State |
 |---|---|---|---|---|---|
-| 1 | `photo-hole-size` | Why a photo cannot tell you your bullet's size | Reading targets | Code | **written**, batch 1 |
-| 2 | `hole-is-not-the-bullet` | A bullet hole is not the bullet | Reading targets | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
-| 3 | `primer-comparison` | Did the primer matter? A real comparison | Range tests | Code | **written**, batch 1 |
+| 1 | `photo-hole-size` | Why a photo cannot tell you your bullet's size | Reading targets | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 2 | `hole-is-not-the-bullet` | A bullet hole is not the bullet | Reading targets | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 3 | `primer-comparison` | Did the primer matter? A real comparison | Range tests | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
 | 4 | `mean-radius-or-extreme-spread` | Mean radius or extreme spread? | Measuring groups | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
-| 5 | `how-grouplab-reads-a-target` | How GroupLab reads a target | Reading targets | Code | **written**, batch 1 |
-| 6 | `wrong-bull` | When shots land on the wrong bull | Reading targets | Code | **written**, batch 1 |
-| 7 | `uploads-rebuilt-from-pixels` | Every upload is rebuilt from pixels | How GroupLab is built | Code | **written 2026-09-22**, batch 3, waiting with batches 1 and 2 for review |
+| 5 | `how-grouplab-reads-a-target` | How GroupLab reads a target | Reading targets | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 6 | `wrong-bull` | When shots land on the wrong bull | Reading targets | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 7 | `uploads-rebuilt-from-pixels` | Every upload is rebuilt from pixels | How GroupLab is built | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
 | 8 | `can-you-see-the-bull` | Can you see the bull? Aim points and optics at 100 yards | Range tests | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
-| 9 | `scans-against-photos` | Scans against phone photos: how close is close enough? | Reading targets | Code | **written 2026-09-22**, batch 3, waiting with batches 1 and 2 for review |
-| 10 | `safe-updates` | How GroupLab updates itself safely | How GroupLab is built | Code | **written 2026-09-22**, batch 3, waiting with batches 1 and 2 for review |
+| 9 | `scans-against-photos` | Scans against phone photos: how close is close enough? | Reading targets | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 10 | `safe-updates` | How GroupLab updates itself safely | How GroupLab is built | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
 | 11 | `how-many-shots` | How many shots do you need? | Measuring groups | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
-| 12 | `pooling-groups` | Pooling groups: when two sheets are one load | Measuring groups | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
+| 12 | `pooling-groups` | Pooling groups: when two sheets are one load | Measuring groups | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
 | 13 | `cep-explained` | CEP 50 and 90 explained | Measuring groups | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
 | 14 | `velocity-sd-small-samples` | Velocity SD from 5, 10 and 20 shots | Measuring groups | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
 | 15 | `moa-mils-inches` | MOA, mils and inches: one group four ways | Measuring groups | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
 | 16 | `when-to-adjust-zero` | Zeroing: when to adjust and when to leave it | Measuring groups | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
-| 17 | `one-hole-or-two` | One hole or two? | Reading targets | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
-| 18 | `curled-angled-paper` | Curled, angled and wrinkled paper | Reading targets | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
-| 19 | `wind-or-rifle` | Wind or rifle? | Range tests | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
-| 20 | `blank-sheet-zero` | Zeroing on a blank sheet with a hand-drawn cross | Reading targets | Code | **written 2026-09-22**, batch 2, waiting with batch 1 for review |
+| 17 | `one-hole-or-two` | One hole or two? | Reading targets | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 18 | `curled-angled-paper` | Curled, angled and wrinkled paper | Reading targets | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 19 | `wind-or-rifle` | Wind or rifle? | Range tests | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 20 | `blank-sheet-zero` | Zeroing on a blank sheet with a hand-drawn cross | Reading targets | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
 | 21 | `photographing-targets` | How to photograph a target so it measures well | Guides | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
 | 22 | `printer-true-size` | Does your printer print at true size? | Guides | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
 | 23 | `scanner-traps` | Scanner traps: cropping, DPI and colour | Guides | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
-| 24 | `choosing-the-markers` | Choosing the markers | How GroupLab is built | Code | **written 2026-09-22**, batch 3, waiting with batches 1 and 2 for review |
-| 25 | `designing-a-readable-target` | Designing a target GroupLab can read | How GroupLab is built | Code | **written 2026-09-22**, batch 3, waiting with batches 1 and 2 for review |
-| 26 | `what-grouplab-sends` | What GroupLab sends from your computer | How GroupLab is built | Code | **written 2026-09-22**, batch 3, waiting with batches 1 and 2 for review |
-| 27 | `nightly-builds` | Nightly builds, from commit to installer | How GroupLab is built | Code | **written 2026-09-22**, batch 3, waiting with batches 1 and 2 for review |
-| 28 | `smaller-installer` | Cutting the installer from 97 MB to 81 MB | How GroupLab is built | Code | **written 2026-09-22**, batch 3, waiting with batches 1 and 2 for review |
+| 24 | `choosing-the-markers` | Choosing the markers | How GroupLab is built | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 25 | `designing-a-readable-target` | Designing a target GroupLab can read | How GroupLab is built | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 26 | `what-grouplab-sends` | What GroupLab sends from your computer | How GroupLab is built | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 27 | `nightly-builds` | Nightly builds, from commit to installer | How GroupLab is built | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
+| 28 | `smaller-installer` | Cutting the installer from 97 MB to 81 MB | How GroupLab is built | Code | **published 2026-09-23** (batches 1 to 3; this table said written until entry 481 part C) |
 | 29 | `aim-points-by-optic-class` | Aim points for 1x to high power optics | Range tests | Planning | **draft** (entry 392): the red dot, prism and medium power classes are not shot yet; request 86 |
 | 30 | `range-test-log` | The range test log | Range tests | Planning | **published 2026-10-09** (entries 392 and 393): checked number by number, every checkable sentence backed |
 
@@ -103,6 +107,8 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| OpenCV's video reader in every Windows download, found listing files for the light installer (entry 474 section 4, entry 481 part B) | **written**, as the section "Found the same way again, six weeks later" of `/research/smaller-installer/` (entry 481 part C) | It is the same lesson as the article found the same way: 12 MB of every Windows zip that never ran, found only by listing the files for another question. A section, not an article, because the article already makes the point and this is its second instance. |
+| A recognized store-bought target marked as a failed stage on Show work (entry 481 part A) | not written | A screen's wording counted an expected miss as a failure; found while making a clip and fixed, and the release note says so. |
 | Hit probability by simulation, and what each error source costs a first round (entry 156; no row until entry 464 section 3 looked for undecided work) | written: [Where a first-round miss comes from](../website/research/where-a-first-miss-comes-from.md) (entry 464 section 3) | It changes what a shooter does: past 500 yd the wind call costs the most first-round hits in every case but one, a guessed distance next, and a 10 ft/s velocity SD under one in a hundred; and at 300 yd with a good reading, correcting off one shot lowers the next shot's chance. Worked from GroupLab's hit probability and its presets, which are its own judgment and the article says so; figures held by ArticleFiguresTests. |
 | Velocity and the vertical: how much of a group's vertical its velocity spread makes at each distance (entries 322 section 3, 329 and 416; no row until entry 464 section 3 looked for undecided work) | written: [How much of your vertical is your velocity?](../website/research/how-much-vertical-is-velocity.md) (entry 464 section 3) | It changes what a shooter does: a velocity SD of 10 ft/s adds 0.02 in of vertical SD at 100 yd and 2.93 in at 1000, so a 100 yard group cannot judge a load's velocity, and at 1000 yd it is half of a good rifle's vertical. Worked from GroupLab's solver for one load; figures held by ArticleFiguresTests. |
 | Top Gun's trend against a group's own sigma, and how many shots it takes to tell them apart (request 103, entry 462 section 2.1) | written: [Does your rifle group as well as Top Gun says it should?](../website/research/top-gun-and-your-groups.md) | It changes what a shooter does: one or two groups say nothing against the trend, and it takes about 50 shots to catch a 25 percent shortfall nine times in ten. Figures held by ArticleFiguresTests. |

@@ -8305,7 +8305,7 @@
   {
    "surface": "^site:research/smaller\\-installer/",
    "kind": "measured",
-   "where": "the article's own evidence: 2 sources, data from 2026-09-22"
+   "where": "the article's own evidence: 3 sources, data from 2026-09-22; the section Found the same way again from 2026-10-26 and 2026-11-07, checked against docs/notes/archive/questions-answered.md question 36 (28.6 MB unpacked, 11.9 MB of the zip) and entry 481 part B (zip 126,565,994 bytes in nightly 223, 114,384,706 from scripts/package-windows.ps1 with LeaveOutOpenCvVideoReader)"
   },
   {
    "surface": "^site:research/uploads\\-rebuilt\\-from\\-pixels/",
