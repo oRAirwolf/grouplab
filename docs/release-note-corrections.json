@@ -11,6 +11,10 @@
     }
   ],
   "corrections": {
+    "21a80eb082a4b8ba6eb2f3168ab1439bd5f3e191": {
+      "why": "Entry 480: its message records Alan's answer to error report 44 and names the iOS audit's failing run; it fixes nothing a report found, so it has no Reported-via, and the check that a report fix says where it came from does not apply.",
+      "reported": "none"
+    },
     "c01a659ef98760acb44dbf968b910d96325d7e5b": {
       "why": "Entry 469 section 2: nightly 218's notes listed two fixes to a fault that c4e1ab07 brought in and this commit and its pair took out inside the same build, so nobody moving from 217 met it. Nightly 218's published notes are not edited; the correction is in the next build's notes.",
       "notes": []

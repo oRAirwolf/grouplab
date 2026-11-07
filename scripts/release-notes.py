@@ -194,9 +194,19 @@ def corrected(sha):
     except FileNotFoundError:
         return None
     for full, entry in data.get("corrections", {}).items():
-        if full.startswith(sha):
+        if full.startswith(sha) and "notes" in entry:
             return [(n["note"], n["kind"].lower()) for n in entry["notes"]]
     return None
+
+
+def fixes_no_report(sha):
+    """Entry 480: a commit whose message names an error report it did not fix from (an answer recorded, an assessment), marked in
+    docs/release-note-corrections.json with "reported": "none" and why, since its message cannot be rewritten."""
+    try:
+        data = json.loads(CORRECTIONS.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return False
+    return any(full.startswith(sha) and entry.get("reported") == "none" for full, entry in data.get("corrections", {}).items())
 
 
 def commits(previous, head):
@@ -516,7 +526,7 @@ def build_notes(version, head, previous, heading=True, new=True):
             continue
         reported, submitted, bad = sources(message)
         wrong += [f"{sha}: {b}" for b in bad]
-        if new and CLOSES_REPORT.search(message) and not reported:
+        if new and CLOSES_REPORT.search(message) and not reported and not fixes_no_report(sha):
             wrong.append(f"{sha}: it closes a crash or error report and has no Reported-via trailer saying where the report came from (entries 458 and 476)")
         if reported:
             counted["fixes"] += 1
