@@ -976,7 +976,7 @@ def page_download() -> str:
 <h3 class="h3">What you get</h3>
 <dl class="facts">
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>
-<div><dt class="mono">Size</dt><dd>The computer downloads come precompiled, so the first photograph after GroupLab starts is read about a quarter sooner; that makes them about an eighth larger than before, the Windows zip about 127 MB rather than 114.</dd></div>
+<div><dt class="mono">Size</dt><dd>The computer downloads come precompiled, so the first photograph after GroupLab starts is read about a quarter sooner; that made them about an eighth larger, and leaving out OpenCV's video reader, which GroupLab never uses, took the Windows zip back from about 127 MB to 114.</dd></div>
 <div><dt class="mono">Samples</dt><dd>The Windows zip and installer carry two sample sheets, so there is something to open in the first minute; the other downloads do not.</dd></div>
 <div><dt class="mono">Your data</dt><dd>Kept in <code>%APPDATA%\\GroupLab</code> on Windows, under your home folder on a Mac or Linux, and in the app's own storage on a phone; if you turn on Sync between devices, also in the folder you choose. An update check sends nothing about you.</dd></div>
 <div><dt class="mono">Which build</dt><dd>Settings, Updates and about names the version, the train and the commit. Put that line in any report.</dd></div>

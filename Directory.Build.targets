@@ -42,4 +42,29 @@
              Text="Left out native assets for platforms nobody runs; kept $(GroupLabPlatformsRun)." />
   </Target>
 
+  <!--
+    NOTES-FROM-PLANNING.md entry 481 part B (question 36, Alan's yes of 2026-11-07, measured in entry 474): OpenCV's video reader,
+    opencv_videoio_ffmpeg*.dll, is left out of every build and publish. It is FFmpeg wrapped for OpenCV's VideoCapture and VideoWriter, which
+    nothing GroupLab ships calls; OpenCV loads it only when a video is opened, so without it pictures read exactly as before. It was 28.6 MB
+    unpacked and 11.9 MB of every Windows zip. Only the Windows runtime package carries it as a file of its own; the Linux and macOS
+    libraries are single files and are unchanged. The launch video clips write their MP4s through Windows' own encoder (Media Foundation),
+    not through this file. Set GroupLabKeepVideoReader to true to keep it for an experiment.
+  -->
+  <Target Name="LeaveOutOpenCvVideoReader"
+          AfterTargets="ResolvePackageAssets"
+          Condition="'$(GroupLabKeepVideoReader)' != 'true'">
+    <ItemGroup>
+      <NativeCopyLocalItems Remove="@(NativeCopyLocalItems)" Condition="$([System.String]::Copy('%(Filename)').StartsWith('opencv_videoio_ffmpeg'))" />
+      <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)" Condition="$([System.String]::Copy('%(Filename)').StartsWith('opencv_videoio_ffmpeg'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="LeaveOutOpenCvVideoReaderWhenPublished"
+          AfterTargets="ComputeResolvedFilesToPublishList"
+          Condition="'$(GroupLabKeepVideoReader)' != 'true'">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="$([System.String]::Copy('%(Filename)').StartsWith('opencv_videoio_ffmpeg'))" />
+    </ItemGroup>
+  </Target>
+
 </Project>

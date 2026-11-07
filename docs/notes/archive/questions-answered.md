@@ -5,6 +5,93 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-09-22, question 36: a light installer, measured, and why shrinking the one we have beat it
+
+**Status: answered 2026-11-07 by Alan (entry 481 part B): yes to the recommendation, no light installer; OpenCV's unused video reader is left out of every build instead (`LeaveOutOpenCvVideoReader` in Directory.Build.targets), the Windows zip 114.4 MB against nightly 223's 126.6 MB.** The question as it was:
+
+### Measured again, 2026-10-26 (entry 474 section 4), against nightly 221
+
+The app published for win-x64 from main both ways, precompiled as every desktop build has been since nightly 220, on this machine:
+
+| | unpacked | zipped | files | start-up to a usable window, median of 7, twice, alternated |
+|---|---|---|---|---|
+| self-contained, as published | 245.8 MB | 102.8 MB | 306 | 682 and 679 ms |
+| framework-dependent, the light one | 165.3 MB | 67.2 MB | 119 | 679 and 672 ms |
+
+**Against nightly 221's zip of 126.5 MB** (which also carries the samples, the notices and the README), the light one would be about
+**91 MB**, 35.6 MB less, about 28 percent. **Start-up is the same**: precompiled, the runtime being in the folder or on the machine makes
+no measurable difference. **What is missing from it** is the .NET runtime itself, 185 of the 187 files only the self-contained one has
+(the other two are the debugger's symbol reader and Visual Basic's support library, both part of the runtime too): without a .NET 10
+runtime on the machine it does not start, and Windows offers to download one.
+
+**Found while measuring:** `opencv_videoio_ffmpeg4130_64.dll`, OpenCV's video reader, is still in every desktop download, 28.6 MB unpacked
+and 11.9 MB of the zip, and nothing in `src/` opens a video (no `VideoCapture` or `VideoWriter`). Leaving it out is a third of the light
+installer's saving with no second package, no runtime to keep patched and nothing a person has to install; it would need the corpus and
+the suites run before and after, as any change to what ships does.
+
+**Recommendation, unchanged in kind:** not the light installer. Its 36 MB costs a second package on every release, an updater that keeps
+each install on its own kind, and a runtime nobody patches (sections 4 to 6 below still hold). Leave out the video reader first (12 MB of
+the zip for nothing), which is point 2 below, now measured. Nothing published was changed; that is Alan's decision.
+
+### 1. What was asked
+
+Entry 133: measure a framework-dependent build, say what a light installer would cost and gain, and recommend. Measure and propose only.
+
+### 2. The figures, measured on this machine tonight
+
+| | unpacked | zip | installer |
+|---|---|---|---|
+| self-contained, as shipped before tonight | 332.6 MB | about 102 MB | 97.3 MB |
+| framework-dependent, no runtime inside | 227.9 MB | 78.2 MB | not built |
+| **self-contained, with tonight's symbol fix** | **204.3 MB** | not built | not built |
+
+What makes up the framework-dependent build, 78 files:
+
+| part | MB |
+|---|---|
+| Avalonia and Skia | 121.4 |
+| OpenCV's native library | 93.6 |
+| everything else | 7.9 |
+| GroupLab itself | 5.0 |
+
+**Measuring this is what found the real problem.** 100.7 MB of the shipped build was debug symbols, and 100 MB of that was two files: `libSkiaSharp.pdb` at 80.1 MB and `libHarfBuzzSharp.pdb` at 19.9 MB. Native symbols for Skia and HarfBuzz, which nothing at runtime reads, no crash report here can use, and no user will ever open in a debugger. They are now left out, which took 332.6 MB to 204.3 MB with the analysis unchanged: 25 holes, 25 shots, mean radius 0.232 in on the sample, exactly as before.
+
+**So the self-contained build is now smaller than the framework-dependent one was**, 204.3 MB against 227.9 MB, and it carries its own runtime.
+
+### 3. Updates
+
+Entry 133 section 2 expected the gain to be in updates rather than first installs, and that was the right instinct, but the arithmetic has moved. An update today downloads the whole installer, about 97 MB, and will now be substantially less. A framework-dependent update would carry perhaps 60 MB of that, since Avalonia, Skia and OpenCV travel either way and they are 215 of the 228 MB. **The runtime is not what makes a GroupLab update large. The drawing and vision libraries are.**
+
+### 4. No administrator prompt, ever
+
+The per-user route does exist: Microsoft's `dotnet-install` script installs into a folder without elevation, and since .NET 9 an application host can be told to look in a private location with `AppHostDotNetSearch` and `AppHostRelativeDotNet`. On a clean Windows user account that works without a prompt.
+
+**But it is a new failure surface on somebody's first run**, and a first run is when a person decides whether to keep the application. The install script must be downloaded and its hash checked, a 70 MB runtime fetched over whatever connection they have, and any of it can fail behind a corporate proxy or an antivirus that objects to a script fetching an executable. The self-contained build has none of those steps: the installer is the application.
+
+Where a suitable runtime is already present, the private copy would be skipped and nothing downloaded, so the light installer would be small and fast for exactly the people who least need it to be.
+
+### 5. Keeping the runtime patched
+
+This is the part I would not want to own. A self-contained build gets .NET security fixes whenever GroupLab is rebuilt, which is every green push. A per-user runtime under `%LOCALAPPDATA%\GroupLab\dotnet` is patched by nobody: Windows Update does not see it, Microsoft's updater does not know about it, and it would fall to GroupLab to notice a CVE, fetch a new runtime and swap it under a running application. That is a real ongoing obligation on a project with one maintainer.
+
+### 6. Cost
+
+Two packages to build, test and support on every release. The updater must keep each install on its own kind for ever, because a light install cannot take a self-contained update or the reverse, which means the train, the manifest and the installer all grow a dimension. Given entry 123 section 2.7 found three separate defects in the single-package updater in one night, doubling its cases is not a small ask.
+
+### 7. Recommendation
+
+**Not yet, and shrink the one we have instead.** The measurement says the light installer solves a smaller problem than it looked: the runtime is about 100 MB of a 332 MB build, and tonight's symbol fix removed 128 MB for no cost, no new failure mode and no second package.
+
+What I would do next, in order:
+
+1. **Done tonight:** leave out the native debug symbols. 128.3 MB, no behaviour change.
+2. **Next, and I would measure before building:** `opencv_videoio_ffmpeg4130_64.dll` is 27.3 MB and GroupLab reads still images. If video capture is genuinely unused, that is 27 MB more for nothing.
+3. **Then consider trimming.** It would reach the managed assemblies, not the 215 MB of native libraries, so the gain is modest. Avalonia uses reflection for styling and data binding, so trimming it risks failures that appear only at runtime on a screen nobody tested, which is the worst kind. I would not trim without a full control walk on all three platforms afterwards.
+
+Revisit the light installer if the download is still thought too large after 1 and 2, because then the remaining weight really is Avalonia, Skia and OpenCV, and none of those is fixed by leaving the runtime out.
+
+---
+
 ## 2026-11-07, question 112: where a phone keeps its rifles and loads
 
 **Status: answered 2026-11-07 by Alan (entry 482 section 2): (a), as recommended, drawn as 2A: a "Rifles and loads" row in the phone's Settings, between Shooting defaults and Printers and paper, that opens Ballistics at the rifle and load forms; Ballistics stays the one place they are kept. Built in entry 482.** The question as it was: Error report 42 (2026-10-28, iOS): "using the iPhone I find it difficult thee find the possibility in the menu to add

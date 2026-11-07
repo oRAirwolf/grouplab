@@ -32,7 +32,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 
 | | Operating system | Built and published | Memory | Disk | Screen |
 |---|---|---|---|---|---|
-| **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 270 MB installed | a window about 1060 wide for the analysis screen |
+| **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 230 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 240 MB on Apple silicon, 270 MB on Intel | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 260 MB installed | as Windows |
 | **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, through TestFlight's public beta; not in the App Store yet | not measured yet | not measured yet | as Android |
