@@ -8084,8 +8084,8 @@
  },
  "rules": [
   {
-   "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/",
-   "match": "says its own resolution|72 or 96 dpi|From the scan's own\\s+resolution|Use the scan's 600 dpi",
+   "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$",
+   "match": "offers its own stated resolution|says its own resolution|72 or 96 dpi|From the scan's own\\s+resolution|Use the scan's 600 dpi",
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/StatedResolutionScale.cs (Offer, LowestBelievable 100, Stretched, DotsPerInchOf, Use) and ScaleSaid.FromScanResolution; src/GroupLab.App/MainWindow.cs SetTool and UseStatedScale; mobile/GroupLab.Mobile/MarkingAPage.cs UseStatedScale; held by StatedResolutionScaleTests, Entry481StatedScaleTests and Entry481StatedScalePhoneTests (entry 481 part E, question 108 (a))"
   },
