@@ -12,6 +12,25 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.224
+
+**2026-11-07**, commit `9b9df1d`. Nightly.
+
+**What you will notice**
+
+- A flatbed scan with no scale now offers its own stated resolution as the scale, on the computer and the phone, with the number shown; it is used only if you choose it, and the scale then says it came from the scan.
+- Settings on the phone now has a Rifles and loads row that opens them in Ballistics, where they are kept, and Back returns you to Settings; a person suggested it in an error report sent from GroupLab (found from an error report sent from GroupLab).
+- A length measured from the corner of a picture is no longer described as coming from the scan's own resolution.
+- Opening a picture of a store-bought target GroupLab recognizes no longer marks Show work in red as if a stage had failed; the target has no GroupLab codes to read, and that is no longer counted as a failure.
+- Finding the bulls on a sheet is about three times faster, so a 600 dpi scan is read about a tenth of a second sooner and a phone photograph a little sooner, with every result the same.
+- The Windows download is about 12 MB smaller: a video reader that came with the image library, and that GroupLab never used, is no longer included.
+
+From your reports and targets in this build: 1 fix from 1 error report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.224)
+
+---
+
 ## 0.2.0-nightly.223
 
 **2026-11-07**, commit `c5db920`. Nightly.
