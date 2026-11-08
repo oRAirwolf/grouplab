@@ -25,6 +25,40 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-08, entry 484: the rest of the week's work, queued
+
+**Status: actioned 2026-11-08. Sections 1 to 3 done; section 4 not done, because its date (2026-11-11) had not come when the entry
+finished: entry 480's dated check stays in STATE.md for the first run on or after it.** 1: no research row is left that needs nobody;
+`aim-points-by-optic-class` waits on request 86 (already in for-alan.md). 2: a hit probability 87 to 49 ms (the zero, the drop per fps and
+the strata's quantiles kept by their inputs) and Find holes on a store-bought target 274 to about 95 ms (`GreyMorphology`), both exact
+(9a38be6c). 3: no row of the proof checklist can move without material or a decision; the tests it names and the bench gate ran again.
+
+From the planning session, with Alan's choice of 2026-11-08 03:20 UTC. Take it after entry 483. Nothing here needs Alan. Stop at the
+usual 85% weekly limit (88% for a finishing block); the week resets 2026-11-13 06:00 UTC. Rewrite STATE.md after each part, and
+commit each part on its own, so a stop part way loses nothing.
+
+## 1. The research table's "not yet" rows
+
+Work down the "not yet" rows of the research table, in the table's own order. For each: do the research, and publish any article that
+is ready (standing rule, entry 393: ready research articles are published without asking), with its thumbnail (look C, entry 453). A
+row that needs Alan, a device or a range trip is marked so in the table and skipped, with one line in for-alan.md only if it is new.
+
+## 2. Phase 9, more measured speedups
+
+Find the next slowest steps (a scan opening, the phone's reading of a photograph, anything else the measurements show) and speed them
+up only where every result stays the same, as in entries 433, 474 and 481 part D. Record before and after in PERFORMANCE.md, and the
+user-visible ones in the release notes, README Phase 9 line and the site in the same change (entry 267).
+
+## 3. The proof checklist items that need nobody
+
+In docs/PROOF-CHECKLIST.md, do every item that needs no device sitting, no range trip, no printer and no answer from Alan. Mark each
+done with its evidence (test, commit or measurement). Leave the others as they are.
+
+## 4. The dated iOS check (entry 480)
+
+If this is still running on or after 2026-11-11, do entry 480's dated check (a .NET iOS workload set after 10.0.402.1 that fixes
+dotnet/macios issue 26969) as soon as the date comes, ahead of whatever part is in progress.
+
 ## 2026-11-07, entry 483: consistency audit, six findings
 
 **Status: actioned 2026-11-08. Every section done.** 1: Windows measured at 237.6 MB unpacked on nightly 224, the table now 240 MB

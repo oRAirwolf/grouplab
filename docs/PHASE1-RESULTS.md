@@ -556,6 +556,20 @@ suggestion. The total now reads 5 fixes from 10 error reports and 1 change sugge
 The wording of 2, 3 and 5 was done by docs-sonnet. Core 3166 passed, the one failure the local inbox line (gone once the entry was
 moved); App report tests 24 passed; site Python tests, readme, claims and consistency checks clean.
 
+## Entry 484: the rest of the week's work (2026-11-08)
+
+**Section 1.** RESEARCH.md's article table has one row not published, `aim-points-by-optic-class`, a draft waiting on request 86's
+shooting; every other row was published or decided "not written" with its reason (entry 481 part C caught the table up). Nothing new for
+for-alan.md. **Section 2.** A fresh bench on 5dfdb5f4 put the photograph's codes (470 ms, question 106) and the scan's holes (317 ms,
+entries 433 and 474) first; the next a person waits on that had never been worked were Find holes on a store-bought target (274 ms) and
+a hit probability (87 ms). Both were taken down with every result the same, measured and proven in docs/PERFORMANCE.md (Entry 484 section
+2): `HitProbability` keeps the zero, the drop per fps and the strata's quantiles by their inputs (`Recent`), 576 answers identical bit for
+bit; `GreyMorphology` does a grey open and close from the element's rows, `GreyMorphologyTests` 15 cases to the byte against OpenCV, and
+the scoreboards and 21 analyses unchanged. Commit 9a38be6c, with the README's Phase 9 line and two release notes. **Section 3.**
+docs/PROOF-CHECKLIST.md, Entry 484 section 3: none of the 16 unproven rows can be proven by a machine alone (material for 13, a planning
+decision for rows 3, 4's second half and 5's point 2); the 18 named tests exist and passed in the whole Core (3,181) and App (656) suites,
+and the bench gate passed, so the 15 proven or met rows still hold. **Section 4** waits for its date, 2026-11-11.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

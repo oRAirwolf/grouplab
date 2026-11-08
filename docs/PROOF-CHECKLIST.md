@@ -63,6 +63,23 @@ Outside the 31, the two lines the README adds: **the rest of the desktop from th
 it is what it is for; **sync between devices** (entries 461 and 463) needs two real devices, a computer and a phone, on one cloud folder,
 each changing a session and seeing the other's change, and a change made on both kept both ways.
 
+## Entry 484 section 3, 2026-11-08: the rows that need nobody, run again
+
+Planning's word: do every item that needs no device sitting, no range trip, no printer and no answer from Alan, and mark each with its
+evidence. **No row moves**, because none of the 16 still built, not proven can be proven by a machine alone:
+
+- **Rows 1, 2, 4 (its first half), 20, 24, 25 and 30** need a sheet shot at the range or photographed and scanned (the range list below).
+- **Rows 14, 19 and 28** need a printer and paper; **9 and 10** a person at the computer; **27 and 29** a phone sitting (request 50).
+- **Row 3** needs a change to detection that removes the corpus's four false marks for a cause that is not made up for those pictures;
+  entry 434 traced each and found none that separates them from real holes. **Row 4's second half** needs the rule or the proposed
+  gate changed first, since one clean torn hole reads 1.48 holes' area on a rendered sheet. **Row 5's point 2** needs planning to restate
+  it. Each is a decision for planning, not material, so none is done here.
+
+**What a machine could do, done on 2026-11-08:** the 18 tests this file names as evidence all still exist under those names, and the
+whole Core suite (3,181 passed, the only failure the inbox line while this entry was in the inbox) and App suite (656 passed) ran on
+commit 9a38be6c, including every one of them; `grouplab bench --gate docs/performance-baseline.json` passed (row 31). So the rows proven
+by tests, 6, 8, 11, 12, 13, 15, 16, 21 and 23, and the rows met, 7, 17, 18, 22, 26 and 31, still hold today.
+
 ## Entry 472 section 5, 2026-10-24: each line still needing Alan, smallest first
 
 Read again on 2026-10-24. Nothing new has come into `grouplab-local` since entry 464 (the range kit in `range-next` is still waiting for
@@ -128,7 +145,7 @@ Results are from 2026-10-01 unless a date says otherwise. "Proposed" marks a gat
 | 28 | The Targets screen on the phone | Proposed: a sheet printed from the phone measures true size | Not measurable: nothing printed from a phone. |
 | 29 | Signed APK, development build, Play internal test | No gate | **Two of the three side by side on an emulator** (entry 414 section 4): nightly 188's signed APK and GroupLab Dev installed together on an Android 16 emulator (x86_64, running the arm64 builds under Android's translation), and each started to its first log line, `0.2.0-nightly.188` and `0.2.0-nightly.188-dev`. The Play internal test copy, and all three on one real phone, still need request 50 |
 | 30 | Marking by hand on the phone | Proposed: within the click noise of request 9 | Not measurable: no hand marking on a phone of a shot store-bought target, and request 9's noise is not measured. |
-| 31 | `grouplab bench` | Phase 9's baseline gate (entry 388 section 4): no figure more than a quarter and 20 ms slower than `docs/performance-baseline.json` | **Met** on 2026-10-08: the gate passes on the code that set the baseline (docs/PERFORMANCE.md). |
+| 31 | `grouplab bench` | Phase 9's baseline gate (entry 388 section 4): no figure more than a quarter and 20 ms slower than `docs/performance-baseline.json` | **Met** on 2026-10-08: the gate passes on the code that set the baseline (docs/PERFORMANCE.md). **Met again 2026-11-08** (entry 484 section 3), on this computer, every figure at or below its baseline, a batch of ten sheets 2,114 ms against 4,150. |
 
 ## For planning: written gates found met
 

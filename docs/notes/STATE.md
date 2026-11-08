@@ -9,14 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-08, entry 483 done; entry 484 sections 1 and 2 done, 3 next, 4 dated 2026-11-11.
+**Last rewritten:** 2026-11-08, entries 483 and 484 done (484 section 4 waits for 2026-11-11); the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 484 (2026-11-08)**, in progress: 1 nothing left that needs nobody (aim points wait on request 86); 2 a hit
-  probability 87 to 49 ms and Find holes on a store-bought target 274 to about 95 ms, both exact; 3 the proof checklist; 4 from 11-11.
+- **Entry 484 (2026-11-08)**, done but section 4: no research row left that needs nobody; a hit probability 87 to 49 ms and Find
+  holes on a store-bought target 274 to about 95 ms, both exact; the proof checklist run again, no row movable. 4 is entry 480's check.
 - **Entry 483 (2026-11-08)**, done: the audit's six findings (Windows 240 MB, measured 237.6 on nightly 224; the scan's resolution
   on Features; Rifles and loads on the tour; a report's suggestion counted apart from fixes, nightly 224 corrected in the total).
 - **Entries 481 and 482 (2026-11-07)**, done: 50 launch clips, the video reader left out, bulls three times sooner, a scan's dpi as its
@@ -81,7 +81,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 484.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -104,6 +104,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
+- **Grey morphology by an ellipse is managed** (`GreyMorphology`, entry 484), as binary is; any other element goes to OpenCV.
 - **The database is schema version 6** (entry 461): each upgrade's first open copies `grouplab.db` to `grouplab.pre-vN.db` first.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
