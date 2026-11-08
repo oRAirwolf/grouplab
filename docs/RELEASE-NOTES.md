@@ -12,6 +12,21 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 0.2.0-nightly.225
+
+**2026-11-08**, commit `54c6871`. Nightly.
+
+**What you will notice**
+
+- Correction: the Rifles and loads row in the phone's Settings in nightly 224 was a change a person suggested in a report, not a fix; its notes named the report twice and counted it as a fix.
+- Working out your chance of a hit on Ballistics, with its curve against distance, now takes a little over half the time, with every figure the same.
+- Find holes on a target GroupLab did not print now finishes in about a third of the time, proposing exactly the same holes.
+- The contact box in Report a problem no longer promises a reply; it says an email address you type is kept only in a saved report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.225)
+
+---
+
 ## 0.2.0-nightly.224
 
 **2026-11-07**, commit `9b9df1d`. Nightly.
