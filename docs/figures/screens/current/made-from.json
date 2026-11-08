@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 223,
+  "afterNightly": 224,
   "screens": {
     "analysis": "cd3630f9efbce647001bebae774c5a11a4bd36ab58476543bc21739368a26e61",
     "analysis-open": "f4d292a18958110f2858e826f9026538fd9d143193bb0f575a97dc01ba57a151",
