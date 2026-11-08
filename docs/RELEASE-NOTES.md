@@ -463,7 +463,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 
 - With many targets open, the tab strip's scrollbar now sits in its own row below the tabs, so it no longer covers their names and close buttons.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.195)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
