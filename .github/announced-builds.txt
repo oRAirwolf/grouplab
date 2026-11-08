@@ -127,3 +127,4 @@
 0.2.0-nightly.222
 0.2.0-nightly.223
 0.2.0-nightly.224
+0.2.0-nightly.225
