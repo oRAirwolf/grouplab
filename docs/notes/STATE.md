@@ -9,12 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-08, entry 483 done; entry 484 (the week's remaining work) next.
+**Last rewritten:** 2026-11-08, entry 483 done; entry 484 sections 1 and 2 done, 3 next, 4 dated 2026-11-11.
 
 ---
 
 ## In flight
 
+- **Entry 484 (2026-11-08)**, in progress: 1 nothing left that needs nobody (aim points wait on request 86); 2 a hit
+  probability 87 to 49 ms and Find holes on a store-bought target 274 to about 95 ms, both exact; 3 the proof checklist; 4 from 11-11.
 - **Entry 483 (2026-11-08)**, done: the audit's six findings (Windows 240 MB, measured 237.6 on nightly 224; the scan's resolution
   on Features; Rifles and loads on the tour; a report's suggestion counted apart from fixes, nightly 224 corrected in the total).
 - **Entries 481 and 482 (2026-11-07)**, done: 50 launch clips, the video reader left out, bulls three times sooner, a scan's dpi as its
@@ -22,8 +24,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Dated check, from 2026-11-11 (.NET's November release):** is there an iOS
   workload set after 10.0.402.1 with dotnet/macios issue 26969 fixed? If so, `python scripts/ios-xcode27.py` on ios-app.yml with its
   version, prove it, then nightly.yml and IosSigningTests (docs/IOS-PLAN.md, The iPhone Duo). Fold tests and two phone fixes are in.
-- **Entries 476 to 479 and error reports 41 to 44 (2026-11-07)**, done: the site's dispatches, the notes counting, four consistency
-  audits; 42 and 43 fixed for nightly 223, 41 and 44 no fault.
 
 ## The next three
 

@@ -305,17 +305,15 @@ public sealed class OpenCvSharpBackend : IImagingBackend
         using var kernel = Cv2.GetStructuringElement(MorphShapes.Ellipse, new Size((2 * radius) + 1, (2 * radius) + 1));
 
         // Entry 392 section 2: a close of a 0 and 1 image is done in managed code from this same element's rows, which gives OpenCV's
-        // answer to the byte in a fraction of the time; Phase 9 (2026-10-20) does the same for an open. A grey image, and an element of
-        // another shape, goes to OpenCV as before.
-        if (BinaryMorphology.IsBinary(image.Pixels))
+        // answer to the byte in a fraction of the time; Phase 9 (2026-10-20) does the same for an open, and entry 484 section 2 for a grey
+        // image. An element of another shape goes to OpenCV as before.
+        kernel.GetArray(out byte[] element);
+        if (BinaryMorphology.HalfWidths(element, kernel.Cols, kernel.Rows) is { } halfWidths)
         {
-            kernel.GetArray(out byte[] element);
-            if (BinaryMorphology.HalfWidths(element, kernel.Cols, kernel.Rows) is { } halfWidths)
-            {
-                return new GrayImage(image.Width, image.Height, operation == MorphologyOperation.Close
-                    ? BinaryMorphology.Close(image.Pixels, image.Width, image.Height, halfWidths)
-                    : BinaryMorphology.Open(image.Pixels, image.Width, image.Height, halfWidths));
-            }
+            bool close = operation == MorphologyOperation.Close;
+            return new GrayImage(image.Width, image.Height, BinaryMorphology.IsBinary(image.Pixels)
+                ? close ? BinaryMorphology.Close(image.Pixels, image.Width, image.Height, halfWidths) : BinaryMorphology.Open(image.Pixels, image.Width, image.Height, halfWidths)
+                : close ? GreyMorphology.Close(image.Pixels, image.Width, image.Height, halfWidths) : GreyMorphology.Open(image.Pixels, image.Width, image.Height, halfWidths));
         }
 
         using var source = Mat.FromPixelData(image.Height, image.Width, MatType.CV_8UC1, image.Pixels);

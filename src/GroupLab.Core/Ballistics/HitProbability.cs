@@ -202,6 +202,14 @@ public static class HitProbability
 
     private const int StrataCount = 1000;
 
+    // Entry 484 section 2: every model built for one answer (the answer, and each point of its curve) worked out the same three things
+    // again for the same rifle: the zero, the velocity's drop per foot per second where the group was shot, and the thousand chi-square
+    // quantiles the strata are drawn from. Between them about half of an answer's time. Each is kept for the inputs it was worked out
+    // from, a record compared field by field, and worked out the same way when it is not kept, so no value moves.
+    private static readonly Recent<BallisticInput, double> Zeros = new(8);
+    private static readonly Recent<(BallisticInput Input, double Yards), double> DropsPerFps = new(8);
+    private static readonly Recent<double, double[]> StrataQuantiles = new(8);
+
     private const int ScatterPoints = 1500;
 
     /// <summary>The sources drawn for every shot.</summary>
@@ -609,7 +617,7 @@ public static class HitProbability
             refusal = null;
             var believed = setup.Solver with
             {
-                LaunchAngleMoa = setup.Solver.LaunchAngleMoa ?? BallisticSolver.Solve(setup.Solver, setup.Solver.ZeroRangeYards, setup.Solver.ZeroRangeYards).ZeroAngleMoa,
+                LaunchAngleMoa = setup.Solver.LaunchAngleMoa ?? Zeros.Get(setup.Solver, s => BallisticSolver.Solve(s, s.ZeroRangeYards, s.ZeroRangeYards).ZeroAngleMoa),
             };
             (double Up, double Across) Impact(BallisticInput input, double at)
             {
@@ -663,7 +671,7 @@ public static class HitProbability
             double velocitySd = Error(setup, HitSource.Velocity).Sd;
             if (setup.Precision.FromYards is { } from && velocitySd > 0)
             {
-                velocityShare = HitPrecision.MradFromInches(Math.Abs(Projection.DropPerFps(setup.Solver, from)) * velocitySd, from);
+                velocityShare = HitPrecision.MradFromInches(Math.Abs(DropsPerFps.Get((setup.Solver, from), k => Projection.DropPerFps(k.Input, k.Yards))) * velocitySd, from);
                 if (velocityShare >= setup.Precision.SigmaMrad)
                 {
                     refusal = string.Create(CultureInfo.InvariantCulture,
@@ -677,9 +685,10 @@ public static class HitProbability
             if (setup.Precision.DegreesOfFreedom is { } df)
             {
                 strata = new double[StrataCount];
+                var quantiles = StrataQuantiles.Get(df, d => Enumerable.Range(0, StrataCount).Select(i => Distributions.ChiSquareQuantile((i + 0.5) / StrataCount, d)).ToArray());
                 for (int i = 0; i < StrataCount; i++)
                 {
-                    strata[i] = setup.Precision.SigmaMrad * Math.Sqrt(df / Distributions.ChiSquareQuantile((i + 0.5) / StrataCount, df));
+                    strata[i] = setup.Precision.SigmaMrad * Math.Sqrt(df / quantiles[i]);
                 }
 
                 // Spread the strata through the trials, so a short run still sees the whole distribution.
@@ -767,5 +776,42 @@ public static class HitProbability
                 }
             }
         }
+    }
+}
+
+/// <summary>
+/// The last few answers of a pure function, by their inputs: entry 484 section 2. Safe from several threads; a miss works the answer out
+/// outside the lock, so two threads may both work out the same one, and either copy is the same.
+/// </summary>
+internal sealed class Recent<TKey, TValue>(int kept)
+    where TKey : notnull
+{
+    private readonly List<KeyValuePair<TKey, TValue>> items = [];
+
+    public TValue Get(TKey key, Func<TKey, TValue> make)
+    {
+        lock (items)
+        {
+            foreach (var item in items)
+            {
+                if (EqualityComparer<TKey>.Default.Equals(item.Key, key))
+                {
+                    return item.Value;
+                }
+            }
+        }
+
+        var value = make(key);
+        lock (items)
+        {
+            if (items.Count == kept)
+            {
+                items.RemoveAt(0);
+            }
+
+            items.Add(new(key, value));
+        }
+
+        return value;
     }
 }

@@ -7197,9 +7197,9 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/ShotList.cs and the report writer (a stored reason is still printed); entry 407 sections 3 and 4"
   },
-  "- **In progress.** Some optimizations have been made and measured: finding the holes on a scan, finding the bulls on a sheet about three times sooner, the phone's reading of a photograph, a 600 dpi scan opening in about four fifths of the time, the solver warmed after start-up, and a photograph's codes read sooner.": {
+  "- **In progress.** Some optimizations have been made and measured: finding the holes on a scan, finding the bulls on a sheet about three times sooner, the chance of a hit in a little over half the time, Find holes on a store-bought target in about a third of the time, the phone's reading of a photograph, a 600 dpi scan opening in about four fifths of the time, the solver warmed after start-up, and a photograph's codes read sooner.": {
    "kind": "decided",
-   "where": "docs/NOTES-FROM-PLANNING.md entries 392, 400, 414 and 415 section 3 (the optimizations and their measurements); docs/RELEASE-NOTES.md nightlies 186 and 189 and nightly 224 (finding the bulls about three times faster, commit d00f3e55, entry 481 part D); Phase 9 table row says In progress"
+   "where": "docs/NOTES-FROM-PLANNING.md entries 392, 400, 414 and 415 section 3 (the optimizations and their measurements); docs/RELEASE-NOTES.md nightlies 186 and 189 and nightly 224 (finding the bulls about three times faster, commit d00f3e55, entry 481 part D); docs/PERFORMANCE.md, entry 484 section 2 (the chance of a hit, 87 to 49 ms, and Find holes on a store-bought target, 274 to 90 to 104 ms, by grouplab bench, 2026-11-08); Phase 9 table row says In progress"
   },
   "Quack's flatbed scans on a Mac showed holes being missed and the snap landing on the wrong side of the rim, a report on the upload page led to its progress bar and to sets of up to 30 photographs, and a question about reading a set of three sheets as one led to the pooled set in its own tab, and Quack's ask with Jylee led to a set of scans dropped together opening in one tab.": {
    "kind": "decided",

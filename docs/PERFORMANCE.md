@@ -48,6 +48,50 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 484 section 2, 2026-11-08: the chance of a hit in a little over half the time, and Find holes on a store-bought target in about a third, every result the same
+
+**Measured first** (`grouplab bench --runs 5` on commit 5dfdb5f4, then timers put into `HitProbability` for this and taken out after):
+with the photograph's codes left by question 106 and the scan's holes and bulls taken down in entries 474 and 481, the next step a
+person waits on that had never been worked is a hit probability, 87 ms for the answer and a three-point curve. Of each, about 16 ms
+found the rifle's zero, 17 ms the velocity's drop per foot per second where the group was shot, 30 ms flew the trajectories each source
+moves, and 23 ms drew the strings. The zero and the drop per fps were worked out again by every model built for one answer, four times
+for the same rifle, and the thousand chi-square quantiles the strata come from again for the same degrees of freedom.
+
+**Taken, one change, which cannot move a value:** `HitProbability` keeps the last eight of each (`Recent`), by the inputs they were
+worked out from, a record compared field by field, and works each out the same way when it is not kept. The trajectories and the
+strings are unchanged.
+
+| `grouplab bench --runs 5`, median ms | before | after |
+|---|---|---|
+| a hit probability, the answer and its curve | 87 | 49 |
+
+**Nothing moved:** 576 answers, each with its curve, written out before and after as the bit patterns of every chance, interval, cost,
+spread and scatter point, over four rifles (one with its launch angle given, one with latitude and spin), three distances, four
+precisions with and without degrees of freedom, every preset, and one and two shots, twice over so that kept and not kept answers both
+ran: the two files, 56 MB each, are identical byte for byte. The ballistics tests pass.
+
+**The second, Find holes on a target GroupLab did not print** (Experimental), 274 ms on the bench's drawn black-bull target. Timers in
+`AnyTargetHoleFinder.Find`, taken out after: more than half of it was the paper's and the print's levels, OpenCV's grey close by a disc
+121 pixels across and open and close by one 61 across on the picture reduced to about 100 dots an inch, then the dark holes and the light
+ones, which open grey images too. The native filter takes the largest or smallest value under every point of the disc at every pixel.
+
+**Taken, one change, which cannot move a pixel:** `GreyMorphology` does a grey open and close from the element's rows, as
+`BinaryMorphology` does for 0 and 1 images (entry 392): the largest over the element's rows of each row's largest within that row's half
+width, every half width of a row had by widening the last one a pixel, beyond the image counting as neither, as OpenCV's default border.
+`OpenCvSharpBackend.Morphology` sends every image with an ellipse to it that is not 0 and 1; the neutral-darkness detector's grey open
+goes the same way. `GreyMorphologyTests` hold the open and the close to OpenCV's to the byte on 15 pictures, from 1 pixel wide to 850 by
+1100 at a radius of 60, with shading, noise, 0 and 255, and marks over all four edges.
+
+| `grouplab bench --runs 5`, median ms | before | after |
+|---|---|---|
+| find holes on a target GroupLab did not print | 274 | 90 to 104 (two runs) |
+
+**Nothing moved:** the command line built before and after: `scoreboard --corpus` on the four local corpus folders, `scoreboard
+--synthetic` and `scoreboard --any-target` the same but for their time columns, and `grouplab analyze --calibre .308 --json` on the 600 dpi
+sample, the 600 dpi phase 0 scan and the 19 local corpus photographs the same marking file, byte for byte, and the same printed stages
+once times are left out. **The bench gate passed** on 2026-11-08 (row 31 of docs/PROOF-CHECKLIST.md), every figure at or below its
+baseline. **Looked at and left:** the user-guide PDF, 577 ms, made by the command line only, never while somebody waits.
+
 ## Entry 481 part D, 2026-11-07: finding the bulls, about three times sooner, every result the same
 
 **Measured first** (timers put into `SheetMeasurer.LocateBulls` and the locators' `Window.Levels` for this and taken out after; Release,
