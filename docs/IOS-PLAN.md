@@ -201,7 +201,7 @@ That is [dotnet/macios issue 26969](https://github.com/dotnet/macios/issues/2696
 2026-10-22 it will be in the next .NET 10 release. Silencing the error could ship a TestFlight build where the keyboard does not work,
 so nothing is moved until a workload set after 10.0.402.1 carries the fix. Then: `python scripts/ios-xcode27.py
 .github/workflows/ios-app.yml <version>`, start ios-app.yml, and once it is green the same on `nightly.yml`, with `IosSigningTests`'
-runs-on line changed in the same commit. Nothing is needed from Alan.
+runs-on line changed in the same commit. Nothing is needed from Alan. **Checked 2026-11-08:** issue 26969 still open; the only later workload set, 10.0.403 (published 2026-10-25), carries the same iOS manifest, 27.1.10018, so it holds no fix. What to look for is a workload set whose `Microsoft.NET.Sdk.iOS` is past 27.1.10018, or a dotnet/macios release after 27.1.10018.
 
 **What is held already, without the new SDK.** `Entry480FoldTests` folds and unfolds at the Duo's reported sizes (outer 466 by 678
 points, inner 626 by 890 and 890 by 626; the simulator leg will record the real ones) on the result, in Fix holes, on Capture and in

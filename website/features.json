@@ -10,6 +10,7 @@
   ],
   "checkedFrom": "0.2.0-nightly.113",
   "notFeatures": [
+    "Correction: the Rifles and loads row in the phone's Settings in nightly 224",
     "On a phone or tablet turned on its side, or a folding phone opened",
     "On the phone, the question of which bulls you fired at now shows its answers",
     "Correction: nightly 222's fixes",
@@ -1194,7 +1195,7 @@
       ],
       "since": "0.2.0-nightly.103",
       "reworded": "0.2.0-nightly.209",
-      "note": ["GroupLab can now send a report when it hits an error", "Make a report now sends from GroupLab"],
+      "note": ["GroupLab can now send a report when it hits an error", "Make a report now sends from GroupLab", "The contact box in Report a problem no longer promises a reply"],
       "tour": "settings",
       "guide": "12-settings",
       "article": "what-grouplab-sends",

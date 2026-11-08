@@ -8080,6 +8080,10 @@
   "GroupLab keeps everything in `%APPDATA%\\GroupLab` on Windows, and under your home folder on macOS and Linux (in the app's own storage on a phone): settings, your sessions database, the daily copies of your records, any sheet you design, and the log.": {
    "kind": "decided",
    "where": "Sync between devices since nightly 215 (entries 461, 463, 464, 471 to 473) writes records to the folder the person chooses; docs/ANDROID.md section 8 (entry 476 finding 4, entry 478 finding 1)"
+  },
+  "What to look for is a workload set whose `Microsoft.NET.Sdk.iOS` is past 27.1.10018, or a dotnet/macios release after 27.1.10018.": {
+   "kind": "measured",
+   "where": "Entry 480 section 2's dated check, looked at on 2026-11-08: NuGet's Microsoft.NET.Workloads.10.0.400 packages 10.402.1 and 10.403.0 both name Microsoft.NET.Sdk.iOS 27.1.10018/10.0.100, the dotnet/macios releases page has none after 27.1.10018 (2026-10-19), and issue 26969 is open; docs/IOS-PLAN.md, The iPhone Duo"
   }
  },
  "rules": [

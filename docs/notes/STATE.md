@@ -23,7 +23,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   scale; "Rifles and loads" in the phones' Settings opens Ballistics (question 112, 2A).
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Dated check, from 2026-11-11 (.NET's November release):** is there an iOS
   workload set after 10.0.402.1 with dotnet/macios issue 26969 fixed? If so, `python scripts/ios-xcode27.py` on ios-app.yml with its
-  version, prove it, then nightly.yml and IosSigningTests (docs/IOS-PLAN.md, The iPhone Duo). Fold tests and two phone fixes are in.
+  version, prove it, then nightly.yml and IosSigningTests (IOS-PLAN.md). 2026-11-08: 10.0.403 still iOS 27.1.10018, no fix.
 
 ## The next three
 
@@ -70,7 +70,7 @@ Two, both in `docs/QUESTIONS-FOR-PLANNING.md` (36 answered in entry 481 and 112 
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.223 (2026-11-07 09:17 UTC), sent to TestFlight and the Store; nightly 224 carries entries 481 and 482.
+- **Last nightly:** 0.2.0-nightly.225 (2026-11-08 06:18 UTC), sent to TestFlight and the Store; it carries entries 483 and 484.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 - Crash reports: none open (41 to 44 closed 2026-11-07; `docs/notes/error-reports.md`).
 
