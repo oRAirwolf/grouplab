@@ -217,7 +217,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
 endobj
 11 0 obj
-<< /Length 7169 >>
+<< /Length 7131 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -295,9 +295,9 @@ BT /F1 71 Tf 1 0 0 -1 381 4616 Tm (The gear at the bottom left opens the setting
 BT /F1 71 Tf 1 0 0 -1 381 4704 Tm (line into any report, because a test build changes whenever the code does. Report a problem in Settings, Help) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4792 Tm (and problems, opens a window that lists what the report holds, with a box for what happened and one for a way) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4880 Tm (to reach you. Write what happened and press Send: the report goes to the project with the error and the logs of) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4968 Tm (its run, carrying no location data and no photographs. Save only writes it as a zip instead. Only when sending is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5056 Tm (not open yet, or a send fails, does the window say so and suggest sending the saved zip by opening an issue at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5144 Tm (<https://github.com/oRAirwolf/grouplab/issues> or by email to support@grouplab.org, with a line about what you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4968 Tm (its run, carrying no location data and no photographs. A contact you type stays in a saved report only; Send does) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5056 Tm (not carry it. Save only writes it as a zip instead. Only when sending is not open yet, or a send fails, does the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5144 Tm (window say so and suggest sending the saved zip by opening an issue at) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 4 of 5) Tj ET
 Q
 endstream
@@ -306,17 +306,18 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 13 0 R >>
 endobj
 13 0 obj
-<< /Length 981 >>
+<< /Length 1134 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (were doing. The support page at <https://grouplab.org/support/> explains the same and is easier to find again.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 575 Tm (GroupLab keeps everything in %APPDATA%\\GroupLab on Windows, and under your home folder on macOS) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 663 Tm (and Linux \(in the app's own storage on a phone\): settings, your sessions database, the daily copies of your) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 751 Tm (records, any sheet you design, and the log. If you turned on Sync between devices, the records are also in the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 839 Tm (folder you chose, which is yours to delete, since the project never holds it. To remove it, uninstall or delete the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 927 Tm (folder you unzipped, and delete that folder when you want the data gone.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (<https://github.com/oRAirwolf/grouplab/issues> or by email to support@grouplab.org, with a line about what you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (were doing. The support page at <https://grouplab.org/support/> explains the same and is easier to find again.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 663 Tm (GroupLab keeps everything in %APPDATA%\\GroupLab on Windows, and under your home folder on macOS) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 751 Tm (and Linux \(in the app's own storage on a phone\): settings, your sessions database, the daily copies of your) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 839 Tm (records, any sheet you design, and the log. If you turned on Sync between devices, the records are also in the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 927 Tm (folder you chose, which is yours to delete, since the project never holds it. To remove it, uninstall or delete the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1015 Tm (folder you unzipped, and delete that folder when you want the data gone.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 5 of 5) Tj ET
 Q
 endstream
@@ -1400,23 +1401,23 @@ xref
 0000013976 00000 n 
 0000017590 00000 n 
 0000017718 00000 n 
-0000024940 00000 n 
-0000025068 00000 n 
-0000026101 00000 n 
-0000288116 00000 n 
-0000288190 00000 n 
-0000288316 00000 n 
-0000288436 00000 n 
-0000288557 00000 n 
-0000288730 00000 n 
-0000288854 00000 n 
-0000288980 00000 n 
-0000289121 00000 n 
-0000289256 00000 n 
-0000289399 00000 n 
-0000289530 00000 n 
+0000024902 00000 n 
+0000025030 00000 n 
+0000026217 00000 n 
+0000288232 00000 n 
+0000288306 00000 n 
+0000288432 00000 n 
+0000288552 00000 n 
+0000288673 00000 n 
+0000288846 00000 n 
+0000288970 00000 n 
+0000289096 00000 n 
+0000289237 00000 n 
+0000289372 00000 n 
+0000289515 00000 n 
+0000289646 00000 n 
 trailer
 << /Size 27 /Root 1 0 R >>
 startxref
-289661
+289777
 %%EOF

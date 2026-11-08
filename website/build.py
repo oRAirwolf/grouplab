@@ -2720,35 +2720,53 @@ HEAD4 = '<h4 class="h3">'
 FROM_YOU = re.compile(r"From your reports and targets in this build: (.+)\.")
 
 
-def attributed(fixes: int, reports: int, first: str) -> tuple[int, int, str]:
+# Entry 483 section 4: a change somebody suggested in a report is counted apart from a fix (scripts/readme.py reads the same).
+FROM_YOU_PARTS = {
+    ("fixes", "reports"): r"(\d+) fix(?:es)? from (\d+) error reports?",
+    ("suggested", "asked"): r"(\d+) changes? suggested in (\d+) error reports?",
+    ("updates", "targets"): r"(\d+) detection updates? from (\d+) targets people sent",
+}
+
+
+def from_you_words(c: dict) -> str:
+    """The running total's parts in words, in the order a build's own line gives them."""
+    def s(n): return "s" if n > 1 else ""
+    said = ([f"{c['fixes']} fix{'es' if c['fixes'] > 1 else ''} from {c['reports']} error report{s(c['reports'])}"] if c["fixes"] else []) + \
+        ([f"{c['suggested']} change{s(c['suggested'])} suggested in {c['asked']} error report{s(c['asked'])}"] if c["suggested"] else []) + \
+        ([f"{c['updates']} detection update{s(c['updates'])} from {c['targets']} targets people sent"] if c["updates"] else [])
+    return said[0] if len(said) < 2 else ", ".join(said[:-1]) + " and " + said[-1]
+
+
+def attributed(c: dict, first: str) -> str:
     """Entry 476 finding 2: fixes from people's reports in a published build whose commits did not say so, kept in
-    docs/release-note-corrections.json under "attributions" and added to the running total; the build's published notes are not edited."""
+    docs/release-note-corrections.json under "attributions" and added to the running total; the build's published notes are not
+    edited. An attribution may also move a count, as nightly 224's suggestion counted as a fix (entry 483 section 4)."""
     import json
     try:
         data = json.loads((REPO / "docs" / "release-note-corrections.json").read_text(encoding="utf-8"))
     except FileNotFoundError:
-        return fixes, reports, first
+        return first
     for a in data.get("attributions", []):
-        fixes, reports = fixes + int(a["fixes"]), reports + int(a["reports"])
+        for key in c:
+            c[key] += int(a.get(key, 0))
         first = first or a["build"]
-    return fixes, reports, first
+    return first
 
 
-def from_you_total(text: str) -> tuple[str, int, int, int, int] | None:
-    """The running total over every build in docs/RELEASE-NOTES.md: the first build that counted, fixes, reports, updates and targets."""
-    first, fixes, reports, updates, targets = "", 0, 0, 0, 0
+def from_you_total(text: str) -> tuple[str, dict] | None:
+    """The running total over every build in docs/RELEASE-NOTES.md: the first build that counted, and each count."""
+    first, c = "", dict.fromkeys(("fixes", "reports", "suggested", "asked", "updates", "targets"), 0)
     for block in re.split(r"(?m)^## ", text)[1:]:
         version = block.split("\n", 1)[0].strip()
         if (m := FROM_YOU.search(block)) is None:
             continue
         first = version
         for part in m.group(1).split(", "):
-            if (f := re.fullmatch(r"(\d+) fix(?:es)? from (\d+) error reports?", part)) is not None:
-                fixes, reports = fixes + int(f.group(1)), reports + int(f.group(2))
-            elif (u := re.fullmatch(r"(\d+) detection updates? from (\d+) targets people sent", part)) is not None:
-                updates, targets = updates + int(u.group(1)), targets + int(u.group(2))
-    fixes, reports, first = attributed(fixes, reports, first)
-    return (first, fixes, reports, updates, targets) if first else None
+            for key, pattern in FROM_YOU_PARTS.items():
+                if (f := re.fullmatch(pattern, part)) is not None:
+                    c[key[0]], c[key[1]] = c[key[0]] + int(f.group(1)), c[key[1]] + int(f.group(2))
+    first = attributed(c, first)
+    return (first, c) if first else None
 
 
 def from_you_sentence() -> str:
@@ -2757,14 +2775,8 @@ def from_you_sentence() -> str:
     if total is None:
         return ("From the next nightly, each build's notes say which fixes came from your error reports and which detection changes were made "
                 "with targets you sent, and the running total is kept here.")
-    first, fixes, reports, updates, targets = total
-    number = first.rsplit(".", 1)[-1]
-    said = []
-    if fixes:
-        said.append(f"{fixes} fix{'es' if fixes > 1 else ''} from {reports} error report{'s' if reports > 1 else ''}")
-    if updates:
-        said.append(f"{updates} detection update{'s' if updates > 1 else ''} from {targets} targets people sent")
-    return f"Since nightly {number}: " + " and ".join(said) + "."
+    first, c = total
+    return f"Since nightly {first.rsplit('.', 1)[-1]}: {from_you_words(c)}."
 
 
 def page_releases() -> str:
@@ -2938,6 +2950,7 @@ def page_tour_index() -> str:
                          f'<img class="research-thumb" src="/assets/screens/{key}-dark-1400x900.webp" alt="" width="320" height="206" loading="lazy">')
         mobile_thumb = (phone_thumb(mobile["shot"]) if mobile.get("shot")
                         else '<p class="eyebrow">On the phone; not yet pictured there</p>' if mobile.get("pending")
+                        else f'<p class="eyebrow">{esc(mobile["card"])}</p>' if mobile.get("card")
                         else '<p class="eyebrow">On the desktop only, for now</p>')
         cards.append(
             f'<a class="panel pad stack tight research-card plain" href="/tour/{key}/">'

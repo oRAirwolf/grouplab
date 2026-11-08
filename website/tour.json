@@ -667,7 +667,8 @@
    ],
    "mobile": {
     "only": "desktop",
-    "words": "On the phone the rifle and load forms are in Ballistics, with Delete and rename; barrels are chosen on the computer."
+    "card": "On the phone, rifles and loads are in Ballistics, and Settings, Rifles and loads opens them; barrels are chosen on the computer.",
+    "words": "On the phone, rifles and loads are in Ballistics, and Settings, Rifles and loads opens them, with Delete and rename; barrels are chosen on the computer."
    }
   },
   "ballistics": {
@@ -867,6 +868,10 @@
      [
       "The list",
       "The same eight categories as the computer, each with its choices in a line under its name, such as MOA · in · yd. A tap opens the page; ‹ Settings comes back."
+     ],
+     [
+      "Rifles and loads",
+      "Not a page of its own: a row that says where they are kept and opens Ballistics, where the rifle and load forms are; ‹ Settings comes back."
      ],
      [
       "Shooting defaults",

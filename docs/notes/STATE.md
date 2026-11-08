@@ -9,17 +9,16 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-07, entries 481 and 482 done; the inbox is empty.
+**Last rewritten:** 2026-11-08, entry 483 done; entry 484 (the week's remaining work) next.
 
 ---
 
 ## In flight
 
-- **Entry 481 (2026-11-07)**, done: ten more launch clips (50 in all; the two camera clips wait for request 50's sitting), OpenCV's
-  video reader left out (Windows zip 114.4 MB, question 36 closed), research table caught up, the bulls found three times sooner, and a
-  scan's own dpi offered as the scale with its own pill and line (question 108 (a)).
-- **Entry 482 (2026-11-07)**, done: "Rifles and loads" in the phones' Settings opens Ballistics, with "‹ Settings" back (question 112
-  answered, 2A); the Duo's bar kept as it is (1A).
+- **Entry 483 (2026-11-08)**, done: the audit's six findings (Windows 240 MB, measured 237.6 on nightly 224; the scan's resolution
+  on Features; Rifles and loads on the tour; a report's suggestion counted apart from fixes, nightly 224 corrected in the total).
+- **Entries 481 and 482 (2026-11-07)**, done: 50 launch clips, the video reader left out, bulls three times sooner, a scan's dpi as its
+  scale; "Rifles and loads" in the phones' Settings opens Ballistics (question 112, 2A).
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Dated check, from 2026-11-11 (.NET's November release):** is there an iOS
   workload set after 10.0.402.1 with dotnet/macios issue 26969 fixed? If so, `python scripts/ios-xcode27.py` on ios-app.yml with its
   version, prove it, then nightly.yml and IosSigningTests (docs/IOS-PLAN.md, The iPhone Duo). Fold tests and two phone fixes are in.
@@ -82,7 +81,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: 484.
 
 ## Things that would surprise somebody who was not here yesterday
 

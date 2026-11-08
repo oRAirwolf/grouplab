@@ -541,6 +541,21 @@ and at the phone's scale step, with the number, used only when chosen; `DotsPerI
 "⚠ Scale from the scan's resolution" and "From the scan's own resolution, 600 dpi, ...". Held by StatedResolutionScaleTests,
 Entry481StatedScaleTests and Entry481StatedScalePhoneTests; the guide says so.
 
+## Entry 483: the 2026-11-07 consistency audit, six findings (2026-11-08)
+
+**1.** Nightly 224's Windows zip unpacks to 237.6 MB (file sizes summed, 2026-11-07), 28.6 MB less than nightly 221's 266.1 with
+OpenCV's video reader left out; docs/PLATFORM-SUPPORT.md says 240 MB installed, rounded up like the others, and its source line names
+nightly 224 for Windows and nightly 221 for the rest. **2.** `other-targets` in website/features.json carries the offer and claims nightly
+224's phrase, reworded in 224; PHONE-PARITY.md's row too. **3.** website/tour.json takes an optional Mobile `card` for the tour index
+(the default stays for every other card); Equipment's card and page and Settings' phone part name the Rifles and loads row.
+**4.** scripts/release-notes.py: `said_already` keeps a note that names its source from getting it again, a note not of kind `fixed` says
+"suggested in", and `total_line` counts suggestions apart ("1 change suggested in 1 error report"); three new self-test checks. The README's
+and the site's running totals read the new part (`FROM_YOU_PARTS`), and an attribution may move counts: nightly 224's is -1 fix, +1
+suggestion. The total now reads 5 fixes from 10 error reports and 1 change suggested in 1 error report. **5.** README Phase 9 line.
+**6.** TESTING-GUIDE.md and its PDF; `ReportWindow` placeholder "An email address, kept only in a saved report. Optional."
+The wording of 2, 3 and 5 was done by docs-sonnet. Core 3166 passed, the one failure the local inbox line (gone once the entry was
+moved); App report tests 24 passed; site Python tests, readme, claims and consistency checks clean.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -2033,9 +2033,9 @@
    "kind": "measured",
    "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
   },
-  "Disk: the unpacked download of nightly 221, measured on 2026-10-26 (Windows 266, Linux 259, macOS 231 on Apple silicon and 262 on Intel, in MB); each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
+  "Disk: the unpacked download, in MB: Windows 238 on nightly 224, measured on 2026-11-07, without OpenCV's video reader; Linux 259, macOS 231 on Apple silicon and 262 on Intel on nightly 221, measured on 2026-10-26; each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
    "kind": "measured",
-   "where": "measured 2026-10-26: the file sizes inside nightly 221's published archives summed (win-x64 zip 266.1, linux-x64 258.8, macos-arm64 231.3, macos-x64 261.5 MB, rounded up to the next 10 in the table, entry 473 section 3); the proof image of the sample (220 KB), measured 2026-09-25"
+   "where": "measured 2026-10-26: the file sizes inside nightly 221's published archives summed (win-x64 zip 266.1, linux-x64 258.8, macos-arm64 231.3, macos-x64 261.5 MB, entry 473 section 3), and nightly 224's win-x64 zip measured 2026-11-07 the same way, 237.6 MB once the video reader was left out (entry 483 section 1); each rounded up to the next 10 in the table; the proof image of the sample (220 KB), measured 2026-09-25"
   },
   "Screen: the analysis screen needs about 1060 units of width; narrower, its right column runs past the window, which is being worked on.": {
    "kind": "measured",
@@ -2045,9 +2045,9 @@
    "kind": "measured",
    "where": "measured 2026-09-25: grouplab analyze on samples/gl-cf25-ltr-d-25-shots-600-dpi.png (peak 733 MB), the unpacked nightly 103 downloads (226, 219 and 185 MB), the proof image of the sample (220 KB), the Fold 7 runs of docs/PHASE1-RESULTS.md entry 209, question 58 for the width"
   },
-  "- **Disk:** the unpacked download of nightly 221, measured on 2026-10-26 (Windows 266, Linux 259, macOS 231 on Apple silicon and 262 on Intel, in MB); each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
+  "- **Disk:** the unpacked download, in MB: Windows 238 on nightly 224, measured on 2026-11-07, without OpenCV's video reader; Linux 259, macOS 231 on Apple silicon and 262 on Intel on nightly 221, measured on 2026-10-26; each saved session adds about 220 KB for its proof image, so a hundred sessions take about 22 MB.": {
    "kind": "measured",
-   "where": "measured 2026-10-26: the file sizes inside nightly 221's published archives summed (win-x64 zip 266.1, linux-x64 258.8, macos-arm64 231.3, macos-x64 261.5 MB, rounded up to the next 10 in the table, entry 473 section 3); the proof image of the sample (220 KB), measured 2026-09-25"
+   "where": "measured 2026-10-26: the file sizes inside nightly 221's published archives summed (win-x64 zip 266.1, linux-x64 258.8, macos-arm64 231.3, macos-x64 261.5 MB, entry 473 section 3), and nightly 224's win-x64 zip measured 2026-11-07 the same way, 237.6 MB once the video reader was left out (entry 483 section 1); each rounded up to the next 10 in the table; the proof image of the sample (220 KB), measured 2026-09-25"
   },
   "- **Screen:** the analysis screen needs about 1060 units of width; narrower, its right column runs past the window, which is being worked on.": {
    "kind": "measured",
@@ -7197,9 +7197,9 @@
    "kind": "code",
    "where": "src/GroupLab.Core/Marking/ShotList.cs and the report writer (a stored reason is still printed); entry 407 sections 3 and 4"
   },
-  "- **In progress.** Some optimizations have been made and measured: finding the holes on a scan, the phone's reading of a photograph, a 600 dpi scan opening in about four fifths of the time, the solver warmed after start-up, and a photograph's codes read sooner.": {
+  "- **In progress.** Some optimizations have been made and measured: finding the holes on a scan, finding the bulls on a sheet about three times sooner, the phone's reading of a photograph, a 600 dpi scan opening in about four fifths of the time, the solver warmed after start-up, and a photograph's codes read sooner.": {
    "kind": "decided",
-   "where": "docs/NOTES-FROM-PLANNING.md entries 392, 400, 414 and 415 section 3 (the optimizations and their measurements); docs/RELEASE-NOTES.md nightlies 186 and 189; Phase 9 table row says In progress"
+   "where": "docs/NOTES-FROM-PLANNING.md entries 392, 400, 414 and 415 section 3 (the optimizations and their measurements); docs/RELEASE-NOTES.md nightlies 186 and 189 and nightly 224 (finding the bulls about three times faster, commit d00f3e55, entry 481 part D); Phase 9 table row says In progress"
   },
   "Quack's flatbed scans on a Mac showed holes being missed and the snap landing on the wrong side of the rim, a report on the upload page led to its progress bar and to sets of up to 30 photographs, and a question about reading a set of three sheets as one led to the pooled set in its own tab, and Quack's ask with Jylee led to a set of scans dropped together opening in one tab.": {
    "kind": "decided",

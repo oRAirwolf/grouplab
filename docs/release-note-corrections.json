@@ -9,6 +9,16 @@
       "via": "error reports sent from GroupLab",
       "why": "Entry 476 finding 2: 1147821e (Delete for rifles, barrels and loads, error report 38) and 60e60bc1 (a sheet on a reused clean picture replaced the earlier session, error reports 39 and 40) carry no Reported-via trailer, so nightly 222's notes did not count them."
     }
+,
+    {
+      "build": "0.2.0-nightly.224",
+      "fixes": -1,
+      "reports": -1,
+      "suggested": 1,
+      "asked": 1,
+      "via": "error reports sent from GroupLab",
+      "why": "Entry 483 section 4: 76f6d8b8 (the Rifles and loads row in the phone's Settings) was a change a person suggested in an error report, and nightly 224's notes counted it as a fix and named the report twice. Its published notes are not edited; the running total moves it from fixes to suggestions here, and the next build's notes carry a Correction line."
+    }
   ],
   "corrections": {
     "21a80eb082a4b8ba6eb2f3168ab1439bd5f3e191": {

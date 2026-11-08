@@ -83,7 +83,6 @@
     "Opening a picture of a store-bought target GroupLab recognizes no longer marks Show work in red",
     "The Windows download is about 12 MB smaller",
     "Finding the bulls on a sheet is about three times faster",
-    "offers its own stated resolution as the scale",
     "A length measured from the corner of a picture is no longer described",
     "A damaged or very large chronograph file is now refused with a sentence saying why",
     "The iPhone and iPad build works again",
@@ -293,7 +292,7 @@
       "key": "other-targets",
       "group": "Reading a target",
       "name": "Any target you already shoot",
-      "sentence": "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand, on the computer or on the phone under a crosshair that stays in the middle; place several bulls and keep the layout as a template for the next sheet. On the computer and in GroupLab Dev, Find holes (Experimental) proposes the holes for you to check; finding them reliably on any target is still the goal.",
+      "sentence": "Photograph or scan whatever you shot on, set the scale once (a flatbed scan offers its own stated resolution as the scale, with the number shown, used only if you choose it), and mark the holes by hand, on the computer or on the phone under a crosshair that stays in the middle; place several bulls and keep the layout as a template for the next sheet. On the computer and in GroupLab Dev, Find holes (Experimental) proposes the holes for you to check; finding them reliably on any target is still the goal.",
       "shot": "marking-other",
       "platforms": [
         "Windows",
@@ -306,8 +305,11 @@
         "noPicture": "marking by hand on the phone is photographed at the next sitting with the phone"
       },
       "since": "0.2.0-nightly.111",
-      "reworded": "0.2.0-nightly.222",
-      "note": "On a target GroupLab did not print, you can now place each bull by hand",
+      "reworded": "0.2.0-nightly.224",
+      "note": [
+        "On a target GroupLab did not print, you can now place each bull by hand",
+        "offers its own stated resolution as the scale"
+      ],
       "tour": "marking",
       "guide": "3-photograph-or-scan-it",
       "article": "photographing-targets"

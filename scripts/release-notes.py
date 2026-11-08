@@ -360,20 +360,28 @@ def sources(message):
     return reported, submitted, wrong
 
 
-def found_from(reported):
-    """ "found from 2 automatic error reports and a Discord post" """
+def found_from(reported, how="found from"):
+    """ "found from 2 automatic error reports and a Discord post", or "suggested in an email" for a change somebody asked for """
     said = []
     for words, count in reported:
         one, many = REPORT_SOURCES[words]
         said.append(f"{count} {many}" if count > 1 else ("an " if one[0] in "aeiou" else "a ") + one)
-    return "found from " + (said[0] if len(said) == 1 else ", ".join(said[:-1]) + " and " + said[-1])
+    return how + " " + (said[0] if len(said) == 1 else ", ".join(said[:-1]) + " and " + said[-1])
 
 
-def with_source(text, reported, submitted):
-    """A note with where it came from on its own line, in brackets before its full stop."""
+def said_already(text, reported):
+    """Entry 483 section 4: a note that already says where it came from ("a person suggested it in an error report sent from
+    GroupLab") is not given the same words again in brackets."""
+    low = text.lower()
+    return all(REPORT_SOURCES[words][0].lower() in low for words, _ in reported)
+
+
+def with_source(text, reported, submitted, fix=True):
+    """A note with where it came from on its own line, in brackets before its full stop. A note whose kind is not `fixed` was
+    a change somebody suggested, and says so instead of "found from" (entry 483 section 4)."""
     tail = []
-    if reported:
-        tail.append(found_from(reported))
+    if reported and not said_already(text, reported):
+        tail.append(found_from(reported, "found from" if fix else "suggested in"))
     if submitted and "targets people sent" not in text:
         tail.append(f"made with {sum(c for _, c in submitted)} targets people sent")
     if not tail:
@@ -381,11 +389,14 @@ def with_source(text, reported, submitted):
     return text[:-1].rstrip() + " (" + "; ".join(tail) + ")" + text[-1]
 
 
-def total_line(fixes, reports, updates, targets):
-    """The line a build's notes end with when people's reports or targets went into it, entry 458 section 3."""
+def total_line(fixes, reports, updates, targets, suggested=0, asked=0):
+    """The line a build's notes end with when people's reports or targets went into it, entry 458 section 3. A change somebody
+    suggested in a report is counted as a suggestion, not a fix (entry 483 section 4)."""
     said = []
     if fixes:
         said.append(f"{fixes} fix{'es' if fixes > 1 else ''} from {reports} error report{'s' if reports > 1 else ''}")
+    if suggested:
+        said.append(f"{suggested} change{'s' if suggested > 1 else ''} suggested in {asked} error report{'s' if asked > 1 else ''}")
     if updates:
         said.append(f"{updates} detection update{'s' if updates > 1 else ''} from {targets} targets people sent")
     return "From your reports and targets in this build: " + ", ".join(said) + "." if said else ""
@@ -499,7 +510,7 @@ def build_notes(version, head, previous, heading=True, new=True):
     notes = {k: [] for k in KINDS}
     generated = []
     wrong = []
-    counted = {"fixes": 0, "reports": 0, "updates": 0, "targets": 0}
+    counted = {"fixes": 0, "reports": 0, "updates": 0, "targets": 0, "suggested": 0, "asked": 0}
 
     for sha, message in commits(previous, head):
         # Entry 168 sections 3.3 and 4.1: a nightly writing its own notes is not a change, and a commit that touched
@@ -528,16 +539,17 @@ def build_notes(version, head, previous, heading=True, new=True):
         wrong += [f"{sha}: {b}" for b in bad]
         if new and CLOSES_REPORT.search(message) and not reported and not fixes_no_report(sha):
             wrong.append(f"{sha}: it closes a crash or error report and has no Reported-via trailer saying where the report came from (entries 458 and 476)")
+        fix = bool(read_notes) and read_notes[0][1] == "fixed"
         if reported:
-            counted["fixes"] += 1
-            counted["reports"] += sum(c for _, c in reported)
+            counted["fixes" if fix else "suggested"] += 1
+            counted["reports" if fix else "asked"] += sum(c for _, c in reported)
         if submitted:
             counted["updates"] += 1
             counted["targets"] += sum(c for _, c in submitted)
         for i, (note, kind) in enumerate(read_notes):
             wrong += problems(sha, note, new=new)
             # The source goes on the commit's first note, which is the one that says what it fixed or changed.
-            notes[kind].append(with_source(reader_text(note), reported, submitted) if i == 0 else reader_text(note))
+            notes[kind].append(with_source(reader_text(note), reported, submitted, fix) if i == 0 else reader_text(note))
 
     if wrong:
         return "", wrong
@@ -567,7 +579,8 @@ def build_notes(version, head, previous, heading=True, new=True):
             out.append("- " + note)
         out.append("")
 
-    if line := total_line(counted["fixes"], counted["reports"], counted["updates"], counted["targets"]):
+    if line := total_line(counted["fixes"], counted["reports"], counted["updates"], counted["targets"],
+                           counted["suggested"], counted["asked"]):
         out.append(line)
         out.append("")
 
@@ -710,6 +723,15 @@ def self_test():
     check("one report of each kind reads as one", found_from([("email", 1)]) == "found from an email")
     check("the build's total line", total_line(2, 4, 1, 48) ==
           "From your reports and targets in this build: 2 fixes from 4 error reports, 1 detection update from 48 targets people sent.")
+    check("a note that names its report is not given it twice (entry 483 section 4)",
+          with_source("Settings has a new row; a person suggested it in an error report sent from GroupLab.",
+                      [("error report sent from grouplab", 1)], [], fix=False) ==
+          "Settings has a new row; a person suggested it in an error report sent from GroupLab.")
+    check("a suggested change says suggested, not found",
+          with_source("Settings has a new row.", [("error report sent from grouplab", 1)], [], fix=False) ==
+          "Settings has a new row (suggested in an error report sent from GroupLab).")
+    check("a suggestion is counted apart from fixes", total_line(0, 0, 0, 0, 1, 1) ==
+          "From your reports and targets in this build: 1 change suggested in 1 error report.")
     check("no total line when nobody's report or target went in", total_line(0, 0, 0, 0) == "")
     _, _, named = sources("\n".join(["Subject", "", "Reported-via: email from Bob"]))
     check("a name in Reported-via is refused", len(named) == 1 and "never named" in named[0])

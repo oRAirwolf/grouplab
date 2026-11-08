@@ -25,6 +25,95 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-07, entry 483: consistency audit, six findings
+
+**Status: actioned 2026-11-08. Every section done.** 1: Windows measured at 237.6 MB unpacked on nightly 224, the table now 240 MB
+(rounded up to the next 10, as the others) and the source line names it. 2: the Features page's other-targets feature carries the scan's
+stated resolution, changed in nightly 224, and PHONE-PARITY.md's row says it. 3: the tour's Equipment card and page and the phone part of
+Settings name the Rifles and loads row, as does PHONE-PARITY.md. 4: the notes generator no longer repeats a source a note already names,
+says "suggested in" for a change that is not a fix, and counts suggestions apart; nightly 224 is moved from fixes to suggestions in the
+running total through release-note-corrections.json, and the next build's notes carry a Correction line. 5: the README's Phase 9 line
+names the bulls found three times sooner. 6: the testing guide says Send does not carry a contact, and the box no longer promises a reply.
+
+From the planning session's scheduled consistency audit (entry 267 section 2b). Read only: README.md, the live grouplab.org (home,
+/download/, /features/, /tour/ and its Equipment and Settings pages, /shoot-a-target/, /guides/, /releases/, /support/),
+website/features.json, docs/RELEASE-NOTES.md (nightlies 222 to 224), STATE.md, for-alan.md, PLATFORM-SUPPORT.md, PHONE-PARITY.md,
+ANDROID.md, TESTING-GUIDE.md, USER-GUIDE.md and the commits of 2026-11-02 to 2026-11-07. There is no open GitHub issue labelled
+`consistency` (issue 1 is closed), so nothing below repeats it. Six findings, none needs Alan. Fix each where it is generated, so the
+README and the site follow by themselves.
+
+## 1. The disk figure for Windows no longer agrees with the line that says where it came from
+
+- **Where:** docs/PLATFORM-SUPPORT.md line 49 (and the copies it generates: README.md line 225, and grouplab.org/download/ under
+  "What each device needs").
+- **What it says:** the Minimums table says Windows "230 MB installed" (changed from 270 in 0bb3bdd7, entry 481 part B), but the source
+  line under it still says "the unpacked download of nightly 221, measured on 2026-10-26 (Windows 266, Linux 259, macOS 231 on Apple
+  silicon and 262 on Intel, in MB)". A reader sees 230 in the table and 266 as its source.
+- **What it should say:** the source line names the Windows measurement the 230 comes from and the build it was measured on (nightly 224
+  or the build 0bb3bdd7 measured), with the other three left at nightly 221 if they are unchanged, for example "Windows NNN on nightly
+  224, without the video reader; Linux 259, macOS 231 on Apple silicon and 262 on Intel on nightly 221". If 230 was an estimate, measure
+  the unpacked nightly 224 Windows zip and use that figure.
+- **Evidence:** 0bb3bdd7 changed only the table cell; 3deefe75 wrote the source line.
+
+## 2. The Features page does not mention a scan's own resolution offered as the scale
+
+- **Where:** grouplab.org/features/#other-targets ("Any target you already shoot"), from website/features.json; features.json line 86
+  lists "offers its own stated resolution as the scale" among the note phrases that need no feature.
+- **What it says:** "Photograph or scan whatever you shot on, set the scale once, and mark the holes by hand ..." with nothing about the
+  scan's stated resolution, "Since nightly.111."
+- **What it should say:** the feature carries it, on the computer and the phone, for example "A flatbed scan offers its own stated
+  resolution as the scale, with the number shown, used only if you choose it." and "Since nightly.111, changed in nightly.224." Remove
+  the phrase from the no-feature list once a feature carries it. If PHONE-PARITY.md has a row for `other-targets`, add the phone's offer
+  at the first step of marking by hand.
+- **Evidence:** it is the first line of nightly 224's notes (docs/RELEASE-NOTES.md, nightly 224); README.md "How it works" says it
+  (d10773e5); docs/USER-GUIDE.md lines 278 to 281 describe it; the live Features page has no "resolution" or "dpi" in that feature.
+
+## 3. The phone's new Settings, Rifles and loads row (entry 482) is missing where people look, and the tour calls Equipment desktop only
+
+- **Where:** grouplab.org/tour/ (the Equipment card's Mobile view, from website/build.py line 2941's default), grouplab.org/tour/equipment/
+  (Mobile), grouplab.org/tour/settings/ (the phone part), docs/PHONE-PARITY.md line 28.
+- **What it says:** the tour index's Equipment card on Mobile says "On the desktop only, for now", while /tour/equipment/ says "On the
+  phone the rifle and load forms are in Ballistics, with Delete and rename; barrels are chosen on the computer." Neither that page nor
+  the phone part of /tour/settings/ mentions the Rifles and loads row, and PHONE-PARITY.md line 28 says only "the phone keeps rifles and
+  loads ... in the forms on Ballistics".
+- **What it should say:** the Equipment card on Mobile gives the same words as its page instead of the desktop-only default, for example
+  "On the phone, rifles and loads are in Ballistics, and Settings, Rifles and loads opens them; barrels are chosen on the computer." Add
+  the row to /tour/equipment/'s phone sentence, to /tour/settings/'s phone part, and to PHONE-PARITY.md line 28.
+- **Evidence:** 76f6d8b8 (entry 482); docs/USER-GUIDE.md line 800; website/features.json line 259 already says it, so only the tour
+  and PHONE-PARITY.md lag.
+
+## 4. Nightly 224's notes say the same attribution twice, and count a suggestion as a fix
+
+- **Where:** docs/RELEASE-NOTES.md line 22, and from it README.md "What is new" and grouplab.org/releases/.
+- **What it says:** "... and Back returns you to Settings; a person suggested it in an error report sent from GroupLab (found from an
+  error report sent from GroupLab)." and below it "From your reports and targets in this build: 1 fix from 1 error report."
+- **What it should say:** one attribution, for example "... and Back returns you to Settings (suggested in an error report sent from
+  GroupLab)." The count should not call a suggestion a fix, for example "1 change suggested in 1 error report", or whatever the count's
+  generator says for a suggestion. Fix it in the generator (release-note-corrections.json or the attribution code, near c5db920, entry
+  480), so it does not happen again, and correct nightly 224's published notes the way nightly 222's correction was made.
+- **Evidence:** the live /releases/ page shows the doubled wording under 0.2.0-nightly.224.
+
+## 5. The README's Phase 9 line leaves out finding the bulls three times sooner
+
+- **Where:** README.md line 515 (Planned, Phase 9).
+- **What it says:** "Some optimizations have been made and measured: finding the holes on a scan, the phone's reading of a photograph,
+  a 600 dpi scan opening in about four fifths of the time, the solver warmed after start-up, and a photograph's codes read sooner."
+- **What it should say:** the same list with "finding the bulls on a sheet about three times sooner" added.
+- **Evidence:** d00f3e55 (entry 481 part D) and nightly 224's notes ("Finding the bulls on a sheet is about three times faster").
+
+## 6. "A way to reach you" reads as if Send carries it, and the box itself promises a reply
+
+- **Where:** docs/TESTING-GUIDE.md line 101 (and its PDF, and the guide on grouplab.org); src/GroupLab.App/Diagnostics/ReportWindow.cs
+  line 25.
+- **What it says:** the testing guide says the Report a problem window has "a box for what happened and one for a way to reach you.
+  Write what happened and press Send: the report goes to the project ...", with nothing saying Send leaves the contact out. The box's
+  placeholder says "An email address, if you would like a reply. Optional." But ReportWindow.cs line 101 (ContactStays) says "a contact
+  stays in a saved report only", and for-alan.md (error report 44) says no reply can reach a sender.
+- **What it should say:** the testing guide adds, as the user guide already does, "A contact you type stays in a saved report only;
+  Send does not carry it." The placeholder stops promising a reply on Send, for example "An email address, kept only in a saved report.
+  Optional."
+- **Evidence:** docs/USER-GUIDE.md line 757 has the right wording ("A contact you type stays in a saved report only.").
+
 ## 2026-11-07, entry 481: the week's queued work (A to E), in this order
 
 **Status: actioned 2026-11-07. Every part done; two clips of part A wait for request 50's sitting.** A: ten more clips made by script (pooled set, Xero file, Top Gun, store-bought target, marking under the crosshair, two aim points, the one-page report, the tablet side by side, step 9's computer half), each checked by a chores-haiku pass on its last frame; the two camera clips (ch04, step 7) need a real camera and are added to request 50's sitting. Making them found Show work marking a recognized store-bought target as a failed stage, fixed. B: OpenCV's video reader left out of every build (Windows zip 126.6 to 114.4 MB, every suite and the clips' encoder the same without it), sizes updated, question 36 answered. C: every article but aim points by optic class is published; the research table brought up to date from PUBLISHED.md, and the installer article gains the video reader. D: finding the bulls about three times sooner (600 dpi scan 117 to 35 ms), every result the same, recorded in PERFORMANCE.md; stopped there. E: a flatbed scan's own stated resolution offered as the scale on the computer and the phones, with its own pill and line (question 108 (a)); no new look was needed.

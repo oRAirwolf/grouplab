@@ -137,39 +137,55 @@ def whats_new() -> str:
     return "\n".join(lines)
 
 
-def attributed(fixes: int, reports: int, first: str) -> tuple[int, int, str]:
+# Entry 483 section 4: a change somebody suggested in a report is counted apart from a fix.
+FROM_YOU_PARTS = {
+    ("fixes", "reports"): r"(\d+) fix(?:es)? from (\d+) error reports?",
+    ("suggested", "asked"): r"(\d+) changes? suggested in (\d+) error reports?",
+    ("updates", "targets"): r"(\d+) detection updates? from (\d+) targets people sent",
+}
+
+
+def from_you_words(c: dict) -> str:
+    """The running total's parts in words, in the order a build's own line gives them."""
+    def s(n): return "s" if n > 1 else ""
+    said = ([f"{c['fixes']} fix{'es' if c['fixes'] > 1 else ''} from {c['reports']} error report{s(c['reports'])}"] if c["fixes"] else []) + \
+        ([f"{c['suggested']} change{s(c['suggested'])} suggested in {c['asked']} error report{s(c['asked'])}"] if c["suggested"] else []) + \
+        ([f"{c['updates']} detection update{s(c['updates'])} from {c['targets']} targets people sent"] if c["updates"] else [])
+    return said[0] if len(said) < 2 else ", ".join(said[:-1]) + " and " + said[-1]
+
+
+def attributed(c: dict, first: str, corrections: Path) -> str:
     """Entry 476 finding 2: fixes from people's reports in a published build whose commits did not say so, kept in
-    docs/release-note-corrections.json under "attributions" and added to the running total; the build's published notes are not edited."""
+    docs/release-note-corrections.json under "attributions" and added to the running total; the build's published notes are not
+    edited. An attribution may also move a count, as nightly 224's suggestion counted as a fix (entry 483 section 4)."""
     import json
     try:
-        data = json.loads((Path(__file__).resolve().parent.parent / "docs" / "release-note-corrections.json").read_text(encoding="utf-8"))
+        data = json.loads(corrections.read_text(encoding="utf-8"))
     except FileNotFoundError:
-        return fixes, reports, first
+        return first
     for a in data.get("attributions", []):
-        fixes, reports = fixes + int(a["fixes"]), reports + int(a["reports"])
+        for key in c:
+            c[key] += int(a.get(key, 0))
         first = first or a["build"]
-    return fixes, reports, first
+    return first
 
 
 def from_you() -> str | None:
     """ "Since nightly 206: 3 fixes from 8 error reports and 1 detection update from 48 targets people sent.", or None before any build counted."""
     import re
-    first, fixes, reports, updates, targets = "", 0, 0, 0, 0
+    first, c = "", dict.fromkeys(("fixes", "reports", "suggested", "asked", "updates", "targets"), 0)
     for block in re.split(r"(?m)^## ", NOTES.read_text(encoding="utf-8"))[1:]:
         if (m := re.search(r"From your reports and targets in this build: (.+)\.", block)) is None:
             continue
         first = block.split("\n", 1)[0].strip()
         for part in m.group(1).split(", "):
-            if (f := re.fullmatch(r"(\d+) fix(?:es)? from (\d+) error reports?", part)) is not None:
-                fixes, reports = fixes + int(f.group(1)), reports + int(f.group(2))
-            elif (u := re.fullmatch(r"(\d+) detection updates? from (\d+) targets people sent", part)) is not None:
-                updates, targets = updates + int(u.group(1)), targets + int(u.group(2))
-    fixes, reports, first = attributed(fixes, reports, first)
+            for key, pattern in FROM_YOU_PARTS.items():
+                if (f := re.fullmatch(pattern, part)) is not None:
+                    c[key[0]], c[key[1]] = c[key[0]] + int(f.group(1)), c[key[1]] + int(f.group(2))
+    first = attributed(c, first, Path(__file__).resolve().parent.parent / "docs" / "release-note-corrections.json")
     if not first:
         return None
-    said = ([f"{fixes} fix{'es' if fixes > 1 else ''} from {reports} error report{'s' if reports > 1 else ''}"] if fixes else []) + \
-        ([f"{updates} detection update{'s' if updates > 1 else ''} from {targets} targets people sent"] if updates else [])
-    return f"Since nightly {first.rsplit('.', 1)[-1]}: " + " and ".join(said) + f". [What your reports and targets changed]({SITE}/releases/#from-you)."
+    return f"Since nightly {first.rsplit('.', 1)[-1]}: " + from_you_words(c) + f". [What your reports and targets changed]({SITE}/releases/#from-you)."
 
 
 # Entry 266: three columns, each gathering the Features page's groups under it; every other group follows in one line.
