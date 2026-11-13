@@ -3,9 +3,9 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-08 08:42 UTC
+## TestFlight, 2026-11-13 15:24 UTC
 
-- Both groups have build 225.
+- TestFlight: App Store Connect refused a request (403 This request requires an in-effect agreement that has not been signed or has expired.); nothing further was done this run.
 <!-- /status:testflight -->
 
 <!-- status:store -->
