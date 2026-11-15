@@ -1,0 +1,128 @@
+{
+ "about": "App Store screenshots taken on the iOS simulators by .github/workflows/apple-screens.yml (entry 487 section 4), fitted to App Store Connect's sizes by scripts/apple-screens.py.",
+ "source": "v0.2.0-nightly.225",
+ "devices": [
+  "iphone: iPhone 17 Pro Max",
+  "ipad: iPad Pro 13-inch (M5)"
+ ],
+ "theme": "dark",
+ "statusBar": "9:41, full battery and signal",
+ "sample": "samples/gl-cf25-ltr-d-25-shots-600-dpi.png",
+ "iphone": {
+  "size": [
+   1320,
+   2868
+  ],
+  "pictures": {
+   "01-result.png": {
+    "from": "result.png",
+    "taken": [
+     1320,
+     2868
+    ]
+   },
+   "02-capture.png": {
+    "from": "capture.png",
+    "taken": [
+     1320,
+     2868
+    ]
+   },
+   "03-fingerprint.png": {
+    "from": "fingerprint.png",
+    "taken": [
+     1320,
+     2868
+    ]
+   },
+   "04-pairing.png": {
+    "from": "pairing.png",
+    "taken": [
+     1320,
+     2868
+    ]
+   },
+   "05-targets.png": {
+    "from": "targets.png",
+    "taken": [
+     1320,
+     2868
+    ]
+   },
+   "06-scale-markers.png": {
+    "from": "scale-markers.png",
+    "taken": [
+     1320,
+     2868
+    ]
+   },
+   "07-open-targets.png": {
+    "from": "open-targets.png",
+    "taken": [
+     1320,
+     2868
+    ]
+   }
+  },
+  "missing": []
+ },
+ "ipad": {
+  "size": [
+   2064,
+   2752
+  ],
+  "pictures": {
+   "01-result.png": {
+    "from": "result.png",
+    "taken": [
+     2064,
+     2752
+    ]
+   },
+   "02-capture.png": {
+    "from": "capture.png",
+    "taken": [
+     2064,
+     2752
+    ]
+   },
+   "03-fingerprint.png": {
+    "from": "fingerprint.png",
+    "taken": [
+     2064,
+     2752
+    ]
+   },
+   "04-pairing.png": {
+    "from": "pairing.png",
+    "taken": [
+     2064,
+     2752
+    ]
+   },
+   "05-targets.png": {
+    "from": "targets.png",
+    "taken": [
+     2064,
+     2752
+    ]
+   },
+   "06-scale-markers.png": {
+    "from": "scale-markers.png",
+    "taken": [
+     2064,
+     2752
+    ]
+   },
+   "07-open-targets.png": {
+    "from": "open-targets.png",
+    "taken": [
+     2064,
+     2752
+    ]
+   }
+  },
+  "missing": []
+ },
+ "run": "apple screens run 43702178215 (the walk's own pictures; fitted on this computer with scripts/apple-screens.py because that run's fitting step could not find the script)"
+}
