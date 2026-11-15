@@ -50,3 +50,6 @@ Set by the planning session in Play Console with Alan signed in, on 2026-11-15. 
   when its newest release is completed. Managed publishing is off, so later closed releases go to Google's quick review by themselves.
 - **The way to production:** a personal account needs 12 testers opted in to the closed test for 14 continuous days, then an
   application for production access; Google also weighs whether testers used the app. Internal testers do not count.
+- **Tablet screenshots** (entry 489 section 4): five each in `docs/store/play-tablet/7in/` (1920 by 1080) and `10in/` (2560 by 1440),
+  result, capture, targets, sessions and settings from the Galaxy Tab S8 Ultra pictures of nightly 225, dark, fitted whole by
+  `scripts/play-screens.py`. Not uploaded: the planning session adds them with the listing's 1.0 sentence after Google's approval.
