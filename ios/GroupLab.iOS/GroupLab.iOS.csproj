@@ -140,4 +140,11 @@
   -->
   <Import Project="$(GroupLabOpenCv)\..\OpenCvSharpExtern.symbols.props" Condition="Exists('$(GroupLabOpenCv)') and Exists('$(GroupLabOpenCv)\..\OpenCvSharpExtern.symbols.props')" />
 
+  <!-- Entry 489 section 2: Apple's privacy manifest. It declares the system calls with required reasons that the .NET runtime and
+       OpenCV make (file timestamps, the time since boot, free disk space, user defaults) and, for the application, the same data types
+       as App Privacy in App Store Connect (docs/store/LISTING.md, entry 379): none linked to the person, none used for tracking. -->
+  <ItemGroup>
+    <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+  </ItemGroup>
+
 </Project>
