@@ -944,9 +944,9 @@ def page_download() -> str:
          "Honestly: a nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Sync and your data, Export all my data"],
         "Download GroupLab Dev", honest=False) + steady(
         "Google Play, closed test",
-        btn("Join the testers group", "https://groups.google.com/g/grouplab-testers"),
+        btn("Join the Android test", ANDROID_TEST_PATH),
         f'GroupLab\'s closed test on Google Play has been sent to Google for review. Once it is approved, anyone can join: join <a href="https://groups.google.com/g/grouplab-testers">the GroupLab testers group</a>, then the test, and Google Play brings you every nightly and updates your copy as it does any app. The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access. The internal test stays open by invitation: ask on the <a href="{DISCORD}">Discord</a>.',
-        ["Each nightly reaches Play by itself", "Two steps: the testers group, then the test, once Google approves it",
+        ["Each nightly reaches Play by itself", "Three steps, on the Join the Android test page",
          "Signed with a different key from the plain APK"]),
         "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. The Play copy gets every nightly through Google Play, the plain APK keeps itself current as GroupLab Dev does, and GroupLab Dev installs beside either with no uninstall.",
         [fold("The plain APK", other(
@@ -3519,6 +3519,49 @@ def page_survey() -> str:
     return shell(SURVEY_PATH, "Hardware survey", "What GroupLab runs on and how fast the benchmark runs, from the hardware survey: counts and medians, never one person's record.", body)
 
 
+ANDROID_TEST_PATH = "/android-test/"
+TESTERS_GROUP = "https://groups.google.com/g/grouplab-testers"
+# Entry 489 section 3: Google Play's opt-in link for the closed test, passed on by the planning session once Google approves it. Until
+# then the page says it is coming.
+PLAY_TEST_LINK = ""
+
+
+def page_android_test() -> str:
+    """Entry 489 section 3: how to join GroupLab's test on Google Play, in plain words. No tester is named anywhere."""
+    if PLAY_TEST_LINK:
+        step2 = (f'<p>Open <a href="{PLAY_TEST_LINK}">the GroupLab test on Google Play</a> on the phone, signed in with the same Google '
+                 'account, and choose to become a tester.</p>')
+    else:
+        step2 = ("<p>Opt in to the test with its Google Play link. <strong>The link is coming</strong>: Google is reviewing the test, "
+                 "and it appears here as soon as Google has approved it. Joining the group now means you are ready the moment it does.</p>")
+    body = f"""
+<section class="wrap page-head stack">
+<p class="eyebrow">Android</p>
+<h1>Join the Android test</h1>
+<p class="lead">GroupLab can be listed publicly on Google Play once 12 people have been in its test for 14 days in a row. Joining takes a couple of minutes, and you get GroupLab from Google Play, kept up to date like any other app.</p>
+</section>
+
+<section class="wrap stack">
+<ol class="steps">
+<li class="step"><span class="mono step-n">1</span><div><h2 class="h3">Join the testers group</h2><p>On the phone or a computer, join <a href="{TESTERS_GROUP}">the GroupLab testers group</a> on Google Groups with the Google account that is signed into the Play Store on your phone. Afterwards the group's page may say "You don't have permission to access this content". That is expected: there is nothing to read in it, and joining is all it is for.</p></div></li>
+<li class="step"><span class="mono step-n">2</span><div><h2 class="h3">Opt in to the test</h2>{step2}</div></li>
+<li class="step"><span class="mono step-n">3</span><div><h2 class="h3">Install from Google Play</h2><p>Install GroupLab from the Play Store as you would any app. Each new build reaches you through Google Play by itself.</p></div></li>
+</ol>
+</section>
+
+<section class="wrap stack">
+<h2>What helps</h2>
+<ul>
+<li>Staying opted in for the whole 14 days. Leaving and joining again starts the count over.</li>
+<li>Using it: photograph and analyze a target or two along the way. Google looks at whether testers actually use the app.</li>
+<li>Saying what went wrong or what you would change, with Settings, Help and problems, Report a problem, or on the <a href="{DISCORD}">Discord</a>.</li>
+</ul>
+<p>It needs Android 10 or later on a 64-bit phone. If you want the newest build the same day it is made, take <a href="/download/#android">GroupLab Dev</a> instead, from the download page; it installs beside the Play copy.</p>
+</section>
+"""
+    return shell(ANDROID_TEST_PATH, "Join the Android test", "How to join GroupLab's test on Google Play: join the testers group, opt in, and install from the Play Store.", body, "Download")
+
+
 def page_discord() -> str:
     """The community page, NOTES-FROM-PLANNING.md entry 151.
 
@@ -5206,13 +5249,14 @@ def main() -> None:
     for old in TOUR_MOVED:
         write(f"tour/{old}/index.html", page_tour_moved(old))
     write("discord/index.html", page_discord())
+    write("android-test/index.html", page_android_test())
     write("survey/index.html", page_survey())
     write("features/index.html", page_features())
     write("assets/js/survey.js", served_js(SURVEY_JS))
     write("assets/js/download.js", served_js(DOWNLOAD_JS))
     write("404.html", page_404())
 
-    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/guides/statistics-primer/", GLOSSARY_PATH, "/releases/", "/support/", SURVEY_PATH, FEATURES_PATH]
+    pages = ["/", "/download/", "/tour/", "/shoot-a-target/", "/guides/", "/guides/user-guide/", "/guides/testing-guide/", "/guides/statistics-primer/", GLOSSARY_PATH, "/releases/", "/support/", SURVEY_PATH, FEATURES_PATH, ANDROID_TEST_PATH]
     pages += [f"/tour/{key}/" for key in tour()["order"]]
     today = datetime.date.today().isoformat()
     urls = "".join(f"<url><loc>{SITE_URL}{p}</loc><lastmod>{today}</lastmod></url>" for p in pages)

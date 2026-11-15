@@ -20,11 +20,11 @@ one that matters.
 |---|---|
 | code | 1926 |
 | measured | 2515 |
-| decided | 1517 |
+| decided | 1523 |
 | unbacked | 0 |
-| **total** | **5958** |
+| **total** | **5964** |
 
-**1695** of them were read one sentence at a time and their backing written against the sentence. The other **4263** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
+**1701** of them were read one sentence at a time and their backing written against the sentence. The other **4263** are classified by a rule that says what their document is: a dated record, a specification the code implements, a generated page, or a research article backed by the evidence in its own front matter. A rule is not a reading, and a sentence a rule covers is only as checked as its document.
 
 ## The claims
 
@@ -4224,6 +4224,15 @@ one that matters.
 ### site:404.html
 
 - *decided* (a page's own heading, breadcrumb or closing links, the same words as before entry 443, which reads the shared header and footer once (scripts/claims.py SHARED) instead of running them into the page's first and last sentences; website/build.py): 404 That page is not here.
+
+### site:android-test/index.html
+
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row): Android Join the Android test GroupLab can be listed publicly on Google Play once 12 people have been in its test for 14 days in a row.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row): 1 Join the testers group On the phone or a computer, join the GroupLab testers group on Google Groups with the Google account that is signed into the Play Store on your phone.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row): 2 Opt in to the test Opt in to the test with its Google Play link.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row): 3 Install from Google Play Install GroupLab from the Play Store as you would any app.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row): What helps Staying opted in for the whole 14 days.
+- *decided* (docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row): It needs Android 10 or later on a 64-bit phone.
 
 ### site:discord/index.html
 

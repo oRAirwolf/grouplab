@@ -8144,6 +8144,30 @@
   "The simulator starts folded and GroupLab lays out on the outer screen (the Shell 466 by 678, display 1 at 1398 by 2034; the inner, display 3, is 2007 by 2853 and was only photographed), with an 84 point inset on the right when upright; upright, the self-test stopped at the picture check instead of the result (\"no session was saved\"), while on its side it passed.": {
    "kind": "measured",
    "where": "ios app run 43710299858 on the ios-xcode27-trial branch, 2026-11-15 (entry 480's dated check): the iPhone Duo leg's SELFTEST lines and screenshot sizes"
+  },
+  "Android Join the Android test GroupLab can be listed publicly on Google Play once 12 people have been in its test for 14 days in a row.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row"
+  },
+  "1 Join the testers group On the phone or a computer, join the GroupLab testers group on Google Groups with the Google account that is signed into the Play Store on your phone.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row"
+  },
+  "2 Opt in to the test Opt in to the test with its Google Play link.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row"
+  },
+  "3 Install from Google Play Install GroupLab from the Play Store as you would any app.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row"
+  },
+  "What helps Staying opted in for the whole 14 days.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row"
+  },
+  "It needs Android 10 or later on a 64-bit phone.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row"
   }
  },
  "rules": [

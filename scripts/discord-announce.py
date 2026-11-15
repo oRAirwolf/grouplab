@@ -42,6 +42,7 @@ DOWNLOAD = "https://grouplab.org/download/"
 # of a sentence, so a long set ends at a whole line and says where the rest is.
 LIMIT = 4096
 MORE = "Full notes on the release page."
+ANDROID_TEST = "https://grouplab.org/android-test/"
 AMBER = 0xE8A33D
 
 
@@ -52,7 +53,8 @@ def description(notes: str, version: str) -> str:
     body = "\n".join(lines).strip()
     if not body:
         body = "This build's notes are on its release page."
-    tail = f"\n\n[Download GroupLab]({DOWNLOAD})"
+    # Entry 489 section 3: every announcement also points Android users at the Play test, which needs 12 people for 14 days.
+    tail = f"\n\n[Download GroupLab]({DOWNLOAD}) · [Join the Android test]({ANDROID_TEST})"
     if len(body) + len(tail) <= LIMIT:
         return body + tail
 
