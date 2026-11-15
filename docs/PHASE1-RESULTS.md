@@ -625,6 +625,11 @@ read; the page built from it shows the people form. A noticed note that begins "
 application) on the README, the home and download pages, the user guide's opening (PDF rebuilt), the desktop's and phones' Settings,
 and LISTING.md's Store description; /releases/ no longer says GroupLab is unreleased. RETIRED-WORDING.json retires "There is no full
 release yet", "GroupLab is unreleased" and "Phase 1 is unreleased". Claims backed (5,953); consistency 0 findings.
+**Section 3, confirmed on nightly 226** (1.0.0-nightly.226, commit 05abdd80, 2026-11-15 14:23 UTC): the Microsoft Store package
+1.0.226.0, submitted by store follow run 43724284898; Android version code 226 and versionName 1.0.226 (read from the published
+bundle), on Play's internal and alpha tracks (play upload run 43724284865); Apple build 226 with short version 1.0, taken by
+TestFlight and waiting for beta review at 14:49 UTC. Play accepted the alpha release with ERROR_IF_IN_REVIEW, so nothing of
+GroupLab's was in Google's review by then: the closed test looks approved, and its opt-in link should now be on the track's Testers tab.
 
 ## Entry 489: the overnight queue (2026-11-15)
 

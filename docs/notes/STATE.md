@@ -73,7 +73,8 @@ Two, both in `docs/QUESTIONS-FOR-PLANNING.md` (36 answered in entry 481 and 112 
 
 ## Builds and the site
 
-- **Last nightly:** 0.2.0-nightly.225 (2026-11-08 06:18 UTC), sent to TestFlight and the Store; it carries entries 483 and 484.
+- **Last nightly:** 1.0.0-nightly.226 (2026-11-15 14:23 UTC), the first 1.0 build: Store 1.0.226.0 submitted, Play internal and
+  alpha, TestFlight build 226 (short version 1.0) waiting for beta review; it carries entries 480's check to 489.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 - Crash reports: none open (checked 2026-11-15; `docs/notes/error-reports.md`).
 
