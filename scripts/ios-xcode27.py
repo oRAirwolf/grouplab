@@ -102,14 +102,14 @@ if "ios-app" in path.name:
             mkdir -p shots/duo
             xcrun simctl launch "$duo" org.grouplab.app
             sleep 20
-            xcrun simctl io "$duo" screenshot shots/duo/00-first-start.png > /dev/null
+            shot "$duo" shots/duo/00-first-start.png
             xcrun simctl terminate "$duo" org.grouplab.app || true
             data=$(xcrun simctl get_app_container "$duo" org.grouplab.app data)
             mkdir -p "$data/Documents/selftest"
             cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
             tour "$duo" shots/duo --screens || failed=1
             tour "$duo" shots/duo-landscape --screens --landscape || failed=1
-            for shot in shots/duo/00-first-start.png shots/duo/*result*.png shots/duo-landscape/*result*.png; do
+            for shot in shots/duo/00-first-start*.png shots/duo/*result*.png shots/duo-landscape/*result*.png; do
               [ -f "$shot" ] && echo "$shot: $(sips -g pixelWidth -g pixelHeight "$shot" | awk '/pixel/ {printf "%s ", $2}')pixels"
             done | tee shots/duo/sizes.txt
             xcrun simctl shutdown "$duo" || true

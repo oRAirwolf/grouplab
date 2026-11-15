@@ -242,6 +242,14 @@ jobs:
         if: steps.opencv.outputs.linked == 'true'
         timeout-minutes: 20
         run: |
+          # A screenshot of each screen a simulator has: the iPhone Duo has two, and simctl then refuses to choose (ios app run
+          # 43707763560), so each is taken as <name>-display<N>.png.
+          shot() {
+            xcrun simctl io "$1" screenshot "$2" > /dev/null 2>&1 && return 0
+            for d in $(xcrun simctl io "$1" screenshot "$2" 2>&1 | grep -oE -- '--display=[0-9]+' | cut -d= -f2); do
+              xcrun simctl io "$1" screenshot --display="$d" "${2%.png}-display$d.png" > /dev/null || true
+            done
+          }
           tour() {
             udid=$1; out=$2; shift 2
             folder="$(xcrun simctl get_app_container "$udid" org.grouplab.app data)/Documents/selftest"
@@ -256,7 +264,7 @@ jobs:
               status=$(cat "$folder/status" 2>/dev/null || true)
               showing=$(cat "$folder/showing" 2>/dev/null || true)
               if [ -n "$showing" ] && [ "$showing" != "$last" ]; then
-                xcrun simctl io "$udid" screenshot "$out/$showing.png" > /dev/null
+                shot "$udid" "$out/$showing.png"
                 printf '%s' "$showing" > "$folder/taken"
                 last="$showing"
               fi
@@ -289,8 +297,8 @@ jobs:
             tour "$IPAD" shots/ipad --screens || failed=1
             # An iPad showing apps in windows refuses an application's own request to turn, so the simulator is turned from its Device
             # menu first, with only the iPad running; the tour turns the screen itself only where it is still upright.
-            # xcode-27 has no Simulator registered by name and none inside Xcode 27.2's own folder (ios app runs 43701100950 and
-            # 43703907381), so it is looked for; where there is none, the iPad's landscape tour is skipped with a warning, not failed.
+            # Xcode 27.2 on GitHub's xcode-27 image has no Simulator registered by name and none in its own folder (ios app runs
+            # 43701100950 and 43703907381), so it is looked for; where there is none, this landscape tour is skipped with a warning.
             simulator=$(find "$(xcode-select -p)/Applications" /Applications /System/Applications -maxdepth 6 -name Simulator.app -type d 2>/dev/null | head -1)
             if [ -n "$simulator" ]; then
               open -a "$simulator" --args -CurrentDeviceUDID "$IPAD"
@@ -320,14 +328,14 @@ jobs:
             mkdir -p shots/duo
             xcrun simctl launch "$duo" org.grouplab.app
             sleep 20
-            xcrun simctl io "$duo" screenshot shots/duo/00-first-start.png > /dev/null
+            shot "$duo" shots/duo/00-first-start.png
             xcrun simctl terminate "$duo" org.grouplab.app || true
             data=$(xcrun simctl get_app_container "$duo" org.grouplab.app data)
             mkdir -p "$data/Documents/selftest"
             cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
             tour "$duo" shots/duo --screens || failed=1
             tour "$duo" shots/duo-landscape --screens --landscape || failed=1
-            for shot in shots/duo/00-first-start.png shots/duo/*result*.png shots/duo-landscape/*result*.png; do
+            for shot in shots/duo/00-first-start*.png shots/duo/*result*.png shots/duo-landscape/*result*.png; do
               [ -f "$shot" ] && echo "$shot: $(sips -g pixelWidth -g pixelHeight "$shot" | awk '/pixel/ {printf "%s ", $2}')pixels"
             done | tee shots/duo/sizes.txt
             xcrun simctl shutdown "$duo" || true
