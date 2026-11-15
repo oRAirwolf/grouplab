@@ -25,6 +25,50 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-10, entry 485: consistency audit, 2026-11-10 (one finding; nothing here needs Alan)
+
+**Status: actioned 2026-11-15. Section 1 done.** The iPhone Duo sentence is in the published Apple mobile section of
+docs/PLATFORM-SUPPORT.md, so /download/ and the README carry it, and in TESTING-GUIDE.md's "What is not done yet" (PDF rebuilt). It
+says "Apple's newest tools", not 27.1, because the fix arrived in Microsoft's Xcode 27.2 release (entry 480's check, 2026-11-15).
+
+From the planning session's scheduled consistency audit (entry 267 section 2b). Read only: README.md (main on GitHub), the live
+grouplab.org (home, /download/, /features/, /tour/, /shoot-a-target/, /guides/, /releases/, /support/), website/features.json,
+docs/RELEASE-NOTES.md (nightlies 222 to 225), STATE.md, for-alan.md, PLATFORM-SUPPORT.md, PHONE-PARITY.md, ANDROID.md,
+TESTING-GUIDE.md and USER-GUIDE.md (the Report a problem passages), docs/notes/external-status.md on main, and the commits of
+2026-11-07 to 2026-11-09. There is no open GitHub issue labelled `consistency` (issue 1 is closed).
+
+Everything entry 483 fixed still holds, and nightly 225 is carried everywhere it should be: the README's newest build and What is new,
+/download/ (every platform, nightly 225, commit 54c6871), /releases/, the tour's phone pictures ("these are from nightly 225"), and the
+Microsoft Store line ("Version 0.2.225 today", which the Store status of 2026-11-09 22:22 UTC confirms: package 0.2.225.0, nothing
+waiting). The contact box change of nightly 225 agrees with USER-GUIDE.md line 757, TESTING-GUIDE.md line 101 and /support/. Entry
+484's speedups are in PERFORMANCE.md and the README's Phase 9 line; no page still quotes the old times. Credits: Unholy, Jylee, Fenix
+and Quack only, all with consent on record; no lawyer wording anywhere; no "What GroupLab is not" section.
+
+## 1. The iPhone Duo's letterboxed inner screen is said nowhere a person would look
+
+- **Where:** the published "Apple mobile" section of docs/PLATFORM-SUPPORT.md (line 73 to 75), which build.py renders into
+  https://grouplab.org/download/ (under Everything else, Apple mobile) and scripts/platform-support.py writes into README.md's "What is
+  supported, and what is not"; and the iPhone and iPad row of the minimums table (PLATFORM-SUPPORT.md line 38, the same table on
+  /download/ and README.md line 215).
+- **What it says:** "GroupLab for iPhone and iPad is in a public beta through TestFlight. It is tested on an iPad Mini, sixth
+  generation, ..." and "iOS and iPadOS 26 or later; an iPhone 11 or newer". Nothing about the iPhone Duo.
+- **What is true:** PLATFORM-SUPPORT.md lines 14 to 16 say that on the iPhone Duo "its inner screen shows GroupLab in an iPhone-sized
+  window" until it is built with Apple's iOS 27.1 tools, waiting on dotnet/macios issue 26969 (STATE.md "Blocked", for-alan.md "iPhone
+  Duo", IOS-PLAN.md line 186 on). But those lines sit in the file's preamble, above the part that is published, so neither the download
+  page nor the README says it. `grep -i duo` finds nothing in README.md, RELEASE-NOTES.md, TESTING-GUIDE.md, USER-GUIDE.md,
+  features.json or tour.json. A TestFlight tester with a Duo, on sale since 2026-10-23, meets a small window on the big screen with no
+  word anywhere public.
+- **What it should say:** one plain sentence in the published Apple mobile section, for example: "On the iPhone Duo, GroupLab runs, but
+  its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest
+  tools; it has been checked only in GroupLab's own tests, because nobody on the project has a Duo." Entry 480 section 7 already asked
+  for a PLATFORM-SUPPORT.md line for the Duo, so this is that line moved to where it is published, not a rewording of Alan's statement.
+  When the fill lands, the same sentence becomes entry 480 section 7's "fills both screens from nightly N". Optionally, the testing
+  guide's "What is not done yet" can carry the same line, since that is where the support page sends people.
+- **Check:** scripts/platform-support.py --readme and --check, the site build, and the consistency check stay green.
+
+Nothing else was found. The local checkout was six `[notes]` and `[screens]` commits behind origin/main when read (newest on GitHub
+0eda8383, 2026-11-09 22:22 UTC); the audit read main on GitHub for those files.
+
 ## 2026-11-08, entry 484: the rest of the week's work, queued
 
 **Status: actioned 2026-11-08. Sections 1 to 3 done; section 4 not done, because its date (2026-11-11) had not come when the entry

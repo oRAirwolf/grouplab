@@ -570,6 +570,15 @@ docs/PROOF-CHECKLIST.md, Entry 484 section 3: none of the 16 unproven rows can b
 decision for rows 3, 4's second half and 5's point 2); the 18 named tests exist and passed in the whole Core (3,181) and App (656) suites,
 and the bench gate passed, so the 15 proven or met rows still hold. **Section 4** waits for its date, 2026-11-11.
 
+## Entry 485: the iPhone Duo said where a person would look (2026-11-15)
+
+**Section 1.** The published "Apple mobile" section of docs/PLATFORM-SUPPORT.md now says that on the iPhone Duo GroupLab runs, but its
+inner screen shows an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools, and that the
+Duo is checked only in GroupLab's own tests. `scripts/platform-support.py --readme` carried it into README.md; TESTING-GUIDE.md's "What
+is not done yet" has the same line, and docs/TESTING-GUIDE.pdf was rebuilt. platform-support `--check`, claims (5,945 backed),
+consistency (0 findings) and readme `--check` pass. When the Duo build lands, this sentence becomes entry 480 section 7's "fills both
+screens from nightly N".
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

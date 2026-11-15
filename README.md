@@ -249,7 +249,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ### Apple mobile
 
-GroupLab for iPhone and iPad is in a public beta through TestFlight. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet; the plan is docs/IOS-PLAN.md.
+GroupLab for iPhone and iPad is in a public beta through TestFlight. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet; the plan is docs/IOS-PLAN.md. On the iPhone Duo, GroupLab runs, but its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools; the Duo has been checked only in GroupLab's own tests, because nobody on the project has one.
 
 ### Other Linux builds
 
