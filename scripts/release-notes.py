@@ -567,9 +567,11 @@ def build_notes(version, head, previous, heading=True, new=True):
     if any(notes[k] for k in NOTICED):
         out.append(NOTICE_HEADING)
         out.append("")
-        for kind in NOTICED:
-            for note in notes[kind]:
-                out.append("- " + note)
+        noticed = [note for kind in NOTICED for note in notes[kind]]
+        # Entry 488 section 1: the build that makes GroupLab a new version opens its notes by saying so, whatever its kind.
+        noticed.sort(key=lambda note: not note.startswith("GroupLab is now version"))
+        for note in noticed:
+            out.append("- " + note)
         out.append("")
 
     if notes["internal"]:

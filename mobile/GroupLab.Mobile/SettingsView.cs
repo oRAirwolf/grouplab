@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using GroupLab.Core.Updates;
 using GroupLab.App;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
@@ -698,8 +699,11 @@ public sealed class SettingsView : UserControl
     private void BuildAbout((StackPanel Body, SettingsPages.Page Page) aboutPage)
     {
         var column = Group(aboutPage, "About", "version build update train nightly check");
-        var aboutCard = Screens.Card(Screens.Line($"GroupLab {AppInfo.ShortVersion}"));
+        var aboutCard = Screens.Card(Screens.Line($"GroupLab {AppInfo.Words}"));
         var about = (StackPanel)aboutCard.Child!;
+        // Entry 488: the exact version for a report, and that GroupLab is still in active development.
+        about.Children.Add(Screens.Quiet(AppInfo.ShortVersion));
+        about.Children.Add(Screens.Quiet(ActiveDevelopment.Sentence));
         column.Children.Add(aboutCard);
         // Entry 288: the updater's version, its train's newest, Update now and the automatic switch, in a build that has one.
         if (Phone.Platform.UpdateCard() is { } updates)
@@ -915,7 +919,7 @@ public sealed class SettingsView : UserControl
 
                 return sent.Count == 0 ? "Sends nothing by itself" : "Sends " + string.Join(", ", sent);
             case SettingsCategory.Updates:
-                return $"GroupLab {AppInfo.ShortVersion}";
+                return $"GroupLab {AppInfo.Words}";
             default:
                 return "Report a problem · camera diagnostics";
         }

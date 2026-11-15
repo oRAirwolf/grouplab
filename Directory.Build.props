@@ -5,8 +5,10 @@
          it is below 1.0.0 rather than the 1.0.0 the SDK assumes; the build stamps the train and the commit after it.
          Entry 121: v0.1.0 was published as a release, and 0.1.0-nightly.N sorts below 0.1.0 under SemVer, so a nightly built from 0.1.0
          would look older than something already public and the updater would offer the release as an upgrade to older code. The version
-         therefore moves to 0.2.0, and VersionTests holds it above every non-nightly tag in the repository. -->
-    <Version>0.2.0</Version>
+         therefore moved to 0.2.0, and VersionTests holds it above every non-nightly tag in the repository.
+         Entry 488, Alan, 2026-11-15: GroupLab becomes version 1.0, still in active development. The nightlies carry on their numbers
+         (1.0.0-nightly.226 follows 0.2.0-nightly.225), and every 1.0.0 build sorts above every 0.2.0 one. -->
+    <Version>1.0.0</Version>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

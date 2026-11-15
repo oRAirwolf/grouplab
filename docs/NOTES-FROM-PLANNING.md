@@ -25,6 +25,49 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-15, entry 488: GroupLab becomes version 1.0, still in active development
+
+**Status: actioned 2026-11-15. Sections 1 to 3 done.** Not done on purpose: the Google Play listing (the entry says the planning
+session adds the sentence after Google's approval). The store strings the first 1.0 build carries are confirmed when that nightly
+runs; what the build is set to give is in PHASE1-RESULTS.md.
+
+Alan, 2026-11-15 03:07 Denver: "I think we should probably go ahead and make grouplab version 1.0 now and say that it is still in
+active development and suggestions and errors are always welcome." Take it after entry 487.
+
+## 1. The version
+
+- `Directory.Build.props` `<Version>` goes from 0.2.0 to 1.0.0. The nightly machinery stays as it is: the next nightly is
+  `v1.0.0-nightly.N`, N carrying on from 225 (so 226 or later), and the Android version code stays N. Check that the updater, the
+  Microsoft Store follow, play-upload, testflight, discord-announce, tester-notes, macos-bundle and the `VersionTests` rules all
+  treat 1.0.0-nightly.N as newer than every 0.2.0 build (entry 116 section 1's reason for 0.2.0 still holds the other way round);
+  `grep -rln "0\.2\.0" scripts .github` lists the places that name the old base.
+- **What a person reads** is "GroupLab 1.0, build N" (in the header's About, Settings, Updates and about, the update bar, the
+  release notes heading, the download page, the Discord announcement). The store version strings stay machine-shaped and increasing:
+  Microsoft Store 1.0.N.0 (higher than 0.2.225.0), Android versionName 1.0.N, and on Apple CFBundleShortVersionString 1.0 with
+  CFBundleVersion N, because App Store Connect's version 1.0 page (entry 487 section 0) needs a build whose short version is 1.0.
+  If Apple refuses a short version that does not change between TestFlight uploads, say so and use 1.0.N there instead; the planning
+  session then sets the App Store version to match the build it submits.
+- The first 1.0 build's release notes open with one line under What you will notice: GroupLab is now version 1.0; it is ready to
+  use and still in active development, and suggestions and error reports are always welcome (Settings, Help and problems, Report a
+  problem). Release-note-kind: changed.
+
+## 2. "Still in active development" everywhere a person meets GroupLab
+
+One sentence, the same meaning everywhere, in the place's own voice: GroupLab 1.0 is ready to use and still in active development;
+new versions arrive often, and suggestions and error reports are always welcome, through Settings, Help and problems, Report a
+problem, or the Discord. Places: the README near the top, the site's home and download pages, the user guide's opening, Settings,
+Updates and about in the application, and `docs/store/LISTING.md` (the Microsoft Store description, which store-follow sends with
+the next submission). The App Store description already has it (the planning session added it on 2026-11-15:
+"GroupLab 1.0 is ready to use and still in active development. New versions arrive often, and suggestions and error reports are
+always welcome: Settings, Help and problems, Report a problem, sends one straight from the app."). **The Google Play listing is not
+edited now**, because the closed test is in Google's first review and a listing change would join it; the planning session adds the
+sentence there after approval. Retire any wording that calls GroupLab unreleased, a preview or pre-1.0 (`docs/RETIRED-WORDING.json`),
+and keep "nightly" for the build channel only. Claims backing names this entry.
+
+## 3. Report
+
+As usual; say which store strings the first 1.0 build carried on each platform.
+
 ## 2026-11-15, entry 487: the Play closed test is submitted, the App Store listing is filled in; closed-track uploads, public wording, records, and Apple screenshots
 
 **Status: actioned 2026-11-15. Sections 0 to 6 done, in the order 5, 3, 1, 2, 4.** Two checks wait on events, not on work: the

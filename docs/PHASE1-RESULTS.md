@@ -606,6 +606,26 @@ uploaded to version 1.0's English (U.S.) sets, APP_IPHONE_67 and APP_IPAD_PRO_3G
 first run's workflow carried two of ios-app.yml's jobs by a copying mistake, so the fitting ran here; the workflow is corrected and
 has `upload_only`.
 
+## Entry 488: GroupLab 1.0, still in active development (2026-11-15)
+
+**Section 1.** `Directory.Build.props` is 1.0.0; the next nightly is 1.0.0-nightly.226 (the number is the highest `v*-nightly.*` tag
+plus one, whatever the base). `VersionTests.OnePointOhIsNewerThanEveryZeroPointTwoBuildAndReadsAsABuildNumber` holds 1.0.0-nightly.226
+above every 0.2.0 build, GroupLab Dev's `-dev` included. A person reads "GroupLab 1.0, build 226" (`SemanticVersion.Words`): in Settings,
+This build, above the exact build line (which stays as it was, because it is the first line of every log and crash record); the
+phones' Settings, About and their Updates summary; the phone's Capture footer; the update bar and Android's update messages; the
+/releases/ headings, with the exact version beside each; the download page's newest-build lines; and the Discord title. `Words` is
+never serialized: `SignableBytesTests` showed that a new property on the version changes the signed bytes of every published
+manifest. The tag filters that took `v0.` (play-upload, apple-screens, android-emulator) take any numbered nightly; the site's
+"Since nightly.N" trimming takes any base. Store strings the build is set to carry: Microsoft Store 1.0.226.0 (package-msix.ps1,
+third number = patch times 1000 plus N); Android version code N and versionName 1.0.N (1.0.N-dev for GroupLab Dev); Apple
+CFBundleShortVersionString 1.0 and CFBundleVersion N (Apple took a short version that stayed 0.2.0 across every upload, so a fixed 1.0
+is expected to be accepted). docs/RELEASE-NOTES.md keeps its machine headings, which the notes, TestFlight, Play and Discord tools
+read; the page built from it shows the people form. A noticed note that begins "GroupLab is now version" opens its build's notes
+(release-notes.py), and features.json lists it as not a feature. **Section 2.** One sentence (`ActiveDevelopment.Sentence` in the
+application) on the README, the home and download pages, the user guide's opening (PDF rebuilt), the desktop's and phones' Settings,
+and LISTING.md's Store description; /releases/ no longer says GroupLab is unreleased. RETIRED-WORDING.json retires "There is no full
+release yet", "GroupLab is unreleased" and "Phase 1 is unreleased". Claims backed (5,953); consistency 0 findings.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

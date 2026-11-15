@@ -15,7 +15,7 @@
     <ApplicationId>org.grouplab.app</ApplicationId>
     <ApplicationTitle>GroupLab</ApplicationTitle>
     <ApplicationVersion>1</ApplicationVersion>
-    <ApplicationDisplayVersion>0.2.0</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <RootNamespace>GroupLab.iOS</RootNamespace>
     <!-- The icon, from the desktop's mark by scripts/ios-icons.py. -->
     <AppIcon>AppIcon</AppIcon>

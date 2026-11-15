@@ -98,6 +98,9 @@ public sealed record BuildIdentity(SemanticVersion Version, UpdateTrain Train, s
     /// <summary>A build nobody published. It has no train, and the updater leaves it alone.</summary>
     public bool IsDevelopment => Train == UpdateTrain.Development;
 
+    /// <summary>The build as a person reads it, "GroupLab 1.0, build 226" (entry 488). <see cref="Line"/> stays the exact one.</summary>
+    public string Words => "GroupLab " + Version.Words;
+
     /// <summary>One line a person can read and paste into a report.</summary>
     public string Line => string.Create(CultureInfo.InvariantCulture,
         $"GroupLab {Version.Number}, {(IsDevelopment ? "development build" : Train.Words().ToLowerInvariant() + " build")}, {(Commit is null ? "no commit recorded" : "commit " + Commit)}");

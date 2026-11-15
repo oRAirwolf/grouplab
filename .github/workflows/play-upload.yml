@@ -63,7 +63,7 @@ jobs:
         id: files
         run: |
           set -eu
-          version="${WANTED:-$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | startswith("v0."))][0].tagName' | sed 's/^v//')}"
+          version="${WANTED:-$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | test("^v[0-9]+[.][0-9]+[.][0-9]+-nightly[.]"))][0].tagName' | sed 's/^v//')}"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           mkdir -p play
           gh release download "v$version" -R "$GITHUB_REPOSITORY" -p "grouplab-$version-android-*.aab" -p "grouplab-$version-android-native-symbols-*.zip" -D play

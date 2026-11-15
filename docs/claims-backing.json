@@ -8100,6 +8100,42 @@
   "The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access (entry 487).": {
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entry 487 sections 0 and 2: the closed test sent for review on 2026-11-15, joined through the grouplab-testers Google Group; Play's rule of 12 testers for 14 days; docs/store/PLAY.md"
+  },
+  "Windows Mac iPhone and iPad Android Linux Windows The installer Newest Download the installer grouplab-setup-win-x64.exe GroupLab 0.2, build 225, built 2026-11-08 from commit 54c6871 .": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
+  },
+  "Mac macOS, Apple silicon Newest Download for Apple silicon grouplab-macos-arm64.tar.gz GroupLab 0.2, build 225, built 2026-11-08 from commit 54c6871 .": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
+  },
+  "Android GroupLab Dev Newest Download GroupLab Dev grouplab-android-dev.apk GroupLab 0.2, build 225, built 2026-11-08 from commit 54c6871 .": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
+  },
+  "Linux Linux tarball Newest Download the Linux tarball grouplab-linux-x64.tar.gz GroupLab 0.2, build 225, built 2026-11-08 from commit 54c6871 .": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
+  },
+  "GroupLab 0.2, build 225, built 2026-11-08 from commit 54c6871 .": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
+  },
+  "GroupLab 1.0 is ready to use and still in active development: new versions arrive often, and suggestions and error reports are always welcome, through Settings, Help and problems, Report a problem, or the Discord.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
+  },
+  "Version 1.0 is ready to use and still in active development: new versions arrive often, and suggestions and error reports are always welcome.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
+  },
+  "Version 1.0, still in active development.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
+  },
+  "**GroupLab 1.0 is ready to use and still in active development.** New versions arrive often, and suggestions and error reports are always welcome: Settings, Help and problems, Report a problem sends one straight from GroupLab, or say it on the [Discord](https://grouplab.org/discord).": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
   }
  },
  "rules": [

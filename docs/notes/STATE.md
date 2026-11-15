@@ -9,18 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-15, entries 485 to 487 done and entry 480's dated check taken; entry 488 (version 1.0) is next.
+**Last rewritten:** 2026-11-15, entries 485 to 488 done and entry 480's dated check taken; entry 489 is next.
 
 ---
 
 ## In flight
 
+- **Entry 488 (2026-11-15)**, done: GroupLab is 1.0.0; the next nightly is 1.0.0-nightly.226, read as "GroupLab 1.0, build 226"
+  (`SemanticVersion.Words`, never serialized: the manifests are signed over it). Store strings: Microsoft 1.0.226.0, Android 1.0.226
+  code 226, Apple 1.0 (226). "Still in active development" on the README, site, guide, Settings and the Store text; not on Play yet.
 - **Entry 487 (2026-11-15)**, done: Play's closed test (alpha) is in Google's first review; every nightly now goes to internal and
   alpha, and a run that meets a review sends nothing (Play's default would cancel it). App Store pictures taken on the simulators,
   in docs/store/apple/, uploaded to version 1.0. Waiting on events only: Google's approval (the planning session passes on the
   opt-in link, then it goes beside the testers group on the pages) and the next nightly reaching TestFlight.
-- **Entry 486 (2026-11-15)**, done: the Apple agreement signed; TestFlight answers again (request 108, answered).
-- **Entry 485 (2026-11-15)**, done: the Duo's iPhone-sized inner screen said on /download/, the README and the testing guide.
+- **Entries 485 and 486 (2026-11-15)**, done: the Duo's letterboxing said on /download/; the Apple agreement signed (request 108).
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Dated check, from 2026-11-11 (.NET's November release):** is there an iOS
   workload set after 10.0.402.1 with dotnet/macios issue 26969 fixed? If so, `python scripts/ios-xcode27.py` on ios-app.yml with its
   version, prove it, then nightly.yml and IosSigningTests (IOS-PLAN.md). 2026-11-08: 10.0.403 still iOS 27.1.10018, no fix.
@@ -85,15 +87,14 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
-- **A one-inch LengthReference on the diagonal is a scan's stated dpi** (`StatedResolutionScale.DotsPerInchOf`, entry 481 E), as
-  imported shots are recognized by theirs; `Directory.Build.targets` drops `opencv_videoio_ffmpeg*` from every build (481 B).
+- **Play's commit cancels a review in progress by default**; play-upload.py asks ERROR_IF_IN_REVIEW, so a nightly that meets
+  a review skips Play that run (entry 487). **Version words are not serialized** (`SemanticVersion.Words`, entry 488).
 - **Ballistics can be opened from Settings** (`Shell.ShowRiflesAndLoads`, entry 482) with "‹ Settings" back; the back walk expects a
   place opened with its own way back to return there, not to Capture.
 - **Every phone sheet closes through `ProblemSheet.PutBack`** (error report 43), and a choice handed to `ProblemSheet.Over` that the
   caller did not place is shown under the body.
 - **A rifle, barrel or load kept from its form renames** (`RecordBook.With(record, was)`, error report 42); a name in use is refused.
 - **Four workflows may start website.yml** (nightly, screenshots, android-emulator, store-status), each after a push with its own token.
-- **Nightly 222's notes are left as published**; its report-born fixes are counted from `attributions` in release-note-corrections.json.
 
 - **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words, or `Screens.LeavesPage` for a Done,
   Cancel, Skip or "Another target" that is the page's way out (entry 472); `Entry472BackTests` fails on a new page Back was never pressed on.
@@ -104,7 +105,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
-- **Grey morphology by an ellipse is managed** (`GreyMorphology`, entry 484), as binary is; any other element goes to OpenCV.
 - **The database is schema version 6** (entry 461): each upgrade's first open copies `grouplab.db` to `grouplab.pre-vN.db` first.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.

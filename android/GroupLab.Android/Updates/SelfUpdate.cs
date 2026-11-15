@@ -231,8 +231,8 @@ internal static class SelfUpdate
             if (!asked && !Unmetered())
             {
                 // Entry 374 section 3: said on the screen too, not only in Settings, so a phone that is never on Wi-Fi is not left behind.
-                Say($"GroupLab {offer.Version!.Number} is out. It downloads on Wi-Fi, or tap Update now.");
-                Notify($"GroupLab {offer.Version.Number} is out. It downloads on Wi-Fi by itself.", "Update now", () => _ = RunAsync(asked: true));
+                Say($"GroupLab {offer.Version!.Words} is out. It downloads on Wi-Fi, or tap Update now.");
+                Notify($"GroupLab {offer.Version.Words} is out. It downloads on Wi-Fi by itself.", "Update now", () => _ = RunAsync(asked: true));
                 return true;
             }
 
@@ -263,7 +263,7 @@ internal static class SelfUpdate
                 .PutString("readyUrl", offer.Asset.Url)!
                 .PutString("readyPublished", offer.PublishedUtc)!
                 .Apply();
-            Say($"GroupLab {offer.Version.Number} is downloaded and checked.");
+            Say($"GroupLab {offer.Version.Words} is downloaded and checked.");
             TryInstall(asked, fromWorker);
             return true;
         }
@@ -292,11 +292,11 @@ internal static class SelfUpdate
         switch (when)
         {
             case InstallWhen.NotDuringWork:
-                Say($"GroupLab {ready.Version} is ready. It installs once nothing is open: no camera, no reading, nothing unsaved.");
+                Say($"GroupLab {SemanticVersion.WordsFor(ready.Version)} is ready. It installs once nothing is open: no camera, no reading, nothing unsaved.");
                 return;
             case InstallWhen.OnRequest:
-                Say($"GroupLab {ready.Version} is ready. Tap Update now to install it.");
-                Notify($"GroupLab {ready.Version} is downloaded. Install it now?", "Update now", () => TryInstall(asked: true));
+                Say($"GroupLab {SemanticVersion.WordsFor(ready.Version)} is ready. Tap Update now to install it.");
+                Notify($"GroupLab {SemanticVersion.WordsFor(ready.Version)} is downloaded. Install it now?", "Update now", () => TryInstall(asked: true));
                 return;
             case InstallWhen.WhenLeft:
                 // A copy that still needs a tap (installed by adb, or before Android 12) is asked now, while the person is here to tap;
@@ -307,14 +307,14 @@ internal static class SelfUpdate
                     return;
                 }
 
-                Say($"GroupLab {ready.Version} is ready. It installs when you leave GroupLab.");
-                Notify($"GroupLab {ready.Version} is downloaded. It installs when you leave GroupLab.", "Install now", () => TryInstall(asked: true));
+                Say($"GroupLab {SemanticVersion.WordsFor(ready.Version)} is ready. It installs when you leave GroupLab.");
+                Notify($"GroupLab {SemanticVersion.WordsFor(ready.Version)} is downloaded. It installs when you leave GroupLab.", "Install now", () => TryInstall(asked: true));
                 return;
             default:
                 // Off screen, a tap cannot be answered: the copy that needs one waits for the next launch.
                 if (!Silent && !WorkInProgress.OnScreen)
                 {
-                    Say($"GroupLab {ready.Version} is ready. Android asks once before GroupLab can update itself; it asks next time you open it.");
+                    Say($"GroupLab {SemanticVersion.WordsFor(ready.Version)} is ready. Android asks once before GroupLab can update itself; it asks next time you open it.");
                     return;
                 }
 
@@ -385,7 +385,7 @@ internal static class SelfUpdate
             session.Commit(pending.IntentSender);
         }
 
-        Say($"Installing GroupLab {ready.Version}…");
+        Say($"Installing GroupLab {SemanticVersion.WordsFor(ready.Version)}…");
     }
 
     /// <summary>Opens Android's "Install unknown apps" page for GroupLab.</summary>

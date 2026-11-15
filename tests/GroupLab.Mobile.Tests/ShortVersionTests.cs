@@ -38,7 +38,10 @@ public class ShortVersionTests
             window.Show();
             Dispatcher.UIThread.RunJobs();
             var texts = view.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text ?? "").ToList();
-            Assert.Contains("GroupLab " + AppInfo.ShortVersion, texts);
+            // Entry 488: the version as a person reads it, "GroupLab 1.0, build 226", with the exact short form under it for a report.
+            Assert.Contains("GroupLab " + AppInfo.Words, texts);
+            Assert.Contains(AppInfo.ShortVersion, texts);
+            Assert.Contains(GroupLab.Core.Updates.ActiveDevelopment.Sentence, texts);
             if (AppInfo.ShortVersion != AppInfo.Version)
             {
                 Assert.DoesNotContain(texts, t => t.Contains(AppInfo.Version, StringComparison.Ordinal));

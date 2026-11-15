@@ -64,9 +64,9 @@ public class SkippedVersionsTests
     {
         string text = SkippedVersions.Combined(History, "0.2.0-nightly.31", "0.2.0-nightly.40");
 
-        Assert.StartsWith("GroupLab 0.2.0-nightly.40", text, StringComparison.Ordinal);
-        Assert.Contains("GroupLab 0.2.0-nightly.38", text, StringComparison.Ordinal);
-        Assert.Contains("GroupLab 0.2.0-nightly.35", text, StringComparison.Ordinal);
+        Assert.StartsWith("GroupLab 0.2, build 40", text, StringComparison.Ordinal);
+        Assert.Contains("GroupLab 0.2, build 38", text, StringComparison.Ordinal);
+        Assert.Contains("GroupLab 0.2, build 35", text, StringComparison.Ordinal);
         Assert.DoesNotContain("nightly.31", text, StringComparison.Ordinal);
         Assert.DoesNotContain("nightly.28", text, StringComparison.Ordinal);
 

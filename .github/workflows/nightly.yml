@@ -406,6 +406,8 @@ jobs:
           echo "$KEYSTORE" | base64 -d > "$keystore"
           trap 'rm -f "$keystore"' EXIT
           code="${VERSION##*.}"
+          # Entry 488: Play shows versionName 1.0.N, and Apple's short version is 1.0 with CFBundleVersion N, so a build attaches to
+          # App Store Connect's version 1.0; the application itself reads its exact version from -p:Version.
           # Once for each: the project's AndroidPackageFormat wins over AndroidPackageFormats, so one publish makes one kind
           # (tried on this machine with a throwaway key, entry 219 item A6).
           # Entry 386: the plain APK carries the updater (the project turns it on for any APK) and so needs the nightly train, without which
@@ -413,7 +415,7 @@ jobs:
           for format in aab apk; do
             train=""; [ "$format" = apk ] && train="-p:GroupLabTrain=nightly"
             dotnet publish android/GroupLab.Android -c Release -o "$RUNNER_TEMP/android-out" $train \
-              -p:AndroidPackageFormat=$format -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$VERSION" -p:Version="$VERSION" \
+              -p:AndroidPackageFormat=$format -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$(echo "${VERSION%%-*}" | cut -d. -f1-2).$code" -p:Version="$VERSION" \
               -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" \
               -p:AndroidKeyStore=true -p:AndroidSigningKeyStore="$keystore" -p:AndroidSigningKeyAlias=grouplab-upload \
               -p:AndroidSigningStorePass=env:STORE_PASS -p:AndroidSigningKeyPass=env:KEY_PASS
@@ -421,7 +423,7 @@ jobs:
           # Entry 234: the development build, org.grouplab.app.dev, "GroupLab Dev", debuggable, installed beside the Play copy. Its version
           # ends in -dev, which marks its error and survey reports.
           dotnet publish android/GroupLab.Android -c Release -o "$RUNNER_TEMP/android-dev-out" \
-            -p:GroupLabDev=true -p:AndroidPackageFormat=apk -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$VERSION-dev" -p:Version="$VERSION-dev" \
+            -p:GroupLabDev=true -p:AndroidPackageFormat=apk -p:ApplicationVersion="$code" -p:ApplicationDisplayVersion="$(echo "${VERSION%%-*}" | cut -d. -f1-2).$code-dev" -p:Version="$VERSION-dev" \
             -p:GroupLabTrain=nightly \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" \
             -p:AndroidKeyStore=true -p:AndroidSigningKeyStore="$keystore" -p:AndroidSigningKeyAlias=grouplab-upload \
@@ -573,7 +575,7 @@ jobs:
           code="${VERSION##*.}"
           dotnet build ios/GroupLab.iOS --configuration Release -r ios-arm64 \
             -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
-            -p:Version="$VERSION" -p:ApplicationDisplayVersion="${VERSION%%-*}" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
+            -p:Version="$VERSION" -p:ApplicationDisplayVersion="$(echo "${VERSION%%-*}" | cut -d. -f1-2)" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
             -p:EnableCodeSigning=false -bl:build-device.binlog \
             -v:minimal -clp:ErrorsOnly > build-device.log 2>&1 || { grep -E "error" build-device.log | head -60; exit 1; }
           app=$(find ios/GroupLab.iOS/bin/Release -path '*ios-arm64*' -not -path '*simulator*' -name 'GroupLab.iOS.app' -type d | head -1)
@@ -635,7 +637,7 @@ jobs:
           EOF
           dotnet publish ios/GroupLab.iOS --configuration Release -r ios-arm64 \
             -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
-            -p:Version="$VERSION" -p:ApplicationDisplayVersion="${VERSION%%-*}" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
+            -p:Version="$VERSION" -p:ApplicationDisplayVersion="$(echo "${VERSION%%-*}" | cut -d. -f1-2)" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
             -p:ArchiveOnBuild=true "$@" -o "$RUNNER_TEMP/ipa" \
             -v:minimal -clp:ErrorsOnly > publish-ios.log 2>&1 || { grep -E "error" publish-ios.log | head -40; exit 1; }
           ipa=$(ls "$RUNNER_TEMP"/ipa/*.ipa | head -1)
@@ -800,7 +802,7 @@ jobs:
           code="${VERSION##*.}"
           dotnet build ios/GroupLab.iOS --configuration Release -r ios-arm64 -p:GroupLabDev=true \
             -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
-            -p:Version="$VERSION-dev" -p:ApplicationDisplayVersion="${VERSION%%-*}" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
+            -p:Version="$VERSION-dev" -p:ApplicationDisplayVersion="$(echo "${VERSION%%-*}" | cut -d. -f1-2)" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
             -p:EnableCodeSigning=false -bl:build-dev-device.binlog \
             -v:minimal -clp:ErrorsOnly > build-dev-device.log 2>&1 || { grep -E "error" build-dev-device.log | head -60; exit 1; }
           app=$(find ios/GroupLab.iOS/bin/Release -path '*ios-arm64*' -not -path '*simulator*' -name 'GroupLab.iOS.app' -type d | head -1)
@@ -854,7 +856,7 @@ jobs:
           EOF
           dotnet publish ios/GroupLab.iOS --configuration Release -r ios-arm64 -p:GroupLabDev=true \
             -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
-            -p:Version="$VERSION-dev" -p:ApplicationDisplayVersion="${VERSION%%-*}" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
+            -p:Version="$VERSION-dev" -p:ApplicationDisplayVersion="$(echo "${VERSION%%-*}" | cut -d. -f1-2)" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
             -p:ArchiveOnBuild=true "$@" -o "$RUNNER_TEMP/ipa-dev" \
             -v:minimal -clp:ErrorsOnly > publish-ios-dev.log 2>&1 || { grep -E "error" publish-ios-dev.log | head -40; exit 1; }
           ipa=$(ls "$RUNNER_TEMP"/ipa-dev/*.ipa | head -1)

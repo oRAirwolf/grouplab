@@ -40,6 +40,36 @@ public sealed partial record SemanticVersion(int Major, int Minor, int Patch, st
 
     public override string ToString() => Number + (Build is null ? "" : "+" + Build);
 
+    /// <summary>
+    /// The version as a person reads it, NOTES-FROM-PLANNING.md entry 488 section 1: "1.0, build 226" for 1.0.0-nightly.226 (GroupLab
+    /// Dev's 1.0.0-nightly.226-dev included), "1.0" for the release 1.0.0, "1.0.1" where there is a patch. Logs, error reports, file
+    /// names, tags and the update check keep <see cref="Number"/>, which is what a machine compares.
+    /// <para>Never serialized: the update manifests are signed over this record's JSON, and a new property in it would change the signed
+    /// bytes of every manifest already published (SignableBytesTests caught it).</para>
+    /// </summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string Words
+    {
+        get
+        {
+            string release = string.Create(CultureInfo.InvariantCulture, $"{Major}.{Minor}") +
+                (Patch == 0 ? "" : string.Create(CultureInfo.InvariantCulture, $".{Patch}"));
+            if (PreRelease is null)
+            {
+                return release;
+            }
+
+            var build = NightlyNumber().Match(PreRelease);
+            return build.Success ? release + ", build " + build.Groups[1].Value : release + " " + PreRelease;
+        }
+    }
+
+    /// <summary><see cref="Words"/> for any text: the text as it stands where it is not a version.</summary>
+    public static string WordsFor(string? text) => Parse(text)?.Words ?? text ?? "";
+
+    [GeneratedRegex(@"^nightly\.(\d+)")]
+    private static partial Regex NightlyNumber();
+
     /// <summary>Whether this version is a pre-release: a nightly or a beta, rather than a release.</summary>
     public bool IsPreRelease => PreRelease is not null;
 

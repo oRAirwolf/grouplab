@@ -26,6 +26,7 @@ not post the same build twice. The workflow commits that file.
 from __future__ import annotations
 
 import json
+import re
 import os
 import sys
 import urllib.error
@@ -64,12 +65,21 @@ def description(notes: str, version: str) -> str:
     return "\n".join(kept).rstrip() + "\n\n" + MORE + tail
 
 
+def people(version: str) -> str:
+    """Entry 488: a build as a person reads it, "GroupLab 1.0, build 226" for 1.0.0-nightly.226; the version as written otherwise."""
+    m = re.match(r"^v?(\d+)\.(\d+)\.(\d+)(?:-nightly\.(\d+))?", version)
+    if not m:
+        return f"GroupLab {version}"
+    release = f"{m.group(1)}.{m.group(2)}" + (f".{m.group(3)}" if m.group(3) != "0" else "")
+    return f"GroupLab {release}" + (f", build {m.group(4)}" if m.group(4) else "")
+
+
 def message(version: str, notes: str) -> dict:
     return {
         "username": "GroupLab builds",
         "allowed_mentions": {"parse": []},
         "embeds": [{
-            "title": f"GroupLab {version}",
+            "title": people(version),
             "url": RELEASES + version,
             "description": description(notes, version),
             "color": AMBER,
@@ -144,7 +154,7 @@ def self_test() -> int:
     d = m["embeds"][0]["description"]
     check("normal notes keep both headings", "**What you will notice**" in d and "**Under the hood**" in d)
     check("the naming line is not repeated under the title", "GroupLab 0.2.0-nightly.95." not in d)
-    check("the title is the version, linked to its release", m["embeds"][0]["title"] == "GroupLab 0.2.0-nightly.95"
+    check("the title is the version, linked to its release", m["embeds"][0]["title"] == "GroupLab 0.2, build 95"
           and m["embeds"][0]["url"].endswith("/v0.2.0-nightly.95"))
     check("the download page is linked", DOWNLOAD in d)
     check("nobody is pinged", m["allowed_mentions"] == {"parse": []})

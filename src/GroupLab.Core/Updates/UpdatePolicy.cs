@@ -132,7 +132,7 @@ public static class UpdatePolicy
             return new UpdateDecision(false, offered, string.Create(CultureInfo.InvariantCulture, $"You asked GroupLab to skip {skipped.Number}, so it will say nothing until there is something newer."));
         }
 
-        return new UpdateDecision(true, offered, string.Create(CultureInfo.InvariantCulture, $"GroupLab {offered.Number} is ready to install."));
+        return new UpdateDecision(true, offered, string.Create(CultureInfo.InvariantCulture, $"GroupLab {offered.Words} is ready to install."));
     }
 
     /// <summary>

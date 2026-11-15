@@ -14,7 +14,7 @@
     <ApplicationId>org.grouplab.app.share</ApplicationId>
     <ApplicationTitle>GroupLab</ApplicationTitle>
     <ApplicationVersion>1</ApplicationVersion>
-    <ApplicationDisplayVersion>0.2.0</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <RootNamespace>GroupLab.Share</RootNamespace>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <!-- The extension's own App Store profile in the nightly's signed publish (the properties scripts/ios-signing.py builds). -->

@@ -661,6 +661,9 @@ public partial class MainWindow
         // Entry 119 section 4: the build says what it is, where a tester can read it and select it, so a report from a rolling test build
         // names the exact commit rather than "the latest one". The same string is the first line of every log and of every crash record.
         var (build, _) = SettingsCard(body, page, "This build", "version about commit github build number");
+        // Entry 488: the version as a person reads it, and that GroupLab is still in active development.
+        build.Children.Add(new TextBlock { Text = ThisBuild.Words, TextWrapping = TextWrapping.Wrap });
+        build.Children.Add(Line(ActiveDevelopment.Sentence));
         build.Children.Add(new SelectableTextBlock
         {
             Text = BuildLine(),

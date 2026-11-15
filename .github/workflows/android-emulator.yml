@@ -181,7 +181,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back emulated
           disable-animations: true
-          script: bash scripts/android-screens.sh apk/grouplab-dev-x86_64.apk android-screens "$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | startswith("v0."))][0].tagName' | sed 's/.*nightly\.//')"
+          script: bash scripts/android-screens.sh apk/grouplab-dev-x86_64.apk android-screens "$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | test("^v[0-9]+[.][0-9]+[.][0-9]+-nightly[.]"))][0].tagName' | sed 's/.*nightly\.//')"
 
       # Entry 388 section 2: the quality sweep, only when asked for; its report is the step summary and the artifact, never a failure.
       - name: The quality sweep

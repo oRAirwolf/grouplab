@@ -101,6 +101,30 @@ public partial class VersionTests
         }
     }
 
+    /// <summary>
+    /// Entry 488 section 1: GroupLab 1.0's nightlies carry on the numbers, so 1.0.0-nightly.226 must be newer than every 0.2.0 build, and
+    /// a person reads it as "1.0, build 226" while machines keep the exact version.
+    /// </summary>
+    [Fact]
+    public void OnePointOhIsNewerThanEveryZeroPointTwoBuildAndReadsAsABuildNumber()
+    {
+        var first = SemanticVersion.Parse("1.0.0-nightly.226")!;
+        foreach (string old in new[] { "0.2.0-nightly.225", "0.2.0-nightly.9999", "0.2.0", "0.2.0-nightly.225-dev" })
+        {
+            Assert.True(UpdateOrder.IsNewer(SemanticVersion.Parse(old), first), old);
+        }
+
+        Assert.Equal("1.0, build 226", first.Words);
+        Assert.Equal("1.0, build 226", SemanticVersion.WordsFor("v1.0.0-nightly.226-dev+deadbeef"));
+        Assert.Equal("1.0", SemanticVersion.Parse("1.0.0")!.Words);
+        Assert.Equal("1.0.1", SemanticVersion.Parse("1.0.1")!.Words);
+        Assert.Equal("1.0 beta.1", SemanticVersion.Parse("1.0.0-beta.1")!.Words);
+        Assert.Equal("0.2, build 225", SemanticVersion.WordsFor("0.2.0-nightly.225"));
+        Assert.Equal("not a version", SemanticVersion.WordsFor("not a version"));
+        Assert.Equal("1.0.0-nightly.226", first.Number);
+        Assert.Equal("GroupLab 1.0, build 226", BuildIdentity.Read("1.0.0-nightly.226+deadbeef", "nightly").Words);
+    }
+
     /// <summary>Every tag in this clone. A clone with no tags proves nothing here and says so by passing.</summary>
     private static IEnumerable<string> Tags()
     {

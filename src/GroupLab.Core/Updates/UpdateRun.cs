@@ -178,7 +178,7 @@ public sealed class UpdateRun(IOutsideWorld outside, BuildIdentity build, string
 
         Downloaded = into;
         return new UpdateState(UpdateStage.ReadyToInstall,
-            string.Create(CultureInfo.InvariantCulture, $"GroupLab {Manifest.Version} is downloaded and checked."),
+            string.Create(CultureInfo.InvariantCulture, $"GroupLab {SemanticVersion.WordsFor(Manifest.Version)} is downloaded and checked."),
             Manifest.Offered, 1, Manifest.Notes);
     }
 

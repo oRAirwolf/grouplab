@@ -707,6 +707,15 @@ NIGHTLY_FILES = [
 ]
 
 
+def people(version: str) -> str:
+    """Entry 488: a build as a person reads it, "GroupLab 1.0, build 226" for 1.0.0-nightly.226; the version as written otherwise."""
+    m = re.match(r"^v?(\d+)\.(\d+)\.(\d+)(?:-nightly\.(\d+))?", version)
+    if not m:
+        return version
+    release = f"{m.group(1)}.{m.group(2)}" + (f".{m.group(3)}" if m.group(3) != "0" else "")
+    return f"GroupLab {release}" + (f", build {m.group(4)}" if m.group(4) else "")
+
+
 def newest_build() -> dict:
     """Entry 338: the newest published build's number, date and commit, from docs/RELEASE-NOTES.md, which each nightly writes its own
     entry into as it publishes. Nothing on the page is typed: a build later, every figure on it has moved with the file."""
@@ -807,7 +816,7 @@ DOWNLOAD_JS = """(function () {
 def page_download() -> str:
     n = newest_build()
     commit_link = f'<a class="mono" href="{GITHUB}/commit/{n["commit"]}">{n["commit"]}</a>'
-    built = f'<p class="small dim">Nightly {n["number"]}, built {n["date"]} from commit {commit_link}.</p>'
+    built = f'<p class="small dim">{people(n["version"])}, built {n["date"]} from commit {commit_link}.</p>'
 
     def points(items: list[str]) -> str:
         return '<ul class="dim small-list">' + "".join(f"<li>{p}</li>" for p in items) + "</ul>"
@@ -864,7 +873,7 @@ def page_download() -> str:
 </section>"""
 
     files_rows = "".join(f'<tr><td><a href="{NIGHTLY}{f}"><code>{f}</code></a></td><td>{what}</td></tr>' for f, what in NIGHTLY_FILES)
-    files_inner = f"""<p class="small">The moving release on GitHub always carries the newest build under these names, so a link to one of them never goes stale. The Android files join it when their own build finishes, usually some minutes after the others; until then a phone is offered the newest earlier build that has an Android file. Nightly {n["number"]}, built {n["date"]} from commit {commit_link}.</p>
+    files_inner = f"""<p class="small">The moving release on GitHub always carries the newest build under these names, so a link to one of them never goes stale. The Android files join it when their own build finishes, usually some minutes after the others; until then a phone is offered the newest earlier build that has an Android file. {people(n["version"])}, built {n["date"]} from commit {commit_link}.</p>
 <div class="dl-table"><table class="small"><thead><tr><th>File</th><th>What it is</th></tr></thead><tbody>{files_rows}</tbody></table></div>
 <p class="small">The same build with its number in every file name, and the notes it was published with: <a href="{GITHUB}/releases/tag/v{n["version"]}">GroupLab {n["version"]} on GitHub</a>. What changed in it: <a href="/releases/#{n["anchor"]}">its release notes</a>.</p>"""
     files_title = f"Every file in nightly {n['number']}, on GitHub"
@@ -968,7 +977,7 @@ def page_download() -> str:
         raise SystemExit("docs/PLATFORM-SUPPORT.md: the Minimums section was not found, and the download page shows it on its own")
     minimums, supported = statement[start:end], statement[:start] + statement[end:]
 
-    updating = f"""<p>The newest build is rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within minutes. It may be broken: passing the tests is not the same as somebody having used it. There is no full release yet.</p>
+    updating = f"""<p>The newest build is rebuilt automatically after every change that passes the tests on Windows, Linux and macOS, and published within minutes. It may be broken: passing the tests is not the same as somebody having used it. GroupLab 1.0 is ready to use and still in active development: new versions arrive often, and suggestions and error reports are always welcome, through Settings, Help and problems, Report a problem, or the Discord.</p>
 <h3 class="h3">Updating</h3>
 <p><strong>Of the computer downloads, only the Windows installer updates itself.</strong> It asks first, then updates in the background.</p>
 <p>The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you. There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.</p>
@@ -2002,7 +2011,7 @@ def page_home() -> str:
 <div class="tp-hero-text">
 <h1 class="cond">GROUP<span class="tp-amber">LAB</span></h1>
 <p class="tp-tagline">Know what your rifle <em>really</em> shoots.</p>
-<p class="tp-lead tp-wide">Photograph any target. GroupLab measures the group and gives every figure with the range it could really be.</p>
+<p class="tp-lead tp-wide">Photograph any target. GroupLab measures the group and gives every figure with the range it could really be. Version 1.0 is ready to use and still in active development: new versions arrive often, and suggestions and error reports are always welcome.</p>
 <div class="tp-actions tp-wide">
 <a class="tp-btn tp-primary mono" href="/download/">DOWNLOAD FREE</a>
 <a class="tp-btn mono" href="{GITHUB}">VIEW THE SOURCE</a>
@@ -2010,7 +2019,7 @@ def page_home() -> str:
 <p class="tp-platforms mono tp-wide">GPL-3.0 &#183; WINDOWS &#183; MACOS &#183; LINUX &#183; ANDROID &#183; IPHONE AND IPAD BETA</p>
 </div>
 <div class="tp-hero-phone">
-<p class="tp-lead">Photograph any target. Every figure comes with the range it could really be.</p>
+<p class="tp-lead">Photograph any target. Every figure comes with the range it could really be. Version 1.0, still in active development.</p>
 <a class="tp-btn tp-primary mono" href="/download/?device=android#android">GET IT FOR ANDROID</a>
 <a class="tp-btn mono" href="/download/?device=iphone#iphone">IPHONE AND IPAD BETA</a>
 </div>
@@ -2788,7 +2797,7 @@ def page_releases() -> str:
         tag = "h3" if i < NEWEST_RELEASES else "span"
         blocks.append(
             f'<details class="panel pad release" id="{anchor}"{open_attr}>'
-            f'<summary><{tag} class="h3">{esc(version)}</{tag}></summary>'
+            f'<summary><{tag} class="h3">{esc(people(version))}</{tag}> <span class="mono faint small">{esc(version)}</span></summary>'
             f'<div class="prose tight">{notes.replace("<h3>", HEAD4).replace("</h3>", "</h4>")}</div>'
             "</details>"
         )
@@ -2797,7 +2806,7 @@ def page_releases() -> str:
 <section class="wrap page-head">
 <p class="eyebrow">Release notes</p>
 <h1>Release notes</h1>
-<p class="lead">Every build of GroupLab anyone could download, newest first. GroupLab is unreleased, so every one of these is a pre-release.</p>
+<p class="lead">Every build of GroupLab anyone could download, newest first. GroupLab 1.0 is ready to use and still in active development, so a new build arrives often; the builds before 1.0 were pre-releases.</p>
 <p class="small faint">Nightly builds are produced on the nights the application changed, so a gap in the numbers means nothing shipped that night. Work on the website, the documentation or these notes does not make a new build. Numbers below 92 were the run that built them rather than the build itself, and a run that was canceled or skipped still took its number, which is why the older gaps are wider.</p>
 </section>
 <section class="wrap stack" id="from-you">
@@ -3402,10 +3411,10 @@ def since_words(f: dict) -> str:
     version, last = arrived(f), changed(f)
     if not version:
         return "Coming in the next build"
-    words = "Since " + version.replace("0.2.0-", "")
+    words = "Since " + re.sub(r"^\d+\.\d+\.\d+-", "", version)
     if last == "next":
         return words + "; its newest part is coming in the next build"
-    return words + (", changed in " + last.replace("0.2.0-", "") if build_number(last) > build_number(version) else "")
+    return words + (", changed in " + re.sub(r"^\d+\.\d+\.\d+-", "", last) if build_number(last) > build_number(version) else "")
 
 
 def spotlight_words(f: dict) -> str:
@@ -3413,7 +3422,7 @@ def spotlight_words(f: dict) -> str:
     version, last = arrived(f), changed(f)
     if not version or last == "next":
         return "Coming in the next build"
-    return ("Changed in " if build_number(last) > build_number(version) else "New in ") + last.replace("0.2.0-", "")
+    return ("Changed in " if build_number(last) > build_number(version) else "New in ") + re.sub(r"^\d+\.\d+\.\d+-", "", last)
 
 
 def spotlight_section(heading: str) -> str:

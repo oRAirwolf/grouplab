@@ -24,6 +24,9 @@ and plotted over time.
 GroupLab is free and open source under the GPL-3.0 license. It sends nothing about you unless you choose to, and it never reads where a
 photo was taken.
 
+GroupLab 1.0 is ready to use and still in active development. New versions arrive often, and suggestions and error reports are always welcome: Settings, Help and problems, Report a problem
+sends one straight from GroupLab.
+
 ## What's new in this version
 
 Pasted from the release's own notes on github.com/oRAirwolf/grouplab/releases, the part under "What you will notice".

@@ -2,7 +2,7 @@ name: apple screens
 
 # NOTES-FROM-PLANNING.md entry 487 section 4: the App Store screenshots, taken on the iOS simulators rather than padded from Android's,
 # so App Store review sees the iPhone and iPad as they are. Run by hand. GroupLab Dev is built from the newest TestFlight build's source
-# (the newest v0.* tag unless a ref is given) on macos-26 with Xcode 26, the toolchain that build was made with, and walks
+# (the newest numbered nightly's tag unless a ref is given) on macos-26 with Xcode 26, the toolchain that build was made with, and walks
 # scripts/scenarios/phone-screens.json, the walk the Play pictures come from, on an iPhone 6.9 inch and an iPad 13 inch simulator in the
 # dark theme with the status bar at 9:41 and full. scripts/apple-screens.py fits the seven places of the Play set to App Store Connect's
 # exact sizes; the pictures are committed to docs/store/apple/ with made-from.json, then uploaded to version 1.0's English (U.S.)
@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: 'The tag or commit to build, such as v0.2.0-nightly.225; the newest v0.* tag when empty'
+        description: 'The tag or commit to build, such as v0.2.0-nightly.225; the newest numbered nightly when empty'
         required: false
         default: ''
       upload:
@@ -49,8 +49,8 @@ jobs:
         id: ref
         run: |
           ref="${{ inputs.ref }}"
-          [ -n "$ref" ] || ref=$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | startswith("v0."))][0].tagName')
-          test -n "$ref" || { echo "::error::No v0.* release to take the source from"; exit 1; }
+          [ -n "$ref" ] || ref=$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | test("^v[0-9]+[.][0-9]+[.][0-9]+-nightly[.]"))][0].tagName')
+          test -n "$ref" || { echo "::error::No numbered nightly release to take the source from"; exit 1; }
           echo "ref=$ref" >> "$GITHUB_OUTPUT"
           echo "Source: $ref" >> "$GITHUB_STEP_SUMMARY"
 

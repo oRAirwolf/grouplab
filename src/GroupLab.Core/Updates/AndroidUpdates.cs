@@ -199,7 +199,7 @@ public static class AndroidUpdates
     {
         ArgumentNullException.ThrowIfNull(build);
         string name = string.Equals(kind, DevKind, StringComparison.OrdinalIgnoreCase) ? "GroupLab Dev" : "GroupLab";
-        return string.Create(CultureInfo.InvariantCulture, $"You have the newest {name} for Android, {build.Version.Number}.");
+        return string.Create(CultureInfo.InvariantCulture, $"You have the newest {name} for Android, {build.Version.Words}.");
     }
 
     /// <summary>

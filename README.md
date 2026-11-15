@@ -4,6 +4,8 @@
 
 Free and open source under GPL-3.0: no account, no ads, no paid tier. On Windows, macOS, Linux and Android, and on iPhone and iPad in a public beta through TestFlight.
 
+**GroupLab 1.0 is ready to use and still in active development.** New versions arrive often, and suggestions and error reports are always welcome: Settings, Help and problems, Report a problem sends one straight from GroupLab, or say it on the [Discord](https://grouplab.org/discord).
+
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
 [![Newest nightly](https://img.shields.io/github/v/release/oRAirwolf/grouplab?include_prereleases&label=nightly)](https://github.com/oRAirwolf/grouplab/releases)
 [![Tests](https://github.com/oRAirwolf/grouplab/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/oRAirwolf/grouplab/actions/workflows/ci.yml)

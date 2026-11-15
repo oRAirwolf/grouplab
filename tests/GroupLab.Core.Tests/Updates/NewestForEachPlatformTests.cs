@@ -86,7 +86,7 @@ public class NewestForEachPlatformTests : IDisposable
             var offer = await Check(Nightly204WithoutAndroid(), nightly);
             Assert.Equal(ApkRefusal.NotNewer, offer.Refusal);
             Assert.False(offer.Offered);
-            Assert.Equal($"You have the newest GroupLab Dev for Android, 0.2.0-nightly.{nightly}.", offer.Says);
+            Assert.Equal($"You have the newest GroupLab Dev for Android, 0.2, build {nightly}.", offer.Says);
         }
     }
 
@@ -116,7 +116,7 @@ public class NewestForEachPlatformTests : IDisposable
         var none = Nightly204WithoutAndroid() with { Platforms = null };
         var offer = await Check(none, 202);
         Assert.Equal(ApkRefusal.NoApk, offer.Refusal);
-        Assert.Equal("You have the newest GroupLab Dev for Android, 0.2.0-nightly.202.", offer.Says);
+        Assert.Equal("You have the newest GroupLab Dev for Android, 0.2, build 202.", offer.Says);
         Assert.DoesNotContain("204", offer.Says, StringComparison.Ordinal);
     }
 

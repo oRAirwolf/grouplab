@@ -73,7 +73,7 @@ public static class SkippedVersions
                 text.Append('\n').Append('\n');
             }
 
-            text.Append("GroupLab ").Append(version.Version).Append('\n').Append('\n').Append(version.Notes.Trim());
+            text.Append("GroupLab ").Append(SemanticVersion.WordsFor(version.Version)).Append('\n').Append('\n').Append(version.Notes.Trim());
         }
 
         return text.ToString();

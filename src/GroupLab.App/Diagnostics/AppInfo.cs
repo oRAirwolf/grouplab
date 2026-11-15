@@ -40,6 +40,9 @@ public static class AppInfo
     /// </summary>
     public static string ShortVersion => Shortened(Version);
 
+    /// <summary>The version as a person reads it, "1.0, build 226" (entry 488 section 1).</summary>
+    public static string Words => GroupLab.Core.Updates.SemanticVersion.WordsFor(Version);
+
     /// <summary>Any version string with its commit cut to seven characters, such as the version an exported file says it came from.</summary>
     public static string Shortened(string version)
     {

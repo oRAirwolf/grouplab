@@ -334,6 +334,36 @@
         "docs/claims-backing.json",
         "docs/CLAIMS.md"
       ]
+    },
+    {
+      "phrase": "There is no full release yet",
+      "why": "entry 488: GroupLab is version 1.0, ready to use and still in active development; nightly names the build channel only",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "GroupLab is unreleased",
+      "why": "entry 488: GroupLab is version 1.0, ready to use and still in active development; nightly names the build channel only",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "Phase 1 is unreleased",
+      "why": "entry 488: GroupLab is version 1.0, ready to use and still in active development; nightly names the build channel only",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
     }
   ],
   "settled": []

@@ -77,9 +77,9 @@ internal static class UpdateCard
         return column;
     }
 
-    /// <summary>"nightly 125" for a nightly, else the version as written.</summary>
+    /// <summary>"1.0, build 226" for a nightly (entry 488), else the version as written.</summary>
     private static string Named(string version) =>
-        SemanticVersion.Parse(version)?.PreRelease?.Split('.') is ["nightly", var n] ? "nightly " + n : version;
+        SemanticVersion.WordsFor(version);
 
     private static string Ago(DateTimeOffset at)
     {

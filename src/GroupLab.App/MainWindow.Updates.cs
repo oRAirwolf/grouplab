@@ -406,7 +406,7 @@ public partial class MainWindow
 
     /// <summary>The line the new version says about itself, kept here so a test reads the same words the window shows.</summary>
     internal static string UpdatedLine(string from, string to) =>
-        string.Create(CultureInfo.InvariantCulture, $"GroupLab updated from {from} to {to}.");
+        string.Create(CultureInfo.InvariantCulture, $"GroupLab updated from {GroupLab.Core.Updates.SemanticVersion.WordsFor(from)} to {GroupLab.Core.Updates.SemanticVersion.WordsFor(to)}.");
 }
 
 /// <summary>Which asset in a manifest this machine installs. One place, so the window does not carry an operating system test around.</summary>
