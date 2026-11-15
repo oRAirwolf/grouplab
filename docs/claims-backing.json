@@ -8168,6 +8168,46 @@
   "It needs Android 10 or later on a 64-bit phone.": {
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entry 489 section 3 (the Play test's rules: 12 testers for 14 days, the grouplab-testers group, Android 10 on 64-bit) and docs/PLATFORM-SUPPORT.md's Android row"
+  },
+  "## Before submitting to the App Store (entry 489 section 2, 2026-11-15) A reviewer's pass over GroupLab for version 1.0, before Alan says yes to submitting.": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
+  },
+  "**Changed: Apple's privacy manifest.** Neither the application nor its share extension had a `PrivacyInfo.xcprivacy`, and App Store review asks for one: a missing required-reason declaration is the most likely rejection (ITMS-91053).": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
+  },
+  "Both now declare the system calls the .NET runtime and OpenCV make (file timestamps C617.1, time since boot 35F9.1, free disk space E174.1, user defaults CA92.1), and the application declares the same data types as its App Privacy answers (docs/store/LISTING.md, entry 379), none linked to the person and none used for tracking.": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
+  },
+  "Proven to build and run on the simulators by ios app run 43715309477 on the branch `ios-privacy-trial`.": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
+  },
+  "**Checked, and fine:** - **A fresh install and the first-run questions:** the walk of apple screens run 43702178215 reset GroupLab to a first run and answered its questions on an iPhone 17 Pro Max and an iPad Pro 13-inch (M5); every step passed.": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
+  },
+  "- **Walk me through a demo,** start to finish, on both: \"every step's control found; nothing left behind\" (47 s on the iPhone, 53 s on the iPad).": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
+  },
+  "The phone has no donation link, and the support page takes no payment, so guideline 3.1.1 does not arise.": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
+  },
+  "- **Report a problem** sends from the phone (Entry363SenderTests); **nothing crashed** in the last ios app run on main (42453772315) or on the trial branches' iPhone, iPad and GroupLab Dev legs.": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
+  },
+  "**What a reviewer might still raise:** the 18+ rating for named rifles and loads is expected and matches Play.": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
+  },
+  "Version 1.0 needs a build whose short version is 1.0, which nightly 226 is the first to carry (entry 488).": {
+   "kind": "measured",
+   "where": "entry 489 section 2, 2026-11-15: apple screens run 43702178215 (results.json per device), ios app runs 42453772315, 43710299858 and 43715309477, ios/GroupLab.iOS/Info.plist and PrivacyInfo.xcprivacy, the links fetched that day"
   }
  },
  "rules": [

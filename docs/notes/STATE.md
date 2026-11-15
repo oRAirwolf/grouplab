@@ -9,12 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-15, entries 485 to 488 done and entry 480's dated check taken; entry 489 is next.
+**Last rewritten:** 2026-11-15, entries 485 to 489 done and entry 480's dated check taken; the inbox is empty.
 
 ---
 
 ## In flight
 
+- **Entry 489 (2026-11-15)**, done: the backup always ends with a result line (limits, a retry, a 50 minute ceiling); the App Store
+  pre-review found no privacy manifest, now added (IOS-PLAN.md); /android-test/ waits for the Play opt-in link (`PLAY_TEST_LINK`).
 - **Entry 488 (2026-11-15)**, done: GroupLab is 1.0.0; the next nightly is 1.0.0-nightly.226, read as "GroupLab 1.0, build 226"
   (`SemanticVersion.Words`, never serialized: the manifests are signed over it). Store strings: Microsoft 1.0.226.0, Android 1.0.226
   code 226, Apple 1.0 (226). "Still in active development" on the README, site, guide, Settings and the Store text; not on Play yet.
@@ -22,7 +24,6 @@ If something here disagrees with the logs, the logs are right and this file is o
   alpha, and a run that meets a review sends nothing (Play's default would cancel it). App Store pictures taken on the simulators,
   in docs/store/apple/, uploaded to version 1.0. Waiting on events only: Google's approval (the planning session passes on the
   opt-in link, then it goes beside the testers group on the pages) and the next nightly reaching TestFlight.
-- **Entries 485 and 486 (2026-11-15)**, done: the Duo's letterboxing said on /download/; the Apple agreement signed (request 108).
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Checked 2026-11-15:** workload set 10.0.404 (Xcode 27.2) fixes 26969; the
   iPhone, iPad and Dev legs pass on the trial branch, the Duo leg not yet (folded, outer screen, upright self-test stops at the picture
   check; IOS-PLAN.md). nightly.yml stays on Xcode 26 until the Duo leg passes.
@@ -94,7 +95,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **Every phone sheet closes through `ProblemSheet.PutBack`** (error report 43), and a choice handed to `ProblemSheet.Over` that the
   caller did not place is shown under the body.
 - **A rifle, barrel or load kept from its form renames** (`RecordBook.With(record, was)`, error report 42); a name in use is refused.
-- **Four workflows may start website.yml** (nightly, screenshots, android-emulator, store-status), each after a push with its own token.
 
 - **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words, or `Screens.LeavesPage` for a Done,
   Cancel, Skip or "Another target" that is the page's way out (entry 472); `Entry472BackTests` fails on a new page Back was never pressed on.

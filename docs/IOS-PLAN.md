@@ -231,6 +231,43 @@ could see the target framed from the front. Capture only has to work on whicheve
 
 **The App Store:** from April 2027 a submission needs iPhone Duo screenshots. Nothing to do while GroupLab is in TestFlight only.
 
+## Before submitting to the App Store (entry 489 section 2, 2026-11-15)
+
+A reviewer's pass over GroupLab for version 1.0, before Alan says yes to submitting. Nothing was attached or submitted. Code has no Mac,
+so it is what the simulator runs already recorded plus a read of what ships; nothing here was tapped by hand.
+
+**Changed: Apple's privacy manifest.** Neither the application nor its share extension had a `PrivacyInfo.xcprivacy`, and App Store
+review asks for one: a missing required-reason declaration is the most likely rejection (ITMS-91053). Both now declare the system calls
+the .NET runtime and OpenCV make (file timestamps C617.1, time since boot 35F9.1, free disk space E174.1, user defaults CA92.1), and the
+application declares the same data types as its App Privacy answers (docs/store/LISTING.md, entry 379), none linked to the person and
+none used for tracking. Proven to build and run on the simulators by ios app run 43715309477 on the branch `ios-privacy-trial`.
+
+**Checked, and fine:**
+- **A fresh install and the first-run questions:** the walk of apple screens run 43702178215 reset GroupLab to a first run and
+  answered its questions on an iPhone 17 Pro Max and an iPad Pro 13-inch (M5); every step passed.
+- **Walk me through a demo,** start to finish, on both: "every step's control found; nothing left behind" (47 s on the iPhone, 53 s on
+  the iPad).
+- **Permissions:** the camera's purpose string says what it is for and that the picture stays on the device; saving a result's
+  picture uses the add-only photo permission, with its own plain string; choosing a photo uses Apple's picker, which needs no
+  permission. Neither string says "this app".
+- **iPad multitasking and rotation:** all four iPad orientations, a launch screen, and no full-screen requirement, so Split View and
+  Stage Manager are open; the iPad tours upright and on its side pass on macos-26 (on xcode-27 the side tour needs the Simulator app,
+  which that image lacks).
+- **The largest text size:** the screen sweep at the largest Dynamic Type size passes in every recent ios app run, the trial branch's
+  included.
+- **No other platform on iOS screens:** the only Google Play wording is GroupLab Dev's own line, shown on Android's Dev build alone.
+  "Beta" and "TestFlight" appear only in self-test details, never on a screen.
+- **Links:** every address the phone opens answers (grouplab.org, the user guide's phone section and its anchor, what GroupLab sends,
+  support, the Discord page, GitHub and its release pages). The phone has no donation link, and the support page takes no payment, so
+  guideline 3.1.1 does not arise.
+- **Report a problem** sends from the phone (Entry363SenderTests); **nothing crashed** in the last ios app run on main (42453772315)
+  or on the trial branches' iPhone, iPad and GroupLab Dev legs.
+- **Export compliance:** `ITSAppUsesNonExemptEncryption` is false; GroupLab uses only the system's HTTPS.
+
+**What a reviewer might still raise:** the 18+ rating for named rifles and loads is expected and matches Play. Version 1.0 needs a build
+whose short version is 1.0, which nightly 226 is the first to carry (entry 488). The share extension has no screen of its own to review.
+Nothing found needs a decision, so no question was written.
+
 ## 4. The App Store, and the licence
 
 Entry 279 section 1 adds to LICENSE a GPLv3 section 7 additional permission for distribution through Apple's App Store and TestFlight

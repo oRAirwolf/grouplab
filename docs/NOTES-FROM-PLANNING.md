@@ -25,6 +25,63 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-15, entry 489: overnight queue (Alan asleep): the nightly backup, an App Store pre-review check, a tester page, Play tablet screenshots
+
+**Status: actioned 2026-11-15. Sections 1 to 5 done.** Nothing needed Alan. Section 2 found one likely rejection, a missing privacy
+manifest, and fixed it; section 3's opt-in link waits for the planning session (marked as `PLAY_TEST_LINK` in website/build.py);
+section 4's pictures are not uploaded, as the entry says.
+
+Alan chose all four, in this order, at 04:30 Denver on 2026-11-15, before going to sleep. None of them needs him. Take it after entry
+488. The week is at 12 percent; the usual guard applies. Anything that turns out to need him goes to for-alan.md and the run carries on.
+
+## 1. The nightly backup can never stall silently
+
+On 3 and 10 November `scripts/Run-Automation.ps1 -Job Nightly` left no backup line in `C:\Dev\grouplab-local\automation.log` after
+the Discord step; 11 to 15 November ran normally. Each step writes its line only when it ends, so a step that hangs leaves nothing.
+
+1. Give every `gh` call in `scripts/backup.py` a time limit and one retry after a short wait, and the whole step a ceiling well above
+   its usual 8 to 14 minutes.
+2. Always write a result line, including a failure line that says which part failed (create, upload, local copy, pruning).
+3. Find out from GitHub whether a half-made `backup-2026-11-03` or `backup-2026-11-10` release exists (no assets, or fewer than the
+   usual seven files); remove any through the safety net rules (RESTORE.md: a good backup newer than a day first), never the good ones.
+4. The weekly backup report says plainly when a night has no line.
+5. Back up the scripts first, the usual way. Prove it with a dry run that forces a timeout and shows the failure line.
+
+## 2. An App Store pre-review check
+
+Before Alan submits version 1.0 (entry 487 section 0), check GroupLab against Apple's App Store Review Guidelines the way a reviewer
+would, on the iOS simulators: a fresh install, first-run questions, Walk me through a demo start to finish on iPhone and iPad, the
+camera and photo-library permission prompts and their purpose strings in Info.plist (plain, specific, no "this app"), the share
+extension, iPad multitasking sizes and rotation, the largest Dynamic Type size, no placeholder or test text, no reference to Android
+or other platforms on iOS screens unless needed, every link opens, Report a problem works, and nothing crashes. Fix what is clear and
+safe; anything that needs a decision goes to QUESTIONS-FOR-PLANNING.md. Write the result in docs/IOS-PLAN.md under a new heading,
+"Before submitting to the App Store", with what was checked and what was changed. Do not attach a build or submit.
+
+## 3. A page for people who want to test on Android
+
+A short page on grouplab.org, "Join the Android test" (linked from the download page and the Discord announcement), in plain words:
+why the test exists (Google wants 12 people opted in for 14 days in a row before GroupLab can be listed publicly); step 1, join the
+Google Group https://groups.google.com/g/grouplab-testers with the Google account signed into the Play Store on the phone (the group
+page saying "You don't have permission to access this content" afterwards is expected: there is nothing to read in it); step 2, opt
+in with the Play test link, which the page says is coming once Google finishes its review (leave a marked place for it; the planning
+session will pass the link on in a later entry); step 3, install from Google Play; what helps (staying opted in for the whole time,
+and analyzing a target or two along the way, because Google looks at whether testers use the app); needs Android 10 or later on a
+64-bit phone; GroupLab Dev for anyone who wants the newest build the same day. No tester's name anywhere. The site's look stays as it
+is. Claims backing names this entry.
+
+## 4. Tablet screenshots for Google Play
+
+Play takes 7 inch and 10 inch tablet screenshots (PNG or JPEG, 16:9 or 9:16, each side 320 to 3,840 px; at least 4, at least
+1,080 px on each side, to be eligible for promotion). From the Tab S8 Ultra emulator pictures (`docs/figures/screens/phone/tab-*`,
+nightly 225 or newer, re-taken if 488's 1.0 build has landed), make at least four for each size, dark theme, fitted without cropping
+on a canvas of the right shape filled with the picture's own colour, the same way as entry 487 section 3's `scripts/play-screens.py`
+(extend that script). Put them in `docs/store/play-tablet/7in/` and `docs/store/play-tablet/10in/`. Do not upload them: the
+closed test is in Google's first review, and the planning session uploads them with the listing's 1.0 sentence after approval.
+
+## 5. Report
+
+As usual, one report per section is fine. Say in section 2's report anything a reviewer would likely reject.
+
 ## 2026-11-15, entry 488: GroupLab becomes version 1.0, still in active development
 
 **Status: actioned 2026-11-15. Sections 1 to 3 done.** Not done on purpose: the Google Play listing (the entry says the planning

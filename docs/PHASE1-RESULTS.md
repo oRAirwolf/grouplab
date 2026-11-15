@@ -626,6 +626,20 @@ application) on the README, the home and download pages, the user guide's openin
 and LISTING.md's Store description; /releases/ no longer says GroupLab is unreleased. RETIRED-WORDING.json retires "There is no full
 release yet", "GroupLab is unreleased" and "Phase 1 is unreleased". Claims backed (5,953); consistency 0 findings.
 
+## Entry 489: the overnight queue (2026-11-15)
+
+**Section 1, the backup.** The log shows 10 November with a Discord line and no backup line (3 November is older than the log's
+week). Every `gh` call in scripts/backup.py now has a limit (3 minutes; 40 for uploads and the restore download) and one retry after
+30 seconds; the run has a 50 minute ceiling enforced inside the script; every run ends with a "result:" line naming the failed part.
+Run-Automation.ps1 writes a "started" line before each step, and the weekly line names a night with no backup line ("no backup line
+on 10 November" today). GitHub holds no backup-2026-11-03 or backup-2026-11-10 release, half-made or whole, so nothing was removed.
+Proven by a dry run forcing a timeout (`result: backup failed at copy archive`, exit 1) and one forcing the ceiling (exit 3);
+tests/python/backup-tests.py 14 checks. **Section 2, the App Store pre-review:** docs/IOS-PLAN.md, "Before submitting to the App
+Store". The one finding: no PrivacyInfo.xcprivacy in the app or the share extension, now added to both. Everything else checked was in
+order. **Section 3:** grouplab.org/android-test/, linked from the download page's Play card and every Discord announcement; the opt-in
+link's place is `PLAY_TEST_LINK`. **Section 4:** five tablet pictures for each of 7 inch (1920 by 1080) and 10 inch (2560 by 1440) in
+docs/store/play-tablet/, from nightly 225's Tab S8 Ultra pictures, by scripts/play-screens.py; not uploaded.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
