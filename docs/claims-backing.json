@@ -8136,6 +8136,14 @@
   "**GroupLab 1.0 is ready to use and still in active development.** New versions arrive often, and suggestions and error reports are always welcome: Settings, Help and problems, Report a problem sends one straight from GroupLab, or say it on the [Discord](https://grouplab.org/discord).": {
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0 (Directory.Build.props), still in active development; Settings, Help and problems, Report a problem (src/GroupLab.Core/Updates/ActiveDevelopment.cs)"
+  },
+  "10.0.404 27.2`; the set version, not the package's 10.404.0).": {
+   "kind": "measured",
+   "where": "ios app run 43710299858 on the ios-xcode27-trial branch, 2026-11-15 (entry 480's dated check): the iPhone Duo leg's SELFTEST lines and screenshot sizes"
+  },
+  "The simulator starts folded and GroupLab lays out on the outer screen (the Shell 466 by 678, display 1 at 1398 by 2034; the inner, display 3, is 2007 by 2853 and was only photographed), with an 84 point inset on the right when upright; upright, the self-test stopped at the picture check instead of the result (\"no session was saved\"), while on its side it passed.": {
+   "kind": "measured",
+   "where": "ios app run 43710299858 on the ios-xcode27-trial branch, 2026-11-15 (entry 480's dated check): the iPhone Duo leg's SELFTEST lines and screenshot sizes"
   }
  },
  "rules": [

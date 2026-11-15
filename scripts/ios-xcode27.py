@@ -1,10 +1,13 @@
 """NOTES-FROM-PLANNING.md entry 480 section 2: moves a workflow's iOS jobs from macos-26 and Xcode 26, with the workload held at 26.5.10318,
-to GitHub's xcode-27 image, Xcode 27.1 and the iOS workload set named, and (in ios-app.yml) the iOS 27 simulators and an iPhone Duo leg.
+to GitHub's xcode-27 image, the Xcode named (27.1 unless a third argument says otherwise) and the iOS workload set named, and (in ios-app.yml) the iOS 27 simulators and an iPhone Duo leg.
 
 Not applied yet: the first workload set for Xcode 27.1, 10.0.402.1, trims away members of Avalonia's iOS types (dotnet/macios issue 26969,
 fixed upstream, waiting for the next .NET 10 release). When a workload set with the fix ships:
 
-    python scripts/ios-xcode27.py .github/workflows/ios-app.yml <workload set version>
+    python scripts/ios-xcode27.py .github/workflows/ios-app.yml <workload set version> [<Xcode version>]
+
+The Xcode is the one the workload set's iOS manifest asks for: 10.404.0 carries iOS 27.2.10000, which requires Xcode 27.2 (checked
+2026-11-15), so that one is run as `... 10.0.404 27.2` (the set version, not the package version 10.404.0).
 
 prove ios-app.yml green, then the same on .github/workflows/nightly.yml, and change IosSigningTests' runs-on line with it.
 """
@@ -15,6 +18,7 @@ CR = chr(13) + chr(10)
 LF = chr(10)
 path = pathlib.Path(sys.argv[1])
 workload = sys.argv[2]
+xcode = sys.argv[3] if len(sys.argv) > 3 else "27.1"
 raw = path.read_bytes().decode("utf-8")
 crlf = CR in raw
 t = raw.replace(CR, LF)
@@ -35,17 +39,17 @@ xcode_old = """      - name: Xcode 26
           xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
           xcodebuild -version | head -1
 """
-xcode_new = """      # Entry 480 section 2: Xcode 27.1, the first that builds an application filling the iPhone Duo's inner screen. GitHub's xcode-27
+xcode_new = """      # Entry 480 section 2: Xcode {XCODE}, one of the Xcodes that build an application filling the iPhone Duo's inner screen. GitHub's xcode-27
       # image carries it; the lowest iOS the application runs on stays 26 (SupportedOSPlatformVersion).
-      - name: Xcode 27.1
+      - name: Xcode {XCODE}
         run: |
-          xcode=$(ls -d /Applications/Xcode_27.1*.app | grep -iv -e beta -e release_candidate | head -1)
-          test -n "$xcode" || { ls -d /Applications/Xcode*.app; echo "::error::No Xcode 27.1 on this runner"; exit 1; }
+          xcode=$(ls -d /Applications/Xcode_{XCODE}*.app | grep -iv -e beta -e release_candidate | head -1)
+          test -n "$xcode" || { ls -d /Applications/Xcode*.app; echo "::error::No Xcode {XCODE} on this runner"; exit 1; }
           sudo xcode-select -s "$xcode"
-          xcodebuild -version | head -1 | grep -q '^Xcode 27\\.1' || { echo "::error::No Xcode 27.1 on this runner"; exit 1; }
+          xcodebuild -version | head -1 | grep -q '^Xcode {XCODE_RE}' || { echo "::error::No Xcode {XCODE} on this runner"; exit 1; }
           xcodebuild -version | head -1
 """
-n = sub(xcode_old, xcode_new)
+n = sub(xcode_old, xcode_new.replace("{XCODE_RE}", xcode.replace(".", chr(92) + ".")).replace("{XCODE}", xcode))
 
 work_old = """      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
       # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
@@ -57,7 +61,7 @@ work_old = """      # The newest iOS workload wants the Xcode after 26 (27.0.107
           dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 """
-work_new = """      # Entry 480 section 2: a workload set Microsoft made for Xcode 27.1, with dotnet/macios issue 26969 fixed. It replaces the rollback
+work_new = """      # Entry 480 section 2: a workload set Microsoft made for Xcode {XCODE}, with dotnet/macios issue 26969 fixed. It replaces the rollback
       # that held the workload at 26.5.10318 for Xcode 26.
       - name: The .NET iOS workload
         run: |
@@ -66,13 +70,13 @@ work_new = """      # Entry 480 section 2: a workload set Microsoft made for Xco
           dotnet workload install ios --version {WORKLOAD} > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 """
-assert sub(work_old, work_new.replace("{WORKLOAD}", workload)) == n
+assert sub(work_old, work_new.replace("{WORKLOAD}", workload).replace("{XCODE}", xcode)) == n
 assert sub("runs-on: macos-26", "runs-on: xcode-27") == n
 
 if "ios-app" in path.name:
     sub("""# NOTES-FROM-PLANNING.md entry 290 section 2 items 3 and 4: the iPhone and iPad application (ios/GroupLab.iOS) built on GitHub's macos-26
 # machine with Xcode 26, and proved""", """# NOTES-FROM-PLANNING.md entry 290 section 2 items 3 and 4: the iPhone and iPad application (ios/GroupLab.iOS) built on GitHub's xcode-27
-# machine with Xcode 27.1 (entry 480), and proved""")
+# machine with Xcode """ + xcode + """ (entry 480), and proved""")
     sub("""if "iOS-26" in runtime for d in ds if d["name"].startswith("iPhone")]""",
         """if "iOS-27" in runtime for d in ds if d["name"].startswith("iPhone") and "Duo" not in d["name"]]""")
     sub("""if "iOS-26" in runtime for d in ds if d["name"].startswith("iPad")]""", """if "iOS-27" in runtime for d in ds if d["name"].startswith("iPad")]""")
@@ -98,14 +102,14 @@ if "ios-app" in path.name:
             mkdir -p shots/duo
             xcrun simctl launch "$duo" org.grouplab.app
             sleep 20
-            xcrun simctl io "$duo" screenshot shots/duo/00-first-start.png > /dev/null
+            shot "$duo" shots/duo/00-first-start.png
             xcrun simctl terminate "$duo" org.grouplab.app || true
             data=$(xcrun simctl get_app_container "$duo" org.grouplab.app data)
             mkdir -p "$data/Documents/selftest"
             cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
             tour "$duo" shots/duo --screens || failed=1
             tour "$duo" shots/duo-landscape --screens --landscape || failed=1
-            for shot in shots/duo/00-first-start.png shots/duo/*result*.png shots/duo-landscape/*result*.png; do
+            for shot in shots/duo/00-first-start*.png shots/duo/*result*.png shots/duo-landscape/*result*.png; do
               [ -f "$shot" ] && echo "$shot: $(sips -g pixelWidth -g pixelHeight "$shot" | awk '/pixel/ {printf "%s ", $2}')pixels"
             done | tee shots/duo/sizes.txt
             xcrun simctl shutdown "$duo" || true

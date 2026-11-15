@@ -23,9 +23,9 @@ If something here disagrees with the logs, the logs are right and this file is o
   in docs/store/apple/, uploaded to version 1.0. Waiting on events only: Google's approval (the planning session passes on the
   opt-in link, then it goes beside the testers group on the pages) and the next nightly reaching TestFlight.
 - **Entries 485 and 486 (2026-11-15)**, done: the Duo's letterboxing said on /download/; the Apple agreement signed (request 108).
-- **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Dated check, from 2026-11-11 (.NET's November release):** is there an iOS
-  workload set after 10.0.402.1 with dotnet/macios issue 26969 fixed? If so, `python scripts/ios-xcode27.py` on ios-app.yml with its
-  version, prove it, then nightly.yml and IosSigningTests (IOS-PLAN.md). 2026-11-08: 10.0.403 still iOS 27.1.10018, no fix.
+- **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Checked 2026-11-15:** workload set 10.0.404 (Xcode 27.2) fixes 26969; the
+  iPhone, iPad and Dev legs pass on the trial branch, the Duo leg not yet (folded, outer screen, upright self-test stops at the picture
+  check; IOS-PLAN.md). nightly.yml stays on Xcode 26 until the Duo leg passes.
 
 ## The next three
 

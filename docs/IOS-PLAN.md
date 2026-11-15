@@ -201,7 +201,19 @@ That is [dotnet/macios issue 26969](https://github.com/dotnet/macios/issues/2696
 2026-10-22 it will be in the next .NET 10 release. Silencing the error could ship a TestFlight build where the keyboard does not work,
 so nothing is moved until a workload set after 10.0.402.1 carries the fix. Then: `python scripts/ios-xcode27.py
 .github/workflows/ios-app.yml <version>`, start ios-app.yml, and once it is green the same on `nightly.yml`, with `IosSigningTests`'
-runs-on line changed in the same commit. Nothing is needed from Alan. **Checked 2026-11-08:** issue 26969 still open; the only later workload set, 10.0.403 (published 2026-10-25), carries the same iOS manifest, 27.1.10018, so it holds no fix. What to look for is a workload set whose `Microsoft.NET.Sdk.iOS` is past 27.1.10018, or a dotnet/macios release after 27.1.10018.
+runs-on line changed in the same commit. Nothing is needed from Alan. **Checked 2026-11-08:** issue 26969 still open; the only later workload set, 10.0.403 (published 2026-10-25), carries the same iOS manifest, 27.1.10018, so it holds no fix. What to look for is a workload set whose `Microsoft.NET.Sdk.iOS` is past 27.1.10018, or a dotnet/macios release after 27.1.10018. **Checked 2026-11-15
+(entry 480's dated check):** issue 26969 was closed on 2026-11-11, and workload set 10.0.404 (package 10.404.0, published 2026-11-10)
+carries iOS 27.2.10000, which wants Xcode 27.2; GitHub's xcode-27 image has it. `scripts/ios-xcode27.py` now takes the Xcode as a third
+argument (`... 10.0.404 27.2`; the set version, not the package's 10.404.0). On the trial branch `ios-xcode27-trial` (ios app runs
+43700870496 to 43710299858) the device build, the iPhone and iPad tours and GroupLab Dev's scenario all pass on Xcode 27.2, so the
+trimming of 26969 is gone. Two things on the image were fixed in ios-app.yml itself, for every runner: the Duo has two screens, so a
+screenshot takes each (`shot`, `-displayN`), and there is no Simulator.app to turn the iPad from its menu, so that one landscape tour is
+skipped with a warning when it is missing. **Not moved yet:** the Duo leg. The simulator starts folded and GroupLab lays out on the
+outer screen (the Shell 466 by 678, display 1 at 1398 by 2034; the inner, display 3, is 2007 by 2853 and was only photographed), with an
+84 point inset on the right when upright; upright, the self-test stopped at the picture check instead of the result ("no session was
+saved"), while on its side it passed. Until that is understood, nightly.yml stays on macos-26 and Xcode 26, because a build that may
+misbehave on the Duo is worse than a letterboxed one. Next: unfold the simulator before the tour, and see whether the picture check's
+buttons are inside the screen at that inset.
 
 **What is held already, without the new SDK.** `Entry480FoldTests` folds and unfolds at the Duo's reported sizes (outer 466 by 678
 points, inner 626 by 890 and 890 by 626; the simulator leg will record the real ones) on the result, in Fix holes, on Capture and in

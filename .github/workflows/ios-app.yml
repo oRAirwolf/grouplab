@@ -240,6 +240,14 @@ jobs:
         if: steps.opencv.outputs.linked == 'true'
         timeout-minutes: 20
         run: |
+          # A screenshot of each screen a simulator has: the iPhone Duo has two, and simctl then refuses to choose (ios app run
+          # 43707763560), so each is taken as <name>-display<N>.png.
+          shot() {
+            xcrun simctl io "$1" screenshot "$2" > /dev/null 2>&1 && return 0
+            for d in $(xcrun simctl io "$1" screenshot "$2" 2>&1 | grep -oE -- '--display=[0-9]+' | cut -d= -f2); do
+              xcrun simctl io "$1" screenshot --display="$d" "${2%.png}-display$d.png" > /dev/null || true
+            done
+          }
           tour() {
             udid=$1; out=$2; shift 2
             folder="$(xcrun simctl get_app_container "$udid" org.grouplab.app data)/Documents/selftest"
@@ -254,7 +262,7 @@ jobs:
               status=$(cat "$folder/status" 2>/dev/null || true)
               showing=$(cat "$folder/showing" 2>/dev/null || true)
               if [ -n "$showing" ] && [ "$showing" != "$last" ]; then
-                xcrun simctl io "$udid" screenshot "$out/$showing.png" > /dev/null
+                shot "$udid" "$out/$showing.png"
                 printf '%s' "$showing" > "$folder/taken"
                 last="$showing"
               fi
@@ -287,14 +295,18 @@ jobs:
             tour "$IPAD" shots/ipad --screens || failed=1
             # An iPad showing apps in windows refuses an application's own request to turn, so the simulator is turned from its Device
             # menu first, with only the iPad running; the tour turns the screen itself only where it is still upright.
-            open -a Simulator --args -CurrentDeviceUDID "$IPAD"
-            sleep 15
-            osascript -e 'tell application "Simulator" to activate' -e 'delay 2' \
-              -e 'tell application "System Events" to tell process "Simulator" to click menu item "Rotate Left" of menu "Device" of menu bar 1' 2>&1 \
-              || osascript -e 'tell application "Simulator" to activate' -e 'delay 2' -e 'tell application "System Events" to key code 123 using command down' 2>&1 \
-              || echo "the simulator could not be turned from its menu"
-            sleep 5
-            tour "$IPAD" shots/ipad-landscape --screens --landscape || failed=1
+            # Xcode 27.2 on GitHub's xcode-27 image has no Simulator registered by name and none in its own folder (ios app runs
+            # 43701100950 and 43703907381), so it is looked for; where there is none, this landscape tour is skipped with a warning.
+            simulator=$(find "$(xcode-select -p)/Applications" /Applications /System/Applications -maxdepth 6 -name Simulator.app -type d 2>/dev/null | head -1)
+            if [ -n "$simulator" ]; then
+              open -a "$simulator" --args -CurrentDeviceUDID "$IPAD"
+              sleep 15
+              osascript -e 'tell application "Simulator" to activate' -e 'delay 2'                 -e 'tell application "System Events" to tell process "Simulator" to click menu item "Rotate Left" of menu "Device" of menu bar 1' 2>&1                 || osascript -e 'tell application "Simulator" to activate' -e 'delay 2' -e 'tell application "System Events" to key code 123 using command down' 2>&1                 || echo "the simulator could not be turned from its menu"
+              sleep 5
+              tour "$IPAD" shots/ipad-landscape --screens --landscape || failed=1
+            else
+              echo "::warning::No Simulator.app on this runner, so the iPad was not turned and its landscape tour was skipped"
+            fi
             xcrun simctl shutdown "$IPAD" || true
           fi
           [ "$failed" = 0 ] || { echo "::error::A tour did not reach the sample's result"; exit 1; }
