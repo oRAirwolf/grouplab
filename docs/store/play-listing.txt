@@ -1,0 +1,26 @@
+Google Play store listing for org.grouplab.app, en-US, as set on 2026-11-15 (NOTES-FROM-PLANNING.md entry 487 section 3).
+Read back from the Play Developer API (play-upload.yml, read_only, run 43701402551). The Console is the authority; this is its record.
+
+Title (8 characters):
+GroupLab
+
+Short description (66 characters):
+Measure your shot groups from a photo or scan of a printed target.
+
+Full description (1479 characters):
+GroupLab measures a group of shots on a printed target. Print one of its sheets, shoot it, then photograph it with your phone or open a scan. GroupLab reads the sheet's printed markers to know its exact size, finds the holes, and reports where each shot landed and how the group measures up.
+
+It gives the figures a shooter needs to compare loads, rifles and days at the range: extreme spread, mean radius, the group's center against the point of aim, and its circular error probable, each with how sure it is from the number of shots. Every figure is shown in inches, centimeters, MOA or mils at the distance you shot, and a tap on any figure says what it means.
+
+On the phone, GroupLab:
+• Photographs a sheet in Guided or Manual mode and checks every picture before it reads it
+• Finds the holes, and lets you move, add or remove any of them by hand
+• Marks any target by hand under a fixed crosshair, including store-bought targets
+• Works out Shots Needed to Zero and compares loads side by side
+• Gives the dope, the chance of a hit and point blank range
+• Prints its own targets, sized exactly
+• Keeps your sessions, and can keep them in step with the desktop version through a cloud folder you choose
+
+It uses the same reading engine as GroupLab for Windows, macOS and Linux, so a sheet reads the same on every device.
+
+GroupLab is free and open source under the GPL-3.0 license. It sends nothing about you unless you choose to, and it never reads where a photo was taken.

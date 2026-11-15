@@ -1,0 +1,677 @@
+name: apple screens
+
+# NOTES-FROM-PLANNING.md entry 487 section 4: the App Store screenshots, taken on the iOS simulators rather than padded from Android's,
+# so App Store review sees the iPhone and iPad as they are. Run by hand. GroupLab Dev is built from the newest TestFlight build's source
+# (the newest v0.* tag unless a ref is given) on macos-26 with Xcode 26, the toolchain that build was made with, and walks
+# scripts/scenarios/phone-screens.json, the walk the Play pictures come from, on an iPhone 6.9 inch and an iPad 13 inch simulator in the
+# dark theme with the status bar at 9:41 and full. scripts/apple-screens.py fits the seven places of the Play set to App Store Connect's
+# exact sizes; the pictures are committed to docs/store/apple/ with made-from.json, then uploaded to version 1.0's English (U.S.)
+# screenshot sets if `upload` is set. Nothing here attaches a build or submits for review.
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'The tag or commit to build, such as v0.2.0-nightly.225; the newest v0.* tag when empty'
+        required: false
+        default: ''
+      upload:
+        description: 'Upload the committed pictures to App Store Connect afterwards'
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apple-screens
+  cancel-in-progress: false
+
+jobs:
+  shots:
+    name: The simulators' screenshots
+    runs-on: macos-26
+    timeout-minutes: 120
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+      GH_TOKEN: ${{ github.token }}
+    outputs:
+      ref: ${{ steps.ref.outputs.ref }}
+    steps:
+      - name: Which source
+        id: ref
+        run: |
+          ref="${{ inputs.ref }}"
+          [ -n "$ref" ] || ref=$(gh release list -R "$GITHUB_REPOSITORY" --limit 30 --json tagName -q '[.[] | select(.tagName | startswith("v0."))][0].tagName')
+          test -n "$ref" || { echo "::error::No v0.* release to take the source from"; exit 1; }
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "Source: $ref" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ steps.ref.outputs.ref }}
+
+      # The fitting script comes from main, whatever the source being photographed.
+      - name: The fitting script from main
+        run: |
+          git fetch --depth 1 origin main
+          git show FETCH_HEAD:scripts/apple-screens.py > "$RUNNER_TEMP/apple-screens.py"
+          python3 -m pip install --quiet --disable-pip-version-check --break-system-packages pillow
+
+      - name: Xcode 26
+        run: |
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
+          sudo xcode-select -s "$xcode"
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
+          xcodebuild -version | head -1
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: The .NET iOS workload
+        run: |
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          dotnet workload list | grep -i ios
+
+      # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
+      # where there is none for this version, the newest successful run's artifact is taken instead.
+      - name: OpenCV for iOS from the cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/ios-opencv
+          key: ios-opencv-${{ hashFiles('ios/opencv/build-extern.sh') }}
+
+      - name: OpenCV for iOS
+        id: opencv
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run="cache"
+          if [ ! -f "$RUNNER_TEMP/ios-opencv/OpenCvSharpExtern.xcframework.zip" ]; then
+            run=""
+            for branch in main ios/opencv; do
+              run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ios.yml --branch "$branch" --status success --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+              [ -n "$run" ] && break
+            done
+            [ -n "$run" ] && gh run download "$run" -R "$GITHUB_REPOSITORY" -n ios-opencv -D "$RUNNER_TEMP/ios-opencv" || run=""
+          fi
+          if [ -z "$run" ]; then
+            echo "::notice::No OpenCV for iOS yet (no successful run of the workflow ios with the artifact ios-opencv). The head is built without it and the imaging checks are skipped."
+            echo "linked=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          cd "$RUNNER_TEMP/ios-opencv"
+          shasum -a 256 -c OpenCvSharpExtern.xcframework.zip.sha256
+          mkdir -p "$GITHUB_WORKSPACE/ios/native"
+          unzip -q OpenCvSharpExtern.xcframework.zip -d "$GITHUB_WORKSPACE/ios/native"
+          ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
+          # The entry points the link must keep, from OpenCvSharp's own assembly, which the restore puts in the package folder.
+          cd "$GITHUB_WORKSPACE"
+          dotnet restore ios/GroupLab.iOS -v:q > /dev/null
+          assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
+          python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
+          xcrun nm -gUm ios/native/OpenCvSharpExtern.xcframework/ios-arm64-simulator/libOpenCvSharpExtern.a 2>/dev/null | grep -E " _vector_Point2f_(delete|new1)$" || echo "vector_Point2f_delete is not defined in the simulator archive"
+          cd "$RUNNER_TEMP/ios-opencv"
+          # link-frameworks.txt names "-framework X", "libY.tbd" and "-lZ" lines; the head takes frameworks and linker flags apart.
+          frameworks=$(grep -oE -- '-framework [A-Za-z]+' link-frameworks.txt | awk '{print $2}' | sort -u | tr '\n' ' ')
+          flags=$( (grep -oE 'lib[a-z0-9+]+\.tbd' link-frameworks.txt | sed -E 's/^lib(.*)\.tbd$/-l\1/'; grep -oE -- '^-l[a-z0-9+]+' link-frameworks.txt) | sort -u | tr '\n' ' ')
+          echo "OpenCV for iOS from run $run: $(cut -d' ' -f1 OpenCvSharpExtern.xcframework.zip.sha256)"
+          echo "frameworks: $frameworks"
+          echo "linker flags: $flags"
+          echo "linked=true" >> "$GITHUB_OUTPUT"
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          # One space between names and none at either end: an empty name reached the native link as an empty path and stopped it.
+          echo "frameworks=$(printf '%s\n' Accelerate CoreFoundation CoreGraphics Foundation $frameworks | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+          echo "flags=$(printf '%s\n' $flags | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+
+      - name: Build for the simulator
+        run: |
+          dotnet build ios/GroupLab.iOS --configuration Release -r iossimulator-arm64 \
+            -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
+            -bl:build-simulator.binlog -v:minimal -clp:ErrorsOnly > build-simulator.log 2>&1 || { grep -E "error" build-simulator.log | head -60; exit 1; }
+          app=$(find ios/GroupLab.iOS/bin/Release -path '*iossimulator-arm64*' -name 'GroupLab.iOS.app' -type d | head -1)
+          test -n "$app"
+          echo "APP=$app" >> "$GITHUB_ENV"
+          du -sh "$app"
+          # The sheets in the bundle, each in its own place: a grep for either passed on Android with them in the wrong one.
+          for item in targets/GL-CF25-LTR.gltd.json targets/GL-CF25-LTR-D.gltd.json; do
+            test -f "$app/$item" || { echo "::error::The application does not carry $item"; exit 1; }
+          done
+          ls "$app/targets/frozen" | head -3
+          # Entry 292 section 2.3: the share extension inside the application, and a share-services extension. The simulator self-test
+          # proves the app group, which the simulator grants from the entitlements the build embeds.
+          appex="$app/PlugIns/GroupLab.Share.appex"
+          test -d "$appex" || { echo "::error::The application carries no share extension"; ls "$app" | head -40; exit 1; }
+          test "$(plutil -extract NSExtension.NSExtensionPointIdentifier raw "$appex/Info.plist")" = "com.apple.share-services" || { echo "::error::The extension is not a share extension"; exit 1; }
+          plutil -extract CFBundleIdentifier raw "$appex/Info.plist"
+          du -sh "$appex"
+          test -n "$(ls "$app/targets/frozen"/*.gltd.json 2>/dev/null)" || { echo "::error::The application carries no frozen sheets"; exit 1; }
+          if [ "${{ steps.opencv.outputs.linked }}" = "true" ]; then
+            nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -c " T _core_Mat_new1$" || { echo "::error::OpenCV's entry points are not in the executable"; exit 1; }
+            nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -E " _vector_Point2f_delete$" || echo "vector_Point2f_delete is not in the executable"
+          fi
+
+          # Entry 315's amendment, section 5: the public application carries none of GroupLab Dev's developer tools, which are compiled
+          # out of it; GroupLab Dev's own job checks that its library has them.
+          dll=$(find "$app" -name 'GroupLab.Mobile.dll' | head -1)
+          if [ -n "$dll" ] && grep -q "GroupLab.Mobile.Dev" "$dll"; then echo "::error::GroupLab carries GroupLab Dev's developer tools"; exit 1; fi
+          test -n "$dll" && echo "GroupLab.Mobile.dll carries no developer tools" || echo "::notice::No GroupLab.Mobile.dll in the bundle to look into"
+
+      - name: Boot an iOS 26 simulator
+        run: |
+          udid=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-26" in runtime for d in ds if d["name"].startswith("iPhone")]
+          found.sort(key=lambda p: (p[0], "Pro" in p[1]["name"], p[1]["name"]))
+          print(found[-1][1]["udid"] if found else "")')
+          test -n "$udid" || { xcrun simctl list runtimes; echo "::error::No iOS 26 iPhone simulator"; exit 1; }
+          xcrun simctl list devices | grep "$udid"
+          xcrun simctl boot "$udid"
+          xcrun simctl bootstatus "$udid" -b > /dev/null
+          xcrun simctl status_bar "$udid" override --time 9:41 --batteryState charged --batteryLevel 100 || true
+          echo "UDID=$udid" >> "$GITHUB_ENV"
+          # Entry 290 section 6: an iPad beside it for the wide screens, an iPad mini where the runner has one since that is the device
+          # the sittings use. Booted only once the iPhone is done with: a second simulator starting beside it made every screenshot take
+          # a minute and a half (runs 36688921677 and 36693793801).
+          ipad=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          found = [(runtime, d) for runtime, ds in devices.items() if "iOS-26" in runtime for d in ds if d["name"].startswith("iPad")]
+          found.sort(key=lambda p: ("mini" in p[1]["name"], p[0], p[1]["name"]))
+          print(found[-1][1]["udid"] if found else "")')
+          if [ -n "$ipad" ]; then
+            xcrun simctl list devices | grep "$ipad"
+            echo "IPAD=$ipad" >> "$GITHUB_ENV"
+          else
+            echo "::warning::No iOS 26 iPad simulator on this runner"
+          fi
+
+      - name: Install and start
+        run: |
+          mkdir -p shots
+          xcrun simctl install "$UDID" "$APP"
+          # The first start as a person sees it, with the first run's questions if this build asks them.
+          xcrun simctl launch "$UDID" org.grouplab.app
+          sleep 25
+          xcrun simctl io "$UDID" screenshot shots/00-first-start.png > /dev/null
+          xcrun simctl terminate "$UDID" org.grouplab.app || true
+          data=$(xcrun simctl get_app_container "$UDID" org.grouplab.app data)
+          echo "DATA=$data" >> "$GITHUB_ENV"
+          # Entry 292 section 2.3: iOS registered the share extension, so GroupLab is offered in other apps' share sheets.
+          xcrun simctl spawn "$UDID" pluginkit -m -A -v -i org.grouplab.app.share 2>&1 | tee pluginkit.txt
+          grep -q "org.grouplab.app.share" pluginkit.txt || { echo "::error::iOS did not register the share extension"; exit 1; }
+          echo "the share extension is registered"
+          # The committed sample scan, whose consent is in samples/PROVENANCE.md, put where the self-test reads it.
+          mkdir -p "$data/Documents/selftest"
+          cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
+
+      - name: Self-test
+        timeout-minutes: 35
+        run: |
+          folder="$DATA/Documents/selftest"
+          rm -f "$folder/status" "$folder/showing" "$folder/taken" "$folder/results.json"
+          SIMCTL_CHILD_GROUPLAB_ARGUMENTS=--self-test xcrun simctl launch --console-pty "$UDID" org.grouplab.app --self-test > app-console.log 2>&1 &
+          launcher=$!
+          # Each screen the self-test names in showing is photographed, and the name written back in taken, before it moves on. The
+          # launcher ends when the application does, so an application that stopped is seen at once rather than at the time limit.
+          # The limit is 1900 s since a slow runner was still at Compare after 1500 (entry 290 section 6, run 36688921677).
+          last=""
+          status=""
+          start=$(date +%s)
+          while [ $(( $(date +%s) - start )) -lt 1900 ]; do
+            status=$(cat "$folder/status" 2>/dev/null || true)
+            showing=$(cat "$folder/showing" 2>/dev/null || true)
+            if [ -n "$showing" ] && [ "$showing" != "$last" ]; then
+              xcrun simctl io "$UDID" screenshot "shots/$showing.png" > /dev/null
+              printf '%s' "$showing" > "$folder/taken"
+              echo "$(( $(date +%s) - start )) s: photographed $showing"
+              last="$showing"
+            fi
+            [ "$status" = "done" ] && break
+            if ! kill -0 "$launcher" 2>/dev/null; then
+              echo "::error::The application ended during the self-test (status: $status)"
+              xcrun simctl io "$UDID" screenshot "shots/99-when-it-ended.png" > /dev/null || true
+              break
+            fi
+            sleep 1
+          done
+          echo "status after $(( $(date +%s) - start )) s: $status"
+          grep "SELFTEST" app-console.log | grep -v SHOWING || true
+          mkdir -p app-logs && cp -R "$DATA/Documents/logs/." app-logs/ 2>/dev/null || true
+          cp "$folder/results.json" ios-results.json 2>/dev/null || { echo "::error::The self-test wrote no results (status: $status)"; grep -v "^\s*$" app-console.log | tail -60; exit 1; }
+          xcrun simctl terminate "$UDID" org.grouplab.app || true
+
+      # Entry 290 section 6: the dark theme, which every shot above is not in. Capture with the bar along the bottom, as a person starts it
+      # with the phone set to dark; the first run's questions were answered by the self-test.
+      - name: The dark theme
+        run: |
+          xcrun simctl ui "$UDID" appearance dark
+          xcrun simctl launch "$UDID" org.grouplab.app
+          sleep 20
+          xcrun simctl io "$UDID" screenshot shots/97-dark-capture.png > /dev/null
+          xcrun simctl terminate "$UDID" org.grouplab.app || true
+          xcrun simctl ui "$UDID" appearance light
+
+      # Entry 290 section 6: the wide screens nobody had photographed. The same one build, on the iPhone turned on its side and on the iPad
+      # in both orientations: the application's short tour (--screens) opens every place along the bottom and the sample's result, and names
+      # each screen as the self-test does. The pictures go in folders of their own beside the self-test's.
+      - name: The iPad and landscape
+        if: steps.opencv.outputs.linked == 'true'
+        timeout-minutes: 20
+        run: |
+          tour() {
+            udid=$1; out=$2; shift 2
+            folder="$(xcrun simctl get_app_container "$udid" org.grouplab.app data)/Documents/selftest"
+            mkdir -p "$folder" "$out"
+            rm -f "$folder/status" "$folder/showing" "$folder/taken" "$folder/results.json"
+            SIMCTL_CHILD_GROUPLAB_ARGUMENTS="$*" xcrun simctl launch --console-pty "$udid" org.grouplab.app "$@" > "$out/console.log" 2>&1 &
+            launcher=$!
+            last=""
+            status=""
+            start=$(date +%s)
+            while [ $(( $(date +%s) - start )) -lt 400 ]; do
+              status=$(cat "$folder/status" 2>/dev/null || true)
+              showing=$(cat "$folder/showing" 2>/dev/null || true)
+              if [ -n "$showing" ] && [ "$showing" != "$last" ]; then
+                xcrun simctl io "$udid" screenshot "$out/$showing.png" > /dev/null
+                printf '%s' "$showing" > "$folder/taken"
+                last="$showing"
+              fi
+              [ "$status" = "done" ] && break
+              kill -0 "$launcher" 2>/dev/null || { echo "::error::The application ended during the tour for $out (status: $status)"; break; }
+              sleep 1
+            done
+            cp "$folder/results.json" "$out/results.json" 2>/dev/null || true
+            xcrun simctl terminate "$udid" org.grouplab.app || true
+            grep "SELFTEST" "$out/console.log" | grep -v SHOWING || true
+            echo "$out after $(( $(date +%s) - start )) s: $(ls "$out" | grep -c '\.png$') screenshots, status $status"
+            test -f "$out/results.json" && ls "$out" | grep -q -- '-chosen-picture\.png$'
+          }
+          failed=0
+          tour "$UDID" shots/landscape --screens --landscape || failed=1
+          if [ -n "$IPAD" ]; then
+            xcrun simctl shutdown "$UDID" || true
+            xcrun simctl boot "$IPAD"
+            xcrun simctl bootstatus "$IPAD" -b > /dev/null
+            xcrun simctl status_bar "$IPAD" override --time 9:41 --batteryState charged --batteryLevel 100 || true
+            xcrun simctl install "$IPAD" "$APP"
+            mkdir -p shots/ipad
+            xcrun simctl launch "$IPAD" org.grouplab.app
+            sleep 20
+            xcrun simctl io "$IPAD" screenshot shots/ipad/00-first-start.png > /dev/null
+            xcrun simctl terminate "$IPAD" org.grouplab.app || true
+            data=$(xcrun simctl get_app_container "$IPAD" org.grouplab.app data)
+            mkdir -p "$data/Documents/selftest"
+            cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$data/Documents/selftest/sample.png"
+            tour "$IPAD" shots/ipad --screens || failed=1
+            # An iPad showing apps in windows refuses an application's own request to turn, so the simulator is turned from its Device
+            # menu first, with only the iPad running; the tour turns the screen itself only where it is still upright.
+            open -a Simulator --args -CurrentDeviceUDID "$IPAD"
+            sleep 15
+            osascript -e 'tell application "Simulator" to activate' -e 'delay 2' \
+              -e 'tell application "System Events" to tell process "Simulator" to click menu item "Rotate Left" of menu "Device" of menu bar 1' 2>&1 \
+              || osascript -e 'tell application "Simulator" to activate' -e 'delay 2' -e 'tell application "System Events" to key code 123 using command down' 2>&1 \
+              || echo "the simulator could not be turned from its menu"
+            sleep 5
+            tour "$IPAD" shots/ipad-landscape --screens --landscape || failed=1
+            xcrun simctl shutdown "$IPAD" || true
+          fi
+          [ "$failed" = 0 ] || { echo "::error::A tour did not reach the sample's result"; exit 1; }
+
+      - name: The desktop's numbers
+        if: steps.opencv.outputs.linked == 'true'
+        run: |
+          budget=$(python3 -c 'import json; print(json.load(open("ios-results.json"))["budgetMb"])')
+          dotnet build ios/SelfTestReference --configuration Release -v:minimal -clp:ErrorsOnly > build-reference.log 2>&1 || { grep -E "error" build-reference.log | sort -u | head -40; exit 1; }
+          dotnet ios/SelfTestReference/bin/Release/net10.0/GroupLab.iOS.SelfTestReference.dll "$RUNNER_TEMP/reference" . "$budget" desktop-results.json | tail -20
+
+      - name: Compare
+        run: python3 ios/selftest.py ios-results.json desktop-results.json --screens shots
+
+      - name: Crash reports
+        if: failure()
+        run: |
+          ls ~/Library/Logs/DiagnosticReports 2>/dev/null | grep -i grouplab | head || true
+          mkdir -p crashes && cp ~/Library/Logs/DiagnosticReports/*GroupLab* crashes/ 2>/dev/null || true
+          tail -80 app-console.log 2>/dev/null || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-simulator
+          path: |
+            shots
+            ios-results.json
+            desktop-results.json
+            app-console.log
+            app-logs
+            pluginkit.txt
+            crashes
+            build-*.log
+            build-*.binlog
+          retention-days: 14
+          if-no-files-found: warn
+
+  # The device build in its own job, beside the simulator's, since each takes a quarter of an hour.
+  device:
+    name: iOS device, unsigned
+    runs-on: macos-26
+    timeout-minutes: 90
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Xcode 26
+        run: |
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
+          sudo xcode-select -s "$xcode"
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
+          xcodebuild -version | head -1
+
+      # The repository has no global.json; the desktop's workflows take the newest .NET 10, and so does this.
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
+      # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
+      - name: The .NET iOS workload
+        run: |
+          ls -d /Applications/Xcode_26*.app | tr '\n' ' '; echo
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          dotnet workload list | grep -i ios
+
+      # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
+      # where there is none for this version, the newest successful run's artifact is taken instead.
+      - name: OpenCV for iOS from the cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/ios-opencv
+          key: ios-opencv-${{ hashFiles('ios/opencv/build-extern.sh') }}
+
+      - name: OpenCV for iOS
+        id: opencv
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run="cache"
+          if [ ! -f "$RUNNER_TEMP/ios-opencv/OpenCvSharpExtern.xcframework.zip" ]; then
+            run=""
+            for branch in main ios/opencv; do
+              run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ios.yml --branch "$branch" --status success --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+              [ -n "$run" ] && break
+            done
+            [ -n "$run" ] && gh run download "$run" -R "$GITHUB_REPOSITORY" -n ios-opencv -D "$RUNNER_TEMP/ios-opencv" || run=""
+          fi
+          if [ -z "$run" ]; then
+            echo "::notice::No OpenCV for iOS yet (no successful run of the workflow ios with the artifact ios-opencv). The head is built without it and the imaging checks are skipped."
+            echo "linked=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          cd "$RUNNER_TEMP/ios-opencv"
+          shasum -a 256 -c OpenCvSharpExtern.xcframework.zip.sha256
+          mkdir -p "$GITHUB_WORKSPACE/ios/native"
+          unzip -q OpenCvSharpExtern.xcframework.zip -d "$GITHUB_WORKSPACE/ios/native"
+          ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
+          # The entry points the link must keep, from OpenCvSharp's own assembly, which the restore puts in the package folder.
+          cd "$GITHUB_WORKSPACE"
+          dotnet restore ios/GroupLab.iOS -v:q > /dev/null
+          assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
+          python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
+          cd "$RUNNER_TEMP/ios-opencv"
+          # link-frameworks.txt names "-framework X", "libY.tbd" and "-lZ" lines; the head takes frameworks and linker flags apart.
+          frameworks=$(grep -oE -- '-framework [A-Za-z]+' link-frameworks.txt | awk '{print $2}' | sort -u | tr '\n' ' ')
+          flags=$( (grep -oE 'lib[a-z0-9+]+\.tbd' link-frameworks.txt | sed -E 's/^lib(.*)\.tbd$/-l\1/'; grep -oE -- '^-l[a-z0-9+]+' link-frameworks.txt) | sort -u | tr '\n' ' ')
+          echo "OpenCV for iOS from run $run: $(cut -d' ' -f1 OpenCvSharpExtern.xcframework.zip.sha256)"
+          echo "frameworks: $frameworks"
+          echo "linker flags: $flags"
+          echo "linked=true" >> "$GITHUB_OUTPUT"
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          # One space between names and none at either end: an empty name reached the native link as an empty path and stopped it.
+          echo "frameworks=$(printf '%s\n' Accelerate CoreFoundation CoreGraphics Foundation $frameworks | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+          echo "flags=$(printf '%s\n' $flags | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+
+      # Unsigned until the signing secrets exist (request 55): this proves the device build compiles and links, and uploads nothing.
+      - name: Build for a device, unsigned
+        run: |
+          dotnet build ios/GroupLab.iOS --configuration Release -r ios-arm64 \
+            -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
+            -p:EnableCodeSigning=false -bl:build-device.binlog \
+            -v:minimal -clp:ErrorsOnly > build-device.log 2>&1 || { grep -E "error" build-device.log | head -60; exit 1; }
+          app=$(find ios/GroupLab.iOS/bin/Release -path '*ios-arm64*' -not -path '*simulator*' -name 'GroupLab.iOS.app' -type d | head -1)
+          test -n "$app"
+          du -sh "$app"
+          lipo -info "$app/GroupLab.iOS"
+          test -d "$app/PlugIns/GroupLab.Share.appex" || { echo "::error::The device build carries no share extension"; exit 1; }
+          lipo -info "$app/PlugIns/GroupLab.Share.appex/GroupLab.Share"
+          if [ "${{ steps.opencv.outputs.linked }}" = "true" ]; then
+            nm -gU "$app/GroupLab.iOS" 2>/dev/null | grep -c " T _core_Mat_new1$" || { echo "::error::OpenCV's entry points are not in the device executable"; exit 1; }
+          fi
+
+      # Entry 290 section 2 item 7: the nightly's signed publish gives the application and the share extension each its own profile,
+      # proved with made-up values, since no Apple secret exists here.
+      - name: The signing properties, a dry run
+        run: sh ios/signing-dry-run.sh
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ios-device-build
+          path: |
+            build-device.log
+            build-device.binlog
+          retention-days: 7
+
+  # NOTES-FROM-PLANNING.md entry 315's amendment, sections 2 and 5, and section 2: GroupLab Dev (org.grouplab.app.dev), built from the same
+  # sources with -p:GroupLabDev=true, checked to be its own application beside GroupLab, and made to run a scenario with nobody's hands.
+  dev-simulator:
+    name: GroupLab Dev on the iOS Simulator
+    runs-on: macos-26
+    timeout-minutes: 120
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Xcode 26
+        run: |
+          xcode=$(ls -d /Applications/Xcode_26*.app | grep -iv beta | tail -1)
+          sudo xcode-select -s "$xcode"
+          xcodebuild -version | head -1 | grep -q '^Xcode 26' || { echo "::error::No Xcode 26 on this runner"; exit 1; }
+          xcodebuild -version | head -1
+
+      # The repository has no global.json; the desktop's workflows take the newest .NET 10, and so does this.
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
+      # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
+      - name: The .NET iOS workload
+        run: |
+          ls -d /Applications/Xcode_26*.app | tr '\n' ' '; echo
+          dotnet workload config --update-mode manifests > /dev/null
+          echo '{"microsoft.net.sdk.ios": "26.5.10318/10.0.100"}' > "$RUNNER_TEMP/ios-rollback.json"
+          dotnet workload install ios --from-rollback-file "$RUNNER_TEMP/ios-rollback.json" > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          dotnet workload list | grep -i ios
+
+      # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
+      # where there is none for this version, the newest successful run's artifact is taken instead.
+      - name: OpenCV for iOS from the cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/ios-opencv
+          key: ios-opencv-${{ hashFiles('ios/opencv/build-extern.sh') }}
+
+      - name: OpenCV for iOS
+        id: opencv
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run="cache"
+          if [ ! -f "$RUNNER_TEMP/ios-opencv/OpenCvSharpExtern.xcframework.zip" ]; then
+            run=""
+            for branch in main ios/opencv; do
+              run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow ios.yml --branch "$branch" --status success --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+              [ -n "$run" ] && break
+            done
+            [ -n "$run" ] && gh run download "$run" -R "$GITHUB_REPOSITORY" -n ios-opencv -D "$RUNNER_TEMP/ios-opencv" || run=""
+          fi
+          if [ -z "$run" ]; then
+            echo "::notice::No OpenCV for iOS yet (no successful run of the workflow ios with the artifact ios-opencv). The head is built without it and the imaging checks are skipped."
+            echo "linked=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          cd "$RUNNER_TEMP/ios-opencv"
+          shasum -a 256 -c OpenCvSharpExtern.xcframework.zip.sha256
+          mkdir -p "$GITHUB_WORKSPACE/ios/native"
+          unzip -q OpenCvSharpExtern.xcframework.zip -d "$GITHUB_WORKSPACE/ios/native"
+          ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
+          # The entry points the link must keep, from OpenCvSharp's own assembly, which the restore puts in the package folder.
+          cd "$GITHUB_WORKSPACE"
+          dotnet restore ios/GroupLab.iOS -v:q > /dev/null
+          assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
+          python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
+          cd "$RUNNER_TEMP/ios-opencv"
+          # link-frameworks.txt names "-framework X", "libY.tbd" and "-lZ" lines; the head takes frameworks and linker flags apart.
+          frameworks=$(grep -oE -- '-framework [A-Za-z]+' link-frameworks.txt | awk '{print $2}' | sort -u | tr '\n' ' ')
+          flags=$( (grep -oE 'lib[a-z0-9+]+\.tbd' link-frameworks.txt | sed -E 's/^lib(.*)\.tbd$/-l\1/'; grep -oE -- '^-l[a-z0-9+]+' link-frameworks.txt) | sort -u | tr '\n' ' ')
+          echo "OpenCV for iOS from run $run: $(cut -d' ' -f1 OpenCvSharpExtern.xcframework.zip.sha256)"
+          echo "frameworks: $frameworks"
+          echo "linker flags: $flags"
+          echo "linked=true" >> "$GITHUB_OUTPUT"
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          # One space between names and none at either end: an empty name reached the native link as an empty path and stopped it.
+          echo "frameworks=$(printf '%s\n' Accelerate CoreFoundation CoreGraphics Foundation $frameworks | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+          echo "flags=$(printf '%s\n' $flags | sort -u | xargs)" >> "$GITHUB_OUTPUT"
+
+      - name: Build GroupLab Dev for the simulator
+        run: |
+          dotnet build ios/GroupLab.iOS --configuration Release -r iossimulator-arm64 -p:GroupLabDev=true \
+            -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
+            -v:minimal -clp:ErrorsOnly > build.log 2>&1 || { grep -E "error" build.log | head -60; exit 1; }
+          app=$(find ios/GroupLab.iOS/bin/Release -path '*iossimulator-arm64*' -name 'GroupLab.iOS.app' -type d | head -1)
+          test -n "$app"
+          echo "APP=$app" >> "$GITHUB_ENV"
+
+      - name: The walk on an iPhone 6.9 inch and an iPad 13 inch
+        timeout-minutes: 60
+        run: |
+          pick() {
+            xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          want = sys.argv[1]
+          devices = json.load(sys.stdin)["devices"]
+          found = [(runtime, d["name"], d["udid"]) for runtime, ds in devices.items() if "iOS-26" in runtime for d in ds
+                   if (want == "iphone" and d["name"].startswith("iPhone") and "Pro Max" in d["name"])
+                   or (want == "ipad" and d["name"].startswith("iPad Pro") and "13-inch" in d["name"])]
+          found.sort()
+          print(found[-1][2] + " " + found[-1][1] if found else "")' "$1"
+          }
+          failed=0
+          for device in iphone ipad; do
+            found=$(pick $device)
+            test -n "$found" || { xcrun simctl list devices available; echo "::error::No $device simulator of the size App Store Connect asks for"; exit 1; }
+            udid=${found%% *}
+            echo "$device: ${found#* }" | tee -a devices.txt
+            xcrun simctl boot "$udid"
+            xcrun simctl bootstatus "$udid" -b > /dev/null
+            xcrun simctl ui "$udid" appearance dark
+            xcrun simctl status_bar "$udid" override --time 9:41 --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+            xcrun simctl install "$udid" "$APP"
+            xcrun simctl launch "$udid" org.grouplab.app.dev
+            sleep 15
+            xcrun simctl terminate "$udid" org.grouplab.app.dev || true
+            folder="$(xcrun simctl get_app_container "$udid" org.grouplab.app.dev data)/Documents/scenario"
+            rm -rf "$folder"; mkdir -p "$folder"
+            cp samples/gl-cf25-ltr-d-25-shots-600-dpi.png "$folder/sample.png"
+            cp scripts/scenarios/stand-in-poster.jpg "$folder/stand-in-poster.jpg"
+            cp scripts/scenarios/phone-screens.json "$folder/scenario.json"
+            xcrun simctl launch --console-pty "$udid" org.grouplab.app.dev > "console-$device.log" 2>&1 &
+            start=$(date +%s); status=""
+            while [ $(( $(date +%s) - start )) -lt 1500 ]; do
+              status=$(cat "$folder/results/status" 2>/dev/null || true)
+              [ "$status" = "done" ] && break
+              sleep 5
+            done
+            echo "$device: ${status:-no status} after $(( $(date +%s) - start )) s"
+            xcrun simctl terminate "$udid" org.grouplab.app.dev || true
+            mkdir -p "results/$device"
+            cp -R "$folder/results/." "results/$device/" 2>/dev/null || true
+            python3 "$RUNNER_TEMP/apple-screens.py" fit "results/$device" "$device" "apple/$device" || failed=1
+            xcrun simctl shutdown "$udid" || true
+          done
+          [ "$failed" = 0 ] || { echo "::error::A device gave none of the seven places"; exit 1; }
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: apple-screens
+          path: |
+            apple
+            results
+            devices.txt
+            console-*.log
+          retention-days: 14
+
+  commit:
+    name: Commit, then upload
+    needs: shots
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: apple-screens
+          path: ${{ runner.temp }}/apple-screens
+
+      - name: Commit the pictures
+        env:
+          REF: ${{ needs.shots.outputs.ref }}
+        run: |
+          set -eu
+          from="$RUNNER_TEMP/apple-screens"
+          for device in iphone ipad; do
+            mkdir -p "docs/store/apple/$device"
+            rm -f docs/store/apple/$device/[0-9][0-9]-*.png
+            cp "$from/apple/$device/"[0-9][0-9]-*.png "docs/store/apple/$device/" 2>/dev/null || true
+          done
+          python3 scripts/apple-screens.py made-from "$from" "$REF"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/store/apple
+          if git diff --cached --quiet -- docs/store/apple; then
+            echo "The pictures are the same as those committed." >> "$GITHUB_STEP_SUMMARY"
+          else
+            git commit -m "[screens] the App Store screenshots, from the iOS simulators" -m "Entry 487 section 4, from $REF. Pictures only: nothing a build reads has changed."
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push origin HEAD:main && break
+              sleep 10
+            done
+            echo "Committed $(ls docs/store/apple/*/[0-9][0-9]-*.png | wc -l) pictures to docs/store/apple." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload to App Store Connect
+        if: inputs.upload
+        env:
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+          python -m pip install --quiet --disable-pip-version-check "pyjwt[crypto]==2.10.1"
+          python3 scripts/apple-screens.py upload | tee -a "$GITHUB_STEP_SUMMARY"
+          exit "${PIPESTATUS[0]}"

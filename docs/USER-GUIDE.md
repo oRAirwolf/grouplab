@@ -909,7 +909,7 @@ testing until GroupLab is on the Play Store**: from the [download page](https://
 nightly after the first install with no computer or adb, installs beside the Google Play test copy without replacing it, makes its logs easy
 to send with a problem report, and gets fixes the same day. A nightly can occasionally break something, and Dev's data stays in Dev unless
 you move it with Settings, **Export all my data** and **Import data**. The
-plain APK and the Google Play internal test (if you are invited) are signed with different keys, so remove one before installing the other. Removing GroupLab from a phone deletes its sessions and settings, so first use Settings, Sync and your data, Export all my data (or turn on Sync between devices), then Import data in the new copy.
+plain APK and the Google Play copy (from the closed test, or the internal test if you are invited) are signed with different keys, so remove one before installing the other. Removing GroupLab from a phone deletes its sessions and settings, so first use Settings, Sync and your data, Export all my data (or turn on Sync between devices), then Import data in the new copy.
 Android asks Google Play Protect to scan an app installed from outside the Play Store, on the first install and on updates: it is Google's
 own check, takes a few seconds, and is expected. It uses the same engine as the computer, so the same picture gives the same numbers.
 

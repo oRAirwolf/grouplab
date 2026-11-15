@@ -8084,6 +8084,22 @@
   "What to look for is a workload set whose `Microsoft.NET.Sdk.iOS` is past 27.1.10018, or a dotnet/macios release after 27.1.10018.": {
    "kind": "measured",
    "where": "Entry 480 section 2's dated check, looked at on 2026-11-08: NuGet's Microsoft.NET.Workloads.10.0.400 packages 10.402.1 and 10.403.0 both name Microsoft.NET.Sdk.iOS 27.1.10018/10.0.100, the dotnet/macios releases page has none after 27.1.10018 (2026-10-19), and issue 26969 is open; docs/IOS-PLAN.md, The iPhone Duo"
+  },
+  "The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 487 sections 0 and 2: the closed test sent for review on 2026-11-15, joined through the grouplab-testers Google Group; Play's rule of 12 testers for 14 days; docs/store/PLAY.md"
+  },
+  "Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's closed test has been sent to Google for review; once it is approved, anyone can join by joining the GroupLab testers group, https://groups.google.com/g/grouplab-testers, and then the test.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 487 sections 0 and 2: the closed test sent for review on 2026-11-15, joined through the grouplab-testers Google Group; Play's rule of 12 testers for 14 days; docs/store/PLAY.md"
+  },
+  "Google Play's closed test was sent to Google for review on 2026-11-15; once it is approved, anyone can join by joining the GroupLab testers group, https://groups.google.com/g/grouplab-testers, and then the test.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 487 sections 0 and 2: the closed test sent for review on 2026-11-15, joined through the grouplab-testers Google Group; Play's rule of 12 testers for 14 days; docs/store/PLAY.md"
+  },
+  "The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access (entry 487).": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 487 sections 0 and 2: the closed test sent for review on 2026-11-15, joined through the grouplab-testers Google Group; Play's rule of 12 testers for 14 days; docs/store/PLAY.md"
   }
  },
  "rules": [
@@ -8100,10 +8116,10 @@
    "where": "Entry 482 section 1 (2026-11-07): Alan's 1A from the planning session's concept canvas, keep the bar as it is on the iPhone Duo's inner screen; nothing was changed for it"
   },
   {
-    "surface": "^docs/IOS-PLAN\\.md$|^docs/PLATFORM-SUPPORT\\.md$",
-    "match": "iPhone Duo|Duo's|iOS 27\\.1|Xcode 2[67]|xcode-27|10\\.0\\.402\\.1|26969|IL2037|ios-xcode27|Entry480FoldTests|without the new SDK|TestFlight only|April 2027",
-    "kind": "measured",
-    "where": "Entry 480 (2026-11-07): the Duo's sale date, screens and the iOS 27.1 SDK rule as the planning session reported them (MacRumors via Notebookcheck); actions/runner-images images/macos/xcode-27-arm64-Readme.md (Xcode 27.1 27A9275 default, iPhone Duo under iOS 27.1); dotnet/macios release dotnet-10.0.1xx-xcode27.1-10018 (workload set 10.0.402.1); ios app runs 42343772140 (CA1422 CanOpenUrl) and 42344190162 (IL2037 on Avalonia's iOS types); dotnet/macios issue 26969 (fixed upstream, backport promised for the next .NET 10 release, 2026-10-22); scripts/ios-xcode27.py; tests/GroupLab.Mobile.Tests/Entry480FoldTests.cs and Entry462PhoneLayoutTests.cs"
+   "surface": "^docs/IOS-PLAN\\.md$|^docs/PLATFORM-SUPPORT\\.md$",
+   "match": "iPhone Duo|Duo's|iOS 27\\.1|Xcode 2[67]|xcode-27|10\\.0\\.402\\.1|26969|IL2037|ios-xcode27|Entry480FoldTests|without the new SDK|TestFlight only|April 2027",
+   "kind": "measured",
+   "where": "Entry 480 (2026-11-07): the Duo's sale date, screens and the iOS 27.1 SDK rule as the planning session reported them (MacRumors via Notebookcheck); actions/runner-images images/macos/xcode-27-arm64-Readme.md (Xcode 27.1 27A9275 default, iPhone Duo under iOS 27.1); dotnet/macios release dotnet-10.0.1xx-xcode27.1-10018 (workload set 10.0.402.1); ios app runs 42343772140 (CA1422 CanOpenUrl) and 42344190162 (IL2037 on Avalonia's iOS types); dotnet/macios issue 26969 (fixed upstream, backport promised for the next .NET 10 release, 2026-10-22); scripts/ios-xcode27.py; tests/GroupLab.Mobile.Tests/Entry480FoldTests.cs and Entry462PhoneLayoutTests.cs"
   },
   {
    "surface": "^docs/STATISTICS-PRIMER\\.md$|^site:guides/statistics-primer/",

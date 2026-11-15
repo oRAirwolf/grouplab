@@ -2,9 +2,11 @@
 
 NOTES-FROM-PLANNING.md entries 198 and 199, 2026-09-25. This is the plan and what each stage found.
 
-**Where it stands now.** GroupLab for Android is a signed APK, GroupLab Dev and Google Play's internal test, each updated with every
+**Where it stands now.** GroupLab for Android is a signed APK, GroupLab Dev and Google Play's internal and closed tests, each updated with every
 nightly. The phone does what `docs/PHONE-PARITY.md` lists, including Ballistics, the Targets screen and printing, through Android's
-dialog and straight to the Phomemo M834 and M220. The public Play listing waits only on Google's closed test (12 testers for 14 days).
+dialog and straight to the Phomemo M834 and M220. Google Play's closed test was sent to Google for review on 2026-11-15; once it is approved, anyone can join by joining the GroupLab
+testers group, https://groups.google.com/g/grouplab-testers, and then the test. The public Play listing follows once 12 testers have stayed in the test for 14
+days and Google approves production access (entry 487).
 The sections below are the plan and what each stage found, in order; the first stage proved the desktop's engine runs on the phone
 before any screen was designed.
 

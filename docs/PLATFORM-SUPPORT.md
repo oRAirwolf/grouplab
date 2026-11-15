@@ -36,7 +36,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 240 MB on Apple silicon, 270 MB on Intel | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 260 MB installed | as Windows |
 | **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, through TestFlight's public beta; not in the App Store yet | not measured yet | not measured yet | as Android |
-| **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's internal test by invitation | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
+| **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's closed test, in Google's review | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
 
 Where the figures come from:
 
@@ -54,7 +54,7 @@ Where the figures come from:
 
 Other platforms get proper attention once the pace of change slows and the Windows application is generally working the way the developer wants it to.
 
-**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's internal test is open by invitation, with a closed test to come. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes how you shot the sheet, works out Shots Needed to Zero, compares loads, gives the dope, the chance of a hit and Point blank, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. More macOS testing depends on somebody with a Mac running the signed builds.
+**Android is built and in testing**, because that is the mobile platform in daily use here. Every nightly carries a signed APK, it runs on a Galaxy Z Fold 7 and a Galaxy Tab S8 Ultra, and Google Play's closed test has been sent to Google for review; once it is approved, anyone can join by joining the GroupLab testers group, https://groups.google.com/g/grouplab-testers, and then the test. The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access. It photographs or opens a sheet in Guided or Manual mode and checks every picture, reads it with the same engine as the desktop, shows every figure the desktop does with a tap to say what each means, takes how you shot the sheet, works out Shots Needed to Zero, compares loads, gives the dope, the chance of a hit and Point blank, prints targets and keeps sessions; it also marks any target by hand, under a fixed crosshair. `docs/PHONE-PARITY.md` lists what the phone does, feature by feature. `docs/ANDROID.md` has the plan and what each stage found. Hands-on Linux testing follows, on virtual machines. More macOS testing depends on somebody with a Mac running the signed builds.
 
 ## Running the macOS build
 

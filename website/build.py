@@ -934,10 +934,10 @@ def page_download() -> str:
          "Its logs are easy to send with a problem report",
          "Honestly: a nightly can occasionally break something, and Dev's data stays in Dev unless you move it with Settings, Sync and your data, Export all my data"],
         "Download GroupLab Dev", honest=False) + steady(
-        "Google Play, by invitation",
-        btn("Ask on the Discord", DISCORD),
-        f'GroupLab\'s internal test on Google Play receives every nightly through Google Play, which updates your copy as it does any app. It is open by invitation: ask on the <a href="{DISCORD}">Discord</a>, then opt in at <a href="https://play.google.com/apps/internaltest/4701684356677501640">the internal test\'s page</a>.',
-        ["Each nightly reaches Play by itself", "One step first: ask on the Discord to be invited",
+        "Google Play, closed test",
+        btn("Join the testers group", "https://groups.google.com/g/grouplab-testers"),
+        f'GroupLab\'s closed test on Google Play has been sent to Google for review. Once it is approved, anyone can join: join <a href="https://groups.google.com/g/grouplab-testers">the GroupLab testers group</a>, then the test, and Google Play brings you every nightly and updates your copy as it does any app. The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access. The internal test stays open by invitation: ask on the <a href="{DISCORD}">Discord</a>.',
+        ["Each nightly reaches Play by itself", "Two steps: the testers group, then the test, once Google approves it",
          "Signed with a different key from the plain APK"]),
         "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. The Play copy gets every nightly through Google Play, the plain APK keeps itself current as GroupLab Dev does, and GroupLab Dev installs beside either with no uninstall.",
         [fold("The plain APK", other(
@@ -946,7 +946,7 @@ def page_download() -> str:
             ["Open the file on the phone; allow your browser to install apps when Android asks",
              "Remove the Google Play copy first, if you have it: the two are signed with different keys, and removing GroupLab deletes its sessions and settings, so use Export all my data (or Sync between devices) first",
              "Marking a target by hand is on the phone, as on the computer"], "Download for Android")),
-         fold("In Brazil, Indonesia, Singapore or Thailand", "<p>In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the Discord for the Google Play internal test instead. The rest of the world follows in 2027.</p>"),
+         fold("In Brazil, Indonesia, Singapore or Thailand", "<p>In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, take GroupLab from Google Play's test instead (the testers group, then the test, once Google approves it). The rest of the world follows in 2027.</p>"),
          fold("When Android says Google Play Protect is scanning the app", """<p>Android asks to scan an app installed from outside the Play Store, the first time you install it and when it updates. It is Google's own check, it takes a few seconds, and the scan is expected: let it finish, then carry on.</p>""")],
         keep='<p class="small dl-keep">Take either the Play copy or the APK, not both: remove one before installing the other, and use Settings, Sync and your data, Export all my data (or turn on Sync between devices) first, because removing GroupLab deletes its sessions and settings. GroupLab Dev is different: it installs beside either.</p>')
 

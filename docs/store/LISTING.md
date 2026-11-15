@@ -102,3 +102,25 @@ Alan filled this in for the first time and wrote "forms updated" on 2026-10-06. 
 What sends each, in the application: the survey (the installation number), error reports with their log (crash data, diagnostic data),
 the survey's benchmark (performance data), and Send everything I open or a target sent (photos). All are the person's choice, and on the
 phones they were switched on by entry 379.
+
+## Apple App Store, version 1.0, as set on 2026-11-15 (entry 487)
+
+Set by the planning session in App Store Connect (GroupLab, Apple ID 6817635137) with Alan signed in. The console is the authority.
+
+- **Agreements:** the updated Apple Developer Program License Agreement (dated 2026-10-29) accepted at developer.apple.com; the Free
+  Apps Agreement Active from 2026-11-15 (entry 486).
+- **EU Digital Services Act:** non-trader; Active in 27 countries or regions from 2026-11-15.
+- **App Information:** subtitle "Measure your shot groups"; category Sports, secondary Utilities; content rights "No, it does not
+  contain, show, or access third-party content" (GroupLab ships measurements of the nine store-bought targets, not pictures of them).
+- **Age rating:** no or none to every question except Guns or Other Weapons: Frequent, since rifles, calibres and loads are named
+  throughout; calculated 13+, set to 18+ at Alan's word to match Google Play's audience of 18 and over. Apple shows 18+ in 173
+  countries or regions, 19+ in Korea, and 17+ on systems before version 26.
+- **Version 1.0:** promotional text; a 1,615 character description (the Play text for iPhone and iPad, plus "Settings, General, Walk
+  me through a demo"); keywords "group size,shooting,target,MOA,mils,reloading,ballistics,precision rifle,load development,CEP";
+  support URL https://grouplab.org/support/; marketing URL https://grouplab.org/; copyright "2026 Alan Hayes"; sign-in not required.
+- **Review notes:** no accounts; use the demo, since a reviewer has no shot sheet; any paper target can be marked by hand; no
+  firearms shown, nothing sold, nothing sent unless chosen; the source is on GitHub under GPL-3.0 with the App Store permission. The
+  review contact is Alan, at support@grouplab.org; the phone number stays in App Store Connect only.
+- **Release:** manual.
+- **Not done:** screenshots (entry 487 section 4, `docs/store/apple/`), a build attached, and submission. Attaching a build and
+  submitting wait for Alan's yes through the planning session.
