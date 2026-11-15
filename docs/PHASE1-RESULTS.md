@@ -579,6 +579,14 @@ is not done yet" has the same line, and docs/TESTING-GUIDE.pdf was rebuilt. plat
 consistency (0 findings) and readme `--check` pass. When the Duo build lands, this sentence becomes entry 480 section 7's "fills both
 screens from nightly N".
 
+## Entry 486: the Apple agreement, signed (2026-11-15)
+
+**Section 1.** App Store Connect refused GroupLab's requests from 2026-11-13 15:24 UTC (403, an agreement not signed or expired). Alan
+accepted the updated Apple Developer Program License Agreement and the Free Apps Agreement became Active on 2026-11-15 (entry 487
+section 0), before Code ran, so for-alan-archive.md has it as request 108, answered that day. The TestFlight status workflow run by
+hand, 43701076184, wrote "Both groups have build 225" to docs/notes/external-status.md at 09:50 UTC. No public page changed. The next
+nightly's iPhone and iPad upload is the last check; no nightly has run since 225.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

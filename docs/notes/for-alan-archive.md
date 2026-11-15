@@ -3,6 +3,16 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 108. Accept Apple's pending agreement, so App Store Connect stops refusing GroupLab's requests (entry 486 section 1)
+
+**Answered 2026-11-15 (entry 487 section 0):** Alan accepted the updated Apple Developer Program License Agreement (dated 2026-10-29)
+at developer.apple.com, and the Free Apps Agreement shows Active from 2026-11-15. The request was never open here: the planning
+session's audit of 2026-11-13 asked for it, and Alan had signed before Code next ran.
+
+**What it was.** From 2026-11-13 15:24 UTC the TestFlight status check read "App Store Connect refused a request (403 This request
+requires an in-effect agreement that has not been signed or has expired.)", so a nightly's iPhone and iPad upload would have been
+refused too. The fix was to accept the pending agreement in App Store Connect, under Business, and on developer.apple.com.
+
 ## 107. Say yes (or no) to GroupLab posting the tester notes and thanks on the Discord for you, two minutes, whenever suits (entry 462 section 5)
 
 **Answered 2026-10-21 (entry 466):** not for now. Alan, after reading drafts of what the script would post: "Lets just not do the notes for now." This replaces the yes of entry 464 section 0. The script and its step stay in place and switched off, no webhook is asked for, and the "For ..." notes stay in for-alan.md for Alan to pass on by hand. If it is ever taken up again: a note ends at its own end, anything with a path or another heading is refused, the wording is rewritten short and casual in Alan's voice, and drafts go to a private channel first.

@@ -25,6 +25,47 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-13, entry 486: consistency audit, 2026-11-13 (one finding; it needs Alan for one step)
+
+**Status: actioned 2026-11-15. Section 1 done, answered before it was asked:** Alan accepted the Apple agreements on 2026-11-15
+(entry 487 section 0), so the request went straight to for-alan-archive.md as 108, answered. The TestFlight check run by hand
+(43701076184) wrote "Both groups have build 225" at 09:50 UTC. Whether the next nightly reaches TestFlight is confirmed when there is one.
+
+From the planning session's scheduled consistency audit (entry 267 section 2b). Read only: README.md (main on GitHub), the live
+grouplab.org (home, /download/, /features/, /tour/, /shoot-a-target/, /guides/, /releases/, /support/), docs/notes/STATE.md,
+docs/notes/inbox (entry 485 waiting), docs/notes/external-status.md on main, the public TestFlight invitation page, and the commits
+since the last audit (2026-11-10). The only new commit on main is 319edf93 (2026-11-13 15:24 UTC, "[notes] External status:
+testflight changed"); the local checkout has nothing newer than 2db2abaf. There is no open GitHub issue labelled `consistency` (issue
+1 is closed).
+
+Everything the 2026-11-10 audit saw still holds: nightly 225 everywhere it should be, the Microsoft Store at 0.2.225.0, no lawyer
+wording, no "What GroupLab is not" section, credits as before. Entry 485 (the iPhone Duo sentence) is still waiting and is not
+repeated here.
+
+## 1. App Store Connect refuses GroupLab's requests: an Apple agreement is unsigned or expired
+
+- **Where:** docs/notes/external-status.md on main, the TestFlight block (commit 319edf93), written by scripts/status-note.py.
+- **What it says:** "TestFlight: App Store Connect refused a request (403 This request requires an in-effect agreement that has not
+  been signed or has expired.); nothing further was done this run." The block before it (2026-11-08 08:42 UTC) said "Both groups have
+  build 225."
+- **Why it matters:** the external-status preamble says anything there that needs Alan goes into for-alan.md the same day, and it has
+  not (for-alan.md on main has no line about it, because Code has not run since 2026-11-08). While the agreement is not in effect, the
+  next nightly's iPhone and iPad upload to TestFlight will most likely be refused too, and the status check cannot see Beta App Review
+  for build 225. The public pages still promise that "TestFlight installs each new iPhone and iPad beta build" (/download/, under
+  Updates, and the README's Android and updates passage); that stays true only once the agreement is signed. The public invitation
+  page (testflight.apple.com/join/A3xyT6C6) still opens and offers the GroupLab beta as of 2026-11-13 16:55 UTC, so testers are not
+  cut off yet.
+- **What to do:** add a request to the top of for-alan.md, in plain words: "Apple needs you to accept an agreement. Sign in at
+  appstoreconnect.apple.com as the account holder, open Business (or the banner at the top of the page), and accept the agreement it
+  shows as pending or expired. Also check developer.apple.com/account for a banner asking to review an updated Apple Developer Program
+  License Agreement, and accept it. Then say done." Do not change the public pages unless an upload is refused after he has signed.
+  When he says done, run the TestFlight status workflow once by hand, confirm the block in external-status.md goes back to the groups
+  and builds, and confirm the next nightly reaches TestFlight; if a nightly already failed its iOS upload, note it in its release
+  notes the usual way.
+- **Check:** external-status.md's TestFlight block shows both groups and a build again; the next nightly's ios-app.yml upload passes.
+
+Nothing else was found.
+
 ## 2026-11-10, entry 485: consistency audit, 2026-11-10 (one finding; nothing here needs Alan)
 
 **Status: actioned 2026-11-15. Section 1 done.** The iPhone Duo sentence is in the published Apple mobile section of
