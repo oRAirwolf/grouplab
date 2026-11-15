@@ -1,7 +1,9 @@
 name: play upload
 
 # NOTES-FROM-PLANNING.md entry 384 section 3: each nightly's Android App Bundle and its native symbols go to Google Play's internal
-# testing track, so testers who installed GroupLab from Play are kept up to date. It runs after a nightly has published, or by hand for
+# testing track, and from entry 487 section 1 to its closed track (alpha) too, so testers who installed GroupLab from Play are kept up
+# to date. The closed track is sent only when its newest release is completed, and nothing is sent while Google reviews earlier
+# changes (scripts/play-upload.py says why). It runs after a nightly has published, or by hand for
 # a given version, and does nothing while the repository secret PLAY_SERVICE_ACCOUNT_JSON is absent (request 80: a Google Cloud service
 # account with release rights on this app only, its JSON key added by Alan). It never holds up or fails a nightly.
 on:
@@ -14,6 +16,11 @@ on:
         description: 'The version to send, such as 0.2.0-nightly.176; the newest numbered nightly when empty'
         required: false
         default: ''
+      read_only:
+        description: 'Only read the tracks and the store listing, change nothing'
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -45,8 +52,14 @@ jobs:
       - uses: actions/checkout@v5
         if: steps.key.outputs.present == 'true'
 
+      - name: Read the tracks and the listing, changing nothing
+        if: steps.key.outputs.present == 'true' && inputs.read_only
+        run: |
+          pip install --quiet google-auth requests
+          python3 scripts/play-upload.py --read-only | tee -a "$GITHUB_STEP_SUMMARY"
+
       - name: The nightly's bundle and symbols
-        if: steps.key.outputs.present == 'true'
+        if: steps.key.outputs.present == 'true' && !inputs.read_only
         id: files
         run: |
           set -eu
@@ -56,8 +69,8 @@ jobs:
           gh release download "v$version" -R "$GITHUB_REPOSITORY" -p "grouplab-$version-android-*.aab" -p "grouplab-$version-android-native-symbols-*.zip" -D play
           ls -l play
 
-      - name: Send to the internal testing track
-        if: steps.key.outputs.present == 'true'
+      - name: Send to the internal and closed testing tracks
+        if: steps.key.outputs.present == 'true' && !inputs.read_only
         env:
           VERSION: ${{ steps.files.outputs.version }}
         run: |
@@ -65,4 +78,4 @@ jobs:
           pip install --quiet google-auth requests
           aab=$(ls play/*.aab | head -1)
           symbols=$(ls play/*native-symbols*.zip 2>/dev/null | head -1 || true)
-          python3 scripts/play-upload.py --aab "$aab" ${symbols:+--symbols "$symbols"} --version "$VERSION" | tee -a "$GITHUB_STEP_SUMMARY"
+          python3 scripts/play-upload.py --aab "$aab" ${symbols:+--symbols "$symbols"} --version "$VERSION" --tracks internal,alpha | tee -a "$GITHUB_STEP_SUMMARY"

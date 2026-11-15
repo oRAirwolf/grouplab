@@ -1,22 +1,41 @@
-"""Sends one nightly's Android App Bundle, and its native debug symbols, to Google Play's internal testing track.
+"""Sends one nightly's Android App Bundle, and its native debug symbols, to Google Play's internal and closed testing tracks.
 
-NOTES-FROM-PLANNING.md entry 384 section 3: until now a build reached Play only when Alan uploaded it by hand, so testers who
+NOTES-FROM-PLANNING.md entry 384 section 3: until then a build reached Play only when Alan uploaded it by hand, so testers who
 installed GroupLab from Play stayed on whatever was last uploaded. This uses the Play Developer API as a service account with
 release rights on this app only (request 80). The key comes from the environment variable PLAY_SERVICE_ACCOUNT_JSON and is never
-written to disk or printed. With --dry-run it checks the files and says what it would do without contacting Google.
+written to disk or printed.
 
-    python scripts/play-upload.py --aab <file.aab> [--symbols <file.zip>] --version 0.2.0-nightly.176 [--track internal] [--dry-run]
+Entry 487 section 1: each nightly goes to `internal` and to `alpha` (Play Console's "Closed testing - Alpha"), with the build's own
+"What you will notice" lines as its notes. Two guards keep it from undoing a review:
+
+- The edit is committed with `changesInReviewBehavior=ERROR_IF_IN_REVIEW`. Play's default cancels whatever is in review and sends the
+  new changes instead, which would have pulled the first closed release out of Google's review. While anything is in review, nothing
+  is sent that run, internal included, and the summary says so; the next nightly tries again.
+- `alpha` is sent only when the track's newest release is `completed` and none is a draft or in progress; otherwise that run skips
+  `alpha` and says so.
+
+    python scripts/play-upload.py --aab <file.aab> [--symbols <file.zip>] --version 0.2.0-nightly.176 [--tracks internal,alpha] [--dry-run]
+    python scripts/play-upload.py --read-only
+
+--dry-run checks the files and prints the notes and tracks without contacting Google. --read-only signs in, opens an edit, prints
+each track's releases and the en-US store listing, and deletes the edit without changing anything.
 """
 
 import argparse
 import json
 import os
+import re
 import sys
 import zipfile
+from pathlib import Path
 
 PACKAGE = "org.grouplab.app"
 API = "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/" + PACKAGE
 UPLOAD = "https://androidpublisher.googleapis.com/upload/androidpublisher/v3/applications/" + PACKAGE
+RELEASE_NOTES = Path(__file__).resolve().parents[1] / "docs" / "RELEASE-NOTES.md"
+LIMIT = 500
+MORE = "All notes: https://grouplab.org/releases/"
+TRACKS = ("internal", "alpha")
 
 
 def release_name(version: str) -> str:
@@ -24,9 +43,52 @@ def release_name(version: str) -> str:
     return version
 
 
-def notes(version: str) -> str:
-    """Play's release note, at most 500 characters: where the full notes are, rather than a copy that can drift."""
-    return f"GroupLab {version}. What changed: https://grouplab.org/releases/"[:500]
+def noticed(version: str, text: str) -> list[str]:
+    """The "What you will notice" lines of one build's section in RELEASE-NOTES.md, without their bullets."""
+    section = re.search(rf"^## {re.escape(version)}\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    if not section:
+        return []
+    part = re.search(r"\*\*What you will notice\*\*\n(.*?)(?=\n\*\*|\n\[|\Z)", section.group(1), re.S)
+    if not part:
+        return []
+    return [line[2:].strip() for line in part.group(1).splitlines() if line.startswith("- ")]
+
+
+def notes(version: str, text: str | None = None) -> str:
+    """Play's release note, at most 500 characters: the build's noticed lines, whole lines only, then where the rest are."""
+    if text is None:
+        text = RELEASE_NOTES.read_text(encoding="utf-8") if RELEASE_NOTES.is_file() else ""
+    # A correction to an earlier build's notes matters least to somebody installing this one, so it goes last.
+    lines = sorted(noticed(version, text), key=lambda line: line.startswith("Correction"))
+    if not lines:
+        return f"GroupLab {version}. What changed: https://grouplab.org/releases/"[:LIMIT]
+    kept: list[str] = []
+    for line in lines:
+        candidate = "\n".join(f"- {x}" for x in kept + [line]) + "\n" + MORE
+        if len(candidate) > LIMIT:
+            continue
+        kept.append(line)
+    if not kept:
+        return (lines[0][: LIMIT - len(MORE) - 4].rstrip() + "...\n" + MORE)[:LIMIT]
+    return "\n".join(f"- {x}" for x in kept) + "\n" + MORE
+
+
+def closed_track_ready(track: dict) -> tuple[bool, str]:
+    """Whether a new release may go to this track: its newest release completed, and nothing in draft or in progress."""
+    releases = track.get("releases") or []
+    if not releases:
+        return False, "the track has no release yet"
+    unfinished = [r for r in releases if r.get("status") in ("draft", "inProgress", "halted")]
+    if unfinished:
+        return False, "a release on it is " + ", ".join(sorted({r["status"] for r in unfinished}))
+    newest = max(releases, key=lambda r: max((int(c) for c in r.get("versionCodes") or ["0"]), default=0))
+    if newest.get("status") != "completed":
+        return False, f"its newest release is {newest.get('status')}"
+    return True, "its newest release is completed"
+
+
+def in_review(response) -> bool:
+    return response.status_code == 400 and "CHANGES_ALREADY_IN_REVIEW" in response.text
 
 
 def check(aab: str, symbols: str | None) -> list[str]:
@@ -41,7 +103,7 @@ def check(aab: str, symbols: str | None) -> list[str]:
     return problems
 
 
-def send(aab: str, symbols: str | None, version: str, track: str) -> int:
+def session():
     # Imported here so --dry-run and the tests need neither package.
     import requests
     from google.auth.transport.requests import Request
@@ -57,7 +119,44 @@ def send(aab: str, symbols: str | None, version: str, track: str) -> int:
             raise SystemExit(f"Play refused {what}: HTTP {response.status_code} {response.text[:400]}")
         return response.json() if response.content else {}
 
+    return requests, headers, ok
+
+
+def read_only() -> int:
+    requests, headers, ok = session()
     edit = ok(requests.post(f"{API}/edits", headers=headers, timeout=60), "a new edit")["id"]
+    try:
+        for track in TRACKS:
+            data = ok(requests.get(f"{API}/edits/{edit}/tracks/{track}", headers=headers, timeout=60), f"the {track} track")
+            for r in data.get("releases") or []:
+                print(f"{track}: {r.get('name')} codes {','.join(r.get('versionCodes') or [])} {r.get('status')}")
+            ready, why = closed_track_ready(data)
+            print(f"{track}: {'would send' if ready else 'would skip'}, {why}")
+        listing = ok(requests.get(f"{API}/edits/{edit}/listings/en-US", headers=headers, timeout=60), "the en-US listing")
+        print(json.dumps({k: listing.get(k) for k in ("title", "shortDescription", "fullDescription")}, ensure_ascii=False, indent=1))
+    finally:
+        requests.delete(f"{API}/edits/{edit}", headers=headers, timeout=60)
+        print("the edit was deleted; nothing changed")
+    return 0
+
+
+def send(aab: str, symbols: str | None, version: str, tracks: list[str]) -> int:
+    requests, headers, ok = session()
+    edit = ok(requests.post(f"{API}/edits", headers=headers, timeout=60), "a new edit")["id"]
+    sending = []
+    for track in tracks:
+        if track == "internal":
+            sending.append(track)
+            continue
+        ready, why = closed_track_ready(ok(requests.get(f"{API}/edits/{edit}/tracks/{track}", headers=headers, timeout=60), f"the {track} track"))
+        if ready:
+            sending.append(track)
+        else:
+            print(f"The {track} track is skipped this run: {why}.")
+    if not sending:
+        requests.delete(f"{API}/edits/{edit}", headers=headers, timeout=60)
+        print("Nothing was sent.")
+        return 0
     with open(aab, "rb") as bundle:
         code = ok(requests.post(f"{UPLOAD}/edits/{edit}/bundles?uploadType=media", headers={**headers, "Content-Type": "application/octet-stream"},
                                 data=bundle, timeout=900), "the bundle")["versionCode"]
@@ -67,30 +166,52 @@ def send(aab: str, symbols: str | None, version: str, track: str) -> int:
             ok(requests.post(f"{UPLOAD}/edits/{edit}/apks/{code}/deobfuscationFiles/nativeCode?uploadType=media",
                              headers={**headers, "Content-Type": "application/octet-stream"}, data=zipped, timeout=900), "the native symbols")
         print("native debug symbols uploaded")
-    body = {"track": track, "releases": [{"name": release_name(version), "versionCodes": [str(code)], "status": "completed",
-                                          "releaseNotes": [{"language": "en-US", "text": notes(version)}]}]}
-    ok(requests.put(f"{API}/edits/{edit}/tracks/{track}", headers=headers, json=body, timeout=60), f"the {track} track")
-    ok(requests.post(f"{API}/edits/{edit}:commit", headers=headers, timeout=120), "the commit")
-    print(f"{version} (version code {code}) is on the {track} track")
+    text = notes(version)
+    for track in sending:
+        body = {"track": track, "releases": [{"name": release_name(version), "versionCodes": [str(code)], "status": "completed",
+                                              "releaseNotes": [{"language": "en-US", "text": text}]}]}
+        ok(requests.put(f"{API}/edits/{edit}/tracks/{track}", headers=headers, json=body, timeout=60), f"the {track} track")
+    response = requests.post(f"{API}/edits/{edit}:commit?changesInReviewBehavior=ERROR_IF_IN_REVIEW", headers=headers, timeout=120)
+    if in_review(response):
+        requests.delete(f"{API}/edits/{edit}", headers=headers, timeout=60)
+        print(f"Google is still reviewing earlier changes, so {version} was not sent this run: sending now would cancel that review. "
+              "The next nightly tries again.")
+        return 0
+    ok(response, "the commit")
+    print(f"{version} (version code {code}) is on the {' and '.join(sending)} track{'s' if len(sending) > 1 else ''}")
     return 0
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--aab", required=True)
+    parser.add_argument("--aab")
     parser.add_argument("--symbols")
-    parser.add_argument("--version", required=True)
-    parser.add_argument("--track", default="internal")
+    parser.add_argument("--version")
+    parser.add_argument("--tracks", default="internal,alpha")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--read-only", action="store_true")
     args = parser.parse_args()
+    if args.read_only:
+        if not os.environ.get("PLAY_SERVICE_ACCOUNT_JSON"):
+            print("no PLAY_SERVICE_ACCOUNT_JSON (request 80), so nothing can be read", file=sys.stderr)
+            return 1
+        return read_only()
+    if not args.aab or not args.version:
+        parser.error("--aab and --version are needed unless --read-only")
+    tracks = [t for t in args.tracks.split(",") if t]
+    if unknown := [t for t in tracks if t not in TRACKS]:
+        parser.error(f"unknown track {', '.join(unknown)}")
     if problems := check(args.aab, args.symbols):
         print("; ".join(problems), file=sys.stderr)
         return 1
     if args.dry_run or not os.environ.get("PLAY_SERVICE_ACCOUNT_JSON"):
         why = "a dry run" if args.dry_run else "no PLAY_SERVICE_ACCOUNT_JSON (request 80)"
-        print(f"{why}: would send {os.path.basename(args.aab)}{' and its symbols' if args.symbols else ''} to the {args.track} track as {args.version}")
+        print(f"{why}: would send {os.path.basename(args.aab)}{' and its symbols' if args.symbols else ''} to the "
+              f"{' and '.join(tracks)} track{'s' if len(tracks) > 1 else ''} as {args.version}, alpha only if its newest release is "
+              "completed, and nothing if Google is reviewing earlier changes. Notes:")
+        print(notes(args.version))
         return 0
-    return send(args.aab, args.symbols, args.version, args.track)
+    return send(args.aab, args.symbols, args.version, tracks)
 
 
 if __name__ == "__main__":

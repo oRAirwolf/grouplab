@@ -245,6 +245,10 @@ jobs:
       - name: The survey worker
         run: python3 tests/python/survey-worker-tests.py
 
+      # Entry 487: Google Play's notes and the closed track's guards, without contacting Google.
+      - name: The Play upload's rules
+        run: python3 tests/python/play-upload-tests.py
+
       # Entry 222: the nightly backup's rules for what it keeps and what it may never read.
       - name: The backup's rules
         run: python3 tests/python/backup-tests.py
