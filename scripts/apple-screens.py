@@ -73,6 +73,7 @@ def fit_all(results: Path, device: str, out: Path) -> int:
 def apple():
     spec = importlib.util.spec_from_file_location("testflight", REPO / "scripts" / "testflight.py")
     testflight = importlib.util.module_from_spec(spec)
+    sys.modules["testflight"] = testflight  # its dataclasses look their module up by name
     spec.loader.exec_module(testflight)
     store = testflight.Apple(os.environ["APPLE_API_ISSUER_ID"], os.environ["APPLE_API_KEY_ID"],
                              testflight.key_text(os.environ["APPLE_API_KEY_P8"]))
