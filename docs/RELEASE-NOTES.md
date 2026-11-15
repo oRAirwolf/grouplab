@@ -466,7 +466,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 - A 600 dpi scan's holes are found about a tenth sooner, with exactly the same result as before.
 - The built-in check for iPhone and iPad answers the caliber question on every target, as you do, so it tests reading a picture again.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.196)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
