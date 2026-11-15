@@ -289,7 +289,8 @@ jobs:
             tour "$IPAD" shots/ipad --screens || failed=1
             # An iPad showing apps in windows refuses an application's own request to turn, so the simulator is turned from its Device
             # menu first, with only the iPad running; the tour turns the screen itself only where it is still upright.
-            open -a Simulator --args -CurrentDeviceUDID "$IPAD"
+            # xcode-27 has no Simulator registered by name (ios app run 43701100950), so it is opened from the selected Xcode.
+            open -a "$(xcode-select -p)/Applications/Simulator.app" --args -CurrentDeviceUDID "$IPAD"
             sleep 15
             osascript -e 'tell application "Simulator" to activate' -e 'delay 2' \
               -e 'tell application "System Events" to tell process "Simulator" to click menu item "Rotate Left" of menu "Device" of menu bar 1' 2>&1 \
