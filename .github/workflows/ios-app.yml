@@ -52,7 +52,7 @@ jobs:
         run: |
           dotnet --version
           dotnet workload config --update-mode workload-set > /dev/null
-          dotnet workload install ios --version 10.404.0 > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          dotnet workload install ios --version 10.0.404 > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 
       # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
@@ -398,7 +398,7 @@ jobs:
         run: |
           dotnet --version
           dotnet workload config --update-mode workload-set > /dev/null
-          dotnet workload install ios --version 10.404.0 > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          dotnet workload install ios --version 10.0.404 > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 
       # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;
@@ -515,7 +515,7 @@ jobs:
         run: |
           dotnet --version
           dotnet workload config --update-mode workload-set > /dev/null
-          dotnet workload install ios --version 10.404.0 > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
+          dotnet workload install ios --version 10.0.404 > workload.log 2>&1 || { tail -40 workload.log; exit 1; }
           dotnet workload list | grep -i ios
 
       # The workflow ios keeps the framework in a cache, made on main for each version of its build script and so seen by every branch;

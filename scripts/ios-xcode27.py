@@ -7,7 +7,7 @@ fixed upstream, waiting for the next .NET 10 release). When a workload set with 
     python scripts/ios-xcode27.py .github/workflows/ios-app.yml <workload set version> [<Xcode version>]
 
 The Xcode is the one the workload set's iOS manifest asks for: 10.404.0 carries iOS 27.2.10000, which requires Xcode 27.2 (checked
-2026-11-15), so that one is run as `... 10.404.0 27.2`.
+2026-11-15), so that one is run as `... 10.0.404 27.2` (the set version, not the package version 10.404.0).
 
 prove ios-app.yml green, then the same on .github/workflows/nightly.yml, and change IosSigningTests' runs-on line with it.
 """
