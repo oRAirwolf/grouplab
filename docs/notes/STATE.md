@@ -9,18 +9,18 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-08, entries 483 and 484 done (484 section 4 waits for 2026-11-11); the inbox is empty.
+**Last rewritten:** 2026-11-15, entries 485 to 487 done and entry 480's dated check taken; entry 488 (version 1.0) is next.
 
 ---
 
 ## In flight
 
-- **Entry 484 (2026-11-08)**, done but section 4: no research row left that needs nobody; a hit probability 87 to 49 ms and Find
-  holes on a store-bought target 274 to about 95 ms, both exact; the proof checklist run again, no row movable. 4 is entry 480's check.
-- **Entry 483 (2026-11-08)**, done: the audit's six findings (Windows 240 MB, measured 237.6 on nightly 224; the scan's resolution
-  on Features; Rifles and loads on the tour; a report's suggestion counted apart from fixes, nightly 224 corrected in the total).
-- **Entries 481 and 482 (2026-11-07)**, done: 50 launch clips, the video reader left out, bulls three times sooner, a scan's dpi as its
-  scale; "Rifles and loads" in the phones' Settings opens Ballistics (question 112, 2A).
+- **Entry 487 (2026-11-15)**, done: Play's closed test (alpha) is in Google's first review; every nightly now goes to internal and
+  alpha, and a run that meets a review sends nothing (Play's default would cancel it). App Store pictures taken on the simulators,
+  in docs/store/apple/, uploaded to version 1.0. Waiting on events only: Google's approval (the planning session passes on the
+  opt-in link, then it goes beside the testers group on the pages) and the next nightly reaching TestFlight.
+- **Entry 486 (2026-11-15)**, done: the Apple agreement signed; TestFlight answers again (request 108, answered).
+- **Entry 485 (2026-11-15)**, done: the Duo's iPhone-sized inner screen said on /download/, the README and the testing guide.
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Dated check, from 2026-11-11 (.NET's November release):** is there an iOS
   workload set after 10.0.402.1 with dotnet/macios issue 26969 fixed? If so, `python scripts/ios-xcode27.py` on ios-app.yml with its
   version, prove it, then nightly.yml and IosSigningTests (IOS-PLAN.md). 2026-11-08: 10.0.403 still iOS 27.1.10018, no fix.
@@ -72,7 +72,7 @@ Two, both in `docs/QUESTIONS-FOR-PLANNING.md` (36 answered in entry 481 and 112 
 
 - **Last nightly:** 0.2.0-nightly.225 (2026-11-08 06:18 UTC), sent to TestFlight and the Store; it carries entries 483 and 484.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
-- Crash reports: none open (41 to 44 closed 2026-11-07; `docs/notes/error-reports.md`).
+- Crash reports: none open (checked 2026-11-15; `docs/notes/error-reports.md`).
 
 ## The inbox
 

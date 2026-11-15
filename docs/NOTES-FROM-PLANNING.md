@@ -25,6 +25,123 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-15, entry 487: the Play closed test is submitted, the App Store listing is filled in; closed-track uploads, public wording, records, and Apple screenshots
+
+**Status: actioned 2026-11-15. Sections 0 to 6 done, in the order 5, 3, 1, 2, 4.** Two checks wait on events, not on work: the
+first nightly after Google approves the closed test is the first sent to `alpha`, and the next nightly is the check that TestFlight
+takes uploads again. Section 4's screenshots were uploaded by Code (14, in order); nothing was attached or submitted.
+
+From the planning session, 2026-11-15 (Denver night of 14 to 15 November), working in the desktop app's browser pane with Alan
+signed in. Alan said yes to all of it. Nothing here needs Alan unless a section says so. No tester's name or email goes in any file.
+
+## 0. What was done in the consoles (record it; do not redo it)
+
+### Google Play (org.grouplab.app)
+
+- **Dashboard setup:** 11 of 11 tasks complete. The App content forms were already done (entry 379); the store listing was the last.
+- **Default store listing (en-US):** app name GroupLab; short description "Measure your shot groups from a photo or scan of a printed
+  target." (66 characters); full description 1,479 characters, the Microsoft Store text reworded for the phone, with a bulleted list
+  of what the phone does (photographs in Guided or Manual mode, finds and lets you fix holes, marks any target by hand under a fixed
+  crosshair including store-bought targets, Shots Needed to Zero and comparing loads, the dope, the chance of a hit and point blank
+  range, prints its own targets, keeps sessions and syncs through a cloud folder), the same engine as the desktop, free and open
+  source under GPL-3.0, sends nothing unless chosen, never reads where a photo was taken. Read the exact text back from the Play
+  Console listing or the Publishing overview if needed; it is not in the repository yet (section 3).
+- **Graphics:** `docs/store/play-icon-512.png` and `docs/store/play-feature-1024x500.png` as made by `scripts/android-icons.py`;
+  seven phone screenshots, each a `docs/figures/screens/phone/fold-*-dark.png` of nightly 225 scaled to 1920 tall (890 wide) and
+  centred on a 1080 by 1920 canvas filled with the screenshot's own edge color, RGB 19, 20, 23, so nothing is cut off and Play's
+  9:16 rule is met. Order: result, capture, fingerprint, pairing, targets, scale-markers, open-targets. No tablet screenshots yet.
+- **AI asset declaration:** "Don't label assets" (the screenshots are GroupLab's own screens; the icon and feature graphic come from
+  `src/GroupLab.App/Assets/grouplab-mark.svg`).
+- **Closed testing - Alpha track:** 178 countries and regions (all); testers by Google Group only (Play allows either email lists or
+  groups on a track, not both): `grouplab-testers@googlegroups.com`, created by the planning session in Alan's account, anyone can
+  join, only managers post, only owners see the member list (so testers cannot see each other); feedback URL
+  https://grouplab.org/support/. The internal track and its email list are unchanged.
+- **First closed release:** version code 225 (0.2.0-nightly.225), full rollout, release notes "The first closed test of GroupLab on
+  Google Play" plus three lines from nightly 225's notes and where Report a problem is. One warning, the deobfuscation file, which
+  docs/ANDROID.md already explains. Alan saved and sent everything for review at about 08:10 UTC on 2026-11-15; Publishing overview
+  showed "Changes in review". The opt-in link appears on the track's Testers tab only after Google approves; the planning session will
+  pass it on.
+- **The rule:** a personal account needs 12 testers opted in to the closed test for 14 continuous days, then an application for
+  production access; Google also weighs whether testers actually used the app. Internal testers do not count.
+
+### App Store Connect (GroupLab, Apple ID 6817635137)
+
+- **Agreements:** Alan accepted the updated Apple Developer Program License Agreement (dated 2026-10-29) at developer.apple.com, and
+  the Free Apps Agreement shows Active from 2026-11-15. This is entry 486's request; see section 5.
+- **EU Digital Services Act:** non-trader; status Active, 27 countries or regions, 2026-11-15.
+- **App Information:** subtitle "Measure your shot groups"; category Sports, secondary Utilities; content rights "No, it does not
+  contain, show, or access third-party content" (GroupLab ships measurements of the nine store-bought targets, not pictures of them).
+- **Age rating:** the questionnaire answered no or none to everything except Guns or Other Weapons: Frequent (rifles, calibers and
+  loads are named throughout); calculated 13+; overridden to 18+ at Alan's word, to match Play's target audience of 18 and over. Apple
+  shows 18+ in 173 countries or regions, 19+ in Korea, and 17+ on systems before version 26.
+- **Version 1.0 page:** promotional text, a 1,615 character description (the Play text for iPhone and iPad, plus "Settings, General,
+  Walk me through a demo"), keywords "group size,shooting,target,MOA,mils,reloading,ballistics,precision rifle,load development,CEP",
+  support URL https://grouplab.org/support/, marketing URL https://grouplab.org/, copyright "2026 Alan Hayes", sign-in not required,
+  review notes (no accounts; use the demo since a reviewer has no shot sheet; any paper target can be marked by hand; no firearms
+  shown, nothing sold, nothing sent unless chosen; source on GitHub under GPL-3.0 with the App Store permission), the review contact
+  (Alan's name, support@grouplab.org, and a phone number that stays in App Store Connect only), and **manual release**.
+- **Not done:** no screenshots, no build attached, not submitted. Submission waits for screenshots (section 4) and Alan's yes, given
+  through the planning session.
+
+## 1. Every nightly also reaches the closed track
+
+`scripts/play-upload.py` sends to `internal` only, so closed testers would stay on 225. Make `play-upload.yml` send each nightly to
+both `internal` and `alpha` (the API's name for Closed testing - Alpha), one edit per track or one edit with both, with the build's
+own release notes (at most 500 characters for en-US, from its "What you will notice" lines, the same rules as every note).
+
+**Wait for Google's first approval before the first automatic closed upload:** while the first closed release is in review, a new
+edit to that track would replace what is being reviewed. Read the track through the API first and send to `alpha` only when its
+newest release is `completed` and nothing is in review; otherwise skip `alpha` for that run and say so in the run's summary. Changes
+are sent for review automatically (managed publishing is off), so later closed releases go through Google's quick review by
+themselves. Back up `scripts/play-upload.py` and `play-upload.yml` the usual way first (RESTORE.md). A dry run proves the two-track
+path before the real one.
+
+## 2. The public pages say what is true
+
+The README, docs/PLATFORM-SUPPORT.md (published to /download/), docs/ANDROID.md and the site say "Google Play's internal test is open
+by invitation, with a closed test to come". Now: "Google Play's closed test has been sent to Google for review; once it is approved,
+anyone can join by joining the GroupLab testers group, https://groups.google.com/g/grouplab-testers, and then the test." When the
+planning session passes on the opt-in link after approval, add it beside the group and drop "has been sent for review". Say plainly
+that the public Play listing follows after 12 testers have stayed in for 14 days and Google approves production access. Backing in
+`docs/claims-backing.json` names this entry. Keep "by invitation" for the internal test only if it is still mentioned at all.
+
+## 3. Record the listings in the repository
+
+- **`docs/store/PLAY.md`:** a section "Store listing and closed test, as set on 2026-11-15 (entry 487)" with section 0's Play facts.
+  Put the exact short and full description in `docs/store/play-listing.txt` (read them back from the Console through the Play
+  Developer API's listings endpoint with the existing service account, which can read them; if its role cannot, the planning session
+  will paste them in a later entry).
+- **`scripts/play-screens.py`:** writes the seven Play screenshots as in section 0 (scale to 1920 tall, centre on 1080 by 1920, fill
+  with the picture's own colour at x = 3 on the middle row) from `docs/figures/screens/phone/` into `docs/store/play-phone/`, so the
+  next listing update uses the newest pictures. Committed images stay under the large-file limit.
+- **`docs/store/LISTING.md`:** an Apple App Store section with section 0's App Store Connect facts, replacing nothing already there.
+  No phone number, no address.
+
+## 4. Apple screenshots, then upload them
+
+App Store Connect needs iPhone screenshots for the 6.9 inch display (1320 by 2868, or 1290 by 2796) and iPad screenshots for the 13
+inch display (2064 by 2752, or 2048 by 2732). Android pictures padded to those sizes would risk a rejection, so take them on the iOS
+simulators on GitHub's `macos-26` runner from the newest TestFlight build's source: the same seven places as the Play set, dark theme,
+the sample sheet `samples/gl-cf25-ltr-d-25-shots-600-dpi.png`, the status bar either the simulator's clean override (9:41, full
+battery and signal) or cut as on Android. A small workflow, run by hand, committing to `docs/store/apple/iphone/` and
+`docs/store/apple/ipad/` with a `made-from.json`. iPhone Duo screenshots are needed from April 2027 (docs/IOS-PLAN.md); not now.
+
+Then upload them to version 1.0's English (U.S.) screenshot sets through the App Store Connect API (appScreenshotSets and
+appScreenshots), with the existing key, if its role allows it; order as listed. If the key cannot, say so and leave them in the
+repository; the planning session uploads them in the browser. **Do not attach a build and do not submit for review**; both wait for
+Alan's yes through the planning session.
+
+## 5. Entry 486 is answered
+
+Alan accepted the Apple agreements on 2026-11-15 (section 0). Close entry 486's request in for-alan.md with that date, run the
+TestFlight status workflow once by hand, and confirm external-status.md's TestFlight block shows the groups and builds again and the
+next nightly reaches TestFlight.
+
+## 6. Order and report
+
+Sections 5, 3, 1, 2, 4. Report as usual, and say for section 4 whether the screenshots were uploaded or are waiting for the planning
+session.
+
 ## 2026-11-13, entry 486: consistency audit, 2026-11-13 (one finding; it needs Alan for one step)
 
 **Status: actioned 2026-11-15. Section 1 done, answered before it was asked:** Alan accepted the Apple agreements on 2026-11-15

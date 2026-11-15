@@ -587,6 +587,25 @@ section 0), before Code ran, so for-alan-archive.md has it as request 108, answe
 hand, 43701076184, wrote "Both groups have build 225" to docs/notes/external-status.md at 09:50 UTC. No public page changed. The next
 nightly's iPhone and iPad upload is the last check; no nightly has run since 225.
 
+## Entry 487: Play's closed test, the App Store listing, and the App Store pictures (2026-11-15)
+
+**Section 5** (first): the TestFlight check run by hand (43701076184) reads both groups on build 225 again; entry 486 records it, and
+request 108 is in for-alan-archive.md, answered. **Section 3:** docs/store/PLAY.md and LISTING.md record what was set in Play
+Console and App Store Connect; `docs/store/play-listing.txt` holds the listing read back through the Play API (66 and 1,479
+characters, as set); `scripts/play-screens.py` makes the seven Play pictures into docs/store/play-phone/. **Section 1:**
+`scripts/play-upload.py` sends each nightly to `internal` and `alpha`, its notes the build's own noticed lines (at most 500
+characters). Found on the way: Play's commit by default cancels whatever is in review and submits the new edit, so the next nightly
+would have pulled the first closed release out of Google's review; the commit now asks for `ERROR_IF_IN_REVIEW`, and a run that meets
+a review sends nothing and says so. The read-only run (43701402551) showed the in-review closed release as `completed`, so that guard,
+not the track's status, is what holds it. tests/python/play-upload-tests.py, 15 checks, runs in CI. **Section 2:** the README, the
+download page (its Play card is now the closed test's), PLATFORM-SUPPORT.md, ANDROID.md and both guides say the closed test is in
+Google's review, how to join, and the 12 testers for 14 days; claims backed; live as c902f743. **Section 4:** `apple-screens.yml`
+built GroupLab Dev from v0.2.0-nightly.225 on macos-26 and walked the seven places on an iPhone 17 Pro Max and an iPad Pro 13-inch
+(M5) simulator, dark, every step passing, at 1320 by 2868 and 2064 by 2752; committed in docs/store/apple/ with made-from.json and
+uploaded to version 1.0's English (U.S.) sets, APP_IPHONE_67 and APP_IPAD_PRO_3GEN_129, seven each in order (run 43705118949). The
+first run's workflow carried two of ios-app.yml's jobs by a copying mistake, so the fitting ran here; the workflow is corrected and
+has `upload_only`.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
