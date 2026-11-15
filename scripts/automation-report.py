@@ -14,11 +14,12 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 STATUS = Path(os.environ.get("GROUPLAB_LOCAL", REPO.parent / "grouplab-local")) / "automation.json"
+LOG = STATUS.with_name("automation.log")
 FOR_ALAN = REPO / "docs" / "notes" / "for-alan.md"
 START = "<!-- automation-week: written by scripts/automation-report.py each week; not a request -->"
 END = "<!-- /automation-week -->"
@@ -28,8 +29,20 @@ def day(stamp: str | None) -> str:
     return datetime.fromisoformat(stamp.replace("Z", "+00:00")).strftime("%d %B").lstrip("0") if stamp else "never"
 
 
-def line(s: dict) -> str:
+def silent_nights(log_text: str, today: date, days: int = 7) -> list[date]:
+    """Entry 489 section 1: the nights of the past week whose nightly backup wrote no result line, the way 3 and 10 November did."""
+    ended = {d for d in (today - timedelta(days=n) for n in range(1, days + 1)) if f"{d.isoformat()} " in log_text
+             and re.search(rf"^{d.isoformat()} \d\d:\d\d Nightly, backup, exit", log_text, re.M)}
+    return [today - timedelta(days=n) for n in range(days, 0, -1) if today - timedelta(days=n) not in ended]
+
+
+def line(s: dict, log_text: str | None = None, today: date | None = None) -> str:
     parts = []
+    if log_text is not None:
+        silent = silent_nights(log_text, today or date.today())
+        if silent:
+            names = ", ".join(d.strftime("%d %B").lstrip("0") for d in silent)
+            parts.append(f"**no backup line on {names}**: the nightly backup did not finish {'that night' if len(silent) == 1 else 'those nights'}")
     b = s.get("backup")
     if not b:
         parts.append("no nightly backup has run yet")
@@ -63,7 +76,7 @@ def main() -> int:
     parser.add_argument("--print", action="store_true", help="print it and write nothing")
     args = parser.parse_args()
     s = json.loads(STATUS.read_text(encoding="utf-8")) if STATUS.is_file() else {}
-    words = line(s)
+    words = line(s, LOG.read_text(encoding="utf-8-sig", errors="replace") if LOG.is_file() else None)
     if args.print:
         print(words)
         return 0

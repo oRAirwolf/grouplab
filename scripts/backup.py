@@ -31,6 +31,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 import urllib.parse
 import urllib.request
 import uuid
@@ -59,17 +61,60 @@ SOURCES = [
 NEVER = {"bin", "obj", "out", "backups", "node_modules", "__pycache__", ".git"}
 NEVER_PATHS = [DEV / "keys"]
 MOST_ASSET = 1900 * 1024 * 1024
+# Entry 489 section 1: on 3 and 10 November the backup left no line at all, because a step that hangs never ends and the automation log is
+# written when a step ends. Every gh call now has a time limit and one retry, the whole run a ceiling well above its usual 8 to 14
+# minutes, and every run ends with a "result:" line naming the part that failed.
+GH_SECONDS = 180
+UPLOAD_SECONDS = 2400
+RETRY_AFTER = 30
+CEILING_SECONDS = int(os.environ.get("GROUPLAB_BACKUP_CEILING_SECONDS", str(50 * 60)))
+# A test hook for the dry run that proves the failure line: the named part's gh call stands in for one that never answers.
+FORCE_TIMEOUT = os.environ.get("GROUPLAB_BACKUP_FORCE_TIMEOUT", "")
+PART = {"now": "starting"}
+
+
+class PartFailed(RuntimeError):
+    """A part of the backup that failed after its retry: create, upload, local copy, pruning and the rest."""
+
+    def __init__(self, part: str, detail: str):
+        super().__init__(f"{part}: {detail}")
+        self.part = part
+
+
+def part(name: str) -> None:
+    PART["now"] = name
 
 
 def log(message: str) -> None:
     print(datetime.now(timezone.utc).strftime("%H:%M:%S ") + message, flush=True)
 
 
-def gh(*args: str, check: bool = True) -> subprocess.CompletedProcess:
-    run = subprocess.run(["gh", *args], capture_output=True, text=True, encoding="utf-8", errors="replace")
-    if check and run.returncode != 0:
-        raise RuntimeError(f"gh {' '.join(args[:3])} failed: {run.stderr.strip()[:300]}")
-    return run
+def gh(*args: str, check: bool = True, seconds: int = GH_SECONDS, binary: bool = False) -> subprocess.CompletedProcess:
+    """gh with a time limit and one retry after a short wait; a second failure raises PartFailed naming the part it was in."""
+    command = ["gh", *args]
+    if FORCE_TIMEOUT and FORCE_TIMEOUT == PART["now"]:
+        command, seconds = [sys.executable, "-c", "import time; time.sleep(600)"], 2
+    wait = 1 if FORCE_TIMEOUT else RETRY_AFTER
+    said = ""
+    for attempt in (1, 2):
+        try:
+            if binary:
+                run = subprocess.run(command, capture_output=True, timeout=seconds)
+            else:
+                run = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=seconds)
+        except subprocess.TimeoutExpired:
+            said = f"gh {' '.join(args[:3])} did not answer within {seconds} s"
+        else:
+            if run.returncode == 0 or not check:
+                return run
+            err = run.stderr if isinstance(run.stderr, str) else run.stderr.decode("utf-8", "replace")
+            said = f"gh {' '.join(args[:3])} failed: {err.strip()[:300]}"
+        if attempt == 1:
+            log(f"{said}; trying once more in {wait} s")
+            time.sleep(wait)
+    if not check:
+        return subprocess.CompletedProcess(command, 1, b"" if binary else "", said)
+    raise PartFailed(PART["now"], said)
 
 
 def sha256(path: Path) -> str:
@@ -138,6 +183,7 @@ def ensure_first_commit(repo: str) -> None:
 def sync_archive(dry: bool, steps: list[str]) -> dict:
     """Entry 222 section 2.3: every archived submission not yet in grouplab-submissions is downloaded and checked against the manifest."""
     got, checked, bad = [], 0, []
+    part("copy archive")
     listed = json.loads(gh("release", "list", "-R", ARCHIVE, "--limit", "1000", "--json", "tagName").stdout or "[]")
     for tag in [r["tagName"] for r in listed if r["tagName"].startswith("archive-")]:
         with tempfile.TemporaryDirectory(prefix="gl-sync-") as tmp:
@@ -153,7 +199,7 @@ def sync_archive(dry: bool, steps: list[str]) -> dict:
                 if dry:
                     got.append(name)
                     continue
-                if gh("release", "download", tag, "-R", ARCHIVE, "-p", f"{name}.zip", "-D", tmp, check=False).returncode != 0:
+                if gh("release", "download", tag, "-R", ARCHIVE, "-p", f"{name}.zip", "-D", tmp, check=False, seconds=600).returncode != 0:
                     bad.append(f"{name}: could not be downloaded")
                     continue
                 zipped = Path(tmp, f"{name}.zip")
@@ -215,7 +261,8 @@ def build(work: Path, steps: list[str]) -> list[Path]:
 
     # Entry 326: TestFlight feedback's screenshots are files in that repository, which the issue list above does not carry.
     shots = work / "crash-reports-files.tar.gz"
-    tarball = subprocess.run(["gh", "api", f"repos/{OWNER}/grouplab-crash-reports/tarball"], capture_output=True)
+    part("the crash reports' files")
+    tarball = gh("api", f"repos/{OWNER}/grouplab-crash-reports/tarball", check=False, seconds=600, binary=True)
     if tarball.returncode == 0 and tarball.stdout:
         shots.write_bytes(tarball.stdout)
         files.append(shots)
@@ -224,7 +271,8 @@ def build(work: Path, steps: list[str]) -> list[Path]:
     # Entry 394: the learning loop's files live in the archive repository's tree (its workflow and learning/: the real scoreboard, its
     # baseline, the summary and the tuning record), which the archive's releases do not hold. Its git tree, not its release zips.
     learned = work / "submissions-archive-files.tar.gz"
-    tarball = subprocess.run(["gh", "api", f"repos/{ARCHIVE}/tarball"], capture_output=True)
+    part("the archive repository's files")
+    tarball = gh("api", f"repos/{ARCHIVE}/tarball", check=False, seconds=600, binary=True)
     if tarball.returncode == 0 and tarball.stdout:
         learned.write_bytes(tarball.stdout)
         files.append(learned)
@@ -258,10 +306,14 @@ def keep(tags: list[str], today: date) -> set[str]:
 def backup(dry: bool, steps: list[str]) -> dict:
     tag = "backup-" + date.today().isoformat()
     with tempfile.TemporaryDirectory(prefix="gl-backup-") as tmp:
+        part("build")
         files = build(Path(tmp), steps)
         total = sum(f.stat().st_size for f in files)
         log(f"built {len(files)} files, {total / 1e6:.1f} MB")
         if dry:
+            if FORCE_TIMEOUT:
+                part(FORCE_TIMEOUT)
+                gh("release", "view", tag, "-R", BACKUPS)
             log(f"dry run: would upload {tag} to {BACKUPS}")
             return {"tag": tag, "bytes": total, "uploaded": False}
         if not repository_exists(BACKUPS):
@@ -273,17 +325,21 @@ def backup(dry: bool, steps: list[str]) -> dict:
                 shutil.copy2(f, KEEP_COPY / f.name)
             return {"tag": tag, "bytes": total, "uploaded": False, "waiting": "the backups repository"}
         ensure_first_commit(BACKUPS)
+        part("create")
         if gh("release", "view", tag, "-R", BACKUPS, check=False).returncode != 0:
             gh("release", "create", tag, "-R", BACKUPS, "--title", f"Backup {tag[7:]}",
                "--notes", "Private. A nightly backup: see docs/RESTORE.md in the grouplab repository.")
-        gh("release", "upload", tag, *[str(f) for f in files], "-R", BACKUPS, "--clobber")
+        part("upload")
+        gh("release", "upload", tag, *[str(f) for f in files], "-R", BACKUPS, "--clobber", seconds=UPLOAD_SECONDS)
         steps.append("uploaded")
+        part("local copy")
         KEEP_COPY.mkdir(parents=True, exist_ok=True)
         for old in KEEP_COPY.iterdir():
             old.unlink()
         for f in files:
             shutil.copy2(f, KEEP_COPY / f.name)
 
+    part("pruning")
     listed = json.loads(gh("release", "list", "-R", BACKUPS, "--limit", "1000", "--json", "tagName").stdout or "[]")
     tags = [r["tagName"] for r in listed]
     kept = keep(tags, date.today())
@@ -302,11 +358,12 @@ def restore_test(steps: list[str]) -> dict:
     with tempfile.TemporaryDirectory(prefix="gl-restore-") as tmp:
         work = Path(tmp)
         if repository_exists(BACKUPS):
+            part("restore download")
             listed = json.loads(gh("release", "list", "-R", BACKUPS, "--limit", "1", "--json", "tagName").stdout or "[]")
             if not listed:
                 raise RuntimeError("the backups repository has no backup in it")
             tag = listed[0]["tagName"]
-            gh("release", "download", tag, "-R", BACKUPS, "-D", str(work))
+            gh("release", "download", tag, "-R", BACKUPS, "-D", str(work), seconds=UPLOAD_SECONDS)
         elif KEEP_COPY.is_dir() and any(KEEP_COPY.iterdir()):
             tag = "the copy on this computer"
             for f in KEEP_COPY.iterdir():
@@ -343,6 +400,24 @@ def main() -> int:
     args = parser.parse_args()
     steps: list[str] = []
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    what_run = "restore test" if args.restore_test else "backup"
+    key = "restoreTest" if args.restore_test else "backup"
+
+    def ceiling() -> None:
+        # Entry 489 section 1: a run that passes its ceiling says so and ends, rather than leaving the log with no line.
+        limit = f"{CEILING_SECONDS // 60} minutes" if CEILING_SECONDS >= 60 else f"{CEILING_SECONDS} seconds"
+        why = f"it passed its ceiling of {limit} during {PART['now']}"
+        log(f"result: {what_run} failed at {PART['now']}: {why}")
+        try:
+            if not args.dry_run:
+                status(**{key: {"at": now, "ok": False, "error": why, "part": PART["now"]}})
+                report_failure("RestoreTestFailed" if args.restore_test else "BackupFailed", why, steps)
+        finally:
+            os._exit(3)
+
+    watchdog = threading.Timer(CEILING_SECONDS, ceiling)
+    watchdog.daemon = True
+    watchdog.start()
     try:
         if args.restore_test:
             result = restore_test(steps)
@@ -355,14 +430,19 @@ def main() -> int:
                    backup={"at": now, "ok": True, **done})
         if synced["problems"]:
             report_failure("ArchiveCopyFailed", "; ".join(synced["problems"]), steps)
+        log(f"result: {what_run} ok" + (", a dry run" if args.dry_run else ""))
         return 0
     except Exception as e:  # noqa: BLE001 - every failure is reported, whatever it is
         what = "RestoreTestFailed" if args.restore_test else "BackupFailed"
+        failed_part = e.part if isinstance(e, PartFailed) else PART["now"]
         log(f"{what}: {e}")
+        log(f"result: {what_run} failed at {failed_part}")
         if not args.dry_run:
-            status(**{("restoreTest" if args.restore_test else "backup"): {"at": now, "ok": False, "error": str(e)[:500]}})
+            status(**{key: {"at": now, "ok": False, "error": str(e)[:500], "part": failed_part}})
             report_failure(what, str(e), steps)
         return 1
+    finally:
+        watchdog.cancel()
 
 
 if __name__ == "__main__":

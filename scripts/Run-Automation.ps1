@@ -21,12 +21,16 @@ $log = Join-Path (Split-Path $repo -Parent) 'grouplab-local\automation.log'
 New-Item -ItemType Directory -Force -Path (Split-Path $log) | Out-Null
 
 function Step([string] $What, [string[]] $Arguments) {
+    # Entry 489 section 1: a line when the step starts, so one that never ends still shows in the log.
+    Add-Content -Path $log -Encoding utf8 -Value "$((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm')) $Job, $What, started"
     $r = Invoke-Native python @Arguments
     $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm')
     Add-Content -Path $log -Encoding utf8 -Value (@("$stamp $Job, $What, exit $($r.ExitCode)") + $r.Output + $r.Errors)
 }
 
 function ScriptStep([string] $What, [string] $Script) {
+    # Entry 489 section 1: a line when the step starts, so one that never ends still shows in the log.
+    Add-Content -Path $log -Encoding utf8 -Value "$((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm')) $Job, $What, started"
     $r = Invoke-Native powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot $Script)
     $stamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm')
     Add-Content -Path $log -Encoding utf8 -Value (@("$stamp $Job, $What, exit $($r.ExitCode)") + $r.Output + $r.Errors)

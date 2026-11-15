@@ -51,6 +51,19 @@ check("build output is never read", not backup.included(backup.DEV / "grouplab-l
 check("the backup's own earlier copy is never read", not backup.included(backup.LOCAL / "backups" / "local.zip"))
 check("an ordinary file is read", backup.included(backup.DEV / "grouplab-local" / "corpus.json"))
 
+# Entry 489 section 1: a night whose backup never wrote its line is named in the weekly line, and a failed run says which part failed.
+spec = importlib.util.spec_from_file_location("automation_report", REPO / "scripts" / "automation-report.py")
+report = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(report)
+nights = [f"2026-11-{d:02d} 09:30 Nightly, Discord attachments, exit 0" for d in range(4, 16)]
+nights += [f"2026-11-{d:02d} 09:42 Nightly, backup, exit 0" for d in range(4, 16) if d != 10]
+log_text = chr(10).join(nights) + chr(10)
+check("a night with no backup line is found", report.silent_nights(log_text, date(2026, 11, 15)) == [date(2026, 11, 10)])
+check("a full week has none", report.silent_nights(log_text.replace("2026-11-10 09:30 Nightly, Discord attachments, exit 0",
+                                                                     "2026-11-10 09:43 Nightly, backup, exit 1"), date(2026, 11, 15)) == [])
+check("the weekly line says it plainly", "no backup line on 10 November" in report.line({}, log_text, date(2026, 11, 15)))
+check("a part that fails names itself", str(backup.PartFailed("upload", "gh release upload did not answer")).startswith("upload:"))
+
 print(f"backup tests: {passed} passed, {len(failed)} failed")
 for f in failed:
     print("  FAILED  " + f)
