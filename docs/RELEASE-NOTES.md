@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 1.0.0-nightly.229
+
+**2026-11-16**, commit `d223aec`. Nightly.
+
+**What you will notice**
+
+- A pooled set of sheets is now saved in Session records as a record of its own, on the computer and the phone: it opens again from there, follows any hole you fix on its sheets, can be compared beside other groups, and can be shared as one file that opens whole on another GroupLab; asked for in two reports on the GroupLab Discord (suggested in 2 Discord posts).
+
+From your reports and targets in this build: 1 change suggested in 2 error reports.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.229)
+
+---
+
 ## 1.0.0-nightly.228
 
 **2026-11-16**, commit `35bfa89`. Nightly.
