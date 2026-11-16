@@ -459,7 +459,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 - Choosing a shot in the shot table with Space no longer sends the next Tab back to the top of the window: the focus stays on the row you chose, thanks to Quack's report.
 - The caliber line under Load no longer turns into a garbled figure such as .568.96 cm after its size was switched to centimeters, which Quack spotted; it always shows inches and millimeters.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.199)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
