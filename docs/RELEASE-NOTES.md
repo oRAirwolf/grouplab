@@ -465,7 +465,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 - The user guide's downloadable PDF now carries the guide's new pictures, with numbered outlines on the buttons the text talks about, and phone pictures at a phone's size.
 - The PDF writer can now give a document bookmarks for its sections; only the guides use it, and every sheet and report is written exactly as before.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.198)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
