@@ -107,6 +107,13 @@ public class PoolSetTests
             Assert.Null(window.CurrentSession);
             Assert.Equal(records, window.Sessions.List().Count);
 
+            // Error report 47: a pool's session file or marking file reopened over one of its pictures put the other sheets off its edge.
+            // It is shared as its sheets, and exported only as the shots' CSV.
+            window.ShareSessionDialog().GetAwaiter().GetResult();
+            Assert.Equal(SetPool.NotSharedWords, window.ProblemText);
+            Assert.Equal(["*.csv"], Assert.Single(MainWindow.ExportChoices(pool: true)).Patterns!);
+            Assert.Equal(2, MainWindow.ExportChoices(pool: false).Count);
+
             // The same tab given a sheet of its own saves again.
             window.OpenSession(saved[0]);
             Dispatcher.UIThread.RunJobs();

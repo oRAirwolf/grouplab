@@ -56,6 +56,11 @@ public class Entry420Tests
             Assert.Equal(records, PhoneAnalysis.Store().List().Count);
             Assert.Null(result.SessionId);
             Assert.Equal(SetPool.NotSavedWords, result.SavedText);
+
+            // Error report 47: it has no session file of its own, and says so rather than that its picture is missing.
+            var share = result.GetVisualDescendants().OfType<Button>().Single(b => AutomationProperties.GetAutomationId(b) == "result-share-session");
+            share.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            Assert.Contains(result.GetVisualDescendants().OfType<TextBlock>(), b => b.Text == SetPool.NotSharedWords);
         }
         finally
         {

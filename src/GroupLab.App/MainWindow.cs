@@ -2621,17 +2621,12 @@ public sealed partial class MainWindow : Window
         var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "Export the marking",
-            SuggestedFileName = Path.GetFileNameWithoutExtension(session.State.ImagePath ?? "group") + ".grouplab.json",
-            DefaultExtension = "json",
-            // Entry 169 section 8: the complete record as JSON, or the shots as CSV for a spreadsheet or another program.
-            FileTypeChoices =
-            [
-                new FilePickerFileType("GroupLab marking, the complete record") { Patterns = ["*.json"] },
-                new FilePickerFileType("Shot coordinates for a spreadsheet (CSV)") { Patterns = ["*.csv"] },
-            ],
+            SuggestedFileName = showingPool ? "pooled group.csv" : Path.GetFileNameWithoutExtension(session.State.ImagePath ?? "group") + ".grouplab.json",
+            DefaultExtension = showingPool ? "csv" : "json",
+            FileTypeChoices = ExportChoices(showingPool),
         });
         DiagnosticLog.Info("dialog.result", ("dialog", "export"), ("chosen", file is not null));
-        if (file?.TryGetLocalPath() is { } csv && csv.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+        if (file?.TryGetLocalPath() is { } csv && (showingPool || csv.EndsWith(".csv", StringComparison.OrdinalIgnoreCase)))
         {
             await WriteCsv(csv);
         }
@@ -2642,6 +2637,17 @@ public sealed partial class MainWindow : Window
             DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(path), ("kind", "marking"), ("shots", session.State.Shots.Count)]);
         }
     }
+
+    /// <summary>
+    /// Entry 169 section 8: the complete record as JSON, or the shots as CSV for a spreadsheet or another program. Error report 47: a pool only as
+    /// CSV, since a marking file is one picture's marks and a pool's reopened over one of its pictures put every other sheet off its edge.
+    /// </summary>
+    internal static List<FilePickerFileType> ExportChoices(bool pool) => pool
+        ? [new FilePickerFileType("Shot coordinates for a spreadsheet (CSV)") { Patterns = ["*.csv"] }]
+        : [
+            new FilePickerFileType("GroupLab marking, the complete record") { Patterns = ["*.json"] },
+            new FilePickerFileType("Shot coordinates for a spreadsheet (CSV)") { Patterns = ["*.csv"] },
+        ];
 
     private void SetTool(MarkingTool tool)
     {

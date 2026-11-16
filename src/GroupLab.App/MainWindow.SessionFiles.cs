@@ -21,8 +21,15 @@ public sealed partial class MainWindow
     /// <summary>How the desktop names itself in a session file: the program and the system, never the machine's own name.</summary>
     private static string DeviceWords => $"GroupLab {AppInfo.Version} on " + (OperatingSystem.IsWindows() ? "Windows" : OperatingSystem.IsMacOS() ? "macOS" : "Linux");
 
-    private async Task ShareSessionDialog()
+    internal async Task ShareSessionDialog()
     {
+        // Error report 47: a pool's marks belong to several pictures, so it is shared as its sheets.
+        if (showingPool)
+        {
+            problem.Text = GroupLab.Core.Marking.SetPool.NotSharedWords;
+            return;
+        }
+
         if (session.State.ImagePath is not { } image || !File.Exists(image) || CleanImage.From(image) is not { } clean)
         {
             problem.Text = "There is no picture open to share. Open a target, or reopen a session whose picture is still where it was.";

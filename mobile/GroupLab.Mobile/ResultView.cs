@@ -564,7 +564,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         saved.Text = pooled ? SetPool.NotSavedWords : SavedWords(sessionId);
         actions.Children.Add(saved);
         var shareSaid = Screens.Line("");
-        actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? "").Id("result-share-session"));
+        actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = pooled ? SetPool.NotSharedWords : SessionFiles.Share(session.State, definition, units) ?? "").Id("result-share-session"));
         actions.Children.Add(Screens.Choice("Share the shots as CSV", () => shareSaid.Text = SessionFiles.ShareCsv(session.State, definition) ?? "").Id("result-share-csv"));
         actions.Children.Add(shareSaid);
         // Entry 472 section 1: the result's own way out, to Capture's start or the list of sessions, is what Android's back presses; before,

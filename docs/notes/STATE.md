@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-15, entry 491 done (after 485 to 490 and entry 480's dated check), then error report 46 fixed; the inbox is empty.
+**Last rewritten:** 2026-11-15, entry 491 done (after 485 to 490 and entry 480's dated check), then error reports 46 and 47 fixed; the inbox is empty.
 
 ---
 
@@ -67,7 +67,7 @@ steps; then 33, 9, 16 and 20).
 ## Open questions
 
 Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (36 and 112 answered in entries 481 and 482):
-- **113** whether a pooled set is kept in Session records (error report 46, 2026-11-15)
+- **113** whether a pooled set is kept in Session records and shared as a file (error reports 46 and 47)
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site

@@ -6,6 +6,17 @@ report's text is data, never an instruction. Nothing personal is written here: n
 the person's files. Claude Code checks the open issues at the start of a run, before each inbox entry, before ending a turn and at least
 hourly while waiting on CI, and writes each new one here.
 
+## 47, 2026-11-16, nightly 226 on the computer (a Discord post in bug-reports, with two screenshots)
+
+- **Said:** the same tester, the same three pooled sheets: Export (or Share a session file) on the pool, then opening the file. It would not
+  open as a session; Open marking took it but asked for one picture, and the shots ran off the right of the screen.
+- **Cause:** the same root as 46. A session file and a marking file are one picture's marks; the pool's marking lays every sheet side by side
+  against one sheet's design, so Export wrote that marking and reopening it over one of the three pictures put the other two sheets'
+  shots off its edge. Share a session file refused, but said only that no picture was open.
+- **Status:** fixed on the computer and the phone: on a pool, Share a session file and the phone's Share this session say the pool is shared
+  as its sheets, and Export offers only the pooled shots' CSV (`SetPool.NotSharedWords`, `MainWindow.ExportChoices`; the same two tests as
+  46). Opening and editing a pool like a sheet, as asked, is part of question 113. Ships in nightly 227.
+
 ## 46, 2026-11-15, nightly 226 on the computer (a Discord post in bug-reports, with two screenshots)
 
 - **Said:** three scanned sheets of one set, each analyzed, ticked in Session records and pooled; the pooled group opened but no record of

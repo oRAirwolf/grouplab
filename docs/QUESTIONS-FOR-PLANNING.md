@@ -23,13 +23,13 @@ number is never reused and a question is never lost:
 
 ## 2026-11-15, question 113: should a pooled set be kept in Session records?
 
-**Status: open.** Error report 46 (a Discord post, nightly 226): a tester pooled three sheets and expected the pool at the top of Session
-records. Entry 420 section 1 says the pool "is not saved as a session of its own", and the only way to make one was a fault (Accept on the
+**Status: open.** Error reports 46 and 47 (Discord posts, nightly 226): a tester pooled three sheets and expected the pool at the top of
+Session records, and to share it as a session file that opens and edits like a sheet's. Entry 420 section 1 says the pool "is not saved as a session of its own", and the only way to make one was a fault (Accept on the
 pool's tab), which is now closed. Each sheet stays in Session records and Pool the chosen reopens the pool at any time.
 
 - **(a) As now.** Nothing to build. The pool's tab says it is not saved and why.
 - **(b) A "pooled" row in Session records that keeps only which sheets were pooled**, and pools them afresh when opened. A new kind of record
-  for the database, synchronization and export (a session file of the pool would carry its sheets). About a day, on the computer and both
+  for the database, synchronization and export (a session file of the pool would carry its sheets and their pictures, and open as the set's tab). About a day, on the computer and both
   phones.
 - **(c) A pool saved as a session of its own** with a copy of the pooled marking. Not recommended: it goes stale when a sheet is fixed, and
   it is the shape that produced the nonsense file.
