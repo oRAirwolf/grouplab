@@ -93,6 +93,25 @@ public class PoolSetTests
             Assert.Contains(window.Plot.Legend, l => l.StartsWith($"Sheet 3: {perSheet} shots, shown alone", StringComparison.Ordinal));
             Assert.Null(window.CurrentSession);
             Assert.Equal(records, window.Sessions.List().Count);
+
+            // Error report 46: Back, then Accept and analyze, saved the pool as a session of one sheet holding every sheet's shots, whose
+            // session file read back as nonsense. Accept, an edit saved by itself, and New target leave Session records as they were.
+            Assert.True(window.ShowingPool);
+            window.BackToEditor();
+            window.Analyse();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(SetPool.NotSavedWords, window.StatusText);
+            window.Session.SetExclusion(window.Session.State.Shots[0].Id, ExclusionReason.ByShooter);
+            Assert.False(window.HasUnsavedWork);
+            window.SaveWaitingNow();
+            Assert.Null(window.CurrentSession);
+            Assert.Equal(records, window.Sessions.List().Count);
+
+            // The same tab given a sheet of its own saves again.
+            window.OpenSession(saved[0]);
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(window.ShowingPool);
+            Assert.Equal(saved[0], window.CurrentSession);
         }
         finally
         {

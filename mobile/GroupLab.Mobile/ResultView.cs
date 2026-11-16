@@ -107,6 +107,16 @@ public sealed class ResultView : UserControl, IOpenTarget
     /// <summary>The plot, for the headless tests (entry 420: a pooled set's sheets in their shades).</summary>
     internal CompositePlot Plot => plot;
 
+    /// <summary>The saved line, for the headless tests.</summary>
+    internal string SavedText => saved.Text ?? "";
+
+    /// <summary>A change made to the result as its pages make one, for the headless tests.</summary>
+    internal void Change(Action<MarkingSession> edit)
+    {
+        edit(session);
+        Changed();
+    }
+
     /// <summary>Entry 259 screen 1: the tiles, the plot with its chips, and the sections that open, from the shared figures.</summary>
     private readonly FiguresView full;
     private readonly TextBlock saved = Screens.Line("");
@@ -125,6 +135,12 @@ public sealed class ResultView : UserControl, IOpenTarget
     /// <summary>Entry 318 section 1: the marks to check, a card that follows every change.</summary>
     private readonly StackPanel checks = new() { Spacing = 8 };
     private long? sessionId;
+
+    /// <summary>Error report 46: a set's pooled group, read afresh from its sheets each time and never saved as a session of its own.</summary>
+    private readonly bool pooled;
+
+    /// <summary>The session saved over itself, or for a pooled group nothing saved and the session it has (none).</summary>
+    private long? SaveHere() => pooled ? sessionId : PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
     private readonly Action again;
 
     /// <summary>
@@ -300,6 +316,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         this.again = again;
         definition = result.Definition;
         sessionId = result.SessionId;
+        pooled = result.Pooled;
         session = new MarkingSession(result.State);
         // Entry 323 section 3: the plot's chips as they were left, the velocity band's among them.
         plot.Shown = Phone.Settings.LoadPlotMarks();
@@ -544,7 +561,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         }
 
         // Entry 281 section 2: the phone follows A, saved by itself, and says so from the start, not only after a change.
-        saved.Text = SavedWords(sessionId);
+        saved.Text = pooled ? SetPool.NotSavedWords : SavedWords(sessionId);
         actions.Children.Add(saved);
         var shareSaid = Screens.Line("");
         actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = SessionFiles.Share(session.State, definition, units) ?? "").Id("result-share-session"));
@@ -796,7 +813,7 @@ public sealed class ResultView : UserControl, IOpenTarget
     /// <summary>After a change: the figures and the plot again, and the session saved over itself.</summary>
     private void Changed()
     {
-        sessionId = PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
+        sessionId = SaveHere();
         Refresh();
         AskWhichBulls();
     }
@@ -823,7 +840,7 @@ public sealed class ResultView : UserControl, IOpenTarget
                 Content = VelocityPages.Distance(units, inches =>
                 {
                     session.SetShotDistance(inches);
-                    sessionId = PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
+                    sessionId = SaveHere();
                     full.SessionId = sessionId;
                     Return();
                 }, Return);
@@ -838,7 +855,7 @@ public sealed class ResultView : UserControl, IOpenTarget
     private void ConditionsChanged(SessionConditions? conditions)
     {
         session.SetConditions(conditions);
-        sessionId = PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
+        sessionId = SaveHere();
         full.SessionId = sessionId;
         Refresh();
     }
@@ -851,7 +868,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         string Bull(int index) => state.Bulls.FirstOrDefault(b => b.Index == index)?.Label ?? index.ToString(CultureInfo.InvariantCulture);
         plot.Show(state, definition, units, Label, Bull);
         full.Show(state, units);
-        saved.Text = SavedWords(sessionId);
+        saved.Text = pooled ? SetPool.NotSavedWords : SavedWords(sessionId);
         ShowChecks();
         picturePane?.InvalidateVisual();
     }

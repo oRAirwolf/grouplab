@@ -40,6 +40,12 @@ public static class SetPool
     private const double SheetGap = 254;
 
     /// <summary>
+    /// Error report 46: what a pooled group says where a sheet would be saved. It is read afresh from its sheets each time, so it is not saved
+    /// as a session of its own, on the computer or the phone.
+    /// </summary>
+    public const string NotSavedWords = "A pooled group is not saved as a session of its own: each sheet keeps its own, and pooling reads them together again whenever you ask. A change made here is not kept; make it on the sheet itself.";
+
+    /// <summary>
     /// NOTES-FROM-PLANNING.md entry 420 section 1: the pooled set as one marking, so the analysis screen shows it as it shows a sheet. Each
     /// sheet read (once, as <see cref="Pool"/> counts it) is laid beside the last on one page, its bulls where they print and each shot at
     /// its own offset from its own bull in inches, as its sheet measured it with that sheet's own scale; so every figure the screen works

@@ -21,7 +21,7 @@ internal sealed record WorkingImage(string Path, ImageMetadata Metadata, int Ori
 internal sealed record PhoneResult(MarkingState State, TargetDefinition? Definition, string? Failure, long? SessionId, WorkingImage? Image = null, bool AskWhichSheet = false,
     GroupLab.Core.Capture.PictureVerdict? Check = null, GroupLab.Core.Measurement.ScaleReport? Measured = null, PaperEdge? Paper = null,
     TargetDefinition? LooksLike = null, StoreTargetSeen? Recognized = null, GroupLab.Core.Registration.OpeningOutcome? Opening = null,
-    GroupLab.Core.Registration.SheetLook? Look = null, string? PictureHash = null);
+    GroupLab.Core.Registration.SheetLook? Look = null, string? PictureHash = null, bool Pooled = false);
 
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 340: a store-bought target recognized in a picture that named no GroupLab sheet, and the working image's size

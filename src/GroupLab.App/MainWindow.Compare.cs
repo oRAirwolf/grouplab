@@ -132,11 +132,29 @@ public sealed partial class MainWindow
         detectedState = null;
         plot.OnlySheet = null;
         session.Load(pooled);
-        MarkingIsSaved();
         currentSession = null;
+        showingPool = true;
+        MarkingIsSaved();
         destination = Destination.Analyse;
         SetAnalysing(true);
         DiagnosticLog.Info("sessions.pool.open", ("shots", pooled.Shots.Count));
+    }
+
+    /// <summary>
+    /// Error report 46: whether the tab shows a pool, Pool the chosen's own tab or a set tab's pool. A pool is never saved as a session of its
+    /// own (entry 420): it is one marking of every sheet laid side by side against one sheet's design, so a record of it named one sheet and
+    /// held the shots of all of them, and its session file read back as nonsense. Accept, the save by itself and closing all leave it alone.
+    /// </summary>
+    private bool showingPool;
+
+    /// <summary>Whether the tab shows a pool, for the headless tests.</summary>
+    internal bool ShowingPool => showingPool;
+
+    /// <summary>The tab now holds a sheet of its own, not a pool: opened, reopened or cleared.</summary>
+    private void NotAPool()
+    {
+        showingPool = false;
+        targets.Current.PooledScales = null;
     }
 
     /// <summary>What the pooled set says, for the headless tests.</summary>

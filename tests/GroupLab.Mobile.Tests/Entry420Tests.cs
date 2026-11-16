@@ -49,6 +49,13 @@ public class Entry420Tests
             Assert.Equal(2 * scoring.Count, result.Plot.Shots.Count(s => !s.Excluded));
             Assert.Equal([0, 2], result.Plot.PooledSheets);
             Assert.Contains(result.Plot.Legend, l => l.StartsWith($"Sheet 3: {scoring.Count} shots", StringComparison.Ordinal));
+
+            // Error report 46: a change on the pooled group saved it as a session of one sheet holding every sheet's shots. It is not saved.
+            int records = PhoneAnalysis.Store().List().Count;
+            result.Change(s => s.SetExclusion(s.State.Shots[0].Id, ExclusionReason.ByShooter));
+            Assert.Equal(records, PhoneAnalysis.Store().List().Count);
+            Assert.Null(result.SessionId);
+            Assert.Equal(SetPool.NotSavedWords, result.SavedText);
         }
         finally
         {

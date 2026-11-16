@@ -1882,6 +1882,7 @@ public sealed partial class MainWindow : Window
 
         // Entry 357 section 1: the picture open until now is left, and under "Send everything I open" it goes in the state it was left in.
         LeavePicture(closing: false);
+        NotAPool();
 
         // A new image is a new session. Found by entry 243: opening a second sheet by Open, drop or paste kept the first one's session, and
         // analyzing the second saved it over the first. Reopening a saved session sets it again after this.
@@ -3708,6 +3709,14 @@ public sealed partial class MainWindow : Window
         int open = ReviewQueue.Open(ReviewQueue.For(session.State, analyseSighters));
         DiagnosticLog.Info("analysis.accept", ("open", open));
         SetAnalysing(true);
+        // Error report 46: a pool shows its analysis again and says why nothing was saved, and is never offered to the project as a sheet.
+        if (showingPool)
+        {
+            status.Text = SetPool.NotSavedWords;
+            DiagnosticLog.Info("sessions.pool.accept");
+            return;
+        }
+
         SaveSession();
         // Entry 439: the demo's sheet is one GroupLab made up, so it is never offered to the project.
         if (!targets.Current.Demo)
@@ -3723,7 +3732,7 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private void SaveSession()
     {
-        if (sessions is null || session.State.Shots.Count == 0)
+        if (sessions is null || showingPool || session.State.Shots.Count == 0)
         {
             return;
         }
@@ -3856,6 +3865,7 @@ public sealed partial class MainWindow : Window
             return;
         }
 
+        NotAPool();
         bool original = record.ImagePath is { } image && File.Exists(image) && Sha256(image) == record.ImageSha256;
         if (original)
         {

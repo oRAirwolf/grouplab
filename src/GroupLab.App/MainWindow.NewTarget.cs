@@ -35,7 +35,7 @@ public sealed partial class MainWindow
 
     /// <summary>Whether this sheet holds work that is not in a saved session, for the headless tests.</summary>
     internal bool HasUnsavedWork =>
-        session.State.Shots.Count > 0 && MarkingFile.Write(session.State, units) != savedMarking;
+        !showingPool && session.State.Shots.Count > 0 && MarkingFile.Write(session.State, units) != savedMarking;
 
     /// <summary>Whether the save, discard or cancel question is up, for the headless tests.</summary>
     internal bool AskingAboutUnsavedWork => leavingAsk.IsVisible;
@@ -138,6 +138,7 @@ public sealed partial class MainWindow
     {
         // Entry 357 section 1: clearing the sheet leaves its picture.
         LeavePicture(closing: false);
+        NotAPool();
         session.Load(start);
         grey = null;
         valueImage = null;

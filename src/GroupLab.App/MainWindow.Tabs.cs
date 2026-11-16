@@ -466,6 +466,7 @@ public sealed partial class MainWindow
             CalibreConfirmed = calibreConfirmed,
             Analysing = analysing,
             ReadHarderRan = readHarderRan,
+            ShowingPool = showingPool,
             DistanceNotKnown = distanceNotKnown,
             RoundsNotKnown = roundsNotKnown,
             RoundsText = roundsFired.Text ?? "",
@@ -525,6 +526,7 @@ public sealed partial class MainWindow
             registrationResidual = p.RegistrationResidual;
             calibreConfirmed = p.CalibreConfirmed;
             readHarderRan = p.ReadHarderRan;
+            showingPool = p.ShowingPool;
             distanceNotKnown = p.DistanceNotKnown;
             roundsNotKnown = p.RoundsNotKnown;
             roundsFired.Text = p.RoundsText;
@@ -646,6 +648,8 @@ public sealed partial class MainWindow
         public bool Analysing { get; init; }
 
         public bool ReadHarderRan { get; init; }
+
+        public bool ShowingPool { get; init; }
 
         public bool DistanceNotKnown { get; init; }
 

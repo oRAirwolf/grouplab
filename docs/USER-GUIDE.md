@@ -725,7 +725,8 @@ set it is. Print the set, shoot it, open each scan or photograph and choose **Ac
 records** tick them and choose **Pool the chosen**. GroupLab says which sheets of the set are still missing and how many shots it has of the
 bulls the set holds, and opens the pooled set on the analysis screen in a tab of its own (1): every shot on one plot, measured from its own
 bull, every figure a sheet has, and the Shots list naming each shot by sheet and bull (2.5 is bull 5 on sheet 2). Each sheet's shots are
-in their own shade; tap a sheet in the plot's key to show its shots alone. A sheet read twice counts once.
+in their own shade; tap a sheet in the plot's key to show its shots alone. A sheet read twice counts once. The pooled set is not saved as
+a record of its own: each sheet keeps its own in Session records, and **Pool the chosen** opens the pool again whenever you want it.
 
 ![A pooled set of three sheets: 1 The set tab](figures/screens/current/set-tab-light-1400x900.png)
 <!-- marks: GroupLab 3x3 2 MOA, Set of 3 Letter Sheets, 3 sheets, Analysis -->

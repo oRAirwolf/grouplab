@@ -94,7 +94,7 @@ internal sealed class SetPage : UserControl
         {
             var composite = SetPool.Composite(definition, states);
             DiagnosticLog.Info("phone.set.open", ("shots", composite.Shots.Count));
-            Content = new ResultView(new PhoneResult(composite, definition, null, null), new ShotSetup(composite.Calibre, composite.ShotDistanceInches), units, () => Content = page);
+            Content = new ResultView(new PhoneResult(composite, definition, null, null, Pooled: true), new ShotSetup(composite.Calibre, composite.ShotDistanceInches), units, () => Content = page);
         }
 
         if (pooled.Shots > 0)
