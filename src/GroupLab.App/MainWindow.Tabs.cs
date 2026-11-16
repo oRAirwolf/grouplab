@@ -358,6 +358,12 @@ public sealed partial class MainWindow
         bool showing = ReferenceEquals(tab, targets.Current);
         if (!showing && !OpenTargets.CloseAsks(tab) && !SendingEverything)
         {
+            // Entry 495: a pooled tab closed while another shows saves its pool too.
+            if (sessions is not null && tab.Parked is ParkedTarget { ShowingPool: true, PoolSources: { SessionIds.Count: > 0 } sources })
+            {
+                SavePool(sources);
+            }
+
             if (tab.Parked is ParkedTarget parked)
             {
                 parked.View.Picture?.Dispose();
@@ -384,6 +390,8 @@ public sealed partial class MainWindow
         }
 
         FlushWaitingSave();
+        // Entry 495: closing a pooled tab saves its pool, as accepting it would.
+        SavePoolHere(quietly: true);
         if (HasUnsavedWork && analysing)
         {
             // The question sits with the marks, so it is asked where it can be seen.
@@ -467,6 +475,7 @@ public sealed partial class MainWindow
             Analysing = analysing,
             ReadHarderRan = readHarderRan,
             ShowingPool = showingPool,
+            PoolSources = poolSources,
             DistanceNotKnown = distanceNotKnown,
             RoundsNotKnown = roundsNotKnown,
             RoundsText = roundsFired.Text ?? "",
@@ -527,6 +536,7 @@ public sealed partial class MainWindow
             calibreConfirmed = p.CalibreConfirmed;
             readHarderRan = p.ReadHarderRan;
             showingPool = p.ShowingPool;
+            poolSources = p.PoolSources;
             distanceNotKnown = p.DistanceNotKnown;
             roundsNotKnown = p.RoundsNotKnown;
             roundsFired.Text = p.RoundsText;
@@ -650,6 +660,9 @@ public sealed partial class MainWindow
         public bool ReadHarderRan { get; init; }
 
         public bool ShowingPool { get; init; }
+
+        /// <summary>Entry 495: the saved sheets a pooled tab pools; set again when its pool is saved while it is parked.</summary>
+        public PoolSources? PoolSources { get; set; }
 
         public bool DistanceNotKnown { get; init; }
 

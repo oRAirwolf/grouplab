@@ -28,7 +28,8 @@ internal sealed class SetPage : UserControl
         var id = GroupLab.Core.Gltd.Binary.GltdBinary.Encode(definition).Encoding?.DefinitionId;
         var records = store.List().Where(s => s.SheetName == definition.Name && (shotDate is null || (s.ShotDate ?? s.CreatedUtc[..10]) == shotDate))
             .Select(s => store.Get(s.Id)).OfType<SessionRecord>().Where(r => r.DefinitionId == id).ToList();
-        var states = records.Select(r => MarkingFile.Read(r.MarkingJson).State).Where(s => s.SetSheet is not null).ToList();
+        var marked = records.Select(r => (r.Id, State: MarkingFile.Read(r.MarkingJson).State)).Where(x => x.State.SetSheet is not null).ToList();
+        var states = marked.Select(x => x.State).ToList();
         var pooled = SetPool.Pool(definition, states);
         DiagnosticLog.Info("phone.set", ("sheets", states.Count), ("set", pooled.SetSize), ("missing", pooled.Missing.Count));
 
@@ -94,7 +95,9 @@ internal sealed class SetPage : UserControl
         {
             var composite = SetPool.Composite(definition, states);
             DiagnosticLog.Info("phone.set.open", ("shots", composite.Shots.Count));
-            Content = new ResultView(new PhoneResult(composite, definition, null, null, Pooled: true), new ShotSetup(composite.Calibre, composite.ShotDistanceInches), units, () => Content = page);
+            // Entry 495: saved as a pool of these sheets' sessions, the one already made of them where there is one.
+            Content = new ResultView(new PhoneResult(composite, definition, null, null, Pooled: true, PoolSheets: [.. marked.Select(x => x.Id)], PoolChoices: SessionPools.Choices(pictures: false)),
+                new ShotSetup(composite.Calibre, composite.ShotDistanceInches), units, () => Content = page);
         }
 
         if (pooled.Shots > 0)

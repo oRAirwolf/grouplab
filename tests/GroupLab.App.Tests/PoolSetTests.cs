@@ -6,6 +6,7 @@ using GroupLab.Cli.Library;
 using GroupLab.Core.Detection;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Records;
 using GroupLab.Core.Registration;
 using GroupLab.Core.Rendering;
 using OpenCvSharp;
@@ -94,25 +95,70 @@ public class PoolSetTests
             Assert.Null(window.CurrentSession);
             Assert.Equal(records, window.Sessions.List().Count);
 
-            // Error report 46: Back, then Accept and analyze, saved the pool as a session of one sheet holding every sheet's shots, whose
-            // session file read back as nonsense. Accept, an edit saved by itself, and New target leave Session records as they were.
+            // Error report 46: Back, then Accept and analyze, saved the pool as a session of one sheet holding every sheet's shots. Entry 495
+            // (question 113, Alan's (b)): it is saved as a pool record of its own instead, naming its three sheets; no session is added.
             Assert.True(window.ShowingPool);
+            Assert.Equal(SetTabWords.PoolNotSavedYet, window.SavedText);
             window.BackToEditor();
             window.Analyse();
             Dispatcher.UIThread.RunJobs();
-            Assert.Equal(SetPool.NotSavedWords, window.StatusText);
+            Assert.Equal(SessionPools.SavedWords(3), window.StatusText);
+            Assert.Equal(SetTabWords.PoolRecordSaved, window.SavedText);
+            long poolId = Assert.IsType<long>(window.CurrentPool);
+            var pool = Assert.Single(window.Sessions.Pools());
+            Assert.Equal(poolId, pool.Id);
+            Assert.Equal(saved.Select(id => DataExport.Identity(window.Sessions.Get(id)!)).Order(), pool.Sheets.Order());
             window.Session.SetExclusion(window.Session.State.Shots[0].Id, ExclusionReason.ByShooter);
             Assert.False(window.HasUnsavedWork);
             window.SaveWaitingNow();
             Assert.Null(window.CurrentSession);
             Assert.Equal(records, window.Sessions.List().Count);
+            window.Analyse();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Single(window.Sessions.Pools());
 
-            // Error report 47: a pool's session file or marking file reopened over one of its pictures put the other sheets off its edge.
-            // It is shared as its sheets, and exported only as the shots' CSV.
-            window.ShareSessionDialog().GetAwaiter().GetResult();
-            Assert.Equal(SetPool.NotSharedWords, window.ProblemText);
+            // Session records shows it as one row, a pooled set of 3 sheets dated by its newest sheet, and it opens again into the pooled
+            // tab with the same shots, worked out again from its sheets.
+            var row = Assert.Single(SessionPools.Rows(window.Sessions, UnitSettings.Imperial)).Row;
+            Assert.StartsWith(SessionPools.RowName(3), row.SheetName, StringComparison.Ordinal);
+            Assert.Equal(SessionPools.RowId(poolId), row.Id);
+            Assert.Equal(3 * perSheet, row.ShotCount);
+            window.OpenSavedPool(poolId);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(window.ShowingPool);
+            Assert.Equal(poolId, window.CurrentPool);
+            Assert.Equal(3 * perSheet, window.Plot.Shots.Count);
+            Assert.Equal([0, 2, 4], window.Plot.PooledSheets);
+
+            // Entry 495 section 4: shared as one file with its sheets, it opens whole on a second GroupLab, the sheets brought in as sessions
+            // first; opened again there, nothing is made twice. Export is still the pooled shots' CSV.
             Assert.Equal(["*.csv"], Assert.Single(MainWindow.ExportChoices(pool: true)).Patterns!);
             Assert.Equal(2, MainWindow.ExportChoices(pool: false).Count);
+            string file = Path.Combine(folder, "pool" + SessionPackage.Extension);
+            window.SharePoolTo(file);
+            Assert.Equal(SessionPools.SharedWords(3), window.StatusText);
+            string elsewhere = Path.Combine(folder, "elsewhere");
+            Directory.CreateDirectory(elsewhere);
+            var second = new MainWindow(new AppSettingsStore(Path.Combine(elsewhere, "settings.json"))) { Width = 1400, Height = 900 };
+            second.Show();
+            try
+            {
+                second.OpenSessionFile(file);
+                Dispatcher.UIThread.RunJobs();
+                Assert.True(second.ShowingPool);
+                Assert.Equal(3, second.Sessions!.List().Count);
+                Assert.Equal(3, Assert.Single(second.Sessions.Pools()).Sheets.Count);
+                Assert.Equal(3 * perSheet, second.Plot.Shots.Count);
+                Assert.Contains("the pool is saved with them", second.StatusText, StringComparison.Ordinal);
+                second.OpenSessionFile(file);
+                Dispatcher.UIThread.RunJobs();
+                Assert.Equal(3, second.Sessions.List().Count);
+                Assert.Single(second.Sessions.Pools());
+            }
+            finally
+            {
+                second.Close();
+            }
 
             // The same tab given a sheet of its own saves again.
             window.OpenSession(saved[0]);

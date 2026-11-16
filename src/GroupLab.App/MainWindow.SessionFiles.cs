@@ -23,10 +23,10 @@ public sealed partial class MainWindow
 
     internal async Task ShareSessionDialog()
     {
-        // Error report 47: a pool's marks belong to several pictures, so it is shared as its sheets.
+        // Error report 47: a pool's marks belong to several pictures, so it is shared as its sheets. Entry 495: in one file with the pool.
         if (showingPool)
         {
-            problem.Text = GroupLab.Core.Marking.SetPool.NotSharedWords;
+            await SharePoolDialog();
             return;
         }
 
@@ -75,6 +75,13 @@ public sealed partial class MainWindow
     /// <summary>Opens a session file as a new session: its picture unpacked beside the settings, its marking loaded, and saved in Session records.</summary>
     internal void OpenSessionFile(string path)
     {
+        // Entry 495: a pooled set's file has the same ending; it brings its sheets in and opens the pool.
+        if (IsPoolFile(path))
+        {
+            OpenPoolFile(path);
+            return;
+        }
+
         SessionPackageContents contents;
         try
         {
@@ -106,6 +113,19 @@ public sealed partial class MainWindow
         SaveSession();
         status.Text = $"Opened a session file from {(contents.Device.Length > 0 ? contents.Device : "another device")}, revision {contents.Revision}. It is saved in Session records as a session of its own.";
         DiagnosticLog.Info("session.file", ("opened", true), ("revision", contents.Revision), ("shots", state.Shots.Count));
+    }
+
+    private static bool IsPoolFile(string path)
+    {
+        try
+        {
+            using var from = File.OpenRead(path);
+            return PoolPackage.IsPool(from);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            return false;
+        }
     }
 
     /// <summary>The revision a picture's session file had when it was opened here, or none where it did not come from one.</summary>

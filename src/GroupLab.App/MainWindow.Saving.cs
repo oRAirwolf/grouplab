@@ -65,6 +65,13 @@ public sealed partial class MainWindow
             return;
         }
 
+        // Entry 495: closing the window saves every pooled tab's pool, as accepting it would.
+        if (!closingAnswered)
+        {
+            SavePoolHere(quietly: true);
+            SaveParkedPools();
+        }
+
         if (closingAnswered || !HasUnsavedWork || sessions is null)
         {
             return;
@@ -93,6 +100,12 @@ public sealed partial class MainWindow
         Closing += (_, e) => SavingOnClose(e);
         saveNow = Button("Save", () =>
         {
+            if (showingPool)
+            {
+                SavePoolHere();
+                return;
+            }
+
             SaveSession();
             ShowSaved();
         });
@@ -139,10 +152,12 @@ public sealed partial class MainWindow
             return;
         }
 
-        // Entry 423: a set's pool is never a session of its own; its sheets are, each saved as it was read or left.
-        if (targets.Current.Set is { Showing: null } && !HasUnsavedWork)
+        // Entry 423: a set's pool is never a session of its own; its sheets are, each saved as it was read or left. Entry 495: any pool is
+        // saved as a pool record of its own once it is accepted, saved or closed.
+        if (showingPool)
         {
-            savedWords.Text = SetTabWords.PoolSaved;
+            savedWords.Text = poolSources?.PoolId is not null ? SetTabWords.PoolRecordSaved
+                : targets.Current.Set is { Showing: null } ? SetTabWords.PoolSaved : SetTabWords.PoolNotSavedYet;
             return;
         }
 

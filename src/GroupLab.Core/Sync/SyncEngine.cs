@@ -88,6 +88,9 @@ public static class SyncEngine
 
     public const string SettingKind = "setting";
 
+    /// <summary>Entry 495 section 4: a pooled set, by its key, naming its sheets by their identity.</summary>
+    public const string PoolKind = "pool";
+
     internal static readonly JsonSerializerOptions Options = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -251,6 +254,12 @@ public static class SyncEngine
 
                 store.SetSyncEntry(entry with { Vector = merged });
                 break;
+            case SyncChoice.KeepBoth when conflict.Kind == PoolKind && conflict.Payload is { } bothPools:
+                // Entry 495: the other device's pool as one of its own, with a key of its own, so it travels as new.
+                var pool = JsonNode.Parse(bothPools).Deserialize<PoolRecord>(Options)!;
+                store.SavePool(pool with { Id = 0, Key = SessionPools.NewKey(), CreatedUtc = now });
+                store.SetSyncEntry(entry with { Vector = merged });
+                break;
             default:
                 throw new ArgumentException($"{choice} does not apply to this record.", nameof(choice));
         }
@@ -308,6 +317,11 @@ public static class SyncEngine
             Add(all, SheetKind, sheet.File, JsonSerializer.SerializeToNode(sheet, Options)!.AsObject());
         }
 
+        foreach (var pool in store.Pools())
+        {
+            Add(all, PoolKind, pool.Key, PoolPayload(pool));
+        }
+
         foreach (var (key, value) in local.Settings())
         {
             if (value is not null && DataExport.PortableSettings.Contains(key))
@@ -318,6 +332,9 @@ public static class SyncEngine
 
         return all;
     }
+
+    /// <summary>A pool as a change file carries it: no id, which is this database's own.</summary>
+    internal static JsonObject PoolPayload(PoolRecord pool) => JsonSerializer.SerializeToNode(pool with { Id = 0 }, Options)!.AsObject();
 
     private static void Add(Dictionary<(string, string), Here> all, string kind, string name, JsonObject payload) =>
         all[(kind, name.ToLowerInvariant())] = new Here(payload, Hash(payload), null);
@@ -461,6 +478,7 @@ public static class SyncEngine
             BarrelKind => data.Deserialize<Barrel>(Options) is { Name.Length: > 0 },
             LoadKind => data.Deserialize<Load>(Options) is { Name.Length: > 0 },
             SheetKind => DataExport.Whole(data.Deserialize<ExportedSheet>(Options)),
+            PoolKind => DataExport.Whole(data.Deserialize<PoolRecord>(Options)),
             _ => true,
         };
     }
@@ -700,6 +718,9 @@ public static class SyncEngine
                 local.SaveSheet(data.Deserialize<ExportedSheet>(Options)!);
                 store.SetSyncEntry(entry);
                 break;
+            case PoolKind:
+                store.ApplySyncedPool(data.Deserialize<PoolRecord>(Options)! with { Id = 0 }, entry, keep);
+                break;
             case SettingKind:
                 KeepFirst(store, entry, keep);
                 local.SaveSetting((string?)data["key"] ?? record.Key, data["value"]?.DeepClone());
@@ -735,6 +756,9 @@ public static class SyncEngine
                 KeepFirst(store, entry, keep);
                 local.DeleteSheet((string?)here.Payload["file"] ?? key);
                 store.SetSyncEntry(entry);
+                break;
+            case PoolKind:
+                store.DeleteSyncedPool((string?)here.Payload["key"] ?? key, entry, keep);
                 break;
             case SettingKind:
                 KeepFirst(store, entry, keep);

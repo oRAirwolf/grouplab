@@ -479,6 +479,31 @@ public static class BenchSuite
                 return string.Create(CultureInfo.InvariantCulture, $"{json.Length / 1024} kB");
             },
             ["SessionStore", "ChronographString", "ShotVelocity"]);
+
+        // Entry 495: a pooled set saved, opened again from its sheets, and written and read as one shared file with its sheets.
+        yield return new BenchCase("storage", "save, open and share a pooled set", "Two saved sheets pooled, the pool reopened from them, and its file written and read back.",
+            _ =>
+            {
+                string path = Path.Combine(m.Temporary, "bench-pool.db");
+                File.Delete(path);
+                var store = SessionStore.Open(path);
+                var one = Session(m, "bench");
+                long[] ids = [store.Save(one), store.Save(one with { CreatedUtc = "2026-11-16T12:00:01Z", ImageSha256 = "bench-2" })];
+                var pool = SessionPools.Save(store, null, ids, SessionPools.Choices(pictures: true), DateTime.UtcNow);
+                var opened = SessionPools.Open(store, pool);
+                var sheets = ids.Select(id =>
+                {
+                    using var file = new MemoryStream();
+                    SessionPackage.Write(file, MarkingFile.Read(store.Get(id)!.MarkingJson).State, null, UnitSettings.Imperial, [1, 2, 3], ".png", "bench", 1, DateTime.UtcNow);
+                    return file.ToArray();
+                }).ToList();
+                using var shared = new MemoryStream();
+                PoolPackage.Write(shared, pool.Choices!, sheets, "bench", DateTime.UtcNow);
+                shared.Position = 0;
+                var read = PoolPackage.Read(shared);
+                return string.Create(CultureInfo.InvariantCulture, $"{opened.Composite.Shots.Count} shots pooled, {read.Sheets.Count} sheets in {shared.Length / 1024} kB");
+            },
+            ["SessionPools", "PoolPackage", "PoolRecord", "OpenedPool", "PoolPackageContents"]);
     }
 
     private static IEnumerable<BenchCase> Documents(BenchMaterial m)

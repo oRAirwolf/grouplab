@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-16, entry 494 done (after 493 and nightly 228); entry 495 is waiting in the inbox.
+**Last rewritten:** 2026-11-16, entry 495 done (after 493, 494 and nightly 228); the inbox is empty.
 
 ---
 
@@ -17,11 +17,12 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entry 493 (2026-11-16)**, done but section 2's keep-both (ships in nightly 228): Numbers from another GroupLab on Check your printer, both numbers
   under each printer to copy; a typed check is saved as a card check marked `typed` so older builds keep it (PrinterProfile).
+- **Entry 495 (2026-11-16)**, done but two parts: a pooled set is a record of its own (schema 7, `pools`, `SessionPools`,
+  `PoolPackage`) on both platforms, in Session records, Compare, sharing, export, import and sync; not built: a screen to choose
+  between two devices' versions of a pool, and the sheet question on the phone (it deletes no session). Look: DESIGN NEEDED in for-alan.
 - **Entries 492 and 494 (2026-11-16)**, done: the Discord worker files feature-requests as `suggestion` issues, installed by Alan
   at 11:49 UTC (RESTORE.md); suggestions 48 and 49 assessed in docs/notes/suggestions.md, both already built (442, 493); 48 left open.
-- **Entry 491 (2026-11-15)**, done: App Store 1.0 (build 226) is with App Review; its state is in external-status.md.
-- **Entries 489 and 490 (2026-11-15)**, done: the backup always ends with a result line; Apple's privacy declaration added; the Play
-  closed test is open (`PLAY_TEST_LINK` on /android-test/ and the pages).
+- **Entries 489 to 491 (2026-11-15)**, done: App Store 1.0 (build 226) with App Review (external-status.md); Play's closed test open.
 - **Entry 488 (2026-11-15)**, done: GroupLab is 1.0.0; the next nightly is 1.0.0-nightly.226, read as "GroupLab 1.0, build 226"
   (`SemanticVersion.Words`, never serialized: the manifests are signed over it). Store strings: Microsoft 1.0.226.0, Android 1.0.226
   code 226, Apple 1.0 (226). "Still in active development" on the README, site, guide, Settings and the Store text; not on Play yet.
@@ -67,8 +68,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (36 and 112 answered in entries 481 and 482):
-- **113** whether a pooled set is kept in Session records and shared as a file (error reports 46 and 47)
+Two, both in `docs/QUESTIONS-FOR-PLANNING.md` (113 answered (b) in entry 495):
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
@@ -84,7 +84,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 495.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 
@@ -105,7 +105,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
-- **The database is schema version 6** (entry 461): each upgrade's first open copies `grouplab.db` to `grouplab.pre-vN.db` first.
+- **The database is schema version 7** (entry 495 added `pools`, listed by negated id): each upgrade's first open copies the database first.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
 - **`docs/notes/external-status.md`** holds TestFlight's, the App Store version's and the Store's state, written by their workflows when it

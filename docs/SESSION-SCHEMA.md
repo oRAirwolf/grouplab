@@ -1,6 +1,6 @@
 # GroupLab's storage schema
 
-**Schema version 6.** `DESIGN.md` section 15: "Storage is SQLite with a documented schema and full JSON export." This is the document; `src/GroupLab.Core/Records/SessionStore.cs` creates the database, and `SessionSchemaTests` fails if the statements below differ from what it creates.
+**Schema version 7.** `DESIGN.md` section 15: "Storage is SQLite with a documented schema and full JSON export." This is the document; `src/GroupLab.Core/Records/SessionStore.cs` creates the database, and `SessionSchemaTests` fails if the statements below differ from what it creates.
 
 ## Where it lives
 
@@ -25,6 +25,7 @@ CREATE TABLE sync_records (kind TEXT NOT NULL, key TEXT NOT NULL, hash TEXT, vec
 CREATE TABLE sync_seen (file TEXT PRIMARY KEY, applied_utc TEXT NOT NULL);
 CREATE TABLE sync_conflicts (id INTEGER PRIMARY KEY, kind TEXT NOT NULL, key TEXT NOT NULL, vector TEXT NOT NULL, payload TEXT, from_device TEXT NOT NULL, found_utc TEXT NOT NULL);
 CREATE TABLE sync_kept (id INTEGER PRIMARY KEY, kind TEXT NOT NULL, key TEXT NOT NULL, payload TEXT NOT NULL, why TEXT NOT NULL, kept_utc TEXT NOT NULL);
+CREATE TABLE pools (id INTEGER PRIMARY KEY, key TEXT NOT NULL UNIQUE, created_utc TEXT NOT NULL, sheets_json TEXT NOT NULL, choices_json TEXT);
 ```
 
 ## What each table holds
@@ -45,13 +46,20 @@ CREATE TABLE sync_kept (id INTEGER PRIMARY KEY, kind TEXT NOT NULL, key TEXT NOT
 - **`chronograph_strings` and `chronograph_shots`:** a chronograph's readings as their own ordered list, per session.
 - **`shot_velocities`:** the explicit mapping from a session's shot to one reading of one string.
 - **Synchronization's own four** (entry 461 section 3, `SessionStore.Sync.cs`, `SyncEngine`), none reached from any screen yet:
-  `sync_records`, each record the export carries (`kind` is `session`, `rifle`, `barrel`, `load`, `sheet` or `setting`; a session's
+  `sync_records`, each record the export carries (`kind` is `session`, `rifle`, `barrel`, `load`, `sheet`, `setting` or `pool`; a session's
   `key` is `DataExport.Identity`, the others' their name in lower case) with its content's SHA-256, its revision (`vector`, the count
   of changes each device made, as JSON) and the revision last written to the folder, and when it was taken away; `sync_seen`, the
   other devices' change files already read; `sync_conflicts`, another device's version of a record changed here too, waiting for the
   person (no `payload` where it is a note: a deletion on one device of a record changed on the other, settled by keeping the change);
   `sync_kept`, every record a merge replaced or took away, whole, as it was. The `meta` table also holds `sync_device`, this device's
   name in the folder.
+- **`pools`** (entry 495, question 113 answered (b), `SessionStore.Pools.cs`, `SessionPools`): a pooled set of sheets as a record of its
+  own, never a session. `key` names it on every device (sixteen hex digits at random); `sheets_json` lists its sheets in order by
+  their identity across devices (`DataExport.Identity`: made when, on which sheet, from which picture), never a copy of their shots;
+  `choices_json` says how they are pooled (`{"as":"set"}`, with each sheet's number in the set where its marking may not say, or
+  `{"as":"pictures"}`, each its own sheet in order). Its figures are never stored: they are worked out from its sheets each time it
+  opens, so a hole fixed on one sheet changes the pool too. Deleting a session takes it out of every pool in the same transaction;
+  synchronization carries a pool as kind `pool`, keyed by `key`.
 
 **Section 15's rule is why these last three exist before Xero import does:** "the shot sequence and the chronograph sequence are separate ordered lists that get reconciled, never assumed to align." Adding import needs no migration of any session.
 
@@ -61,6 +69,7 @@ CREATE TABLE sync_kept (id INTEGER PRIMARY KEY, kind TEXT NOT NULL, key TEXT NOT
 - `format` and `schemaVersion`;
 - the rifles, barrels and loads;
 - every session, with its proof image in base64;
+- every pooled set (`pools`), with its id, key, sheets and choices;
 - the chronograph strings and the mapping.
 
 `SessionStore.Import` reads it back into an empty database, keeping every id. `SessionStoreTests` holds the round trip exact, byte for byte. An export of version 2 still reads, its barrels put under their rifles as an upgraded database's are; any other version is refused with the reason.
@@ -76,5 +85,6 @@ A change raises the version and adds a migration from the version before. It cha
 | 1 | 2 | `ALTER TABLE loads ADD COLUMN muzzle_velocity_sd_from TEXT` | A velocity SD worked out from a chronograph string says where it came from, rather than looking like a figure somebody typed (`NOTES-FROM-PLANNING.md` entry 115 section 3). |
 | 2 | 3 | `ALTER TABLE ... ADD COLUMN` for each column added to `rifles`, `barrels` and `loads` above, in their order | Barrels under their rifle, with the one on now (entry 407 section 5). The Equipment screen's fields from entry 131 section 7 had never reached the database, so a barrel's length and twist, a rifle's cartridge and scope and a load's powder and charge were dropped at every save; they are kept now. After the upgrade, `BarrelMigration` puts every barrel under a rifle once. |
 | 3 | 4 | `ALTER TABLE rifles ADD COLUMN previous_zeros TEXT`, `ALTER TABLE loads ADD COLUMN min_expansion_fps REAL` | A zero kept from the point blank view keeps the one it replaced, newest first as JSON, so it can be put back; a load's least expansion velocity, from the bullet's maker, ends the point blank distances where the bullet stops opening (`NOTES-FROM-PLANNING.md` entry 455). |
+| 6 | 7 | the `CREATE TABLE pools` statement above | A pooled set saved as a record of its own, never a session, so Session records keeps it, Compare takes it and it travels in a shared file, an export and sync (entry 495, question 113 answered (b), error reports 46 and 47). |
 | 5 | 6 | the four `CREATE TABLE sync_...` statements above | Synchronization through a folder the person's cloud client syncs, option A of `docs/notes/sync-options.md`, chosen by Alan on 2026-10-20 (entry 461 section 3): each record's revision, the files read, the versions waiting for the person and every record a merge changed, kept. |
 | 4 | 5 | `ALTER TABLE rifles ADD COLUMN` for `scope_travel`, `scope_travel_kind`, `rail_cant`, `sight_scale_factor` and `weight_as_fired_lb` | A rifle's scope and mount: its elevation travel (in the scope's unit, the whole of it or the most up from the zero), its rail's cant, its sight scale factor from a tracking test, and its weight as fired for Top Gun (`NOTES-FROM-PLANNING.md` entry 456). |

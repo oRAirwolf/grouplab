@@ -14,27 +14,10 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ## Answered, and moved
 
-These 58 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 59 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 36, 34.
-
----
-
-## 2026-11-15, question 113: should a pooled set be kept in Session records?
-
-**Status: open.** Error reports 46 and 47 (Discord posts, nightly 226): a tester pooled three sheets and expected the pool at the top of
-Session records, and to share it as a session file that opens and edits like a sheet's. Entry 420 section 1 says the pool "is not saved as a session of its own", and the only way to make one was a fault (Accept on the
-pool's tab), which is now closed. Each sheet stays in Session records and Pool the chosen reopens the pool at any time.
-
-- **(a) As now.** Nothing to build. The pool's tab says it is not saved and why.
-- **(b) A "pooled" row in Session records that keeps only which sheets were pooled**, and pools them afresh when opened. A new kind of record
-  for the database, synchronization and export (a session file of the pool would carry its sheets and their pictures, and open as the set's tab). About a day, on the computer and both
-  phones.
-- **(c) A pool saved as a session of its own** with a copy of the pooled marking. Not recommended: it goes stale when a sheet is fixed, and
-  it is the shape that produced the nonsense file.
-
-I would choose (b) if testers keep asking, and (a) until then.
+> 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 36, 34.
 
 ---
 

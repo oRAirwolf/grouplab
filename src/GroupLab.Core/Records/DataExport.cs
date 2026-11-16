@@ -13,7 +13,11 @@ public sealed record ExportedSession(SessionRecord Session, IReadOnlyList<Chrono
 
 /// <summary>What an export file holds, read and checked, before anything is written.</summary>
 public sealed record DataFile(int Version, string? ExportedUtc, string? FromApp, RecordBook Book, IReadOnlyList<ExportedSession> Sessions,
-    IReadOnlyList<ExportedSheet> Sheets, JsonObject Settings);
+    IReadOnlyList<ExportedSheet> Sheets, JsonObject Settings)
+{
+    /// <summary>Entry 495 section 4: the pooled sets, each naming its sheets by their identity; none in a file written before them.</summary>
+    public IReadOnlyList<PoolRecord> Pools { get; init; } = [];
+}
 
 /// <summary>
 /// What an import would do, worked out before anything is written (NOTES-FROM-PLANNING.md entry 307 section 2): the items it adds, the items
@@ -27,8 +31,14 @@ public sealed record ImportPlan(
     JsonObject NewSettings, int NewSettingsItems,
     IReadOnlyList<string> Conflicts)
 {
+    /// <summary>Entry 495 section 4: the pooled sets new here; one already here with the same key is the same pool, or a conflict where it differs.</summary>
+    public IReadOnlyList<PoolRecord> NewPools { get; init; } = [];
+
+    /// <summary>The pooled sets already here and the same.</summary>
+    public int SamePools { get; init; }
+
     /// <summary>How many items the import adds.</summary>
-    public int Adds => NewSessions.Count + NewBookItems + NewSheets.Count + NewSettingsItems;
+    public int Adds => NewSessions.Count + NewBookItems + NewSheets.Count + NewSettingsItems + NewPools.Count;
 
     /// <summary>What the import will do, in a few plain lines, for the question before it is written.</summary>
     public IReadOnlyList<string> Summary() =>
@@ -37,6 +47,7 @@ public sealed record ImportPlan(
         $"{NewBookItems} new rifle{(NewBookItems == 1 ? "" : "s")}, barrel{(NewBookItems == 1 ? "" : "s")} or load{(NewBookItems == 1 ? "" : "s")}, {SameBookItems} already here",
         $"{NewSheets.Count} new designed sheet{(NewSheets.Count == 1 ? "" : "s")}, {SameSheets} already here",
         $"{NewSettingsItems} printer{(NewSettingsItems == 1 ? "" : "s")} or setting{(NewSettingsItems == 1 ? "" : "s")} new here",
+        .. NewPools.Count + SamePools == 0 ? [] : new[] { $"{NewPools.Count} new pooled set{(NewPools.Count == 1 ? "" : "s")}, {SamePools} already here" },
         Conflicts.Count == 0 ? "Nothing here differs from the file." : $"{Conflicts.Count} item{(Conflicts.Count == 1 ? "" : "s")} here differ from the file and are kept as they are here:",
     ];
 }
@@ -112,6 +123,9 @@ public static class DataExport
         }
 
         json.WriteEndArray();
+        // Entry 495 section 4: the pooled sets, each naming its sheets by identity; this device's ids mean nothing elsewhere.
+        json.WritePropertyName("pools");
+        JsonSerializer.Serialize(json, store.Pools().OrderBy(p => p.Id).Select(p => p with { Id = 0 }).ToList(), Options);
         json.WritePropertyName("sheets");
         JsonSerializer.Serialize(json, sheets, Options);
         json.WritePropertyName("settings");
@@ -152,6 +166,9 @@ public static class DataExport
     /// <summary>What the database needs of a chronograph string: where it came from and its readings.</summary>
     internal static bool Whole(ChronographString? c) => c is { Source: not null, VelocitiesFps: not null };
 
+    /// <summary>What a pooled set needs: its key, when it was made, and the list of its sheets.</summary>
+    internal static bool Whole(PoolRecord? p) => p is { Key.Length: > 0, CreatedUtc.Length: > 0, Sheets: not null } && p.Sheets.All(s => s is not null);
+
     /// <summary>What a designed sheet needs: its file name and its definition.</summary>
     internal static bool Whole(ExportedSheet? s) => s is { File.Length: > 0, Definition: not null };
 
@@ -180,9 +197,11 @@ public static class DataExport
             var book = file["book"]?.Deserialize<RecordBook>(Options) ?? RecordBook.Empty;
             var sessions = file["sessions"]?.Deserialize<List<ExportedSession>>(Options) ?? [];
             var sheets = file["sheets"]?.Deserialize<List<ExportedSheet>>(Options) ?? [];
+            var pools = file["pools"]?.Deserialize<List<PoolRecord>>(Options) ?? [];
             // Entry 472 section 2: everything the database needs is checked here, so an import never stops part way through on a value missing.
             if (sessions.Any(s => s is null || !Whole(s.Session) || s.Strings is null || !s.Strings.All(Whole) || s.Velocities is null || s.Velocities.Any(v => v is null))
                 || sheets.Any(s => !Whole(s))
+                || pools.Any(p => !Whole(p))
                 || (book.Rifles ?? []).Any(r => r is not { Name.Length: > 0 }) || (book.Barrels ?? []).Any(b => b is not { Name.Length: > 0 }) || (book.Loads ?? []).Any(l => l is not { Name.Length: > 0 }))
             {
                 throw new InvalidDataException("A session in this file is incomplete, so the file is damaged, and nothing was imported.");
@@ -193,7 +212,7 @@ public static class DataExport
                 Rifles = [.. book.Rifles ?? []],
                 Barrels = [.. book.Barrels ?? []],
                 Loads = [.. book.Loads ?? []],
-            }, sessions, sheets, file["settings"] as JsonObject is { } s ? (JsonObject)s.DeepClone() : []);
+            }, sessions, sheets, file["settings"] as JsonObject is { } s ? (JsonObject)s.DeepClone() : []) { Pools = pools };
         }
         catch (Exception e) when (e is JsonException or NotSupportedException or InvalidOperationException or FormatException or ArgumentException)
         {
@@ -367,8 +386,35 @@ public static class DataExport
             }
         }
 
+        // Entry 495 section 4: a pooled set is the same pool by its key; one that differs is listed and kept as it is here, as a session is.
+        var newPools = new List<PoolRecord>();
+        int samePools = 0;
+        var poolsHere = store.Pools();
+        foreach (var pool in file.Pools)
+        {
+            if (poolsHere.FirstOrDefault(p => string.Equals(p.Key, pool.Key, StringComparison.OrdinalIgnoreCase)) is not { } existing)
+            {
+                if (!newPools.Any(p => string.Equals(p.Key, pool.Key, StringComparison.OrdinalIgnoreCase)))
+                {
+                    newPools.Add(pool);
+                }
+            }
+            else if (existing.SameAs(pool with { Id = existing.Id }))
+            {
+                samePools++;
+            }
+            else
+            {
+                conflicts.Add($"{SessionPools.RowName(pool.Sheets.Count)}, made {pool.CreatedUtc[..Math.Min(10, pool.CreatedUtc.Length)]}: its sheets differ.");
+            }
+        }
+
         int bookItems = addBook.Rifles.Count + addBook.Barrels.Count + addBook.Loads.Count;
-        return new ImportPlan(newSessions, sameSessions, addBook, bookItems, sameBook, newSheets, sameSheets, newSettings, newSettingItems, conflicts);
+        return new ImportPlan(newSessions, sameSessions, addBook, bookItems, sameBook, newSheets, sameSheets, newSettings, newSettingItems, conflicts)
+        {
+            NewPools = newPools,
+            SamePools = samePools,
+        };
     }
 
     /// <summary>
@@ -417,6 +463,11 @@ public static class DataExport
                     store.MapShot(velocity with { SessionId = id, StringId = stringId });
                 }
             }
+        }
+
+        foreach (var pool in plan.NewPools)
+        {
+            store.SavePool(pool with { Id = 0 });
         }
 
         // Entry 407 section 5: a file written before barrels went under their rifle may carry barrels that name none; they are placed now,

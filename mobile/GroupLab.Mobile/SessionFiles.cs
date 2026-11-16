@@ -21,7 +21,7 @@ internal static class SessionFiles
     /// so the development build of entry 234 is its own application in this too.
     /// </summary>
 
-    private static string Shared => Path.Combine(Phone.Platform.CacheFolder, "shared");
+    internal static string Shared => Path.Combine(Phone.Platform.CacheFolder, "shared");
 
     private static string DeviceWords => Phone.Platform.DeviceWords;
 

@@ -60,6 +60,9 @@ internal sealed class SetGroup
 
     public List<SetMember> Members { get; } = [];
 
+    /// <summary>Entry 495: the pool record this set's pool is saved as, once it has been saved.</summary>
+    public long? PoolId { get; set; }
+
     /// <summary>The member shown alone to be checked or fixed, or null while the pool is showing.</summary>
     public SetMember? Showing { get; set; }
 
@@ -162,6 +165,12 @@ internal static class SetTabWords
     public const string BackToSet = "Back to the set";
 
     public const string PoolSaved = "Each sheet is saved as its own session in grouplab.db · safe to close";
+
+    /// <summary>Entry 495: the pooled tab's saved line once its pool is saved as a record of its own.</summary>
+    public const string PoolRecordSaved = "Pooled set saved in grouplab.db · safe to close";
+
+    /// <summary>Entry 495: the pooled tab's saved line before its pool is saved.</summary>
+    public const string PoolNotSavedYet = "Pooled set: saved in grouplab.db when you accept it, save it or close it";
 
     public const string WaitForSet = "GroupLab is reading the sheets of a set in this tab. Wait for it to finish before switching targets.";
 

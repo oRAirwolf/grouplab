@@ -1287,7 +1287,7 @@
       "key": "pool-set",
       "group": "Sheets and printing",
       "name": "Pool the sheets of a set",
-      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing. Dropped onto the window together, the sheets of a set open in one tab, pooled with no question asked, and each sheet can be opened alone there to check and fix; on the phone, sheets chosen together open as the set's checklist with the pooled group showing. Asked for by Quack and Jylee.",
+      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing. Dropped onto the window together, the sheets of a set open in one tab, pooled with no question asked, and each sheet can be opened alone there to check and fix; on the phone, sheets chosen together open as the set's checklist with the pooled group showing. The pool is saved in Session records as a pooled set of its own, opens again from there, and can be shared as one file with its sheets. Asked for by Quack and Jylee.",
       "shot": "set-tab",
       "platforms": [
         "Windows",
@@ -1301,9 +1301,10 @@
         "Several copies of one page dropped or chosen together are now asked about once",
         "pool",
         "now opens your pooled set on the analysis screen in its own tab",
-        "open in one tab, pooled"
+        "open in one tab, pooled",
+        "A pooled set of sheets is now saved in Session records"
       ],
-      "reworded": "0.2.0-nightly.196",
+      "reworded": "1.0.0-nightly.228",
       "tour": "sessions",
       "guide": "the-sheets-of-a-set-pool-into-one-group",
       "mobile": {

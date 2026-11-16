@@ -84,7 +84,9 @@ public sealed class SessionsPage : UserControl
         IReadOnlyList<SessionSummary> saved;
         try
         {
-            saved = PhoneAnalysis.Store().List();
+            // Entry 495 section 2: a saved pool is one row among the sessions, dated by its newest sheet.
+            var store = PhoneAnalysis.Store();
+            saved = SessionPools.Merged(store.List(), SessionPools.Rows(store, Phone.Settings.LoadUnits()).Select(p => p.Row));
         }
         catch (Microsoft.Data.Sqlite.SqliteException e)
         {
@@ -104,7 +106,9 @@ public sealed class SessionsPage : UserControl
         foreach (var (s, name) in Named(saved))
         {
             string detail = Detail(s, name, units);
-            rows.Children.Add(Screens.Row(name.Name, twoVersions.Contains(s.Id) ? GroupLab.Core.Sync.SyncScreens.TwoVersions + " · " + detail : detail, () => Open(s.Id), explain: false));
+            long id = s.Id;
+            rows.Children.Add(Screens.Row(name.Name, twoVersions.Contains(id) ? GroupLab.Core.Sync.SyncScreens.TwoVersions + " · " + detail : detail,
+                () => Open(id, said), explain: false));
         }
 
         if (rows.Children.Count > 0)
@@ -125,7 +129,10 @@ public sealed class SessionsPage : UserControl
     private static IEnumerable<(SessionSummary Session, SessionName Name)> Named(IReadOnlyList<SessionSummary> saved)
     {
         var newest = saved.OrderByDescending(s => s.CreatedUtc, StringComparer.Ordinal).ToList();
-        return newest.Zip(SessionNames.For(newest));
+        // Entry 495: a pool is named a pooled set of N sheets, with its newest sheet's date; a session as entry 295 names it.
+        return newest.Zip(SessionNames.For(newest)).Select(x => x.First.Id < 0
+            ? (x.First, new SessionName(SessionPools.Called(x.First), x.Second.When, x.First.SheetName.Contains(", ", StringComparison.Ordinal) ? x.First.SheetName[(x.First.SheetName.IndexOf(", ", StringComparison.Ordinal) + 2)..] : "pictures"))
+            : x);
     }
 
     /// <summary>The line beneath a session's name: the date where the name does not already carry it, the sheet, the shots, the mean radius.</summary>
@@ -144,8 +151,8 @@ public sealed class SessionsPage : UserControl
         var column = new StackPanel { Spacing = 8, Children = { Screens.Title("Compare loads"), Screens.Line("Choose two or more sessions.") } };
         var compare = Screens.Primary("Compare", () =>
         {
-            var store = PhoneAnalysis.Store();
-            var records = saved.OrderBy(s => s.CreatedUtc, StringComparer.Ordinal).Where(s => chosen.Contains(s.Id)).Select(s => store.Get(s.Id)).OfType<SessionRecord>().ToList();
+            // Entry 495 section 5: a chosen pool is one group beside the sessions.
+            var records = SessionPools.Chosen(PhoneAnalysis.Store(), units, chosen);
             Content = new ComparePage(records, units, () => Content = Choose(saved, chosen), () => Content = List());
         });
         compare.IsEnabled = chosen.Count >= 2;
@@ -199,6 +206,19 @@ public sealed class SessionsPage : UserControl
         await from.CopyToAsync(copy);
         copy.Position = 0;
         var units = Phone.Settings.LoadUnits();
+        // Entry 495: a pooled set's file has the same ending; it brings its sheets in and opens the pool.
+        if (PoolPackage.IsPool(copy))
+        {
+            var (pool, poolSaid) = PhonePools.OpenFile(copy);
+            said.Text = poolSaid ?? "";
+            if (pool is not null)
+            {
+                Content = Opened(new ResultView(pool, new ShotSetup(pool.State.Calibre, pool.State.ShotDistanceInches), units, ToList));
+            }
+
+            return;
+        }
+
         var (result, why) = SessionFiles.Open(copy, units);
         if (result is null)
         {
@@ -253,8 +273,26 @@ public sealed class SessionsPage : UserControl
             result => Content = Opened(new ResultView(result, new ShotSetup(null, result.State.ShotDistanceInches), units, ToList)));
     }
 
-    private void Open(long id)
+    private void Open(long id, TextBlock? said = null)
     {
+        // Entry 495: a pool's row opens the pooled group from its sheets as they are now.
+        if (SessionPools.PoolOf(id) is { } poolId)
+        {
+            var (pool, poolSaid) = PhonePools.Open(poolId);
+            if (pool is null)
+            {
+                if (said is not null)
+                {
+                    said.Text = poolSaid;
+                }
+
+                return;
+            }
+
+            Content = Opened(new ResultView(pool, new ShotSetup(pool.State.Calibre, pool.State.ShotDistanceInches), Phone.Settings.LoadUnits(), ToList));
+            return;
+        }
+
         // A session already open is switched to, as it was left, rather than opened twice, where two copies would save over each other.
         if (Shell.Current is { } shell && ReferenceEquals(shell.PageContent, this) && shell.Targets.Find(id) is { } open)
         {

@@ -3715,10 +3715,11 @@ public sealed partial class MainWindow : Window
         int open = ReviewQueue.Open(ReviewQueue.For(session.State, analyseSighters));
         DiagnosticLog.Info("analysis.accept", ("open", open));
         SetAnalysing(true);
-        // Error report 46: a pool shows its analysis again and says why nothing was saved, and is never offered to the project as a sheet.
+        // Error report 46: a pool is never saved as a session, and is never offered to the project as a sheet. Entry 495: it is saved as a
+        // pool record instead, naming its sheets.
         if (showingPool)
         {
-            status.Text = SetPool.NotSavedWords;
+            SavePoolHere();
             DiagnosticLog.Info("sessions.pool.accept");
             return;
         }
@@ -3967,8 +3968,12 @@ public sealed partial class MainWindow : Window
         sessionLoad.SelectedItem = load ?? "Every load";
         fillingSessions = false;
 
-        var list = sessions.List(rifle, load);
-        FillSessionTrend(load, list);
+        var sessionList = sessions.List(rifle, load);
+        FillSessionTrend(load, sessionList);
+        // Entry 495 section 2: a saved pool is one row among the sessions, sorted and filtered as one, dated by its newest sheet.
+        var poolRows = PoolRows(rifle, load);
+        var poolNames = poolRows.ToDictionary(p => p.Row.Id, p => SessionPools.Called(p.Row));
+        var list = SessionPools.Merged(sessionList, poolRows.Select(p => p.Row));
 
         // Entry 463 section 2: a session changed on two devices waits here to be chosen between, banner first and its row tagged.
         var toChoose = SessionsToChoose();
@@ -3980,7 +3985,7 @@ public sealed partial class MainWindow : Window
         var twoVersions = toChoose.Where(w => w.Here is not null).ToDictionary(w => w.Here!.Id, w => w.Conflict.Id);
         if (list.Count == 0)
         {
-            sessionRows.Children.Add(Line(all.Count == 0 ? "No sessions yet. Accept and analyze on a marked sheet saves one." : "No session matches the rifle and load chosen."));
+            sessionRows.Children.Add(Line(all.Count == 0 && poolRows.Count == 0 ? "No sessions yet. Accept and analyze on a marked sheet saves one." : "No session matches the rifle and load chosen."));
             return;
         }
 
@@ -4036,8 +4041,19 @@ public sealed partial class MainWindow : Window
                 open.Classes.Add(AppStyles.Shaded);
             }
 
-            ToolTip.SetTip(open, $"Open the session {name.Name}, {s.SheetName}");
-            open.Click += (_, _) => Leaving(() => OpenSession(id));
+            long? poolId = SessionPools.PoolOf(id);
+            ToolTip.SetTip(open, poolId is null ? $"Open the session {name.Name}, {s.SheetName}" : $"Open the {poolNames[id]}");
+            open.Click += (_, _) => Leaving(() =>
+            {
+                if (poolId is { } p)
+                {
+                    OpenSavedPool(p);
+                }
+                else
+                {
+                    OpenSession(id);
+                }
+            });
             var delete = Button("Delete", () => { });
             delete.Width = SessionDeleteWidth;
 
@@ -4061,13 +4077,34 @@ public sealed partial class MainWindow : Window
             }
 
             row.Children.Add(open);
-            // Delete asks first: the button gives way to the question and its two answers.
+            // Delete asks first: the button gives way to the question and its two answers. Entry 495: deleting a pool deletes only the pool, and
+            // deleting a sheet a pool uses names the pools and what happens to them.
             delete.Click += (_, _) =>
             {
                 row.Children.Remove(delete);
-                var confirm = Row(new TextBlock { Text = "Delete this session?", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Warn } },
+                string question = poolId is not null ? SessionPools.DeletePoolQuestion
+                    : SessionPools.DeleteSheetQuestion(sessions.Get(id) is { } record
+                        ? [.. sessions.PoolsUsing(record).Select(p => (p, poolNames.TryGetValue(SessionPools.RowId(p.Id), out var n) ? n : SessionPools.RowName(p.Sheets.Count)))]
+                        : []) ?? "Delete this session?";
+                var confirm = Row(new TextBlock { Text = question, TextWrapping = TextWrapping.Wrap, MaxWidth = 520, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Warn } },
                     Button("Delete", () =>
                     {
+                        if (poolId is { } p)
+                        {
+                            int sheets = sessions.GetPool(p)?.Sheets.Count ?? 0;
+                            sessions.DeletePool(p);
+                            DiagnosticLog.Info("sessions.pool.delete", ("pool", p));
+                            // A pool open in the tab showing is not saved again when that tab closes: deleted is gone.
+                            if (poolSources?.PoolId == p)
+                            {
+                                poolSources = null;
+                            }
+
+                            status.Text = SessionPools.DeletedWords(sheets);
+                            FillSessions();
+                            return;
+                        }
+
                         sessions.Delete(id);
                         DiagnosticLog.Info("session.delete", ("session", id));
                         if (currentSession == id)

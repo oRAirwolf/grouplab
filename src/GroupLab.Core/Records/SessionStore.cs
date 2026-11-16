@@ -73,7 +73,7 @@ public sealed record ShotVelocity(long SessionId, int ShotId, long StringId, int
 public sealed partial class SessionStore
 {
     /// <summary>The schema's version, stored in the meta table and in every export.</summary>
-    public const int SchemaVersion = 6;
+    public const int SchemaVersion = 7;
 
     /// <summary>
     /// What each version before this one needs to become this one, oldest first, NOTES-FROM-PLANNING.md entry 115 section 3. Version 2 adds
@@ -91,6 +91,10 @@ public sealed partial class SessionStore
     /// <para>
     /// Version 5, NOTES-FROM-PLANNING.md entry 456: a rifle's scope and mount, its elevation travel and what that travel is, its rail's cant,
     /// its sight scale factor, and its weight as fired.
+    /// </para>
+    /// <para>
+    /// Version 7, NOTES-FROM-PLANNING.md entry 495 (question 113, Alan's (b)): a pooled set of sheets saved as a record of its own, never a
+    /// session. It keeps which sheets it pools, by their identity across devices, and how they were pooled; never a copy of their shots.
     /// </para>
     /// </summary>
     public static IReadOnlyList<(int From, string Statement)> Upgrades { get; } =
@@ -129,6 +133,7 @@ public sealed partial class SessionStore
         (5, SyncSeenTable),
         (5, SyncConflictsTable),
         (5, SyncKeptTable),
+        (6, PoolsTable),
     ];
 
     /// <summary>Every statement that creates the schema, in order, exactly as docs/SESSION-SCHEMA.md gives them.</summary>
@@ -148,12 +153,16 @@ public sealed partial class SessionStore
         SyncSeenTable,
         SyncConflictsTable,
         SyncKeptTable,
+        PoolsTable,
     ];
 
     // Entry 461 section 3.1: synchronization's own tables, schema 6 (SessionStore.Sync.cs).
     private const string SyncRecordsTable = "CREATE TABLE sync_records (kind TEXT NOT NULL, key TEXT NOT NULL, hash TEXT, vector TEXT NOT NULL, deleted_utc TEXT, written TEXT, PRIMARY KEY (kind, key))";
     private const string SyncSeenTable = "CREATE TABLE sync_seen (file TEXT PRIMARY KEY, applied_utc TEXT NOT NULL)";
     private const string SyncConflictsTable = "CREATE TABLE sync_conflicts (id INTEGER PRIMARY KEY, kind TEXT NOT NULL, key TEXT NOT NULL, vector TEXT NOT NULL, payload TEXT, from_device TEXT NOT NULL, found_utc TEXT NOT NULL)";
+    // Entry 495: a pooled set as a record of its own, schema 7 (SessionStore.Pools.cs).
+    private const string PoolsTable = "CREATE TABLE pools (id INTEGER PRIMARY KEY, key TEXT NOT NULL UNIQUE, created_utc TEXT NOT NULL, sheets_json TEXT NOT NULL, choices_json TEXT)";
+
     private const string SyncKeptTable = "CREATE TABLE sync_kept (id INTEGER PRIMARY KEY, kind TEXT NOT NULL, key TEXT NOT NULL, payload TEXT NOT NULL, why TEXT NOT NULL, kept_utc TEXT NOT NULL)";
 
     private readonly string connection;
@@ -566,12 +575,42 @@ public sealed partial class SessionStore
         return list;
     }
 
-    /// <summary>Deletes a session and its chronograph strings and mapping.</summary>
+    /// <summary>
+    /// Deletes a session and its chronograph strings and mapping. Entry 495: a pooled set that used it keeps its other sheets, so the sheet is
+    /// taken out of every pool in the same transaction; a pool left with fewer than two says so when it is opened.
+    /// </summary>
     public bool Delete(long id)
     {
         using var db = Connect();
+        using var transaction = db.BeginTransaction();
+        string? identity = null;
+        using (var read = Command(db, $"SELECT {SessionColumns} FROM sessions WHERE id = $id", [("$id", id)]))
+        using (var r = read.ExecuteReader())
+        {
+            if (r.Read())
+            {
+                identity = DataExport.Identity(ReadSession(r));
+            }
+        }
+
+        // Two sessions can share an identity (the same picture read twice in one second); a pool names it once for each, so it keeps as many
+        // of it as are still here.
+        long others = identity is null ? 0 : (long)Scalar(db, "SELECT count(*) FROM sessions s, sessions t WHERE t.id = $id AND s.id != t.id AND s.created_utc = t.created_utc "
+            + "AND s.sheet_name = t.sheet_name AND s.definition_id IS t.definition_id AND s.image_sha256 IS t.image_sha256", ("$id", id))!;
+        if (identity is not null)
+        {
+            foreach (var pool in ReadPools(db).Where(p => p.Sheets.Count(s => s == identity) > others))
+            {
+                // The last mention goes, so the sheets before it keep their places.
+                int last = pool.Sheets.ToList().LastIndexOf(identity);
+                WritePool(db, pool with { Sheets = [.. pool.Sheets.Where((_, i) => i != last)] });
+            }
+        }
+
         using var command = Command(db, "DELETE FROM sessions WHERE id = $id", [("$id", id)]);
-        return command.ExecuteNonQuery() > 0;
+        bool deleted = command.ExecuteNonQuery() > 0;
+        transaction.Commit();
+        return deleted;
     }
 
     /// <summary>The sessions analysed against a sheet, by its definition identifier.</summary>
@@ -737,6 +776,10 @@ public sealed partial class SessionStore
                 ["minExpansionFps"] = x.MinExpansionFps,
             })]),
             ["sessions"] = sessions,
+            ["pools"] = new JsonArray([.. ReadPools(db).Select(x => (JsonNode)new JsonObject
+            {
+                ["id"] = x.Id, ["key"] = x.Key, ["createdUtc"] = x.CreatedUtc, ["sheets"] = new JsonArray([.. x.Sheets.Select(s => (JsonNode)s)]), ["choices"] = x.Choices,
+            })]),
             ["chronographStrings"] = new JsonArray([.. ReadStrings(db, null).Select(c => (JsonNode)new JsonObject
             {
                 ["id"] = c.Id, ["sessionId"] = c.SessionId, ["source"] = c.Source, ["recordedUtc"] = c.RecordedUtc,
@@ -765,7 +808,7 @@ public sealed partial class SessionStore
 
         // Entry 407 section 5: an export from version 2 has no barrel on any rifle and barrels that may name none; it reads, and the barrels
         // are put under their rifles as the move does on opening.
-        if ((int?)root["schemaVersion"] is not (2 or 3 or 4 or 5 or SchemaVersion))
+        if ((int?)root["schemaVersion"] is not (2 or 3 or 4 or 5 or 6 or SchemaVersion))
         {
             throw new InvalidDataException($"This export has schema version {(int?)root["schemaVersion"]}, and this GroupLab reads versions 2 to {SchemaVersion}.");
         }
@@ -809,6 +852,11 @@ public sealed partial class SessionStore
                 (double?)x["distanceInches"], (string?)x["rifle"], (string?)x["barrel"], (string?)x["load"], (double?)x["calibreInches"], (string)x["markingJson"]!,
                 (int)x["shotCount"]!, (double?)x["meanRadiusInches"], (double?)x["meanRadiusLowerInches"], (double?)x["meanRadiusUpperInches"],
                 (string?)x["imagePath"], (string?)x["imageSha256"], (string?)x["proofImage"] is { } proof ? Convert.FromBase64String(proof) : null, (string?)x["proofImageType"]));
+        }
+
+        foreach (var x in root["pools"] as JsonArray ?? [])
+        {
+            WritePool(db, new PoolRecord((long)x!["id"]!, (string)x["key"]!, (string)x["createdUtc"]!, [.. (x["sheets"] as JsonArray ?? []).Select(s => (string)s!)], (string?)x["choices"]));
         }
 
         foreach (var x in root["chronographStrings"] as JsonArray ?? [])

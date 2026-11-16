@@ -8216,14 +8216,18 @@
   "Free, like every GroupLab download TestFlight installs each new beta build for you Not in the App Store itself yet: version 1.0 is with Apple's review Not sure?": {
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entry 491 (the planning session, at Alan's word \"Submit now\", 2026-11-15 20:36 Denver): build 226 attached to version 1.0 and submitted to App Review, Waiting for Review; free in 175 countries or regions; not offered on Apple silicon Macs or Apple Vision Pro; release manual. docs/store/LISTING.md's Apple section"
+  },
+  "Accept and analyze, Save, or closing the pooled tab saves the pool as a record of its own: Session records lists it as one row, \"Pooled set of 3 sheets\", and clicking it opens the pooled tab again.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 495 (question 113 answered (b)): src/GroupLab.Core/Records/SessionPools.cs and PoolPackage.cs, held by PoolRecordTests"
   }
  },
  "rules": [
   {
-    "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$",
-    "match": "Numbers from another\\s+GroupLab|both its numbers to type into another GroupLab",
-    "kind": "code",
-    "where": "src/GroupLab.Core/Marking/PrinterProfile.cs (Typed, FromTyped, ReadPercent, CopyLine, CopyWords, Measured, TypedHelp); src/GroupLab.App/MainWindow.PrinterWizard.cs and MainWindow.Printer.cs ShowPrinters; mobile/GroupLab.Mobile/PrinterCheckPage.cs and SettingsView.cs; held by Core, App and Mobile Entry493Tests (entry 493)"
+   "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$",
+   "match": "Numbers from another\\s+GroupLab|both its numbers to type into another GroupLab",
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/PrinterProfile.cs (Typed, FromTyped, ReadPercent, CopyLine, CopyWords, Measured, TypedHelp); src/GroupLab.App/MainWindow.PrinterWizard.cs and MainWindow.Printer.cs ShowPrinters; mobile/GroupLab.Mobile/PrinterCheckPage.cs and SettingsView.cs; held by Core, App and Mobile Entry493Tests (entry 493)"
   },
   {
    "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$",

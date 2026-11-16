@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using GroupLab.App.Diagnostics;
 using GroupLab.Cli.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Records;
 using GroupLab.Core.Registration;
 using GroupLab.Core.Trace;
 
@@ -234,6 +235,11 @@ public sealed partial class MainWindow
         }
 
         ShowPooledHere(set.Definition, pooled);
+        // Entry 495: the saved sheets this pool is made of, as it counts them, so accepting, saving or closing saves the pool with them.
+        var counting = set.Definition is null ? read : [.. read.Where(set.Counts)];
+        var saved = counting.Select(m => (m, ((ParkedTarget)m.Parked!).CurrentSession)).Where(x => x.CurrentSession is not null).ToList();
+        poolSources = new PoolSources([.. saved.Select(x => x.CurrentSession!.Value)],
+            set.Definition is null ? SessionPools.Choices(pictures: true) : SessionPools.Choices(pictures: false, [.. saved.Select(x => x.m.Sheet)]), set.PoolId);
         poolWords = said;
         DiagnosticLog.Info("set.pool", ("members", set.Members.Count), ("read", read.Count), ("shots", pooled.Shots.Count), ("contested", set.Contested.Count));
         status.Text = said + " Each shot is named sheet.bull. Tap a sheet in the plot's key to show it alone; " + SetTabWords.CheckOneSheet + " opens one to check or fix.";

@@ -714,6 +714,29 @@ another GroupLab) is assessed in `docs/notes/suggestions.md` as built by entry 4
 nightly 199, so nothing is left to build; recommended closed, left open for the planning session. **Section 4:** nothing on the server
 was changed or deleted; the worker's own `.bak` beside it stays.
 
+## Entry 495: a pooled set saved as a record of its own (2026-11-16)
+
+Question 113 answered (b). **Store:** schema 7 adds `pools` (`SessionStore.Pools.cs`): a key, when it was made, its sheets in order by
+`DataExport.Identity`, and its choices (a set, with each sheet's number where its marking may not say, or pictures in order); never a
+copy of a shot. A database of version 6 is copied first and gains the table. `SessionStore.Delete` takes a deleted sheet out of every
+pool in the same transaction, keeping one mention for each twin that shares its identity. **Logic** (`SessionPools`): save or find the
+pool of these sheets, open it from its sheets as they are now (the same `SetPool.Composite` or `CompositeOfPictures` as before), its row
+named "Pooled set of N sheets" and dated by its newest sheet (row id the pool's id negated, so one list sorts and filters both), the
+words, and the chosen rows for Compare. **Sharing** (`PoolPackage`): one `.grouplab` zip whose `session.json` says `grouplab-pool-1`
+(a build from before pools says it is from a newer GroupLab) and each sheet's own session file; opening it brings each sheet in as a
+session unless the same picture with the same holes is here, then saves the pool. **Export, import and sync** carry pools (`pools` in
+the data file and the database's JSON, kind `pool` in the change files, keyed by its key; a pool new on two devices with Keep both gets
+a key of its own). **Computer:** the pooled tab keeps its saved sheets (`PoolSources`, parked with the tab; a set tab's pool by its
+set); Accept, Save, closing the tab and closing the window save it; Session records lists pools, opens them, deletes only the pool, and
+names the pools a sheet is in before it is deleted; Share writes the pool's file; opening one opens the pool; Compare takes it.
+**Phone:** the pooled group is saved as a pool as it shows (set page, copies pooled from Capture, a saved pool reopened); Sessions lists
+and opens pools and Compare takes them; Share this pooled set; Delete this pooled set; opening a pool's file. The phone's pooled copies
+from Capture had no pooled mark and were saved as one session holding every copy's shots; they are now a pool. **Not done:** a screen to
+choose between two devices' versions of one pool (none exists for rifles or loads either), and the sheet question on the phone, which
+deletes no session. **Tests:** `PoolRecordTests` (6: figures again and a fixed hole, delete both ways, twins, the shared file on a
+second store, export, import, the database's JSON, sync add, change and delete, the upgrade from 6), `PoolSetTests` on the computer
+(saved, one row, reopened, shared and opened whole on a second GroupLab, twice) and `Entry420Tests` on the phone.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

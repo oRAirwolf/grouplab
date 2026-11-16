@@ -25,6 +25,50 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-16, entry 495: question 113 answered (b): a pooled set is saved as a record of its own
+
+**Status: actioned 2026-11-16. Every section built on the computer and the phone, except two parts recorded as not done:** a pool changed on two devices follows sessions' rule in synchronization (both kept, the other device's waiting to be chosen), but no screen offers that choice for a pool yet, as none does for a rifle or load; and deleting a sheet names its pools only on the computer, since the phone has no way to delete a session. The look is a DESIGN NEEDED line in for-alan.md. Question 113 closed.
+
+Alan, 2026-11-16 04:51 Denver: "Go with B." Question 113 (from error reports 46 and 47): should a pooled set be kept in Session records?
+(a) keep it a view that is never saved, or (b) save a pool as its own kind of record. The answer is (b). Take it after entry 494.
+
+## What (b) means
+
+1. **A pool is a record of its own, never a session.** It stores which sheets it pools (their session ids) and the choices that made
+   the pool (which sheets were ticked, anything the pooled tab lets a person set), not a copy of their shots. Its figures are always
+   worked out again from the sheets as they are now, so fixing a hole on one sheet changes the pool too. Nothing about a single
+   sheet's session changes.
+2. **Session records shows it**, marked plainly as a pooled set of N sheets, with the date of its newest sheet, and opens it with one
+   tap or click into the same pooled tab as today. Sorting and filtering treat it as one row. Deleting a pool deletes only the pool,
+   never its sheets, and says so. Deleting a sheet that a pool uses tells the person which pools use it and what happens to them
+   (the pool keeps its other sheets; a pool left with fewer than two sheets says so when opened).
+3. **Accept and analyze, Save and closing** on the pooled tab save or update the pool record, not a session; the words added in error
+   reports 46 and 47 (`SetPool.NotSavedWords`, `SetPool.NotSharedWords`) change to match.
+4. **Sharing and export:** Share a session file on a pool shares the pool record together with its sheets' session files, so it opens
+   whole on another GroupLab; export still offers the pooled shots' CSV, and opening a shared pool brings its sheets in as sessions
+   first if they are not there. Export all my data, Import data and Sync carry pool records (in entry 461's change files), with the same
+   rule as sessions for a pool changed on two devices.
+5. **Compare** (`CompareSessions`) can take a pool as one entry beside sessions and other pools.
+6. **The records made the old way** (a pool saved as a sheet's session before nightly 227) stay as they are; do not touch them.
+7. **Both platforms**, computer and phone, the same behaviour.
+
+## Look
+
+The row in Session records and the pooled tab's saved line are a look question (working agreement, visual decisions go to Alan as
+concepts): build it in the plainest way that fits the current list, and put a DESIGN NEEDED line in for-alan.md naming the row and the
+saved line, so the planning session can draw two concepts. Do not wait for the answer.
+
+## Words, tests, notes
+
+- The user guide's pooling part, the phone parity row for pooling, and the Features page and tour page if they describe pooling.
+- Tests: a pool saved and reopened gives the same figures; a hole fixed on one sheet changes the pool's figures; deleting a pool keeps
+  its sheets; deleting a sheet tells which pools use it; a shared pool opens whole on a second GroupLab; a pool survives export,
+  import and a simulated sync.
+- Release-note-kind: new. Credit it to the error reports that asked for it, as entries 480 and 483 do.
+- Close question 113 with this answer.
+
+Report as usual, naming the nightly it ships in.
+
 ## 2026-11-16, entry 494: request 109 answered; the feature-requests forum is live; assess suggestions 48 and 49
 
 **Status: actioned 2026-11-16. Sections 1 to 4 done.** Request 109 closed and the install recorded in RESTORE.md (entry 492 section 1 done); issue 49 assessed and closed as built by entry 493 in nightly 228; issue 48 assessed in suggestions.md: already built by entry 442 in nightly 199, recommended closed, left open for the planning session; nothing on the server touched.

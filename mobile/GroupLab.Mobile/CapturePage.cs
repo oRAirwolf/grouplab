@@ -696,7 +696,9 @@ public sealed class CapturePage : UserControl
         {
             var pooled = SetPool.CompositeOfPictures([.. read.Select(r => r.State)]);
             DiagnosticLog.Info("phone.copies.pooled", ("pictures", read.Count), ("shots", pooled.Shots.Count));
-            Content = new ResultView(new PhoneResult(pooled, null, null, null), new ShotSetup(pooled.Calibre, pooled.ShotDistanceInches), units, ShowStart);
+            // Entry 495: a pooled group, saved as a pool of these pictures' sessions, never as a session of its own.
+            Content = new ResultView(new PhoneResult(pooled, null, null, null, Pooled: true, PoolSheets: [.. read.Select(r => r.SessionId).OfType<long>()],
+                PoolChoices: GroupLab.Core.Records.SessionPools.Choices(pictures: true)), new ShotSetup(pooled.Calibre, pooled.ShotDistanceInches), units, ShowStart);
             return;
         }
 

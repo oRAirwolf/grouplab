@@ -139,6 +139,35 @@ public sealed class ResultView : UserControl, IOpenTarget
     /// <summary>Error report 46: a set's pooled group, read afresh from its sheets each time and never saved as a session of its own.</summary>
     private readonly bool pooled;
 
+    /// <summary>Entry 495: the saved sheets a pooled group pools, how, and the pool record it is saved as; empty for one sheet's result.</summary>
+    private readonly IReadOnlyList<long> poolSheets = [];
+
+    private readonly string poolChoices = GroupLab.Core.Records.SessionPools.Choices(pictures: false);
+
+    private long? poolId;
+
+    private int poolSaved;
+
+    /// <summary>The pool record this pooled group is saved as, for the headless tests.</summary>
+    internal long? PoolId => poolId;
+
+    /// <summary>
+    /// Entry 495 section 3: a pooled group is saved as a pool record as soon as it shows, as the phone saves a sheet by itself (entry 281, A),
+    /// and never as a session.
+    /// </summary>
+    private void SavePool()
+    {
+        if (!pooled || PhonePools.Save(poolSheets, poolChoices, poolId) is not { } pool)
+        {
+            return;
+        }
+
+        poolId = pool.Id;
+        poolSaved = pool.Sheets.Count;
+    }
+
+    private string PoolSavedWords => poolId is null ? GroupLab.Core.Records.SessionPools.NothingToSaveWords : GroupLab.Core.Records.SessionPools.SavedWords(poolSaved);
+
     /// <summary>The session saved over itself, or for a pooled group nothing saved and the session it has (none).</summary>
     private long? SaveHere() => pooled ? sessionId : PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
     private readonly Action again;
@@ -317,6 +346,10 @@ public sealed class ResultView : UserControl, IOpenTarget
         definition = result.Definition;
         sessionId = result.SessionId;
         pooled = result.Pooled;
+        poolSheets = result.PoolSheets ?? [];
+        poolChoices = result.PoolChoices ?? poolChoices;
+        poolId = result.PoolId;
+        SavePool();
         session = new MarkingSession(result.State);
         // Entry 323 section 3: the plot's chips as they were left, the velocity band's among them.
         plot.Shown = Phone.Settings.LoadPlotMarks();
@@ -561,12 +594,44 @@ public sealed class ResultView : UserControl, IOpenTarget
         }
 
         // Entry 281 section 2: the phone follows A, saved by itself, and says so from the start, not only after a change.
-        saved.Text = pooled ? SetPool.NotSavedWords : SavedWords(sessionId);
+        saved.Text = pooled ? PoolSavedWords : SavedWords(sessionId);
         actions.Children.Add(saved);
         var shareSaid = Screens.Line("");
-        actions.Children.Add(Screens.Choice("Share this session", () => shareSaid.Text = pooled ? SetPool.NotSharedWords : SessionFiles.Share(session.State, definition, units) ?? "").Id("result-share-session"));
+        // Entry 495 section 4: a pooled group is shared as one file with its sheets, so it opens whole on another GroupLab.
+        actions.Children.Add(Screens.Choice(pooled ? "Share this pooled set" : "Share this session",
+            () => shareSaid.Text = pooled ? PhonePools.Share(poolSheets, poolChoices, units) : SessionFiles.Share(session.State, definition, units) ?? "").Id("result-share-session"));
         actions.Children.Add(Screens.Choice("Share the shots as CSV", () => shareSaid.Text = SessionFiles.ShareCsv(session.State, definition) ?? "").Id("result-share-csv"));
         actions.Children.Add(shareSaid);
+        // Entry 495 section 2: deleting a pool deletes only the pool, never its sheets, and says so.
+        if (pooled && poolId is not null)
+        {
+            var deleting = new StackPanel { Spacing = 8 };
+            deleting.Children.Add(Screens.Choice("Delete this pooled set", () =>
+            {
+                deleting.Children.Clear();
+                deleting.Children.Add(Screens.Line(GroupLab.Core.Records.SessionPools.DeletePoolQuestion));
+                deleting.Children.Add(Screens.Choice("Delete", () =>
+                {
+                    if (poolId is { } id)
+                    {
+                        PhoneAnalysis.Store().DeletePool(id);
+                        GroupLab.App.Diagnostics.DiagnosticLog.Info("sessions.pool.delete", ("pool", id));
+                    }
+
+                    poolId = null;
+                    deleting.Children.Clear();
+                    deleting.Children.Add(Screens.Line(GroupLab.Core.Records.SessionPools.DeletedWords(poolSheets.Count)));
+                    saved.Text = "";
+                }).Id("result-pool-delete-yes"));
+                deleting.Children.Add(Screens.Choice("Keep it", () =>
+                {
+                    deleting.Children.Clear();
+                    deleting.Children.Add(Screens.Line(PoolSavedWords));
+                }).Id("result-pool-delete-no"));
+            }).Id("result-pool-delete"));
+            actions.Children.Add(deleting);
+        }
+
         // Entry 472 section 1: the result's own way out, to Capture's start or the list of sessions, is what Android's back presses; before,
         // back on a result found no way back and closed GroupLab on Capture, or went to Capture from Sessions.
         actions.Children.Add(Screens.Choice("Another target", again).Id("result-another-target").LeavesPage());
@@ -868,7 +933,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         string Bull(int index) => state.Bulls.FirstOrDefault(b => b.Index == index)?.Label ?? index.ToString(CultureInfo.InvariantCulture);
         plot.Show(state, definition, units, Label, Bull);
         full.Show(state, units);
-        saved.Text = pooled ? SetPool.NotSavedWords : SavedWords(sessionId);
+        saved.Text = pooled ? (poolId is null && poolSaved > 0 ? "" : PoolSavedWords) : SavedWords(sessionId);
         ShowChecks();
         picturePane?.InvalidateVisual();
     }

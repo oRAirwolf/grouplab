@@ -75,6 +75,7 @@
     "src/GroupLab.App/MainWindow.NewTarget.cs",
     "src/GroupLab.App/MainWindow.Panes.cs",
     "src/GroupLab.App/MainWindow.PointBlank.cs",
+    "src/GroupLab.App/MainWindow.Pools.cs",
     "src/GroupLab.App/MainWindow.Printer.cs",
     "src/GroupLab.App/MainWindow.PrinterWizard.cs",
     "src/GroupLab.App/MainWindow.Problems.cs",

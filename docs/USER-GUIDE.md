@@ -728,9 +728,7 @@ set it is. Print the set, shoot it, open each scan or photograph and choose **Ac
 records** tick them and choose **Pool the chosen**. GroupLab says which sheets of the set are still missing and how many shots it has of the
 bulls the set holds, and opens the pooled set on the analysis screen in a tab of its own (1): every shot on one plot, measured from its own
 bull, every figure a sheet has, and the Shots list naming each shot by sheet and bull (2.5 is bull 5 on sheet 2). Each sheet's shots are
-in their own shade; tap a sheet in the plot's key to show its shots alone. A sheet read twice counts once. The pooled set is not saved as
-a record of its own: each sheet keeps its own in Session records, and **Pool the chosen** opens the pool again whenever you want it. To share it, share each sheet's session file; **Export** saves the pooled
-shots as a CSV.
+in their own shade; tap a sheet in the plot's key to show its shots alone. A sheet read twice counts once. Accept and analyze, Save, or closing the pooled tab saves the pool as a record of its own: Session records lists it as one row, "Pooled set of 3 sheets", and clicking it opens the pooled tab again. A pool keeps which sheets it pools, not a copy of their shots, so its figures are worked out again from the sheets each time it opens, and a hole fixed on one sheet changes the pool too. Deleting a pool deletes only the pool; the sheets stay. Deleting a sheet a pool uses asks first and names the pools, and each keeps its other sheets. **Share this session** on a pool writes one file holding the pool and each sheet's own session file; opening it on another GroupLab brings the sheets in and opens the pool, if each sheet's picture is on that device. **Export** saves the pooled shots as a CSV. On the phone the pooled group is saved as a pool as soon as it shows, and Sessions lists it, shares it and deletes it the same way.
 
 ![A pooled set of three sheets: 1 The set tab](figures/screens/current/set-tab-light-1400x900.png)
 <!-- marks: GroupLab 3x3 2 MOA, Set of 3 Letter Sheets, 3 sheets, Analysis -->

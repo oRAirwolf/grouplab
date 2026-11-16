@@ -7,6 +7,7 @@ using Avalonia.VisualTree;
 using GroupLab.App;
 using GroupLab.Core.Imaging;
 using GroupLab.Core.Marking;
+using GroupLab.Core.Records;
 using GroupLab.Core.Registration;
 
 namespace GroupLab.Mobile.Tests;
@@ -50,17 +51,28 @@ public class Entry420Tests
             Assert.Equal([0, 2], result.Plot.PooledSheets);
             Assert.Contains(result.Plot.Legend, l => l.StartsWith($"Sheet 3: {scoring.Count} shots", StringComparison.Ordinal));
 
-            // Error report 46: a change on the pooled group saved it as a session of one sheet holding every sheet's shots. It is not saved.
+            // Error report 46: a change on the pooled group saved it as a session of one sheet holding every sheet's shots. Entry 495
+            // (question 113, (b)): it is saved as a pool record of its two sheets as it shows, never as a session.
             int records = PhoneAnalysis.Store().List().Count;
             result.Change(s => s.SetExclusion(s.State.Shots[0].Id, ExclusionReason.ByShooter));
             Assert.Equal(records, PhoneAnalysis.Store().List().Count);
             Assert.Null(result.SessionId);
-            Assert.Equal(SetPool.NotSavedWords, result.SavedText);
+            long poolId = Assert.IsType<long>(result.PoolId);
+            Assert.Equal(2, PhoneAnalysis.Store().GetPool(poolId)!.Sheets.Count);
+            Assert.Equal(SessionPools.SavedWords(2), result.SavedText);
 
-            // Error report 47: it has no session file of its own, and says so rather than that its picture is missing.
+            // Error report 47: shared, it goes as one file with its sheets; these sheets have no picture on the phone, and it says so.
             var share = result.GetVisualDescendants().OfType<Button>().Single(b => AutomationProperties.GetAutomationId(b) == "result-share-session");
             share.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
-            Assert.Contains(result.GetVisualDescendants().OfType<TextBlock>(), b => b.Text == SetPool.NotSharedWords);
+            Assert.Contains(result.GetVisualDescendants().OfType<TextBlock>(), b => b.Text?.Contains("cannot be shared whole", StringComparison.Ordinal) == true);
+
+            // Opened from Sessions it is one row; the set's pooled group shown again is the same pool, not a second one.
+            var row = Assert.Single(SessionPools.Rows(PhoneAnalysis.Store(), UnitSettings.Imperial)).Row;
+            Assert.StartsWith(SessionPools.RowName(2), row.SheetName, StringComparison.Ordinal);
+            var (again, _) = PhonePools.Open(poolId);
+            Assert.Equal(poolId, Assert.IsType<PhoneResult>(again).PoolId);
+            Assert.Equal(2 * scoring.Count, again.State.Shots.Count);
+            Assert.Single(PhoneAnalysis.Store().Pools());
         }
         finally
         {

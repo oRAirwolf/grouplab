@@ -99,6 +99,8 @@ public sealed partial class MainWindow
         if (pooled.Shots > 0)
         {
             OpenPooled(definition, SetPool.Composite(definition, states), [.. states.Select(s => s.Scale)]);
+            // Entry 495: the pool is saved with these sheets when it is accepted, saved or closed.
+            poolSources = PooledSessions(records);
         }
     }
 
@@ -141,9 +143,9 @@ public sealed partial class MainWindow
     }
 
     /// <summary>
-    /// Error report 46: whether the tab shows a pool, Pool the chosen's own tab or a set tab's pool. A pool is never saved as a session of its
-    /// own (entry 420): it is one marking of every sheet laid side by side against one sheet's design, so a record of it named one sheet and
-    /// held the shots of all of them, and its session file read back as nonsense. Accept, the save by itself and closing all leave it alone.
+    /// Error report 46: whether the tab shows a pool, Pool the chosen's own tab, a saved pool or a set tab's pool. A pool is never saved as a
+    /// session of its own (entry 420): it is one marking of every sheet laid side by side against one sheet's design, so a record of it named
+    /// one sheet and held the shots of all of them. Since entry 495 Accept, Save and closing save it as a pool record instead (MainWindow.Pools.cs).
     /// </summary>
     private bool showingPool;
 
@@ -154,6 +156,7 @@ public sealed partial class MainWindow
     private void NotAPool()
     {
         showingPool = false;
+        poolSources = null;
         targets.Current.PooledScales = null;
     }
 
@@ -169,7 +172,8 @@ public sealed partial class MainWindow
         }
 
         // Entry 258: the sessions made into groups by the shared code the phone uses too.
-        var records = sessions.List().Where(s => sessionChosen.Contains(s.Id)).Reverse().Select(s => sessions.Get(s.Id)!).ToList();
+        // Entry 495 section 5: a chosen pooled set is one group beside the sessions.
+        var records = SessionPools.Chosen(sessions, units, sessionChosen).ToList();
         var setup = CompareSessions.From(records, units);
         compareFooting = setup.Footing;
         compareDistance = setup.Distance;
