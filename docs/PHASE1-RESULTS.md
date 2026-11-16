@@ -672,6 +672,18 @@ live version with a newer one in review. **Section 3:** the check only reads; th
 step works on builds and beta groups only; apple-screens.yml, the only thing that writes to a version, runs by hand and leaves a set
 with pictures alone. Nothing was changed for it.
 
+## Entry 492: the feature-requests forum becomes suggestions (2026-11-16)
+
+**Section 1, written and tested, not yet live:** `website/server/grouplab-discord-worker.py` reads a list of forums, bug-reports
+(required, as before) and feature-requests (read when the bot can see it); a post there becomes an issue labelled `discord` and
+`suggestion` whose first line names the forum, and a post with no title is "Discord: a suggestion". A state file from before keeps
+working: the worker looks for forums again until it has found every one, so the forum made after it first ran is found on its next run.
+`--dry-run` finds the forums and prints, by forum, how many posts there are, how many are filed and the ids it would file, and writes
+nothing (no issue, no reply, no state, no log; only GET requests to Discord). tests/python/discord-worker-tests.py: 41 checks, 11 new.
+It is installed by request 109 (05b289ab), which Alan runs once he has seen today's Oracle backup: RESTORE.md rule 5.1 needs it, and Code
+cannot see the Oracle console. **Section 2:** `docs/notes/suggestions.md`, with none filed yet; CLAUDE.md lists `suggestion` issues at
+the error reports' points and says none is built without Alan's yes.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
