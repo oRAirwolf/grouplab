@@ -13,7 +13,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 6693 >>
+<< /Length 6740 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -72,20 +72,20 @@ BT /F1 99 Tf 1 0 0 -1 381 3747 Tm (On the phone) Tj ET
 f
 0.27451 0.27451 0.27451 rg
 BT /F1 71 Tf 1 0 0 -1 381 3877 Tm (GroupLab for Android is the APK on the download page \(https://grouplab.org/download/\), or Google Play's) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3965 Tm (closed test once Google has approved it \(join the GroupLab testers group,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4053 Tm (https://groups.google.com/g/grouplab-testers, then the test\), or its internal test for those invited. Remove one) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4141 Tm (before installing the other: they are signed with different keys. Removing GroupLab from a phone deletes its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4229 Tm (sessions and settings, so first use Settings, Sync and your data, Export all my data \(or turn on Sync between) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4317 Tm (devices\), then Import data in the new copy. The Play copy gets every nightly through Google Play, and the plain) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4405 Tm (APK keeps itself current as GroupLab Dev does; an APK from before nightly 177 has no updater, so install one) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4493 Tm (newer plain APK by hand once; it keeps itself current after that. GroupLab Dev, also on the download page,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4581 Tm (installs beside either with no uninstall. In Brazil, Indonesia, Singapore and Thailand, certified Android phones) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4669 Tm (have refused apps from outside Google Play since 30 September 2026 unless their developer has registered) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4757 Tm (them with Google; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4845 Tm (there still refuses one, ask on the Discord for the Google Play internal test instead. The rest of the world follows) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4933 Tm (in 2027. On an iPhone or iPad, GroupLab is in a public beta through Apple's TestFlight: install TestFlight from the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5021 Tm (App Store, then open the invitation \(https://testflight.apple.com/join/A3xyT6C6\) on the device; Send Beta) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5109 Tm (Feedback in TestFlight, or a screenshot shared to it, reaches the project. On the Capture screen, Guided takes) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3965 Tm (closed test, open to anyone \(the three steps are at https://grouplab.org/android-test/: join the GroupLab testers) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4053 Tm (group, opt in, install from Google Play\), or its internal test for those invited. Remove one before installing the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4141 Tm (other: they are signed with different keys. Removing GroupLab from a phone deletes its sessions and settings,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4229 Tm (so first use Settings, Sync and your data, Export all my data \(or turn on Sync between devices\), then Import data) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4317 Tm (in the new copy. The Play copy gets every nightly through Google Play, and the plain APK keeps itself current as) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4405 Tm (GroupLab Dev does; an APK from before nightly 177 has no updater, so install one newer plain APK by hand) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4493 Tm (once; it keeps itself current after that. GroupLab Dev, also on the download page, installs beside either with no) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4581 Tm (uninstall. In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4669 Tm (Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4757 Tm (and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, ask on the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4845 Tm (Discord for the Google Play internal test instead. The rest of the world follows in 2027. On an iPhone or iPad,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4933 Tm (GroupLab is in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5021 Tm (invitation \(https://testflight.apple.com/join/A3xyT6C6\) on the device; Send Beta Feedback in TestFlight, or a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5109 Tm (screenshot shared to it, reaches the project. On the Capture screen, Guided takes the picture by itself when) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3656 5398 Tm (page 1 of 5) Tj ET
 Q
 endstream
@@ -94,15 +94,15 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 6475 >>
+<< /Length 6448 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (the picture by itself when everything is right and Manual leaves it to you; either way every picture is checked, with) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (a score and notes on what GroupLab corrected. A result has every figure the desktop shows, with a tap on a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (name to explain it and a tap on a number to switch its units; Sessions compares loads, Ballistics is a tab of its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 716 Tm (own, and Targets prints a sheet or the printer check page.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (everything is right and Manual leaves it to you; either way every picture is checked, with a score and notes on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (what GroupLab corrected. A result has every figure the desktop shows, with a tap on a name to explain it and a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (tap on a number to switch its units; Sessions compares loads, Ballistics is a tab of its own, and Targets prints a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 716 Tm (sheet or the printer check page.) Tj ET
 0.078431 0.078431 0.078431 rg
 BT /F1 99 Tf 1 0 0 -1 381 923 Tm (It keeps itself up to date) Tj ET
 0.745098 0.745098 0.745098 rg
@@ -1398,29 +1398,29 @@ xref
 0000000232 00000 n 
 0000000329 00000 n 
 0000000455 00000 n 
-0000007200 00000 n 
-0000007326 00000 n 
-0000013853 00000 n 
-0000014006 00000 n 
-0000017775 00000 n 
-0000017903 00000 n 
-0000025061 00000 n 
-0000025189 00000 n 
-0000026644 00000 n 
-0000288659 00000 n 
-0000288733 00000 n 
-0000288859 00000 n 
-0000288979 00000 n 
-0000289100 00000 n 
-0000289273 00000 n 
-0000289397 00000 n 
-0000289523 00000 n 
-0000289664 00000 n 
-0000289798 00000 n 
-0000289941 00000 n 
-0000290072 00000 n 
+0000007247 00000 n 
+0000007373 00000 n 
+0000013873 00000 n 
+0000014026 00000 n 
+0000017795 00000 n 
+0000017923 00000 n 
+0000025081 00000 n 
+0000025209 00000 n 
+0000026664 00000 n 
+0000288679 00000 n 
+0000288753 00000 n 
+0000288879 00000 n 
+0000288999 00000 n 
+0000289120 00000 n 
+0000289293 00000 n 
+0000289417 00000 n 
+0000289543 00000 n 
+0000289684 00000 n 
+0000289818 00000 n 
+0000289961 00000 n 
+0000290092 00000 n 
 trailer
 << /Size 27 /Root 1 0 R >>
 startxref
-290203
+290223
 %%EOF

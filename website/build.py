@@ -945,7 +945,7 @@ def page_download() -> str:
         "Download GroupLab Dev", honest=False) + steady(
         "Google Play, closed test",
         btn("Join the Android test", ANDROID_TEST_PATH),
-        f'GroupLab\'s closed test on Google Play has been sent to Google for review. Once it is approved, anyone can join: join <a href="https://groups.google.com/g/grouplab-testers">the GroupLab testers group</a>, then the test, and Google Play brings you every nightly and updates your copy as it does any app. The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access. The internal test stays open by invitation: ask on the <a href="{DISCORD}">Discord</a>.',
+        f'GroupLab\'s closed test on Google Play is open, and anyone can join: join <a href="https://groups.google.com/g/grouplab-testers">the GroupLab testers group</a>, then <a href="{PLAY_TEST_LINK}">opt in to the test</a> with the same Google account, and Google Play brings you every nightly and updates your copy as it does any app. The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access. The internal test stays open by invitation: ask on the <a href="{DISCORD}">Discord</a>.',
         ["Each nightly reaches Play by itself", "Three steps, on the Join the Android test page",
          "Signed with a different key from the plain APK"]),
         "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. The Play copy gets every nightly through Google Play, the plain APK keeps itself current as GroupLab Dev does, and GroupLab Dev installs beside either with no uninstall.",
@@ -3521,19 +3521,16 @@ def page_survey() -> str:
 
 ANDROID_TEST_PATH = "/android-test/"
 TESTERS_GROUP = "https://groups.google.com/g/grouplab-testers"
-# Entry 489 section 3: Google Play's opt-in link for the closed test, passed on by the planning session once Google approves it. Until
-# then the page says it is coming.
-PLAY_TEST_LINK = ""
+# Entry 489 section 3 left the place, entry 490 filled it: Google approved the closed test on 2026-11-15. The opt-in page, then the Play
+# page, which opens for a person once they have opted in.
+PLAY_TEST_LINK = "https://play.google.com/apps/testing/org.grouplab.app"
+PLAY_LISTING_LINK = "https://play.google.com/store/apps/details?id=org.grouplab.app"
 
 
 def page_android_test() -> str:
     """Entry 489 section 3: how to join GroupLab's test on Google Play, in plain words. No tester is named anywhere."""
-    if PLAY_TEST_LINK:
-        step2 = (f'<p>Open <a href="{PLAY_TEST_LINK}">the GroupLab test on Google Play</a> on the phone, signed in with the same Google '
-                 'account, and choose to become a tester.</p>')
-    else:
-        step2 = ("<p>Opt in to the test with its Google Play link. <strong>The link is coming</strong>: Google is reviewing the test, "
-                 "and it appears here as soon as Google has approved it. Joining the group now means you are ready the moment it does.</p>")
+    step2 = (f'<p>Open <a href="{PLAY_TEST_LINK}">the test\'s opt-in page on Google Play</a>, signed in with the same Google account as '
+             'in step 1, and press <strong>Become a tester</strong>.</p>')
     body = f"""
 <section class="wrap page-head stack">
 <p class="eyebrow">Android</p>
@@ -3545,7 +3542,7 @@ def page_android_test() -> str:
 <ol class="steps">
 <li class="step"><span class="mono step-n">1</span><div><h2 class="h3">Join the testers group</h2><p>On the phone or a computer, join <a href="{TESTERS_GROUP}">the GroupLab testers group</a> on Google Groups with the Google account that is signed into the Play Store on your phone. Afterwards the group's page may say "You don't have permission to access this content". That is expected: there is nothing to read in it, and joining is all it is for.</p></div></li>
 <li class="step"><span class="mono step-n">2</span><div><h2 class="h3">Opt in to the test</h2>{step2}</div></li>
-<li class="step"><span class="mono step-n">3</span><div><h2 class="h3">Install from Google Play</h2><p>Install GroupLab from the Play Store as you would any app. Each new build reaches you through Google Play by itself.</p></div></li>
+<li class="step"><span class="mono step-n">3</span><div><h2 class="h3">Install from Google Play</h2><p>Install GroupLab from <a href="{PLAY_LISTING_LINK}">its page on Google Play</a>, which opens for you once you have opted in, or from the opt-in page's own link. Each new build reaches you through Google Play by itself.</p></div></li>
 </ol>
 </section>
 

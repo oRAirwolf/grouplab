@@ -25,6 +25,38 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-15, entry 490: Google approved the Play closed test; the opt-in link goes on the pages
+
+**Status: actioned 2026-11-15. Sections 1 to 3 done.** The opt-in page is on /android-test/ (step 2 live, step 3 links the Play
+page) and on /download/; the README, PLATFORM-SUPPORT.md, ANDROID.md, TESTING-GUIDE.md and docs/store/PLAY.md say the closed test is open
+and keep the 12 testers for 14 days line. The Discord announcer already ends every message with Join the Android test (entry 489
+section 3), so nothing changed there. Claims backing names this entry; the download page's build lines are now backed by a pattern
+instead of one sentence a build, which entry 488 had left.
+
+The planning session read the Play Console at 19:10 Denver on 2026-11-15: Google approved the first closed release and published it on
+2026-11-15 ("App update published"); Closed testing - Alpha is Active, latest release 1.0.0-nightly.226 (entry 487 section 1's
+automatic closed upload worked), 178 countries, testers by the Google Group. The dashboard shows 0 testers opted in so far.
+
+## 1. The links
+
+- **Join on the web (the opt-in page):** https://play.google.com/apps/testing/org.grouplab.app
+- **Join on Android (the Play page, which works once a person has opted in):** https://play.google.com/store/apps/details?id=org.grouplab.app
+
+## 2. Put them where entry 487 section 2 and entry 489 section 3 left a place
+
+- `website/build.py` `PLAY_TEST_LINK` gets the opt-in page; /android-test/ step 2 becomes live, in order: join the group, open the
+  opt-in page signed in with the same Google account and press Become a tester, then install from the Play page.
+- The README, docs/PLATFORM-SUPPORT.md (/download/) and docs/ANDROID.md: the closed test is open now; anyone can join by joining the
+  GroupLab testers group and then opting in (both links, or a link to /android-test/ where a sentence is enough); drop "has been sent
+  for Google's review". Keep the line that the public listing follows after 12 testers have stayed in for 14 days and Google approves
+  production access.
+- The Discord announcement for the next build, if the announcer has a place for a standing line, links /android-test/.
+- Claims backing names this entry.
+
+## 3. Report
+
+As usual. Nothing here needs Alan.
+
 ## 2026-11-15, entry 489: overnight queue (Alan asleep): the nightly backup, an App Store pre-review check, a tester page, Play tablet screenshots
 
 **Status: actioned 2026-11-15. Sections 1 to 5 done.** Nothing needed Alan. Section 2 found one likely rejection, a missing privacy

@@ -43,8 +43,8 @@ Set by the planning session in Play Console with Alan signed in, on 2026-11-15. 
   owners see the members, so testers cannot see each other. Feedback URL https://grouplab.org/support/. The internal track and its
   email list are unchanged.
 - **First closed release:** version code 225 (0.2.0-nightly.225), full rollout, sent for review at about 08:10 UTC on 2026-11-15
-  ("Changes in review"). One warning, the deobfuscation file, which `docs/ANDROID.md` explains. The opt-in link appears on the
-  track's Testers tab once Google approves.
+  ("Changes in review"). One warning, the deobfuscation file, which `docs/ANDROID.md` explains. Google approved and published it on
+  2026-11-15 (entry 490); the opt-in page is https://play.google.com/apps/testing/org.grouplab.app, and a tester installs from https://play.google.com/store/apps/details?id=org.grouplab.app.
 - **Every nightly after it** goes to `internal` and `alpha` by `play-upload.yml` (entry 487 section 1), with the build's own noticed
   lines as its notes. While Google is reviewing anything, a run sends nothing rather than cancel that review, and `alpha` is sent only
   when its newest release is completed. Managed publishing is off, so later closed releases go to Google's quick review by themselves.

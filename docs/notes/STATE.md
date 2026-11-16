@@ -9,21 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-15, entries 485 to 489 done and entry 480's dated check taken; the inbox is empty.
+**Last rewritten:** 2026-11-15, entry 490 done (after 485 to 489 and entry 480's dated check); the inbox is empty.
 
 ---
 
 ## In flight
 
+- **Entry 490 (2026-11-15)**, done: Google approved the Play closed test; /android-test/ step 2 is live with the opt-in page
+  (`PLAY_TEST_LINK`), and the README, download page, ANDROID.md and the testing guide say it is open. 0 testers opted in so far.
 - **Entry 489 (2026-11-15)**, done: the backup always ends with a result line (limits, a retry, a 50 minute ceiling); the App Store
-  pre-review found no privacy manifest, now added (IOS-PLAN.md); /android-test/ waits for the Play opt-in link (`PLAY_TEST_LINK`).
+  pre-review's one finding, a missing privacy manifest, is fixed (IOS-PLAN.md).
 - **Entry 488 (2026-11-15)**, done: GroupLab is 1.0.0; the next nightly is 1.0.0-nightly.226, read as "GroupLab 1.0, build 226"
   (`SemanticVersion.Words`, never serialized: the manifests are signed over it). Store strings: Microsoft 1.0.226.0, Android 1.0.226
   code 226, Apple 1.0 (226). "Still in active development" on the README, site, guide, Settings and the Store text; not on Play yet.
-- **Entry 487 (2026-11-15)**, done: Play's closed test (alpha) is in Google's first review; every nightly now goes to internal and
-  alpha, and a run that meets a review sends nothing (Play's default would cancel it). App Store pictures taken on the simulators,
-  in docs/store/apple/, uploaded to version 1.0. Waiting on events only: Google's approval (the planning session passes on the
-  opt-in link, then it goes beside the testers group on the pages) and the next nightly reaching TestFlight.
+- **Entry 487 (2026-11-15)**, done: every nightly goes to Play's internal and alpha tracks, and a run that meets a review sends
+  nothing; App Store pictures from the simulators (docs/store/apple/) are on version 1.0. TestFlight 226 waits for beta review.
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Checked 2026-11-15:** workload set 10.0.404 (Xcode 27.2) fixes 26969; the
   iPhone, iPad and Dev legs pass on the trial branch, the Duo leg not yet (folded, outer screen, upright self-test stops at the picture
   check; IOS-PLAN.md). nightly.yml stays on Xcode 26 until the Duo leg passes.
@@ -45,7 +45,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   61, an App Store release Alan's word.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
-- **Stores**: Microsoft follows the nightlies (entry 369); Google Play past internal test is Alan's call; Test Lab waits on request 62.
+- **Stores**: Microsoft follows the nightlies (entry 369); Play's closed test is open (entry 490); Test Lab waits on request 62.
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
@@ -55,8 +55,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Blocked, and on what
 
-- **The iPhone Duo's inner screen**: Microsoft's iOS 27.1 workload (dotnet/macios issue 26969); nothing needed from Alan.
-
+- **The iPhone Duo's inner screen**: the Duo leg on Xcode 27.2 (simulator starts folded; IOS-PLAN.md); nothing needed from Alan.
 - **Entry 380 section 3**: measuring the M220 labels waits on request 77's photos in `m220-labels`.
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.

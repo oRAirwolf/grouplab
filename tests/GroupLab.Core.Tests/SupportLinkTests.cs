@@ -161,8 +161,9 @@ public partial class SupportLinkTests
     /// <summary>
     /// A GroupLab domain, and only a domain. Case matters: the namespaces are <c>GroupLab.App</c> and <c>GroupLab.Core</c>, and a domain is
     /// written in lower case, so matching case-sensitively keeps every namespace out of it. The extension is a list rather than "any
-    /// letters", because that is what separates grouplab.com from grouplab.json and grouplab.db.
+    /// letters", because that is what separates grouplab.com from grouplab.json and grouplab.db. The Android package name,
+    /// <c>org.grouplab.app</c>, is not a domain, and Google Play's links carry it (entry 490), so a match straight after "org." is not one.
     /// </summary>
-    [GeneratedRegex(@"\bgrouplab\.(?:org|com|net|io|app|dev|co|uk|info|site|shop|online|store)\b")]
+    [GeneratedRegex(@"(?<!\borg\.)\bgrouplab\.(?:org|com|net|io|app|dev|co|uk|info|site|shop|online|store)\b")]
     private static partial Regex GroupLabDomain();
 }

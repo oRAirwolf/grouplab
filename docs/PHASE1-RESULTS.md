@@ -645,6 +645,18 @@ order. **Section 3:** grouplab.org/android-test/, linked from the download page'
 link's place is `PLAY_TEST_LINK`. **Section 4:** five tablet pictures for each of 7 inch (1920 by 1080) and 10 inch (2560 by 1440) in
 docs/store/play-tablet/, from nightly 225's Tab S8 Ultra pictures, by scripts/play-screens.py; not uploaded.
 
+## Entry 490: the Play closed test is open (2026-11-15)
+
+Google approved and published the first closed release on 2026-11-15, as the planning session read in the Play Console. The opt-in
+page, https://play.google.com/apps/testing/org.grouplab.app, is `PLAY_TEST_LINK` in website/build.py, so step 2 of /android-test/ is
+live (open it signed in with the group's Google account, press Become a tester), and step 3 links the Play page, which opens for a
+person once opted in. The download card links the opt-in page; the README's newest-build table links /android-test/, the group and
+the opt-in page (scripts/readme.py). PLATFORM-SUPPORT.md, ANDROID.md, TESTING-GUIDE.md (PDF rebuilt) and docs/store/PLAY.md say the
+test is open and keep the 12 testers for 14 days line. Discord needed nothing: every announcement already links /android-test/.
+Found on the way: entry 488 had backed the download page's build lines as five literal sentences naming build 225, which the first
+1.0 build broke; the existing pattern rule now reads "GroupLab 1.0, build N" as well as "Nightly N", and the five are gone.
+Error report 45, a diagnostics send with no note from a first start of build 226 on Android, had no error in its log; closed.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

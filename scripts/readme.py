@@ -96,8 +96,11 @@ PLATFORMS = [
     ("Android", [("GroupLab Dev", "grouplab-android-dev.apk"), ("APK", "grouplab-android.apk")]),
 ]
 PLAY_TEST = "https://play.google.com/apps/internaltest/4701684356677501640"
-# Entry 487 section 2: the closed test is joined through this group; its opt-in link is added once Google approves the test.
+# Entry 487 section 2: the closed test is joined through this group. Entry 490: Google approved it on 2026-11-15, and the steps are on
+# grouplab.org/android-test/.
 PLAY_GROUP = "https://groups.google.com/g/grouplab-testers"
+PLAY_OPT_IN = "https://play.google.com/apps/testing/org.grouplab.app"
+ANDROID_TEST = "https://grouplab.org/android-test/"
 # Entries 335 and 337, published with Alan's approval on 2026-10-01: the Microsoft Store listing and the TestFlight Public Beta.
 STORE = "https://apps.microsoft.com/detail/9NWJCXBKZNPZ"
 TESTFLIGHT = "https://testflight.apple.com/join/A3xyT6C6"
@@ -111,7 +114,7 @@ def newest() -> str:
         if name == "Windows":
             links += f" · [Microsoft Store]({STORE}), which gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself"
         if name == "Android":
-            links += f" · Google Play closed test, in Google's review: [the testers group]({PLAY_GROUP}) · [internal test]({PLAY_TEST}), by invitation"
+            links += f" · Google Play closed test, open to anyone: [how to join]({ANDROID_TEST}) ([the testers group]({PLAY_GROUP}), then [opt in]({PLAY_OPT_IN})) · [internal test]({PLAY_TEST}), by invitation"
         rows.append(f"| **{name}** | {links} |")
         if name == "macOS":
             rows.append(f"| **iPhone and iPad** | [Public beta on TestFlight]({TESTFLIGHT}): install TestFlight from the App Store, then open the invitation |")
