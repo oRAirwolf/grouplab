@@ -150,7 +150,7 @@ public sealed partial class MainWindow
             {
                 GroupName = "printerChosen",
                 IsChecked = p.Name == chosen?.Name,
-                Content = Wrapped(string.Create(CultureInfo.InvariantCulture, $"{p.Name}: {p.Percentages}, measured {p.How}")),
+                Content = Wrapped(string.Create(CultureInfo.InvariantCulture, $"{p.Name}: {p.Percentages}, {p.Measured}")),
             };
             use.IsCheckedChanged += (_, _) =>
             {
@@ -160,6 +160,8 @@ public sealed partial class MainWindow
                 }
             };
             printerList.Children.Add(use);
+            // Entry 493: both numbers plainly, so another GroupLab can be given them under Numbers from another GroupLab.
+            printerList.Children.Add(Line(p.CopyLine));
             // Entry 291 section 5.2: a check holds for the sheets printed before the printer changed, and says so once it may not.
             if (p.Stale(Today()) is { } stale)
             {

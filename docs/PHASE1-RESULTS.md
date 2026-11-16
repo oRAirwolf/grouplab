@@ -684,6 +684,27 @@ It is installed by request 109 (05b289ab), which Alan runs once he has seen toda
 cannot see the Oracle console. **Section 2:** `docs/notes/suggestions.md`, with none filed yet; CLAUDE.md lists `suggestion` issues at
 the error reports' points and says none is built without Alan's yes.
 
+## Entry 493: a printer's check typed in from another GroupLab (2026-11-16)
+
+**Section 1:** Check your printer's fifth way, **Numbers from another GroupLab** ("Copy them from a computer or phone that checked this
+printer."), on the computer and the phone. The form is decided once, `PrinterProfile.CopyWords`, two decimals of a percent: every checked
+printer in Printers and paper now shows "To type into another GroupLab: 99.23% across, 99.41% down" on every platform, since before only
+"99.2 by 99.4%" was shown and a pair that rounded alike showed as one number. The typing screen names where the numbers are and takes
+"99.23" or "99.23%"; a number outside 85% to 115%, the range any check is held to (`SheetReference.LowestBelievable` and
+`HighestBelievable`), is refused in a sentence naming it, and a number that does not read asks again. A typed check is method `Typed`, given
+0.3% give or take (the copy has the numbers and not how they were measured), and says "typed in from another device's check on 16 November"
+in Settings, on the check's result and in each result it corrects, where a measured one says "measured with a caliper on ..." or "checked
+...". A typed check is saved as a card check of the same give or take, marked `typed`: a build before this one reads it as a card check rather than dropping the printer, which its next save of any printer would have taken off every synced device.
+**Section 2, in part:** printer checks already travel in Export all my data, Import data and sync (entry 461 carries `printers` as one
+setting); tests now prove it for a typed check. Not built: keeping both checks of a same-named printer and asking which to use. Import
+names the difference and keeps this device's check; sync takes the newer printers list whole and keeps the one it replaced among its kept
+copies, so nothing is lost but nothing asks. Keeping both needs a sync record per printer, with a mark for a deleted printer (merging whole
+lists would bring a deleted printer back), and a which-to-use question on both platforms. **Section 3:** the user guide's printer passage
+and Settings list (PDF rebuilt), the tour's Printers and paper line, PHONE-PARITY.md's `printer-scale` row and the Features sentence, which
+credits Quack; no Features picture shows the wizard (its picture is the check page, unchanged), so none is stale. Tests: Core
+`Entry493Tests` (7: the same scale typed as measured, refusals, the words, the saved form, export and import, a second device by sync),
+App and Mobile `Entry493Tests` (the wizard walked as a person would, then Printers and paper).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

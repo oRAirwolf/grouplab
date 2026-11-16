@@ -560,7 +560,7 @@
       "key": "printer-scale",
       "group": "Reading a target",
       "name": "Check your printer once, for real inches from photos",
-      "sentence": "Print the check page and measure it once, with a card and one photo, a digital caliper, a ruler or a scanner; photographs of that printer's sheets are then corrected across and down, each saying so, and the paper's own edge checks every photo.",
+      "sentence": "Print the check page and measure it once, with a card and one photo, a digital caliper, a ruler or a scanner, or type in the two numbers another GroupLab measured for the same printer; photographs of that printer's sheets are then corrected across and down, each saying so, and the paper's own edge checks every photo. Typing them in was asked for by Quack.",
       "shot": "marking",
       "sheets": [
         [
@@ -575,7 +575,10 @@
         "Android"
       ],
       "since": "next",
-      "note": "corrected to real inches with your printer's scale",
+      "note": [
+        "corrected to real inches with your printer's scale",
+        "Numbers from another GroupLab"
+      ],
       "tour": "targets",
       "guide": "3-photograph-or-scan-it",
       "mobile": {

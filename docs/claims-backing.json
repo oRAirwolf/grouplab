@@ -8220,6 +8220,12 @@
  },
  "rules": [
   {
+    "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$",
+    "match": "Numbers from another\\s+GroupLab|both its numbers to type into another GroupLab",
+    "kind": "code",
+    "where": "src/GroupLab.Core/Marking/PrinterProfile.cs (Typed, FromTyped, ReadPercent, CopyLine, CopyWords, Measured, TypedHelp); src/GroupLab.App/MainWindow.PrinterWizard.cs and MainWindow.Printer.cs ShowPrinters; mobile/GroupLab.Mobile/PrinterCheckPage.cs and SettingsView.cs; held by Core, App and Mobile Entry493Tests (entry 493)"
+  },
+  {
    "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$",
    "match": "offers its own stated resolution|says its own resolution|72 or 96 dpi|From the scan's own\\s+resolution|Use the scan's 600 dpi",
    "kind": "code",

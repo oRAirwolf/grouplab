@@ -379,7 +379,7 @@ public sealed class SettingsView : UserControl
                 GroupName = "printer",
                 IsChecked = p.Name == chosenPrinter?.Name,
                 MinHeight = Screens.Touch,
-                Content = new TextBlock { Text = $"{p.Name}: {p.Percentages}, measured {p.How}", TextWrapping = Avalonia.Media.TextWrapping.Wrap },
+                Content = new TextBlock { Text = $"{p.Name}: {p.Percentages}, {p.Measured}", TextWrapping = Avalonia.Media.TextWrapping.Wrap },
             };
             use.IsCheckedChanged += (_, _) =>
             {
@@ -389,6 +389,8 @@ public sealed class SettingsView : UserControl
                 }
             };
             column.Children.Add(use);
+            // Entry 493: both numbers plainly, so another GroupLab can be given them under Numbers from another GroupLab.
+            column.Children.Add(Screens.Dim(p.CopyLine));
             // Entry 291 section 5.2: a check holds for the sheets printed before the printer changed, and says so once it may not.
             if (p.Stale(DateOnly.FromDateTime(DateTime.Now)) is { } stale)
             {

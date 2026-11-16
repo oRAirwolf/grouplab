@@ -9,16 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-16, entry 492 done but for request 109 (after error reports 46 and 47 and nightly 227's fix); 493 next.
+**Last rewritten:** 2026-11-16, entry 493 done (after 492, error reports 46 and 47 and nightly 227's fix); the inbox is empty.
 
 ---
 
 ## In flight
 
+- **Entry 493 (2026-11-16)**, done but section 2's keep-both: Numbers from another GroupLab on Check your printer, both numbers
+  under each printer to copy; a typed check is saved as a card check marked `typed` so older builds keep it (PrinterProfile).
 - **Entry 492 (2026-11-16)**, done but section 1's install: the Discord worker files feature-requests as `suggestion` issues
   (05b289ab, `--dry-run` writes nothing); request 109 installs it once Alan sees today's Oracle backup; docs/notes/suggestions.md.
-- **Entry 491 (2026-11-15)**, done: App Store 1.0 (build 226) is with App Review, release manual; its state is read beside
-  TestFlight's into external-status.md (`testflight.py --app-store`, read only). A rejection goes to for-alan.md that day.
+- **Entry 491 (2026-11-15)**, done: App Store 1.0 (build 226) is with App Review; its state is in external-status.md.
 - **Entries 489 and 490 (2026-11-15)**, done: the backup always ends with a result line; Apple's privacy declaration added; the Play
   closed test is open (`PLAY_TEST_LINK` on /android-test/ and the pages).
 - **Entry 488 (2026-11-15)**, done: GroupLab is 1.0.0; the next nightly is 1.0.0-nightly.226, read as "GroupLab 1.0, build 226"

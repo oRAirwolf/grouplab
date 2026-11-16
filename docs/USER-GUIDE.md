@@ -224,7 +224,10 @@ printer printed at 97 percent makes every group read about 3 percent large. For 
 The easiest way is the printer check, offered the first time GroupLab opens and the first time you print, and always in Settings,
 **Printers and paper**. Name the printer, print the check page at actual size, and measure it one way: lay any bank, gift or ID card inside its
 outline and take one photo (about 0.3 percent), measure between its crosshairs with a digital caliper (about 0.1 percent), measure its
-two long lines with a ruler or tape, or scan it. GroupLab shows how large the printer prints across and down and saves it. Photographs of
+two long lines with a ruler or tape, or scan it. Where another computer or phone has already checked the printer, **Numbers from another
+GroupLab** takes the two numbers it shows under that printer in **Printers and paper** ("To type into another GroupLab: 99.23% across, 99.41%
+down"), so a phone with no scanner can use a computer's scan; the check then says it was typed in from another device's check. GroupLab
+shows how large the printer prints across and down and saves it. Photographs of
 that printer's sheets are then corrected, and each result says so in one line, such as "Corrected for My printer, 99.2 by 99.4%, checked
 28 September". A check measures the sheets printed before it. If you calibrate or service the printer, or change its settings, press
 **Printer calibrated or serviced** under that printer in Settings: sheets printed before stay corrected by the old check, and every result
@@ -804,8 +807,8 @@ choices back as GroupLab starts with them; it never touches your sessions, rifle
 - **Rifles and loads**, on the phone only: not a page of its own but a row that says where they are kept and opens them, **Open
   Ballistics**, at the rifle and load forms; **‹ Settings** or the phone's back brings you back. Ballistics is still the one place on the
   phone where rifles and loads are added, renamed and deleted. On the computer they are in Equipment.
-- **Printers and paper:** the printers GroupLab has checked, which one photographs are corrected for, Check again, Delete and Add a
-  printer, on the computer and the phone alike; and the **Paper** GroupLab prints and designs its sheets on, Letter or A4, which starts as
+- **Printers and paper:** the printers GroupLab has checked, each with both its numbers to type into another GroupLab, which one
+  photographs are corrected for, Check again, Delete and Add a printer, on the computer and the phone alike; and the **Paper** GroupLab prints and designs its sheets on, Letter or A4, which starts as
   your region's.
 - **Sync and your data:** first **Daily copies of your records** (below), then **Sync between devices** (see [Sync between
   devices](#sync-between-devices)), on the computer how a target is saved (by itself, or with a Save button), and **Your data**:

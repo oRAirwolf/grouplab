@@ -19,6 +19,12 @@ public enum PrinterMethod
 
     /// <summary>The check page's crosshairs, measured with a digital caliper and typed in.</summary>
     Caliper,
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 493: the two numbers another GroupLab's check of this printer shows, across and down, typed in. Its
+    /// measurement was made on that device; this one only knows the numbers.
+    /// </summary>
+    Typed,
 }
 
 /// <summary>
@@ -115,6 +121,25 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
     /// <summary>How finely a person reads a ruler: a sixteenth of an inch at each end, so a thirty-second either way over the span.</summary>
     public const double RulerReadingInches = 1.0 / 32;
 
+    /// <summary>
+    /// Entry 493: a check typed in from another device carries its numbers and not how they were measured, so it is given the widest a card or
+    /// caliper check claims, 0.3 percent, rather than the other device's own.
+    /// </summary>
+    public const double TypedUncertainty = 0.003;
+
+    /// <summary>Entry 493: the fifth way on Check your printer, and the line under it.</summary>
+    public const string TypedTitle = "Numbers from another GroupLab";
+
+    /// <summary>The line under <see cref="TypedTitle"/>.</summary>
+    public const string TypedDetail = "Copy them from a computer or phone that checked this printer.";
+
+    /// <summary>Entry 493: what the line under each checked printer in Printers and paper starts with, the numbers to copy after it.</summary>
+    public const string CopyLead = "To type into another GroupLab";
+
+    /// <summary>Entry 493: what the typing screen says, naming where the numbers are on the other device.</summary>
+    public const string TypedHelp = "On the computer or phone that checked this printer, open Settings, then Printers and paper. Under the printer it says \"" + CopyLead
+        + ": 99.23% across, 99.41% down\". Type those two numbers here.";
+
     /// <summary>How well a digital caliper is set on a crosshair's center by eye: about a tenth of a millimeter at each end.</summary>
     public const double CaliperReadingInches = 0.2 / 25.4;
 
@@ -152,6 +177,39 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
         return new PrinterProfile(Named(name), x, y, method, measuredOn, reading / Math.Min(acrossDrawnInches, downDrawnInches));
     }
 
+    /// <summary>
+    /// Entry 493: a printer's check typed in from another GroupLab, its two numbers as <see cref="CopyWords"/> shows them ("99.23" or "99.23%"),
+    /// and why not where it cannot be made: a number that does not read, or one outside the scales GroupLab takes from any check.
+    /// </summary>
+    public static (PrinterProfile? Profile, string? Why) FromTyped(string? name, string? across, string? down, DateOnly measuredOn)
+    {
+        if (ReadPercent(across) is not { } x || ReadPercent(down) is not { } y)
+        {
+            return (null, "Type each number as the other device shows it under the printer in Printers and paper, such as 99.23 for 99.23% across.");
+        }
+
+        foreach (double k in new[] { x, y })
+        {
+            if (!Believable(k))
+            {
+                return (null, string.Create(CultureInfo.InvariantCulture,
+                    $"GroupLab takes a printer's scale between {SheetReference.LowestBelievable * 100:0}% and {SheetReference.HighestBelievable * 100:0}%, and {k * 100:0.##}% is outside it. Check the number on the other device."));
+            }
+        }
+
+        return (new PrinterProfile(Named(name), x, y, PrinterMethod.Typed, measuredOn, TypedUncertainty), null);
+    }
+
+    /// <summary>A percentage as a person types it, "99.23", "99.23%" or "99,23 %", as a fraction: 0.9923. Null for anything else.</summary>
+    public static double? ReadPercent(string? typed)
+    {
+        string text = (typed ?? "").Trim().TrimEnd('%').Trim();
+        return (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double v)
+                || double.TryParse(text, NumberStyles.Float, CultureInfo.CurrentCulture, out v)) && double.IsFinite(v) && v > 0
+            ? v / 100
+            : null;
+    }
+
     private static double? Ratio(double measured, double drawn) =>
         double.IsFinite(measured) && double.IsFinite(drawn) && measured > 0 && drawn > 0 && Believable(measured / drawn) ? measured / drawn : null;
 
@@ -173,8 +231,24 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
         PrinterMethod.Scan => "from a scan",
         PrinterMethod.Card => "with a card",
         PrinterMethod.Caliper => "with a caliper",
+        PrinterMethod.Typed => "typed in from another device's check",
         _ => "with a ruler",
     };
+
+    /// <summary>
+    /// How the figures were come by, as a printer's line in Settings and the check's result say it: "measured with a card on 28 September", or
+    /// for a check typed in from another device (entry 493), "typed in from another device's check on 16 November", so the two can be told apart.
+    /// </summary>
+    public string Measured => Method == PrinterMethod.Typed ? How : "measured " + How;
+
+    /// <summary>
+    /// Entry 493: both numbers plainly, to two decimals, as another GroupLab's Numbers from another GroupLab takes them: "99.23% across, 99.41%
+    /// down". Shown under every checked printer in Printers and paper, after <see cref="CopyLead"/>.
+    /// </summary>
+    public string CopyWords => string.Create(CultureInfo.InvariantCulture, $"{Across * 100:0.00}% across, {Down * 100:0.00}% down");
+
+    /// <summary>The line under a checked printer in Printers and paper: "To type into another GroupLab: 99.23% across, 99.41% down".</summary>
+    public string CopyLine => CopyLead + ": " + CopyWords;
 
     /// <summary>How it was measured and when: "with a card on 28 September".</summary>
     public string How => $"{MethodWords} on {Day(MeasuredOn)}";
@@ -188,7 +262,9 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
     /// The one line a photograph's result carries once this profile has corrected it, entry 273 section 5, with the day of the check (entry 291
     /// section 5.2) so a result says which correction it used: "Corrected for My printer, 99.2 by 99.4%, checked 28 September".
     /// </summary>
-    public string Line => $"Corrected for {Name}, {Percentages}, checked {Day(MeasuredOn)}";
+    public string Line => Method == PrinterMethod.Typed
+        ? $"Corrected for {Name}, {Percentages}, typed in from another device's check on {Day(MeasuredOn)}"
+        : $"Corrected for {Name}, {Percentages}, checked {Day(MeasuredOn)}";
 
     /// <summary>This profile, with the day the person said the printer was calibrated, serviced or set differently.</summary>
     public PrinterProfile Changed(DateOnly on) => this with { ChangedOn = on };
@@ -231,10 +307,17 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
             ["name"] = Name,
             ["across"] = Across,
             ["down"] = Down,
-            ["method"] = Method.ToString().ToLowerInvariant(),
+            // Entry 493: a typed check is saved as a card check, the same give or take, marked "typed". A build before entry 493 knows no
+            // fifth method and would drop the printer, and its next save of any printer would then take it off every synced device too.
+            ["method"] = (Method == PrinterMethod.Typed ? PrinterMethod.Card : Method).ToString().ToLowerInvariant(),
             ["measuredOn"] = MeasuredOn.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
             ["uncertainty"] = Uncertainty,
         };
+        if (Method == PrinterMethod.Typed)
+        {
+            json["typed"] = true;
+        }
+
         if (ChangedOn is { } changed)
         {
             json["changedOn"] = changed.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -270,6 +353,7 @@ public sealed record PrinterProfile(string Name, double Across, double Down, Pri
             // Entry 291 section 5.2: a profile saved before a printer could be marked changed reads as never changed.
             DateOnly? changed = DateOnly.TryParseExact((string?)o["changedOn"], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var c) ? c : null;
             (int, int)? label = o["labelSize"] is JsonArray l && l.Count == 2 && (int?)l[0] is > 0 and var w && (int?)l[1] is > 0 and var h ? (w, h) : null;
+            method = (bool?)o["typed"] == true ? PrinterMethod.Typed : method;
             return new PrinterProfile(Named(name), across, down, method, on, uncertainty) { ChangedOn = changed, Paper = (string?)o["paper"], LabelSize = label };
         }
         catch (Exception ex) when (ex is InvalidOperationException or FormatException)

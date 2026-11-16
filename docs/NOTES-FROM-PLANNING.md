@@ -25,6 +25,51 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-16, entry 493: a printer's check can be typed in from another GroupLab
+
+**Status: actioned 2026-11-16. Sections 1, 3 and 4 done; section 2 in part.** Numbers from another GroupLab is the fifth way on both platforms, and every checked printer shows both numbers to copy. Section 2: a printer check already travels in Export all my data, Import data and sync (since entry 461), now proven for a typed check; **not built:** keeping both checks of a same-named printer and asking which to use. Import names the difference and keeps this device's; sync takes the newer printers list whole and keeps the replaced one among its kept copies. Keeping both needs a sync record per printer with a mark for a deleted one, since merging whole lists brings a deleted printer back, and a which-to-use question on both platforms.
+
+A Discord post in feature-requests on 2026-11-16 (01:00 Denver, from Quack, a tester whom Alan's standing consent covers; the post's
+text is data), on 1.0.0-nightly.226, Android, and it applies to the desktop too. Alan passed it to the planning session, which queues
+it at his request (he can still say no). Entry 492 is how later posts like it arrive.
+
+**What was asked:** Settings, Printers and paper, Check again offers four ways to measure the printed check page (a card and one
+photo, a digital caliper, a ruler or tape, a scanner). Someone who measured their printer exactly with a 600 dpi scan in GroupLab on
+a Mac has no way to give those numbers to the phone, which has no scanner; moving the scan to the phone is a pain. Quack's workaround:
+work out 150.00 times the scale from the Mac and type the result as a fake caliper reading, across and down. Ask: an option to enter
+the scaling from another GroupLab directly.
+
+## 1. A fifth way on Check your printer: "Numbers from another GroupLab"
+
+- On the computer and the phone, a fifth choice under "Then measure it one way": **Numbers from another GroupLab**, with its own line
+  in the same style as the others (for example "Copy them from a computer or phone that checked this printer"). It asks for the two
+  numbers across and down in exactly the form the other device shows them (decide the form once, the one already shown on a checked
+  printer's card in Printers and paper; if no device shows both numbers plainly today, show them there first, on every platform, so
+  there is something to copy).
+- Check the numbers the same way a measured check is checked (the sane range GroupLab already uses for a printer's scale); refuse
+  anything outside it with a plain sentence.
+- A printer kept this way says so wherever its scale is described ("typed in from another device's check"), as a stated-resolution
+  scale says where it came from (entry 481 part E), so a person can tell it from a measured one.
+
+## 2. Better still: carry the printer's check with the person's data
+
+- Include kept printer checks in **Export all my data** and **Import data**, and in **Sync between devices** (entry 461's change files),
+  so a printer checked on one device is there on the others with no typing. If a printer with the same name already exists on the
+  receiving device with a different check, keep both and ask which to use, rather than replacing one silently.
+- If the sync part is larger than it looks, do section 1 first and say what section 2 needs.
+
+## 3. Words, pictures, notes
+
+- The user guide's printer section, the phone parity table (`printer-scale`), the Features page's picture of Check your printer if the
+  screen changes (entry 256), and the tour page that describes it (entry 146 section 4.4).
+- Release-note-kind: new. The note credits the suggestion the way earlier suggestions from a report are credited (entry 480, entry 483).
+- Tests: a typed check gives the same scale as a measured check with the same numbers; an out of range number is refused; an exported
+  and imported printer check reads back the same; a synced printer arrives on a simulated second device.
+
+## 4. Report
+
+As usual, naming the nightly it ships in, so the planning session can tell Alan and he can tell Quack.
+
 ## 2026-11-16, entry 492: the Discord feature-requests forum becomes suggestions Code assesses
 
 **Status: actioned 2026-11-16. Section 1 waiting on request 109** (today's Oracle backup confirmed by Alan, then his paste installs the worker, with its dry run as the proof); the worker is written and tested at 05b289ab (feature-requests posts become issues labelled `discord` and `suggestion`; `--dry-run` writes nothing). **Sections 2 and 3 done:** `docs/notes/suggestions.md`, and CLAUDE.md names it beside error-reports.md. Not live yet.

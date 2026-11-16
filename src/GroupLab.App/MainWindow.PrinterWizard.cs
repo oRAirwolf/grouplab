@@ -140,6 +140,7 @@ public sealed partial class MainWindow
             (PrinterMethod.Caliper, "Digital caliper", "Most exact without a scanner. About 0.1%."),
             (PrinterMethod.Ruler, "Ruler or tape", "Two long lines. About 0.3 to 0.5%."),
             (PrinterMethod.Scan, "Scanner", "Best, if you have one. Scan the page."),
+            (PrinterMethod.Typed, PrinterProfile.TypedTitle, PrinterProfile.TypedDetail),
         };
         var chosen = method;
         foreach (var (m, title, detail) in choices)
@@ -169,6 +170,7 @@ public sealed partial class MainWindow
             PrinterMethod.Card => "A card and one photo",
             PrinterMethod.Caliper => "Measure with a caliper",
             PrinterMethod.Ruler => "Measure with a ruler or tape",
+            PrinterMethod.Typed => PrinterProfile.TypedTitle,
             _ => "Scan the check page",
         });
         var said = new TextBlock { TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Alert }, IsVisible = false };
@@ -217,6 +219,34 @@ public sealed partial class MainWindow
                 {
                     Wrong(result.Why ?? PrinterCheck.NoPage);
                 }
+            })));
+        }
+        else if (method == PrinterMethod.Typed)
+        {
+            // Entry 493: the two numbers another GroupLab shows under this printer, as it shows them.
+            page.Children.Add(Line(PrinterProfile.TypedHelp));
+            var across = new TextBox { Width = 120, PlaceholderText = "99.23" };
+            var down = new TextBox { Width = 120, PlaceholderText = "99.41" };
+            TextBlock Labelled(string words, Control field)
+            {
+                var label = new TextBlock { Text = words, Width = 110, VerticalAlignment = VerticalAlignment.Center };
+                Avalonia.Automation.AutomationProperties.SetLabeledBy(field, label);
+                return label;
+            }
+
+            page.Children.Add(Row(Labelled("Across, %", across), across));
+            page.Children.Add(Row(Labelled("Down, %", down), down));
+            page.Children.Add(Row(Button("Use these", () =>
+            {
+                var (profile, why) = PrinterProfile.FromTyped(name, across.Text, down.Text, today);
+                if (profile is null)
+                {
+                    Wrong(why!);
+                    return;
+                }
+
+                DiagnosticLog.Info("printer.check", ("step", "measured"), ("method", method.ToString()), ("found", true));
+                ShowPrinterResult(window, profile, null);
             })));
         }
         else
@@ -303,7 +333,7 @@ public sealed partial class MainWindow
         Figure(0, "Across", profile.Across);
         Figure(1, "Down", profile.Down);
         page.Children.Add(figures);
-        page.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Give or take {profile.Uncertainty * 100:0.0}%, measured {profile.How}.")));
+        page.Children.Add(Line(string.Create(CultureInfo.InvariantCulture, $"Give or take {profile.Uncertainty * 100:0.0}%, {profile.Measured}.")));
         var rows = new Grid { ColumnDefinitions = new ColumnDefinitions("160,*"), RowDefinitions = new RowDefinitions("Auto,Auto,Auto"), RowSpacing = Tokens.Space8 };
         void Kv(int row, string key, string value)
         {

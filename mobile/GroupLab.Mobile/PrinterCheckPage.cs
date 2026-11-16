@@ -69,6 +69,7 @@ internal sealed class PrinterCheckPage : UserControl
             (PrinterMethod.Caliper, "Digital caliper", "Most exact without a scanner. About 0.1%."),
             (PrinterMethod.Ruler, "Ruler or tape", "Two long lines. About 0.3 to 0.5%."),
             (PrinterMethod.Scan, "Scanner", "Best, if you have one. Scan the page."),
+            (PrinterMethod.Typed, PrinterProfile.TypedTitle, PrinterProfile.TypedDetail),
         };
         foreach (var (m, title, detail) in choices)
         {
@@ -106,6 +107,7 @@ internal sealed class PrinterCheckPage : UserControl
             PrinterMethod.Card => "A card and one photo",
             PrinterMethod.Caliper => "Measure with a caliper",
             PrinterMethod.Ruler => "Measure with a ruler or tape",
+            PrinterMethod.Typed => PrinterProfile.TypedTitle,
             _ => "Scan the check page",
         });
         var said = Screens.Line("");
@@ -145,6 +147,28 @@ internal sealed class PrinterCheckPage : UserControl
             }
 
             column.Children.Add(Screens.Choice(method == PrinterMethod.Card ? "Choose a photo instead" : "Choose the scan", () => _ = Choose(said)));
+        }
+        else if (method == PrinterMethod.Typed)
+        {
+            // Entry 493: the two numbers another GroupLab shows under this printer, as it shows them.
+            column.Children.Add(Screens.Dim(PrinterProfile.TypedHelp));
+            var across = Screens.Numeric(new TextBox { MinHeight = Screens.Touch, PlaceholderText = "Across, %, such as 99.23" });
+            var down = Screens.Numeric(new TextBox { MinHeight = Screens.Touch, PlaceholderText = "Down, %, such as 99.41" });
+            Avalonia.Automation.AutomationProperties.SetName(across, "Across, percent");
+            Avalonia.Automation.AutomationProperties.SetName(down, "Down, percent");
+            column.Children.Add(Screens.Card(across, down));
+            column.Children.Add(Screens.Primary("Use these", () =>
+            {
+                var (profile, why) = PrinterProfile.FromTyped(name, across.Text, down.Text, Today());
+                if (profile is null)
+                {
+                    said.Text = why!;
+                    return;
+                }
+
+                DiagnosticLog.Info("printer.check", ("step", "measured"), ("method", method.ToString()), ("found", true));
+                Result(profile, null);
+            }));
         }
         else
         {
@@ -260,7 +284,7 @@ internal sealed class PrinterCheckPage : UserControl
         Add(Screens.Dim("Down"), 1, 0);
         Add(Big(profile.Across), 0, 1);
         Add(Big(profile.Down), 1, 1);
-        column.Children.Add(Screens.Card(figures, Screens.Dim(string.Create(CultureInfo.InvariantCulture, $"Give or take {profile.Uncertainty * 100:0.0}%, measured {profile.How}."))));
+        column.Children.Add(Screens.Card(figures, Screens.Dim(string.Create(CultureInfo.InvariantCulture, $"Give or take {profile.Uncertainty * 100:0.0}%, {profile.Measured}."))));
         column.Children.Add(Screens.Card(
             Screens.Row("What it means", PrinterCheck.WhatItMeans(profile), () => { }),
             Screens.Row("From now on", $"photos from {profile.Name} are corrected", () => { }),
