@@ -3,12 +3,13 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-16 09:14 UTC
+## TestFlight, 2026-11-16 12:52 UTC
 
-- Build 227 not submitted yet: Apple said 422 Another build in the same train is already in beta review. Please submit it again once it gets completed.. The next run tries again.
-- Build 227 for Public Beta: ready for beta submission.
+- Build 228 added to Public Beta, with its release notes as What to Test.
+- Build 228 not submitted yet: Apple said 422 Another build in the same train is already in beta review. Please submit it again once it gets completed.. The next run tries again.
+- Build 228 for Public Beta: ready for beta submission.
 - Both groups have build 225.
-- GroupLab Team also has build 227, 226, newer than Public Beta's; it was added by hand and is left there.
+- GroupLab Team also has build 228, 227, 226, newer than Public Beta's; it was added by hand and is left there.
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
