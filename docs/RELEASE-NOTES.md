@@ -12,6 +12,21 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 1.0.0-nightly.227
+
+**2026-11-16**, commit `2ae9462`. Nightly.
+
+**What you will notice**
+
+- Sharing a pooled set of sheets now explains that each sheet's session file is what to share, and Export saves the pooled shots as a CSV instead of a file that opened with the shots off the edge of the screen. (Error report 47) (found from a Discord post).
+- A pooled set of sheets is no longer saved as a broken session when you press Accept and analyze on it; it now says it is not kept on its own, since each sheet keeps its own record, and the phone's pooled group does the same. (Error report 46) (found from a Discord post).
+
+From your reports and targets in this build: 2 fixes from 2 error reports.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.227)
+
+---
+
 ## 1.0.0-nightly.226
 
 **2026-11-15**, commit `05abdd8`. Nightly.
