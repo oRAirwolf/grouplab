@@ -12,6 +12,20 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 ---
 
+## 1.0.0-nightly.228
+
+**2026-11-16**, commit `35bfa89`. Nightly.
+
+**What you will notice**
+
+- Check your printer has a fifth way, Numbers from another GroupLab: type in the two numbers another computer or phone shows under that printer in Printers and paper, which now shows both, so a phone without a scanner can use a computer's scan; a tester suggested it on the GroupLab Discord (suggested in a Discord post).
+
+From your reports and targets in this build: 1 change suggested in 1 error report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.228)
+
+---
+
 ## 1.0.0-nightly.227
 
 **2026-11-16**, commit `2ae9462`. Nightly.
