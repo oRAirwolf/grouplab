@@ -3,9 +3,8 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-16 09:09 UTC
+## TestFlight, 2026-11-16 09:14 UTC
 
-- Build 227 added to Public Beta, with its release notes as What to Test.
 - Build 227 not submitted yet: Apple said 422 Another build in the same train is already in beta review. Please submit it again once it gets completed.. The next run tries again.
 - Build 227 for Public Beta: ready for beta submission.
 - Both groups have build 225.
