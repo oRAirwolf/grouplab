@@ -1,4 +1,4 @@
-**Open: 26.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **109**, one look and one paste so the Discord bot reads feature-requests (five minutes). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 25.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 App clips for the launch videos are in C:\Dev\grouplab-local\video-clips\ (50 clips, see clips.csv; the two camera clips wait for request 50's sitting).
 **iPhone Duo** (entry 480, not a request): nothing to do, waiting on Microsoft. Apple's and GitHub's side are ready, but Microsoft's first iOS 27.1 tools drop parts of the keyboard code GroupLab relies on; their fix comes with the next .NET 10 release, and the build moves then by itself. Until then the Duo's inner screen shows GroupLab in an iPhone-sized window.
 **DESIGN NEEDED** (entry 480 section 6): **Answered 2026-11-07: 1A, keep the bar as it is (entry 482); no layout changed.** The line as it was: on the iPhone Duo's inner screen held upright, the crease runs down the middle, through the middle of the five places along the bottom (Ballistics sits under the crease), as on the Galaxy Z Fold 7 open. Keep it as it is, or leave a gap at the crease? Nothing is changed meanwhile.
@@ -327,31 +327,6 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
-
-## 109. The Discord bot reads feature-requests too, one look and one paste, about five minutes, whenever suits (entry 492)
-
-**Opened 2026-11-16.** You said yes to the feature-requests forum. The bot now files a post there as a GitHub issue labelled
-`suggestion`, as it files bug reports; Claude Code assesses each in `docs/notes/suggestions.md` and builds nothing without your yes.
-The new bot is written and tested; installing it on the server needs today's server backup confirmed first, which Claude Code cannot
-see (RESTORE.md rule 5).
-
-**First, one look:** in the Oracle console, **Storage**, **Block Storage**, **Boot Volume Backups**: is there a backup created today,
-about 09:00 UTC? If there is none from the last day, stop and say so instead.
-
-**Then this paste**, in your usual bash session on the server. It fetches the six files at 05b289ab and checks each against the
-repository, backs up the bot's script, shows what the new bot would file without filing anything (the proof the entry asks for), then
-installs it, runs it once, shows its log and checks both sites.
-
-```
-mkdir -p /home/ubuntu/grouplab-server-492 && cd /home/ubuntu/grouplab-server-492 && for f in install.py grouplab-change-backup.py grouplab-discord-worker.py grouplab-set-discord-token grouplab-discord-worker.service grouplab-discord-worker.timer; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/05b289ab/website/server/$f" || { echo "STOP: $f could not be fetched"; break; }; done; printf '%s\n' 'b76c3e8fe6a37df0cdedc2c6e46a46dec93abda2335da812d087e03ea1f137ed  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' '4a69a5ad8fd6c584bc01cc61ad24a470288e38769f7f29ad0f414dc94d7ccf24  grouplab-discord-worker.py' '82fca876d79928b20520154ec424b8530465b9b49bb055bb0a33d1d0d3220fb7  grouplab-set-discord-token' '9fab3f90ad7202f01d47f217e016a9c3f3caa43fd139cbd970c92f4507d607ec  grouplab-discord-worker.service' '759a3ced54099155cc524aed9c83879f5fd4148bf2c97445e1cfcbe50cc0de3f  grouplab-discord-worker.timer' | sha256sum -c || { echo "STOP: a file is not what the repository holds"; false; } && sudo systemd-run --quiet --wait --pipe --collect -p LoadCredential=discord-token:/etc/grouplab/discord-token /usr/bin/python3 /home/ubuntu/grouplab-server-492/grouplab-discord-worker.py --dry-run || { echo "STOP: the dry run did not finish"; false; } && sudo python3 grouplab-change-backup.py --label discord-worker-suggestions --file /usr/local/sbin/grouplab-discord-worker.py || { echo "STOP: the backup did not finish"; false; } && sudo python3 install.py --discord || { echo "STOP: the install did not finish"; false; } && sudo systemctl start grouplab-discord-worker.service || { echo "STOP: the worker did not run; its log follows"; false; }; sudo tail -n 20 /home/airwolf/logs/grouplab-discord-worker.log; for s in grouplab.org pissinhot.com; do echo "$s $(curl -s -o /dev/null -w '%{http_code}' https://$s/)"; done
-```
-
-**A good result:** six `OK`; `dry run: forums found: bug-reports, feature-requests`, a `bug-reports:` line saying 0 would be filed, and
-a `feature-requests:` line saying how many posts would be filed (at least 1, the printer post that became entry 493); the backup
-folder's name; the install's done; a log ending with `found the feature-requests forum` and an `issue #` line for each of those posts,
-with no Traceback or STOP; and `grouplab.org 200` and `pissinhot.com 200`. The bot thanks each poster once in their thread, as it does
-for bug reports. **A good answer:** paste back what it printed. **To undo:** `sudo install -m 755 -o root -g root` the backup folder's
-copy of the script over `/usr/local/sbin/grouplab-discord-worker.py`; the issues it filed stay filed.
 
 ## 106. A weekly look at the Oracle backups without you, about fifteen minutes once, whenever suits (entry 462 section 5)
 

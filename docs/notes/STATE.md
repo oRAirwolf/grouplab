@@ -9,16 +9,16 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-16, entry 493 done (after 492, error reports 46 and 47 and nightly 227's fix); the inbox is empty.
+**Last rewritten:** 2026-11-16, entry 494 done (after 493 and nightly 228); entry 495 is waiting in the inbox.
 
 ---
 
 ## In flight
 
-- **Entry 493 (2026-11-16)**, done but section 2's keep-both: Numbers from another GroupLab on Check your printer, both numbers
+- **Entry 493 (2026-11-16)**, done but section 2's keep-both (ships in nightly 228): Numbers from another GroupLab on Check your printer, both numbers
   under each printer to copy; a typed check is saved as a card check marked `typed` so older builds keep it (PrinterProfile).
-- **Entry 492 (2026-11-16)**, done but section 1's install: the Discord worker files feature-requests as `suggestion` issues
-  (05b289ab, `--dry-run` writes nothing); request 109 installs it once Alan sees today's Oracle backup; docs/notes/suggestions.md.
+- **Entries 492 and 494 (2026-11-16)**, done: the Discord worker files feature-requests as `suggestion` issues, installed by Alan
+  at 11:49 UTC (RESTORE.md); suggestions 48 and 49 assessed in docs/notes/suggestions.md, both already built (442, 493); 48 left open.
 - **Entry 491 (2026-11-15)**, done: App Store 1.0 (build 226) is with App Review; its state is in external-status.md.
 - **Entries 489 and 490 (2026-11-15)**, done: the backup always ends with a result line; Apple's privacy declaration added; the Play
   closed test is open (`PLAY_TEST_LINK` on /android-test/ and the pages).
@@ -61,7 +61,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **26**; waiting on him: 109 (the Discord bot's install), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **25**; waiting on him: 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -73,8 +73,8 @@ Three, all in `docs/QUESTIONS-FOR-PLANNING.md` (36 and 112 answered in entries 4
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.226 (2026-11-15 14:23 UTC), the first 1.0 build: Store 1.0.226.0 submitted, Play internal and
-  alpha, TestFlight build 226 (short version 1.0) waiting for beta review; it carries entries 480's check to 489.
+- **Last nightly:** 1.0.0-nightly.228 (2026-11-16 11:30 UTC), carrying entry 493 (a printer's check typed in from another
+  GroupLab); App Store 1.0 (build 226) is with App Review; TestFlight build 227 waits for 226's beta review to finish.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
 ## The inbox
@@ -84,7 +84,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 495.
 
 ## Things that would surprise somebody who was not here yesterday
 

@@ -705,6 +705,15 @@ credits Quack; no Features picture shows the wizard (its picture is the check pa
 `Entry493Tests` (7: the same scale typed as measured, refusals, the words, the saved form, export and import, a second device by sync),
 App and Mobile `Entry493Tests` (the wizard walked as a person would, then Printers and paper).
 
+## Entry 494: the feature-requests forum is live; suggestions 48 and 49 (2026-11-16)
+
+**Section 1:** request 109 is answered and moved to the archive; the worker's install of 11:49 UTC is recorded in `docs/RESTORE.md`
+under rule 5 with its backup folder and its undo. Entry 492 section 1 is done. **Section 2:** issue 49 (type in a printer's check from
+another GroupLab) is assessed in `docs/notes/suggestions.md` as built by entry 493 and closed, naming nightly 228. **Section 3:** issue
+48 (Tab after choosing a shot, and the arrow keys) is assessed: posted from nightly 198, it was already built by entry 442 and shipped in
+nightly 199, so nothing is left to build; recommended closed, left open for the planning session. **Section 4:** nothing on the server
+was changed or deleted; the worker's own `.bak` beside it stays.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

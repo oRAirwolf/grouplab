@@ -25,6 +25,33 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-16, entry 494: request 109 answered; the feature-requests forum is live; assess suggestions 48 and 49
+
+**Status: actioned 2026-11-16. Sections 1 to 4 done.** Request 109 closed and the install recorded in RESTORE.md (entry 492 section 1 done); issue 49 assessed and closed as built by entry 493 in nightly 228; issue 48 assessed in suggestions.md: already built by entry 442 in nightly 199, recommended closed, left open for the planning session; nothing on the server touched.
+
+Alan ran request 109's paste on the server at 04:49 Denver (11:49 UTC) on 2026-11-16, after checking the Oracle boot volume backup, and
+pasted the output back to the planning session. The planning session had checked the six fingerprints against 05b289ab on main first.
+
+**What it printed, in short:** all six files OK; the dry run found both forums (bug-reports: 9 posts, 9 filed already, 0 to file;
+feature-requests: 2 posts, 2 to file); the backup `/home/ubuntu/grouplab-server/backups/2026-11-16T114908Z-discord-worker-suggestions`
+(the script, 21,088 bytes, 0755 root:root); install.py kept the old script as `/usr/local/sbin/grouplab-discord-worker.py.20261116-044908.bak`,
+wrote the new one, found the token, the units and the private folders already as they should be, and restarted the timer; the run
+found both forums and filed thread 1561049299238912071 as **issue #48** and thread 1571797004076716072 as **issue #49**, both in
+feature-requests; no Traceback, no STOP; grouplab.org 200 and pissinhot.com 200. The older log lines (a TimeoutError on 2026-10-16 and
+a Discord 503 on 2026-11-05) were runs that stopped and resumed, nothing new.
+
+## What to do
+
+1. Record the install in RESTORE.md (what changed, the backup, the undo: install the backup folder's copy over the script) and close
+   request 109 in for-alan.md with today's date. Entry 492 section 1 is done.
+2. Assess **issue #49** in suggestions.md: it is Quack's printer request, already answered yes as entry 493 (in nightly 228); close it
+   with that.
+3. Assess **issue #48** in suggestions.md the usual way (what is asked, whether GroupLab already does it, size, fit, recommendation).
+   Build nothing; the planning session brings it to Alan.
+4. Delete nothing on the server. The `.bak` copy beside the script in /usr/local/sbin is install.py's own and stays.
+
+Report as usual.
+
 ## 2026-11-16, entry 493: a printer's check can be typed in from another GroupLab
 
 **Status: actioned 2026-11-16. Sections 1, 3 and 4 done; section 2 in part.** Numbers from another GroupLab is the fifth way on both platforms, and every checked printer shows both numbers to copy. Section 2: a printer check already travels in Export all my data, Import data and sync (since entry 461), now proven for a typed check; **not built:** keeping both checks of a same-named printer and asking which to use. Import names the difference and keeps this device's; sync takes the newer printers list whole and keeps the replaced one among its kept copies. Keeping both needs a sync record per printer with a mark for a deleted one, since merging whole lists brings a deleted printer back, and a which-to-use question on both platforms.

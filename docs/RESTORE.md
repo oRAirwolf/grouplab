@@ -99,6 +99,16 @@ server is limited to GroupLab's own files and its installer.
 **Changes made under rule 5** (newest first). The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from
 09:02 UTC that day when these were made.
 
+- **2026-11-16 11:49 UTC, the Discord worker reads the feature-requests forum too** (entry 492 section 1, request 109, run by Alan;
+  recorded by entry 494). Alan checked the Oracle boot volume backup from that day first. Fetched at 05b289ab, six files `OK` against
+  the repository. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only (it files a feature-requests post as an issue labelled
+  `suggestion`); `install.py --discord` found the token, the units and the private folders already as they should be and restarted the
+  timer. Backup: `/home/ubuntu/grouplab-server/backups/2026-11-16T114908Z-discord-worker-suggestions/`, holding the previous worker
+  (21,088 bytes, 0755 root:root). `install.py` also kept it beside the worker as
+  `/usr/local/sbin/grouplab-discord-worker.py.20261116-044908.bak`, which stays. The dry run before it found both forums (bug-reports
+  0 to file, feature-requests 2), and the run filed them as issues 48 and 49 with no Traceback and no STOP; grouplab.org and
+  pissinhot.com both answered 200. Undo: `sudo install -m 755 -o root -g root` the backup folder's copy over the worker, then
+  `sudo systemctl start grouplab-discord-worker.service`; check with `sha256sum` against the backup. Issues already filed stay filed.
 - **2026-10-16 07:45 UTC, the Discord worker puts attachments on their issues** (entry 429, request 102, run by Alan; recorded
   2026-10-16). Fetched at 5baf3bbf, six files `OK` against the repository. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only
   (it commits each kept attachment under `discord/` in `grouplab-crash-reports` and shows it on its issue); a3ea5ecf to 5baf3bbf
