@@ -667,9 +667,17 @@ jobs:
           else
             printf '%s' "$APPLE_API_KEY_P8" | base64 --decode > "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
           fi
+          # 2026-11-16: a nightly whose publish failed after this step had sent its build is run again under the same number, and
+          # Apple refuses a build number it already has. That one number, already there, is said and passes; anything else stops.
+          sent="signed and sent to TestFlight"
           xcrun altool --upload-app --type ios --file "$ipa" --apiKey "$APPLE_API_KEY_ID" --apiIssuer "$APPLE_API_ISSUER_ID" > upload.log 2>&1 \
-            || { grep -vi "key" upload.log | tail -20; echo "::error::TestFlight did not take the build; the lines above say why."; exit 1; }
-          echo "### iOS: signed and sent to TestFlight, version $VERSION." >> "$GITHUB_STEP_SUMMARY"
+            || if grep -F "previously uploaded version: " upload.log | grep -q "[^0-9]$code[^0-9]"; then
+                 sent="already on TestFlight as build $code from an earlier run of this nightly, so not sent twice"
+                 echo "::notice::TestFlight already has build $code, sent by an earlier run of this nightly; it is not sent twice."
+               else
+                 grep -vi "key" upload.log | tail -20; echo "::error::TestFlight did not take the build; the lines above say why."; exit 1
+               fi
+          echo "### iOS: $sent, version $VERSION." >> "$GITHUB_STEP_SUMMARY"
           rm -f "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
           security delete-keychain "$keychain"
 

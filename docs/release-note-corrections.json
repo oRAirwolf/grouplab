@@ -204,6 +204,15 @@
           "kind": "fixed"
         }
       ]
+    },
+    "703ebdfb2ec374a0e9e277631d212b31db164427": {
+      "why": "Entry 489 section 2's note used a word the release notes refuse as meaning nothing to somebody who shoots; it stopped nightly 227 twice on 2026-11-16, in the step that lists each recent build's notes for the update bar.",
+      "notes": [
+        {
+          "note": "The iPhone and iPad build now carries Apple's privacy declaration, which the App Store asks for, saying the same about your data as GroupLab's privacy answers. (Entry 489, 2)",
+          "kind": "changed"
+        }
+      ]
     }
   }
 }
