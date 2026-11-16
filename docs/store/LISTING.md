@@ -124,6 +124,19 @@ Set by the planning session in App Store Connect (GroupLab, Apple ID 6817635137)
 - **Review notes:** no accounts; use the demo, since a reviewer has no shot sheet; any paper target can be marked by hand; no
   firearms shown, nothing sold, nothing sent unless chosen; the source is on GitHub under GPL-3.0 with the App Store permission. The
   review contact is Alan, at support@grouplab.org; the phone number stays in App Store Connect only.
-- **Release:** manual.
-- **Not done:** screenshots (entry 487 section 4, `docs/store/apple/`), a build attached, and submission. Attaching a build and
-  submitting wait for Alan's yes through the planning session.
+- **Release:** manual. After approval nothing is public until Alan says to release it, through the planning session.
+- **Screenshots:** from the simulators (entry 487 section 4, `docs/store/apple/`).
+
+### Submitted to App Review, 2026-11-15 (entry 491)
+
+At Alan's word ("Submit now"), by the planning session at 20:36 Denver time on 2026-11-15:
+
+- **Build:** 226, version 1.0, attached to iOS version 1.0; it carries the privacy manifest from entry 489.
+- **Content rights** saved again on App Information ("No third-party content"): the first answer was set but its page never saved.
+- **Pricing and Availability:** free ($0.00, base United States) in all 175 countries or regions. **Not offered on Apple silicon Macs
+  or Apple Vision Pro**: both were on by default and neither has been tried; GroupLab has its own signed macOS build. Either can be
+  turned on later.
+- **Status:** 1.0 Waiting for Review; Apple says up to 48 hours. The testflight workflow reads the version's state through the API
+  after every nightly and every half hour, into `docs/notes/external-status.md`; a rejection goes to `docs/notes/for-alan.md` the same
+  day with Apple's words, which are copied from App Store Connect because the API does not give them.
+- **TestFlight** goes on as before: each nightly still goes to both groups, and nothing in a nightly touches the version in review.

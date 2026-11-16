@@ -25,6 +25,37 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-15, entry 491: GroupLab 1.0 (build 226) is submitted to App Review
+
+**Status: actioned 2026-11-15. Sections 1 to 3 done.** LISTING.md's Apple section and IOS-PLAN.md section 4 record the
+submission; the README, PLATFORM-SUPPORT.md and the download page say version 1.0 is with Apple's review and TestFlight stays the
+way in. The testflight workflow now reads the App Store version's state through the API (`testflight.py --app-store`, GET only)
+into external-status.md beside TestFlight; Apple's rejection words are not in the API, so a rejection names where they are and the
+planning session copies them. Nothing in a nightly touches the version: the upload sends builds only, and the screenshot job is run
+by hand and never removes a picture.
+
+The planning session, at Alan's word ("Submit now"), 20:36 Denver on 2026-11-15, in App Store Connect:
+
+- **Build:** 226, version 1.0, attached to iOS version 1.0 (it carries entry 489's privacy manifest).
+- **Before Apple would take it:** content rights saved again on App Information ("No third-party content"; the first answer on
+  2026-11-15 was set but the page was never saved), and Pricing and Availability set: free ($0.00, base United States) in all 175
+  countries or regions. **Not offered on Apple silicon Macs or Apple Vision Pro** (both were on by default; neither has been tried, and
+  GroupLab has its own signed macOS build); either can be turned on later.
+- **Status:** "1.0 Waiting for Review"; Apple says up to 48 hours. Release is **manual**: after approval nothing is public until Alan
+  presses release, through the planning session.
+
+## What to do
+
+1. Record the above in docs/store/LISTING.md's Apple section and docs/IOS-PLAN.md section 4, and say on the README and
+   docs/PLATFORM-SUPPORT.md only what is true: the App Store version is with Apple's review; TestFlight stays the way in until it is
+   released. Claims backing names this entry.
+2. If the TestFlight status workflow or a status note can read the App Store version's review state through the API, add it to
+   external-status.md beside TestFlight, so a rejection or approval is seen without anyone opening App Store Connect. A rejection
+   goes to for-alan.md the same day with Apple's words.
+3. While 1.0 is in review, a new nightly still goes to TestFlight as usual; nothing may remove the version from review.
+
+Report as usual.
+
 ## 2026-11-15, entry 490: Google approved the Play closed test; the opt-in link goes on the pages
 
 **Status: actioned 2026-11-15. Sections 1 to 3 done.** The opt-in page is on /android-test/ (step 2 live, step 3 links the Play

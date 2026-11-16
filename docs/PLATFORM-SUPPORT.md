@@ -35,7 +35,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 | **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 240 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 240 MB on Apple silicon, 270 MB on Intel | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 260 MB installed | as Windows |
-| **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, through TestFlight's public beta; not in the App Store yet | not measured yet | not measured yet | as Android |
+| **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, through TestFlight's public beta; version 1.0 is with Apple's App Store review | not measured yet | not measured yet | as Android |
 | **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's closed test, open to anyone | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
 
 Where the figures come from:
@@ -72,7 +72,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ## Apple mobile
 
-GroupLab for iPhone and iPad is in a public beta through TestFlight. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet; the plan is docs/IOS-PLAN.md. On the iPhone Duo, GroupLab runs, but its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools; the Duo has been checked only in GroupLab's own tests, because nobody on the project has one.
+GroupLab for iPhone and iPad is in a public beta through TestFlight. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet: version 1.0 was submitted to Apple's App Review on 15 November 2026 and waits for review, and TestFlight stays the way in until it is released. The plan is docs/IOS-PLAN.md. On the iPhone Duo, GroupLab runs, but its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools; the Duo has been checked only in GroupLab's own tests, because nobody on the project has one.
 
 ## Other Linux builds
 

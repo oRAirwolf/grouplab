@@ -657,6 +657,21 @@ Found on the way: entry 488 had backed the download page's build lines as five l
 1.0 build broke; the existing pattern rule now reads "GroupLab 1.0, build N" as well as "Nightly N", and the five are gone.
 Error report 45, a diagnostics send with no note from a first start of build 226 on Android, had no error in its log; closed.
 
+## Entry 491: GroupLab 1.0 submitted to App Review (2026-11-15)
+
+The planning session submitted version 1.0 with build 226 at Alan's word, 20:36 Denver on 2026-11-15; it is Waiting for Review, release
+manual, free in 175 countries or regions, not offered on Apple silicon Macs or Apple Vision Pro. **Section 1:** recorded in
+docs/store/LISTING.md (Apple, "Submitted to App Review") and docs/IOS-PLAN.md section 4; the README's platform row, iOS paragraph and
+Phase 8 line, PLATFORM-SUPPORT.md and the download page's iPhone card say it is with Apple's review and TestFlight stays the way in;
+four sentences backed by this entry. **Section 2:** `scripts/testflight.py --app-store` reads the newest iOS App Store version and its
+build (appStoreVersions with the build included, appVersionState or the older appStoreState) and says it in plain words; the testflight
+workflow runs it after every nightly and on its half-hourly schedule and writes an `app-store` section into external-status.md beside
+TestFlight's, committed only when it changes. A rejection or an approval also prints a warning and a line for for-alan.md; Apple's
+reasons are not in the API, so the line says where to read them. Its self-test covers no version, waiting, rejected, approved and a
+live version with a newer one in review. **Section 3:** the check only reads; the nightly's iOS job uploads builds and the TestFlight
+step works on builds and beta groups only; apple-screens.yml, the only thing that writes to a version, runs by hand and leaves a set
+with pictures alone. Nothing was changed for it.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

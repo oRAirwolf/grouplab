@@ -8196,6 +8196,26 @@
   "3 Install from Google Play Install GroupLab from its page on Google Play , which opens for you once you have opted in, or from the opt-in page's own link.": {
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entry 490 section 2: the opt-in page (Become a tester) and the Play page, which opens once a person has opted in, as the planning session read them on 2026-11-15; website/build.py page_android_test, PLAY_TEST_LINK and PLAY_LISTING_LINK"
+  },
+  "Version 1.0 is with Apple's App Store review; releasing it once approved waits for Alan.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 491 (the planning session, at Alan's word \"Submit now\", 2026-11-15 20:36 Denver): build 226 attached to version 1.0 and submitted to App Review, Waiting for Review; free in 175 countries or regions; not offered on Apple silicon Macs or Apple Vision Pro; release manual. docs/store/LISTING.md's Apple section"
+  },
+  "**Submitted, 2026-11-15 (entry 491).** At Alan's word, the planning session attached build 226 to version 1.0 and submitted it at 20:36 Denver time; its state is \"Waiting for Review\" (Apple says up to 48 hours).": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 491 (the planning session, at Alan's word \"Submit now\", 2026-11-15 20:36 Denver): build 226 attached to version 1.0 and submitted to App Review, Waiting for Review; free in 175 countries or regions; not offered on Apple silicon Macs or Apple Vision Pro; release manual. docs/store/LISTING.md's Apple section"
+  },
+  "It is free in all 175 countries or regions, and not offered on Apple silicon Macs or Apple Vision Pro, which nobody has tried.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 491 (the planning session, at Alan's word \"Submit now\", 2026-11-15 20:36 Denver): build 226 attached to version 1.0 and submitted to App Review, Waiting for Review; free in 175 countries or regions; not offered on Apple silicon Macs or Apple Vision Pro; release manual. docs/store/LISTING.md's Apple section"
+  },
+  "It is not in the App Store yet: version 1.0 was submitted to Apple's App Review on 15 November 2026 and waits for review, and TestFlight stays the way in until it is released.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 491 (the planning session, at Alan's word \"Submit now\", 2026-11-15 20:36 Denver): build 226 attached to version 1.0 and submitted to App Review, Waiting for Review; free in 175 countries or regions; not offered on Apple silicon Macs or Apple Vision Pro; release manual. docs/store/LISTING.md's Apple section"
+  },
+  "Free, like every GroupLab download TestFlight installs each new beta build for you Not in the App Store itself yet: version 1.0 is with Apple's review Not sure?": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 491 (the planning session, at Alan's word \"Submit now\", 2026-11-15 20:36 Denver): build 226 attached to version 1.0 and submitted to App Review, Waiting for Review; free in 175 countries or regions; not offered on Apple silicon Macs or Apple Vision Pro; release manual. docs/store/LISTING.md's Apple section"
   }
  },
  "rules": [

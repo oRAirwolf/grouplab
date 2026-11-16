@@ -19,7 +19,7 @@ FILE = Path(__file__).resolve().parent.parent / "docs" / "notes" / "external-sta
 HEAD = ("# Apple's and Microsoft's stores, as the scheduled checks last saw them\n\n"
         "Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. "
         "Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.\n")
-TITLES = {"testflight": "TestFlight", "store": "The Microsoft Store"}
+TITLES = {"testflight": "TestFlight", "app-store": "The App Store version", "store": "The Microsoft Store"}
 
 
 def update(text: str, section: str, lines: list[str], now: str) -> tuple[str, bool]:

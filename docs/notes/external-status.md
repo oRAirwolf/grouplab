@@ -10,6 +10,13 @@ Written by scripts/status-note.py from the testflight and store status workflows
 - GroupLab Team also has build 226, newer than Public Beta's; it was added by hand and is left there.
 <!-- /status:testflight -->
 
+<!-- status:app-store -->
+## The App Store version, 2026-11-16 03:36 UTC
+
+- App Store version 1.0 (build 226): waiting for review.
+- On the App Store now: nothing yet; TestFlight stays the way in.
+<!-- /status:app-store -->
+
 <!-- status:store -->
 ## The Microsoft Store, 2026-11-15 18:51 UTC
 

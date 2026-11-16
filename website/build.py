@@ -926,7 +926,7 @@ def page_download() -> str:
 <div class="card-head"><h3 class="h3">The public beta</h3><span class="badge mono">Public beta</span></div>
 <div>{btn("Join the iPhone and iPad beta", TESTFLIGHT, True, big=True)}</div>
 <p>GroupLab for iPhone and iPad is in a public beta through Apple's TestFlight. Install TestFlight from the App Store first, then open the invitation on the iPhone or iPad. Each new beta build arrives through TestFlight.</p>
-{points(["Free, like every GroupLab download", "TestFlight installs each new beta build for you", "Not in the App Store itself yet"])}
+{points(["Free, like every GroupLab download", "TestFlight installs each new beta build for you", "Not in the App Store itself yet: version 1.0 is with Apple's review"])}
 </article>""",
         "Install TestFlight from the App Store first, then open the invitation on the iPhone or iPad.",
         [fold("Install TestFlight first", """<ol class="text">

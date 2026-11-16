@@ -16,7 +16,12 @@ state on by what Apple allows at that moment, and can be run again at any time w
 Nothing is ever taken out of a group: a build Alan added to GroupLab Team by hand is left there, and the run names it.
 
     python3 scripts/testflight.py --run [--wait-minutes N]   one step, with the key from APPLE_API_ISSUER_ID, APPLE_API_KEY_ID, APPLE_API_KEY_P8
+    python3 scripts/testflight.py --app-store                  the App Store version's review state, read only (entry 491)
     python3 scripts/testflight.py --self-test                  every case against a made-up App Store Connect, no network
+
+Entry 491: the App Store version's review is read beside TestFlight, so an approval or a rejection is seen without anyone opening App
+Store Connect. That check only reads: nothing here submits, cancels or changes an App Store version, so a nightly going to TestFlight
+never takes a version out of review.
 
 The lines are printed and appended to $GITHUB_STEP_SUMMARY when that is set. No key, email or token is ever printed.
 """
@@ -62,6 +67,39 @@ class Build:
     expired: bool = False
 
 
+@dataclass
+class Version:
+    """An App Store version as App Store Connect lists it: its number, its state, and the build attached, if any."""
+    number: str
+    state: str
+    created: str = ""
+    build: int | None = None
+
+
+# Entry 491: an App Store version's state in plain words. Old and new names both, since Apple renamed them (appStoreState, appVersionState).
+VERSION_WORDS = {
+    "PREPARE_FOR_SUBMISSION": "being prepared, not submitted",
+    "READY_FOR_REVIEW": "ready, not submitted",
+    "WAITING_FOR_REVIEW": "waiting for review",
+    "IN_REVIEW": "in review",
+    "WAITING_FOR_EXPORT_COMPLIANCE": "waiting for the export question",
+    "PENDING_DEVELOPER_RELEASE": "approved, waiting for Alan to release it",
+    "ACCEPTED": "approved",
+    "PENDING_APPLE_RELEASE": "approved, Apple is releasing it",
+    "PROCESSING_FOR_APP_STORE": "approved, being prepared for the App Store",
+    "PROCESSING_FOR_DISTRIBUTION": "approved, being prepared for the App Store",
+    "READY_FOR_SALE": "released on the App Store",
+    "READY_FOR_DISTRIBUTION": "released on the App Store",
+    "REJECTED": "rejected by App Review",
+    "METADATA_REJECTED": "rejected by App Review for its listing",
+    "INVALID_BINARY": "rejected, Apple found the build invalid",
+    "DEVELOPER_REJECTED": "taken out of review",
+    "REPLACED_WITH_NEW_VERSION": "replaced by a newer version",
+}
+RELEASED = {"READY_FOR_SALE", "READY_FOR_DISTRIBUTION"}
+TURNED_DOWN = {"REJECTED", "METADATA_REJECTED", "INVALID_BINARY"}
+
+
 class Store:
     """What the steps need from App Store Connect. The real one talks to Apple; the self-test's keeps everything in memory."""
 
@@ -75,6 +113,7 @@ class Store:
     def submit(self, build: str) -> None: raise NotImplementedError
     def no_encryption(self, build: str) -> None: raise NotImplementedError
     def what_to_test(self, build: str, text: str) -> None: raise NotImplementedError
+    def versions(self, app: str) -> list["Version"]: raise NotImplementedError
 
 
 def whats_new(number: int, notes: str) -> str:
@@ -172,6 +211,33 @@ def step(store: Store, notes: Callable[[int], str], wait_minutes: int = 0, sleep
     return lines, for_alan
 
 
+def app_store(store: Store) -> tuple[list[str], str | None]:
+    """Entry 491: the newest App Store version's review state, read only. Returns the lines and, where Alan should know, the line for
+    docs/notes/for-alan.md: a rejection the same day, and an approval because release is manual and needs his word."""
+    app = store.app(BUNDLE_ID)
+    if app is None:
+        return [f"App Store: App Store Connect has no app {BUNDLE_ID}."], None
+    versions = sorted(store.versions(app), key=lambda v: v.created, reverse=True)
+    if not versions:
+        return ["App Store: no iOS version yet."], None
+    newest = versions[0]
+    built = f" (build {newest.build})" if newest.build else ""
+    lines = [f"App Store version {newest.number}{built}: {VERSION_WORDS.get(newest.state, newest.state.replace('_', ' ').lower())}."]
+    live = next((v for v in versions if v.state in RELEASED), None)
+    if newest.state not in RELEASED:
+        lines.append(f"On the App Store now: {'version ' + live.number if live else 'nothing yet'}; TestFlight stays the way in.")
+    for_alan = None
+    if newest.state in TURNED_DOWN:
+        for_alan = (f"Apple's App Review turned down GroupLab {newest.number}{built}. Apple's own words are under App Review in App Store "
+                    "Connect, which this check cannot read; the planning session copies them into for-alan.md. TestFlight goes on as before.")
+    elif newest.state == "PENDING_DEVELOPER_RELEASE":
+        for_alan = (f"Apple approved GroupLab {newest.number}{built} for the App Store. Release is manual: nothing is public until Alan "
+                    "says to release it, through the planning session.")
+    if for_alan:
+        lines.append(for_alan)
+    return lines, for_alan
+
+
 class Apple(Store):
     """App Store Connect's own API, signed with the key the nightly already uses to upload."""
 
@@ -241,6 +307,18 @@ class Apple(Store):
                       {"data": {"type": "betaBuildLocalizations", "attributes": {"locale": "en-US", "whatsNew": text},
                                 "relationships": {"build": {"data": {"type": "builds", "id": build}}}}})
 
+    def versions(self, app):
+        answer = self.call("GET", f"/v1/apps/{app}/appStoreVersions?filter[platform]=IOS&include=build&limit=10")
+        builds = {b["id"]: b["attributes"].get("version", "") for b in answer.get("included", []) if b.get("type") == "builds"}
+        found = []
+        for v in answer.get("data", []):
+            a = v["attributes"]
+            link = ((v.get("relationships") or {}).get("build") or {}).get("data") or {}
+            number = re.sub(r"\D", "", builds.get(link.get("id", ""), ""))
+            found.append(Version(a.get("versionString", ""), a.get("appVersionState") or a.get("appStoreState") or "",
+                                 a.get("createdDate", ""), int(number) if number else None))
+        return found
+
 
 def key_text(value: str) -> str:
     """The .p8 as the nightly takes it: the PEM itself, or the PEM in base64."""
@@ -258,7 +336,9 @@ class Pretend(Store):
     refuse_submit: str | None = None
     needs_review: bool = True
     notes: dict[str, str] = field(default_factory=dict)
+    versions_: list[Version] = field(default_factory=list)
 
+    def versions(self, app): return list(self.versions_)
     def app(self, bundle): return "app" if bundle == BUNDLE_ID else None
     def groups(self, app): return dict(self.names)
     def builds(self, app): return sorted(self.builds_, key=lambda b: b.number, reverse=True)
@@ -375,6 +455,25 @@ def self_test() -> int:
     expect("notes read", text.startswith("- First thing.\n- Second thing.") and "Hidden" not in text)
     expect("notes fallback", whats_new(999, notes).startswith("Nightly 999."))
 
+    # Entry 491: the App Store version's review, read only.
+    lines, alan = app_store(Pretend())
+    expect("no version yet", lines == ["App Store: no iOS version yet."] and alan is None)
+    s = Pretend(versions_=[Version("1.0", "WAITING_FOR_REVIEW", "2026-11-15", 226)])
+    lines, alan = app_store(s)
+    expect("waiting said", lines[0] == "App Store version 1.0 (build 226): waiting for review." and alan is None
+           and "nothing yet" in lines[1])
+    s.versions_[0].state = "REJECTED"
+    lines, alan = app_store(s)
+    expect("a rejection goes to Alan", alan is not None and "turned down" in alan and alan in lines)
+    s.versions_[0].state = "PENDING_DEVELOPER_RELEASE"
+    lines, alan = app_store(s)
+    expect("an approval goes to Alan", alan is not None and "Release is manual" in alan)
+    s = Pretend(versions_=[Version("1.0", "READY_FOR_SALE", "2026-11-15", 226), Version("1.1", "IN_REVIEW", "2026-12-01", 240)])
+    lines, alan = app_store(s)
+    expect("the live one named", lines[0].startswith("App Store version 1.1 (build 240): in review") and "version 1.0" in lines[1])
+    # Reading the versions moves nothing in TestFlight and nothing in the version.
+    expect("read only", s.versions_[1].state == "IN_REVIEW" and not s.members["beta"] and not s.reviews)
+
     for failure in failures:
         print("FAILED:", failure)
     print(f"testflight.py self-test: {'failed' if failures else 'passed'}")
@@ -384,6 +483,8 @@ def self_test() -> int:
 def main(argv: list[str]) -> int:
     if argv[1:2] == ["--self-test"]:
         return self_test()
+    if argv[1:2] == ["--app-store"]:
+        return main_app_store()
     if argv[1:2] != ["--run"]:
         print(__doc__)
         return 2
@@ -401,6 +502,27 @@ def main(argv: list[str]) -> int:
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     with open(summary, "a", encoding="utf-8") if summary else open(os.devnull, "w") as out:
         out.write("### TestFlight\n\n" + "".join(f"- {line}\n" for line in lines))
+    for line in lines:
+        print(line)
+    if alan:
+        print(f"::warning::{alan}")
+    return 0
+
+
+def main_app_store() -> int:
+    """Entry 491: the App Store version's state, printed for status-note.py; never fails the run."""
+    names = ("APPLE_API_ISSUER_ID", "APPLE_API_KEY_ID", "APPLE_API_KEY_P8")
+    if not all(os.environ.get(n) for n in names):
+        lines, alan = ["App Store: the App Store Connect key is not set, so the review was not read."], None
+    else:
+        try:
+            store = Apple(os.environ["APPLE_API_ISSUER_ID"], os.environ["APPLE_API_KEY_ID"], key_text(os.environ["APPLE_API_KEY_P8"]))
+            lines, alan = app_store(store)
+        except Refused as said:
+            lines, alan = [f"App Store: App Store Connect refused the read ({said})."], None
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    with open(summary, "a", encoding="utf-8") if summary else open(os.devnull, "w") as out:
+        out.write("### The App Store version\n\n" + "".join(f"- {line}\n" for line in lines))
     for line in lines:
         print(line)
     if alan:

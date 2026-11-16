@@ -9,12 +9,14 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-15, entry 490 done (after 485 to 489 and entry 480's dated check); the inbox is empty.
+**Last rewritten:** 2026-11-15, entry 491 done (after 485 to 490 and entry 480's dated check); the inbox is empty.
 
 ---
 
 ## In flight
 
+- **Entry 491 (2026-11-15)**, done: App Store 1.0 (build 226) is with App Review, release manual; its state is read beside
+  TestFlight's into external-status.md (`testflight.py --app-store`, read only). A rejection goes to for-alan.md that day.
 - **Entry 490 (2026-11-15)**, done: Google approved the Play closed test; /android-test/ step 2 is live with the opt-in page
   (`PLAY_TEST_LINK`), and the README, download page, ANDROID.md and the testing guide say it is open. 0 testers opted in so far.
 - **Entry 489 (2026-11-15)**, done: the backup always ends with a result line (limits, a retry, a 50 minute ceiling); the App Store
@@ -22,8 +24,6 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 488 (2026-11-15)**, done: GroupLab is 1.0.0; the next nightly is 1.0.0-nightly.226, read as "GroupLab 1.0, build 226"
   (`SemanticVersion.Words`, never serialized: the manifests are signed over it). Store strings: Microsoft 1.0.226.0, Android 1.0.226
   code 226, Apple 1.0 (226). "Still in active development" on the README, site, guide, Settings and the Store text; not on Play yet.
-- **Entry 487 (2026-11-15)**, done: every nightly goes to Play's internal and alpha tracks, and a run that meets a review sends
-  nothing; App Store pictures from the simulators (docs/store/apple/) are on version 1.0. TestFlight 226 waits for beta review.
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Checked 2026-11-15:** workload set 10.0.404 (Xcode 27.2) fixes 26969; the
   iPhone, iPad and Dev legs pass on the trial branch, the Duo leg not yet (folded, outer screen, upright self-test stops at the picture
   check; IOS-PLAN.md). nightly.yml stays on Xcode 26 until the Duo leg passes.
@@ -42,7 +42,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   devices, late, out of order and half-written files, conflicted copies and wrong clocks (entry 472); a real cloud client over weeks
   needs Alan's two devices (PROOF-CHECKLIST.md, line 4 of entry 472's list).
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
-  61, an App Store release Alan's word.
+  61; App Store 1.0 submitted (entry 491), and releasing it once approved is Alan's word.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft follows the nightlies (entry 369); Play's closed test is open (entry 490); Test Lab waits on request 62.
@@ -107,8 +107,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **The database is schema version 6** (entry 461): each upgrade's first open copies `grouplab.db` to `grouplab.pre-vN.db` first.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.
-- **`docs/notes/external-status.md`** holds TestFlight's and the Store's state, written by their workflows when it changes; read it
-  at the start of a run (entries 335 and 336).
+- **`docs/notes/external-status.md`** holds TestFlight's, the App Store version's and the Store's state, written by their workflows when it
+  changes; read it at the start of a run (entries 335, 336 and 491).
 - **Alan allowed ssh to the server, standing, 2026-10-26**; it is still announced in panel.md, and sudo's rules are unchanged.
 - **Helpers only when Alan asks, ending at the week's reset; chores to chores-haiku, wording to docs-sonnet** (CLAUDE.md, 2026-10-08).
   A finished worker's subjects are compared with main before its worktree goes to the trash.
