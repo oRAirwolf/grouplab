@@ -61,6 +61,9 @@ class World:
     def __init__(self, port_holder: list) -> None:
         self.port = port_holder
         self.refuse_discord = False
+        # Entry 492: the feature-requests forum, made after the worker first ran, as on the real server.
+        self.feature_forum = False
+        self.feature_archived: list[dict] = []
         self.threads_active = [{"id": "100", "parent_id": "20", "name": "Drag broken on macOS"},
                                {"id": "300", "parent_id": "99", "name": "Not in the forum"}]
         self.threads_archived = [{"id": "200", "parent_id": "20", "name": "Old post @everyone", "thread_metadata": {"archive_timestamp": "x"}}]
@@ -106,11 +109,14 @@ def serve(world: World) -> HTTPServer:
             if p == "/discord/users/@me/guilds":
                 return self.reply(200, [{"id": "1", "name": "GroupLab"}])
             if p == "/discord/guilds/1/channels":
-                return self.reply(200, [{"id": "10", "type": 0, "name": "general"}, {"id": "20", "type": 15, "name": "bug-reports"}])
+                return self.reply(200, [{"id": "10", "type": 0, "name": "general"}, {"id": "20", "type": 15, "name": "bug-reports"}]
+                                  + ([{"id": "30", "type": 15, "name": "feature-requests"}] if world.feature_forum else []))
             if p == "/discord/guilds/1/threads/active":
                 return self.reply(200, {"threads": world.threads_active})
             if p.startswith("/discord/channels/20/threads/archived/public"):
                 return self.reply(200, {"threads": world.threads_archived, "has_more": False})
+            if p.startswith("/discord/channels/30/threads/archived/public"):
+                return self.reply(200, {"threads": world.feature_archived, "has_more": False})
             if p.startswith("/discord/channels/") and "/messages/" in p:
                 # One message read again for fresh attachment links: an expired one comes back signed anew.
                 thread, mid = p.split("/")[3], p.split("/")[5]
@@ -170,13 +176,13 @@ def serve(world: World) -> HTTPServer:
     return server
 
 
-def run(root: Path, port: int, tokens: bool = True) -> subprocess.CompletedProcess:
+def run(root: Path, port: int, tokens: bool = True, *args: str) -> subprocess.CompletedProcess:
     env = dict(os.environ)
     env.pop("CREDENTIALS_DIRECTORY", None)
     env.update(GROUPLAB_DISCORD_ROOT=str(root / "discord"), GROUPLAB_DISCORD_LOG=str(root / "worker.log"),
                GROUPLAB_DISCORD_API=f"http://127.0.0.1:{port}/discord", GROUPLAB_GITHUB_API=f"http://127.0.0.1:{port}/github",
                GROUPLAB_DISCORD_TOKEN_FILE=str(root / ("discord-token" if tokens else "none")), GROUPLAB_ERRORS_TOKEN_FILE=str(root / "github-token"))
-    return subprocess.run([sys.executable, str(WORKER)], env=env, capture_output=True, text=True, timeout=120)
+    return subprocess.run([sys.executable, str(WORKER), *args], env=env, capture_output=True, text=True, timeout=120)
 
 
 def main() -> int:
@@ -231,6 +237,41 @@ def main() -> int:
               and not any(c.startswith("POST /discord/channels/200/messages") for c in world.calls), str(world.calls))
         r = run(root, port[0])
         check("a run with nothing new files nothing", len(world.issues) == 2 and len(world.comments.get(1, [])) == 1)
+
+        # Entry 492: the feature-requests forum appears; its posts are suggestions, and a dry run first says so and writes nothing.
+        world.feature_forum = True
+        world.threads_active.append({"id": "700", "parent_id": "30", "name": "Type a printer's check in"})
+        world.feature_archived = [{"id": "710", "parent_id": "30", "name": "", "thread_metadata": {"archive_timestamp": "y"}}]
+        world.messages["700"] = [message("700", "7", "Could the phone take the numbers from the Mac?")]
+        world.messages["710"] = [message("710", "8", "An older wish")]
+        state_before = (root / "discord" / "state.json").read_text(encoding="utf-8")
+        log_before = (root / "worker.log").read_text(encoding="utf-8")
+        world.calls.clear()
+        r = run(root, port[0], True, "--dry-run")
+        check("a dry run names the forums and what it would file, by forum",
+              r.returncode == 0 and "forums found: bug-reports, feature-requests" in r.stdout
+              and "bug-reports: 2 posts, 2 filed already, 0 would be filed" in r.stdout
+              and "feature-requests: 2 posts, 0 filed already, 2 would be filed (700, 710), labelled discord, suggestion" in r.stdout, r.stdout + r.stderr)
+        check("and writes nothing: no issue, no reply, no state, no log, nothing sent but reads",
+              len(world.issues) == 2 and not any(not c.startswith("GET /discord/") for c in world.calls)
+              and (root / "discord" / "state.json").read_text(encoding="utf-8") == state_before
+              and (root / "worker.log").read_text(encoding="utf-8") == log_before, str(world.calls))
+        check("a dry run never shows a post's words", "Mac" not in r.stdout and "printer" not in r.stdout, r.stdout)
+        world.calls.clear()
+        r = run(root, port[0])
+        wishes = [i for i in world.issues.values() if "suggestion" in i["labels"]]
+        check("a worker that ran before the forum existed finds it and files its posts, open and archived",
+              r.returncode == 0 and len(wishes) == 2 and len(world.issues) == 4, r.stdout + str([i["title"] for i in world.issues.values()]))
+        check("a feature request is labelled discord and suggestion", all(i["labels"] == ["discord", "suggestion"] for i in wishes))
+        check("and says it came from the feature-requests forum", all("Discord's feature-requests forum" in i["body"] for i in wishes))
+        check("a post with no title is called a suggestion", any(i["title"] == "Discord: a suggestion" for i in wishes), str([i["title"] for i in wishes]))
+        check("the suggestion label is made", "POST /github/repos/oRAirwolf/grouplab-crash-reports/labels" in world.calls
+              and len([c for c in world.calls if c.endswith("/labels")]) == 2, str(world.calls))
+        check("a bug report stays a bug report", all(i["labels"] == ["discord"] and "bug-reports forum" in i["body"]
+                                                    for i in world.issues.values() if "suggestion" not in i["labels"]))
+        check("the bot thanks a suggestion's poster once, as a bug report's", [t for t, _ in world.replies].count("700") == 1)
+        r = run(root, port[0])
+        check("nothing in either forum is filed twice", len(world.issues) == 4, str(len(world.issues)))
 
         # Entry 427: attachments that cannot be fetched, and a thread that cannot be filed at all ahead of one that can.
         world.threads_active += [{"id": "350", "parent_id": "20", "name": "Broken post"}, {"id": "400", "parent_id": "20", "name": "Four files"},
