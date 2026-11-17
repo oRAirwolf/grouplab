@@ -535,7 +535,7 @@ jobs:
           ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
           # The entry points the link must keep, from OpenCvSharp's own assembly, which the restore puts in the package folder.
           cd "$GITHUB_WORKSPACE"
-          dotnet restore ios/GroupLab.iOS -v:q > /dev/null
+          dotnet restore ios/GroupLab.iOS -v:q > "$RUNNER_TEMP/ios-restore.log" 2>&1 || { grep -E "error|warning NU" "$RUNNER_TEMP/ios-restore.log" | sort -u | tail -20; echo "STOP: the restore of the iPhone project failed, its errors above"; exit 1; }
           assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
           python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
           cd "$RUNNER_TEMP/ios-opencv"
@@ -765,7 +765,7 @@ jobs:
           ls "$GITHUB_WORKSPACE/ios/native/OpenCvSharpExtern.xcframework"
           # The entry points the link must keep, from OpenCvSharp's own assembly, which the restore puts in the package folder.
           cd "$GITHUB_WORKSPACE"
-          dotnet restore ios/GroupLab.iOS -v:q > /dev/null
+          dotnet restore ios/GroupLab.iOS -v:q > "$RUNNER_TEMP/ios-restore.log" 2>&1 || { grep -E "error|warning NU" "$RUNNER_TEMP/ios-restore.log" | sort -u | tail -20; echo "STOP: the restore of the iPhone project failed, its errors above"; exit 1; }
           assembly=$(ls "${NUGET_PACKAGES:-$HOME/.nuget/packages}"/opencvsharp4/*/lib/net8.0/OpenCvSharp.dll | tail -1)
           python3 ios/opencv-symbols.py ios/native/OpenCvSharpExtern.xcframework "$assembly" ios/native/OpenCvSharpExtern.symbols.props
           cd "$RUNNER_TEMP/ios-opencv"

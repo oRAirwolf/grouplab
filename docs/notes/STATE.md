@@ -74,8 +74,9 @@ Two, both in `docs/QUESTIONS-FOR-PLANNING.md` (113 answered (b) in entry 495):
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.229 (2026-11-16 14:50 UTC), carrying entry 495 (a pooled set saved as a record); App Store
-  1.0 (build 226) is with App Review; the next nightly, 230, carries error report 50's snap fix.
+- **Last nightly:** 1.0.0-nightly.230 (2026-11-17 15:08 UTC), carrying error report 50's snap fix and entry 497; **its two iOS
+  jobs failed** at the iPhone project's restore (twice; the simulator checks of the same commit restored fine), so 230 is not on
+  TestFlight. The restore now prints its errors; the next nightly shows the cause.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
 ## The inbox
@@ -100,8 +101,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 - **With no design known, the snap looks for a hole's outline first** (error report 50, `Snapping.Outline`), then weighs the dark as
-  before if it finds none; a sheet with its design known snaps as it did.
-- **Backups over 1 GB are in parts** (`grouplab.bundle.001` and on); `python scripts/backup.py --join <folder>` rebuilds them.
+  before if it finds none; a sheet with its design known snaps as it did. Backups over 1 GB are in parts (`backup.py --join`).
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
 - **The database is schema version 7** (entry 495 added `pools`, listed by negated id): each upgrade's first open copies the database first.
