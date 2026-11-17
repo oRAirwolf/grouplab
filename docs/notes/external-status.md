@@ -27,10 +27,10 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:store -->
 
 <!-- status:store-submission -->
-## store-submission, 2026-11-15 14:35 UTC
+## store-submission, 2026-11-17 15:20 UTC
 
-- The Store submission of grouplab-win-x64.msix, 93265018 bytes
-- Submission 1152921505702409508: PreProcessing.
+- The Store submission of grouplab-win-x64.msix, 93348203 bytes
+- Submission 1152921505702430420: PreProcessing.
 <!-- /status:store-submission -->
 
 <!-- status:store-search -->
