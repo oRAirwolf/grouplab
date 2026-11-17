@@ -3,9 +3,9 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-17 18:23 UTC
+## TestFlight, 2026-11-17 18:39 UTC
 
-- TestFlight: there is no group named 'GroupLab Team' or 'Public Beta' yet, so this step distributed nothing (entry 310: Alan creates both in App Store Connect).
+- TestFlight: App Store Connect refused a request (500 An unexpected error occurred on the server side. If this issue continues, contact us at https://developer.apple.com/contact/.); nothing further was done this run.
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
