@@ -2,7 +2,9 @@
 
 NOTES-FROM-PLANNING.md entry 278 section 6 and entry 279 section 1. Alan decided on 2026-09-28 that GroupLab will be built for iOS. He
 enrols in the Apple Developer Program as an individual from his iPad mini (6th generation). He has no Mac and no iPhone, and the plan needs
-neither: GitHub's Mac machines build and sign every build, and TestFlight puts it on the iPad mini, and later on testers' iPhones.
+neither: GitHub's Mac machines build and sign every build, and TestFlight puts it on the iPad mini, and later on testers' iPhones. GroupLab 1.0 was released on the App Store on 2026-11-17, and TestFlight's public beta carries the nightlies.
+
+**Status, 2026-11-17: GroupLab 1.0 (build 226) is released on the App Store; TestFlight's public beta carries on with the nightly builds.**
 
 This is a plan with sizes. Nothing here is built yet except where a line says so.
 
@@ -229,7 +231,7 @@ problem at the fold, such as a control the system will not let a person tap ther
 **An idea, not built:** if the Duo lets the outer screen show the camera's preview while GroupLab runs on the inner screen, a person
 could see the target framed from the front. Capture only has to work on whichever screen is open, and it does.
 
-**The App Store:** from April 2027 a submission needs iPhone Duo screenshots. Nothing to do while GroupLab is in TestFlight only.
+**The App Store:** from April 2027 a submission needs iPhone Duo screenshots. Nothing to do until a version with the Duo build is submitted: 1.0 has been on the App Store since 2026-11-17 and TestFlight carries the nightlies.
 
 ## Before submitting to the App Store (entry 489 section 2, 2026-11-15)
 
@@ -278,7 +280,7 @@ Font License, the packages are MIT or Apache-2.0, and OpenCV, opencv_contrib and
 20:36 Denver time; its state is "Waiting for Review" (Apple says up to 48 hours). It is free in all 175 countries or regions, and not
 offered on Apple silicon Macs or Apple Vision Pro, which nobody has tried. Release is manual: after approval nothing is public until Alan
 says to release it. The testflight workflow reads the version's state beside TestFlight's into `docs/notes/external-status.md`, read
-only, so a nightly never takes the version out of review. Until it is released, TestFlight stays the way in. The details are in
+only, so a nightly never takes the version out of review. Version 1.0 was released on 2026-11-17; TestFlight stays the way in for the nightlies. The details are in
 docs/store/LISTING.md.
 
 ## 5. In what order

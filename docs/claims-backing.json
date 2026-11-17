@@ -8240,6 +8240,62 @@
   "GroupLab 1.0 is ready to use and still in active development, so it changes often.": {
    "kind": "decided",
    "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0, ready to use and still in active development"
+  },
+  "iPhone and iPad The App Store Released Get GroupLab on the App Store GroupLab 1.0 is on Apple's App Store for iPhone and iPad.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "Join the iPhone and iPad beta Free, like every GroupLab download The App Store copy is version 1.0, released on 17 November 2026 TestFlight's public beta installs each new nightly build for you Not sure?": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "Version 1.0 was released on the App Store on 17 November 2026; the App Store gets a new version only when one is submitted and approved, so it lags the nightly builds, which testers get through TestFlight's public beta.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "On Windows, macOS, Linux and Android, and on iPhone and iPad from the App Store, with a public beta of the nightly builds through TestFlight.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "What is not finished yet: finding holes by itself on blank paper (Find holes (Experimental) proposes them once the scale is set, for you to check, but its gate still needs a photograph of plain paper with real holes at a known scale), and newer iOS builds on the App Store (version 1.0 is released there; the nightly builds go to TestFlight's public beta).": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "Version 1.0 was released on the App Store on 2026-11-17.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "iOS is Phase 8, on the App Store with a public beta through TestFlight: `docs/IOS-PLAN.md` has the plan, tested on an iPad Mini and built and signed on GitHub's Mac machines.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "**Status, 2026-11-17: GroupLab 1.0 (build 226) is released on the App Store; TestFlight's public beta carries on with the nightly builds.** This is a plan with sizes.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "**iPhone and iPad, on the App Store and in a public beta through TestFlight** (entry 278 section 6, Alan's decision of 2026-09-28; entry 206 section 4 recorded the facts).": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "On an iPhone or iPad, GroupLab is on [the App Store](https://apps.apple.com/app/id6817635137), and the newest builds are in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open [the invitation](https://testflight.apple.com/join/A3xyT6C6) on the device.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "On an iPhone or iPad, GroupLab is on the App Store , and the newest builds are in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open the invitation on the device.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "GroupLab 1.0 was released on the App Store on 2026-11-17, and TestFlight's public beta carries the nightlies.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "Nothing to do until a version with the Duo build is submitted: 1.0 has been on the App Store since 2026-11-17 and TestFlight carries the nightlies.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "Version 1.0 was released on 2026-11-17; TestFlight stays the way in for the nightlies.": {
+   "kind": "decided",
+   "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
   }
  },
  "rules": [

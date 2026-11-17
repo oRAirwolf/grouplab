@@ -22,8 +22,10 @@ Each line is checked, and says where, before Alan is asked whether to release.
 
 ## The App Store and the iPhone Duo (entry 480)
 
-From April 2027 an App Store submission needs iPhone Duo screenshots. GroupLab is in TestFlight only, so nothing is needed
-until it is submitted; docs/IOS-PLAN.md says what the Duo build waits on.
+**Status, 2026-11-17: GroupLab 1.0 (build 226) is released on the App Store; TestFlight's public beta carries on with the nightly builds.**
+
+From April 2027 an App Store submission needs iPhone Duo screenshots. GroupLab 1.0 has been on the App Store since 2026-11-17 and TestFlight carries the nightlies, so nothing is needed
+until a version with the Duo build is submitted; docs/IOS-PLAN.md says what the Duo build waits on.
 
 ## The Microsoft Store (entry 224 section 3)
 

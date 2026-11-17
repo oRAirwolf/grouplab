@@ -83,6 +83,7 @@ def store_version() -> str | None:
     m = re.search(r"The Store carries package version (\d+)\.(\d+)\.(\d+)\.\d+", status.read_text(encoding="utf-8"))
     return ".".join(m.groups()) if m else None
 TESTFLIGHT = "https://testflight.apple.com/join/A3xyT6C6"
+APP_STORE = "https://apps.apple.com/app/id6817635137"
 # Entry 129 section 1: the upload page moves to grouplab.org. It stays pointed at the old one until
 # the receiver is installed on the server and tested, because a button that leads nowhere is worse
 # than one that leads somewhere old. Entry 129 section 6.2 flips it and redirects the old page.
@@ -923,12 +924,13 @@ def page_download() -> str:
          fold("Opening it on a Mac", """<p>From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled. Move <code>GroupLab.app</code> into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.</p>""")])
 
     iphone = section("iphone", "iPhone and iPad", f"""<article class="panel card card-rec dl-card">
-<div class="card-head"><h3 class="h3">The public beta</h3><span class="badge mono">Public beta</span></div>
-<div>{btn("Join the iPhone and iPad beta", TESTFLIGHT, True, big=True)}</div>
-<p>GroupLab for iPhone and iPad is in a public beta through Apple's TestFlight. Install TestFlight from the App Store first, then open the invitation on the iPhone or iPad. Each new beta build arrives through TestFlight.</p>
-{points(["Free, like every GroupLab download", "TestFlight installs each new beta build for you", "Not in the App Store itself yet: version 1.0 is with Apple's review"])}
+<div class="card-head"><h3 class="h3">The App Store</h3><span class="badge mono">Released</span></div>
+<div>{btn("Get GroupLab on the App Store", APP_STORE, True, big=True)}</div>
+<p>GroupLab 1.0 is on Apple's App Store for iPhone and iPad. The App Store gets a new version only when one is submitted and approved, so it lags the nightly builds. To get every nightly build, join the public beta through TestFlight: install TestFlight from the App Store first, then open the invitation on the iPhone or iPad.</p>
+<div>{btn("Join the iPhone and iPad beta", TESTFLIGHT, False)}</div>
+{points(["Free, like every GroupLab download", "The App Store copy is version 1.0, released on 17 November 2026", "TestFlight's public beta installs each new nightly build for you"])}
 </article>""",
-        "Install TestFlight from the App Store first, then open the invitation on the iPhone or iPad.",
+        "Get GroupLab from the App Store, or install TestFlight from the App Store first and open the invitation for the nightly builds.",
         [fold("Install TestFlight first", """<ol class="text">
 <li>On the iPhone or iPad, open the App Store and install <strong>TestFlight</strong>, Apple's own app for beta builds.</li>
 <li>On the same iPhone or iPad, open the invitation: <strong>Join the iPhone and iPad beta</strong>, above.</li>
@@ -981,7 +983,7 @@ def page_download() -> str:
 <h3 class="h3">Updating</h3>
 <p><strong>Of the computer downloads, only the Windows installer updates itself.</strong> It asks first, then updates in the background.</p>
 <p>The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you. There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.</p>
-<p>The Microsoft Store copy is updated by the Store, GroupLab Dev and the plain Android APK update themselves from every nightly, the Google Play copy is updated by Google Play, and TestFlight installs each new iPhone and iPad beta build.</p>
+<p>The Microsoft Store copy is updated by the Store, GroupLab Dev and the plain Android APK update themselves from every nightly, the Google Play copy is updated by Google Play, the App Store copy for iPhone and iPad is updated by the App Store when a new version is approved, and TestFlight installs each new iPhone and iPad beta build.</p>
 <h3 class="h3">What you get</h3>
 <dl class="facts">
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>

@@ -8,7 +8,7 @@ Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears 
 - `scripts/platform-support.py` writes it into `README.md` between its two markers, and checks that it is current.
 - `.github/workflows/nightly.yml` appends the one line `scripts/platform-support.py --release` makes to a release whose assets include a macOS build.
 
-**iPhone and iPad, in a public beta through TestFlight** (entry 278 section 6, Alan's decision of 2026-09-28; entry 206 section 4 recorded the facts). iPhone is
+**iPhone and iPad, on the App Store and in a public beta through TestFlight** (entry 278 section 6, Alan's decision of 2026-09-28; entry 206 section 4 recorded the facts). iPhone is
 about 60 percent of phones in the United States and half in the United Kingdom (StatCounter, August 2026). The floor is an iPhone 11 on
 iOS 26 or later; Avalonia runs on iOS; the engine needs OpenCV built for iOS, which GitHub's macOS build machines do without anyone owning
 a Mac; and distribution needs the paid Apple developer program, which the project joined. `docs/IOS-PLAN.md` is the plan. **The iPhone Duo** (entry 480): GroupLab runs on it, but until it is built with Apple's iOS 27.1 tools its inner screen shows
@@ -35,7 +35,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 | **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 240 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 240 MB on Apple silicon, 270 MB on Intel | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 260 MB installed | as Windows |
-| **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, through TestFlight's public beta; version 1.0 is with Apple's App Store review | not measured yet | not measured yet | as Android |
+| **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, from the App Store (version 1.0, released 2026-11-17) and through TestFlight's public beta for the nightly builds | not measured yet | not measured yet | as Android |
 | **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's closed test, open to anyone | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
 
 Where the figures come from:
@@ -72,7 +72,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ## Apple mobile
 
-GroupLab for iPhone and iPad is in a public beta through TestFlight. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Testers get it through TestFlight. It is not in the App Store yet: version 1.0 was submitted to Apple's App Review on 15 November 2026 and waits for review, and TestFlight stays the way in until it is released. The plan is docs/IOS-PLAN.md. On the iPhone Duo, GroupLab runs, but its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools; the Duo has been checked only in GroupLab's own tests, because nobody on the project has one.
+GroupLab for iPhone and iPad is on the App Store, with a public beta of the nightly builds through TestFlight. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Version 1.0 was released on the App Store on 17 November 2026; the App Store gets a new version only when one is submitted and approved, so it lags the nightly builds, which testers get through TestFlight's public beta. The plan is docs/IOS-PLAN.md. On the iPhone Duo, GroupLab runs, but its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools; the Duo has been checked only in GroupLab's own tests, because nobody on the project has one.
 
 ## Other Linux builds
 
