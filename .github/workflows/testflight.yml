@@ -13,6 +13,11 @@ on:
   schedule:
     - cron: "15,45 * * * *"
   workflow_dispatch:
+    inputs:
+      release:
+        description: "Alan's word only: release this approved App Store version and build, as '1.0 226'. Empty releases nothing."
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -62,6 +67,17 @@ jobs:
         # Entry 350: GitHub runs the half-hourly schedule as seldom as every three or four hours, so a scheduled run looks back a day; an
         # item already filed is known by its marker and never filed twice.
         run: python scripts/testflight-feedback.py --run --since-hours ${{ github.event_name == 'workflow_run' && '24' || github.event_name == 'schedule' && '24' || '336' }}
+
+      # Alan, 2026-11-17: the one step that changes an App Store version. It runs only when the release input is filled in by hand, and
+      # releases only that version with that build once Apple has approved it; it fails the run when it released nothing.
+      - name: Release the approved App Store version
+        if: github.event_name == 'workflow_dispatch' && inputs.release != ''
+        env:
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          RELEASE: ${{ inputs.release }}
+        run: python scripts/testflight.py --release $RELEASE
 
       # Entry 491: the App Store version's review state beside TestFlight's, so an approval or a rejection is seen without anyone opening
       # App Store Connect. It only reads (GET), so nothing here can take a version out of review; it never fails the run.

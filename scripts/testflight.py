@@ -17,11 +17,17 @@ Nothing is ever taken out of a group: a build Alan added to GroupLab Team by han
 
     python3 scripts/testflight.py --run [--wait-minutes N]   one step, with the key from APPLE_API_ISSUER_ID, APPLE_API_KEY_ID, APPLE_API_KEY_P8
     python3 scripts/testflight.py --app-store                  the App Store version's review state, read only (entry 491)
+    python3 scripts/testflight.py --release 1.0 226            release that approved version, only by hand, on Alan's word
     python3 scripts/testflight.py --self-test                  every case against a made-up App Store Connect, no network
 
 Entry 491: the App Store version's review is read beside TestFlight, so an approval or a rejection is seen without anyone opening App
 Store Connect. That check only reads: nothing here submits, cancels or changes an App Store version, so a nightly going to TestFlight
 never takes a version out of review.
+
+Alan, 2026-11-17: "release GroupLab 1.0 (build 226) on the App Store now". --release is the one thing here that changes an App Store
+version, and only that way: it releases the version named, with the build named, when Apple has approved it and it waits for release
+(PENDING_DEVELOPER_RELEASE), and does nothing at all otherwise. It is run only by hand, from the testflight workflow's release input, so
+no schedule and no nightly can ever release a version.
 
 The lines are printed and appended to $GITHUB_STEP_SUMMARY when that is set. No key, email or token is ever printed.
 """
@@ -74,6 +80,7 @@ class Version:
     state: str
     created: str = ""
     build: int | None = None
+    id: str = ""
 
 
 # Entry 491: an App Store version's state in plain words. Old and new names both, since Apple renamed them (appStoreState, appVersionState).
@@ -114,6 +121,7 @@ class Store:
     def no_encryption(self, build: str) -> None: raise NotImplementedError
     def what_to_test(self, build: str, text: str) -> None: raise NotImplementedError
     def versions(self, app: str) -> list["Version"]: raise NotImplementedError
+    def release(self, version: str) -> None: raise NotImplementedError
 
 
 def whats_new(number: int, notes: str) -> str:
@@ -238,6 +246,28 @@ def app_store(store: Store) -> tuple[list[str], str | None]:
     return lines, for_alan
 
 
+def release(store: Store, number: str, build: int) -> tuple[list[str], bool]:
+    """Alan, 2026-11-17: the approved version named, with the build named, released on the App Store; nothing else is ever released.
+    Returns the lines and whether the version is now released or releasing."""
+    app = store.app(BUNDLE_ID)
+    if app is None:
+        return [f"App Store: App Store Connect has no app {BUNDLE_ID}; nothing was released."], False
+    match = [v for v in store.versions(app) if v.number == number]
+    if not match:
+        return [f"App Store: there is no version {number}; nothing was released."], False
+    version = match[0]
+    if version.state in RELEASED or version.state == "PROCESSING_FOR_DISTRIBUTION":
+        return [f"App Store version {number} (build {version.build}) is already released: {version.state}."], True
+    if version.build != build:
+        return [f"App Store version {number} carries build {version.build}, not {build}; nothing was released."], False
+    if version.state != "PENDING_DEVELOPER_RELEASE":
+        return [f"App Store version {number} (build {build}) is {version.state}, not waiting for release; nothing was released."], False
+    store.release(version.id)
+    after = next((v for v in store.versions(app) if v.number == number), version)
+    words = VERSION_WORDS.get(after.state, after.state.replace("_", " ").lower())
+    return [f"App Store version {number} (build {build}): released by hand on Alan's word; Apple now says {after.state} ({words})."], True
+
+
 class Apple(Store):
     """App Store Connect's own API, signed with the key the nightly already uses to upload."""
 
@@ -316,8 +346,13 @@ class Apple(Store):
             link = ((v.get("relationships") or {}).get("build") or {}).get("data") or {}
             number = re.sub(r"\D", "", builds.get(link.get("id", ""), ""))
             found.append(Version(a.get("versionString", ""), a.get("appVersionState") or a.get("appStoreState") or "",
-                                 a.get("createdDate", ""), int(number) if number else None))
+                                 a.get("createdDate", ""), int(number) if number else None, v.get("id", "")))
         return found
+
+    def release(self, version):
+        self.call("POST", "/v1/appStoreVersionReleaseRequests",
+                  {"data": {"type": "appStoreVersionReleaseRequests",
+                            "relationships": {"appStoreVersion": {"data": {"type": "appStoreVersions", "id": version}}}}})
 
 
 def key_text(value: str) -> str:
@@ -339,6 +374,11 @@ class Pretend(Store):
     versions_: list[Version] = field(default_factory=list)
 
     def versions(self, app): return list(self.versions_)
+
+    def release(self, version):
+        for v in self.versions_:
+            if v.id == version:
+                v.state = "PROCESSING_FOR_DISTRIBUTION"
     def app(self, bundle): return "app" if bundle == BUNDLE_ID else None
     def groups(self, app): return dict(self.names)
     def builds(self, app): return sorted(self.builds_, key=lambda b: b.number, reverse=True)
@@ -474,6 +514,20 @@ def self_test() -> int:
     # Reading the versions moves nothing in TestFlight and nothing in the version.
     expect("read only", s.versions_[1].state == "IN_REVIEW" and not s.members["beta"] and not s.reviews)
 
+    # Alan, 2026-11-17: only the approved version named, with the build named, is ever released.
+    s = Pretend(versions_=[Version("1.0", "WAITING_FOR_REVIEW", "2026-11-15", 226, "v1")])
+    lines, done = release(s, "1.0", 226)
+    expect("nothing released in review", not done and s.versions_[0].state == "WAITING_FOR_REVIEW" and "nothing was released" in lines[0])
+    s.versions_[0].state = "PENDING_DEVELOPER_RELEASE"
+    lines, done = release(s, "1.0", 227)
+    expect("nothing released for another build", not done and s.versions_[0].state == "PENDING_DEVELOPER_RELEASE")
+    lines, done = release(s, "1.1", 226)
+    expect("nothing released for another version", not done and s.versions_[0].state == "PENDING_DEVELOPER_RELEASE")
+    lines, done = release(s, "1.0", 226)
+    expect("the approved one released", done and s.versions_[0].state == "PROCESSING_FOR_DISTRIBUTION" and "released by hand" in lines[0])
+    lines, done = release(s, "1.0", 226)
+    expect("released once", done and "already released" in lines[0])
+
     for failure in failures:
         print("FAILED:", failure)
     print(f"testflight.py self-test: {'failed' if failures else 'passed'}")
@@ -485,6 +539,8 @@ def main(argv: list[str]) -> int:
         return self_test()
     if argv[1:2] == ["--app-store"]:
         return main_app_store()
+    if argv[1:2] == ["--release"] and len(argv) == 4 and argv[3].isdigit():
+        return main_release(argv[2], int(argv[3]))
     if argv[1:2] != ["--run"]:
         print(__doc__)
         return 2
@@ -528,6 +584,25 @@ def main_app_store() -> int:
     if alan:
         print(f"::warning::{alan}")
     return 0
+
+
+def main_release(number: str, build: int) -> int:
+    """Alan, 2026-11-17: release the approved version named. Fails the run when it released nothing, so nobody takes it for done."""
+    names = ("APPLE_API_ISSUER_ID", "APPLE_API_KEY_ID", "APPLE_API_KEY_P8")
+    if not all(os.environ.get(n) for n in names):
+        lines, done = ["App Store: the App Store Connect key is not set, so nothing was released."], False
+    else:
+        try:
+            store = Apple(os.environ["APPLE_API_ISSUER_ID"], os.environ["APPLE_API_KEY_ID"], key_text(os.environ["APPLE_API_KEY_P8"]))
+            lines, done = release(store, number, build)
+        except Refused as said:
+            lines, done = [f"App Store: App Store Connect refused the release ({said})."], False
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    with open(summary, "a", encoding="utf-8") if summary else open(os.devnull, "w") as out:
+        out.write("### The App Store release\n\n" + "".join(f"- {line}\n" for line in lines))
+    for line in lines:
+        print(line)
+    return 0 if done else 1
 
 
 if __name__ == "__main__":
