@@ -3,16 +3,15 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-17 01:05 UTC
+## TestFlight, 2026-11-17 16:40 UTC
 
-- Both groups have build 228.
+- TestFlight: App Store Connect refused a request (500 An unexpected error occurred on the server side. If this issue continues, contact us at https://developer.apple.com/contact/.); nothing further was done this run.
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
-## The App Store version, 2026-11-17 16:31 UTC
+## The App Store version, 2026-11-17 16:40 UTC
 
-- App Store version 1.0 (build 226): released on the App Store.
-- The App Store page: https://apps.apple.com/app/id6817635137
+- App Store: App Store Connect refused the read (500 An unexpected error occurred on the server side. If this issue continues, contact us at https://developer.apple.com/contact/.).
 <!-- /status:app-store -->
 
 <!-- status:store -->
