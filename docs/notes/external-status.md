@@ -9,9 +9,10 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
-## The App Store version, 2026-11-17 16:27 UTC
+## The App Store version, 2026-11-17 16:31 UTC
 
 - App Store version 1.0 (build 226): released on the App Store.
+- The App Store page: https://apps.apple.com/app/id6817635137
 <!-- /status:app-store -->
 
 <!-- status:store -->
