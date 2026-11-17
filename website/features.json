@@ -131,6 +131,7 @@
     "The status bar now says when the target was saved",
     "GroupLab's license now allows it to be distributed through Apple's App Store",
     "GroupLab for iPhone and iPad is now on the App Store",
+    "iPhone and iPad builds on TestFlight are now numbered like Android's",
     "A tap on a number now switches that number alone",
     "On the phone, a result now lists every shot",
     "On the phone, a target with several aim points",

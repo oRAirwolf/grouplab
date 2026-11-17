@@ -21,6 +21,21 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-11-17, question 114: the iPhone builds' version after the App Store release of 1.0
+
+**Status: open. Built meanwhile as (a); nothing waits on the answer.**
+
+Entry 488 set Apple's strings as "1.0 (226)": version 1.0, build 226. Releasing 1.0 on the App Store today (Alan's word) closed Apple's
+1.0 train: nightly 231's upload was refused with "Invalid Pre-Release Train. The train version '1.0' is closed for new build
+submissions" (90186), so no build could reach TestFlight. The options:
+
+- **(a) 1.0.<build>, as built from nightly 232**: the same as Android's version name (1.0.226), always above the released 1.0, no
+  decision needed per build. The next App Store submission would show as, say, 1.0.240.
+- **(b) 1.1, and later 1.2 and so on**: a version number chosen by hand at each App Store release, so TestFlight shows "1.1 (240)".
+  Costs a decision per release and a nightly.yml change each time.
+
+I would choose (a) for its parity with Android and the Microsoft Store (1.0.226.0) and because it never closes again.
+
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 
 **Status: open, being tested (entry 278 section 3):** Alan chose to test rather than choose. The three pages, A as built, B a hairline on the card's edge and C corner marks, are made; request 53 asks for them printed, scanned and photographed with a card, and the answer comes from measuring those photographs. A stays built until then.

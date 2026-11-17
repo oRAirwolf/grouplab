@@ -68,14 +68,14 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Two, both in `docs/QUESTIONS-FOR-PLANNING.md` (113 answered (b) in entry 495):
-- **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
+Three, in `docs/QUESTIONS-FOR-PLANNING.md` (113 answered (b) in entry 495):
+- **114** the iPhone version after 1.0's release (built as 1.0.<build>); **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.230 (2026-11-17 15:08 UTC), carrying error report 50's snap fix and entry 497; **its two iOS
-  jobs failed** at the iPhone project's restore (twice; the simulator checks of the same commit restored fine), so 230 is not on
-  TestFlight. The restore now prints its errors; the next nightly shows the cause.
+- **Last nightly:** 1.0.0-nightly.231 (2026-11-17), with Find holes' rings (report 50); its iPhone build was refused by TestFlight
+  because releasing 1.0 closed Apple's 1.0 train, so from 232 the iPhone builds are 1.0.<build> (question 114). The iOS jobs are held
+  to .NET 10 since the Mac runners gained .NET 11 (the restore failures of 230 and 231).
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
 ## The inbox
