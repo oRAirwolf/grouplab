@@ -318,7 +318,166 @@ public static class Snapping
     /// <summary>A pixel of the expected artwork at or above this level is paper, the detector's own reading of its render.</summary>
     public const byte ArtworkPaper = 230;
 
-    public static PointD ToDarkCentroid(GrayImage value, PointD click, double radiusPixels) => Centroid(value, click, radiusPixels, null);
+    /// <summary>
+    /// The snap with no artwork to tell print from holes, as on a bought target. Error report 50 (a Discord video, 2026-11-17): on a
+    /// store-bought diamond target, a click on a ring hole touching the black diamond went down and left onto the diamond's edge, 38 to 48
+    /// pixels off, because the diamond's ink outweighed the hole's grey rim in the dark weight. Where <see cref="Outline"/> finds a hole
+    /// near the click, the snap is that hole's centre; where it finds none, the dark weight over the whole radius, as before.
+    /// </summary>
+    public static PointD ToDarkCentroid(GrayImage value, PointD click, double radiusPixels)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        return Outline(value, click, radiusPixels) ?? Centroid(value, click, radiusPixels, null);
+    }
+
+    /// <summary>
+    /// How many more of the 48 directions round a circle must show a hole's edge (a dark rim with light paper beyond it) than show dark
+    /// carrying on past the rim, for <see cref="Outline"/> to call the circle a hole: half of them.
+    /// </summary>
+    internal const double OutlineShare = 0.5;
+
+    private const int OutlineDirections = 48;
+
+    private static readonly (double Cos, double Sin)[] Directions =
+        [.. Enumerable.Range(0, OutlineDirections).Select(k => (Math.Cos(2 * Math.PI * k / OutlineDirections), Math.Sin(2 * Math.PI * k / OutlineDirections)))];
+
+    /// <summary>
+    /// The centre of the hole nearest a click, found by its outline rather than its weight (error report 50). A hole on paper, dark all
+    /// through or a ring with a light middle (entry 417), is a circle of about a hole's size whose rim is dark with light paper a little beyond
+    /// it in most directions. Printed ink touching the hole carries the dark on past the rim in a few directions; the edge or the corner of a
+    /// printed shape carries it on in many, so each direction where the dark carries on counts against the circle. Centres within the snap
+    /// radius are tried on a grid of about 26 steps to the radius, with rim radii from a quarter to three quarters of it (the radius is about
+    /// one hole across); the best circle wins, the nearer to the click on a tie. Its centre is then refined twice by fitting a circle to the
+    /// hole's outer edge in the clean directions alone, so the print that touches it pulls nothing. Null when no circle shows the edge in
+    /// <see cref="OutlineShare"/> of the directions more than it shows dark carrying on.
+    /// </summary>
+    internal static PointD? Outline(GrayImage value, PointD click, double radiusPixels)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        double r = radiusPixels;
+        if (r < 4)
+        {
+            return null;
+        }
+
+        double delta = Math.Max(1.5, 0.08 * r), gap = Math.Max(3, 0.2 * r);
+        int reach = (int)Math.Ceiling(r + (0.75 * r) + gap + (2 * delta) + 3);
+        int x0 = Math.Max(0, (int)(click.X - reach)), x1 = Math.Min(value.Width - 1, (int)(click.X + reach));
+        int y0 = Math.Max(0, (int)(click.Y - reach)), y1 = Math.Min(value.Height - 1, (int)(click.Y + reach));
+        if (x1 <= x0 || y1 <= y0)
+        {
+            return null;
+        }
+
+        int paper = PaperLevel(value, x0, x1, y0, y1);
+        int w = x1 - x0 + 1, h = y1 - y0 + 1;
+        var dark = new bool[w * h];
+        for (int y = y0; y <= y1; y++)
+        {
+            for (int x = x0; x <= x1; x++)
+            {
+                dark[((y - y0) * w) + (x - x0)] = paper - value.Pixels[(y * value.Width) + x] - 40 > 0;
+            }
+        }
+
+        bool Dark(double x, double y)
+        {
+            int xi = (int)Math.Round(x) - x0, yi = (int)Math.Round(y) - y0;
+            return xi >= 0 && xi < w && yi >= 0 && yi < h && dark[(yi * w) + xi];
+        }
+
+        // In one direction from a centre: 1 where the rim is dark and the paper beyond it light, -1 where the dark carries on past the rim.
+        int Edge(double cx, double cy, double c, double s, double rim)
+        {
+            if (!Dark(cx + (c * (rim - delta)), cy + (s * (rim - delta))) && !Dark(cx + (c * rim), cy + (s * rim)) && !Dark(cx + (c * (rim + delta)), cy + (s * (rim + delta))))
+            {
+                return 0;
+            }
+
+            double beyond = rim + delta + gap;
+            return Dark(cx + (c * beyond), cy + (s * beyond)) || Dark(cx + (c * (beyond + delta)), cy + (s * (beyond + delta))) ? -1 : 1;
+        }
+
+        double step = Math.Max(1, r / 26);
+        int n = (int)(r / step);
+        int best = int.MinValue;
+        double bestAway = double.MaxValue, bestRim = 0;
+        PointD centre = click;
+        for (int j = -n; j <= n; j++)
+        {
+            for (int i = -n; i <= n; i++)
+            {
+                double away = Math.Sqrt(((i * step) * (i * step)) + ((j * step) * (j * step)));
+                if (away > r)
+                {
+                    continue;
+                }
+
+                double cx = click.X + (i * step), cy = click.Y + (j * step);
+                for (int k = 0; k <= 10; k++)
+                {
+                    double rim = r * (0.25 + (0.05 * k));
+                    int score = 0;
+                    foreach (var (c, s) in Directions)
+                    {
+                        score += Edge(cx, cy, c, s, rim);
+                    }
+
+                    if (score > best || (score == best && away < bestAway))
+                    {
+                        (best, bestAway, bestRim, centre) = (score, away, rim, new PointD(cx, cy));
+                    }
+                }
+            }
+        }
+
+        if (best < OutlineShare * OutlineDirections)
+        {
+            return null;
+        }
+
+        var found = centre;
+        for (int pass = 0; pass < 2; pass++)
+        {
+            // The outer edge in each clean direction: the farthest dark pixel short of the light paper beyond the rim.
+            var edge = new List<(double X, double Y)>();
+            foreach (var (c, s) in Directions)
+            {
+                if (Edge(centre.X, centre.Y, c, s, bestRim) != 1)
+                {
+                    continue;
+                }
+
+                for (double t = bestRim + delta + gap; t >= bestRim - delta; t -= 0.5)
+                {
+                    if (Dark(centre.X + (c * t), centre.Y + (s * t)))
+                    {
+                        edge.Add((centre.X + (c * t), centre.Y + (s * t)));
+                        break;
+                    }
+                }
+            }
+
+            // A thin printed line just beyond the hole is narrower than the test beyond the rim can see, and where it touches, the farthest
+            // dark pixel is the line's: those few points sit outside the circle the rest make, and are dropped before the circle is fitted again.
+            if (Detection.RenderDifferenceHoleDetector.FitCircle(edge) is { } first)
+            {
+                var off = edge.Select(p => Math.Abs(Math.Sqrt(((p.X - first.X) * (p.X - first.X)) + ((p.Y - first.Y) * (p.Y - first.Y))) - first.Radius)).ToList();
+                double usual = off.Order().ElementAt(off.Count / 2);
+                edge = [.. edge.Where((_, i) => off[i] <= Math.Max(1, 2.5 * usual))];
+            }
+
+            if (Detection.RenderDifferenceHoleDetector.FitCircle(edge) is not { } fit
+                || Math.Sqrt(((fit.X - found.X) * (fit.X - found.X)) + ((fit.Y - found.Y) * (fit.Y - found.Y))) > bestRim)
+            {
+                break;
+            }
+
+            centre = new PointD(fit.X, fit.Y);
+        }
+
+        return centre;
+    }
 
     /// <summary>
     /// The snap on a sheet whose printed artwork is known, NOTES-FROM-PLANNING.md entry 40 section 1: taps on a rendered, unshot sheet
