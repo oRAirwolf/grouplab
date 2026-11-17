@@ -12,6 +12,20 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.230
+
+**2026-11-17**, commit `32e4f97`. Nightly.
+
+**What you will notice**
+
+- Marking by hand on a store-bought target, a click on a hole that touches the dark print now lands on that hole, and the dashed preview shows it there, instead of being pulled onto the edge of the print. (Error report 50) (found from a Discord post).
+
+From your reports and targets in this build: 1 fix from 1 error report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.230)
+
+---
+
 ## 1.0.0-nightly.229
 
 **2026-11-16**, commit `d223aec`. Nightly.
