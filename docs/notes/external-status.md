@@ -9,9 +9,10 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
-## The App Store version, 2026-11-17 16:40 UTC
+## The App Store version, 2026-11-17 20:51 UTC
 
-- App Store: App Store Connect refused the read (500 An unexpected error occurred on the server side. If this issue continues, contact us at https://developer.apple.com/contact/.).
+- App Store version 1.0 (build 226): released on the App Store.
+- The App Store page: https://apps.apple.com/app/id6817635137
 <!-- /status:app-store -->
 
 <!-- status:store -->
