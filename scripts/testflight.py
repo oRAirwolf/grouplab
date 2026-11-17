@@ -232,6 +232,8 @@ def app_store(store: Store) -> tuple[list[str], str | None]:
     built = f" (build {newest.build})" if newest.build else ""
     lines = [f"App Store version {newest.number}{built}: {VERSION_WORDS.get(newest.state, newest.state.replace('_', ' ').lower())}."]
     live = next((v for v in versions if v.state in RELEASED), None)
+    if live:
+        lines.append(f"The App Store page: https://apps.apple.com/app/id{app}")
     if newest.state not in RELEASED:
         lines.append(f"On the App Store now: {'version ' + live.number if live else 'nothing yet'}; TestFlight stays the way in.")
     for_alan = None
@@ -510,7 +512,8 @@ def self_test() -> int:
     expect("an approval goes to Alan", alan is not None and "Release is manual" in alan)
     s = Pretend(versions_=[Version("1.0", "READY_FOR_SALE", "2026-11-15", 226), Version("1.1", "IN_REVIEW", "2026-12-01", 240)])
     lines, alan = app_store(s)
-    expect("the live one named", lines[0].startswith("App Store version 1.1 (build 240): in review") and "version 1.0" in lines[1])
+    expect("the live one named", lines[0].startswith("App Store version 1.1 (build 240): in review") and "version 1.0" in lines[2])
+    expect("its page linked", lines[1] == "The App Store page: https://apps.apple.com/app/idapp")
     # Reading the versions moves nothing in TestFlight and nothing in the version.
     expect("read only", s.versions_[1].state == "IN_REVIEW" and not s.members["beta"] and not s.reviews)
 
