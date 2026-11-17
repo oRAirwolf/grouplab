@@ -468,7 +468,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 - The development build's scripted test logs every press it receives, to find out where a rare lost tap goes on the iPhone simulator.
 - The development build's tap test on the iPhone simulator now records why a tap could not reach its button, to find a rare lost first tap on the keyboard's Next.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.200)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
