@@ -369,6 +369,22 @@ def found_from(reported, how="found from"):
     return how + " " + (said[0] if len(said) == 1 else ", ".join(said[:-1]) + " and " + said[-1])
 
 
+# Entry 497 section 4: the words in a note that already name a source, so the note and its trailer never say it twice.
+SOURCE_WORDS = {
+    "automatic error report": ("error report",),
+    "error report sent from grouplab": ("error report",),
+    "github issue": ("github",),
+    "email": ("email",),
+    "discord": ("discord",),
+}
+
+
+def names_source(text, reported):
+    """The sources a note's own words already name, of those its Reported-via trailer gives."""
+    low = text.lower()
+    return [words for words, _ in reported if any(w in low for w in SOURCE_WORDS[words])]
+
+
 def said_already(text, reported):
     """Entry 483 section 4: a note that already says where it came from ("a person suggested it in an error report sent from
     GroupLab") is not given the same words again in brackets."""
@@ -389,14 +405,16 @@ def with_source(text, reported, submitted, fix=True):
     return text[:-1].rstrip() + " (" + "; ".join(tail) + ")" + text[-1]
 
 
-def total_line(fixes, reports, updates, targets, suggested=0, asked=0):
+def total_line(fixes, reports, updates, targets, suggested=0, asked=0, asked_by=None):
     """The line a build's notes end with when people's reports or targets went into it, entry 458 section 3. A change somebody
-    suggested in a report is counted as a suggestion, not a fix (entry 483 section 4)."""
+    suggested in a report is counted as a suggestion, not a fix (entry 483 section 4), and is counted in what it was asked in, a Discord
+    post or an email, not as an error report it was not (entry 497 section 4); ``asked_by`` is [(source, count)]."""
     said = []
     if fixes:
         said.append(f"{fixes} fix{'es' if fixes > 1 else ''} from {reports} error report{'s' if reports > 1 else ''}")
     if suggested:
-        said.append(f"{suggested} change{'s' if suggested > 1 else ''} suggested in {asked} error report{'s' if asked > 1 else ''}")
+        where = found_from(asked_by, "suggested in") if asked_by else f"suggested in {asked} error report{'s' if asked > 1 else ''}"
+        said.append(f"{suggested} change{'s' if suggested > 1 else ''} {where}")
     if updates:
         said.append(f"{updates} detection update{'s' if updates > 1 else ''} from {targets} targets people sent")
     return "From your reports and targets in this build: " + ", ".join(said) + "." if said else ""
@@ -511,6 +529,7 @@ def build_notes(version, head, previous, heading=True, new=True):
     generated = []
     wrong = []
     counted = {"fixes": 0, "reports": 0, "updates": 0, "targets": 0, "suggested": 0, "asked": 0}
+    asked_by: dict[str, int] = {}
 
     for sha, message in commits(previous, head):
         # Entry 168 sections 3.3 and 4.1: a nightly writing its own notes is not a change, and a commit that touched
@@ -540,9 +559,15 @@ def build_notes(version, head, previous, heading=True, new=True):
         if new and CLOSES_REPORT.search(message) and not reported and not fixes_no_report(sha):
             wrong.append(f"{sha}: it closes a crash or error report and has no Reported-via trailer saying where the report came from (entries 458 and 476)")
         fix = bool(read_notes) and read_notes[0][1] == "fixed"
+        if new and read_notes and (twice := names_source(read_notes[0][0], reported)):
+            wrong.append(f"{sha}: its note names {', '.join(twice)} in its own words and its Reported-via trailer gives it too, so the "
+                         "notes would say it twice; say it in one place (entry 497 section 4)")
         if reported:
             counted["fixes" if fix else "suggested"] += 1
             counted["reports" if fix else "asked"] += sum(c for _, c in reported)
+            if not fix:
+                for words, c in reported:
+                    asked_by[words] = asked_by.get(words, 0) + c
         if submitted:
             counted["updates"] += 1
             counted["targets"] += sum(c for _, c in submitted)
@@ -582,7 +607,7 @@ def build_notes(version, head, previous, heading=True, new=True):
         out.append("")
 
     if line := total_line(counted["fixes"], counted["reports"], counted["updates"], counted["targets"],
-                           counted["suggested"], counted["asked"]):
+                           counted["suggested"], counted["asked"], [(w, c) for w, c in asked_by.items()]):
         out.append(line)
         out.append("")
 
@@ -734,6 +759,11 @@ def self_test():
           "Settings has a new row (suggested in an error report sent from GroupLab).")
     check("a suggestion is counted apart from fixes", total_line(0, 0, 0, 0, 1, 1) ==
           "From your reports and targets in this build: 1 change suggested in 1 error report.")
+    check("a suggestion from Discord posts is not counted as an error report (entry 497 section 4)",
+          total_line(0, 0, 0, 0, 1, 2, [("discord", 2)]) == "From your reports and targets in this build: 1 change suggested in 2 Discord posts.")
+    check("a note that names the Discord and carries Reported-via: Discord is caught (entry 497 section 4)",
+          names_source("Pooled sets are saved; asked for in two reports on the GroupLab Discord.", [("discord", 2)]) == ["discord"]
+          and names_source("Pooled sets are saved.", [("discord", 2)]) == [])
     check("no total line when nobody's report or target went in", total_line(0, 0, 0, 0) == "")
     _, _, named = sources("\n".join(["Subject", "", "Reported-via: email from Bob"]))
     check("a name in Reported-via is refused", len(named) == 1 and "never named" in named[0])

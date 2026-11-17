@@ -4,7 +4,7 @@
 
 GroupLab measures how accurately a rifle shoots, from a photograph or a scan of a target you have shot. It is built around one idea: a small group tells you far less than shooters think, so every figure comes with the range it could really be, and the software says plainly when the evidence does not support a conclusion. It is free, it keeps everything on your own machine, unless you turn on Sync between devices, which also writes to the folder you choose, it has no account, and it sends nothing you have not agreed to: sending a target, error reports and the hardware survey each ask first.
 
-This page is for somebody who has never seen it. It is an unfinished test build, and the last section says what is not done.
+This page is for somebody who has never seen it. GroupLab 1.0 is ready to use and still in active development, and the last section says what is not done.
 
 ## Getting it
 

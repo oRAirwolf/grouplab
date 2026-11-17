@@ -12,6 +12,7 @@
   "notFeatures": [
   "GroupLab is now version 1.0",
   "Settings, the update messages and the release notes now name each build",
+  "The iPhone and iPad build now carries Apple's privacy manifest",
     "Correction: the Rifles and loads row in the phone's Settings in nightly 224",
     "On a phone or tablet turned on its side, or a folding phone opened",
     "On the phone, the question of which bulls you fired at now shows its answers",

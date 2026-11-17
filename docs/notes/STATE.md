@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-17, entry 496 done (after the backup split and error report 50); entry 497 is next.
+**Last rewritten:** 2026-11-17, entries 496 and 497 done (after the backup split and error report 50); the inbox is empty.
 
 ---
 
@@ -19,7 +19,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   is now uploaded in parts (`backup.py`, manifest format 2, `--join`), backup-2026-11-17 made by hand and its restore test passed; a
   failed backup now writes its own line in for-alan.md the same day. **Error report 50** (Discord video): the snap with no design
   known now finds a hole by its outline (`Snapping.Outline`), so a click beside dark print lands on the hole; ships in nightly 230.
-- **Entry 496 (2026-11-17)**, done: entry 495's pooled set look kept as built ("keep it"); no layout changed.
+- **Entries 496 and 497 (2026-11-17)**, done: the pooled set look kept as built; the 16 November consistency audit's six findings
+  fixed (1.0 wording, Play's closed test, nightly 226's notes, suggestions counted as Discord posts, feature-requests named, pools).
 - **Entry 495 (2026-11-16)**, done but two parts: a pooled set is a record of its own (schema 7, `pools`, `SessionPools`,
   `PoolPackage`) on both platforms, in Session records, Compare, sharing, export, import and sync; not built: a screen to choose
   between two devices' versions of a pool, and the sheet question on the phone (it deletes no session). Look: DESIGN NEEDED in for-alan.

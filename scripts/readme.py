@@ -145,7 +145,8 @@ def whats_new() -> str:
 # Entry 483 section 4: a change somebody suggested in a report is counted apart from a fix.
 FROM_YOU_PARTS = {
     ("fixes", "reports"): r"(\d+) fix(?:es)? from (\d+) error reports?",
-    ("suggested", "asked"): r"(\d+) changes? suggested in (\d+) error reports?",
+    # Entry 497 section 4: a suggestion is counted in what it was asked in ("2 Discord posts", "an email"), not always an error report.
+    ("suggested", "asked"): r"(\d+) changes? suggested in (?:(\d+)|an?) .+",
     ("updates", "targets"): r"(\d+) detection updates? from (\d+) targets people sent",
 }
 
@@ -154,7 +155,7 @@ def from_you_words(c: dict) -> str:
     """The running total's parts in words, in the order a build's own line gives them."""
     def s(n): return "s" if n > 1 else ""
     said = ([f"{c['fixes']} fix{'es' if c['fixes'] > 1 else ''} from {c['reports']} error report{s(c['reports'])}"] if c["fixes"] else []) + \
-        ([f"{c['suggested']} change{s(c['suggested'])} suggested in {c['asked']} error report{s(c['asked'])}"] if c["suggested"] else []) + \
+        ([f"{c['suggested']} change{s(c['suggested'])} people suggested"] if c["suggested"] else []) + \
         ([f"{c['updates']} detection update{s(c['updates'])} from {c['targets']} targets people sent"] if c["updates"] else [])
     return said[0] if len(said) < 2 else ", ".join(said[:-1]) + " and " + said[-1]
 
@@ -186,7 +187,7 @@ def from_you() -> str | None:
         for part in m.group(1).split(", "):
             for key, pattern in FROM_YOU_PARTS.items():
                 if (f := re.fullmatch(pattern, part)) is not None:
-                    c[key[0]], c[key[1]] = c[key[0]] + int(f.group(1)), c[key[1]] + int(f.group(2))
+                    c[key[0]], c[key[1]] = c[key[0]] + int(f.group(1)), c[key[1]] + int(f.group(2) or 1)
     first = attributed(c, first, Path(__file__).resolve().parent.parent / "docs" / "release-note-corrections.json")
     if not first:
         return None

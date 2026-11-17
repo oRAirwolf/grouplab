@@ -13,7 +13,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 6740 >>
+<< /Length 6770 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -34,8 +34,8 @@ BT /F1 71 Tf 1 0 0 -1 381 1053 Tm (could really be, and the software says plainl
 BT /F1 71 Tf 1 0 0 -1 381 1141 Tm (keeps everything on your own machine, unless you turn on Sync between devices, which also writes to the folder) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1229 Tm (you choose, it has no account, and it sends nothing you have not agreed to: sending a target, error reports and) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1317 Tm (the hardware survey each ask first.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1440 Tm (This page is for somebody who has never seen it. It is an unfinished test build, and the last section says what is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1528 Tm (not done.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1440 Tm (This page is for somebody who has never seen it. GroupLab 1.0 is ready to use and still in active development,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1528 Tm (and the last section says what is not done.) Tj ET
 0.078431 0.078431 0.078431 rg
 BT /F1 99 Tf 1 0 0 -1 381 1735 Tm (Getting it) Tj ET
 0.745098 0.745098 0.745098 rg
@@ -1398,29 +1398,29 @@ xref
 0000000232 00000 n 
 0000000329 00000 n 
 0000000455 00000 n 
-0000007247 00000 n 
-0000007373 00000 n 
-0000013873 00000 n 
-0000014026 00000 n 
-0000017795 00000 n 
-0000017923 00000 n 
-0000025081 00000 n 
-0000025209 00000 n 
-0000026664 00000 n 
-0000288679 00000 n 
-0000288753 00000 n 
-0000288879 00000 n 
-0000288999 00000 n 
-0000289120 00000 n 
-0000289293 00000 n 
-0000289417 00000 n 
-0000289543 00000 n 
-0000289684 00000 n 
-0000289818 00000 n 
-0000289961 00000 n 
-0000290092 00000 n 
+0000007277 00000 n 
+0000007403 00000 n 
+0000013903 00000 n 
+0000014056 00000 n 
+0000017825 00000 n 
+0000017953 00000 n 
+0000025111 00000 n 
+0000025239 00000 n 
+0000026694 00000 n 
+0000288709 00000 n 
+0000288783 00000 n 
+0000288909 00000 n 
+0000289029 00000 n 
+0000289150 00000 n 
+0000289323 00000 n 
+0000289447 00000 n 
+0000289573 00000 n 
+0000289714 00000 n 
+0000289848 00000 n 
+0000289991 00000 n 
+0000290122 00000 n 
 trailer
 << /Size 27 /Root 1 0 R >>
 startxref
-290223
+290253
 %%EOF

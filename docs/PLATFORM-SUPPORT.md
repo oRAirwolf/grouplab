@@ -82,4 +82,4 @@ Requests go to support@grouplab.org, naming the distribution and the architectur
 
 ## Reports from Linux and macOS are welcome
 
-A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report: **Report a problem** in the settings, or **Make a report** on an error's banner, sends it from GroupLab when you press **Send**. The Discord's bug-reports forum works too, and support@grouplab.org is for anything private.
+A report is useful even when the answer is that it crashed on startup. "It opened and the buttons are the wrong size" is a useful report, and so is a crash report: **Report a problem** in the settings, or **Make a report** on an error's banner, sends it from GroupLab when you press **Send**. The Discord's bug-reports forum works too, and a post in its feature-requests forum becomes a suggestion that is read and answered, and support@grouplab.org is for anything private.

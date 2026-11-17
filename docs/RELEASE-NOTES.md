@@ -2,7 +2,7 @@
 
 Every build of GroupLab anyone could download, newest first. This file is the source of truth: the page at <https://grouplab.org/releases/> is built from it, and it reads here on GitHub too.
 
-GroupLab is unreleased. Everything below is a pre-release, and the version numbers say so.
+GroupLab 1.0 is ready to use and still in active development, so a new build arrives often; the builds before 1.0 were pre-releases.
 
 **How to read this.** Every build says what is in it, whoever it affects. **What you will notice** is the part you meet: something on screen, something that behaves differently, something new or gone, something fixed, or a change to what gets installed. **Under the hood** is everything else in the application in plain words, such as a check that now runs or work nobody can perceive yet. Changes to this website, the guides and the research are not listed here, because they are not in the application; the website says when it changes. A build shows only the headings it has, and a build that changed nothing in the application says so in one line. Where a build has something wrong with it that matters, it says so under **Known issues**.
 
@@ -18,9 +18,9 @@ GroupLab is unreleased. Everything below is a pre-release, and the version numbe
 
 **What you will notice**
 
-- A pooled set of sheets is now saved in Session records as a record of its own, on the computer and the phone: it opens again from there, follows any hole you fix on its sheets, can be compared beside other groups, and can be shared as one file that opens whole on another GroupLab; asked for in two reports on the GroupLab Discord (suggested in 2 Discord posts).
+- A pooled set of sheets is now saved in Session records as a record of its own, on the computer and the phone: it opens again from there, follows any hole you fix on its sheets, can be compared beside other groups, and can be shared as one file that opens whole on another GroupLab; asked for in two reports on the GroupLab Discord.
 
-From your reports and targets in this build: 1 change suggested in 2 error reports.
+From your reports and targets in this build: 1 change suggested in 2 Discord posts.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.229)
 
@@ -32,9 +32,9 @@ From your reports and targets in this build: 1 change suggested in 2 error repor
 
 **What you will notice**
 
-- Check your printer has a fifth way, Numbers from another GroupLab: type in the two numbers another computer or phone shows under that printer in Printers and paper, which now shows both, so a phone without a scanner can use a computer's scan; a tester suggested it on the GroupLab Discord (suggested in a Discord post).
+- Check your printer has a fifth way, Numbers from another GroupLab: type in the two numbers another computer or phone shows under that printer in Printers and paper, which now shows both, so a phone without a scanner can use a computer's scan; a tester suggested it on the GroupLab Discord.
 
-From your reports and targets in this build: 1 change suggested in 1 error report.
+From your reports and targets in this build: 1 change suggested in a Discord post.
 
 [Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.228)
 
@@ -61,7 +61,16 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 
 **What you will notice**
 
-- The notes for this build could not be written in time, so it was published with this short note instead of waiting for them. (Entry 452)
+- GroupLab is now version 1.0: it is ready to use and still in active development, and suggestions and error reports are always welcome through Settings, Help and problems, Report a problem. (Entry 488)
+- Settings, the update messages and the release notes now name each build the way a person reads it, such as GroupLab 1.0, build 226, with the exact version still shown for reports. (Entry 488, 1)
+- The iPhone and iPad build now carries Apple's privacy manifest, which the App Store asks for, declaring the same data as its privacy answers. (Entry 489, 2)
+
+**Under the hood**
+
+- Testers who join GroupLab's closed test on Google Play now get each nightly build too, with that build's own notes. (Entry 487, 1)
+- Several changes that nobody using the application will notice: the project's own records, pictures for the stores, and a safer nightly backup.
+
+These notes were written afterwards, from this build's own commits, because the build was first published with a short note saying they could not be written in time.
 
 [Every change in this build](https://github.com/oRAirwolf/grouplab/compare/v0.2.0-nightly.225...05abdd8066c8f416b3cf34493a5af7e34b240b47), from commit `05abdd8`.
 

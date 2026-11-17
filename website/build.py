@@ -955,7 +955,7 @@ def page_download() -> str:
             ["Open the file on the phone; allow your browser to install apps when Android asks",
              "Remove the Google Play copy first, if you have it: the two are signed with different keys, and removing GroupLab deletes its sessions and settings, so use Export all my data (or Sync between devices) first",
              "Marking a target by hand is on the phone, as on the computer"], "Download for Android")),
-         fold("In Brazil, Indonesia, Singapore or Thailand", "<p>In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, take GroupLab from Google Play's test instead (the testers group, then the test, once Google approves it). The rest of the world follows in 2027.</p>"),
+         fold("In Brazil, Indonesia, Singapore or Thailand", "<p>In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, take GroupLab from Google Play's closed test instead, which anyone can join (the testers group, then the test). The rest of the world follows in 2027.</p>"),
          fold("When Android says Google Play Protect is scanning the app", """<p>Android asks to scan an app installed from outside the Play Store, the first time you install it and when it updates. It is Google's own check, it takes a few seconds, and the scan is expected: let it finish, then carry on.</p>""")],
         keep='<p class="small dl-keep">Take either the Play copy or the APK, not both: remove one before installing the other, and use Settings, Sync and your data, Export all my data (or turn on Sync between devices) first, because removing GroupLab deletes its sessions and settings. GroupLab Dev is different: it installs beside either.</p>')
 
@@ -1305,13 +1305,13 @@ def page_support() -> str:
 <section class="wrap page-head">
 <p class="eyebrow">Support</p>
 <h1>Something wrong? Tell us.</h1>
-<p class="lead">GroupLab is a test build that changes whenever the code does. A report with the build it came from is the most useful thing you can send.</p>
+<p class="lead">GroupLab 1.0 is ready to use and still in active development, so it changes often. A report with the build it came from is the most useful thing you can send.</p>
 </section>
 <section class="wrap section-sm">
 <div class="panel pad stack tight">
 <h2 class="h3">Discord</h2>
 <p>Questions, bug reports, target sheets, and what people are shooting. The project's developer reads it.</p>
-<p class="small">A post in the bug-reports forum becomes a bug report for the developer, and the pictures you post there go on that report and nowhere else. For anything private, the support address below is better.</p>
+<p class="small">A post in the bug-reports forum becomes a bug report for the developer, and the pictures you post there go on that report and nowhere else. A post in the feature-requests forum becomes a suggestion that is read and answered. For anything private, the support address below is better.</p>
 <p class="small">Reports you send are counted in the release notes: <a href="/releases/#from-you">what your reports and targets changed</a>.</p>
 <div class="actions">{btn("What is in the Discord", DISCORD, True)}</div>
 </div>
@@ -2040,7 +2040,7 @@ def page_home() -> str:
 <div class="tp-strip-label mono tp-head" data-terms="off"><span>02 / HONEST</span><span class="tp-wide">FREE AND OPEN SOURCE</span></div>
 <div class="tp-intro tp-ease"><h2>No bragging numbers.</h2></div>
 <div class="tp-points">{points}</div>
-<p class="tp-today">Today GroupLab is test builds, rebuilt after every change that passes its tests, so one may be broken; the Windows and Linux downloads are unsigned.
+<p class="tp-today">Today the newest builds are rebuilt after every change that passes its tests, so one may be broken; the Windows and Linux downloads are unsigned.
 Not finished: finding holes by itself on plain paper (Find holes, Experimental, proposes them once the scale is set). <a href="/download/">What to expect</a>, and
 <a href="{GITHUB}#planned">the full status on GitHub</a>.</p>
 </section>
@@ -2732,7 +2732,8 @@ FROM_YOU = re.compile(r"From your reports and targets in this build: (.+)\.")
 # Entry 483 section 4: a change somebody suggested in a report is counted apart from a fix (scripts/readme.py reads the same).
 FROM_YOU_PARTS = {
     ("fixes", "reports"): r"(\d+) fix(?:es)? from (\d+) error reports?",
-    ("suggested", "asked"): r"(\d+) changes? suggested in (\d+) error reports?",
+    # Entry 497 section 4: a suggestion is counted in what it was asked in ("2 Discord posts", "an email"), not always an error report.
+    ("suggested", "asked"): r"(\d+) changes? suggested in (?:(\d+)|an?) .+",
     ("updates", "targets"): r"(\d+) detection updates? from (\d+) targets people sent",
 }
 
@@ -2741,7 +2742,7 @@ def from_you_words(c: dict) -> str:
     """The running total's parts in words, in the order a build's own line gives them."""
     def s(n): return "s" if n > 1 else ""
     said = ([f"{c['fixes']} fix{'es' if c['fixes'] > 1 else ''} from {c['reports']} error report{s(c['reports'])}"] if c["fixes"] else []) + \
-        ([f"{c['suggested']} change{s(c['suggested'])} suggested in {c['asked']} error report{s(c['asked'])}"] if c["suggested"] else []) + \
+        ([f"{c['suggested']} change{s(c['suggested'])} people suggested"] if c["suggested"] else []) + \
         ([f"{c['updates']} detection update{s(c['updates'])} from {c['targets']} targets people sent"] if c["updates"] else [])
     return said[0] if len(said) < 2 else ", ".join(said[:-1]) + " and " + said[-1]
 
@@ -2773,7 +2774,7 @@ def from_you_total(text: str) -> tuple[str, dict] | None:
         for part in m.group(1).split(", "):
             for key, pattern in FROM_YOU_PARTS.items():
                 if (f := re.fullmatch(pattern, part)) is not None:
-                    c[key[0]], c[key[1]] = c[key[0]] + int(f.group(1)), c[key[1]] + int(f.group(2))
+                    c[key[0]], c[key[1]] = c[key[0]] + int(f.group(1)), c[key[1]] + int(f.group(2) or 1)
     first = attributed(c, first)
     return (first, c) if first else None
 

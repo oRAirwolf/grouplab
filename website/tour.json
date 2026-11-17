@@ -476,8 +476,8 @@
   },
   "sessions": {
    "name": "Session records",
-   "blurb": "Every sheet you have accepted, newest first, ready to open again or to compare.",
-   "purpose": "A session is one sheet, accepted and saved. This is the list of them. It is how you go back to a result weeks later, and how you pick which two loads to put side by side.",
+   "blurb": "Every sheet you have accepted, and every pooled set you have saved, newest first, ready to open again or to compare.",
+   "purpose": "A session is one sheet, accepted and saved. This is the list of them, and a pooled set is listed as one row of its own, opened again and compared from there. It is how you go back to a result weeks later, and how you pick which two loads to put side by side.",
    "withoutASheet": "No difference. A session from a hand-marked target is saved, listed and reopened like any other.",
    "parts": [
     [

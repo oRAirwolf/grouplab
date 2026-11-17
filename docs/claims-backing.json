@@ -8220,6 +8220,26 @@
   "Accept and analyze, Save, or closing the pooled tab saves the pool as a record of its own: Session records lists it as one row, \"Pooled set of 3 sheets\", and clicking it opens the pooled tab again.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 495 (question 113 answered (b)): src/GroupLab.Core/Records/SessionPools.cs and PoolPackage.cs, held by PoolRecordTests"
+  },
+  "| | [![Session records](docs/figures/screens/current/sessions-dark-1400x900.png)](docs/figures/screens/current/sessions-dark-1400x900.png) | [![Compare loads](docs/figures/screens/current/compare-dark-1400x900.png)](docs/figures/screens/current/compare-dark-1400x900.png) | | **Session records.** Every analyzed sheet and every saved pooled set, by rifle and load, to open again, compare or pool.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 495 (nightly 229): a pooled set is saved as a record of its own and listed in Session records; entry 497 section 6"
+  },
+  "**In Brazil, Indonesia, Singapore and Thailand, certified Android phones have refused apps from outside Google Play since 30 September 2026 unless their developer has registered them with Google**; GroupLab Dev and the plain APK were registered with Google on 7 October 2026; if a phone there still refuses one, take GroupLab from Google Play's closed test instead, which anyone can join.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md lines 39 and 57 and docs/ANDROID.md: Google approved the Play closed test on 2026-11-15 and anyone can join it (entry 487, entry 497 section 1); developer registration of GroupLab Dev and the plain APK, Alan, 2026-10-07"
+  },
+  "GroupLab 1.0 is ready to use and still in active development, and the last section says what is not done.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0, ready to use and still in active development"
+  },
+  "Today the newest builds are rebuilt after every change that passes its tests, so one may be broken; the Windows and Linux downloads are unsigned.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0, ready to use and still in active development"
+  },
+  "GroupLab 1.0 is ready to use and still in active development, so it changes often.": {
+   "kind": "decided",
+   "where": "docs/NOTES-FROM-PLANNING.md entry 488 (Alan, 2026-11-15): GroupLab is version 1.0, ready to use and still in active development"
   }
  },
  "rules": [

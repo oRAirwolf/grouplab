@@ -25,6 +25,111 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-16, entry 497: consistency audit, 2026-11-16
+
+**Status: actioned 2026-11-17. Every section done.**
+
+From the scheduled consistency audit (entry 267 section 2b). Read: README.md, the live grouplab.org (home, /download/, /features/,
+/tour/, /shoot-a-target/, /guides/, /releases/, /support/, /discord/), website/features.json, website/tour.json, website/build.py,
+docs/RELEASE-NOTES.md, STATE.md, for-alan.md, PLATFORM-SUPPORT.md, PHONE-PARITY.md, ANDROID.md, TESTING-GUIDE.md, USER-GUIDE.md and the
+commits of 15 and 16 November. No open GitHub issue labelled `consistency` exists, so none of this repeats it. Six findings. Fix them in
+one change, with the usual backups, and report as usual. Nothing here needs Alan.
+
+### 1. Google Play's closed test is still "to come" in four places (entry 487 section 2 missed them)
+
+Google approved the closed test on 2026-11-15 and it is open to anyone (ANDROID.md line 7, PLATFORM-SUPPORT.md lines 39 and 57, the
+README's own download table at line 106, and the /download/ page's "Google Play, closed test" card all say so).
+
+- **README.md line 131** ("On Android" bullet under Before you install) says: "Google Play's internal test is open by invitation, with a
+  closed test to come". Should say the closed test is open to anyone, with the three steps at https://grouplab.org/android-test/, and
+  the internal test by invitation only if it is still worth mentioning (entry 487 section 2's own rule).
+- **The same bullet** ends: "if a phone there still refuses one, ask on the Discord for the Google Play internal test instead".
+  **docs/ANDROID.md line 414** and **docs/TESTING-GUIDE.md line 24** say the same. Should point to the closed test, which anyone can join.
+- **website/build.py line 958** (the /download/ fold "In Brazil, Indonesia, Singapore or Thailand", live now) says: "take GroupLab from
+  Google Play's test instead (the testers group, then the test, once Google approves it)". Drop "once Google approves it"; Google has.
+- Update the matching lines in docs/claims-backing.json (around lines 5660 to 5724). Consider adding "with a closed test to come" and
+  "once Google approves it" to docs/RETIRED-WORDING.json so the weekly check catches them next time.
+
+### 2. "Unreleased" and "test build" still stand beside "GroupLab 1.0 is ready to use" (entry 488)
+
+Entry 488 said "the release notes page no longer says GroupLab is unreleased, and that wording is retired". The site's /releases/ page
+is right, but:
+
+- **docs/RELEASE-NOTES.md line 5**, which is what GitHub shows and which the file calls the source of truth: "GroupLab is unreleased.
+  Everything below is a pre-release, and the version numbers say so." Should match the /releases/ page: "GroupLab 1.0 is ready to use and
+  still in active development, so a new build arrives often; the builds before 1.0 were pre-releases." RETIRED-WORDING.json allows the
+  phrase in RELEASE-NOTES.md (for the historical line 2688), which is why the check missed line 5; keep line 2688 as written.
+- **website/build.py line 1308**, the lead of https://grouplab.org/support/: "GroupLab is a test build that changes whenever the code
+  does." Should use the 1.0 wording, for example "GroupLab 1.0 is ready to use and still in active development, so it changes often. A
+  report with the build it came from is the most useful thing you can send."
+- **website/build.py line 2043**, the home page's status line: "Today GroupLab is test builds, rebuilt after every change that passes its
+  tests, so one may be broken". It sits two paragraphs below "Version 1.0 is ready to use". Should say that the newest builds are
+  rebuilt after every change and one may be broken, without calling GroupLab itself a test build. docs/CLAIMS.md line 4674 follows.
+- **docs/TESTING-GUIDE.md line 7**: "It is an unfinished test build". Should use the 1.0 wording (USER-GUIDE.md line 5 already does).
+  Regenerate the PDF.
+
+### 3. Nightly 226, the first 1.0 build, has no real notes
+
+docs/RELEASE-NOTES.md and https://grouplab.org/releases/ show for 1.0.0-nightly.226 only "The notes for this build could not be written
+in time, so it was published with this short note instead of waiting for them. (Entry 452)". The commits in it (54c6871..05abdd8)
+carry Release-note lines that never reached any build's notes, among them the version itself:
+
+- "GroupLab is now version 1.0: it is ready to use and still in active development ..." (entry 488)
+- "Settings, the update messages and the release notes now name each build the way a person reads it, such as GroupLab 1.0, build 226
+  ..." (entry 488, 1)
+- "Testers who join GroupLab's closed test on Google Play now get each nightly build too ..." (entry 487, 1)
+- "The iPhone and iPad build now carries Apple's privacy manifest ..." (entry 489, 2), under the hood.
+
+Write nightly 226's notes from its own commits, the way the 2026-09-24 rewrite did, keeping a line that they were written afterwards.
+The README's What is new and the Discord need nothing new beyond what the generator does.
+
+### 4. Nightly 228's and 229's notes name their source twice and count Discord suggestions as error reports
+
+Entry 483 section 4 said "the notes no longer repeat a source a note already names". Now:
+
+- **1.0.0-nightly.228** (RELEASE-NOTES.md, README What is new, /releases/): "... a tester suggested it on the GroupLab Discord (suggested
+  in a Discord post)".
+- **1.0.0-nightly.229** (/releases/): "... asked for in two reports on the GroupLab Discord (suggested in 2 Discord posts)".
+- Both builds' footers say "1 change suggested in 1 error report" and "1 change suggested in 2 error reports", and the running total
+  reads "3 changes suggested in 4 error reports", although these came from posts in the Discord feature-requests forum, filed as
+  `suggestion` issues (entries 492 and 494), not error reports.
+
+Drop the source from the note text where the trailer already gives it (or the other way round) for both builds, and count
+feature-requests posts as suggestions, not error reports, in each build's footer and the running total. Add a test so a note that names
+the Discord and also carries `Reported-via: Discord` fails.
+
+### 5. The feature-requests forum is not mentioned where users look
+
+Since entry 494 (request 109, installed 2026-11-16 11:49 UTC) a post in the Discord's feature-requests forum is filed as a suggestion and
+assessed. The /discord/ page lists the forum, but the places that explain what a Discord post does only name the bug-reports forum:
+
+- **README.md line 130** ("Questions, or somewhere to say it did not work"): "A post in the bug-reports forum becomes a bug report for the
+  developer ..."
+- **https://grouplab.org/support/**, Discord section (website/build.py): the same sentence.
+- docs/PLATFORM-SUPPORT.md's bug-reports line, if it is the same.
+
+Add one plain sentence beside each: a post in the feature-requests forum becomes a suggestion that is read and answered. Say nothing
+about who decides what is built.
+
+### 6. Session records now holds pooled sets, and two descriptions still say only sheets
+
+Entry 495 (nightly 229) saves a pooled set as a record of its own, listed in Session records. The user guide was updated; these were not:
+
+- **website/tour.json, "sessions"** (live at https://grouplab.org/tour/ and /tour/sessions/): blurb "Every sheet you have accepted,
+  newest first, ready to open again or to compare." and purpose "A session is one sheet, accepted and saved. This is the list of them."
+  Should add that a pooled set is listed as one row of its own, opened again and compared from there.
+- **README.md line 66**, Every screen, larger: "Session records. Every analyzed sheet, by rifle and load, to open again, compare or pool."
+  Should add the saved pooled sets.
+- Smaller: **README.md line 683**, Thanks: Quack's line does not yet name the typed-in printer check (entry 493), which the Features page
+  already credits to Quack ("Typing them in was asked for by Quack"). Add a few words. Credits stay to the consented names only.
+
+### Checked and found right
+
+The README's platform table and badges, /download/ (1.0 build 229, the Microsoft Store at 0.2.225 while 1.0.226 is in certification, the
+App Store 1.0 with Apple's review, TestFlight as the way in), the Features page against PHONE-PARITY.md, the printer-scale and pool-set
+Features sentences, the user guide's pooled set section, the Discord page, no lawyer mentioned, no "What GroupLab is not", and the
+credits (Unholy, Jylee, Fenix and Quack, all with consent).
+
 ## 2026-11-16, entry 496: the saved pooled set's look is kept as built
 
 **Status: actioned 2026-11-17. Done: the DESIGN NEEDED line in for-alan.md is marked answered; no layout changed.**

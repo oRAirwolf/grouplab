@@ -364,6 +364,26 @@
         "docs/claims-backing.json",
         "docs/CLAIMS.md"
       ]
+    },
+    {
+      "phrase": "with a closed test to come",
+      "why": "entry 497: Google approved Play's closed test on 2026-11-15 and it is open to anyone",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "once Google approves it",
+      "why": "entry 497: Google approved Play's closed test on 2026-11-15",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
     }
   ],
   "settled": []

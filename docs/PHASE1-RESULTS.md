@@ -742,6 +742,20 @@ second store, export, import, the database's JSON, sync add, change and delete, 
 Alan answered "keep it" to entry 495's DESIGN NEEDED line (how a saved pooled set looks in Session records, and the pooled tab's
 saved line). The line in `docs/notes/for-alan.md` is marked answered with the date; nothing in the application changed.
 
+## Entry 497: consistency audit of 16 November (2026-11-17)
+
+**1.** Google Play's closed test is open to anyone in the README's Android bullet (from PLATFORM-SUPPORT.md), ANDROID.md, TESTING-GUIDE.md
+and the /download/ fold; "with a closed test to come" and "once Google approves it" are retired wording. **2.** The 1.0 wording on
+RELEASE-NOTES.md's opening (the historical line kept), the support page's lead, the home page's status line and TESTING-GUIDE.md (PDF
+regenerated). **3.** Nightly 226 has notes written from its own commits, saying they were written afterwards; the privacy manifest note
+is listed in features.json's notFeatures. **4.** `release-notes.py` counts a suggestion in what it was asked in ("1 change suggested in
+2 Discord posts") and refuses a new note whose words name a source its Reported-via also gives (`names_source`, two self-test checks);
+the running total in `readme.py` and `website/build.py` reads either wording and says "N changes people suggested"; nightly 228's and
+229's entries no longer name the Discord twice and their lines count Discord posts. **5.** The README, the support page and
+PLATFORM-SUPPORT.md say a feature-requests post becomes a suggestion that is read and answered. **6.** The tour's Session records and
+the README's screen list name saved pooled sets; Quack's thanks name the typed-in printer check. Checks: claims all backed, readme
+current, consistency 0 findings, site build ok. The wording was done by the docs worker, section 4 on the main model.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
