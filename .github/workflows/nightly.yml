@@ -491,6 +491,14 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # 2026-11-17: the Mac runners now carry a .NET 11 SDK, and with no global.json `dotnet` took it, so the iOS workload installed for
+      # .NET 10 did not apply and the restore stopped with NETSDK1147 (nightlies 230 and 231). The job is held to the newest .NET 10 SDK.
+      - name: Hold this job to .NET 10
+        run: |
+          sdk=$(dotnet --list-sdks | awk '/^10\./ {print $1}' | sort -V | tail -1)
+          [ -n "$sdk" ] || { echo "STOP: no .NET 10 SDK on this runner"; exit 1; }
+          printf '{"sdk": {"version": "%s", "rollForward": "disable"}}' "$sdk" > global.json
+          dotnet --version
       # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
       # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
       - name: The .NET iOS workload
@@ -721,6 +729,14 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # 2026-11-17: the Mac runners now carry a .NET 11 SDK, and with no global.json `dotnet` took it, so the iOS workload installed for
+      # .NET 10 did not apply and the restore stopped with NETSDK1147 (nightlies 230 and 231). The job is held to the newest .NET 10 SDK.
+      - name: Hold this job to .NET 10
+        run: |
+          sdk=$(dotnet --list-sdks | awk '/^10\./ {print $1}' | sort -V | tail -1)
+          [ -n "$sdk" ] || { echo "STOP: no .NET 10 SDK on this runner"; exit 1; }
+          printf '{"sdk": {"version": "%s", "rollForward": "disable"}}' "$sdk" > global.json
+          dotnet --version
       # The newest iOS workload wants the Xcode after 26 (27.0.10722 refused Xcode 26.6), so the workload is held to the newest one made
       # for Xcode 26. The manifest's band is 10.0.100 whatever the SDK's band is.
       - name: The .NET iOS workload
