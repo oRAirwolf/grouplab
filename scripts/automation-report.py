@@ -71,6 +71,20 @@ def line(s: dict, log_text: str | None = None, today: date | None = None) -> str
     return "**This week, by itself** (not a request): " + "; ".join(p for p in parts if p) + "."
 
 
+FAILED = "**The nightly backup failed on"
+
+
+def failure(s: dict) -> str | None:
+    """Entry of 17 November 2026: a failed backup or restore test puts its own line in for-alan.md the same day, above the week's line,
+    instead of waiting for Sunday. Two nights failed unseen because their error reports landed on a closed issue."""
+    b, r = s.get("backup") or {}, s.get("restoreTest") or {}
+    if b and not b.get("ok"):
+        return f"{FAILED} {day(b.get('at'))}** (not a request; Code fixes it at the start of its next run): {b.get('error', 'no reason recorded')}"
+    if r and not r.get("ok"):
+        return f"**The weekly restore test failed on {day(r.get('at'))}** (not a request; Code fixes it at the start of its next run): {r.get('error', '')}"
+    return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="The weekly automation line (entry 222).")
     parser.add_argument("--print", action="store_true", help="print it and write nothing")
@@ -78,12 +92,14 @@ def main() -> int:
     s = json.loads(STATUS.read_text(encoding="utf-8")) if STATUS.is_file() else {}
     words = line(s, LOG.read_text(encoding="utf-8-sig", errors="replace") if LOG.is_file() else None)
     if args.print:
+        print(failure(s) or "")
         print(words)
         return 0
     raw = FOR_ALAN.read_bytes().decode("utf-8")
     crlf = "\r\n" in raw
     text = raw.replace("\r\n", "\n")
-    block = f"{START}\n{words}\n{END}"
+    failed = failure(s)
+    block = f"{START}\n" + (f"{failed}\n" if failed else "") + f"{words}\n{END}"
     if START in text:
         text = re.sub(re.escape(START) + r".*?" + re.escape(END), lambda _: block, text, flags=re.S)
     else:

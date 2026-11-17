@@ -15,7 +15,7 @@ listed as one, and Code does not act on it until the gap is closed.**
 
 | What | Its backup | How often | Where | Restore |
 |---|---|---|---|---|
-| This repository, every branch and tag | GitHub itself, and a git bundle of every ref in the nightly backup | every push; nightly | github.com/oRAirwolf/grouplab; `grouplab-backups` | "The repository" below |
+| This repository, every branch and tag | GitHub itself, and a git bundle of every ref in the nightly backup (since 17 November 2026 in numbered parts of 1 GB, `grouplab.bundle.001` and on, because the whole passed the 1.9 GB a release asset may be) | every push; nightly | github.com/oRAirwolf/grouplab; `grouplab-backups` | "The repository" below |
 | Its files git does not hold: `docs/notes/panel.md`, `.claude/` settings | the nightly backup zip | nightly | `grouplab-backups` | "Local files" below |
 | `C:\Dev\grouplab-local` | the nightly backup zip | nightly | `grouplab-backups` | "Local files" below |
 | `C:\Dev\grouplab-originals` | the nightly backup zip | nightly | `grouplab-backups` | "Local files" below |
@@ -68,7 +68,9 @@ any sudo change outside GroupLab's own files, what will change and how to undo i
 **How it runs**: two scheduled tasks on this computer, registered by `scripts\Register-GroupLabTasks.ps1` as Alan, only while he is logged
 on, with no password stored: `\GroupLab\Nightly backup` at 03:30 (`scripts\backup.py`: the archive copied here, then the backup) and
 `\GroupLab\Weekly check` on Sundays at 04:30 (the restore test, `scripts\cleanup.py`, and the week's line in `docs/notes/for-alan.md`).
-Each writes to `C:\Dev\grouplab-local\automation.log`; a failure is also sent as an error report, so it reaches Code. Until the whole-server gap is closed, Code's use of sudo on the
+Each writes to `C:\Dev\grouplab-local\automation.log`; a failure is also sent as an error report, so it reaches Code, and (since 17
+November 2026, after two failed nights went unseen on a closed issue) puts its own line in `docs/notes/for-alan.md` at once, above the
+week's line, which the next good run removes. Until the whole-server gap is closed, Code's use of sudo on the
 server is limited to GroupLab's own files and its installer.
 
 ## The standing rules
@@ -80,7 +82,7 @@ server is limited to GroupLab's own files and its installer.
 3. **Deletions on this computer go through the trash first**: `C:\Dev\grouplab-trash\<date>\`, emptied after 14 days and never before a
    nightly backup has succeeded since. Build output and test leftovers, which rebuild themselves, are deleted directly.
 4. **Proof, not assumption**: a weekly restore test downloads the newest backup, checks every file against its manifest, and restores the
-   bundle into a clone to compare with GitHub. The weekly line in `docs/notes/for-alan.md` says whether it passed.
+   bundle into a clone to compare with GitHub, joining a bundle kept in parts first and checking the joined file against the manifest. The weekly line in `docs/notes/for-alan.md` says whether it passed.
 
 5. **Every change on the server is backed up before it is made** (entry 397, Alan, 2026-10-09: "make a backup of anything it changes on
    the web server").
@@ -176,7 +178,10 @@ server is limited to GroupLab's own files and its installer.
 ## Restoring
 
 **The repository.** From GitHub: `git clone https://github.com/oRAirwolf/grouplab`. If GitHub's copy is the damaged one, from the newest
-backup: download `grouplab.bundle` from the newest release of `grouplab-backups`, then
+backup: download `grouplab.bundle` from the newest release of `grouplab-backups`, or, from 17 November 2026, its parts with the manifest
+(`gh release download <tag> -R oRAirwolf/grouplab-backups -p "grouplab.bundle.*" -p manifest.json -D C:\Dev\restore`) and join them
+with `python scripts/backup.py --join C:\Dev\restore`, which checks the whole against the manifest's SHA-256 (in Git Bash
+`cat grouplab.bundle.0* > grouplab.bundle` does the same without the check); then
 `git clone grouplab.bundle grouplab-restored` and `git -C grouplab-restored remote set-url origin https://github.com/oRAirwolf/grouplab`.
 Every branch and tag is in the bundle.
 

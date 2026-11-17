@@ -5,6 +5,10 @@ that scripts/Register-GroupLabTasks.ps1 sets up, as Alan, while he is logged on;
     python scripts/backup.py                 the nightly run: copy the archive's submissions here, then back up and prune
     python scripts/backup.py --dry-run       build everything, upload and delete nothing, say what would happen
     python scripts/backup.py --restore-test  the weekly proof: download the newest backup, check it, restore the bundle
+    python scripts/backup.py --join FOLDER   in a downloaded backup, rebuild and check the files that were kept in parts
+
+**Parts** (17 November 2026, after the bundle passed 1.9 GB and two nights failed): a file over 1 GB is uploaded as `<name>.001`,
+`<name>.002` and so on; the manifest lists the parts as assets and, under `joined`, the whole file's size and SHA-256.
 
 **What is backed up** (entry 222 section 3.1): every branch and tag of this repository and of `grouplab-testdata` as git bundles; the
 files git does not hold that matter (`docs/notes/panel.md`, the `.claude` settings); `C:\\Dev\\grouplab-local` and
@@ -61,6 +65,7 @@ SOURCES = [
 NEVER = {"bin", "obj", "out", "backups", "node_modules", "__pycache__", ".git"}
 NEVER_PATHS = [DEV / "keys"]
 MOST_ASSET = 1900 * 1024 * 1024
+PART_BYTES = int(os.environ.get("GROUPLAB_BACKUP_PART_BYTES", str(1024 * 1024 * 1024)))  # 1 GiB a part, well under MOST_ASSET
 # Entry 489 section 1: on 3 and 10 November the backup left no line at all, because a step that hangs never ends and the automation log is
 # written when a step ends. Every gh call now has a time limit and one retry, the whole run a ceiling well above its usual 8 to 14
 # minutes, and every run ends with a "result:" line naming the part that failed.
@@ -154,6 +159,18 @@ def report_failure(what: str, detail: str, steps: list[str]) -> None:
             log(f"reported the failure ({r.status})")
     except OSError as e:
         log(f"the failure could not be reported: {type(e).__name__}")
+
+
+def failure_line(failed: bool) -> None:
+    """A failure rewrites the automation lines in for-alan.md at once, so the failure is there the same day; the next good run clears it."""
+    try:
+        text = (REPO / "docs" / "notes" / "for-alan.md").read_text(encoding="utf-8")
+        if failed or "**The nightly backup failed on" in text or "**The weekly restore test failed on" in text:
+            run = subprocess.run([sys.executable, str(REPO / "scripts" / "automation-report.py")], capture_output=True, text=True, timeout=120)
+            log("for-alan.md: " + ("the failure line written" if failed else "the failure line cleared") if run.returncode == 0
+                else f"for-alan.md could not be written: exit {run.returncode}")
+    except (OSError, subprocess.SubprocessError) as e:
+        log(f"for-alan.md could not be written: {type(e).__name__}")
 
 
 def repository_exists(repo: str) -> bool:
@@ -278,17 +295,76 @@ def build(work: Path, steps: list[str]) -> list[Path]:
         files.append(learned)
         steps.append("the archive repository's files")
 
+    # 16 and 17 November 2026: the repository's bundle grew past what a release asset may be, and two nights failed. A file over
+    # PART_BYTES is now uploaded as numbered parts; the manifest names the whole file, its SHA-256 and its parts, and join() rebuilds it.
+    part("splitting")
+    uploaded: list[Path] = []
+    joined: list[dict] = []
     for f in files:
+        if f.stat().st_size > PART_BYTES:
+            whole = {"name": f.name, "bytes": f.stat().st_size, "sha256": sha256(f)}
+            pieces = split(f, PART_BYTES)
+            whole["parts"] = [p.name for p in pieces]
+            joined.append(whole)
+            uploaded += pieces
+        else:
+            uploaded.append(f)
+    if joined:
+        steps.append("split: " + ", ".join(f"{j['name']} in {len(j['parts'])}" for j in joined))
+    for f in uploaded:
         if f.stat().st_size > MOST_ASSET:
-            raise RuntimeError(f"{f.name} is {f.stat().st_size >> 20} MB, over the 1.9 GB a release asset may be; split it before the next run")
+            raise RuntimeError(f"{f.name} is {f.stat().st_size >> 20} MB, over the 1.9 GB a release asset may be, even after splitting")
     manifest = work / "manifest.json"
     manifest.write_text(json.dumps({
-        "format": "grouplab-backup-1",
+        "format": "grouplab-backup-2",
         "written": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "assets": [{"name": f.name, "bytes": f.stat().st_size, "sha256": sha256(f)} for f in files],
+        "assets": [{"name": f.name, "bytes": f.stat().st_size, "sha256": sha256(f)} for f in uploaded],
+        "joined": joined,
         "local": entries,
     }, indent=1) + "\n", encoding="utf-8", newline="\n")
-    return files + [manifest]
+    return uploaded + [manifest]
+
+
+def split(f: Path, size: int) -> list[Path]:
+    """Cuts f into f.001, f.002 and so on, each at most size bytes, and deletes f. Joined in order they are f again, byte for byte."""
+    pieces: list[Path] = []
+    with f.open("rb") as source:
+        while True:
+            piece = f.with_name(f"{f.name}.{len(pieces) + 1:03d}")
+            written = 0
+            with piece.open("wb") as out:
+                while written < size:
+                    block = source.read(min(1 << 22, size - written))
+                    if not block:
+                        break
+                    out.write(block)
+                    written += len(block)
+            if written == 0:
+                piece.unlink()
+                break
+            pieces.append(piece)
+            if written < size:
+                break
+    f.unlink()
+    return pieces
+
+
+def join(folder: Path, manifest: dict) -> list[str]:
+    """Rebuilds every split file in folder from its parts, checks it against the manifest and deletes the parts. Returns the names
+    rebuilt. A backup written before the split (format 1) has no "joined" list and needs nothing."""
+    rebuilt = []
+    for whole in manifest.get("joined", []):
+        out = folder / whole["name"]
+        with out.open("wb") as o:
+            for name in whole["parts"]:
+                with (folder / name).open("rb") as i:
+                    shutil.copyfileobj(i, o, 1 << 22)
+        if sha256(out) != whole["sha256"]:
+            raise RuntimeError(f"{whole['name']}, joined from {len(whole['parts'])} parts, does not match its manifest")
+        for name in whole["parts"]:
+            (folder / name).unlink()
+        rebuilt.append(whole["name"])
+    return rebuilt
 
 
 def keep(tags: list[str], today: date) -> set[str]:
@@ -375,6 +451,9 @@ def restore_test(steps: list[str]) -> dict:
             if sha256(work / asset["name"]) != asset["sha256"]:
                 raise RuntimeError(f"{asset['name']} in {tag} does not match its manifest")
         steps.append("assets match")
+        rebuilt = join(work, manifest)
+        if rebuilt:
+            steps.append("joined: " + ", ".join(rebuilt))
         with zipfile.ZipFile(work / "local.zip") as z:
             listed_files = {e["path"]: e["sha256"] for e in manifest["local"]}
             for name, digest in listed_files.items():
@@ -389,7 +468,8 @@ def restore_test(steps: list[str]) -> dict:
         if gh("api", f"repos/{OWNER}/grouplab/commits/{head}", "--jq", ".sha", check=False).returncode != 0:
             raise RuntimeError(f"the bundle's head {head[:7]} is not on GitHub")
         steps.append("bundle clones")
-        log(f"restore test passed on {tag}: {len(manifest['assets'])} files and {len(listed_files)} local files match, the bundle clones")
+        joined_words = f", {len(rebuilt)} joined from parts" if rebuilt else ""
+        log(f"restore test passed on {tag}: {len(manifest['assets'])} files{joined_words} and {len(listed_files)} local files match, the bundle clones")
         return {"tag": tag, "files": len(listed_files), "head": head[:7]}
 
 
@@ -397,7 +477,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="The nightly backup and the weekly restore test (entry 222).")
     parser.add_argument("--dry-run", action="store_true", help="build everything, upload and delete nothing")
     parser.add_argument("--restore-test", action="store_true", help="download the newest backup, check it and restore the bundle")
+    parser.add_argument("--join", metavar="FOLDER", help="in a downloaded backup's folder, rebuild the files that were split into parts")
     args = parser.parse_args()
+    if args.join:
+        folder = Path(args.join)
+        rebuilt = join(folder, json.loads((folder / "manifest.json").read_text(encoding="utf-8")))
+        print("joined and checked: " + (", ".join(rebuilt) if rebuilt else "nothing was split in this backup"))
+        return 0
     steps: list[str] = []
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     what_run = "restore test" if args.restore_test else "backup"
@@ -412,6 +498,7 @@ def main() -> int:
             if not args.dry_run:
                 status(**{key: {"at": now, "ok": False, "error": why, "part": PART["now"]}})
                 report_failure("RestoreTestFailed" if args.restore_test else "BackupFailed", why, steps)
+                failure_line(True)
         finally:
             os._exit(3)
 
@@ -422,12 +509,14 @@ def main() -> int:
         if args.restore_test:
             result = restore_test(steps)
             status(restoreTest={"at": now, "ok": True, **result})
+            failure_line(False)
             return 0
         synced = sync_archive(args.dry_run, steps)
         done = backup(args.dry_run, steps)
         if not args.dry_run:
             status(archiveCopy={"at": now, "ok": not synced["problems"], "copied": len(synced["copied"]), "problems": synced["problems"]},
                    backup={"at": now, "ok": True, **done})
+            failure_line(False)
         if synced["problems"]:
             report_failure("ArchiveCopyFailed", "; ".join(synced["problems"]), steps)
         log(f"result: {what_run} ok" + (", a dry run" if args.dry_run else ""))
@@ -440,6 +529,7 @@ def main() -> int:
         if not args.dry_run:
             status(**{key: {"at": now, "ok": False, "error": str(e)[:500], "part": failed_part}})
             report_failure(what, str(e), steps)
+            failure_line(True)
         return 1
     finally:
         watchdog.cancel()

@@ -64,6 +64,43 @@ check("a full week has none", report.silent_nights(log_text.replace("2026-11-10 
 check("the weekly line says it plainly", "no backup line on 10 November" in report.line({}, log_text, date(2026, 11, 15)))
 check("a part that fails names itself", str(backup.PartFailed("upload", "gh release upload did not answer")).startswith("upload:"))
 
+# 16 and 17 November 2026: the bundle passed 1.9 GB and two nights failed. A file over the part size is cut into parts that join back
+# byte for byte; a part that is wrong is refused; and a backup from before the split needs no joining.
+import json
+import os
+import tempfile
+
+with tempfile.TemporaryDirectory(dir=os.environ.get("TMP")) as tmp:
+    folder = Path(tmp)
+    data = bytes(range(256)) * 41 + b"tail"
+    whole = folder / "grouplab.bundle"
+    whole.write_bytes(data)
+    digest = backup.sha256(whole)
+    pieces = backup.split(whole, 4096)
+    check("a file over the part size is cut into numbered parts", [p.name for p in pieces] == [f"grouplab.bundle.{n:03d}" for n in (1, 2, 3)],
+          str([p.name for p in pieces]))
+    check("no part is over the part size, and the whole is gone", all(p.stat().st_size <= 4096 for p in pieces) and not whole.exists())
+    manifest = {"joined": [{"name": "grouplab.bundle", "bytes": len(data), "sha256": digest, "parts": [p.name for p in pieces]}]}
+    check("the parts join back to the same file", backup.join(folder, manifest) == ["grouplab.bundle"] and whole.read_bytes() == data)
+    check("the parts are deleted once joined", not any(p.exists() for p in pieces))
+    exact = folder / "exact.bin"
+    exact.write_bytes(b"x" * 8192)
+    check("a file of exactly two parts makes two parts, not an empty third", len(backup.split(exact, 4096)) == 2)
+    pieces = backup.split(whole, 4096)
+    pieces[1].write_bytes(b"0" * 4096)
+    try:
+        backup.join(folder, manifest)
+        check("a damaged part is refused", False)
+    except RuntimeError as e:
+        check("a damaged part is refused", "does not match" in str(e))
+    check("a backup from before the split joins nothing", backup.join(folder, {"assets": []}) == [])
+    check("the part size is well under what a release asset may be", backup.PART_BYTES <= backup.MOST_ASSET // 1.5)
+
+check("a failed backup puts its own line in for-alan.md", (report.failure({"backup": {"at": "2026-11-17T09:30:00Z", "ok": False, "error": "x"}})
+                                                         or "").startswith("**The nightly backup failed on 17 November**"))
+check("a failed restore test does too", "restore test failed" in (report.failure({"backup": {"ok": True}, "restoreTest": {"ok": False}}) or ""))
+check("a good night has no such line", report.failure({"backup": {"ok": True}, "restoreTest": {"ok": True}}) is None)
+
 print(f"backup tests: {passed} passed, {len(failed)} failed")
 for f in failed:
     print("  FAILED  " + f)
