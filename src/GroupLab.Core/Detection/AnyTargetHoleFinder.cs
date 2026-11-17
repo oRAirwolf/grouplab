@@ -97,6 +97,33 @@ public static class AnyTargetHoleFinder
     /// <summary>The most corners a printed straight-sided shape is taken to have, its outline simplified as <see cref="NeutralDarknessHoleDetector.Corners"/> says.</summary>
     public const int PrintedCorners = 4;
 
+    /// <summary>How much darker than the paper around it a ring's rim is, grey levels: the snap's own step for a hole's outline.</summary>
+    public const double RimStep = 40;
+
+    /// <summary>A ring's separate tufts are joined across gaps up to twice this, inches.</summary>
+    public const double RimGapInches = 0.03;
+
+    /// <summary>The share of 48 directions round a light middle that must show a rim with paper beyond it.</summary>
+    public const double RimShare = 0.6;
+
+    /// <summary>A ring's rim is at least this wide, inches (the middle median over the directions); a printed letter's stroke is thinner.</summary>
+    public const double ThinnestRimInches = 0.02;
+
+    /// <summary>A ring's rim is at most this wide, inches; a printed band round a light shape is wider.</summary>
+    public const double WidestRimInches = 0.1;
+
+    /// <summary>A ring's rim edge is round: half its outer edge lies within this share of its radius of the circle fitted to it.</summary>
+    public const double RingRoundness = 0.12;
+
+    /// <summary>The circle fitted to a ring's outer edge is centred within this share of the middle's breadth of the middle's own centre.</summary>
+    public const double RingOffCentre = 0.4;
+
+    /// <summary>The smallest light middle a ring is taken to have, inches; a printed digit's or letter's counter is smaller.</summary>
+    public const double SmallestMiddleInches = 0.08;
+
+    /// <summary>A light middle with a rim at least this many times as long as it is wide is two holes touching.</summary>
+    public const double PairAspect = 1.6;
+
     /// <param name="value">max(R, G, B) per pixel, as the survey's detector reads it.</param>
     /// <param name="dpi">Pixels an inch on the target, from the scale the person set.</param>
     /// <param name="calibreInches">The bullet's diameter, where the person named one: it sets the smallest hole and what counts as too large.</param>
@@ -129,16 +156,45 @@ public static class AnyTargetHoleFinder
         bool mostlyPrint = print.Pixels.Count(p => p < 0.5 * brightest) >= DarkTarget * print.Pixels.Length;
         var patches = new List<(PointD Centre, double Radius)>();
         var rings = mostlyPrint ? Rings(print, fp, dpi, printLevel, paperLevel, backend, calibre, rejected, patches) : [];
-        var dark = Dark(value, dpi, fp, paperLevel, backend, calibre, rejected);
+        // The dark passes read the picture at up to 300 dots an inch, against the paper's local level drawn at every pixel there.
+        int fa = Math.Max(1, (int)Math.Ceiling((dpi / HoleDpi) - 1e-9));
+        var holeImage = Reduce(value, fa);
+        var paperImage = DrawnUp(paperLevel, fp, holeImage, fa);
+        // A ring on paper needs paper: on a target that is mostly dark print, a light middle in the dark is a hit's bright patch, the ring pass's.
+        var paperRings = mostlyPrint ? [] : PaperRings(holeImage, paperImage, fa, dpi / fa, backend, calibre, rejected);
+        var dark = Dark(holeImage, paperImage, fa, dpi / fa, backend, calibre, rejected);
+
+        // A pocket of paper closed in between a hole's torn edge and a printed line looks like a ring's middle. The hole beside it is a dark
+        // mark whose outline overlaps the pocket's without lying inside it; a dark mark inside a ring is a piece of that ring's own rim.
+        paperRings = [.. paperRings.Where(r =>
+        {
+            double own = 0.5 * r.DiameterInches * dpi;
+            bool pocket = dark.Any(d => Distance(d.Image, r.Image) >= own && Distance(d.Image, r.Image) < own + (0.5 * d.DiameterInches * dpi));
+            if (pocket)
+            {
+                rejected.Add(new RejectedBlob(r.Image.X, r.Image.Y, r.DiameterInches, "a pocket of paper beside a hole, not a ring"));
+            }
+
+            return !pocket;
+        })];
 
         // Where hits with bright rings were found, a light spot is a piece of a ring, not a hole in print; elsewhere, one inside a bright patch is.
         var light = rings.Count > 0 ? [] : Light(value, dpi, fp, printLevel, backend, calibre, rejected).Where(l => !patches.Any(p => Distance(p.Centre, l.Image) < p.Radius)).ToList();
 
-        // One proposal for one hole: a ring's centre first, as the most particular, then the dark holes, then the light ones.
+        // One proposal for one hole: a ring's centre first, as the most particular, then a ring on paper, then the dark holes, then the light
+        // ones. A ring on paper is the whole hole, so nothing inside its outline is proposed again: a piece of its rim is not another hole.
         double apart = 0.5 * Math.Max(calibre ?? 0.2, 0.2) * dpi;
         var holes = new List<ProposedHole>();
-        foreach (var hole in rings.Concat(dark).Concat(light))
+        var outlines = new List<(PointD Centre, double Radius)>();
+        foreach (var hole in rings.Concat(paperRings).Concat(dark).Concat(light))
         {
+            // Two touching holes are two rings on paper inside one outline, so a ring on paper is never dropped for another's.
+            bool onPaper = paperRings.Contains(hole);
+            if (!onPaper && outlines.Any(o => Distance(o.Centre, hole.Image) < o.Radius))
+            {
+                continue;
+            }
+
             if (inside is not null && !inside(hole.Image))
             {
                 rejected.Add(new RejectedBlob(hole.Image.X, hole.Image.Y, hole.DiameterInches, "outside the target"));
@@ -160,6 +216,10 @@ public static class AnyTargetHoleFinder
             // A scan's edge and a photograph's are where shadows and the scanner's own border lie.
             double edge = Math.Min(Math.Min(hole.Image.X, value.Width - 1 - hole.Image.X), Math.Min(hole.Image.Y, value.Height - 1 - hole.Image.Y));
             holes.Add(edge < EdgeInches * dpi && hole.Doubt is null ? hole with { Doubt = "it is at the edge of the picture" } : hole);
+            if (onPaper)
+            {
+                outlines.Add((hole.Image, 0.5 * hole.DiameterInches * dpi));
+            }
         }
 
         return new AnyTargetFinding(dpi, [.. holes.OrderBy(h => h.Image.Y).ThenBy(h => h.Image.X)], rejected);
@@ -170,12 +230,8 @@ public static class AnyTargetHoleFinder
     /// for the picture, in the full picture's pixels. The local level keeps holes in a shadow; the single level keeps a hole beside a large dark
     /// printed shape, where the local level is pulled down, and is what the survey measured. The two are merged by the caller.
     /// </summary>
-    private static List<ProposedHole> Dark(GrayImage value, double dpi, int fp, GrayImage paperLevel, IImagingBackend backend, double? calibre, List<RejectedBlob> rejected)
+    private static List<ProposedHole> Dark(GrayImage image, GrayImage paperImage, int fa, double adpi, IImagingBackend backend, double? calibre, List<RejectedBlob> rejected)
     {
-        int fa = Math.Max(1, (int)Math.Ceiling((dpi / HoleDpi) - 1e-9));
-        var image = Reduce(value, fa);
-        double adpi = dpi / fa;
-        var paperImage = DrawnUp(paperLevel, fp, image, fa);
         var options = new HoleDetectionOptions(CalibreInches: calibre);
         var holes = new List<ProposedHole>();
         foreach (bool local in new[] { true, false })
@@ -190,6 +246,222 @@ public static class AnyTargetHoleFinder
         }
 
         return holes;
+    }
+
+    /// <summary>
+    /// Error report 50, part two (a tester's 600 dpi flatbed scan, 2026-11-17): on a flatbed with its lid closed a hole is a ring, a grey torn
+    /// rim about 0.03 to 0.06 in wide round a middle as light as the paper (entry 417). The dark pass opens away anything narrower than
+    /// 0.064 in before it looks, which erased most of every rim: of about fifteen holes it found one, and refused the rims' pieces as too
+    /// small. Here a ring is found as what it is: a light middle closed in by a dark rim, with paper beyond the rim. The dark is taken against
+    /// the paper's local level with no opening, the rim's separate tufts are joined by a closing of <see cref="RimGapInches"/>, and each light
+    /// patch the dark closes in on every side is judged: about a hole's size, round, with a rim in at least <see cref="RimShare"/> of 48
+    /// directions that is at least <see cref="ThinnestRimInches"/> and at most <see cref="WidestRimInches"/> wide with paper beyond it. A
+    /// printed letter's counter is smaller or ringed by a thinner stroke; a printed shape inside a wide dark band (an orange diamond in a
+    /// black one) has a band far wider than a rim. The centre is that of a circle fitted to the rim's outer edge in the clean directions, and
+    /// the diameter is that circle's. A light middle at least <see cref="PairAspect"/> times as long as it is wide, with a rim, is two holes
+    /// touching, proposed as two and both doubted.
+    /// </summary>
+    private static List<ProposedHole> PaperRings(GrayImage image, GrayImage paperImage, int fa, double adpi, IImagingBackend backend, double? calibre, List<RejectedBlob> rejected)
+    {
+        int w = image.Width, h = image.Height;
+        var binary = new byte[image.Pixels.Length];
+        for (int i = 0; i < binary.Length; i++)
+        {
+            binary[i] = paperImage.Pixels[i] - image.Pixels[i] >= RimStep ? (byte)1 : (byte)0;
+        }
+
+        var closed = backend.Morphology(new GrayImage(w, h, binary), MorphologyOperation.Close, Radius(RimGapInches * adpi, 1)).Pixels;
+        var light = new byte[closed.Length];
+        for (int i = 0; i < light.Length; i++)
+        {
+            light[i] = closed[i] == 0 ? (byte)1 : (byte)0;
+        }
+
+        bool Dark(double x, double y)
+        {
+            int xi = (int)Math.Round(x), yi = (int)Math.Round(y);
+            return xi >= 0 && yi >= 0 && xi < w && yi < h && closed[(yi * w) + xi] != 0;
+        }
+
+        double smallest = Math.Max(SmallestMiddleInches, 0.3 * (calibre ?? 0));
+        double largest = calibre is { } bullet ? Math.Min(LargestLightInches, 1.5 * bullet) : LargestLightInches;
+        double thinnest = ThinnestRimInches * adpi, widest = WidestRimInches * adpi, step = 0.5;
+        var holes = new List<ProposedHole>();
+
+        // The paper itself and the inside of a printed frame are light patches too, and far larger than twice the largest middle.
+        foreach (var blob in Blobs(light, w, h, (int)Math.Ceiling(2 * largest * adpi) + 2))
+        {
+            if (blob.Left == 0 || blob.Top == 0 || blob.Left + blob.Width >= w || blob.Top + blob.Height >= h)
+            {
+                continue;
+            }
+
+            var (hullArea, cx, cy) = Polygon(blob.Hull);
+            double across = 2 * Math.Sqrt(blob.Area / Math.PI) / adpi;
+            if (hullArea <= 0 || across < smallest || across > 2 * largest)
+            {
+                continue;
+            }
+
+            // The middle's long axis and its extent along it and across it.
+            var (axis, length, breadth) = Extent(light, w, blob, cx, cy);
+            double solidity = Math.Min(1, blob.Area / hullArea);
+            double aspect = length / Math.Max(1, breadth);
+            bool pair = aspect >= PairAspect;
+            var at = new PointD(Up(cx, fa), Up(cy, fa));
+            string? why = solidity < (pair ? 0.75 : 0.8) ? Words($"a light middle, not compact, solidity {solidity:0.00}")
+                : aspect > 2.8 ? Words($"a light middle, elongated, aspect {aspect:0.00}")
+                : !pair && across > largest ? Words($"a light middle {across:0.00} in across, wider than a hole")
+                : !pair && 2 * Math.Sqrt(blob.Area / Math.PI) / Math.Max(blob.Width, blob.Height) < 0.7 ? "a light middle, not round"
+                : null;
+
+            // The rim in each of 48 directions: the first dark from the middle, then how far the dark goes before the paper.
+            int clean = 0, carried = 0;
+            var outer = new List<(double X, double Y)>();
+            var widths = new List<double>();
+            double reach = 0.65 * Math.Max(length, breadth);
+            for (int a = 0; a < 48 && why is null; a++)
+            {
+                double c = Math.Cos(2 * Math.PI * a / 48), s = Math.Sin(2 * Math.PI * a / 48);
+                double t = 0;
+                while (t <= reach && !Dark(cx + (c * t), cy + (s * t)))
+                {
+                    t += step;
+                }
+
+                if (t > reach)
+                {
+                    continue;
+                }
+
+                double inner = t;
+                while (t - inner <= widest && Dark(cx + (c * t), cy + (s * t)))
+                {
+                    t += step;
+                }
+
+                if (t - inner > widest)
+                {
+                    carried++;
+                    continue;
+                }
+
+                // The light beyond a rim is paper outside the middle. Light beyond it inside the middle's own outline means the dark crossed was
+                // printed inside the light: the loop of a white 9 on a black band, or the cross on a diamond's white centre.
+                if (InHull(blob.Hull, new PointD(cx + (c * (t + step)), cy + (s * (t + step)))))
+                {
+                    continue;
+                }
+
+                clean++;
+                widths.Add(t - inner);
+                outer.Add((cx + (c * (t - step)), cy + (s * (t - step))));
+            }
+
+            if (why is null && clean < RimShare * 48)
+            {
+                why = Words($"a light middle without a rim and paper beyond it, {clean} of 48 directions");
+            }
+
+            double rim = widths.Count > 0 ? widths.Order().ElementAt(widths.Count / 2) : 0;
+            if (why is null && rim < thinnest)
+            {
+                why = Words($"a light middle inside a thin line, {rim / adpi:0.000} in, not a hole's rim");
+            }
+
+            if (why is not null)
+            {
+                rejected.Add(new RejectedBlob(at.X, at.Y, across, why));
+                continue;
+            }
+
+            // The rim's outer edge must be round about the middle: one circle, or for two touching holes two of the middle's breadth. A
+            // pocket of paper closed in between a hole and printed lines, or a piece of a printed light ring that a hole cuts, has an edge
+            // no such circle follows.
+            string? doubt = carried > 48 / 4 ? "it touches printing" : null;
+            var middle = new PointD(cx, cy);
+            double radius = (breadth / 2) + rim;
+            PointD[] centres = pair
+                ? [new PointD(cx - ((length - breadth) / 2 * axis.X), cy - ((length - breadth) / 2 * axis.Y)), new PointD(cx + ((length - breadth) / 2 * axis.X), cy + ((length - breadth) / 2 * axis.Y))]
+                : [middle];
+            if (!pair && RenderDifferenceHoleDetector.FitCircle(outer) is { } fit && Distance(new PointD(fit.X, fit.Y), middle) < RingOffCentre * breadth)
+            {
+                (centres[0], radius) = (new PointD(fit.X, fit.Y), fit.Radius);
+            }
+            else if (!pair)
+            {
+                rejected.Add(new RejectedBlob(at.X, at.Y, across, "a light middle whose rim is not round about it"));
+                continue;
+            }
+
+            var off = outer.Select(o => centres.Min(m => Math.Abs(Distance(m, new PointD(o.X, o.Y)) - radius))).Order().ToList();
+            double usual = off[off.Count / 2];
+            if (usual > RingRoundness * radius)
+            {
+                rejected.Add(new RejectedBlob(at.X, at.Y, across, Words($"a light middle whose rim is not round, {usual / radius:0.00} of its radius off a circle")));
+                continue;
+            }
+
+            double size = 2 * radius / adpi;
+            foreach (var centre in centres)
+            {
+                holes.Add(new ProposedHole(new PointD(Up(centre.X, fa), Up(centre.Y, fa)), size, HoleLook.DarkOnPaper,
+                    pair ? "two holes touching, or one torn long: check both" : SizeDoubt(size, calibre, 0.6, 1.7) ?? doubt));
+            }
+        }
+
+        return holes;
+    }
+
+    /// <summary>Whether a point lies inside a convex hull listed counter-clockwise.</summary>
+    private static bool InHull(IReadOnlyList<PointD> hull, PointD p)
+    {
+        if (hull.Count < 3)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < hull.Count; i++)
+        {
+            var a = hull[i];
+            var b = hull[(i + 1) % hull.Count];
+            if ((((b.X - a.X) * (p.Y - a.Y)) - ((b.Y - a.Y) * (p.X - a.X))) < 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>A blob's long axis, as a unit vector, and its extent along that axis and across it, in pixels.</summary>
+    private static (PointD Axis, double Length, double Breadth) Extent(byte[] mask, int w, ImageBlob blob, double cx, double cy)
+    {
+        double xx = 0, yy = 0, xy = 0;
+        for (int y = blob.Top; y < blob.Top + blob.Height; y++)
+        {
+            for (int x = blob.Left; x < blob.Left + blob.Width; x++)
+            {
+                if (mask[(y * w) + x] != 0)
+                {
+                    double dx = x - cx, dy = y - cy;
+                    xx += dx * dx;
+                    yy += dy * dy;
+                    xy += dx * dy;
+                }
+            }
+        }
+
+        double angle = 0.5 * Math.Atan2(2 * xy, xx - yy);
+        var axis = new PointD(Math.Cos(angle), Math.Sin(angle));
+        double lo = 0, hi = 0, blo = 0, bhi = 0;
+        foreach (var p in blob.Hull)
+        {
+            double along = ((p.X - cx) * axis.X) + ((p.Y - cy) * axis.Y), side = (-(p.X - cx) * axis.Y) + ((p.Y - cy) * axis.X);
+            (lo, hi, blo, bhi) = (Math.Min(lo, along), Math.Max(hi, along), Math.Min(blo, side), Math.Max(bhi, side));
+        }
+
+        return (axis, hi - lo + 1, bhi - blo + 1);
     }
 
     /// <summary>The dark pass's marks judged: refused where they are the edge of a large printed area, and doubted where they are unlike a hole.</summary>

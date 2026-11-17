@@ -9,24 +9,23 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-17, entries 496 and 497 done (after the backup split and error report 50); the inbox is empty.
+**Last rewritten:** 2026-11-17, after Alan's App Store release and error report 50's second part; the inbox is empty.
 
 ---
 
 ## In flight
 
+- **2026-11-17, by Alan's word**: GroupLab 1.0 (build 226) **released on the App Store** (READY_FOR_DISTRIBUTION,
+  https://apps.apple.com/app/id6817635137) by `testflight.py --release`, run only from the testflight workflow's hand-filled input; the
+  README, site, guide and PLATFORM-SUPPORT.md say so. Suggestion 48 closed as built in nightly 199. **Error report 50, part two**: Find
+  holes now finds a ring on paper (`AnyTargetHoleFinder.PaperRings`), 9 of the tester's 11 holes instead of 1; ships in nightly 231.
 - **2026-11-17, by Alan's word**: the nightly backup failed on 16 and 17 November (the bundle passed 1.9 GB); a file over 1 GB
   is now uploaded in parts (`backup.py`, manifest format 2, `--join`), backup-2026-11-17 made by hand and its restore test passed; a
   failed backup now writes its own line in for-alan.md the same day. **Error report 50** (Discord video): the snap with no design
   known now finds a hole by its outline (`Snapping.Outline`), so a click beside dark print lands on the hole; ships in nightly 230.
-- **Entries 496 and 497 (2026-11-17)**, done: the pooled set look kept as built; the 16 November consistency audit's six findings
-  fixed (1.0 wording, Play's closed test, nightly 226's notes, suggestions counted as Discord posts, feature-requests named, pools).
 - **Entry 495 (2026-11-16)**, done but two parts: a pooled set is a record of its own (schema 7, `pools`, `SessionPools`,
   `PoolPackage`) on both platforms, in Session records, Compare, sharing, export, import and sync; not built: a screen to choose
   between two devices' versions of a pool, and the sheet question on the phone (it deletes no session). Look: DESIGN NEEDED in for-alan.
-- **Entry 488 (2026-11-15)**, done: GroupLab is 1.0.0; the next nightly is 1.0.0-nightly.226, read as "GroupLab 1.0, build 226"
-  (`SemanticVersion.Words`, never serialized: the manifests are signed over it). Store strings: Microsoft 1.0.226.0, Android 1.0.226
-  code 226, Apple 1.0 (226). "Still in active development" on the README, site, guide, Settings and the Store text; not on Play yet.
 - **Entry 480 (2026-11-07)**, in part: the iPhone Duo. **Checked 2026-11-15:** workload set 10.0.404 (Xcode 27.2) fixes 26969; the
   iPhone, iPad and Dev legs pass on the trial branch, the Duo leg not yet (folded, outer screen, upright self-test stops at the picture
   check; IOS-PLAN.md). nightly.yml stays on Xcode 26 until the Duo leg passes.
@@ -45,7 +44,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   devices, late, out of order and half-written files, conflicted copies and wrong clocks (entry 472); a real cloud client over weeks
   needs Alan's two devices (PROOF-CHECKLIST.md, line 4 of entry 472's list).
 - **iOS** (Phase 8): in a public beta through TestFlight; the device checks need a sitting (50), GroupLab Dev on the iPad request
-  61; App Store 1.0 submitted (entry 491), and releasing it once approved is Alan's word.
+  61; App Store 1.0 released 2026-11-17 on Alan's word.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft follows the nightlies (entry 369); Play's closed test is open (entry 490); Test Lab waits on request 62.
@@ -100,6 +99,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **The server's logs are in Denver time** (-0600, -0700 from 1 November), not UTC; a log paste converts its window (request 99).
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
+- **Find holes looks for rings on paper first** (report 50): nothing inside a ring's outline is proposed again; not on dark targets.
 - **With no design known, the snap looks for a hole's outline first** (error report 50, `Snapping.Outline`), then weighs the dark as
   before if it finds none; a sheet with its design known snaps as it did. Backups over 1 GB are in parts (`backup.py --join`).
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its

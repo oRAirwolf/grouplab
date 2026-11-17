@@ -35,6 +35,8 @@ before ending a turn, and at least hourly while waiting on CI) and writes each n
 - **Size:** medium (done). **Fits:** yes; keyboard use is accessibility work GroupLab already does.
 - **Recommendation:** close as built in nightly 199 (entry 442), with a word in the thread that the build the poster tried predates it.
   Nothing to put to Alan unless the poster finds something on a 1.0 build.
+- **Closed 2026-11-17** as built in nightly 199 (entry 442), by Alan's word; the issue says the build the poster tried predates it, and the
+  line for the Discord thread is in for-alan.md (the worker carries posts one way, so the thread hears it from Alan).
 
 ## Before the worker read the forum (2026-11-16)
 

@@ -24,6 +24,26 @@ hourly while waiting on CI, and writes each new one here.
   click now lands within 0.4 to 0.9 pixels of that hole, 0.0 to 0.2 for a hole on plain paper and 1.3 to 2.2 for the one at the frame
   line. `InkBesideAHoleTests` holds it on a page rebuilt from the frame's measurements, not its pixels, since the poster has not consented
   to public test data. Ships in the next nightly.
+- **Part two, 2026-11-17 (the tester's answer):** build 225 on Windows 11 x64, a 600 dpi flatbed scan with the lid closed of a target they
+  made themselves (four boxes, each a black diamond round an orange one), and "Find holes didn't work well". The planning session counts 11
+  holes; every one is a ring. Find holes, run as the tester would (the scale set, no calibre, no bulls), proposed **1**, 0.09 in off its
+  hole, and nothing false.
+- **Cause:** the dark pass opens away anything narrower than 0.064 in before it looks, and a ring's grey rim is about 0.055 in wide and
+  broken into tufts, so every rim but one went and the pieces left were refused as too small. Nothing in the finder looked for a ring on
+  paper (entry 417's ring fit is in the printed-sheet detector and the snap only).
+- **Fixed:** a fourth pass finds a ring as a light middle closed in by a dark rim 0.02 to 0.1 in wide with paper beyond it in most
+  directions, centred on a circle fitted to the rim's outer edge; a middle about twice as long as it is wide is two touching holes, two
+  marks, both sent to the review. It refuses a printed letter's or digit's counter, a light shape inside print, a rim that is not round,
+  a pocket of paper closed in between a hole and a printed line, and is not run on a target that is mostly dark print. Now **9 of 11**,
+  each on its centre, nothing false: box 3 three of three, box 4 two of three, box 5 two of three (the touching pair as two), box 6 two
+  of two. The one across the Vel / SD line is one hole: its middle is 1.28 times as long as wide (single holes 1.09 to 1.50, the
+  touching pair 1.87) and its outline 0.30 in against 0.26, so one hole torn along the line, or two almost on top of each other that no
+  picture can split. The store-bought blanks are as they were (0, 0, 0, 0, 2 false; rendered holes 228 of 592 found, 36 false both
+  ways); the any-target scoreboard finds 12 more holes over its 16 lines with the same 24 false marks in all, and five lines moved in
+  its baseline. `RingsOnPaperTests` holds it on a box rebuilt from the scan's measurements, not its pixels. Ships in nightly 231.
+- **Not fixed, by design for now:** the two holes torn through the orange and the black. In the brightest channel the orange is as light
+  as the paper, so such a hole is neither a light spot with print all round it nor a ring with paper beyond it; a click places it, and
+  part one's snap puts the click on the hole.
 
 ## 47, 2026-11-16, nightly 226 on the computer (a Discord post in bug-reports, with two screenshots)
 

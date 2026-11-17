@@ -5,7 +5,7 @@
     "read by the finder for such targets under four conditions on two seeds. AnyTargetScoreboardTests holds every build to these lines.",
     "Written by grouplab scoreboard --any-target --out; when a change makes a line better, move it in the same commit and say why."
   ],
-  "measured": "2026-09-30",
+  "measured": "2026-11-17",
   "seeds": [
     318,
     319
@@ -24,17 +24,17 @@
       "pictures": 2,
       "registered": 2,
       "holes": 32,
-      "marks": 21,
-      "found": 20,
-      "falseMarks": 1,
-      "medianCentreInches": 0.0114,
+      "marks": 22,
+      "found": 22,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0112,
       "worstCentreInches": 0.0328,
-      "medianMilliseconds": 409,
+      "medianMilliseconds": 436,
       "foundPerPicture": [
         12,
-        8
+        10
       ],
-      "recall": 0.625,
+      "recall": 0.6875,
       "expectedToFail": false
     },
     {
@@ -43,17 +43,17 @@
       "pictures": 2,
       "registered": 2,
       "holes": 32,
-      "marks": 21,
-      "found": 20,
-      "falseMarks": 1,
-      "medianCentreInches": 0.01,
+      "marks": 23,
+      "found": 23,
+      "falseMarks": 0,
+      "medianCentreInches": 0.0101,
       "worstCentreInches": 0.0328,
-      "medianMilliseconds": 300,
+      "medianMilliseconds": 309,
       "foundPerPicture": [
-        12,
-        8
+        13,
+        10
       ],
-      "recall": 0.625,
+      "recall": 0.7188,
       "expectedToFail": false
     },
     {
@@ -62,17 +62,17 @@
       "pictures": 2,
       "registered": 2,
       "holes": 32,
-      "marks": 22,
-      "found": 19,
+      "marks": 25,
+      "found": 22,
       "falseMarks": 3,
-      "medianCentreInches": 0.011,
-      "worstCentreInches": 0.0314,
-      "medianMilliseconds": 270,
+      "medianCentreInches": 0.0112,
+      "worstCentreInches": 0.0327,
+      "medianMilliseconds": 329,
       "foundPerPicture": [
-        12,
-        7
+        13,
+        9
       ],
-      "recall": 0.5938,
+      "recall": 0.6875,
       "expectedToFail": false
     },
     {
@@ -81,17 +81,17 @@
       "pictures": 2,
       "registered": 2,
       "holes": 32,
-      "marks": 20,
-      "found": 20,
+      "marks": 22,
+      "found": 22,
       "falseMarks": 0,
       "medianCentreInches": 0.0106,
       "worstCentreInches": 0.0332,
-      "medianMilliseconds": 273,
+      "medianMilliseconds": 222,
       "foundPerPicture": [
         12,
-        8
+        10
       ],
-      "recall": 0.625,
+      "recall": 0.6875,
       "expectedToFail": false
     },
     {
@@ -105,7 +105,7 @@
       "falseMarks": 0,
       "medianCentreInches": 0.0073,
       "worstCentreInches": 0.0229,
-      "medianMilliseconds": 263,
+      "medianMilliseconds": 84,
       "foundPerPicture": [
         13,
         13
@@ -124,7 +124,7 @@
       "falseMarks": 0,
       "medianCentreInches": 0.0073,
       "worstCentreInches": 0.0229,
-      "medianMilliseconds": 257,
+      "medianMilliseconds": 74,
       "foundPerPicture": [
         13,
         13
@@ -143,7 +143,7 @@
       "falseMarks": 0,
       "medianCentreInches": 0.008,
       "worstCentreInches": 0.0227,
-      "medianMilliseconds": 258,
+      "medianMilliseconds": 82,
       "foundPerPicture": [
         13,
         13
@@ -162,7 +162,7 @@
       "falseMarks": 0,
       "medianCentreInches": 0.0072,
       "worstCentreInches": 0.0274,
-      "medianMilliseconds": 259,
+      "medianMilliseconds": 65,
       "foundPerPicture": [
         13,
         13
@@ -181,7 +181,7 @@
       "falseMarks": 0,
       "medianCentreInches": 0.0115,
       "worstCentreInches": 0.0339,
-      "medianMilliseconds": 266,
+      "medianMilliseconds": 99,
       "foundPerPicture": [
         8,
         14
@@ -200,7 +200,7 @@
       "falseMarks": 0,
       "medianCentreInches": 0.0106,
       "worstCentreInches": 0.0339,
-      "medianMilliseconds": 266,
+      "medianMilliseconds": 98,
       "foundPerPicture": [
         7,
         14
@@ -214,17 +214,17 @@
       "pictures": 2,
       "registered": 2,
       "holes": 32,
-      "marks": 26,
-      "found": 23,
+      "marks": 28,
+      "found": 25,
       "falseMarks": 3,
       "medianCentreInches": 0.0106,
-      "worstCentreInches": 0.0341,
-      "medianMilliseconds": 268,
+      "worstCentreInches": 0.0508,
+      "medianMilliseconds": 110,
       "foundPerPicture": [
-        9,
+        11,
         14
       ],
-      "recall": 0.7188,
+      "recall": 0.7812,
       "expectedToFail": false
     },
     {
@@ -233,12 +233,12 @@
       "pictures": 2,
       "registered": 2,
       "holes": 32,
-      "marks": 22,
+      "marks": 23,
       "found": 22,
-      "falseMarks": 0,
-      "medianCentreInches": 0.0111,
+      "falseMarks": 1,
+      "medianCentreInches": 0.0107,
       "worstCentreInches": 0.0332,
-      "medianMilliseconds": 267,
+      "medianMilliseconds": 92,
       "foundPerPicture": [
         8,
         14
@@ -257,7 +257,7 @@
       "falseMarks": 4,
       "medianCentreInches": 0.0149,
       "worstCentreInches": 0.0534,
-      "medianMilliseconds": 271,
+      "medianMilliseconds": 106,
       "foundPerPicture": [
         12,
         13
@@ -276,7 +276,7 @@
       "falseMarks": 3,
       "medianCentreInches": 0.0145,
       "worstCentreInches": 0.0421,
-      "medianMilliseconds": 273,
+      "medianMilliseconds": 105,
       "foundPerPicture": [
         11,
         13
@@ -295,7 +295,7 @@
       "falseMarks": 7,
       "medianCentreInches": 0.0151,
       "worstCentreInches": 0.0438,
-      "medianMilliseconds": 272,
+      "medianMilliseconds": 100,
       "foundPerPicture": [
         12,
         13
@@ -309,12 +309,12 @@
       "pictures": 2,
       "registered": 2,
       "holes": 32,
-      "marks": 28,
+      "marks": 29,
       "found": 26,
-      "falseMarks": 2,
+      "falseMarks": 3,
       "medianCentreInches": 0.0166,
       "worstCentreInches": 0.0973,
-      "medianMilliseconds": 274,
+      "medianMilliseconds": 102,
       "foundPerPicture": [
         13,
         13

@@ -499,7 +499,7 @@ Phases 5 and 9 are in progress in the nearest honest sense: parts of each are bu
   inside the folder kept 14 days (entry 464). Proving it needs two real devices on one cloud folder.
 
 **Phase 8. iOS.**
-- **In progress.** The plan, with sizes, is `docs/IOS-PLAN.md` (entry 278 section 6): the shared phone screens, OpenCV built for iOS, the camera on AVFoundation, and a nightly build signed on GitHub's Mac machines and sent to TestFlight. Version 1.0 was released on the App Store on 2026-11-17.
+- **In progress.** The plan, with sizes, is `docs/IOS-PLAN.md` (entry 278 section 6): the shared phone screens, OpenCV built for iOS, the camera on AVFoundation, and a nightly build signed on GitHub's Mac machines and sent to TestFlight. Version 1.0 is on the App Store.
 
 **Phase 9. Performance.**
 - **In progress.** Making GroupLab quick, once it is right. It may run alongside Phase 6, and Android is the reason it matters: a phone is several times slower than a desktop. Each change is held to giving the same results as before, because a fast wrong answer is worthless.
