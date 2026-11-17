@@ -12,6 +12,20 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.231
+
+**2026-11-17**, commit `92a9694`. Nightly.
+
+**What you will notice**
+
+- Find holes now finds holes that show as rings, as a flatbed scan with the lid closed makes them, and places each on its center; two holes touching come up as two marks for you to check. (Error report 50) (found from a Discord post).
+
+From your reports and targets in this build: 1 fix from 1 error report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.231)
+
+---
+
 ## 1.0.0-nightly.230
 
 **2026-11-17**, commit `32e4f97`. Nightly.
