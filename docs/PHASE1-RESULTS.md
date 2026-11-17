@@ -737,6 +737,11 @@ deletes no session. **Tests:** `PoolRecordTests` (6: figures again and a fixed h
 second store, export, import, the database's JSON, sync add, change and delete, the upgrade from 6), `PoolSetTests` on the computer
 (saved, one row, reopened, shared and opened whole on a second GroupLab, twice) and `Entry420Tests` on the phone.
 
+## Entry 496: the saved pooled set's look kept as built (2026-11-17)
+
+Alan answered "keep it" to entry 495's DESIGN NEEDED line (how a saved pooled set looks in Session records, and the pooled tab's
+saved line). The line in `docs/notes/for-alan.md` is marked answered with the date; nothing in the application changed.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

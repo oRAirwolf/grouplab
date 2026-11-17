@@ -9,20 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-16, entry 495 done (after 493, 494 and nightly 228); the inbox is empty.
+**Last rewritten:** 2026-11-17, entry 496 done (after the backup split and error report 50); entry 497 is next.
 
 ---
 
 ## In flight
 
-- **Entry 493 (2026-11-16)**, done but section 2's keep-both (ships in nightly 228): Numbers from another GroupLab on Check your printer, both numbers
-  under each printer to copy; a typed check is saved as a card check marked `typed` so older builds keep it (PrinterProfile).
+- **2026-11-17, by Alan's word**: the nightly backup failed on 16 and 17 November (the bundle passed 1.9 GB); a file over 1 GB
+  is now uploaded in parts (`backup.py`, manifest format 2, `--join`), backup-2026-11-17 made by hand and its restore test passed; a
+  failed backup now writes its own line in for-alan.md the same day. **Error report 50** (Discord video): the snap with no design
+  known now finds a hole by its outline (`Snapping.Outline`), so a click beside dark print lands on the hole; ships in nightly 230.
+- **Entry 496 (2026-11-17)**, done: entry 495's pooled set look kept as built ("keep it"); no layout changed.
 - **Entry 495 (2026-11-16)**, done but two parts: a pooled set is a record of its own (schema 7, `pools`, `SessionPools`,
   `PoolPackage`) on both platforms, in Session records, Compare, sharing, export, import and sync; not built: a screen to choose
   between two devices' versions of a pool, and the sheet question on the phone (it deletes no session). Look: DESIGN NEEDED in for-alan.
-- **Entries 492 and 494 (2026-11-16)**, done: the Discord worker files feature-requests as `suggestion` issues, installed by Alan
-  at 11:49 UTC (RESTORE.md); suggestions 48 and 49 assessed in docs/notes/suggestions.md, both already built (442, 493); 48 left open.
-- **Entries 489 to 491 (2026-11-15)**, done: App Store 1.0 (build 226) with App Review (external-status.md); Play's closed test open.
 - **Entry 488 (2026-11-15)**, done: GroupLab is 1.0.0; the next nightly is 1.0.0-nightly.226, read as "GroupLab 1.0, build 226"
   (`SemanticVersion.Words`, never serialized: the manifests are signed over it). Store strings: Microsoft 1.0.226.0, Android 1.0.226
   code 226, Apple 1.0 (226). "Still in active development" on the README, site, guide, Settings and the Store text; not on Play yet.
@@ -73,8 +73,8 @@ Two, both in `docs/QUESTIONS-FOR-PLANNING.md` (113 answered (b) in entry 495):
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.228 (2026-11-16 11:30 UTC), carrying entry 493 (a printer's check typed in from another
-  GroupLab); App Store 1.0 (build 226) is with App Review; TestFlight build 227 waits for 226's beta review to finish.
+- **Last nightly:** 1.0.0-nightly.229 (2026-11-16 14:50 UTC), carrying entry 495 (a pooled set saved as a record); App Store
+  1.0 (build 226) is with App Review; the next nightly, 230, carries error report 50's snap fix.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
 ## The inbox
@@ -88,13 +88,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
-- **Play's commit cancels a review in progress by default**; play-upload.py asks ERROR_IF_IN_REVIEW, so a nightly that meets
-  a review skips Play that run (entry 487). **Version words are not serialized** (`SemanticVersion.Words`, entry 488).
-- **Ballistics can be opened from Settings** (`Shell.ShowRiflesAndLoads`, entry 482) with "‹ Settings" back; the back walk expects a
-  place opened with its own way back to return there, not to Capture.
 - **Every phone sheet closes through `ProblemSheet.PutBack`** (error report 43), and a choice handed to `ProblemSheet.Over` that the
   caller did not place is shown under the body.
-- **A rifle, barrel or load kept from its form renames** (`RecordBook.With(record, was)`, error report 42); a name in use is refused.
 
 - **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words, or `Screens.LeavesPage` for a Done,
   Cancel, Skip or "Another target" that is the page's way out (entry 472); `Entry472BackTests` fails on a new page Back was never pressed on.
@@ -103,6 +98,9 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **The server's logs are in Denver time** (-0600, -0700 from 1 November), not UTC; a log paste converts its window (request 99).
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
+- **With no design known, the snap looks for a hole's outline first** (error report 50, `Snapping.Outline`), then weighs the dark as
+  before if it finds none; a sheet with its design known snaps as it did.
+- **Backups over 1 GB are in parts** (`grouplab.bundle.001` and on); `python scripts/backup.py --join <folder>` rebuilds them.
 - **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
   rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
 - **The database is schema version 7** (entry 495 added `pools`, listed by negated id): each upgrade's first open copies the database first.

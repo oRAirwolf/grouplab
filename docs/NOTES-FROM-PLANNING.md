@@ -25,6 +25,14 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-16, entry 496: the saved pooled set's look is kept as built
+
+**Status: actioned 2026-11-17. Done: the DESIGN NEEDED line in for-alan.md is marked answered; no layout changed.**
+
+Alan, 2026-11-16 09:33 Denver: "keep it", to the DESIGN NEEDED line from entry 495 (how a saved pooled set looks in Session records,
+and the pooled tab's saved line). Mark that line in for-alan.md answered with today's date and "keep it, as built in entry 495"; no
+layout changes. Nothing else to do. Report as usual.
+
 ## 2026-11-16, entry 495: question 113 answered (b): a pooled set is saved as a record of its own
 
 **Status: actioned 2026-11-16. Every section built on the computer and the phone, except two parts recorded as not done:** a pool changed on two devices follows sessions' rule in synchronization (both kept, the other device's waiting to be chosen), but no screen offers that choice for a pool yet, as none does for a rifle or load; and deleting a sheet names its pools only on the computer, since the phone has no way to delete a session. The look is a DESIGN NEEDED line in for-alan.md. Question 113 closed.
