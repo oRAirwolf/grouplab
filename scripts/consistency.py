@@ -113,7 +113,7 @@ def routes() -> list[str]:
     """Where to get GroupLab, and which chronograph files it reads, said the same everywhere a person reads it."""
     site = (REPO / "website" / "build.py").read_text(encoding="utf-8")
     found = []
-    for name in ("STORE", "TESTFLIGHT"):
+    for name in ("STORE", "APP_STORE"):
         url = re.search(rf'^{name} = "([^"]+)"', site, re.M).group(1)
         for doc in GETTING:
             if url not in doc.read_text(encoding="utf-8"):

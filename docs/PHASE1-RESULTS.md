@@ -810,6 +810,20 @@ the touching pair, a click on print with no hole near it, and a hole on paper; t
 proposed; with a caliber, the pair as one): their scale was most likely about a quarter short. Find holes finds 7 holes at 550 or 650
 against 9 at 600. **5.** The line for Alan to post on Discord is in for-alan.md.
 
+## Entry 500: the App Store is the way in on iPhone and iPad; the public TestFlight invitation retired (2026-11-18)
+
+By the docs worker, checked on the main model. **1.** The download page's iPhone and iPad card says only that GroupLab 1.0 is on the App
+Store, which gets a new version when one is submitted and approved; the "Join the iPhone and iPad beta" button, the TestFlight sentence
+and point, and the "Install TestFlight first" fold are gone, and so is the TESTFLIGHT constant, used nowhere else; the Updating paragraph
+and how-it-works.json no longer invite anyone to the beta. **2.** The README's download row links the App Store (from `readme.py`, whose
+constant became APP_STORE), and the public-beta wording is gone from its lines and from docs/PLATFORM-SUPPORT.md (the README's platform
+statement regenerated from it), the user guide and the testing guide (both PDFs regenerated); the GPL section 7 permission and the
+statements that each nightly goes to TestFlight stay, since the beta goes on for its existing testers. `consistency.py` checked the three
+documents link the TestFlight invitation and now checks they link the App Store. The two claims keys for the old button are gone and nine
+new decided entries cite this entry; "Join the iPhone and iPad beta" and the public link are retired wording. Checks: readme current,
+claims all backed, site build ok, consistency 0 findings, Core suite passing. Kept on purpose: the support page's line telling existing
+testers how to send feedback from TestFlight.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-18, after entry 499; entries 500 and 501 are next in the inbox.
+**Last rewritten:** 2026-11-18, after entry 500; entry 501 is next in the inbox.
 
 ---
 
@@ -18,6 +18,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 498 (2026-11-18)**: question 114 answered (a); report 50's two holes in the diamonds left (no honest fix); the App Store audit
   fixed 6 findings; a pooled set changed on two devices reaches the Sessions banner and a plain prompt (look: DESIGN NEEDED). Not taken:
   speed on a scan. Still to check: nightly 232 reaching TestFlight as 1.0.232.
+- **Entry 500 (2026-11-18)**: the App Store is the way in on iPhone and iPad; the public TestFlight invitation is retired wording.
 - **Entry 499 (2026-11-18)**: Snap to holes (toolbar and Shooting defaults) and Alt for one click; the snap keeps a click on its own
   touching ring and stays put when it finds no hole's edge. The missed backup night is caught at the start of every Code run now.
 - **Entry 495 (2026-11-16)**, done but two parts: a pooled set is a record of its own (schema 7, `pools`, `SessionPools`,
@@ -79,7 +80,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entries 500 and 501.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 501.
 
 ## Things that would surprise somebody who was not here yesterday
 

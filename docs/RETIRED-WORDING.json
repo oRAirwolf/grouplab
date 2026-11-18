@@ -424,6 +424,26 @@
         "docs/claims-backing.json",
         "docs/CLAIMS.md"
       ]
+    },
+    {
+      "phrase": "Join the iPhone and iPad beta",
+      "why": "entry 500, Alan, 2026-11-18: the App Store is the way in on iPhone and iPad, and the public is no longer invited to the TestFlight beta; the beta itself carries on for existing testers",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "testflight.apple.com/join/A3xyT6C6",
+      "why": "entry 500, Alan, 2026-11-18: the App Store is the way in on iPhone and iPad, and the public is no longer invited to the TestFlight beta; the beta itself carries on for existing testers",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
     }
   ],
   "settled": []

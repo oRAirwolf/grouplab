@@ -2,7 +2,7 @@
 
 **Photograph any target, and GroupLab measures the group and tells you honestly what its size is worth. Print a GroupLab sheet, and it does all of it by itself.**
 
-Free and open source under GPL-3.0: no account, no ads, no paid tier. On Windows, macOS, Linux and Android, and on iPhone and iPad from the App Store, with a public beta of the nightly builds through TestFlight.
+Free and open source under GPL-3.0: no account, no ads, no paid tier. On Windows, macOS, Linux and Android, and on iPhone and iPad from the App Store.
 
 **GroupLab 1.0 is ready to use and still in active development.** New versions arrive often, and suggestions and error reports are always welcome: Settings, Help and problems, Report a problem sends one straight from GroupLab, or say it on the [Discord](https://grouplab.org/discord).
 
@@ -101,7 +101,7 @@ color, large solid areas print as a lighter tint, and GroupLab finds the color f
 |---|---|
 | **Windows** | [Installer](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-setup-win-x64.exe) · [Zip](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-win-x64.zip) · [Microsoft Store](https://apps.microsoft.com/detail/9NWJCXBKZNPZ), which gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself |
 | **macOS** | [Apple silicon](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-arm64.tar.gz) · [Intel](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-macos-x64.tar.gz) |
-| **iPhone and iPad** | [Public beta on TestFlight](https://testflight.apple.com/join/A3xyT6C6): install TestFlight from the App Store, then open the invitation |
+| **iPhone and iPad** | [The App Store](https://apps.apple.com/app/id6817635137) |
 | **Linux** | [Tarball](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-linux-x64.tar.gz) |
 | **Android** | [GroupLab Dev](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android-dev.apk) · [APK](https://github.com/oRAirwolf/grouplab/releases/download/nightly/grouplab-android.apk) · Google Play closed test, open to anyone: [how to join](https://grouplab.org/android-test/) ([the testers group](https://groups.google.com/g/grouplab-testers), then [opt in](https://play.google.com/apps/testing/org.grouplab.app)) · [internal test](https://play.google.com/apps/internaltest/4701684356677501640), by invitation |
 <!-- /readme:newest -->
@@ -205,7 +205,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 | **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 240 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 240 MB on Apple silicon, 270 MB on Intel | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 260 MB installed | as Windows |
-| **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, from the App Store (version 1.0, released 2026-11-17) and through TestFlight's public beta for the nightly builds | not measured yet | not measured yet | as Android |
+| **iPhone and iPad** | iOS and iPadOS 26 or later; an iPhone 11 or newer | arm64, from the App Store (version 1.0, released 2026-11-17) | not measured yet | not measured yet | as Android |
 | **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's closed test, open to anyone | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
 
 Where the figures come from:
@@ -242,7 +242,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ### Apple mobile
 
-GroupLab for iPhone and iPad is on the App Store, with a public beta of the nightly builds through TestFlight. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Version 1.0 was released on the App Store on 17 November 2026; the App Store gets a new version only when one is submitted and approved, so it lags the nightly builds, which testers get through TestFlight's public beta. The plan is docs/IOS-PLAN.md. On the iPhone Duo, GroupLab runs, but its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools; the Duo has been checked only in GroupLab's own tests, because nobody on the project has one.
+GroupLab for iPhone and iPad is on the App Store. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Version 1.0 was released on the App Store on 17 November 2026; the App Store gets a new version when one is submitted and approved. The plan is docs/IOS-PLAN.md. On the iPhone Duo, GroupLab runs, but its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools; the Duo has been checked only in GroupLab's own tests, because nobody on the project has one.
 
 ### Other Linux builds
 
@@ -326,7 +326,7 @@ What exists and is tested:
 - load comparison, pooling a set of sheets, the zero correction, and a ballistic solver
 - a desktop application for Windows, Linux and macOS, with hand marking for targets GroupLab did not print
 - an Android app, in testing, that photographs or opens a sheet and reads it with the same engine, and the same app for iPhone and
-  iPad, on the App Store and in a public beta through TestFlight
+  iPad, on the App Store
 - <!--count:store-targets-->nine<!--/count--> store-bought targets recognized from a fingerprint, named, their bulls placed and their printed scale offered with a warning
   to check it, and a newer signed list of them reaching every copy with the updates, without a new build (built, not proven)
 - scale markers beside a target: corner brackets, scale bars or a measured board's stickers printed from Targets, or a bank card blanked out of the photo, giving a target GroupLab did not print its scale; scale labels from a label printer such as the Phomemo M220 came in nightly 168, and two labels printed from the phone on a real M220 (2026-10-08, and again on 2026-10-10) had every code whole, codes 59.96 to 59.98 mm apart across (60.0 designed), each label about 0.4 to 0.7 mm left of center, left as it is; the Label size loaded is chosen on the computer and, from nightly 175, on the phone; a printer check label measures the label printer and keeps the size with it, and on Android two labels print straight to the M220 over Bluetooth (entry 386)
@@ -359,7 +359,7 @@ Since the phone was brought level with the desktop (entries 258 and 259):
 - On the phone, the camera's level works upright at a sheet left on its backer as well as flat over a table, names which under the
   crosshair, and follows the sheet's own angle once its markers are read; Guided takes the picture in either position.
 
-What is not finished yet: finding holes by itself on blank paper (Find holes (Experimental) proposes them once the scale is set, for you to check, but its gate still needs a photograph of plain paper with real holes at a known scale), and newer iOS builds on the App Store (version 1.0 is released there; the nightly builds go to TestFlight's public beta).
+What is not finished yet: finding holes by itself on blank paper (Find holes (Experimental) proposes them once the scale is set, for you to check, but its gate still needs a photograph of plain paper with real holes at a known scale), and newer iOS builds on the App Store (version 1.0 is released there).
 
 #### Before the first beta or stable release
 
@@ -535,7 +535,7 @@ it.
 **The developer works on Windows.** Targets are printed, shot, photographed and marked there, so that is where the application meets real
 data. Linux and macOS are held correct continuously so that neither turns into a port later, which is the expensive way to do it.
 
-**Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on. iOS is Phase 8, on the App Store with a public beta through TestFlight: `docs/IOS-PLAN.md` has the plan, tested on an iPad Mini and built and signed on GitHub's Mac machines. The App Store needs the GPL section 7 additional permission described under License; building and testing on a device do not.
+**Mobile comes after the desktop, Android first.** Android is Phase 6, and in testing: the platform statement above says what it runs on. iOS is Phase 8, on the App Store: `docs/IOS-PLAN.md` has the plan, tested on an iPad Mini and built and signed on GitHub's Mac machines. The App Store needs the GPL section 7 additional permission described under License; building and testing on a device do not.
 
 </details>
 
@@ -594,7 +594,7 @@ flowchart TB
         APP["Desktop<br/>Avalonia"]
         CLI["Command line<br/>grouplab"]
         AND["Android<br/>in testing"]
-        IOS["iOS<br/>App Store, TestFlight beta"]
+        IOS["iOS<br/>App Store"]
     end
 
     subgraph img["Imaging backend"]

@@ -75,8 +75,7 @@ Every click GroupLab gives is corrected by the factor, the turret reading being 
 
 The download page, grouplab.org/download/, has every build. On Windows, the Microsoft Store carries GroupLab too
 and gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself ([Get it from
-Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build the moment it is made. On an iPhone or iPad, GroupLab is on [the App Store](https://apps.apple.com/app/id6817635137), and the newest builds are in a public beta through Apple's TestFlight: install TestFlight from
-the App Store, then open [the invitation](https://testflight.apple.com/join/A3xyT6C6) on the device.
+Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build the moment it is made. On an iPhone or iPad, GroupLab is on [the App Store](https://apps.apple.com/app/id6817635137).
 
 ## 1. Print a sheet
 
@@ -992,7 +991,7 @@ reads the whole photograph, and when an app hands over a smaller copy it says so
 
 ### On iPhone and iPad
 
-On iPhone and iPad (the App Store, and a public beta through TestFlight): **Choose a photo** opens Photos, iCloud Photos included, with no
+On iPhone and iPad (from the App Store): **Choose a photo** opens Photos, iCloud Photos included, with no
 question about access, and **From another app** opens Files, which reaches iCloud Drive, Google Drive, OneDrive and Dropbox. iOS lets no
 app open another app's library, so a Google Photos picture is **shared** into GroupLab: in Google Photos, Share, then GroupLab. The same
 works from Photos and any other app, and **Open in GroupLab** from Files; the picture opens straight into analysis. A picture opened

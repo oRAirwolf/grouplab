@@ -25,6 +25,46 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-18, entry 500: the App Store is the way in on iPhone and iPad; stop inviting people to the TestFlight beta
+
+**Status: actioned 2026-11-18. Every section done; the download page's check after the push is in the report.**
+
+From the planning session, on Alan's word in chat at 08:31 Denver on 2026-11-18: remove "Join the iPhone and iPad beta" from the download
+page's iPhone and iPad section. Small; take it in number order after entries 498 and 499. Nothing here needs Alan.
+
+### 1. The download page
+
+In `website/build.py`, the `iphone` section (about line 925, read 2026-11-18):
+
+1. Remove the "Join the iPhone and iPad beta" button (the `TESTFLIGHT` link).
+2. Rewrite the card's paragraph so it says only that GroupLab 1.0 is on Apple's App Store for iPhone and iPad, and that the App Store
+   gets a new version when one is submitted and approved. Drop the sentence telling people to join the public beta through TestFlight.
+3. Points: keep "Free, like every GroupLab download" and the 1.0 release date; drop "TestFlight's public beta installs each new nightly
+   build for you".
+4. Remove the "Install TestFlight first" fold (`install-testflight`), and rewrite the section's one-line hint to say only to get
+   GroupLab from the App Store.
+5. If `TESTFLIGHT` is then used nowhere else in the site, remove the constant too.
+
+### 2. The same change everywhere public (entry 267)
+
+The beta itself keeps running: existing testers and the internal groups keep getting nightlies, and nothing in TestFlight, the nightly
+or `testflight.py` changes. Only the public invitation goes.
+
+1. **README:** the download table's iPhone and iPad row (about line 104) still points at the TestFlight public link; point it at the App
+   Store instead. Lines that say "with a public beta of the nightly builds through TestFlight" (about 5, 206, 243, 327, 536, 595) say
+   the App Store only. Leave the GPL section 7 permission paragraph (about 688) as it is; it covers TestFlight builds, which still
+   exist.
+2. **docs/PLATFORM-SUPPORT.md** (about lines 11, 38, 75), the user guide and any other guide, and the website's other pages: the same.
+3. **The claims register:** update `docs/claims-backing.json` for every changed sentence (two keys start with "Join the iPhone and iPad
+   beta") with this entry as the decision, and regenerate `docs/CLAIMS.md`.
+4. Add "Join the iPhone and iPad beta" and the public TestFlight link to `docs/RETIRED-WORDING.json`, so the consistency check catches
+   it if it comes back.
+5. Anything internal that should still say TestFlight (STATE, external-status, IOS-PLAN, the store notes) stays as it is.
+
+Release-note: none in the application's notes (the website and README only, entry 168). The site says when it changes.
+
+After the push, confirm the download page is live with the new commit and the iPhone section shows the App Store button alone.
+
 ## 2026-11-18, entry 499: a switch to place holes by hand without the snap, and the snap staying put when it is unsure
 
 **Status: actioned 2026-11-18. Every section done; section 3.3 in part: a touching pair is now two circles, but a light hole inside dark print found by its outline was not built (on the rebuilt page the outline step accepts a circle shifted onto the orange, 19 to 23 pixels off; numbers in PHASE1-RESULTS.md).**

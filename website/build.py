@@ -70,7 +70,7 @@ def count_words(name: str, capital: bool = False) -> str:
 SITE_URL = "https://grouplab.org"
 GITHUB = "https://github.com/oRAirwolf/grouplab"
 NIGHTLY = GITHUB + "/releases/download/nightly/"
-# Entries 335 to 337: the Microsoft Store's listing and the TestFlight Public Beta's invitation, published with Alan's approval on 2026-10-01.
+# Entries 335 to 337: the Microsoft Store's listing, published with Alan's approval on 2026-10-01.
 STORE = "https://apps.microsoft.com/detail/9NWJCXBKZNPZ"
 
 
@@ -82,7 +82,6 @@ def store_version() -> str | None:
         return None
     m = re.search(r"The Store carries package version (\d+)\.(\d+)\.(\d+)\.\d+", status.read_text(encoding="utf-8"))
     return ".".join(m.groups()) if m else None
-TESTFLIGHT = "https://testflight.apple.com/join/A3xyT6C6"
 APP_STORE = "https://apps.apple.com/app/id6817635137"
 # Entry 129 section 1: the upload page moves to grouplab.org. It stays pointed at the old one until
 # the receiver is installed on the server and tested, because a button that leads nowhere is worse
@@ -926,16 +925,11 @@ def page_download() -> str:
     iphone = section("iphone", "iPhone and iPad", f"""<article class="panel card card-rec dl-card">
 <div class="card-head"><h3 class="h3">The App Store</h3><span class="badge mono">Released</span></div>
 <div>{btn("Get GroupLab on the App Store", APP_STORE, True, big=True)}</div>
-<p>GroupLab 1.0 is on Apple's App Store for iPhone and iPad. The App Store gets a new version only when one is submitted and approved, so it lags the nightly builds. To get every nightly build, join the public beta through TestFlight: install TestFlight from the App Store first, then open the invitation on the iPhone or iPad.</p>
-<div>{btn("Join the iPhone and iPad beta", TESTFLIGHT, False)}</div>
-{points(["Free, like every GroupLab download", "The App Store copy is version 1.0, released on 17 November 2026", "TestFlight's public beta installs each new nightly build for you"])}
+<p>GroupLab 1.0 is on Apple's App Store for iPhone and iPad. The App Store gets a new version when one is submitted and approved.</p>
+{points(["Free, like every GroupLab download", "The App Store copy is version 1.0, released on 17 November 2026"])}
 </article>""",
-        "Get GroupLab from the App Store, or install TestFlight from the App Store first and open the invitation for the nightly builds.",
-        [fold("Install TestFlight first", """<ol class="text">
-<li>On the iPhone or iPad, open the App Store and install <strong>TestFlight</strong>, Apple's own app for beta builds.</li>
-<li>On the same iPhone or iPad, open the invitation: <strong>Join the iPhone and iPad beta</strong>, above.</li>
-<li>TestFlight opens. Accept the invitation, then install GroupLab.</li>
-</ol>""", ident="install-testflight")], single=True)
+        "Get GroupLab from the App Store.",
+        [], single=True)
 
     android = section("android", "Android", newest(
         "GroupLab Dev", "grouplab-android-dev.apk",
@@ -983,7 +977,7 @@ def page_download() -> str:
 <h3 class="h3">Updating</h3>
 <p><strong>Of the computer downloads, only the Windows installer updates itself.</strong> It asks first, then updates in the background.</p>
 <p>The zip, the Linux tarball and both macOS builds tell you when a newer build exists and leave the downloading to you. There is no silent update on those platforms, and GroupLab will not pretend otherwise: it says so on the Settings screen rather than offering an update it cannot apply.</p>
-<p>The Microsoft Store copy is updated by the Store, GroupLab Dev and the plain Android APK update themselves from every nightly, the Google Play copy is updated by Google Play, the App Store copy for iPhone and iPad is updated by the App Store when a new version is approved, and TestFlight installs each new iPhone and iPad beta build.</p>
+<p>The Microsoft Store copy is updated by the Store, GroupLab Dev and the plain Android APK update themselves from every nightly, the Google Play copy is updated by Google Play, the App Store copy for iPhone and iPad is updated by the App Store when a new version is approved.</p>
 <h3 class="h3">What you get</h3>
 <dl class="facts">
 <div><dt class="mono">Runtime</dt><dd>Nothing else to install. The download carries its own .NET runtime.</dd></div>

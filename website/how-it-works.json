@@ -1140,10 +1140,10 @@
      {
       "key": "iphone",
       "name": "iPhone and iPad",
-      "sub": "App Store, and a public beta on TestFlight",
+      "sub": "On the App Store",
       "path": "docs/IOS-PLAN.md",
       "summary": [
-       "Planned the same way: an Avalonia shell around the same Core, with OpenCV built as a static iOS framework and builds from GitHub's macOS runners to TestFlight's public beta; version 1.0 is on the App Store."
+       "Planned the same way: an Avalonia shell around the same Core, with OpenCV built as a static iOS framework and builds from GitHub's macOS runners to TestFlight; version 1.0 is on the App Store."
       ],
       "builtFrom": [
        ".NET 10",

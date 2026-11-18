@@ -101,9 +101,9 @@ PLAY_TEST = "https://play.google.com/apps/internaltest/4701684356677501640"
 PLAY_GROUP = "https://groups.google.com/g/grouplab-testers"
 PLAY_OPT_IN = "https://play.google.com/apps/testing/org.grouplab.app"
 ANDROID_TEST = "https://grouplab.org/android-test/"
-# Entries 335 and 337, published with Alan's approval on 2026-10-01: the Microsoft Store listing and the TestFlight Public Beta.
+# Entries 335 and 337, published with Alan's approval on 2026-10-01: the Microsoft Store listing.
 STORE = "https://apps.microsoft.com/detail/9NWJCXBKZNPZ"
-TESTFLIGHT = "https://testflight.apple.com/join/A3xyT6C6"
+APP_STORE = "https://apps.apple.com/app/id6817635137"
 
 
 def newest() -> str:
@@ -117,7 +117,7 @@ def newest() -> str:
             links += f" · Google Play closed test, open to anyone: [how to join]({ANDROID_TEST}) ([the testers group]({PLAY_GROUP}), then [opt in]({PLAY_OPT_IN})) · [internal test]({PLAY_TEST}), by invitation"
         rows.append(f"| **{name}** | {links} |")
         if name == "macOS":
-            rows.append(f"| **iPhone and iPad** | [Public beta on TestFlight]({TESTFLIGHT}): install TestFlight from the App Store, then open the invitation |")
+            rows.append(f"| **iPhone and iPad** | [The App Store]({APP_STORE}) |")
     return (f"**The newest build is {b['version']}**, from {b['date']}, commit `{b['commit']}`: "
             f"[its release page]({RELEASES}/tag/v{b['version']}), and [what is new in it](#what-is-new).\n\n" + "\n".join(rows))
 
