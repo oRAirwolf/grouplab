@@ -5,7 +5,7 @@
   "controls": {
     "Also the original photographs": [
       342,
-      620,
+      603,
       205,
       32
     ],
@@ -23,7 +23,7 @@
     ],
     "Change folder…": [
       332,
-      229,
+      212,
       119,
       27
     ],
@@ -53,7 +53,7 @@
     ],
     "Forget this device: Range laptop": [
       509,
-      395,
+      378,
       107,
       17
     ],
@@ -71,7 +71,7 @@
     ],
     "Marks and proof pictures": [
       342,
-      457,
+      440,
       178,
       32
     ],
@@ -125,7 +125,7 @@
     ],
     "Stop syncing": [
       332,
-      807,
+      790,
       102,
       27
     ],
@@ -137,7 +137,7 @@
     ],
     "Sync now": [
       584,
-      333,
+      316,
       83,
       27
     ],
@@ -149,7 +149,7 @@
     ],
     "This device's name, as the others see it": [
       330,
-      291,
+      274,
       260,
       32
     ],
