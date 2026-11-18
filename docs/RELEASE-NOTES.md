@@ -12,6 +12,22 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.232
+
+**2026-11-18**, commit `43aff07`. Nightly.
+
+**What you will notice**
+
+- You can now turn off Snap to holes on the marking screen, or hold Alt as you click, to put a hole exactly where you click, which helps with touching holes and holes in dark print (suggested in a Discord post).
+- When marking by hand on a target GroupLab did not print, a click the snap cannot match to a hole now stays where you clicked instead of moving onto dark print, and a click on one of two touching holes stays on that hole.
+- When a pooled set is changed on two of your synced devices, Sessions now says so and lets you keep either version or both, instead of leaving the choice out of sight.
+
+From your reports and targets in this build: 1 change suggested in a Discord post.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.232)
+
+---
+
 ## 1.0.0-nightly.231
 
 **2026-11-17**, commit `92a9694`. Nightly.
