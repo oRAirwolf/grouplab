@@ -756,6 +756,29 @@ PLATFORM-SUPPORT.md say a feature-requests post becomes a suggestion that is rea
 the README's screen list name saved pooled sets; Quack's thanks name the typed-in printer check. Checks: claims all backed, readme
 current, consistency 0 findings, site build ok. The wording was done by the docs worker, section 4 on the main model.
 
+## Entry 498: question 114 answered, Find holes on report 50's diamonds, the App Store audit, a pooled set on two devices (2026-11-18)
+
+**0.** Question 114 answered (a): the iPhone builds stay 1.0.<build>; moved to the answered archive, nightly.yml unchanged. Whether
+nightly 232 reaches TestFlight as 1.0.232 is checked once the nightly this commit makes has run. **1.** The two holes Find holes misses on
+error report 50's scan are refused by the light-in-print pass ("a light spot without print all round it", 0.47 in): in the brightest
+channel the orange diamond is as light as the paper, so each hole's white middle and the orange are one patch. A light pass on the
+picture's neutral lightness (twice the grey less the brightest channel) found box 5's hole with nothing false on the scan, but refused
+box 4's as straight sided at 0.87 round against printed squares at 0.83 to 0.88, and on the other local pictures it added at least 40
+marks on 18, 7 on 5 store-bought blanks never shot; not kept, Find holes stays at 9 of 11 with nothing false (448 ms on the scan).
+Nothing from the scan was committed. 1.3, more speed on a scan, was not taken. **2.** The App Store audit, by the docs worker: 6
+findings, all fixed (three on the home page's words, two in TESTING-GUIDE.md with its PDF, one in docs/store/LISTING.md); four retired
+phrases; no "1.0 (N)" numbering after 231 anywhere; the tour pages have no TestFlight-only wording and still describe their screens.
+**3.** A pooled set changed on two devices was already kept both ways by sync (entry 495), but nothing showed it: the banner and the
+choose prompt listed sessions only. Now `SyncEngine.PoolVersions` gives the two versions, `SessionPools.Version` reads each as this device
+does (its sheets by name, how many are not here yet), and `SyncScreens.ComparePools` lays them out as rows (sheets, not here, pooled as),
+a sheet not here yet never a difference on its own. The Sessions banner counts pooled sets ("1 pooled set to choose between"), the pool's
+row carries the 2 versions tag, and the session prompt's card shows the pool with no plot and "Keep both as two pooled sets", on the
+computer and the phone. `CloudClientTests.APooledSetChangedOnTwoDevicesKeepsBothUntilChosen` (six runs, three clouds, clocks hours apart,
+late, out of order and half written files) holds that a pool reaching a device before its sheets asks nothing, that both versions survive,
+that the asked device's two versions are the desk's and the phone's, and that each of the three choices ends with every device the same;
+`Entry463Tests` and `Entry463PhoneTests` hold the banner, the tag and keeping both. The screen's look is a DESIGN NEEDED line in
+for-alan.md. The user guide and the Features sentence say it.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -1945,7 +1945,7 @@ HOME_CARDS = [
 HOME_POINTS = [
     ("A", "Free and open source", "GPL-3.0. Every line of how a figure is worked out can be read, checked and built yourself."),
     ("B", "The range, not just the number", "A figure without its range invites a story. GroupLab shows how big each one could really be."),
-    ("C", "On what you already own", "Windows, macOS, Linux and Android, with iPhone and iPad in a public beta."),
+    ("C", "On what you already own", "Windows, macOS, Linux and Android, and iPhone and iPad from the App Store."),
 ]
 HOME_DESCRIPTION = "Photograph any target. GroupLab measures the group and gives every figure with the range it could really be."
 HOME_SECTIONS = [("measure", "Measure"), ("honest", "Honest"), ("phone", "Phone"), ("start", "Get started")]
@@ -2018,12 +2018,12 @@ def page_home() -> str:
 <a class="tp-btn tp-primary mono" href="/download/">DOWNLOAD FREE</a>
 <a class="tp-btn mono" href="{GITHUB}">VIEW THE SOURCE</a>
 </div>
-<p class="tp-platforms mono tp-wide">GPL-3.0 &#183; WINDOWS &#183; MACOS &#183; LINUX &#183; ANDROID &#183; IPHONE AND IPAD BETA</p>
+<p class="tp-platforms mono tp-wide">GPL-3.0 &#183; WINDOWS &#183; MACOS &#183; LINUX &#183; ANDROID &#183; IPHONE AND IPAD</p>
 </div>
 <div class="tp-hero-phone">
 <p class="tp-lead">Photograph any target. Every figure comes with the range it could really be. Version 1.0, still in active development.</p>
 <a class="tp-btn tp-primary mono" href="/download/?device=android#android">GET IT FOR ANDROID</a>
-<a class="tp-btn mono" href="/download/?device=iphone#iphone">IPHONE AND IPAD BETA</a>
+<a class="tp-btn mono" href="/download/?device=iphone#iphone">GET IT FOR IPHONE AND IPAD</a>
 </div>
 </section>
 <nav class="tp-index mono" aria-label="Sections of this page">{index}</nav>

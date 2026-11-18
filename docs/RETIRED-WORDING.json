@@ -384,6 +384,46 @@
         "docs/claims-backing.json",
         "docs/CLAIMS.md"
       ]
+    },
+    {
+      "phrase": "with iPhone and iPad in a public beta",
+      "why": "entry 498: GroupLab 1.0 was released on the App Store on 2026-11-17; TestFlight's public beta carries the nightlies",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "ANDROID &#183; IPHONE AND IPAD BETA",
+      "why": "entry 498: GroupLab 1.0 was released on the App Store on 2026-11-17; TestFlight's public beta carries the nightlies",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "is a beta through TestFlight, not a released app",
+      "why": "entry 498: GroupLab 1.0 was released on the App Store on 2026-11-17; TestFlight's public beta carries the nightlies",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "GroupLab is in a public beta through Apple's TestFlight",
+      "why": "entry 498: GroupLab 1.0 was released on the App Store on 2026-11-17; TestFlight's public beta carries the nightlies",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
     }
   ],
   "settled": []

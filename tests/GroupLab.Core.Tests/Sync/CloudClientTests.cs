@@ -447,4 +447,140 @@ public sealed class CloudClientTests : IDisposable
         Assert.True(cloud.Conflicts > 0, "no conflicted copy was made, so the run proved nothing about them");
         Assert.True(failures > 0, "the folder never went away during a run");
     }
+    /// <summary>
+    /// Entry 498 section 3: one pooled set on three devices through the same cloud. While its sheets are still arriving, late and out of
+    /// order, a device may hold the pool before every sheet it names, and that alone asks nobody anything. Then the desk pools the sheets as
+    /// pictures and the phone takes one sheet out, before either has seen the other's: both versions are kept somewhere a person can reach,
+    /// the pool is waiting to be chosen on a device that saw both, its two versions say what each holds, and once the choice is made every
+    /// device ends with the same pools, and nothing is waiting. The seed picks keep this one, keep the other, or keep both.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(PoolRuns))]
+    public void APooledSetChangedOnTwoDevicesKeepsBothUntilChosen(Style style, int seed)
+    {
+        var random = new Random(seed);
+        var cloud = new Cloud(random, style, mostDelayMinutes: 20);
+        var devices = new[]
+        {
+            NewDevice(cloud, "desk", TimeSpan.Zero),
+            NewDevice(cloud, "phone", TimeSpan.FromHours(5)),
+            NewDevice(cloud, "tablet", TimeSpan.FromHours(-3)),
+        };
+        var desk = devices[0];
+        var phone = devices[1];
+        var ids = new List<long>();
+        for (int k = 0; k < 3; k++)
+        {
+            ids.Add(desk.Store.Save(Session($"2026-10-2{k}T08:00:00Z", $"sheet{k}")));
+            Sync(cloud, desk);
+            cloud.Step();
+        }
+
+        var pool = SessionPools.Save(desk.Store, null, ids, SessionPools.Choices(pictures: false), Now(cloud, desk));
+        string key = pool.Key;
+        bool sawPoolBeforeItsSheets = false;
+        for (int minute = 0; minute < 40; minute++)
+        {
+            cloud.Step();
+            Sync(cloud, devices[random.Next(devices.Length)]);
+            foreach (var d in devices)
+            {
+                Assert.Empty(d.Store.SyncConflicts());
+                if (d.Store.PoolByKey(key) is { } here && SessionPools.SheetsOf(d.Store, here).Missing > 0)
+                {
+                    sawPoolBeforeItsSheets = true;
+                }
+            }
+        }
+
+        Settled(cloud, devices);
+        Assert.All(devices, d => Assert.Equal(0, SessionPools.SheetsOf(d.Store, d.Store.PoolByKey(key)!).Missing));
+        Assert.All(devices, d => Assert.Empty(d.Store.SyncConflicts()));
+
+        // Changed on two devices before either has seen the other's change.
+        var deskPool = SessionPools.Save(desk.Store, desk.Store.PoolByKey(key)!.Id, ids, SessionPools.Choices(pictures: true), Now(cloud, desk));
+        var phoneIds = SessionPools.SheetsOf(phone.Store, phone.Store.PoolByKey(key)!).Ids.Take(2).ToList();
+        var phonePool = SessionPools.Save(phone.Store, phone.Store.PoolByKey(key)!.Id, phoneIds, SessionPools.Choices(pictures: false), Now(cloud, phone));
+        Assert.Equal(key, deskPool.Key);
+        Assert.Equal(key, phonePool.Key);
+        Sync(cloud, desk);
+        Sync(cloud, phone);
+        for (int round = 0; round < 4; round++)
+        {
+            cloud.Settle();
+            foreach (var d in devices)
+            {
+                Sync(cloud, d);
+            }
+        }
+
+        cloud.Settle();
+        var asked = devices.FirstOrDefault(d => d.Store.SyncConflicts().Any(c => c.Kind == SyncEngine.PoolKind));
+        Assert.True(asked is not null, $"{style}, seed {seed}: nobody was asked about the pooled set changed on two devices");
+        var question = asked!.Store.SyncConflicts().First(c => c.Kind == SyncEngine.PoolKind);
+        var (mine, theirs) = SyncEngine.PoolVersions(asked.Store, question)!.Value;
+        Assert.NotNull(mine);
+        var hereVersion = SessionPools.Version(asked.Store, mine!);
+        var thereVersion = SessionPools.Version(asked.Store, theirs);
+        var compared = SyncScreens.ComparePools(hereVersion, thereVersion, asked.Name, question.FromDevice, question.FoundUtc);
+        Assert.Contains(compared.Rows, r => r.Differs);
+        string[] versions = [Describe(mine!), Describe(theirs)];
+        Assert.Contains(Describe(deskPool), versions);
+        Assert.Contains(Describe(phonePool), versions);
+
+        // Nothing lost before the choice: both versions are on the device asked, one in place and one waiting.
+        var choice = (seed % 3) switch { 0 => SyncChoice.KeepBoth, 1 => SyncChoice.KeepThisOne, _ => SyncChoice.KeepTheOther };
+        SyncEngine.Resolve(asked.Store, asked.Local, question.Id, choice, Now(cloud, asked));
+        Settled(cloud, devices);
+        foreach (var d in devices)
+        {
+            foreach (var other in d.Store.SyncConflicts().ToList())
+            {
+                SyncEngine.Resolve(d.Store, d.Local, other.Id, SyncChoice.KeepThisOne, Now(cloud, d));
+            }
+        }
+
+        Settled(cloud, devices);
+        string Pools(Device d) => string.Join(" / ", d.Store.Pools().Select(Describe).Order(StringComparer.Ordinal));
+        Assert.True(devices.Select(Pools).Distinct().Count() == 1, $"{style}, seed {seed}: the pools differ: " + string.Join(" | ", devices.Select(d => $"{d.Name}: {Pools(d)}")));
+        Assert.All(devices, d => Assert.Empty(d.Store.SyncConflicts()));
+        Assert.Equal(choice == SyncChoice.KeepBoth ? 2 : 1, desk.Store.Pools().Count);
+        var kept = devices.SelectMany(d => d.Store.Pools().Select(Describe).Concat(d.Store.Kept().Where(k => k.Kind == SyncEngine.PoolKind)
+            .Select(k => Describe(System.Text.Json.JsonSerializer.Deserialize<PoolRecord>(k.Payload, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web))!)))).ToHashSet();
+        Assert.Contains(Describe(deskPool), kept);
+        Assert.Contains(Describe(phonePool), kept);
+        Assert.True(sawPoolBeforeItsSheets, $"{style}, seed {seed}: no device held the pool before all its sheets, so the run proved nothing about it");
+    }
+
+    /// <summary>
+    /// The runs for a pooled set: each of the three choices twice, under each cloud's naming, with seeds whose late and out of order files
+    /// bring the pool to some device before all its sheets (seed 2 did not, and 8 makes the same choice).
+    /// </summary>
+    public static TheoryData<Style, int> PoolRuns() => new()
+    {
+        { Style.OneDrive, 1 },
+        { Style.GoogleDrive, 8 },
+        { Style.Dropbox, 3 },
+        { Style.OneDrive, 4 },
+        { Style.GoogleDrive, 5 },
+        { Style.Dropbox, 6 },
+    };
+
+    /// <summary>What a pool holds that must be the same everywhere: its sheets in order and how they were pooled.</summary>
+    private static string Describe(PoolRecord p) => $"{string.Join(",", p.Sheets)} as {p.Choices}";
+
+    /// <summary>Every device synced until nothing more arrives anywhere.</summary>
+    private static void Settled(Cloud cloud, Device[] devices)
+    {
+        for (int round = 0; round < 6; round++)
+        {
+            cloud.Settle();
+            foreach (var d in devices)
+            {
+                Sync(cloud, d);
+            }
+        }
+
+        cloud.Settle();
+    }
 }

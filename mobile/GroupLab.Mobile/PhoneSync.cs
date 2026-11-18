@@ -247,6 +247,22 @@ internal static class PhoneSync
         return waiting;
     }
 
+    /// <summary>Entry 498 section 3: the pooled sets changed on two devices, each with the pool it is here (null where it is gone here).</summary>
+    internal static IReadOnlyList<(SyncConflict Conflict, PoolRecord? Here, PoolRecord There)> PoolsToChoose()
+    {
+        var store = PhoneAnalysis.Store();
+        var waiting = new List<(SyncConflict, PoolRecord?, PoolRecord)>();
+        foreach (var conflict in store.SyncConflicts().Where(c => c.Kind == SyncEngine.PoolKind))
+        {
+            if (SyncEngine.PoolVersions(store, conflict) is { } versions)
+            {
+                waiting.Add((conflict, versions.Here, versions.There));
+            }
+        }
+
+        return waiting;
+    }
+
     /// <summary>The other device's name as it wrote it in the folder, where it can be read now.</summary>
     internal static string DeviceName(string code) =>
         (Phone.Platform is { } platform ? With(platform, folder =>
@@ -259,20 +275,45 @@ internal static class PhoneSync
     /// </summary>
     internal static void ShowConflict(UserControl page, long conflictId, Action done)
     {
-        if (ToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is not { Conflict: { } conflict } waiting || page.Content is not Control behind)
+        if (page.Content is not Control behind)
         {
             return;
         }
 
-        string here = Setup.DeviceName, there = DeviceName(conflict.FromDevice);
-        var compared = SyncScreens.Compare(waiting.Here, waiting.There, here, there, conflict.FoundUtc, Phone.Settings.LoadUnits());
+        string here = Setup.DeviceName;
+        SyncConflict conflict;
+        SyncComparison compared;
+        bool pool = false;
+        if (ToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } c } waiting)
+        {
+            conflict = c;
+            compared = SyncScreens.Compare(waiting.Here, waiting.There, here, DeviceName(conflict.FromDevice), conflict.FoundUtc, Phone.Settings.LoadUnits());
+        }
+        else if (PoolsToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } p } pooled)
+        {
+            // Entry 498 section 3: until the pooled set's own screen is drawn, its two versions as plain rows, with no plot.
+            var store = PhoneAnalysis.Store();
+            (conflict, pool) = (p, true);
+            compared = SyncScreens.ComparePools(pooled.Here is { } mine ? SessionPools.Version(store, mine) : null, SessionPools.Version(store, pooled.There), here,
+                DeviceName(conflict.FromDevice), conflict.FoundUtc);
+        }
+        else
+        {
+            return;
+        }
+
+        string there = DeviceName(conflict.FromDevice);
         double reach = SyncHolesPlot.Reach(compared.HereHoles, compared.ThereHoles);
         Control Side(string device, string when, IReadOnlyList<GroupLab.Core.Imaging.PointD> holes, Func<SyncRow, string> value)
         {
             var side = new StackPanel { Spacing = 6 };
             side.Children.Add(Screens.Heading(device));
             side.Children.Add(Screens.Quiet(when));
-            side.Children.Add(new SyncHolesPlot(holes, reach) { HorizontalAlignment = HorizontalAlignment.Left });
+            if (!pool)
+            {
+                side.Children.Add(new SyncHolesPlot(holes, reach) { HorizontalAlignment = HorizontalAlignment.Left });
+            }
+
             foreach (var row in compared.Rows)
             {
                 var line = new WrapPanel { ItemSpacing = 8 };
@@ -311,7 +352,7 @@ internal static class PhoneSync
         [
             ProblemSheet.Choice(SyncScreens.KeepThis(here), () => Choose(SyncChoice.KeepThisOne), primary: true),
             ProblemSheet.Choice(SyncScreens.KeepThis(there), () => Choose(SyncChoice.KeepTheOther)),
-            ProblemSheet.Choice(SyncScreens.KeepBoth, () => Choose(SyncChoice.KeepBoth)),
+            ProblemSheet.Choice(pool ? SyncScreens.KeepBothPools : SyncScreens.KeepBoth, () => Choose(SyncChoice.KeepBoth)),
             ProblemSheet.Choice(SyncScreens.DecideLater, Close),
         ];
         var buttons = new StackPanel { Spacing = 8 };
@@ -322,7 +363,7 @@ internal static class PhoneSync
 
         body.Children.Add(buttons);
         page.Content = null;
-        page.Content = ProblemSheet.Over(behind, SyncScreens.ConflictTitle, body, choices, Close);
+        page.Content = ProblemSheet.Over(behind, pool ? SyncScreens.PoolConflictTitle : SyncScreens.ConflictTitle, body, choices, Close);
     }
 }
 

@@ -849,6 +849,23 @@ public static class SyncEngine
     }
 
     /// <summary>
+    /// Entry 498 section 3: the two versions of a pooled set changed on two devices, this device's (null where it is gone here) and the
+    /// other's, for the choice between them; null where the waiting record is not a pool, or is one taken away on one device.
+    /// </summary>
+    public static (PoolRecord? Here, PoolRecord There)? PoolVersions(SessionStore store, SyncConflict conflict)
+    {
+        ArgumentNullException.ThrowIfNull(store);
+        ArgumentNullException.ThrowIfNull(conflict);
+        if (conflict.Kind != PoolKind || conflict.Payload is null)
+        {
+            return null;
+        }
+
+        var there = JsonNode.Parse(conflict.Payload).Deserialize<PoolRecord>(Options)! with { Id = 0 };
+        return (store.PoolByKey(conflict.Key), there);
+    }
+
+    /// <summary>
     /// Entry 463 section 3: what this device's sessions weigh as synchronization writes them, marks and proof pictures, and their original
     /// photographs, with the first and last day they were made, for the two cards' sizes.
     /// </summary>

@@ -136,7 +136,7 @@ At Alan's word ("Submit now"), by the planning session at 20:36 Denver time on 2
 - **Pricing and Availability:** free ($0.00, base United States) in all 175 countries or regions. **Not offered on Apple silicon Macs
   or Apple Vision Pro**: both were on by default and neither has been tried; GroupLab has its own signed macOS build. Either can be
   turned on later.
-- **Status:** 1.0 Waiting for Review; Apple says up to 48 hours. The testflight workflow reads the version's state through the API
+- **Status:** 1.0 was Waiting for Review at submission (Apple said up to 48 hours); Alan released it on 2026-11-17 and App Store Connect says Ready for Distribution, at https://apps.apple.com/app/id6817635137. The testflight workflow reads the version's state through the API
   after every nightly and every half hour, into `docs/notes/external-status.md`; a rejection goes to `docs/notes/for-alan.md` the same
   day with Apple's words, which are copied from App Store Connect because the API does not give them.
-- **TestFlight** goes on as before: each nightly still goes to both groups, and nothing in a nightly touches the version in review.
+- **TestFlight** goes on as before: each nightly still goes to both groups, and nothing in a nightly touches the released version. From nightly 232 the iPhone builds are numbered 1.0.<build>, as Android's are (entry 498 section 0).

@@ -362,16 +362,38 @@ public partial class MainWindow
         return waiting;
     }
 
-    /// <summary>The banner over Sessions while a session waits to be chosen between, or null.</summary>
-    private Control? SyncChooseBanner(IReadOnlyList<(SyncConflict Conflict, SessionRecord? Here, SessionRecord There)> waiting)
+    /// <summary>Entry 498 section 3: the pooled sets changed on two devices, each with the pool it is here (null where it is gone here).</summary>
+    internal IReadOnlyList<(SyncConflict Conflict, PoolRecord? Here, PoolRecord There)> PoolsToChoose()
     {
-        if (waiting.Count == 0)
+        if (sessions is null)
+        {
+            return [];
+        }
+
+        var waiting = new List<(SyncConflict, PoolRecord?, PoolRecord)>();
+        foreach (var conflict in sessions.SyncConflicts().Where(c => c.Kind == SyncEngine.PoolKind))
+        {
+            if (SyncEngine.PoolVersions(sessions, conflict) is { } versions)
+            {
+                waiting.Add((conflict, versions.Here, versions.There));
+            }
+        }
+
+        return waiting;
+    }
+
+    /// <summary>The banner over Sessions while a session or a pooled set waits to be chosen between, or null.</summary>
+    private Control? SyncChooseBanner(IReadOnlyList<(SyncConflict Conflict, SessionRecord? Here, SessionRecord There)> waiting,
+        IReadOnlyList<(SyncConflict Conflict, PoolRecord? Here, PoolRecord There)> pools)
+    {
+        if (waiting.Count + pools.Count == 0)
         {
             return null;
         }
 
-        var line = new TextBlock { Text = SyncScreens.ToChooseBanner(waiting.Count), FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center };
-        var open = Button("Choose", () => ShowSyncConflict(waiting[0].Conflict.Id));
+        long first = waiting.Count > 0 ? waiting[0].Conflict.Id : pools[0].Conflict.Id;
+        var line = new TextBlock { Text = SyncScreens.ToChooseBanner(waiting.Count, pools.Count), FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center };
+        var open = Button("Choose", () => ShowSyncConflict(first));
         return new Border
         {
             Child = new WrapPanel { ItemSpacing = Tokens.Space12, Children = { line, open } },
@@ -387,21 +409,44 @@ public partial class MainWindow
     /// </summary>
     internal void ShowSyncConflict(long conflictId)
     {
-        if (sessions is null || SessionsToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is not { Conflict: { } conflict } waiting)
+        if (sessions is null)
         {
             return;
         }
 
         string here = Sync.DeviceName;
+        SyncConflict conflict;
+        SyncComparison compared;
+        bool pool = false;
+        if (SessionsToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } c } waiting)
+        {
+            conflict = c;
+            compared = SyncScreens.Compare(waiting.Here, waiting.There, here, SyncDeviceName(conflict.FromDevice), conflict.FoundUtc, units);
+        }
+        else if (PoolsToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } p } pooled)
+        {
+            // Entry 498 section 3: until the pooled set's own screen is drawn, its two versions as plain rows, with no plot.
+            (conflict, pool) = (p, true);
+            compared = SyncScreens.ComparePools(pooled.Here is { } ours ? SessionPools.Version(sessions, ours) : null, SessionPools.Version(sessions, pooled.There), here,
+                SyncDeviceName(conflict.FromDevice), conflict.FoundUtc);
+        }
+        else
+        {
+            return;
+        }
+
         string there = SyncDeviceName(conflict.FromDevice);
-        var compared = SyncScreens.Compare(waiting.Here, waiting.There, here, there, conflict.FoundUtc, units);
         double reach = SyncHolesPlot.Reach(compared.HereHoles, compared.ThereHoles);
         Control Side(string device, string when, IReadOnlyList<GroupLab.Core.Imaging.PointD> holes, Func<SyncRow, string> value)
         {
             var side = new StackPanel { Spacing = Tokens.Space8 };
             side.Children.Add(new TextBlock { Text = device, FontWeight = FontWeight.SemiBold });
             side.Children.Add(new TextBlock { Text = when, Classes = { AppStyles.Secondary } });
-            side.Children.Add(new SyncHolesPlot(holes, reach) { HorizontalAlignment = HorizontalAlignment.Left });
+            if (!pool)
+            {
+                side.Children.Add(new SyncHolesPlot(holes, reach) { HorizontalAlignment = HorizontalAlignment.Left });
+            }
+
             foreach (var row in compared.Rows)
             {
                 var line = new WrapPanel { ItemSpacing = Tokens.Space8 };
@@ -432,7 +477,7 @@ public partial class MainWindow
         {
             (SyncScreens.KeepThis(here), () => ResolveSync(conflict.Id, SyncChoice.KeepThisOne)),
             (SyncScreens.KeepThis(there), () => ResolveSync(conflict.Id, SyncChoice.KeepTheOther)),
-            (SyncScreens.KeepBoth, () => ResolveSync(conflict.Id, SyncChoice.KeepBoth)),
+            (pool ? SyncScreens.KeepBothPools : SyncScreens.KeepBoth, () => ResolveSync(conflict.Id, SyncChoice.KeepBoth)),
             (SyncScreens.DecideLater, () => { }),
         };
         var row = new WrapPanel { ItemSpacing = Tokens.Space8, LineSpacing = Tokens.Space8 };
@@ -442,7 +487,8 @@ public partial class MainWindow
         }
 
         body.Children.Add(row);
-        OpenProblem(SyncScreens.ConflictTitle, ProblemCard(SyncScreens.ConflictTitle, 760, body), choices);
+        string title = pool ? SyncScreens.PoolConflictTitle : SyncScreens.ConflictTitle;
+        OpenProblem(title, ProblemCard(title, 760, body), choices);
     }
 
     private void ResolveSync(long conflictId, SyncChoice choice)

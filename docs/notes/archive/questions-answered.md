@@ -5,6 +5,21 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-11-17, question 114: the iPhone builds' version after the App Store release of 1.0
+
+**Status: answered 2026-11-18 by Alan (entry 498 section 0): (a), the iPhone builds stay 1.0.<build>, as built from nightly 232; nightly.yml unchanged.**
+
+Entry 488 set Apple's strings as "1.0 (226)": version 1.0, build 226. Releasing 1.0 on the App Store today (Alan's word) closed Apple's
+1.0 train: nightly 231's upload was refused with "Invalid Pre-Release Train. The train version '1.0' is closed for new build
+submissions" (90186), so no build could reach TestFlight. The options:
+
+- **(a) 1.0.<build>, as built from nightly 232**: the same as Android's version name (1.0.226), always above the released 1.0, no
+  decision needed per build. The next App Store submission would show as, say, 1.0.240.
+- **(b) 1.1, and later 1.2 and so on**: a version number chosen by hand at each App Store release, so TestFlight shows "1.1 (240)".
+  Costs a decision per release and a nightly.yml change each time.
+
+I would choose (a) for its parity with Android and the Microsoft Store (1.0.226.0) and because it never closes again.
+
 ## 2026-11-15, question 113: should a pooled set be kept in Session records?
 
 **Status: answered 2026-11-16 by Alan (entry 495): (b), "Go with B." A pooled set is saved as a record of its own, never a session, naming its sheets and worked out again from them; built in entry 495 on the computer and the phone.** The question as it was: Error reports 46 and 47 (Discord posts, nightly 226): a tester pooled three sheets and expected the pool at the top of

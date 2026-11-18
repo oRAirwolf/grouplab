@@ -48,19 +48,23 @@ public sealed class SessionsPage : UserControl
         column.Children.Add(Screens.Title("Sessions"));
 
         // Entry 463 section 2: a session changed on two devices waits here to be chosen between, banner first and its row tagged.
+        // Entry 498 section 3: a pooled set changed on two devices waits the same way, its row tagged by the pool's row id.
         IReadOnlyList<(SyncConflict Conflict, SessionRecord? Here, SessionRecord There)> toChoose;
+        IReadOnlyList<(SyncConflict Conflict, PoolRecord? Here, PoolRecord There)> poolsToChoose;
         try
         {
             toChoose = PhoneSync.ToChoose();
+            poolsToChoose = PhoneSync.PoolsToChoose();
         }
         catch (Microsoft.Data.Sqlite.SqliteException)
         {
             toChoose = [];
+            poolsToChoose = [];
         }
 
-        if (toChoose.Count > 0)
+        if (toChoose.Count + poolsToChoose.Count > 0)
         {
-            long first = toChoose[0].Conflict.Id;
+            long first = toChoose.Count > 0 ? toChoose[0].Conflict.Id : poolsToChoose[0].Conflict.Id;
             column.Children.Add(new Border
             {
                 Child = new StackPanel
@@ -68,7 +72,7 @@ public sealed class SessionsPage : UserControl
                     Spacing = 8,
                     Children =
                     {
-                        Screens.Heading(GroupLab.Core.Sync.SyncScreens.ToChooseBanner(toChoose.Count)),
+                        Screens.Heading(GroupLab.Core.Sync.SyncScreens.ToChooseBanner(toChoose.Count, poolsToChoose.Count)),
                         Screens.Primary("Choose", () => PhoneSync.ShowConflict(this, first, ToList)).Id("sessions-sync-choose"),
                     },
                 },
@@ -76,7 +80,8 @@ public sealed class SessionsPage : UserControl
             }.Id("sessions-sync-banner"));
         }
 
-        var twoVersions = toChoose.Where(w => w.Here is not null).Select(w => w.Here!.Id).ToHashSet();
+        var twoVersions = toChoose.Where(w => w.Here is not null).Select(w => w.Here!.Id)
+            .Concat(poolsToChoose.Where(w => w.Here is not null).Select(w => SessionPools.RowId(w.Here!.Id))).ToHashSet();
         var said = Screens.Line("");
         column.Children.Add(Screens.Choice("Open a session file", () => _ = OpenFile(said)).Id("sessions-open-file"));
         column.Children.Add(Screens.Choice("Import shots from a CSV file", () => _ = ImportCsv(said)).Id("sessions-import-csv"));

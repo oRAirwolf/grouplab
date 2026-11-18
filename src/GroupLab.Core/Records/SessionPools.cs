@@ -21,6 +21,9 @@ public sealed record OpenedPool(PoolRecord Pool, IReadOnlyList<SessionRecord> Sh
 /// alike. Making one, finding the one already made of the same sheets, opening it from its sheets as they are now, and how it is named in
 /// Session records and Compare. A pool's figures are never stored: they are worked out from its sheets each time, as entry 420's pool was.
 /// </summary>
+/// <summary>One version of a pool as a device reads it: the record, its sheets here by name, and how many it names that are not here.</summary>
+public sealed record PoolVersion(PoolRecord Pool, IReadOnlyList<string> Sheets, int NotHere);
+
 public static class SessionPools
 {
     /// <summary>
@@ -97,6 +100,16 @@ public static class SessionPools
         }
 
         return (sheets, ids, missing);
+    }
+
+    /// <summary>
+    /// Entry 498 section 3: one version of a pool as this device reads it, for the choice between two: its sheets that are here, named as
+    /// Session records names them, and how many it names that are not here yet.
+    /// </summary>
+    public static PoolVersion Version(SessionStore store, PoolRecord pool)
+    {
+        var (sheets, _, missing) = SheetsOf(store, pool);
+        return new PoolVersion(pool, [.. SessionNames.For(sheets).Select(n => n.Name)], missing);
     }
 
     /// <summary>

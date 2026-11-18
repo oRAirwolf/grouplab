@@ -3976,13 +3976,20 @@ public sealed partial class MainWindow : Window
         var list = SessionPools.Merged(sessionList, poolRows.Select(p => p.Row));
 
         // Entry 463 section 2: a session changed on two devices waits here to be chosen between, banner first and its row tagged.
+        // Entry 498 section 3: a pooled set changed on two devices waits the same way, its row tagged by the pool's row id.
         var toChoose = SessionsToChoose();
-        if (SyncChooseBanner(toChoose) is { } banner)
+        var poolsToChoose = PoolsToChoose();
+        if (SyncChooseBanner(toChoose, poolsToChoose) is { } banner)
         {
             sessionRows.Children.Add(banner);
         }
 
         var twoVersions = toChoose.Where(w => w.Here is not null).ToDictionary(w => w.Here!.Id, w => w.Conflict.Id);
+        foreach (var (conflict, here, _) in poolsToChoose.Where(w => w.Here is not null))
+        {
+            twoVersions[SessionPools.RowId(here!.Id)] = conflict.Id;
+        }
+
         if (list.Count == 0)
         {
             sessionRows.Children.Add(Line(all.Count == 0 && poolRows.Count == 0 ? "No sessions yet. Accept and analyze on a marked sheet saves one." : "No session matches the rifle and load chosen."));
@@ -4070,7 +4077,7 @@ public sealed partial class MainWindow : Window
             {
                 // Entry 463 section 2: this session is waiting to be chosen between; the tag opens the side by side.
                 var tag = Button(SyncScreens.TwoVersions, () => ShowSyncConflict(waitingConflict));
-                ToolTip.SetTip(tag, SyncScreens.ConflictTitle);
+                ToolTip.SetTip(tag, id < 0 ? SyncScreens.PoolConflictTitle : SyncScreens.ConflictTitle);
                 tag.Classes.Add(AppStyles.Warn);
                 DockPanel.SetDock(tag, Dock.Right);
                 row.Children.Add(tag);

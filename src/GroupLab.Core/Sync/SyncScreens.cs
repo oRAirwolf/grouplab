@@ -95,6 +95,11 @@ public static class SyncScreens
 
     public const string KeepBoth = "Keep both as two sessions";
 
+    /// <summary>Entry 498 section 3: a pooled set changed on two devices, until its own screen is drawn.</summary>
+    public const string PoolConflictTitle = "This pooled set was changed on two devices";
+
+    public const string KeepBothPools = "Keep both as two pooled sets";
+
     public const string DecideLater = "Decide later";
 
     public const string Differs = "differs";
@@ -107,8 +112,18 @@ public static class SyncScreens
         ? "The cloud app that keeps it may have signed out, or the folder was moved or deleted."
         : "The drive it is on may be unplugged, its cloud app signed out, or the folder moved or deleted.";
 
-    /// <summary>The Sessions banner: "1 session to choose between".</summary>
-    public static string ToChooseBanner(int n) => n == 1 ? "1 session to choose between" : $"{n} sessions to choose between";
+    /// <summary>The Sessions banner: "1 session to choose between", and from entry 498 the pooled sets with them.</summary>
+    public static string ToChooseBanner(int n, int pools = 0)
+    {
+        string sessions = n == 1 ? "1 session" : $"{n} sessions";
+        string pooled = pools == 1 ? "1 pooled set" : $"{pools} pooled sets";
+        return (n, pools) switch
+        {
+            (_, 0) => sessions,
+            (0, _) => pooled,
+            _ => sessions + " and " + pooled,
+        } + " to choose between";
+    }
 
     public static string KeepThis(string device) => $"Keep {device}'s";
 
@@ -274,6 +289,31 @@ public static class SyncScreens
         string heading = string.Join(", ", new[] { there.Load ?? there.Rifle, there.SheetName, there.ShotDate ?? there.CreatedUtc[..Math.Min(10, there.CreatedUtc.Length)] }
             .Where(s => !string.IsNullOrWhiteSpace(s)));
         return new SyncComparison(heading, hereDevice, When(here?.CreatedUtc), thereDevice, When(foundUtc), hereHoles, thereHoles, rows);
+    }
+
+    /// <summary>
+    /// Entry 498 section 3: a pooled set changed on two devices, for the choice between its versions until the screen for it is drawn: each
+    /// version's device and when (made, for this device's; arrived, for the other's, as for a session), and rows for its sheets, those it names
+    /// that are not on this device yet, and how they were pooled, each that differs marked. A sheet not here yet is said, never counted as a
+    /// difference on its own.
+    /// </summary>
+    public static SyncComparison ComparePools(PoolVersion? here, PoolVersion there, string hereDevice, string thereDevice, string foundUtc)
+    {
+        ArgumentNullException.ThrowIfNull(there);
+        var rows = new List<SyncRow>();
+        static string Sheets(PoolVersion v) => v.Sheets.Count == 0 ? "none here" : $"{v.Sheets.Count}: {string.Join("; ", v.Sheets)}";
+        static string NotHere(PoolVersion v) => v.NotHere == 0 ? "none" : v.NotHere == 1 ? "1 not on this device yet" : $"{v.NotHere} not on this device yet";
+        static string As(PoolVersion v) => v.Pool.Pictures ? "pictures, each its own sheet" : "the sheets of one set";
+        bool sameSheets = here is not null && here.Pool.Sheets.SequenceEqual(there.Pool.Sheets, StringComparer.Ordinal);
+        rows.Add(new SyncRow("Sheets", here is null ? "none" : Sheets(here), Sheets(there), !sameSheets));
+        if ((here?.NotHere ?? 0) + there.NotHere > 0)
+        {
+            rows.Add(new SyncRow("Not here", here is null ? "none" : NotHere(here), NotHere(there), false));
+        }
+
+        rows.Add(new SyncRow("Pooled as", here is null ? "none" : As(here), As(there), here is null || here.Pool.Choices != there.Pool.Choices));
+        string heading = SessionPools.RowName(there.Pool.Sheets.Count) + (there.Pool.CreatedUtc.Length >= 10 ? ", made " + there.Pool.CreatedUtc[..10] : "");
+        return new SyncComparison(heading, hereDevice, When(here?.Pool.CreatedUtc), thereDevice, When(foundUtc), [], [], rows);
     }
 
     private static string When(string? utc) =>

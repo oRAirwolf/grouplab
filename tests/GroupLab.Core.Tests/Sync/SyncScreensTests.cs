@@ -64,6 +64,8 @@ public sealed class SyncScreensTests : IDisposable
         Assert.Equal("Synced 2 minutes ago: 3 changes in, 1 out.", SyncScreens.Status(ran, now));
         Assert.Equal("Synced just now: nothing new either way.", SyncScreens.Status(ran with { LastUtc = now.ToString("o"), LastIn = 0, LastOut = 0 }, now));
         Assert.Equal("1 session to choose between", SyncScreens.ToChooseBanner(1));
+        Assert.Equal("1 pooled set to choose between", SyncScreens.ToChooseBanner(0, 1));
+        Assert.Equal("2 sessions and 3 pooled sets to choose between", SyncScreens.ToChooseBanner(2, 3));
         Assert.Equal("Keep Alan's phone's", SyncScreens.KeepThis("Alan's phone"));
     }
 
@@ -126,5 +128,30 @@ public sealed class SyncScreensTests : IDisposable
         Assert.Equal("3.2 MB", SyncScreens.Size(3_200_000));
         Assert.Equal("1.4 GB", SyncScreens.Size(1_400_000_000));
         Assert.Contains("written again whole", SyncScreens.ScaleLine(1_000_000), StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Entry 498 section 3: a pooled set's two versions as rows. Sheets and how they were pooled differ where they do; a sheet the pool names
+    /// that is not on this device yet is said, and is not a difference on its own.
+    /// </summary>
+    [Fact]
+    public void APooledSetsTwoVersionsSayWhatEachHolds()
+    {
+        var pool = new PoolRecord(0, "k", "2026-11-18T08:00:00Z", ["a", "b", "c"], SessionPools.Choices(pictures: false));
+        var here = new PoolVersion(pool, ["H4350", "Varget"], 1);
+        var same = SyncScreens.ComparePools(here, here with { }, "Desk", "Phone", "2026-11-18T09:00:00Z");
+        Assert.DoesNotContain(same.Rows, r => r.Differs);
+        Assert.Contains(same.Rows, r => r.What == "Not here" && r.Here == "1 not on this device yet");
+        Assert.Empty(same.HereHoles);
+        Assert.StartsWith("Pooled set of 3 sheets", same.Heading, StringComparison.Ordinal);
+
+        var there = new PoolVersion(pool with { Sheets = ["a", "b"], Choices = SessionPools.Choices(pictures: true) }, ["H4350", "Varget"], 0);
+        var changed = SyncScreens.ComparePools(here, there, "Desk", "Phone", "2026-11-18T09:00:00Z");
+        Assert.True(changed.Rows.Single(r => r.What == "Sheets").Differs);
+        var pooled = changed.Rows.Single(r => r.What == "Pooled as");
+        Assert.True(pooled.Differs);
+        Assert.Equal("the sheets of one set", pooled.Here);
+        Assert.Equal("pictures, each its own sheet", pooled.There);
+        Assert.Equal("none", SyncScreens.ComparePools(null, there, "Desk", "Phone", "2026-11-18T09:00:00Z").Rows[0].Here);
     }
 }

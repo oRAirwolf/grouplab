@@ -25,6 +25,68 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-17, entry 498: question 114 answered (a); three pieces of work for the rest of the week
+
+**Status: actioned 2026-11-18. Not done: section 1.1 left as it is (the two holes in the diamonds have no honest fix; the numbers are in error-reports.md under report 50); section 1.3 not taken (the speed work was optional, and the week went to sections 2 and 3 and entry 499); section 0's check that nightly 232 reaches TestFlight as 1.0.232 waits for the nightly this commit makes.**
+
+From the planning session, on Alan's word in chat at 15:40 Denver on 2026-11-17. The week is 40% used and resets on Friday
+2026-11-20 at 06:00 UTC. Alan chose these three, in this order. Nothing here needs Alan. The usage guard stays at 85% (88% for a
+finishing block). If the guard stops the work, finish the section in hand, record what is left, and report.
+
+### 0. Question 114 answered: (a), the iPhone builds stay 1.0.<build>
+
+Alan chose (a): the iPhone builds are numbered 1.0.<build>, as built from nightly 232, the same as Android's version name. Mark question
+114 answered (a) with today's date, and change nothing in nightly.yml. Check that nightly 232's iPhone build reaches TestFlight as
+1.0.232; if it is refused again, it is an error to fix, not a reason to reopen the question.
+
+### 1. Find holes: the last two rings on error report 50's scan, then speed on scans
+
+Error report 50 part two left Find holes at 9 of 11 on the tester's 600 dpi flatbed scan: box 4 two of three, box 5 two of three.
+
+1. Find why each of the two missed holes is refused (which pass sees it, and which test turns it away). Fix it only if the fix is
+   honest: nothing false on that scan, and no change for the worse on every other picture the suite and the detection gates measure.
+   If the honest answer is that the two cannot be told from print or a crease, say so with the numbers and stop there.
+2. The poster has not consented to public test data, so, as before, any test page is rebuilt from the scan's measurements, never from
+   its pixels, and nothing from the scan is committed.
+3. If there is room after that, take more Phase 9 speed work on hole finding on a scan (STATE: "hole finding on a scan", the
+   2026-10-20 open item), with every result identical byte for byte, measured before and after in PERFORMANCE.md.
+4. Release-note in a shooter's words. Update the error-reports.md entry for report 50 with the result.
+
+### 2. A consistency audit after the App Store release of 1.0
+
+GroupLab 1.0 (build 226) was released on the App Store today. Give the audit to docs-sonnet (the standing rule for wording and
+consistency checks).
+
+1. Read the README, the live grouplab.org (home, /download/, /features/, /tour/, /guides/, /releases/, /support/, /discord/,
+   /android-test/), the three guides and their PDFs, docs/PLATFORM-SUPPORT.md, docs/PHONE-PARITY.md, docs/RELEASE-PLAN.md,
+   docs/TESTING-GUIDE.md, the store texts under docs/store/, and for-alan.md.
+2. Find anything that still says or implies that the iPhone or iPad version is TestFlight only, unreleased, waiting on Apple's review,
+   or "coming to the App Store"; anything that numbers the iPhone builds as "1.0 (N)" for builds after 231; and anything that
+   disagrees with the App Store page now being live.
+3. Fix every finding in one change, with backings in docs/claims-backing.json, and add the retired phrases to
+   docs/RETIRED-WORDING.json so the weekly check catches them next time.
+4. Say in the report how many findings there were and that the tour pages still describe their screens.
+
+### 3. Pooled sets on two devices: the logic for two versions of one pool
+
+Entry 495 left unbuilt "a screen to choose between two devices' versions of a pool". Build everything except the screen's look:
+
+1. When sync meets two different versions of one pooled set (the same pool changed on two devices), keep both, lose nothing, and
+   mark the pool as needing a choice, the same way sessions are handled where that applies. A pool whose sheets are missing on one
+   device is not a conflict on its own.
+2. The model for the choice: what each version holds (its sheets, how they were pooled, when and on which device it last changed),
+   keep this one, keep that one, or keep both as two pools. Hold it in tests with the simulated cloud clients (late, out of order,
+   half written files, wrong clocks), on the computer and the phone.
+3. Do not design the screen. Until the look is chosen, show the existing plain conflict prompt or a plain list, whatever already
+   exists for sessions, and write a "DESIGN NEEDED:" line in for-alan.md saying what the screen must show. The planning session will
+   draw the concepts for Alan.
+4. Release-note it only for what a person can actually reach.
+
+### 4. As usual
+
+Fold this entry into NOTES-FROM-PLANNING.md, delete this file, results in PHASE1-RESULTS.md, STATE.md rewritten, the five line report,
+and check the error reports and suggestions before each section.
+
 ## 2026-11-16, entry 497: consistency audit, 2026-11-16
 
 **Status: actioned 2026-11-17. Every section done.**

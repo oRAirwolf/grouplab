@@ -893,6 +893,11 @@ device's name and time, its holes drawn small on one scale, and its figures, wit
 **Keep** one device's version, **Keep both as two sessions** (1), or **Decide later** (2). The version you do not keep is kept aside too, so
 it can be got back. On the phone the two stack, one above the other.
 
+A pooled set changed on two devices waits the same way: the banner counts it, "1 pooled set to choose between", and its row in Session
+records has the **2 versions** tag. For now the two are a plain list, each device's sheets, how they were pooled and when, with **differs**
+beside what is not the same; **Keep** one device's version, **Keep both as two pooled sets**, or **Decide later**. A sheet that has not
+reached this device yet is listed as not here yet, and is not a reason to choose on its own.
+
 ![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png)
 <!-- marks: Keep both as two sessions | Decide later -->
 

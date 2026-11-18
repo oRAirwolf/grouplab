@@ -44,6 +44,15 @@ hourly while waiting on CI, and writes each new one here.
 - **Not fixed, by design for now:** the two holes torn through the orange and the black. In the brightest channel the orange is as light
   as the paper, so such a hole is neither a light spot with print all round it nor a ring with paper beyond it; a click places it, and
   part one's snap puts the click on the hole.
+- **Entry 498 section 1, 2026-11-18 (the two holes torn through the diamonds):** found why each is refused, and left as it is. Run on the
+  scan as the tester would, Find holes still proposes 9 of 11 with nothing false, in 448 ms. Both holes are refused by the light-in-print
+  pass as "a light spot without print all round it", 0.47 in across: in the brightest channel the orange is as light as the paper, so
+  each hole's white middle and the orange diamond are one light patch. In the picture's neutral lightness (twice the grey less the
+  brightest channel: paper about 250, black 20, orange 50) both stand out as light in print, and a light pass there with torn fibres and
+  a printed cross opened away (0.04 in) finds box 5's hole, 0.10 in across at its centre, with nothing false on the scan; box 4's is
+  refused as straight sided (0.87 round), and printed squares on the same scan measure 0.83 to 0.88, so no line between them is honest.
+  Not kept: over the other local pictures (store-bought blanks, range photographs and camera tests) the same pass added at least 40 marks on 18 of them, 7 of those on 5 store-bought blanks never
+  shot. Both holes are placed by a click; entry 499 makes the snap and a switch better for exactly these.
 
 ## 47, 2026-11-16, nightly 226 on the computer (a Discord post in bug-reports, with two screenshots)
 

@@ -53,6 +53,17 @@ public sealed class Entry463PhoneTests : IDisposable
     private static IEnumerable<string> Words(Control c) => c.GetLogicalDescendants()
         .Select(d => d switch { TextBlock t => t.Text, ContentControl { Content: string s } => s, _ => null }).OfType<string>();
 
+    /// <summary>Entry 498: a session with a real marking, three shots about <paramref name="x"/>, so a pool of it opens and is listed.</summary>
+    private static SessionRecord Marked(string created, double x)
+    {
+        var marking = new GroupLab.Core.Marking.MarkingSession();
+        marking.SetScale(new GroupLab.Core.Marking.LengthReference(new GroupLab.Core.Imaging.PointD(0, 0), new GroupLab.Core.Imaging.PointD(600, 0), 1));
+        marking.AddShot(new GroupLab.Core.Imaging.PointD(x, x));
+        marking.AddShot(new GroupLab.Core.Imaging.PointD(x + 30, x + 10));
+        marking.AddShot(new GroupLab.Core.Imaging.PointD(x + 5, x + 40));
+        return Session(created) with { MarkingJson = GroupLab.Core.Marking.MarkingFile.Write(marking.State) };
+    }
+
     private static SessionRecord Session(string created) => new(
         0, created, created[..10], "GroupLab 5x5 Load Development, Letter", "GL-TEST-0000", "{\"name\":\"test\"}", 3600, "Tikka", null, "H4350", 0.264,
         "{\"marks\":1}", 25, 0.3, 0.25, 0.4, null, new string('a', 64), [1, 2, 3], "image/jpeg");
@@ -111,6 +122,76 @@ public sealed class Entry463PhoneTests : IDisposable
         finally
         {
             window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void APooledSetChangedOnTwoDevicesIsChosenBetweenFromSessions()
+    {
+        var mine = PhoneAnalysis.Store();
+        foreach (var s in mine.List())
+        {
+            mine.Delete(s.Id);
+        }
+
+        foreach (var p in mine.Pools())
+        {
+            mine.DeletePool(p.Id);
+        }
+
+        string desk = Path.Combine(root, "desk");
+        Directory.CreateDirectory(desk);
+        var other = SessionStore.Open(Path.Combine(desk, "grouplab.db"));
+        var otherLocal = new FileSyncLocal(Path.Combine(desk, "sheets"), Path.Combine(desk, "settings.json"));
+        var cloud = new DirectorySyncFolder(Path.Combine(root, "cloud"));
+        TestPhone.SyncFolderToPick = Path.Combine(root, "cloud");
+        var shell = new Shell();
+        var window = new Window { Width = 412, Height = 915, Content = shell };
+        window.Show();
+        try
+        {
+            var ids = new[] { mine.Save(Marked("2026-10-20T10:00:00Z", 100)), mine.Save(Marked("2026-10-21T10:00:00Z", 200)) };
+            var pool = SessionPools.Save(mine, null, ids, SessionPools.Choices(pictures: false), DateTime.UtcNow);
+            Wait(PhoneSync.Choose(window));
+            Wait(PhoneSync.Now());
+            SyncEngine.Run(other, otherLocal, cloud, "Desk", DateTime.UtcNow.AddMinutes(1));
+            SessionPools.Save(mine, pool.Id, ids, SessionPools.Choices(pictures: true), DateTime.UtcNow);
+            var theirs = other.PoolByKey(pool.Key)!;
+            SessionPools.Save(other, theirs.Id, SessionPools.SheetsOf(other, theirs).Ids.Reverse().ToList(), SessionPools.Choices(pictures: false), DateTime.UtcNow);
+            Wait(PhoneSync.Now());
+            SyncEngine.Run(other, otherLocal, cloud, "Desk", DateTime.UtcNow.AddMinutes(2));
+            Wait(PhoneSync.Now());
+
+            Assert.Single(PhoneSync.PoolsToChoose());
+            shell.Show(Shell.Place.Sessions);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Contains(SyncScreens.ToChooseBanner(0, 1), Words(window));
+            Assert.Contains(Words(window), w => w.StartsWith(SyncScreens.TwoVersions, StringComparison.Ordinal));
+
+            var page = Assert.IsType<SessionsPage>(shell.PageContent);
+            PhoneSync.ShowConflict(page, PhoneSync.PoolsToChoose()[0].Conflict.Id, () => { });
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            Assert.Contains(SyncScreens.PoolConflictTitle, Words(window));
+            Assert.Contains(SyncScreens.Differs, Words(window));
+            var choose = window.GetLogicalDescendants().OfType<Button>().First(b => Equals(b.Content, SyncScreens.KeepBothPools) || (b.Content is TextBlock t && t.Text == SyncScreens.KeepBothPools));
+            choose.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.Empty(PhoneSync.PoolsToChoose());
+            Assert.Equal(2, mine.Pools().Count);
+        }
+        finally
+        {
+            window.Close();
+            foreach (var p in mine.Pools())
+            {
+                mine.DeletePool(p.Id);
+            }
+
+            foreach (var s in mine.List())
+            {
+                mine.Delete(s.Id);
+            }
         }
     }
 

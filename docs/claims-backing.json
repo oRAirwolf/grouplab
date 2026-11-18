@@ -8296,6 +8296,26 @@
   "Version 1.0 was released on 2026-11-17; TestFlight stays the way in for the nightlies.": {
    "kind": "decided",
    "where": "Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612"
+  },
+  "On an iPhone or iPad, GroupLab 1.0 is on [the App Store](https://apps.apple.com/app/id6817635137), and the nightly builds are in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open [the invitation](https://testflight.apple.com/join/A3xyT6C6) on the device; **Send Beta Feedback** in TestFlight, or a screenshot shared to it, reaches the project.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 498 section 0 and the 2026-11-17 release by Alan's word: GroupLab 1.0 (build 226) is released on the App Store, https://apps.apple.com/app/id6817635137, Ready for Distribution; TestFlight's public beta carries on with the nightlies"
+  },
+  "- **The iPhone and iPad build** is released on the App Store as version 1.0, and the nightly builds you test come through TestFlight's public beta.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 498 section 0 and the 2026-11-17 release by Alan's word: GroupLab 1.0 (build 226) is released on the App Store, https://apps.apple.com/app/id6817635137, Ready for Distribution; TestFlight's public beta carries on with the nightlies"
+  },
+  "On an iPhone or iPad, GroupLab 1.0 is on the App Store , and the nightly builds are in a public beta through Apple's TestFlight: install TestFlight from the App Store, then open the invitation on the device; Send Beta Feedback in TestFlight, or a screenshot shared to it, reaches the project.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 498 section 0 and the 2026-11-17 release by Alan's word: GroupLab 1.0 (build 226) is released on the App Store, https://apps.apple.com/app/id6817635137, Ready for Distribution; TestFlight's public beta carries on with the nightlies"
+  },
+  "The iPhone and iPad build is released on the App Store as version 1.0, and the nightly builds you test come through TestFlight's public beta.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 498 section 0 and the 2026-11-17 release by Alan's word: GroupLab 1.0 (build 226) is released on the App Store, https://apps.apple.com/app/id6817635137, Ready for Distribution; TestFlight's public beta carries on with the nightlies"
+  },
+  "C On what you already own Windows, macOS, Linux and Android, and iPhone and iPad from the App Store.": {
+   "kind": "decided",
+   "where": "NOTES-FROM-PLANNING.md entry 498 section 0 and the 2026-11-17 release by Alan's word: GroupLab 1.0 (build 226) is released on the App Store, https://apps.apple.com/app/id6817635137, Ready for Distribution; TestFlight's public beta carries on with the nightlies"
   }
  },
  "rules": [
@@ -8659,6 +8679,12 @@
    "match": "^Where a first-round miss comes from At 300 yards|^At 600 and 1000 it is mostly the wind call",
    "kind": "measured",
    "where": "the research index card repeats the description of website/research/where-a-first-miss-comes-from.md, whose numbers are held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TheMissArticlesFiguresHold and whose sources are in its front matter (entry 464 section 3)"
+  },
+  {
+   "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$|^site:features/",
+   "match": "A pooled set changed on two devices waits the same way|a pooled set the same way as a plain list",
+   "kind": "code",
+   "where": "src/GroupLab.Core/Sync/SyncEngine.cs (PoolVersions, Resolve), src/GroupLab.Core/Sync/SyncScreens.cs (ComparePools, ToChooseBanner, KeepBothPools), src/GroupLab.Core/Records/SessionPools.cs (Version); src/GroupLab.App/MainWindow.Sync.cs (PoolsToChoose, ShowSyncConflict) and mobile/GroupLab.Mobile/PhoneSync.cs (PoolsToChoose, ShowConflict); held by CloudClientTests.APooledSetChangedOnTwoDevicesKeepsBothUntilChosen, SyncScreensTests.APooledSetsTwoVersionsSayWhatEachHolds, Entry463Tests and Entry463PhoneTests (entry 498 section 3)"
   }
  ]
 }
