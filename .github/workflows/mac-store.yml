@@ -103,9 +103,11 @@ jobs:
           plistlib.dump(e, open("out/sandbox-only.entitlements", "wb"))
           PY
           main="$app/Contents/MacOS/GroupLab.App"
+          # As package.yml signs the download: every file in Contents/MacOS is code to codesign, the .NET libraries included, and a
+          # Mach-O file anywhere else.
           find "$app/Contents" -type f | while read -r f; do
             [ "$f" = "$main" ] && continue
-            if file "$f" | grep -q "Mach-O"; then codesign --force --sign - "$f"; fi
+            case "$f" in "$app/Contents/MacOS/"*) codesign --force --sign - "$f" ;; *) if file "$f" | grep -q "Mach-O"; then codesign --force --sign - "$f"; fi ;; esac
           done
           codesign --force --sign - --entitlements out/sandbox-only.entitlements "$app"
           codesign --display --entitlements - "$app" | grep -q app-sandbox || { echo "::error::the sandbox entitlement is not on the bundle"; exit 1; }
@@ -186,7 +188,10 @@ jobs:
           main="$app/Contents/MacOS/GroupLab.App"
           find "$app/Contents" -type f | while read -r f; do
             [ "$f" = "$main" ] && continue
-            if file "$f" | grep -q "Mach-O"; then codesign --force --options runtime --sign "$identity" "$f"; fi
+            case "$f" in
+              "$app/Contents/MacOS/"*) codesign --force --options runtime --sign "$identity" "$f" ;;
+              *) if file "$f" | grep -q "Mach-O"; then codesign --force --options runtime --sign "$identity" "$f"; fi ;;
+            esac
           done
           codesign --force --options runtime --entitlements "$RUNNER_TEMP/store.entitlements" --sign "$identity" "$app"
           codesign --verify --deep --strict --verbose=2 "$app"
