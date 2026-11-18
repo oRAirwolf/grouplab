@@ -31,9 +31,9 @@ public class MacBundleTests
         return published;
     }
 
-    private static (int Code, string Output) Bundle(string published, string into, string version, string arch)
+    private static (int Code, string Output) Bundle(string published, string into, string version, string arch, string more = "")
     {
-        var start = new ProcessStartInfo("python", $"-B \"{Script}\" \"{published}\" \"{into}\" --version {version} --arch {arch}")
+        var start = new ProcessStartInfo("python", $"-B \"{Script}\" \"{published}\" \"{into}\" --version {version} --arch {arch} {more}")
         {
             WorkingDirectory = Repo.Root,
             RedirectStandardOutput = true,
@@ -113,6 +113,39 @@ public class MacBundleTests
             // has been unpacked and the download page is long forgotten.
             Assert.Contains("macos-x64", plist, StringComparison.Ordinal);
             Assert.Contains("nobody has run this on a real Mac", plist, StringComparison.Ordinal);
+        }
+        finally
+        {
+            GroupLab.Tests.Support.Temp.Delete(root);
+        }
+    }
+
+    /// <summary>
+    /// Entry 501: the Mac App Store copy is the iPhone and iPad app's identifier, org.grouplab.app, for one App Store record; its version is
+    /// the release's, 1.0, and its build the nightly's number; it says its encryption is exempt; and it carries its provisioning profile.
+    /// </summary>
+    [Fact]
+    public void TheStoreCopySaysWhatTheMacAppStoreReads()
+    {
+        string root = GroupLab.Tests.Support.Temp.Folder("mac-bundle");
+        try
+        {
+            Directory.CreateDirectory(root);
+            string profile = Path.Combine(root, "store.provisionprofile");
+            File.WriteAllText(profile, "not really a profile");
+            var (code, output) = Bundle(Published(root), Path.Combine(root, "out"), "1.0.0-nightly.232", "macos-arm64", $"--store-build 232 --profile \"{profile}\"");
+            Assert.True(code == 0, output);
+
+            string contents = Path.Combine(root, "out", "GroupLab.app", "Contents");
+            string plist = File.ReadAllText(Path.Combine(contents, "Info.plist"));
+            Assert.Contains("<string>org.grouplab.app</string>", plist, StringComparison.Ordinal);
+            Assert.DoesNotContain("org.grouplab.GroupLab", plist, StringComparison.Ordinal);
+            // The release's version a person sees, and the nightly's number as the build, never the nightly's whole name.
+            Assert.Contains("<string>1.0</string>", plist, StringComparison.Ordinal);
+            Assert.Contains("<string>232</string>", plist, StringComparison.Ordinal);
+            Assert.DoesNotContain("nightly", plist, StringComparison.Ordinal);
+            Assert.Contains("<key>ITSAppUsesNonExemptEncryption</key>", plist, StringComparison.Ordinal);
+            Assert.True(File.Exists(Path.Combine(contents, "embedded.provisionprofile")), "the profile is not in the bundle");
         }
         finally
         {

@@ -338,8 +338,19 @@ public sealed class TheOutsideWorld : IOutsideWorld
         using var started = Process.Start(new ProcessStartInfo(path, arguments) { UseShellExecute = false });
     }
 
+    /// <summary>
+    /// Entry 501: how a link, file or folder is opened where starting a process is not the way, as in the Mac App Store copy's sandbox. The
+    /// application installs it at startup; true means it was opened.
+    /// </summary>
+    public static Func<string, bool>? OpensThings { get; set; }
+
     private static void Start(string what)
     {
+        if (OpensThings?.Invoke(what) == true)
+        {
+            return;
+        }
+
         using var started = Process.Start(new ProcessStartInfo(what) { UseShellExecute = true });
     }
 }

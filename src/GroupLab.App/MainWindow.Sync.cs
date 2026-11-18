@@ -54,6 +54,13 @@ public partial class MainWindow
     private void BuildSyncSettings(StackPanel column)
     {
         column.Children.Add(syncSection);
+        // Entry 501: in the sandbox the sync folder is reached through its bookmark, which starts access to it for this run.
+        if (AppInfo.Sandboxed && Sync.On && settingsStore.LoadSyncBookmark() is { } bookmark && MacSandbox.Resolve(bookmark) is { } reached
+            && reached != Sync.Folder)
+        {
+            SaveSync(SyncScreens.InFolder(Sync, reached));
+        }
+
         FillSync();
         if (Sync.On)
         {
@@ -96,6 +103,12 @@ public partial class MainWindow
         var picked = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions { Title = SyncScreens.ChooseFolder, AllowMultiple = false });
         if (picked.Count > 0 && picked[0].TryGetLocalPath() is { } path)
         {
+            // Entry 501: in the sandbox the folder is reached after a restart only through a bookmark made now, while the choice holds.
+            if (AppInfo.Sandboxed)
+            {
+                settingsStore.SaveSyncBookmark(MacSandbox.Bookmark(path));
+            }
+
             ChooseSyncFolder(path);
         }
     }

@@ -103,7 +103,12 @@ public partial class MainWindow
     /// say, because an update bar that appears to tell you there is no update is a bar nobody wants.
     /// </summary>
     /// <summary>What the Store's copy says where the update controls would be.</summary>
-    internal const string StoreUpdateWords = "This copy of GroupLab came from the Microsoft Store, which keeps it up to date, so GroupLab's own updater is off.";
+    internal const string MicrosoftStoreUpdateWords = "This copy of GroupLab came from the Microsoft Store, which keeps it up to date, so GroupLab's own updater is off.";
+
+    /// <summary>Entry 501: the Mac App Store copy's line, in the same words.</summary>
+    internal const string MacStoreUpdateWords = "This copy of GroupLab came from the Mac App Store, which keeps it up to date, so GroupLab's own updater is off.";
+
+    internal static string StoreUpdateWords => OperatingSystem.IsMacOS() ? MacStoreUpdateWords : MicrosoftStoreUpdateWords;
 
     internal async Task CheckForUpdatesAsync(bool byHand, CancellationToken token = default)
     {

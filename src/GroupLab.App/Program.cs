@@ -31,6 +31,13 @@ internal static class Program
         using var crashes = CrashReporter.Install(log);
         CrashReporter.BeginRun(log);
         var units = settings.LoadUnits();
+        // Entry 501: in the Mac App Store copy's sandbox, links and files open through NSWorkspace.
+        if (AppInfo.Sandboxed)
+        {
+            GroupLab.Core.Updates.TheOutsideWorld.OpensThings = MacSandbox.Open;
+        }
+
+        App.SelfCheck = args.Contains("--self-check", StringComparer.Ordinal);
         DiagnosticLog.Info("app.start", [.. AppInfo.EnvironmentFields(), ("units", $"{units.Linear} {units.Angular} {units.Distance}"), ("verbose", verbose), ("logdir", described)]);
         var clock = Stopwatch.StartNew();
         int code = -1;
@@ -57,6 +64,9 @@ internal static class Program
 /// </summary>
 public sealed class App : Application
 {
+    /// <summary>Entry 501: <c>--self-check</c>, the run that proves a build on a machine nobody sits at (<see cref="GroupLab.App.SelfCheck"/>).</summary>
+    internal static bool SelfCheck { get; set; }
+
     public override void Initialize()
     {
         Styles.Add(new FluentTheme());
@@ -73,6 +83,10 @@ public sealed class App : Application
             // Entry 414 section 1.2: once the window is up, the solver warmed on a thread of the lowest priority, so Ballistics' first
             // tables do not wait for it.
             desktop.MainWindow.Opened += (_, _) => GroupLab.Core.Ballistics.SolverUse.WarmInBackground();
+            if (SelfCheck && desktop.MainWindow is MainWindow window)
+            {
+                window.Opened += async (_, _) => desktop.Shutdown(await GroupLab.App.SelfCheck.RunAsync(window));
+            }
         }
 
         base.OnFrameworkInitializationCompleted();

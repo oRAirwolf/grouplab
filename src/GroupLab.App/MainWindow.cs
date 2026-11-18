@@ -1906,6 +1906,50 @@ public sealed partial class MainWindow : Window
     /// </summary>
     public void OpenImage(string path) => OpenImageLoaded(path, ImageLoader.LoadForEditor(path));
 
+    /// <summary>
+    /// Entry 501: in the Mac App Store copy's sandbox, a picture opened from anywhere the person chose is reachable only while that choice
+    /// holds, and a session reopens its picture by path later. So it is copied into GroupLab's own <c>originals</c> folder, named by its
+    /// SHA-256 so one picture is kept once, and that copy is the path from here on. Elsewhere the picture stays where it is.
+    /// </summary>
+    internal string KeptHere(string path)
+    {
+        if (!AppInfo.Sandboxed)
+        {
+            return path;
+        }
+
+        try
+        {
+            string folder = Path.Combine(Path.GetDirectoryName(settingsStore.Path) ?? Path.GetTempPath(), "originals");
+            string full = Path.GetFullPath(path);
+            if (full.StartsWith(Path.GetFullPath(folder) + Path.DirectorySeparatorChar, StringComparison.Ordinal))
+            {
+                return path;
+            }
+
+            string sha;
+            using (var stream = File.OpenRead(full))
+            {
+                sha = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(stream)).ToLowerInvariant();
+            }
+
+            Directory.CreateDirectory(folder);
+            string kept = Path.Combine(folder, sha + Path.GetExtension(full).ToLowerInvariant());
+            if (!File.Exists(kept))
+            {
+                File.Copy(full, kept + ".part", overwrite: true);
+                File.Move(kept + ".part", kept, overwrite: true);
+            }
+
+            return kept;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "file.keep", e);
+            return path;
+        }
+    }
+
     /// <summary>The image <see cref="ImageLoader.LoadForEditor"/> decoded, shown; question 43 decodes it off this thread first.</summary>
     private void OpenImageLoaded(string path, (GrayImage Grey, GrayImage MaxChannel, OpenCvSharp.Mat Colour, ImageMetadata Metadata) loaded)
     {
@@ -1913,6 +1957,7 @@ public sealed partial class MainWindow : Window
         // a 600 dpi letter scan is three passes over 34 megapixels where the command line makes one.
         var (image, max, colour, meta) = loaded;
         using var colourImage = colour;
+        path = KeptHere(path);
 
         // Entry 357 section 1: the picture open until now is left, and under "Send everything I open" it goes in the state it was left in.
         LeavePicture(closing: false);

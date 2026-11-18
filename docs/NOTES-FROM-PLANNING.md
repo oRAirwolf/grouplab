@@ -25,6 +25,72 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-18, entry 501: GroupLab for Mac on the Mac App Store, up to TestFlight; submission waits on Alan's word
+
+**Status: actioned in part 2026-11-18. Done: section 1 (docs/MAC-APP-STORE.md; nothing needs a temporary exception), section 2.1 (universal purchase), sections 3.1 to 3.3 built (mac-store.yml with the sandbox self-check). Not done, waiting on request 107 (macOS on the record, the Mac Installer Distribution certificate, the Mac App Store profile): section 2.2's API steps, signing and the TestFlight upload (3.3), and section 3.4 (Mac screenshots, the Mac listing text; the App Privacy answers were checked); section 4's for-alan line waits until a TestFlight build works.**
+
+From the planning session, on Alan's word in chat at 08:31 Denver on 2026-11-18: "Can we publish the desktop mac app to the app store as
+well?" Take it after entries 498 to 500. This is the desktop application (the same one as the notarized Mac download), not the iPad app
+running on a Mac. Nothing is submitted to Apple for review without Alan's word, the way 1.0 for iPhone and iPad waited for his
+"Submit now" (entry 491). Anything only Alan can do goes into `docs/notes/for-alan.md` in one go at the start (the CLAUDE.md rule), and
+everything else carries on.
+
+### Background, read 2026-11-18
+
+- The Mac builds are Developer ID signed, notarized and stapled in `package.yml` with `scripts/macos/GroupLab.entitlements`, and update
+  themselves through GroupLab's own updater. The download page says "GroupLab is not in the Mac App Store."
+- The September notes (archive, notes-2026-09 line 601) already named the two obstacles: the Mac App Store needs **App Sandbox** and
+  **no self-updater**.
+- The iPhone and iPad app is not offered on Apple silicon Macs (entry 491). Leave that switch alone.
+- The Microsoft Store copy is the precedent for a store build that leaves updating to the store.
+- Apple's rules: a Mac App Store app must enable App Sandbox, is uploaded as a `.pkg` signed with a Mac Installer Distribution
+  certificate (not a zip or dmg), with the app signed for Apple distribution and a Mac App Store provisioning profile for an explicit
+  App ID. A temporary exception entitlement has to be explained to Apple in App Store Connect.
+
+### 1. A sandbox audit first, written down before anything is built
+
+List everything the desktop app does on a Mac that the sandbox changes, with what each needs, in `docs/MAC-APP-STORE.md`:
+
+1. **Files:** opening a picture or a session the person chooses (a file dialog grants it); recent files and anything reopened later
+   (security-scoped bookmarks); the database, settings, logs, `copies/` and the trash (inside the app's container, which moves them:
+   say how an existing Mac user's records get there, or that the store copy starts fresh and Export all my data / Import moves them);
+   the sync folder (a bookmark to a folder the person chose); exports and reports.
+2. **Devices:** the camera, if the Mac build uses it; Bluetooth for the M834 and M220 printers; printing through the system.
+3. **Network:** Make a report, the update check (off in this build), anything else outbound.
+4. **.NET and native code:** the JIT and anything else in the current entitlements file, OpenCV's native libraries signed inside the
+   bundle, and whether anything writes next to the executable.
+5. **The updater:** off in the store build, with the update bar saying updates come from the Mac App Store, as the Microsoft Store copy
+   does.
+
+For each item: works as is, needs a change (and its size), or needs a temporary exception (say why one cannot be avoided). If something
+GroupLab does cannot work in the sandbox at all, say so plainly and stop before building; that is a question for Alan.
+
+### 2. The App Store record
+
+1. Decide, and say why, between adding macOS to the existing GroupLab app record (one listing, universal purchase, the same bundle ID)
+   and a separate Mac record. Universal purchase is the likely choice.
+2. Do through the App Store Connect API what it allows (certificates, the App ID's capabilities, the provisioning profile, the macOS
+   platform on the record). Anything the API cannot do goes into for-alan.md as written steps, at the start.
+
+### 3. A store build to TestFlight for Mac
+
+1. A Mac App Store variant of the existing Mac build: sandboxed entitlements, the updater off, signed for Apple distribution, packaged
+   as a signed `.pkg`, built on GitHub's Mac machines as the Developer ID build is. The Developer ID download stays exactly as it is.
+2. Version numbers as entry 488 set them for the App Store (short version 1.0, build N).
+3. Upload to TestFlight for Mac, internal group only, and run the suite's Mac tests against the sandboxed bundle where they can reach
+   it. Find out whether it starts in the sandbox, opens a sample, analyzes it and saves a session.
+4. Store screenshots for the Mac (the `apple-screens.yml` approach, if it can make Mac ones), the listing's Mac text, and the App Privacy
+   answers checked against what the Mac build does.
+
+### 4. Stop before submission
+
+Report to the planning session: the audit's result, what changed, what (if anything) needs a temporary exception, whether the TestFlight
+build works, and anything that needs a real Mac. Then a line in for-alan.md: GroupLab for Mac is ready to submit to the Mac App Store,
+waiting on Alan's word. Submission is a separate inbox entry when he gives it.
+
+Release-note: for anything that changes what a Mac user sees (for example the update bar's wording in the store copy), in a shooter's
+words; the rest is internal. No change to the README, site or guides until the Mac App Store copy is actually released.
+
 ## 2026-11-18, entry 500: the App Store is the way in on iPhone and iPad; stop inviting people to the TestFlight beta
 
 **Status: actioned 2026-11-18. Every section done; the download page's check after the push is in the report.**

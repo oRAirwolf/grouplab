@@ -1257,6 +1257,20 @@ public sealed class PrintPanel : UserControl
         double dpi = Head?.DotsPerInch ?? PrinterAppFiles.DefaultDpi;
         string stem = darkness ? "darkness-test" : Path.GetFileName(selected!.File).Replace(".gltd.json", "", StringComparison.Ordinal);
         DiagnosticLog.Info("dialog.open", ("dialog", "save-printer-app"), ("darkness", darkness));
+        // Entry 501: the sandbox lets the Mac App Store copy write only what was chosen, and this writes a PDF and a picture a page beside
+        // one another, so there a folder is chosen instead of one file.
+        if (GroupLab.App.Diagnostics.AppInfo.Sandboxed)
+        {
+            var folders = await storage.OpenFolderPickerAsync(new FolderPickerOpenOptions { Title = darkness ? "Choose a folder for the darkness test page" : "Choose a folder for the target's files", AllowMultiple = false });
+            DiagnosticLog.Info("dialog.result", ("dialog", "save-printer-app"), ("chosen", folders.Count > 0));
+            if (folders.Count > 0 && folders[0].TryGetLocalPath() is { } chosenFolder)
+            {
+                SaveForApp(Path.Combine(chosenFolder, $"{stem}-{PrinterAppFiles.Suffix(dpi)}.png"), darkness);
+            }
+
+            return;
+        }
+
         var file = await storage.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = darkness ? "Save the darkness test page for a printer app" : "Save the target for a printer app",

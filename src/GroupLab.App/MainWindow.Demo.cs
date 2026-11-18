@@ -480,6 +480,12 @@ public sealed partial class MainWindow
         demoCarryOn.Content = DemoWords.CarryOn(at + 1, DemoSteps.Count);
     }
 
+    /// <summary>Entry 501: the demo's sample sheet, for <see cref="SelfCheck"/>.</summary>
+    internal string WriteSampleForSelfCheck() => WriteDemoSheet();
+
+    /// <summary>Where this window's settings file is, for <see cref="SelfCheck"/>: its folder holds everything GroupLab keeps.</summary>
+    internal string SettingsPath => settingsStore.Path;
+
     /// <summary>Entry 439: the sample, made by GroupLab from <see cref="DemoSample"/>, the same sheet the phones make (entry 446).</summary>
     private string WriteDemoSheet()
     {

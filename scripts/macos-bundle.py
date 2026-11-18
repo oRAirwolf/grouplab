@@ -33,6 +33,9 @@ EXECUTABLE = "GroupLab.App"
 DISPLAY_NAME = "GroupLab"
 
 BUNDLE_ID = "org.grouplab.GroupLab"
+# Entry 501: the Mac App Store copy shares the iPhone and iPad app's identifier, so the two are one App Store record (universal purchase).
+# It is a different identifier from the download's on purpose: the two can sit on one Mac, each with its own records.
+STORE_BUNDLE_ID = "org.grouplab.app"
 
 ICON = Path("src/GroupLab.App/Assets/icons/grouplab.icns")
 
@@ -41,7 +44,7 @@ ICON = Path("src/GroupLab.App/Assets/icons/grouplab.icns")
 MINIMUM_SYSTEM = "12.0"
 
 
-def plist(version: str, arch: str) -> dict:
+def plist(version: str, arch: str, store_build: int | None = None) -> dict:
     """The Info.plist, as the fields macOS actually reads.
 
     ``CFBundleShortVersionString`` is what a person sees in Finder's Get Info, and macOS expects it to look
@@ -49,6 +52,27 @@ def plist(version: str, arch: str) -> dict:
     ``CFBundleVersion`` where a longer string is allowed, and the plain part is kept here.
     """
     short = version.split("-")[0] or "0.0.0"
+    if store_build is not None:
+        # Entry 488 for the App Store, kept for the Mac by entry 501: the version a person sees is the release's, 1.0, and the build is the
+        # nightly's number, which only ever grows.
+        return {
+            "CFBundleName": DISPLAY_NAME,
+            "CFBundleDisplayName": DISPLAY_NAME,
+            "CFBundleIdentifier": STORE_BUNDLE_ID,
+            "CFBundleExecutable": EXECUTABLE,
+            "CFBundleIconFile": "grouplab.icns",
+            "CFBundlePackageType": "APPL",
+            "CFBundleShortVersionString": ".".join(short.split(".")[:2]),
+            "CFBundleVersion": str(store_build),
+            "CFBundleInfoDictionaryVersion": "6.0",
+            "LSMinimumSystemVersion": MINIMUM_SYSTEM,
+            "LSApplicationCategoryType": "public.app-category.utilities",
+            "NSHighResolutionCapable": True,
+            "NSSupportsAutomaticGraphicsSwitching": True,
+            # GroupLab uses only the encryption built into the system, for HTTPS, which is exempt.
+            "ITSAppUsesNonExemptEncryption": False,
+            "GroupLabBuildArchitecture": arch,
+        }
     return {
         "CFBundleName": DISPLAY_NAME,
         "CFBundleDisplayName": DISPLAY_NAME,
@@ -73,7 +97,7 @@ def plist(version: str, arch: str) -> dict:
     }
 
 
-def build(published: Path, out: Path, version: str, arch: str, icon: Path) -> Path:
+def build(published: Path, out: Path, version: str, arch: str, icon: Path, store_build: int | None = None, profile: Path | None = None) -> Path:
     if not published.is_dir():
         raise SystemExit(f"{published} is not a directory, so there is nothing to wrap")
     if not (published / EXECUTABLE).is_file():
@@ -102,7 +126,10 @@ def build(published: Path, out: Path, version: str, arch: str, icon: Path) -> Pa
         print(f"note: {icon} is not here, so the bundle has no icon", file=sys.stderr)
 
     with (contents / "Info.plist").open("wb") as f:
-        plistlib.dump(plist(version, arch), f)
+        plistlib.dump(plist(version, arch, store_build), f)
+    # Entry 501: the Mac App Store copy carries its provisioning profile inside the bundle, where macOS and the store look for it.
+    if profile is not None:
+        shutil.copy2(profile, contents / "embedded.provisionprofile")
 
     # macOS looks for this and treats a bundle without it as a folder that happens to be named .app.
     (contents / "PkgInfo").write_text("APPL????", encoding="ascii")
@@ -122,10 +149,12 @@ def main() -> int:
     parser.add_argument("--version", required=True)
     parser.add_argument("--arch", required=True, help="macos-arm64 or macos-x64, as the download names it")
     parser.add_argument("--icon", type=Path, default=ICON)
+    parser.add_argument("--store-build", type=int, help="the Mac App Store copy, with this build number (entry 501)")
+    parser.add_argument("--profile", type=Path, help="the Mac App Store provisioning profile to embed")
     args = parser.parse_args()
 
     args.out.mkdir(parents=True, exist_ok=True)
-    app = build(args.published, args.out, args.version, args.arch, args.icon)
+    app = build(args.published, args.out, args.version, args.arch, args.icon, args.store_build, args.profile)
     files = sum(1 for _ in app.rglob("*") if _.is_file())
     size = sum(f.stat().st_size for f in app.rglob("*") if f.is_file())
     print(f"{app}: {files} files, {size / (1024 * 1024):.0f} MB, {args.arch}, version {args.version}")

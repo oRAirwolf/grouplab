@@ -929,6 +929,21 @@ public sealed class AppSettingsStore(string path)
             (long?)sync?["freedBytes"] ?? 0);
     }) ?? new GroupLab.Core.Sync.SyncSetup(null, defaultName);
 
+    /// <summary>Entry 501: the Mac App Store copy's security-scoped bookmark of the sync folder, or null.</summary>
+    public string? LoadSyncBookmark() => Read(file => (string?)file["syncBookmark"]);
+
+    public bool SaveSyncBookmark(string? bookmark) => Save(file =>
+    {
+        if (bookmark is null)
+        {
+            file.Remove("syncBookmark");
+        }
+        else
+        {
+            file["syncBookmark"] = bookmark;
+        }
+    });
+
     public bool SaveSync(GroupLab.Core.Sync.SyncSetup setup) => Save(file =>
     {
         ArgumentNullException.ThrowIfNull(setup);

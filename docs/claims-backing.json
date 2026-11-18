@@ -8735,6 +8735,11 @@
    "match": "A hole you place by hand snaps to the hole near your click|Holding \\*\\*Alt\\*\\* \\(Option on a Mac\\)|held as you place a hole puts it exactly where you click|it snaps to the hole near your click, or goes exactly where you click|Where it cannot find a hole's edge and the dark around the click would pull the mark onto print",
    "kind": "code",
    "where": "src/GroupLab.App/MarkingCanvas.cs (SnapToHoles, Placement, OnPointerReleased) and src/GroupLab.Core/Marking/AutomaticMarking.cs (Snapping.ToHole, UnsureShare, NearShare, StayedPut); src/GroupLab.App/MainWindow.cs (snapToggle, SetSnapToHoles) and MainWindow.SettingsMenu.cs (Shooting defaults); held by App Entry499Tests and Core SnapStaysPutTests (entry 499 sections 2 and 3)"
+  },
+  {
+   "surface": "^docs/MAC-APP-STORE\\.md$",
+   "kind": "code",
+   "where": "entry 501 (Alan, 2026-11-18) and the code it describes: scripts/macos/GroupLab.store.entitlements, scripts/macos-bundle.py (--store-build, --profile), .github/workflows/mac-store.yml, src/GroupLab.App/MacSandbox.cs, SelfCheck.cs, MainWindow.KeptHere, MainWindow.Sync.cs (syncBookmark), PrintPanel.cs (Save for a printer app), Diagnostics/AppInfo.cs (Sandboxed), MainWindow.Updates.cs (MacStoreUpdateWords); the audit read from the code on 2026-11-18; held by Core MacBundleTests and App Entry501Tests, and on a Mac by mac-store.yml's --self-check"
   }
  ]
 }

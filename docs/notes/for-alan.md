@@ -1,4 +1,4 @@
-**Open: 25.** Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 26.** Newest: **107**, three Apple steps for GroupLab on the Mac App Store (fifteen minutes, whenever suits). Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **GroupLab 1.0 is on the App Store** (your word, 2026-11-17): build 226 released through App Store Connect, which now says Ready for Distribution; its page is https://apps.apple.com/app/id6817635137 (Apple's search can take a few hours to list it). TestFlight's public beta carries on with the nightlies. The README, the download page, the user guide and PLATFORM-SUPPORT.md say so.
 **TestFlight after the App Store release** (not a request): releasing 1.0 closed Apple's 1.0 for new uploads, so nightly 231 could not reach TestFlight. From nightly 232 the iPhone builds are numbered 1.0.232 and so on, as Android's already are; the planning session has the choice as question 114 if you would rather number them 1.1.
 **For Discord, error report 50's thread, the reply about build 231** (not a request; post it in your own words once the nightly whose notes name Snap to holes is out): "Thanks for testing build 231. The newest build has a **Snap to holes** switch in the bar of marking tools (and in Settings, Shooting defaults): turn it off and every hole goes exactly where you click. Or leave it on and hold **Alt** (Option on a Mac) as you click to skip the snap for one hole. The snap itself now stays on the ring you click when two touch, and where it cannot find a hole's edge it leaves the mark where you clicked and says so. One more thing from your screenshot: Find holes marked the printed 4 and took the touching pair as one hole, which happens here when the scale reads the scan about a quarter too large. If you set the scale with the line across box 3, check the length typed for it; on a 600 dpi scan, the scan's own resolution offered when you open it is exact."
@@ -335,6 +335,36 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 107. Three Apple steps for GroupLab on the Mac App Store, about fifteen minutes, whenever suits (entry 501)
+
+**Why:** you asked for the desktop application on the Mac App Store. It goes on GroupLab's existing App Store record as a second
+platform (one listing, so buying or installing on one counts on the other; Apple calls it universal purchase), signed with the same
+Apple Distribution certificate as the iPhone build, which already works for Mac apps. Apple wants two more things only you can make: a
+**Mac Installer Distribution** certificate, which signs the installer package Apple takes for a Mac app, and a **Mac App Store**
+provisioning profile. Nothing here submits anything for review; the Mac build goes to TestFlight's internal group only, and submission
+waits for your word as 1.0 for the iPhone did. Keep every file below in `C:\Dev\keys\apple\`, which I never open.
+**Needed, in order** (the shell is Git Bash in MobaXterm, in `C:\Dev\keys\apple`):
+
+1. **macOS on the app record.** appstoreconnect.apple.com, Apps, GroupLab. In the left column, under the iOS App heading, the **+** beside
+   the platforms (Add Platform), **macOS**. Done: a macOS App heading appears under iOS App. If Apple does not offer macOS there, say so
+   and stop.
+2. **A certificate request and the installer certificate.** In Git Bash, with your Apple ID's email in place of the words:
+   `openssl req -new -newkey rsa:2048 -nodes -keyout grouplab-mac-installer.key -out grouplab-mac-installer.csr -subj "/emailAddress=YOUR-APPLE-ID-EMAIL/CN=Alan Hayes/C=US" || { echo "STOP: the request was not made"; false; }`
+   Then developer.apple.com, Certificates, Identifiers & Profiles, Certificates, the + button, **Mac Installer Distribution**, Continue,
+   choose `grouplab-mac-installer.csr`, Continue, Download, and save the `.cer` in the same folder as `mac_installer.cer` (rename it if
+   Apple named it otherwise). Then, choosing a password when asked:
+   `openssl x509 -inform DER -in mac_installer.cer -out mac_installer.pem && openssl pkcs12 -export -inkey grouplab-mac-installer.key -in mac_installer.pem -out grouplab-mac-installer.p12 -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 && base64 -w0 grouplab-mac-installer.p12 | gh secret set MACOS_INSTALLER_CERT_P12 -R oRAirwolf/grouplab || { echo "STOP: the installer certificate did not reach GitHub"; false; }`
+   then `gh secret set MACOS_INSTALLER_CERT_PASSWORD -R oRAirwolf/grouplab` and paste the same password. Done: both names are listed by
+   `gh secret list -R oRAirwolf/grouplab`.
+3. **The Mac App Store profile.** Certificates, Identifiers & Profiles, Profiles, the + button, under Distribution **Mac App Store
+   Connect**, Continue, App ID `org.grouplab.app`, the **Apple Distribution** certificate you made for the iPhone (request 55), name
+   `GroupLab Mac App Store`, Generate, Download. Then
+   `base64 -w0 GroupLab_Mac_App_Store.provisionprofile | gh secret set MACOS_STORE_PROFILE -R oRAirwolf/grouplab || { echo "STOP: the profile did not reach GitHub"; false; }`
+   (use the downloaded file's name if it differs). Done: listed. If `org.grouplab.app` is not in the App ID list for a Mac profile, say so.
+
+**A good answer:** "Mac App Store steps done", or which step Apple would not let you do and what it said. Until the three secrets are
+there, the Mac App Store build is made unsigned and sent nowhere, and the Mac download stays exactly as it is.
 
 ## 106. A weekly look at the Oracle backups without you, about fifteen minutes once, whenever suits (entry 462 section 5)
 

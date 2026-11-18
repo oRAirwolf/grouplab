@@ -77,6 +77,16 @@ public static class AppInfo
 
     internal static bool? FromStoreOverride { get; set; }
 
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 501: whether this copy runs in Apple's App Sandbox, which a store copy on a Mac does (the Mac App Store
+    /// copy). It reaches a file or folder outside its own container only while the person's choice of it holds, so a picture is kept in
+    /// GroupLab's own folder, the sync folder is reached through a bookmark, and links open through NSWorkspace. The tests set
+    /// <see cref="SandboxedOverride"/>.
+    /// </summary>
+    public static bool Sandboxed => SandboxedOverride ?? (OperatingSystem.IsMacOS() && FromStore);
+
+    internal static bool? SandboxedOverride { get; set; }
+
     private static readonly Lazy<GroupLab.Core.Updates.BuildIdentity> TheBuild =
         new(() => GroupLab.Core.Updates.BuildIdentity.Read(Version, Train));
 

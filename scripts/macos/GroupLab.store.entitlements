@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  NOTES-FROM-PLANNING.md entry 501: the Mac App Store copy, which must run in Apple's App Sandbox (docs/MAC-APP-STORE.md says why each key
+  is here). The sandbox; the network as a client only (the target library, error reports and a report a person sends); files and folders
+  the person chooses, kept across restarts by a bookmark (the sync folder); printing; and the JIT .NET needs. The two identifiers are filled
+  in with the team when the copy is signed for the store (mac-store.yml), and left out for the unsigned run that checks the sandbox.
+  Nothing else: no camera, no Bluetooth (the label printers are reached from the computer on Windows only), no server.
+-->
+<plist version="1.0">
+<dict>
+  <key>com.apple.security.app-sandbox</key>
+  <true/>
+  <key>com.apple.security.network.client</key>
+  <true/>
+  <key>com.apple.security.files.user-selected.read-write</key>
+  <true/>
+  <key>com.apple.security.files.bookmarks.app-scope</key>
+  <true/>
+  <key>com.apple.security.print</key>
+  <true/>
+  <key>com.apple.security.cs.allow-jit</key>
+  <true/>
+  <key>com.apple.application-identifier</key>
+  <string>TEAM_ID.org.grouplab.app</string>
+  <key>com.apple.developer.team-identifier</key>
+  <string>TEAM_ID</string>
+</dict>
+</plist>
