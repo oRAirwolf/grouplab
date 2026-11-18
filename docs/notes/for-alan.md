@@ -1,4 +1,4 @@
-**Open: 25.** Newest: **106**, a weekly look at the Oracle backups without you. Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 26.** Newest: **111**, open GroupLab for Mac from TestFlight on a Mac (ten minutes, whenever you have one to hand). Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **GroupLab 1.0 is on the App Store** (your word, 2026-11-17): build 226 released through App Store Connect, which now says Ready for Distribution; its page is https://apps.apple.com/app/id6817635137 (Apple's search can take a few hours to list it). TestFlight's public beta carries on with the nightlies. The README, the download page, the user guide and PLATFORM-SUPPORT.md say so.
 **TestFlight after the App Store release** (not a request): releasing 1.0 closed Apple's 1.0 for new uploads, so nightly 231 could not reach TestFlight. From nightly 232 the iPhone builds are numbered 1.0.232 and so on, as Android's already are; the planning session has the choice as question 114 if you would rather number them 1.1.
 **For Discord, error report 50's thread, the reply about build 231** (not a request; post it in your own words once the nightly whose notes name Snap to holes is out): "Thanks for testing build 231. The newest build has a **Snap to holes** switch in the bar of marking tools (and in Settings, Shooting defaults): turn it off and every hole goes exactly where you click. Or leave it on and hold **Alt** (Option on a Mac) as you click to skip the snap for one hole. The snap itself now stays on the ring you click when two touch, and where it cannot find a hole's edge it leaves the mark where you clicked and says so. One more thing from your screenshot: Find holes marked the printed 4 and took the touching pair as one hole, which happens here when the scale reads the scan about a quarter too large. If you set the scale with the line across box 3, check the length typed for it; on a 600 dpi scan, the scan's own resolution offered when you open it is exact."
@@ -335,6 +335,24 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 111. Open GroupLab for Mac from TestFlight on a Mac, about ten minutes, whenever you have a Mac to hand (entry 501 section 3.3)
+
+**Opened 2026-11-18.** **Why:** the Mac App Store copy of GroupLab, build 233, is on TestFlight and GroupLab Team has it. Apple checked it
+and took it. Nothing has been submitted for review. One thing cannot be checked on GitHub's Mac machines: whether it runs inside Apple's
+sandbox. Apple lets a copy signed for the store start only once TestFlight has installed it, and only on a real Mac. Until somebody
+opens it on one, the Mac App Store copy is not ready to submit. If you have no Mac, say so; a tester with one can do it instead.
+
+**Needed:** on a Mac with Apple silicon (an M1 or newer) and macOS 12 or later:
+
+1. Install **TestFlight** from the Mac App Store, and sign in with the Apple ID that is in GroupLab Team.
+2. In TestFlight, **GroupLab**, build **1.0 (233)**, **Install**, then **Open**.
+3. In GroupLab, open a photo or scan of one of your sheets, mark the holes, and let it analyze the sheet and save the session. (Or use
+   **Walk me through a demo** and choose **Keep this demo in Sessions** at its end.)
+4. Quit GroupLab, open it again, and check the session is still listed.
+
+**A good answer:** "Mac TestFlight build works", or the step where it stopped and what it said. If it closes as it starts, send the
+error report it offers, or say so. Once it works, GroupLab for Mac is ready to submit to the Mac App Store, waiting on your word.
 
 ## 106. A weekly look at the Oracle backups without you, about fifteen minutes once, whenever suits (entry 462 section 5)
 

@@ -107,7 +107,7 @@ Store, which keeps it up to date, so GroupLab's own updater is off."
    certificate and a Mac development profile, a later request) or the TestFlight build opened on a real Mac.
 4. **With request 110's secrets:** signed for the store with the hardened runtime, packaged with `productbuild` and signed with the Mac
    Installer Distribution certificate, and sent to TestFlight with `xcrun altool --upload-app --type macos`. TestFlight's internal group
-   only; nothing is submitted for review.
+   only; nothing is submitted for review. .NET's `createdump` is left out of the store copy (a second executable the store refuses without its own sandbox, and one that only writes a crash dump when a setting nobody sets asks for one), and the command line `grouplab` inside the bundle is signed into the app's sandbox with `com.apple.security.inherit`, so it runs only when GroupLab starts it. `testflight.py --mac-internal` then gives the build to GroupLab Team; the half-hourly TestFlight step reads the iPhone and iPad builds only, so a Mac build never reaches Public Beta. **First done for nightly 233, 2026-11-18:** Apple processed it as valid and GroupLab Team has it.
 
 Store screenshots for the Mac, the listing's Mac text and a last look at the App Privacy answers come with the submission entry, once a
 TestFlight build has been installed and opened on a real Mac.

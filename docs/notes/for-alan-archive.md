@@ -5,7 +5,7 @@ NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries 
 
 ## 110. Three Apple steps for GroupLab on the Mac App Store, about fifteen minutes, whenever suits (entry 501)
 
-**Answered 2026-11-18:** Alan added macOS to GroupLab's App Store record (macOS App 1.0, Prepare for Submission) and set MACOS_INSTALLER_CERT_P12, MACOS_INSTALLER_CERT_PASSWORD and MACOS_STORE_PROFILE (the profile "GroupLab Mac App Store", Mac App Store Connect, org.grouplab.app, the Apple Distribution certificate). First numbered 107, which the Discord tester notes already had; renumbered 110 the same day. The request as it was follows.
+**Answered 2026-11-18:** Alan added macOS to GroupLab's App Store record (macOS App 1.0, Prepare for Submission) and set MACOS_INSTALLER_CERT_P12, MACOS_INSTALLER_CERT_PASSWORD and MACOS_STORE_PROFILE (the profile "GroupLab Mac App Store", Mac App Store Connect, org.grouplab.app, the Apple Distribution certificate). First numbered 107, which the Discord tester notes already had; renumbered 110 the same day. With them, nightly 233's Mac App Store copy was signed, packaged and sent to TestFlight (run 44409935372), Apple processed it as valid, and GroupLab Team has it (run 44411686807); nothing submitted. Opening it on a real Mac is request 111. The request as it was follows.
 
 **Why:** you asked for the desktop application on the Mac App Store. It goes on GroupLab's existing App Store record as a second
 platform (one listing, so buying or installing on one counts on the other; Apple calls it universal purchase), signed with the same

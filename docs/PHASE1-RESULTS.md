@@ -838,15 +838,17 @@ do is request 110 (first numbered 107, which the Discord tester notes already ha
 **3.** `mac-store.yml` after each nightly: the store copy published with `GroupLabDistribution=store` (updater off, and Settings says the
 Mac App Store keeps it up to date), bundled by `macos-bundle.py --store-build` (version 1.0, the nightly's number as the build, the
 encryption answer, the profile inside), checked inside the sandbox by `--self-check` (reads the demo sheet, accepts and analyzes it,
-saves a session, keeps the picture, follows a bookmark, all in the container), and, once request 107's secrets exist, signed for the
+saves a session, keeps the picture, follows a bookmark, all in the container), and, once request 110's secrets exist, signed for the
 store, packaged with `productbuild` and sent to TestFlight's internal group. Run by hand on GitHub's Mac machines (three runs on
 2026-11-18): the store copy publishes and bundles; signed ad hoc it starts in the sandbox, which makes its container, and is then stopped,
 because the sandbox refuses it the connection to LaunchServices every window application needs ("unable to get application ASN from
 launchservicesd ... aborting"); a copy signed for the store runs only once installed from TestFlight. So the step reports in the summary
 without turning the run red, and the proof that it reads a sheet and saves a session in the sandbox needs a development signature or the
 TestFlight build on a real Mac. The first two runs also found the .NET libraries in Contents/MacOS must be signed, as the download signs them. Held off a Mac by `MacBundleTests` (the store copy's plist and
-profile) and `Entry501Tests` (a picture kept once in `originals/`, the open hook, the store's words). **3.4** waits for macOS on the
-record. **4.** Nothing was submitted; the line saying GroupLab for Mac is ready to submit waits until a TestFlight build works.
+profile) and `Entry501Tests` (a picture kept once in `originals/`, the open hook, the store's words). **3.4** waits for the submission
+entry. **4.** Nothing was submitted; the line saying GroupLab for Mac is ready to submit waits until a TestFlight build works.
+
+**Signed and on TestFlight, 2026-11-18, request 110 answered** (first numbered 107, which the Discord tester notes already had; renumbered, archived, and `ForAlanTests.EveryRequestNumberIsUsedOnce` holds the numbers apart). Two faults were found before the first upload and fixed in 94827fba: `testflight.py` read every build on the record, so the first Mac build, sharing the iPhone build's number, would have been taken for the newest iPhone build and added to Public Beta and submitted for Beta App Review; it now reads the iPhone and iPad builds only (`filter[preReleaseVersion.platform]`), and `--mac-internal` gives a Mac build to GroupLab Team and nothing else. And .NET's `createdump`, a second executable the store refuses without a sandbox of its own, is left out of the store copy. The first run (44409935372) found one more executable in the bundle, the command line `grouplab`, and signed it into the app's sandbox (app-sandbox with inherit); the copy was signed with Apple Distribution, packaged by `productbuild` with the Mac Installer Distribution certificate, and altool sent it; its GroupLab Team step stopped on a missing pyjwt. The second run (44411686807, 14a27170) found Apple already had build 233, waited for nothing, and read Mac build 233 as valid and already in GroupLab Team (the internal group's automatic distribution). The half-hourly TestFlight step on 14a27170 then moved the iPhone 1.0.233 on as before and never touched the Mac build. Whether the copy runs in the sandbox, reads a sheet and saves a session is request 111, on a real Mac.
 
 ## Decision log
 

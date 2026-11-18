@@ -27,7 +27,7 @@ only written record of why much of this project is the way it is.
 
 ## 2026-11-18, entry 501: GroupLab for Mac on the Mac App Store, up to TestFlight; submission waits on Alan's word
 
-**Status: actioned in part 2026-11-18. Done: section 1 (docs/MAC-APP-STORE.md; nothing needs a temporary exception), section 2.1 (universal purchase), sections 3.1 to 3.3 built (mac-store.yml with the sandbox self-check). Not done, waiting on request 110 (first numbered 107; macOS on the record, the Mac Installer Distribution certificate, the Mac App Store profile): section 2.2's API steps, signing and the TestFlight upload (3.3), and section 3.4 (Mac screenshots, the Mac listing text; the App Privacy answers were checked); section 4's for-alan line waits until a TestFlight build works.**
+**Status: actioned in part 2026-11-18. Done: section 1 (docs/MAC-APP-STORE.md; nothing needs a temporary exception), section 2 (universal purchase; Alan did request 110, first numbered 107), sections 3.1 to 3.3 as far as a machine can go: nightly 233's store copy signed, sent to TestFlight, processed as valid and in GroupLab Team only, nothing submitted. Not done: whether it runs in the sandbox on a real Mac (request 111), section 3.4 (Mac screenshots, the Mac listing text; the App Privacy answers were checked), and section 4's for-alan line, which waits for request 111.**
 
 From the planning session, on Alan's word in chat at 08:31 Denver on 2026-11-18: "Can we publish the desktop mac app to the app store as
 well?" Take it after entries 498 to 500. This is the desktop application (the same one as the notarized Mac download), not the iPad app
