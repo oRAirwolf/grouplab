@@ -824,7 +824,7 @@ new decided entries cite this entry; "Join the iPhone and iPad beta" and the pub
 claims all backed, site build ok, consistency 0 findings, Core suite passing. Kept on purpose: the support page's line telling existing
 testers how to send feedback from TestFlight.
 
-## Entry 501: GroupLab for Mac on the Mac App Store, built as far as the sandbox; signing waits on request 107 (2026-11-18)
+## Entry 501: GroupLab for Mac on the Mac App Store, built as far as the sandbox; signing waits on request 110 (2026-11-18)
 
 **1. The sandbox audit** is docs/MAC-APP-STORE.md, read from the code: GroupLab's own files all land in the container and work as they are;
 a session's picture, reopened later by path, is now copied in the sandbox into GroupLab's own `originals/` folder, once a picture by its
@@ -834,7 +834,7 @@ NSWorkspace (`TheOutsideWorld.OpensThings`); Open marking already asks for a pho
 path is Windows only; the network is client only; the JIT is the one runtime exception kept. **Nothing needs a temporary exception**, so
 nothing stopped the build. **2.** Universal purchase on GroupLab's existing record, so the store copy is `org.grouplab.app` (the download
 stays `org.grouplab.GroupLab`, and the two can sit on one Mac with their own records); the App Privacy answers hold. What only Alan can
-do is request 107, written at the start: macOS on the record, the Mac Installer Distribution certificate, the Mac App Store profile.
+do is request 110 (first numbered 107, which the Discord tester notes already had), written at the start: macOS on the record, the Mac Installer Distribution certificate, the Mac App Store profile.
 **3.** `mac-store.yml` after each nightly: the store copy published with `GroupLabDistribution=store` (updater off, and Settings says the
 Mac App Store keeps it up to date), bundled by `macos-bundle.py --store-build` (version 1.0, the nightly's number as the build, the
 encryption answer, the profile inside), checked inside the sandbox by `--self-check` (reads the demo sheet, accepts and analyzes it,

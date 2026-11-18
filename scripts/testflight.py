@@ -15,7 +15,12 @@ state on by what Apple allows at that moment, and can be run again at any time w
 
 Nothing is ever taken out of a group: a build Alan added to GroupLab Team by hand is left there, and the run names it.
 
+Entry 501: the app record also carries the Mac App Store copy, whose builds share its numbers. The steps above read the iPhone and iPad
+builds only, so a Mac build never reaches Public Beta or Beta App Review. --mac-internal gives the Mac build named to GroupLab Team and
+does nothing else: no Public Beta, no review, nothing submitted.
+
     python3 scripts/testflight.py --run [--wait-minutes N]   one step, with the key from APPLE_API_ISSUER_ID, APPLE_API_KEY_ID, APPLE_API_KEY_P8
+    python3 scripts/testflight.py --mac-internal 233 [--wait-minutes N]   Mac App Store build 233 to GroupLab Team only (entry 501)
     python3 scripts/testflight.py --app-store                  the App Store version's review state, read only (entry 491)
     python3 scripts/testflight.py --release 1.0 226            release that approved version, only by hand, on Alan's word
     python3 scripts/testflight.py --self-test                  every case against a made-up App Store Connect, no network
@@ -112,7 +117,7 @@ class Store:
 
     def app(self, bundle: str) -> str | None: raise NotImplementedError
     def groups(self, app: str) -> dict[str, str]: raise NotImplementedError
-    def builds(self, app: str) -> list[Build]: raise NotImplementedError
+    def builds(self, app: str, platform: str = "IOS") -> list[Build]: raise NotImplementedError
     def in_group(self, group: str) -> set[str]: raise NotImplementedError
     def add(self, group: str, build: str) -> None: raise NotImplementedError
     def external_state(self, build: str) -> str: raise NotImplementedError
@@ -219,6 +224,42 @@ def step(store: Store, notes: Callable[[int], str], wait_minutes: int = 0, sleep
     return lines, for_alan
 
 
+def mac_internal(store: Store, number: int, wait_minutes: int = 0, sleep: Callable[[float], None] = time.sleep) -> tuple[list[str], bool]:
+    """Entry 501: the Mac App Store build named, to GroupLab Team and nowhere else. Returns the lines and whether the team has it."""
+    app = store.app(BUNDLE_ID)
+    if app is None:
+        return [f"TestFlight for Mac: App Store Connect has no app {BUNDLE_ID}."], False
+    groups = store.groups(app)
+    if TEAM not in groups:
+        return [f"TestFlight for Mac: there is no group named {TEAM!r}, so the Mac build was given to nobody."], False
+    team = groups[TEAM]
+
+    def find() -> Build | None:
+        return next((b for b in store.builds(app, "MAC_OS") if b.number == number), None)
+
+    build, waited = find(), 0
+    while (build is None or build.processing == "PROCESSING") and waited < wait_minutes:
+        sleep(60)
+        waited += 1
+        build = find()
+    if build is None:
+        return [f"TestFlight for Mac: Apple does not list Mac build {number} yet; run this again later."], False
+    if build.processing == "PROCESSING":
+        return [f"TestFlight for Mac: Apple is still processing Mac build {number}; run this again later."], False
+    if build.processing != "VALID":
+        return [f"TestFlight for Mac: Apple found Mac build {number} {build.processing.lower()}; App Store Connect, TestFlight, macOS says why."], False
+    lines: list[str] = []
+    if store.external_state(build.id) == "MISSING_EXPORT_COMPLIANCE":
+        store.no_encryption(build.id)
+        lines.append(f"Mac build {number}: answered the export question (GroupLab uses only the system's encryption).")
+    if build.id in store.in_group(team):
+        lines.append(f"{TEAM} already has Mac build {number}.")
+    else:
+        store.add(team, build.id)
+        lines.append(f"Mac build {number} given to {TEAM} (internal testers only; nothing submitted for review).")
+    return lines, True
+
+
 def app_store(store: Store) -> tuple[list[str], str | None]:
     """Entry 491: the newest App Store version's review state, read only. Returns the lines and, where Alan should know, the line for
     docs/notes/for-alan.md: a rejection the same day, and an approval because release is manual and needs his word."""
@@ -300,9 +341,11 @@ class Apple(Store):
     def groups(self, app):
         return {g["attributes"]["name"]: g["id"] for g in self.call("GET", f"/v1/apps/{app}/betaGroups?limit=200").get("data", [])}
 
-    def builds(self, app):
+    def builds(self, app, platform="IOS"):
         found = []
-        for b in self.call("GET", f"/v1/builds?filter[app]={app}&sort=-uploadedDate&limit=50").get("data", []):
+        # Entry 501: one platform's builds only; the Mac App Store copy's share the record and its numbers.
+        for b in self.call("GET", f"/v1/builds?filter[app]={app}&filter[preReleaseVersion.platform]={platform}"
+                                  "&sort=-uploadedDate&limit=50").get("data", []):
             a = b["attributes"]
             found.append(Build(b["id"], int(re.sub(r"\D", "", a.get("version", "0")) or 0), a.get("processingState", ""), a.get("expired", False)))
         return sorted(found, key=lambda b: b.number, reverse=True)
@@ -374,6 +417,7 @@ class Pretend(Store):
     needs_review: bool = True
     notes: dict[str, str] = field(default_factory=dict)
     versions_: list[Version] = field(default_factory=list)
+    mac_builds: list[Build] = field(default_factory=list)
 
     def versions(self, app): return list(self.versions_)
 
@@ -383,7 +427,8 @@ class Pretend(Store):
                 v.state = "PROCESSING_FOR_DISTRIBUTION"
     def app(self, bundle): return "app" if bundle == BUNDLE_ID else None
     def groups(self, app): return dict(self.names)
-    def builds(self, app): return sorted(self.builds_, key=lambda b: b.number, reverse=True)
+    def builds(self, app, platform="IOS"):
+        return sorted(self.builds_ if platform == "IOS" else self.mac_builds, key=lambda b: b.number, reverse=True)
     def in_group(self, group): return set(self.members[group])
     def external_state(self, build): return self.states.get(build, "READY_FOR_BETA_SUBMISSION")
     def review(self, build): return self.reviews.get(build)
@@ -490,6 +535,26 @@ def self_test() -> int:
     step(s, no_notes)
     expect("after approval, on", "b140" in s.members["beta"] and "b134" in s.members["team"])
 
+    # Entry 501: a Mac build is never taken for the newest iPhone and iPad build, and goes to GroupLab Team only.
+    s = Pretend(builds_=[Build("b233", 233, "VALID")], mac_builds=[Build("m233", 233, "VALID"), Build("m234", 234, "VALID")],
+                states={"b233": "IN_BETA_TESTING"})
+    s.members["beta"].add("b233")
+    step(s, no_notes)
+    expect("mac builds ignored by the step", not {"m233", "m234"} & (s.members["beta"] | s.members["team"] | set(s.reviews)))
+    lines, done = mac_internal(s, 233)
+    expect("mac to team only", done and "m233" in s.members["team"] and "m233" not in s.members["beta"] and "m233" not in s.reviews)
+    lines, done = mac_internal(s, 233)
+    expect("mac once", done and "already has" in lines[0])
+    s.mac_builds = [Build("m235", 235, "PROCESSING")]
+    slept = []
+    lines, done = mac_internal(s, 235, wait_minutes=3, sleep=slept.append)
+    expect("mac processing waited", not done and len(slept) == 3 and "still processing" in lines[0] and "m235" not in s.members["team"])
+    lines, done = mac_internal(s, 236)
+    expect("mac missing said", not done and "does not list" in lines[0])
+    s.mac_builds = [Build("m237", 237, "INVALID")]
+    lines, done = mac_internal(s, 237)
+    expect("mac invalid said", not done and "invalid" in lines[0] and "m237" not in s.members["team"])
+
     # What to Test from the release notes.
     notes = ("## 0.2.0-nightly.142\n\n**2026-10-01**\n\n**What you will notice**\n\n- First thing.\n- Second thing.\n\n"
              "**Under the hood**\n\n- Hidden.\n\n## 0.2.0-nightly.141\n")
@@ -542,6 +607,8 @@ def main(argv: list[str]) -> int:
         return self_test()
     if argv[1:2] == ["--app-store"]:
         return main_app_store()
+    if argv[1:2] == ["--mac-internal"] and len(argv) >= 3 and argv[2].isdigit():
+        return main_mac_internal(int(argv[2]), int(argv[argv.index("--wait-minutes") + 1]) if "--wait-minutes" in argv else 0)
     if argv[1:2] == ["--release"] and len(argv) == 4 and argv[3].isdigit():
         return main_release(argv[2], int(argv[3]))
     if argv[1:2] != ["--run"]:
@@ -587,6 +654,25 @@ def main_app_store() -> int:
     if alan:
         print(f"::warning::{alan}")
     return 0
+
+
+def main_mac_internal(number: int, wait: int) -> int:
+    """Entry 501: fails the run when GroupLab Team was not given the Mac build, so nobody takes it for done."""
+    names = ("APPLE_API_ISSUER_ID", "APPLE_API_KEY_ID", "APPLE_API_KEY_P8")
+    if not all(os.environ.get(n) for n in names):
+        lines, done = ["TestFlight for Mac: the App Store Connect key is not set, so the Mac build was given to nobody."], False
+    else:
+        try:
+            store = Apple(os.environ["APPLE_API_ISSUER_ID"], os.environ["APPLE_API_KEY_ID"], key_text(os.environ["APPLE_API_KEY_P8"]))
+            lines, done = mac_internal(store, number, wait)
+        except Refused as said:
+            lines, done = [f"TestFlight for Mac: App Store Connect refused a request ({said})."], False
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    with open(summary, "a", encoding="utf-8") if summary else open(os.devnull, "w") as out:
+        out.write("### TestFlight for Mac\n\n" + "".join(f"- {line}\n" for line in lines))
+    for line in lines:
+        print(line)
+    return 0 if done else 1
 
 
 def main_release(number: str, build: int) -> int:

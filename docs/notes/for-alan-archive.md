@@ -3,6 +3,38 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 110. Three Apple steps for GroupLab on the Mac App Store, about fifteen minutes, whenever suits (entry 501)
+
+**Answered 2026-11-18:** Alan added macOS to GroupLab's App Store record (macOS App 1.0, Prepare for Submission) and set MACOS_INSTALLER_CERT_P12, MACOS_INSTALLER_CERT_PASSWORD and MACOS_STORE_PROFILE (the profile "GroupLab Mac App Store", Mac App Store Connect, org.grouplab.app, the Apple Distribution certificate). First numbered 107, which the Discord tester notes already had; renumbered 110 the same day. The request as it was follows.
+
+**Why:** you asked for the desktop application on the Mac App Store. It goes on GroupLab's existing App Store record as a second
+platform (one listing, so buying or installing on one counts on the other; Apple calls it universal purchase), signed with the same
+Apple Distribution certificate as the iPhone build, which already works for Mac apps. Apple wants two more things only you can make: a
+**Mac Installer Distribution** certificate, which signs the installer package Apple takes for a Mac app, and a **Mac App Store**
+provisioning profile. Nothing here submits anything for review; the Mac build goes to TestFlight's internal group only, and submission
+waits for your word as 1.0 for the iPhone did. Keep every file below in `C:\Dev\keys\apple\`, which I never open.
+**Needed, in order** (the shell is Git Bash in MobaXterm, in `C:\Dev\keys\apple`):
+
+1. **macOS on the app record.** appstoreconnect.apple.com, Apps, GroupLab. In the left column, under the iOS App heading, the **+** beside
+   the platforms (Add Platform), **macOS**. Done: a macOS App heading appears under iOS App. If Apple does not offer macOS there, say so
+   and stop.
+2. **A certificate request and the installer certificate.** In Git Bash, with your Apple ID's email in place of the words:
+   `openssl req -new -newkey rsa:2048 -nodes -keyout grouplab-mac-installer.key -out grouplab-mac-installer.csr -subj "/emailAddress=YOUR-APPLE-ID-EMAIL/CN=Alan Hayes/C=US" || { echo "STOP: the request was not made"; false; }`
+   Then developer.apple.com, Certificates, Identifiers & Profiles, Certificates, the + button, **Mac Installer Distribution**, Continue,
+   choose `grouplab-mac-installer.csr`, Continue, Download, and save the `.cer` in the same folder as `mac_installer.cer` (rename it if
+   Apple named it otherwise). Then, choosing a password when asked:
+   `openssl x509 -inform DER -in mac_installer.cer -out mac_installer.pem && openssl pkcs12 -export -inkey grouplab-mac-installer.key -in mac_installer.pem -out grouplab-mac-installer.p12 -certpbe PBE-SHA1-3DES -keypbe PBE-SHA1-3DES -macalg sha1 && base64 -w0 grouplab-mac-installer.p12 | gh secret set MACOS_INSTALLER_CERT_P12 -R oRAirwolf/grouplab || { echo "STOP: the installer certificate did not reach GitHub"; false; }`
+   then `gh secret set MACOS_INSTALLER_CERT_PASSWORD -R oRAirwolf/grouplab` and paste the same password. Done: both names are listed by
+   `gh secret list -R oRAirwolf/grouplab`.
+3. **The Mac App Store profile.** Certificates, Identifiers & Profiles, Profiles, the + button, under Distribution **Mac App Store
+   Connect**, Continue, App ID `org.grouplab.app`, the **Apple Distribution** certificate you made for the iPhone (request 55), name
+   `GroupLab Mac App Store`, Generate, Download. Then
+   `base64 -w0 GroupLab_Mac_App_Store.provisionprofile | gh secret set MACOS_STORE_PROFILE -R oRAirwolf/grouplab || { echo "STOP: the profile did not reach GitHub"; false; }`
+   (use the downloaded file's name if it differs). Done: listed. If `org.grouplab.app` is not in the App ID list for a Mac profile, say so.
+
+**A good answer:** "Mac App Store steps done", or which step Apple would not let you do and what it said. Until the three secrets are
+there, the Mac App Store build is made unsigned and sent nowhere, and the Mac download stays exactly as it is.
+
 ## 109. The Discord bot reads feature-requests too, one look and one paste, about five minutes, whenever suits (entry 492)
 
 **Answered 2026-11-16 (entry 494 section 1):** Alan checked the Oracle boot volume backup and ran the paste at 11:49 UTC. Six

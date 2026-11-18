@@ -4,7 +4,7 @@ name: mac app store
 # word. After each nightly, the desktop application is built again as the store copy (GroupLabDistribution=store, so its own updater is
 # off, and bundle identifier org.grouplab.app, the iPhone and iPad app's, for one App Store record) and checked inside Apple's App Sandbox:
 # signed ad hoc with the sandbox's entitlements, it runs --self-check, which reads and analyzes a sample sheet, saves a session and makes
-# and follows a bookmark, all inside its container. Once request 107's secrets exist it is also signed for the store with the Apple
+# and follows a bookmark, all inside its container. Once request 110's secrets exist it is also signed for the store with the Apple
 # Distribution certificate, packaged as an installer signed with the Mac Installer Distribution certificate, and sent to TestFlight. Until
 # then it says so and sends nothing. The Developer ID download (package.yml) is not touched.
 
@@ -151,7 +151,7 @@ jobs:
             [ -n "${!name}" ] || missing="$missing $name"
           done
           if [ -n "$missing" ]; then
-            echo "### The Mac App Store copy is not signed or sent to TestFlight: request 107's secrets are not all there yet (missing:$missing)." >> "$GITHUB_STEP_SUMMARY"
+            echo "### The Mac App Store copy is not signed or sent to TestFlight: request 110's secrets are not all there yet (missing:$missing)." >> "$GITHUB_STEP_SUMMARY"
             echo "sign=false" >> "$GITHUB_OUTPUT"
           else
             echo "sign=true" >> "$GITHUB_OUTPUT"
@@ -197,11 +197,21 @@ jobs:
           test -n "$installer" || { echo "::error::MACOS_INSTALLER_CERT_P12 is not a Mac Installer Distribution certificate"; exit 1; }
 
           main="$app/Contents/MacOS/GroupLab.App"
+          # Entry 501, before the first upload: .NET's createdump is a second executable, which the store refuses unless it carries the
+          # sandbox of its own. It only writes a crash dump when asked to by a setting nobody sets, so the store copy leaves it out, and
+          # any other executable found inside is signed into the app's sandbox (app-sandbox with inherit), as Apple asks of helpers.
+          rm -f "$app/Contents/MacOS/createdump"
+          printf '%s\n' '<?xml version="1.0" encoding="UTF-8"?>' \
+            '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' \
+            '<plist version="1.0"><dict><key>com.apple.security.app-sandbox</key><true/><key>com.apple.security.inherit</key><true/></dict></plist>' \
+            > "$RUNNER_TEMP/helper.entitlements"
           find "$app/Contents" -type f | while read -r f; do
             [ "$f" = "$main" ] && continue
-            case "$f" in
-              "$app/Contents/MacOS/"*) codesign --force --options runtime --sign "$identity" "$f" ;;
-              *) if file "$f" | grep -q "Mach-O"; then codesign --force --options runtime --sign "$identity" "$f"; fi ;;
+            kind=$(file -b "$f")
+            case "$kind" in
+              *"Mach-O"*executable*) echo "a helper executable: ${f#$app/}"; codesign --force --options runtime --entitlements "$RUNNER_TEMP/helper.entitlements" --sign "$identity" "$f" ;;
+              *"Mach-O"*) codesign --force --options runtime --sign "$identity" "$f" ;;
+              *) case "$f" in "$app/Contents/MacOS/"*) codesign --force --options runtime --sign "$identity" "$f" ;; esac ;;
             esac
           done
           codesign --force --options runtime --entitlements "$RUNNER_TEMP/store.entitlements" --sign "$identity" "$app"
@@ -209,7 +219,12 @@ jobs:
           productbuild --component "$app" /Applications --sign "$installer" out/GroupLab.pkg
 
           mkdir -p "$HOME/private_keys"
-          printf '%s' "$APPLE_API_KEY_P8" > "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
+          # As the nightly writes it: the secret is the key itself or the key in base64.
+          if printf '%s' "$APPLE_API_KEY_P8" | grep -q "BEGIN PRIVATE KEY"; then
+            printf '%s' "$APPLE_API_KEY_P8" > "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
+          else
+            printf '%s' "$APPLE_API_KEY_P8" | base64 --decode > "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
+          fi
           if xcrun altool --upload-app --type macos --file out/GroupLab.pkg --apiKey "$APPLE_API_KEY_ID" --apiIssuer "$APPLE_API_ISSUER_ID" > upload.log 2>&1; then
             echo "### The Mac App Store copy, build ${{ steps.which.outputs.build }}, signed and sent to TestFlight (internal group only; nothing submitted for review)." >> "$GITHUB_STEP_SUMMARY"
           else
@@ -220,3 +235,21 @@ jobs:
           fi
           rm -rf "$HOME/private_keys"
           security delete-keychain "$keychain"
+
+      # The nightly's own checkout has the scripts as they were at its tag; giving the build to the internal group needs this workflow's
+      # own, which knows the Mac builds apart from the iPhone and iPad ones (entry 501).
+      - uses: actions/checkout@v5
+        if: steps.which.outputs.tag != '' && steps.secrets.outputs.sign == 'true' && inputs.ref == ''
+        with:
+          ref: ${{ github.sha }}
+          path: current
+          sparse-checkout: scripts
+
+      - name: Give it to GroupLab Team only
+        if: steps.which.outputs.tag != '' && steps.secrets.outputs.sign == 'true' && inputs.ref == ''
+        shell: bash
+        env:
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: python3 current/scripts/testflight.py --mac-internal "${{ steps.which.outputs.build }}" --wait-minutes 30

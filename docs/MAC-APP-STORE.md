@@ -9,7 +9,7 @@ waited for his "Submit now" (entry 491). The README, the site and the guides say
 | | The download (unchanged) | The Mac App Store copy |
 |---|---|---|
 | Bundle identifier | `org.grouplab.GroupLab` | `org.grouplab.app`, the iPhone and iPad app's |
-| Signed with | Developer ID Application, notarized and stapled | Apple Distribution (request 55's certificate), in an installer signed with Mac Installer Distribution (request 107) |
+| Signed with | Developer ID Application, notarized and stapled | Apple Distribution (request 55's certificate), in an installer signed with Mac Installer Distribution (request 110) |
 | Sandbox | none (hardened runtime only) | App Sandbox, `scripts/macos/GroupLab.store.entitlements` |
 | Updates | GroupLab's own updater offers the download page | the Mac App Store; GroupLab's updater is off (`GroupLabDistribution=store`, as the Microsoft Store copy) |
 | Its records | `~/.config/GroupLab` | the same path inside the sandbox's container, `~/Library/Containers/org.grouplab.app/Data` |
@@ -27,7 +27,7 @@ the store copy is `org.grouplab.app`. A separate Mac record would need its own n
 privacy answers kept in step by hand, and gives nothing in return. The App Privacy answers given for the iPhone hold for the Mac copy: it
 sends the same error reports and the same opt-in survey, and nothing else (the target library is read, not sent to).
 
-What the App Store Connect API cannot do, or what needs a certificate's private key, is request 107 in `docs/notes/for-alan.md`: macOS
+What the App Store Connect API cannot do, or what needs a certificate's private key, was request 110, done by Alan on 2026-11-18 (now in `docs/notes/for-alan-archive.md`): macOS
 added to the record, the Mac Installer Distribution certificate, and the Mac App Store profile. The Apple Distribution certificate and the
 API key are request 55's.
 
@@ -105,7 +105,7 @@ Store, which keeps it up to date, so GroupLab's own updater is off."
    once installed from TestFlight or the store. So the step reports what happened in the summary and does not turn the run red; the
    proof that the copy reads a sheet and saves a session inside the sandbox is either a development signature (an Apple Development
    certificate and a Mac development profile, a later request) or the TestFlight build opened on a real Mac.
-4. **With request 107's secrets:** signed for the store with the hardened runtime, packaged with `productbuild` and signed with the Mac
+4. **With request 110's secrets:** signed for the store with the hardened runtime, packaged with `productbuild` and signed with the Mac
    Installer Distribution certificate, and sent to TestFlight with `xcrun altool --upload-app --type macos`. TestFlight's internal group
    only; nothing is submitted for review.
 

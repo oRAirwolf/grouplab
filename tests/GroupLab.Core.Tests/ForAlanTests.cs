@@ -34,6 +34,30 @@ public class ForAlanTests
     }
 
     /// <summary>
+    /// 2026-11-18: entry 501's Apple steps were written as request 107, a number the Discord tester notes already had in the archive,
+    /// so "request 107" meant two things until it was renumbered 110. A request's number is used once, open or archived.
+    /// </summary>
+    [Fact]
+    public void EveryRequestNumberIsUsedOnce()
+    {
+        var seen = new Dictionary<string, string>();
+        var twice = new List<string>();
+        foreach (string file in new[] { "for-alan.md", "for-alan-archive.md" })
+        {
+            foreach (Match m in Regex.Matches(File.ReadAllText(Repo.PathTo("docs", "notes", file)), @"(?m)^## (\d+)\. "))
+            {
+                string number = m.Groups[1].Value;
+                if (!seen.TryAdd(number, file))
+                {
+                    twice.Add($"{number} (in {seen[number]} and {file})");
+                }
+            }
+        }
+
+        Assert.True(twice.Count == 0, "These request numbers are used more than once: " + string.Join("; ", twice));
+    }
+
+    /// <summary>
     /// Entry 406 section 3: <c>grouplab-change-backup.py</c> makes its folder readable by root only, so request 93's plain
     /// <c>test -f "$B/files/..."</c> failed without a word and its chain stopped after the backup with nothing installed. Every command
     /// in a paste that reads or copies from a backup folder runs under sudo.
