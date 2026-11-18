@@ -82,8 +82,13 @@ jobs:
             "-p:Version=${{ steps.which.outputs.version }}" -p:GroupLabTrain=nightly -p:GroupLabDistribution=store
           cp LICENSE THIRD-PARTY-NOTICES.md publish/grouplab/
 
+      # Entry 501, found 2026-11-18: signed ad hoc, the sandbox refuses the copy its connection to LaunchServices on GitHub's Mac machines
+      # and AppKit stops it ("unable to get application ASN from launchservicesd"), and a copy signed for the store runs only once installed
+      # from TestFlight. So this step says what happened in the summary without turning the run red until the copy can be signed for
+      # development or installed on a real Mac (docs/MAC-APP-STORE.md); the signing and upload below do not depend on it.
       - name: Check it inside the sandbox
         if: steps.which.outputs.tag != ''
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail

@@ -18,7 +18,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 498 (2026-11-18)**: question 114 answered (a); report 50's two holes in the diamonds left (no honest fix); the App Store audit
   fixed 6 findings; a pooled set changed on two devices reaches the Sessions banner and a plain prompt (look: DESIGN NEEDED). Not taken:
   speed on a scan. Still to check: nightly 232 reaching TestFlight as 1.0.232.
-- **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built and checked in the sandbox by mac-store.yml after each nightly; signing and TestFlight wait on request 107.
+- **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by mac-store.yml after each nightly; signed ad hoc the sandbox stops it at LaunchServices, so its proof needs TestFlight on a Mac; signing waits on request 107.
 - **Entry 500 (2026-11-18)**: the App Store is the way in on iPhone and iPad; the public TestFlight invitation is retired wording.
 - **Entry 499 (2026-11-18)**: Snap to holes (toolbar and Shooting defaults) and Alt for one click; the snap keeps a click on its own
   touching ring and stays put when it finds no hole's edge. The missed backup night is caught at the start of every Code run now.

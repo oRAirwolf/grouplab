@@ -839,8 +839,12 @@ do is request 107, written at the start: macOS on the record, the Mac Installer 
 Mac App Store keeps it up to date), bundled by `macos-bundle.py --store-build` (version 1.0, the nightly's number as the build, the
 encryption answer, the profile inside), checked inside the sandbox by `--self-check` (reads the demo sheet, accepts and analyzes it,
 saves a session, keeps the picture, follows a bookmark, all in the container), and, once request 107's secrets exist, signed for the
-store, packaged with `productbuild` and sent to TestFlight's internal group. Its first run inside the sandbox is the next nightly's (or a
-run by hand with a commit to build); until then nothing has run on a Mac. Held off a Mac by `MacBundleTests` (the store copy's plist and
+store, packaged with `productbuild` and sent to TestFlight's internal group. Run by hand on GitHub's Mac machines (three runs on
+2026-11-18): the store copy publishes and bundles; signed ad hoc it starts in the sandbox, which makes its container, and is then stopped,
+because the sandbox refuses it the connection to LaunchServices every window application needs ("unable to get application ASN from
+launchservicesd ... aborting"); a copy signed for the store runs only once installed from TestFlight. So the step reports in the summary
+without turning the run red, and the proof that it reads a sheet and saves a session in the sandbox needs a development signature or the
+TestFlight build on a real Mac. The first two runs also found the .NET libraries in Contents/MacOS must be signed, as the download signs them. Held off a Mac by `MacBundleTests` (the store copy's plist and
 profile) and `Entry501Tests` (a picture kept once in `originals/`, the open hook, the store's words). **3.4** waits for macOS on the
 record. **4.** Nothing was submitted; the line saying GroupLab for Mac is ready to submit waits until a TestFlight build works.
 

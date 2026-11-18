@@ -98,6 +98,13 @@ Store, which keeps it up to date, so GroupLab's own updater is off."
    demo's sample sheet, opens it, waits for the sheet to be read, accepts and analyzes it, checks a session was saved, that the picture was
    kept in `originals/`, and that a bookmark of a folder leads back to it, and writes `self-check.json` in the container. The job fails when
    any step does, and the summary shows the file.
+   **Found on the first runs, 2026-11-18:** signed ad hoc, the copy starts in the sandbox (macOS logs the AppSandbox set up and makes the
+   container) and is then stopped: the sandbox refuses it the connection to LaunchServices that every window application needs ("Process
+   unable to create connection because the sandbox denied the right to lookup com.apple.coreservices.launchservicesd", then "unable to get
+   application ASN from launchservicesd ... aborting"). A copy signed for the store cannot be run on the runner either, since it runs only
+   once installed from TestFlight or the store. So the step reports what happened in the summary and does not turn the run red; the
+   proof that the copy reads a sheet and saves a session inside the sandbox is either a development signature (an Apple Development
+   certificate and a Mac development profile, a later request) or the TestFlight build opened on a real Mac.
 4. **With request 107's secrets:** signed for the store with the hardened runtime, packaged with `productbuild` and signed with the Mac
    Installer Distribution certificate, and sent to TestFlight with `xcrun altool --upload-app --type macos`. TestFlight's internal group
    only; nothing is submitted for review.
