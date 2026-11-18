@@ -53,7 +53,8 @@ foreach ($dir in $listing) {
         $argLine = ($sshArgs | ForEach-Object { if ($_ -eq $KeyFile) { $keyQuoted } else { $_ } }) -join ' '
         $fetched = Invoke-Native cmd /c "ssh $argLine `"sudo tar cf - -C '$RemoteRoot' '$dir'`" > `"$tmp`" 2> `"$tmpErr`""
         if ($fetched.ExitCode -ne 0 -or (Get-Item $tmp).Length -eq 0) { $kept += "$dir : it could not be fetched"; continue }
-        $unpacked = Invoke-Native tar xf $tmp -C $LocalRoot
+        # Windows' own tar by its path: run from Git Bash, GNU tar comes first on the PATH and reads C: as a host to connect to (entry 499).
+        $unpacked = Invoke-Native (Join-Path $env:SystemRoot 'System32/tar.exe') xf $tmp -C $LocalRoot
         if ($unpacked.ExitCode -ne 0) { $kept += "$dir : it would not unpack"; continue }
 
         $manifestPath = Join-Path $LocalRoot "$dir\manifest.json"

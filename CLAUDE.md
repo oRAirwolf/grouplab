@@ -19,6 +19,9 @@ that you have access to delete or change, that there are backups in place to min
    pissinhot.com is touched apart from the approved `/targets` redirect, `nginx -t` passes before any reload and both sites are checked
    after, the key file is never read, and the server's address never appears anywhere.
 5. Nothing is force pushed to `main`, ever.
+6. **At the start of every run**, `python scripts/automation-report.py` rewrites the automation lines in `docs/notes/for-alan.md` (entry
+   499 section 0). If they say the newest backup failed or is more than 26 hours old, a night that never started, run
+   `scripts/Run-Automation.ps1 -Job Nightly` by hand before anything else and record its `result:` line.
 
 ## Where the work comes from
 

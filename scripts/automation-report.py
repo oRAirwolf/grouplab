@@ -14,7 +14,7 @@ import json
 import os
 import re
 import sys
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -74,12 +74,22 @@ def line(s: dict, log_text: str | None = None, today: date | None = None) -> str
 FAILED = "**The nightly backup failed on"
 
 
-def failure(s: dict) -> str | None:
+#: Entry 499 section 0: a nightly backup older than this, in hours, means a night that never started.
+STALE_HOURS = 26
+
+
+def failure(s: dict, now: datetime | None = None) -> str | None:
     """Entry of 17 November 2026: a failed backup or restore test puts its own line in for-alan.md the same day, above the week's line,
-    instead of waiting for Sunday. Two nights failed unseen because their error reports landed on a closed issue."""
+    instead of waiting for Sunday. Two nights failed unseen because their error reports landed on a closed issue. Entry 499 section 0: a
+    night that never started writes nothing at all (18 November: Windows Update restarted the computer and nobody signed in, and the task
+    runs only while somebody is), so a newest backup more than STALE_HOURS old says so too; Code runs this at the start of every run."""
     b, r = s.get("backup") or {}, s.get("restoreTest") or {}
     if b and not b.get("ok"):
         return f"{FAILED} {day(b.get('at'))}** (not a request; Code fixes it at the start of its next run): {b.get('error', 'no reason recorded')}"
+    if b.get("at") and (now or datetime.now(timezone.utc)) - datetime.fromisoformat(b["at"].replace("Z", "+00:00")) > timedelta(hours=STALE_HOURS):
+        return (f"**No nightly backup since {day(b.get('at'))}** (not a request; Code runs it by hand at the start of its next run): the "
+                "nightly did not start, most likely because the computer was off, asleep or signed out at 02:30; signing in after a restart "
+                "lets the next night run.")
     if r and not r.get("ok"):
         return f"**The weekly restore test failed on {day(r.get('at'))}** (not a request; Code fixes it at the start of its next run): {r.get('error', '')}"
     return None

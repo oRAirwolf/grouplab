@@ -476,6 +476,13 @@ public partial class MainWindow
         // Shown here too; it lives in Printers and paper.
         SettingRow(start, card, DefaultsWords.Paper, DefaultsWords.PaperSays, PaperChoice(), "letter a4 sheet size print");
         page.OnPutBack(PutPaperBack);
+
+        // Entry 499 section 2: Snap to holes, the marking toolbar's switch, found here by "snap" or "manual" too.
+        var snap = new CheckBox { Content = DefaultsWords.SnapToHoles, IsChecked = canvas.SnapToHoles };
+        snapSetting = snap;
+        snap.IsCheckedChanged += (_, _) => SetSnapToHoles(snap.IsChecked == true);
+        SettingRow(start, card, DefaultsWords.SnapToHoles, DefaultsWords.SnapSays, snap, "snap manual placement place holes by hand exactly where click alt option");
+        page.OnPutBack(() => SetSnapToHoles(true));
         EndSettingsPage(body, page);
     }
 

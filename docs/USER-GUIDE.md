@@ -275,6 +275,13 @@ line. In any such window Enter takes the first choice and Escape closes it.
 
 Every result is an ordinary mark that you can move, delete or reassign. On any other target, you mark the holes by hand against a length or a rectangle of known size. To change that scale, tap its two ends or four corners again and enter the new size, or choose the length or rectangle tool and **Change the length of the scale in use**; every figure follows. Typing a caliber offers the calibers and cartridges that match, with spacing and points forgiven, so "65 creed" finds 6.5 Creedmoor, and choosing one from the list, with a click or with Enter, sets it at once. **Caliber box shows** in Settings, the same on the phone, chooses what the list offers: **Calibers**, the bullet diameters with their usual names, such as .308 (7.62 mm, .30); **Cartridges**, the names, each with its diameter, such as 6.5 Creedmoor, 0.264 in; or **Both**, calibers first and then cartridges, which is where it starts. Any other diameter can still be typed in inches or in millimeters.
 
+A hole you place by hand snaps to the hole near your click: GroupLab looks for the hole's edge and puts the mark at its middle, so a
+rough click lands true. Where it cannot find a hole's edge and the dark around the click would pull the mark onto print, the mark stays
+where you clicked and the line under the picture says so. **Snap to holes**, in the bar of marking tools and in Settings, Shooting
+defaults, turns this off: each hole then goes exactly where you click, which helps with holes that touch and holes torn through dark
+print. Holding **Alt** (Option on a Mac) as you click places one hole without the snap whatever the switch says. A hole you drag with
+Select goes exactly where you let go.
+
 With the rectangle tool, **Find the paper's edges** places the four corners on the paper itself when the sheet stands out from what is
 behind it, still draggable, and offers a standard paper size when the photograph's shape matches one. On a white board it cannot tell the
 paper from the board, and you tap the corners. A photograph taken more than 37 degrees off square to the sheet is refused, with the angle
@@ -376,6 +383,7 @@ The arrow keys:
 - **The marking picture:** with a hole selected, the arrows nudge it one pixel of the picture, ten with Shift held, in the direction
   they point on the screen however the view is turned, and a run of presses is one step Undo takes back. With nothing selected they
   move the view. They act only while the picture has the focus: click it, or Tab to it.
+- **Alt** (Option on a Mac) held as you place a hole puts it exactly where you click, without the snap.
 
 The arrows never act in a text box or a number box, radio buttons and drop downs keep their own arrows, and moving the focus never
 presses a button. The marking screen's own keys are listed in the line above the picture.

@@ -244,6 +244,11 @@ public sealed class AppSettingsStore(string path)
     /// <summary>Entry 468 section 2.3: a sound when the camera takes the picture; on unless turned off, and always where the phone requires it.</summary>
     public bool LoadShutterSound() => Read(file => (bool?)file["shutterSound"]) ?? true;
 
+    /// <summary>Entry 499 section 2: whether a new impact snaps to the hole near it; on unless turned off.</summary>
+    public bool LoadSnapToHoles() => Read(file => (bool?)file["snapToHoles"]) ?? true;
+
+    public bool SaveSnapToHoles(bool on) => Save(file => file["snapToHoles"] = on);
+
     public bool SaveShutterSound(bool on) => Save(file => file["shutterSound"] = on);
 
     /// <summary>Entry 468 section 2.4: whether the analysis opens with every figure, the folded ones open too; the main figures, as today, unless chosen.</summary>

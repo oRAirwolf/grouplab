@@ -57,6 +57,34 @@ public sealed partial class MainWindow : Window
     private MarkingSession session = new();
     private readonly MarkingCanvas canvas = new() { Name = "Picture" };
 
+    /// <summary>Entry 499 section 2: the marking toolbar's Snap to holes switch.</summary>
+    private readonly CheckBox snapToggle = new() { Content = DefaultsWords.SnapToHoles, VerticalAlignment = VerticalAlignment.Center, Name = "SnapToHoles" };
+
+    /// <summary>The Settings page's copy of the switch, kept showing the toolbar's while the page is open.</summary>
+    private CheckBox? snapSetting;
+
+    /// <summary>Entry 499 section 2: the switch, from the toolbar or Settings, saved at once and shown the same in both places.</summary>
+    internal void SetSnapToHoles(bool on)
+    {
+        if (canvas.SnapToHoles == on && snapToggle.IsChecked == on && (snapSetting is null || snapSetting.IsChecked == on))
+        {
+            return;
+        }
+
+        canvas.SnapToHoles = on;
+        snapToggle.IsChecked = on;
+        if (snapSetting is not null)
+        {
+            snapSetting.IsChecked = on;
+        }
+
+        settingsStore.SaveSnapToHoles(on);
+        DiagnosticLog.Info("settings.change", ("setting", "snapToHoles"), ("on", on));
+    }
+
+    /// <summary>Whether a new impact snaps to the hole near it, for the headless tests.</summary>
+    internal bool SnapsToHoles => canvas.SnapToHoles;
+
     /// <summary>
     /// The analysis showing its work, DESIGN.md section 19 [r3] and NOTES-FROM-PLANNING.md entry 97 section 3: every stage's record on a
     /// timeline under the image, filed as each stage lands, scrubbed with the slider or the stage buttons, with the chosen stage's parameters,
@@ -740,6 +768,12 @@ public sealed partial class MainWindow : Window
             tools.Children.Add(button);
         }
 
+        // Entry 499 section 2: Snap to holes, beside the marking tools where a person placing holes sees it, remembered between sessions.
+        snapToggle.IsChecked = canvas.SnapToHoles = settingsStore.LoadSnapToHoles();
+        ToolTip.SetTip(snapToggle, DefaultsWords.SnapSays);
+        snapToggle.IsCheckedChanged += (_, _) => SetSnapToHoles(snapToggle.IsChecked == true);
+        tools.Children.Add(new Border { Width = 1, Margin = new Thickness(Tokens.Space8, Tokens.Space4), Classes = { AppStyles.Divider } });
+        tools.Children.Add(snapToggle);
         tools.Children.Add(new Border { Width = 1, Margin = new Thickness(Tokens.Space8, Tokens.Space4), Classes = { AppStyles.Divider } });
         // Entry 166 section 2: the tester was not sure what undo would undo. Each button is disabled when there is nothing to take back or
         // put back, and its tooltip names the step, read from the two markings either side of it.
@@ -2762,7 +2796,7 @@ public sealed partial class MainWindow : Window
         MarkingTool.Length => "Tap two points a known distance apart. The line is drawn as you make it; drag either end onto its mark, then enter the distance. The ends stay draggable afterwards.",
         MarkingTool.Rectangle => "Tap four corners of a known rectangle, top left first and around, then enter its size. Drag any corner onto its mark. This removes perspective.",
         MarkingTool.Aim => "Tap the point of aim.",
-        MarkingTool.Impact => "Press on each impact, drag it to where it belongs, and let go to set it. It snaps to the hole under it, never onto a detected sheet's printed target, and on a sheet of bulls it is assigned to its nearest bull.",
+        MarkingTool.Impact => "Press on each impact, drag it to where it belongs, and let go to set it. It snaps to the hole under it, never onto a detected sheet's printed target, and on a sheet of bulls it is assigned to its nearest bull. Turn off Snap to holes, or hold Alt as you click, to put it exactly where you click.",
         MarkingTool.Select => "Tap a shot to select it and drag to move it. With a shot selected, tap a bull to assign the shot to it. Drag an end of the scale to adjust it.",
         MarkingTool.Bulls => "Tap each bull's aim point to place it; drag one to move it, and Delete takes the chosen one away. Shots go to their nearest bull and are drawn in its color. With a scale set, a length drawn near a bull can be its own scale.",
         MarkingTool.Lasso => "Draw round the shots that belong together, then tap the bull they were fired at.",

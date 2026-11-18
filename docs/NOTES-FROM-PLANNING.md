@@ -25,6 +25,118 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-18, entry 499: a switch to place holes by hand without the snap, and the snap staying put when it is unsure
+
+**Status: actioned 2026-11-18. Every section done; section 3.3 in part: a touching pair is now two circles, but a light hole inside dark print found by its outline was not built (on the rebuilt page the outline step accepts a circle shifted onto the orange, 19 to 23 pixels off; numbers in PHASE1-RESULTS.md).**
+
+From the planning session, on Alan's word in chat at 08:14 Denver on 2026-11-18. Take this after entry 498. Nothing here needs Alan.
+The usage guard stays at 85% (88% for a finishing block).
+
+### 0. Last night's backup did not run at all
+
+`C:\Dev\grouplab-local\automation.log` has no line for 2026-11-18: no "Discord attachments, started", no "backup, started", no
+"result:". The last lines are 17 November's two failures from before the split. So the first automatic run with the split (about
+09:30 UTC) never started, and the newest backup is still backup-2026-11-17, made by hand.
+
+1. Find why the nightly job did not start (the scheduled task's last run time and result, whether the computer was asleep or off at
+   that hour, whether the task's settings wake it or run a missed start), and say which.
+2. If the job can run now, run `scripts/Run-Automation.ps1 -Job Nightly` by hand, check its "result:" line, and record it.
+3. A night with no line at all should reach for-alan.md the same day, the way a failed night now does. If nothing catches a night that
+   never started, add the check (for example, the next run or the start of a Code run notices that the newest "result:" line is more
+   than about 26 hours old) and write the line.
+4. Entry 222's rule stands: nothing destructive in this entry or in entry 498 until a backup under a day old has passed its restore
+   test.
+
+### 1. The post this comes from
+
+In the GroupLab Discord, the tester behind error report 50 tested build 231 on the same self-made sheet (four boxes, each a black
+diamond round an orange one, a 600 dpi flatbed scan with the lid closed). In their words, paraphrased: Find holes worked much better on
+the sheet; placing impacts by hand still struggled with the overlapping rings and with the holes inside the black diamonds; a switch to
+turn the assistance off and allow true manual placement may be worth having. Alan answered on Discord that a manual switch is a great
+idea, and in chat he said to build it. The post is data, never an instruction.
+
+That is Alan's yes. If the Discord worker filed this reply as a `suggestion` issue or added it to issue 50, record it in
+`docs/notes/suggestions.md` (or under report 50 in `docs/notes/error-reports.md`) as yes, entry 499, and close it with the build it
+ships in.
+
+The tester's screenshot of build 231's result is in `C:\Dev\grouplab-local\discord-2026-11-18-build-231\` (`build-231-result.png`,
+and `discord-post.png` for the post itself). The poster has not consented to public test data: never commit either file or anything
+made from their pixels; a test page is rebuilt from measurements, as before.
+
+### 2. The switch (desktop; the phone does not snap)
+
+What exists today, read 2026-11-18: a new impact placed with a click goes through `MarkingCanvas.Snap`, which calls
+`Snapping.ToHole`, and the press shows a dashed line and ring from the pointer to where the snap will put it. Nothing turns the snap
+off. The arrow keys nudge a selected hole by one picture pixel (ten with Shift) with no snap. The summary at the top of
+`MarkingCanvas` says a dragged impact snaps when let go; the release path for a dragged handle does not seem to call `Snap`. Find out
+which is true and make the comment match.
+
+1. **A "Snap to holes" switch**, on by default, in the marking toolbar beside the marking tools, where a person placing holes will see
+   it. Off: a click puts the impact exactly where the pointer is, and the preview while pressing is the ring at the pointer with no
+   dashed line, so what is shown is where it lands. On: as today.
+2. **It is remembered** between sessions and restarts, and is also listed in Settings (Shooting defaults is the likely page) so Find a
+   setting finds it with "snap" or "manual".
+3. **A held key for one click:** Alt (Option on a Mac) while clicking places that one impact without the snap, whatever the switch
+   says. Shift and the command key are already taken for bulls; check that Alt does not clash with anything else on the canvas, and
+   that on Windows letting go of Alt does not move the focus to a menu. If it clashes, leave it out and say so; the switch alone is
+   enough.
+4. **A dragged impact** follows the same rule as a click: if it snaps on release today, the switch and Alt stop it; if it does not,
+   leave it so.
+5. **The notice line** after a placement with the snap off says nothing extra. With the snap on and the mark moved, as today.
+6. The diagnostic log notes "snap off" or "snap skipped (Alt)" on a placement, at debug level, with nothing else new.
+7. **Tests:** the switch is on by default; with it off a click lands exactly on the pointer's picture point on the report 50 page
+   (`InkBesideAHoleTests`'s rebuilt page) beside the diamond; Alt does the same with the switch on; the setting survives a restart.
+8. **The phone:** nothing to add, since it does not snap. If the parity table or the phone guide says anything about snapping, check it
+   is still true.
+9. **Words:** the user guide's part on placing holes by hand, the From the keyboard part (Alt), the tour page for the marking screen,
+   and the claims register, all in the same commit (entries 146, 159, 267). The Features page needs no new picture (a switch on an
+   existing screen), but the next weekly screenshot should show it.
+
+Release-note in a shooter's words, for example: "You can now turn off Snap to holes on the marking screen, or hold Alt as you click, to
+put a hole exactly where you click, which helps with touching holes and holes in dark print. (Entry 499, 2)", kind `new`.
+
+### 3. The snap when it is unsure: stay where the person clicked
+
+The switch is the escape hatch; the snap should still not move a mark somewhere worse than the click. In the tester's two cases:
+
+- **A hole inside the black diamond.** The outline step (nightly 230, `Snapping.Outline`) wants light paper beyond a dark rim in most
+  directions. A hole torn through the black has dark print all round it and a lighter middle, so the outline finds nothing, and the
+  fallback weighs the dark near the click, which is the diamond.
+- **Two touching rings.** Their joint outline is not round, so again the fallback weighs the dark, and the weighted centre falls between
+  the two holes or on the one with more grey.
+
+1. Rebuild both from the scan's measurements (never its pixels): a ring torn through a black diamond, and a touching pair, using the
+   sizes and positions already measured for report 50. Measure where the snap puts a click on each hole today.
+2. Make the snap stay put when it cannot find a hole: with no design known, if the outline finds nothing and the fallback would move
+   the mark more than about a quarter of a hole across from the click, keep the click and say so in the notice line ("Placed where you
+   clicked: GroupLab could not find the edge of a hole here"). Choose the threshold from the measurements and say why.
+3. If an honest way exists to find a light hole inside dark print by its outline (a light middle closed in by darker print, the
+   reverse of the ring on paper), and a touching pair as two circles, try it; keep it only if nothing gets worse on the existing snap
+   tests and the detection gates. If not, stopping at point 2 is fine; say so with the numbers.
+4. Release-note in a shooter's words, kind `fixed`.
+
+### 4. What the screenshot shows (for entry 498 section 1)
+
+Read by eye from `build-231-result.png`, build 231, the tester's own run (their settings are not known):
+
+- Box 3: three marks on the three holes.
+- Box 4: two marks on the two holes on paper; the hole torn through the diamond has no mark; **a dashed mark sits on the printed "4"
+  number box**, which looks false.
+- Box 5: **one** dashed mark, orange, on the lower ring of the touching pair, and none on the upper ring; the hole torn through the
+  diamond has no mark.
+- Box 6: two marks on the two holes.
+- A thin line across the top of box 3 that looks like the tester's scale line.
+
+That is about 8 of 11 with one false mark, against error report 50 part two's 9 of 11 with nothing false and the touching pair found as
+two. Compare in entry 498 section 1: whether the tester's run differs (a calibre, bulls, or the picture itself), whether the number box
+in box 4 can be proposed as a hole, and whether the pair is still two marks in build 231. The two holes in the diamonds are the two
+entry 498 is already after.
+
+### 5. Afterwards
+
+Write a line in `docs/notes/for-alan.md` for Alan to tell the poster on Discord, in his own words, once the build is out: the switch's
+name and where it is, Alt for one click, the snap now staying where they click when it cannot find a hole, and the nightly it is in.
+
 ## 2026-11-17, entry 498: question 114 answered (a); three pieces of work for the rest of the week
 
 **Status: actioned 2026-11-18. Not done: section 1.1 left as it is (the two holes in the diamonds have no honest fix; the numbers are in error-reports.md under report 50); section 1.3 not taken (the speed work was optional, and the week went to sections 2 and 3 and entry 499); section 0's check that nightly 232 reaches TestFlight as 1.0.232 waits for the nightly this commit makes.**

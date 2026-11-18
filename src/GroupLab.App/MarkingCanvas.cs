@@ -29,7 +29,10 @@ public enum MarkingTool
     /// <summary>Tap the point of aim.</summary>
     Aim,
 
-    /// <summary>Press on an impact, drag it to where it belongs, and let go to set it; it snaps to the hole under it then (entry 39 section 4).</summary>
+    /// <summary>
+    /// Press on an impact, drag it to where it belongs, and let go to set it; it snaps to the hole under it then (entry 39 section 4), unless
+    /// Snap to holes is off or Alt is held (entry 499). A shot already placed and dragged with Select is put exactly where it is let go.
+    /// </summary>
     Impact,
 
     /// <summary>Tap a shot to select it, drag it to move it, then tap a bull to assign it there (DESIGN.md section 13); drag an end of the scale to adjust it.</summary>
@@ -134,6 +137,15 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     private (Handle Kind, int Index)? handle;
     private PointD handleAt;
     private PointD? placing;
+
+    /// <summary>Whether Alt (Option on a Mac) was held at the last pointer event, so the preview shows what letting go will do (entry 499).</summary>
+    private bool altHeld;
+
+    /// <summary>
+    /// Entry 499 section 2: Snap to holes, on by default. Off, a new impact goes exactly where it is let go, and the preview while pressing is
+    /// a ring at the pointer with no dashed line. Alt held does the same for one placement whatever this says.
+    /// </summary>
+    public bool SnapToHoles { get; set; } = true;
 
     /// <summary>Which scale points a dragged end belongs to: one being made, one waiting for its size, or the reference in use.</summary>
     private enum Handle
@@ -932,7 +944,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         if (placing is { } placed)
         {
             var c = ToControl(placed);
-            var snap = Snap(session, placed).At;
+            var snap = Placement(session, placed, altHeld).At;
             var snapped = ToControl(snap);
             Marks.Cross(context, Marks.Selected, c, 10);
             if (Distance(c, snapped) > 1)
@@ -1054,6 +1066,9 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
     /// The snap for an impact at an image point. With a calibre and a scale it reaches one bullet diameter (entry 24 section 5 point 2);
     /// otherwise a finger's width on screen. On a detected sheet it never lands on printed artwork (entry 40 section 1).
     /// </summary>
+    /// <summary>Entry 499: where a new impact let go at <paramref name="image"/> goes: the snap, or exactly there with the switch off or Alt held.</summary>
+    private SnapResult Placement(MarkingSession session, PointD image, bool alt) => SnapToHoles && !alt ? Snap(session, image) : new SnapResult(image, null);
+
     private SnapResult Snap(MarkingSession session, PointD image) => value is null
         ? new SnapResult(image, null)
         : Snapping.ToHole(value, image, SnapRadius(session.State, image), Artwork);
@@ -1184,6 +1199,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             case MarkingTool.Impact:
                 // Placed when let go, so a press that missed is dragged onto the hole rather than tapped again blind (entry 39 section 4).
                 placing = image;
+                altHeld = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
                 e.Pointer.Capture(this);
                 break;
 
@@ -1306,6 +1322,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         else if (placing is not null)
         {
             placing = ToImage(position);
+            altHeld = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
         }
         else if (pending.Count > 0 && Tool is MarkingTool.Length or MarkingTool.Rectangle)
         {
@@ -1360,7 +1377,14 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             if (placing is { } placed)
             {
                 placing = null;
-                var snap = Snap(session, placed);
+                bool alt = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
+                var snap = Placement(session, placed, alt);
+                if (!SnapToHoles || alt)
+                {
+                    // Entry 499 section 2.6: which way round the snap was left out, and nothing else new.
+                    DiagnosticLog.Debug("marking.place", ("snap", SnapToHoles ? "snap skipped (Alt)" : "snap off"));
+                }
+
                 Selected = session.AddShot(snap.At);
                 if (snap.NotSnapped is { } note)
                 {

@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import importlib.util
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -100,6 +100,11 @@ check("a failed backup puts its own line in for-alan.md", (report.failure({"back
                                                          or "").startswith("**The nightly backup failed on 17 November**"))
 check("a failed restore test does too", "restore test failed" in (report.failure({"backup": {"ok": True}, "restoreTest": {"ok": False}}) or ""))
 check("a good night has no such line", report.failure({"backup": {"ok": True}, "restoreTest": {"ok": True}}) is None)
+# Entry 499 section 0: a night that never started writes nothing, so a backup more than 26 hours old says so the same day.
+now = datetime(2026, 11, 18, 16, 0, tzinfo=timezone.utc)
+check("a backup 30 hours old is a night that never started", "No nightly backup since 17 November" in (report.failure(
+    {"backup": {"at": "2026-11-17T09:30:00Z", "ok": True}, "restoreTest": {"ok": True}}, now) or ""))
+check("a backup 7 hours old is not", report.failure({"backup": {"at": "2026-11-18T09:30:00Z", "ok": True}, "restoreTest": {"ok": True}}, now) is None)
 
 print(f"backup tests: {passed} passed, {len(failed)} failed")
 for f in failed:

@@ -336,6 +336,23 @@ public static class Snapping
     /// </summary>
     internal const double OutlineShare = 0.5;
 
+    /// <summary>
+    /// Entry 499 section 3: a hole's outline found within this share of the snap's radius (about half a hole) of the click is taken before a
+    /// cleaner one farther off. Two touching rings 41 pixels apart (a hole 52 across): a click on the lower one's centre went to the upper.
+    /// </summary>
+    internal const double NearShare = 0.5;
+
+    /// <summary>
+    /// Entry 499 section 3: with no design known and no hole's outline found, a dark weight that would move the mark more than this share of
+    /// the snap's radius (about a quarter of a hole) is not trusted, and the mark stays where it was placed. On a hole torn where orange
+    /// print meets black (error report 50's sheet, rebuilt in SnapStaysPutTests) the weight moved clicks 6 to 32 pixels and left every one 19
+    /// to 23 pixels off the hole, on the black; a hole on paper is found by its outline and never reaches this.
+    /// </summary>
+    internal const double UnsureShare = 0.25;
+
+    /// <summary>What the notice line says when the snap leaves a mark where it was placed because it found no hole there.</summary>
+    public const string StayedPut = "Placed where you clicked: GroupLab could not find the edge of a hole here";
+
     private const int OutlineDirections = 48;
 
     private static readonly (double Cos, double Sin)[] Directions =
@@ -400,9 +417,9 @@ public static class Snapping
 
         double step = Math.Max(1, r / 26);
         int n = (int)(r / step);
-        int best = int.MinValue;
-        double bestAway = double.MaxValue, bestRim = 0;
-        PointD centre = click;
+        int best = int.MinValue, near = int.MinValue;
+        double bestAway = double.MaxValue, bestRim = 0, nearAway = double.MaxValue, nearRim = 0;
+        PointD centre = click, nearCentre = click;
         for (int j = -n; j <= n; j++)
         {
             for (int i = -n; i <= n; i++)
@@ -427,8 +444,20 @@ public static class Snapping
                     {
                         (best, bestAway, bestRim, centre) = (score, away, rim, new PointD(cx, cy));
                     }
+
+                    // Entry 499 section 3: the best circle within half a hole of the click, so a click on one of two touching holes is not
+                    // taken to the other because the other's outline happens to be cleaner.
+                    if (away <= NearShare * r && (score > near || (score == near && away < nearAway)))
+                    {
+                        (near, nearAway, nearRim, nearCentre) = (score, away, rim, new PointD(cx, cy));
+                    }
                 }
             }
+        }
+
+        if (near >= OutlineShare * OutlineDirections)
+        {
+            (best, bestRim, centre) = (near, nearRim, nearCentre);
         }
 
         if (best < OutlineShare * OutlineDirections)
@@ -484,14 +513,22 @@ public static class Snapping
     /// snapped to bull 13's inner ring, because a printed ring is darker than paper. The expected artwork says which dark pixels were
     /// printed. When most of the dark weight under the tap is printed, the tap is placed where it was made and
     /// <see cref="SnapResult.NotSnapped"/> says why; otherwise only the dark pixels the artwork calls paper pull the snap. Without
-    /// artwork this is <see cref="ToDarkCentroid"/>.
+    /// artwork this is <see cref="ToDarkCentroid"/>, except that a dark weight moving the mark more than <see cref="UnsureShare"/> of the
+    /// radius with no hole's outline found leaves it where it was placed, and says so (entry 499 section 3).
     /// </summary>
     public static SnapResult ToHole(GrayImage value, PointD click, double radiusPixels, GrayImage? artwork)
     {
         ArgumentNullException.ThrowIfNull(value);
         if (artwork is null || artwork.Width != value.Width || artwork.Height != value.Height)
         {
-            return new SnapResult(ToDarkCentroid(value, click, radiusPixels), null);
+            if (Outline(value, click, radiusPixels) is { } found)
+            {
+                return new SnapResult(found, null);
+            }
+
+            var weighed = Centroid(value, click, radiusPixels, null);
+            double moved = Math.Sqrt(((weighed.X - click.X) * (weighed.X - click.X)) + ((weighed.Y - click.Y) * (weighed.Y - click.Y)));
+            return moved > UnsureShare * radiusPixels ? new SnapResult(click, StayedPut) : new SnapResult(weighed, null);
         }
 
         var (onPaper, onInk) = DarkWeight(value, artwork, click, radiusPixels);

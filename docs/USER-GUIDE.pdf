@@ -701,7 +701,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 115 0 R >> >> /Contents 37 0 R >>
 endobj
 37 0 obj
-<< /Length 3221 >>
+<< /Length 4158 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -717,17 +717,23 @@ BT /F1 71 Tf 1 0 0 -1 381 3318 Tm (once. Caliber box shows in Settings, the same
 BT /F1 71 Tf 1 0 0 -1 381 3406 Tm (diameters with their usual names, such as .308 \(7.62 mm, .30\); Cartridges, the names, each with its diameter,) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3494 Tm (such as 6.5 Creedmoor, 0.264 in; or Both, calibers first and then cartridges, which is where it starts. Any other) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 3582 Tm (diameter can still be typed in inches or in millimeters.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3705 Tm (With the rectangle tool, Find the paper's edges places the four corners on the paper itself when the sheet stands) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3793 Tm (out from what is behind it, still draggable, and offers a standard paper size when the photograph's shape) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3881 Tm (matches one. On a white board it cannot tell the paper from the board, and you tap the corners. A photograph) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3969 Tm (taken more than 37 degrees off square to the sheet is refused, with the angle named, and every photograph you) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4057 Tm (open keeps how far off square it was and how good it is: good, usable or poor.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4180 Tm (A flatbed scan usually says its own resolution, and on a sheet with no scale yet the length and rectangle tools) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4268 Tm (offer it, with its number: Use the scan's 600 dpi as the scale, or measure a known distance yourself instead. It is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4356 Tm (never used unless you choose it; a photograph, a file stating 72 or 96 dpi \(what a program writes when it has) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4444 Tm (nothing to say\) or a scan stretched one way offers nothing. On the phone the same offer is at the first step of) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4532 Tm (marking by hand, the scale. Once chosen, the scale's line says From the scan's own resolution, never a length) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4620 Tm (you measured.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3705 Tm (A hole you place by hand snaps to the hole near your click: GroupLab looks for the hole's edge and puts the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3793 Tm (mark at its middle, so a rough click lands true. Where it cannot find a hole's edge and the dark around the click) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3881 Tm (would pull the mark onto print, the mark stays where you clicked and the line under the picture says so. Snap to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3969 Tm (holes, in the bar of marking tools and in Settings, Shooting defaults, turns this off: each hole then goes exactly) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4057 Tm (where you click, which helps with holes that touch and holes torn through dark print. Holding Alt \(Option on a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4145 Tm (Mac\) as you click places one hole without the snap whatever the switch says. A hole you drag with Select goes) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4233 Tm (exactly where you let go.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4356 Tm (With the rectangle tool, Find the paper's edges places the four corners on the paper itself when the sheet stands) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4444 Tm (out from what is behind it, still draggable, and offers a standard paper size when the photograph's shape) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4532 Tm (matches one. On a white board it cannot tell the paper from the board, and you tap the corners. A photograph) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4620 Tm (taken more than 37 degrees off square to the sheet is refused, with the angle named, and every photograph you) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4708 Tm (open keeps how far off square it was and how good it is: good, usable or poor.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4831 Tm (A flatbed scan usually says its own resolution, and on a sheet with no scale yet the length and rectangle tools) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4919 Tm (offer it, with its number: Use the scan's 600 dpi as the scale, or measure a known distance yourself instead. It is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5007 Tm (never used unless you choose it; a photograph, a file stating 72 or 96 dpi \(what a program writes when it has) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5095 Tm (nothing to say\) or a scan stretched one way offers nothing. On the phone the same offer is at the first step of) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5183 Tm (marking by hand, the scale. Once chosen, the scale's line says From the scan's own resolution, never a length) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 17 of 50) Tj ET
 Q
 endstream
@@ -736,47 +742,45 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 116 0 R >> >> /Contents 39 0 R >>
 endobj
 39 0 obj
-<< /Length 3421 >>
+<< /Length 3360 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
-q 3556 0 0 -2286 381 2695 cm /Im0 Do Q
 0.27451 0.27451 0.27451 rg
-BT /F1 56 Tf 1 0 0 -1 381 2751 Tm (The marking screen, with the review queue in the side panel) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2878 Tm (On the picture, each bull's number stands outside its outer ring at the top left, in plain gray, and each hole's) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2966 Tm (number sits in a dark tag just outside the ring, placed where it covers no other tag, no bull's number and no hole.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3054 Tm (Where a bull holds several holes, as on a target marked by hand, their tags stand in a column beside it, 1a, 1b,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3142 Tm (1c from the top, each on a short line to its hole. The shot you select has an open magenta ring with four short) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3230 Tm (ticks outside it, so the hole itself stays in sight, and its tag turns magenta. Fix holes on the phone draws them the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3318 Tm (same way.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3441 Tm (The pill in the header counts the marks that need you. The review queue in the side panel lists each one with the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3529 Tm (choices that settle it. The items are:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3652 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3652 Tm (Contested assignment: a hole that could belong to either of two bulls, or one that the matching gave to a bull) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3740 Tm (other than its nearest.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3842 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3842 Tm (Possibly two holes: a mark about the size of two holes.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3944 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3944 Tm (Possibly one hole: two marks closer than half a hole's width, probably one hole marked twice. One shot) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4032 Tm (leaves one mark at the middle of the two; Two shots keeps both.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4134 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4134 Tm (Hole read with what is beside it: a mark at least twice as wide as a hole, usually a hole joined to the printed) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4222 Tm (rings in a photograph taken off square. GroupLab places the shot on the part the size of one hole; check it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4310 Tm (sits on the hole, or move it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4412 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4412 Tm (Two shots on one bull.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4514 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4514 Tm (No bull.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4616 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4616 Tm (Count differs from rounds fired: raised when you have said how many rounds you fired.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4718 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4718 Tm (Refused candidate: something the detector saw and did not take as a hole.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4820 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4820 Tm (Bulls with nothing on them: when you have said how many rounds you fired and GroupLab finds fewer, it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4908 Tm (names the bulls that are empty. A shortfall is never allowed to pass as a clean result.) Tj ET
-0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 5076 Tm (Change an answer) Tj ET
-0.27451 0.27451 0.27451 rg
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (you measured.) Tj ET
+q 3556 0 0 -2286 381 2818 cm /Im0 Do Q
+BT /F1 56 Tf 1 0 0 -1 381 2874 Tm (The marking screen, with the review queue in the side panel) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3001 Tm (On the picture, each bull's number stands outside its outer ring at the top left, in plain gray, and each hole's) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3089 Tm (number sits in a dark tag just outside the ring, placed where it covers no other tag, no bull's number and no hole.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3177 Tm (Where a bull holds several holes, as on a target marked by hand, their tags stand in a column beside it, 1a, 1b,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3265 Tm (1c from the top, each on a short line to its hole. The shot you select has an open magenta ring with four short) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3353 Tm (ticks outside it, so the hole itself stays in sight, and its tag turns magenta. Fix holes on the phone draws them the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3441 Tm (same way.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3564 Tm (The pill in the header counts the marks that need you. The review queue in the side panel lists each one with the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3652 Tm (choices that settle it. The items are:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3775 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3775 Tm (Contested assignment: a hole that could belong to either of two bulls, or one that the matching gave to a bull) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3863 Tm (other than its nearest.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3965 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3965 Tm (Possibly two holes: a mark about the size of two holes.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4067 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4067 Tm (Possibly one hole: two marks closer than half a hole's width, probably one hole marked twice. One shot) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4155 Tm (leaves one mark at the middle of the two; Two shots keeps both.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4257 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4257 Tm (Hole read with what is beside it: a mark at least twice as wide as a hole, usually a hole joined to the printed) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4345 Tm (rings in a photograph taken off square. GroupLab places the shot on the part the size of one hole; check it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4433 Tm (sits on the hole, or move it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4535 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4535 Tm (Two shots on one bull.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4637 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4637 Tm (No bull.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4739 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4739 Tm (Count differs from rounds fired: raised when you have said how many rounds you fired.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4841 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4841 Tm (Refused candidate: something the detector saw and did not take as a hole.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4943 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4943 Tm (Bulls with nothing on them: when you have said how many rounds you fired and GroupLab finds fewer, it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 5031 Tm (names the bulls that are empty. A shortfall is never allowed to pass as a clean result.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 18 of 50) Tj ET
 Q
 endstream
@@ -785,75 +789,77 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 41 0 R >>
 endobj
 41 0 obj
-<< /Length 5849 >>
+<< /Length 5938 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
-0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (An answered item stays in the queue, marked DONE. Click it and its card says what you answered, with Ask) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (again, which opens the question once more, and its choices, which change the answer straight away. On the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (phone, answered marks fold up under one line, Show the answered marks, each with Ask again. Undo takes) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 716 Tm (either back.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 905 Tm (Name the caliber if you know it) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 518 Tm (Change an answer) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 1031 Tm (It sets the smallest hole GroupLab will accept, which matters most for small calibers, and it gives you the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1119 Tm (edge-to-edge figure. On one of the test scans it is the difference between nineteen holes found and twenty-four;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1207 Tm (on another it is the difference between missing the shot at the edge of the scan and finding it. A .22 hole in paper) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1295 Tm (is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1383 Tm (go on.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 644 Tm (An answered item stays in the queue, marked DONE. Click it and its card says what you answered, with Ask) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 732 Tm (again, which opens the question once more, and its choices, which change the answer straight away. On the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 820 Tm (phone, answered marks fold up under one line, Show the answered marks, each with Ask again. Undo takes) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 908 Tm (either back.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 1572 Tm (Holes between bulls, and marks off the grid) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 1097 Tm (Name the caliber if you know it) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 1698 Tm (A hole that lands between two bulls, or beside the grid rather than on it, is kept, counted and offered to you. It is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1786 Tm (never dropped for being in the wrong place. Where GroupLab is not sure which bull a hole belongs to, it says so) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1874 Tm (and the figures built on that assignment carry the doubt with them until you have settled it: a figure that rests on a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1962 Tm (guess is marked as resting on a guess.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2085 Tm (The queue works from the keyboard:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2208 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2208 Tm (Space goes to the next item.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2310 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2310 Tm (Enter takes its first choice.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2412 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2412 Tm (Type a bull's number and press Enter to give the shot to that bull.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2514 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2514 Tm (T takes a flagged mark as the two shots the detector says it is.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2616 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2616 Tm (N marks the selected mark as not a shot.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2718 Tm (The tools have keys too:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2841 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2841 Tm (C or P pan, V select, I impact, A aim, L length, R rectangle, B place bulls and O lasso shots onto a bull;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 2943 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 2943 Tm (the square brackets turn the view;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3045 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3045 Tm (Delete removes the selected mark, or with Place bulls the bull chosen;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3147 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3147 Tm (the arrow keys nudge the selected mark, or move the view \(see From the keyboard, under the analysis\);) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3249 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3249 Tm (Ctrl+N starts a new target, clearing this one with a way back from the note it shows, and Ctrl+V pastes a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3337 Tm (picture, Command N and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3439 Tm (Command V on a Mac;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3562 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3562 Tm (Ctrl+Z and Ctrl+Y undo and redo, and on a Mac Command Z and Shift Command Z. The undo button's tooltip) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3650 Tm (says what it will undo.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3752 Tm (To move around the sheet, a mouse wheel zooms about the pointer, and a touchpad's two finger drag moves the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3840 Tm (sheet. A pinch zooms, on a touchpad or a touch screen, and so does Ctrl, or Command on a Mac, with any) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3928 Tm (scroll. On a Mac any plain scroll moves the sheet, as it does in other Mac applications.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4051 Tm (In the side panel you also set:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4174 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4174 Tm (the caliber, as the bullet's diameter;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4276 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4276 Tm (the shot distance;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4378 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4378 Tm (the rifle and barrel, in one list with the barrel that is on now first, and the load, from your records;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4480 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4480 Tm (the rounds fired, as a check on the count;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4582 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4582 Tm (at the bottom, in a closed fold, For the hole size studies: the paper and the backing. They are recorded only) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4670 Tm (and change no detection, so hole sizes can be compared later by paper and backing. Remember these for) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4758 Tm (my next sheet is on unless you turn it off.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4860 Tm (When the marks are right, Accept and analyze. Anything still open stays open: the analysis names it, and the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4948 Tm (sheet crumb goes back to it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1223 Tm (It sets the smallest hole GroupLab will accept, which matters most for small calibers, and it gives you the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1311 Tm (edge-to-edge figure. On one of the test scans it is the difference between nineteen holes found and twenty-four;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1399 Tm (on another it is the difference between missing the shot at the edge of the scan and finding it. A .22 hole in paper) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1487 Tm (is much smaller than the bullet that made it, and without the caliber the detector has only the shape of a mark to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1575 Tm (go on.) Tj ET
+0.078431 0.078431 0.078431 rg
+BT /F1 81 Tf 1 0 0 -1 381 1764 Tm (Holes between bulls, and marks off the grid) Tj ET
+0.27451 0.27451 0.27451 rg
+BT /F1 71 Tf 1 0 0 -1 381 1890 Tm (A hole that lands between two bulls, or beside the grid rather than on it, is kept, counted and offered to you. It is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1978 Tm (never dropped for being in the wrong place. Where GroupLab is not sure which bull a hole belongs to, it says so) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2066 Tm (and the figures built on that assignment carry the doubt with them until you have settled it: a figure that rests on a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2154 Tm (guess is marked as resting on a guess.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2277 Tm (The queue works from the keyboard:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2400 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2400 Tm (Space goes to the next item.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2502 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2502 Tm (Enter takes its first choice.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2604 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2604 Tm (Type a bull's number and press Enter to give the shot to that bull.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2706 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2706 Tm (T takes a flagged mark as the two shots the detector says it is.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 2808 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 2808 Tm (N marks the selected mark as not a shot.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2910 Tm (The tools have keys too:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3033 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3033 Tm (C or P pan, V select, I impact, A aim, L length, R rectangle, B place bulls and O lasso shots onto a bull;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3135 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3135 Tm (the square brackets turn the view;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3237 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3237 Tm (Delete removes the selected mark, or with Place bulls the bull chosen;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3339 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3339 Tm (the arrow keys nudge the selected mark, or move the view \(see From the keyboard, under the analysis\);) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3441 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3441 Tm (Ctrl+N starts a new target, clearing this one with a way back from the note it shows, and Ctrl+V pastes a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3529 Tm (picture, Command N and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3631 Tm (Command V on a Mac;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3754 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3754 Tm (Ctrl+Z and Ctrl+Y undo and redo, and on a Mac Command Z and Shift Command Z. The undo button's tooltip) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3842 Tm (says what it will undo.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3944 Tm (To move around the sheet, a mouse wheel zooms about the pointer, and a touchpad's two finger drag moves the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4032 Tm (sheet. A pinch zooms, on a touchpad or a touch screen, and so does Ctrl, or Command on a Mac, with any) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4120 Tm (scroll. On a Mac any plain scroll moves the sheet, as it does in other Mac applications.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4243 Tm (In the side panel you also set:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4366 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4366 Tm (the caliber, as the bullet's diameter;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4468 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4468 Tm (the shot distance;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4570 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4570 Tm (the rifle and barrel, in one list with the barrel that is on now first, and the load, from your records;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4672 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4672 Tm (the rounds fired, as a check on the count;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4774 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4774 Tm (at the bottom, in a closed fold, For the hole size studies: the paper and the backing. They are recorded only) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4862 Tm (and change no detection, so hole sizes can be compared later by paper and backing. Remember these for) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4950 Tm (my next sheet is on unless you turn it off.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5052 Tm (When the marks are right, Accept and analyze. Anything still open stays open: the analysis names it, and the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5140 Tm (sheet crumb goes back to it.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 19 of 50) Tj ET
 Q
 endstream
@@ -920,7 +926,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 117 0 R >> >> /Contents 45 0 R >>
 endobj
 45 0 obj
-<< /Length 3522 >>
+<< /Length 3555 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -947,15 +953,16 @@ BT /F1 71 Tf 1 0 0 -1 494 3974 Tm (The marking picture: with a hole selected, th
 BT /F1 71 Tf 1 0 0 -1 494 4062 Tm (the direction) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4164 Tm (they point on the screen however the view is turned, and a run of presses is one step Undo takes back. With) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 4252 Tm (nothing selected they move the view. They act only while the picture has the focus: click it, or Tab to it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4375 Tm (The arrows never act in a text box or a number box, radio buttons and drop downs keep their own arrows, and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4463 Tm (moving the focus never presses a button. The marking screen's own keys are listed in the line above the picture.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4586 Tm (Which target is this?, along the bottom of the picture, takes Enter for its first size and Escape for Not sure. The) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4674 Tm (windows GroupLab opens over itself work the same way, from importing shot coordinates to the print) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4762 Tm (confirmation, the figures in their own window and the three group tools, and each box and button in them has a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4850 Tm (name a screen reader reads. Fudd buster holds only words and two plots, so its page takes the focus and the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4938 Tm (arrows and Page Down read down it.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5061 Tm (With a screen reader \(Narrator, TalkBack or VoiceOver\): every button, box and choice is checked by machine for) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5149 Tm (what a screen reader needs. Each has a name in words and says what it is, a button holding words and a picture) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4375 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4375 Tm (Alt \(Option on a Mac\) held as you place a hole puts it exactly where you click, without the snap.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4477 Tm (The arrows never act in a text box or a number box, radio buttons and drop downs keep their own arrows, and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4565 Tm (moving the focus never presses a button. The marking screen's own keys are listed in the line above the picture.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4688 Tm (Which target is this?, along the bottom of the picture, takes Enter for its first size and Escape for Not sure. The) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4776 Tm (windows GroupLab opens over itself work the same way, from importing shot coordinates to the print) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4864 Tm (confirmation, the figures in their own window and the three group tools, and each box and button in them has a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4952 Tm (name a screen reader reads. Fudd buster holds only words and two plots, so its page takes the focus and the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5040 Tm (arrows and Page Down read down it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5163 Tm (With a screen reader \(Narrator, TalkBack or VoiceOver\): every button, box and choice is checked by machine for) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 21 of 50) Tj ET
 Q
 endstream
@@ -964,68 +971,68 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 47 0 R >>
 endobj
 47 0 obj
-<< /Length 6916 >>
+<< /Length 6912 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (is read by its words, and on the computer Tab reaches each one. On the phone each is at least 48 by 48 to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (touch, and the emulator and the simulator read the screens the way TalkBack and VoiceOver do. Whether the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (order things are read in makes sense aloud is something only a person can judge, and nobody using a screen) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 716 Tm (reader has tried GroupLab yet.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (what a screen reader needs. Each has a name in words and says what it is, a button holding words and a picture) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (is read by its words, and on the computer Tab reaches each one. On the phone each is at least 48 by 48 to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (touch, and the emulator and the simulator read the screens the way TalkBack and VoiceOver do. Whether the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 716 Tm (order things are read in makes sense aloud is something only a person can judge, and nobody using a screen) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 804 Tm (reader has tried GroupLab yet.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 905 Tm (Click a hole to edit it) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 993 Tm (Click a hole to edit it) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 1031 Tm (A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1119 Tm (hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1207 Tm (bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1330 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1330 Tm (Sighter, which sets it aside from the group, as a shot on a sighter bull already is;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1432 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1432 Tm (Flyer, which calls it out on the sheet and in the list and changes no figure;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1534 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1534 Tm (Leave out of the figures, which does change them and asks no reason \(a reason stored earlier is shown, read) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1622 Tm (only, and still printed in reports\): every figure, the report and the saved session then leave the shot out, it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1710 Tm (stays on the sheet drawn hollow, and each figure's detail gives the figure again with every shot;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 1812 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1812 Tm (Delete, not a hole, for a staple, a tear or a pen mark. The mark stays at the end of the Shots list with It is a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 1900 Tm (hole, and Undo works. Remove the mark deletes it fully.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2002 Tm (In the Shots list each shot is a short row \(across, up and down, distance from its own bull\). Click a row, or the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2090 Tm (shot on the sheet, to open it in place: the bull \(nearest first\), its place in the firing order, Counted, and where it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2178 Tm (came from \(Found by GroupLab, moved by you, or added by you\). The firing order is what In the order fired uses) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2266 Tm (when there is no chronograph string.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2389 Tm (A click on the sheet moves the side panel to what it changed and flashes that part twice: a hole opens its row) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2477 Tm (under Shots, a bull goes to Which bull each shot belongs to, and Shift or Command on a bull goes to Loads on) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2565 Tm (this sheet. The line under the picture says in a sentence what the click did. Where your computer is set to reduce) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2653 Tm (motion, the part is tinted for a moment instead of flashing.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2776 Tm (Flyer and "leave out" are deliberately two different things. Pointing at a shot and dropping it from the group are) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2864 Tm (two different decisions, and GroupLab will not quietly make the second one for you because you made the first.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2987 Tm (Every edit shows a small message at the bottom of the screen saying what changed, with Undo on it. Ctrl+Z and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3075 Tm (Ctrl+Y work everywhere, Command Z and Shift Command Z on a Mac, and the Undo on the message is the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3163 Tm (same undo.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1119 Tm (A small editor opens beside it, not a dialog over the page. From it you can move the hole with the arrow keys, a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1207 Tm (hundredth of an inch a press and a tenth with Shift held; give it to another bull, either from the list or by clicking a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1295 Tm (bull on the sheet; set its size by hand where the detector read it wrong; leave a note on it; and mark it:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1418 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1418 Tm (Sighter, which sets it aside from the group, as a shot on a sighter bull already is;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1520 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1520 Tm (Flyer, which calls it out on the sheet and in the list and changes no figure;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1622 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1622 Tm (Leave out of the figures, which does change them and asks no reason \(a reason stored earlier is shown, read) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1710 Tm (only, and still printed in reports\): every figure, the report and the saved session then leave the shot out, it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1798 Tm (stays on the sheet drawn hollow, and each figure's detail gives the figure again with every shot;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 1900 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1900 Tm (Delete, not a hole, for a staple, a tear or a pen mark. The mark stays at the end of the Shots list with It is a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 1988 Tm (hole, and Undo works. Remove the mark deletes it fully.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2090 Tm (In the Shots list each shot is a short row \(across, up and down, distance from its own bull\). Click a row, or the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2178 Tm (shot on the sheet, to open it in place: the bull \(nearest first\), its place in the firing order, Counted, and where it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2266 Tm (came from \(Found by GroupLab, moved by you, or added by you\). The firing order is what In the order fired uses) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2354 Tm (when there is no chronograph string.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2477 Tm (A click on the sheet moves the side panel to what it changed and flashes that part twice: a hole opens its row) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2565 Tm (under Shots, a bull goes to Which bull each shot belongs to, and Shift or Command on a bull goes to Loads on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2653 Tm (this sheet. The line under the picture says in a sentence what the click did. Where your computer is set to reduce) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2741 Tm (motion, the part is tinted for a moment instead of flashing.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2864 Tm (Flyer and "leave out" are deliberately two different things. Pointing at a shot and dropping it from the group are) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2952 Tm (two different decisions, and GroupLab will not quietly make the second one for you because you made the first.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3075 Tm (Every edit shows a small message at the bottom of the screen saying what changed, with Undo on it. Ctrl+Z and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3163 Tm (Ctrl+Y work everywhere, Command Z and Shift Command Z on a Mac, and the Undo on the message is the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3251 Tm (same undo.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 3352 Tm (Words underlined with dots) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 3440 Tm (Words underlined with dots) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 3478 Tm (Every word you may not know is underlined with dots, a figure's name or a word like sigma, MOA or bull, here) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3566 Tm (and on the website. Hold the pointer over it, or tab to it, for two or three plain sentences saying what it means;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3654 Tm (click it or press Enter for the whole entry, with More in the glossary. For a figure the sentences say what it is good) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3742 Tm (for and what the number of shots does to it. Every explanation says something about sample size, because every) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3830 Tm (one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3918 Tm (as a measurement of a rifle.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3566 Tm (Every word you may not know is underlined with dots, a figure's name or a word like sigma, MOA or bull, here) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3654 Tm (and on the website. Hold the pointer over it, or tab to it, for two or three plain sentences saying what it means;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3742 Tm (click it or press Enter for the whole entry, with More in the glossary. For a figure the sentences say what it is good) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3830 Tm (for and what the number of shots does to it. Every explanation says something about sample size, because every) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3918 Tm (one of these figures depends on it, and the commonest mistake in group shooting is treating one five shot group) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4006 Tm (as a measurement of a rifle.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 4107 Tm (Six figures stay in view) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 4195 Tm (Six figures stay in view) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 4233 Tm (Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4321 Tm (90. With the shot distance set, each is an angle first, in your scope's unit \(the session's rifle's, or the one in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4409 Tm (Settings, Units and figures\), and its size on the paper at that distance is beneath it in smaller type: an angle is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4497 Tm (what lets a group shot at 25 yards be compared with one shot at 100. Mil and MOA are the two a scope is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4585 Tm (marked in; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4673 Tm (reads 0.46 mil, 1.59 MOA or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4761 Tm (says an angle needs the distance, with a button to set it. A setting puts the size on the paper first, for a shooter) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4849 Tm (who only shoots one distance. Every figure carries its interval, the range the true value is likely to lie in, and the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4937 Tm (percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5025 Tm (excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5148 Tm (Advanced holds everything else, closed until you open it: sigma, the strips across and up and down, the order the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4321 Tm (Six figures stay in view: center from aim, extreme spread, group width by height, mean radius, and CEP 50 and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4409 Tm (90. With the shot distance set, each is an angle first, in your scope's unit \(the session's rifle's, or the one in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4497 Tm (Settings, Units and figures\), and its size on the paper at that distance is beneath it in smaller type: an angle is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4585 Tm (what lets a group shot at 25 yards be compared with one shot at 100. Mil and MOA are the two a scope is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4673 Tm (marked in; SMOA, an inch at 100 yards, is there for those who think in it, so a 0.422 inch group at 25.4 yards) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4761 Tm (reads 0.46 mil, 1.59 MOA or 1.66 SMOA. Without a distance the figures are sizes on the paper, and the panel) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4849 Tm (says an angle needs the distance, with a button to set it. A setting puts the size on the paper first, for a shooter) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4937 Tm (who only shoots one distance. Every figure carries its interval, the range the true value is likely to lie in, and the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5025 Tm (percentage it covers: hold the pointer over a figure to see it, with its angle at the distance shot. When you have) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5113 Tm (excluded a shot, the tooltip also gives the figure without the exclusion, so an exclusion is never hidden.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 22 of 50) Tj ET
 Q
 endstream
@@ -1034,46 +1041,47 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 49 0 R >>
 endobj
 49 0 obj
-<< /Length 4963 >>
+<< /Length 5119 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (shots were fired in, the two cards below, the full CEP table, the sighters, and carrying the correction to another) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (distance. GroupLab remembers whether you opened it. Where the rifle and load are known, Advanced also) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (carries one line from Bryan Litz's Top Gun trend, the average group a rifle of that weight and load tends to shoot,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 716 Tm (labeled as a trend and not a limit, with your shots beside it as the average five-shot group they imply \(see Scope) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 804 Tm (and mount\).) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (Advanced holds everything else, closed until you open it: sigma, the strips across and up and down, the order the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (shots were fired in, the two cards below, the full CEP table, the sighters, and carrying the correction to another) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (distance. GroupLab remembers whether you opened it. Where the rifle and load are known, Advanced also) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 716 Tm (carries one line from Bryan Litz's Top Gun trend, the average group a rifle of that weight and load tends to shoot,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 804 Tm (labeled as a trend and not a limit, with your shots beside it as the average five-shot group they imply \(see Scope) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 892 Tm (and mount\).) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 993 Tm (Velocity and the vertical) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 1081 Tm (Velocity and the vertical) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 1119 Tm (Velocity and the vertical, directly under the group's figures, says how much of the group's up-and-down spread) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1207 Tm (comes from velocity alone. It needs the session's chronograph readings \(Ballistics, Chronograph\), the shot) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1295 Tm (distance and the load's BC; without one of them it says which, with a button to it. The share is in amber with its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1383 Tm (range, at the confidence it states, then a meter from none to all of it and two bars on one scale: the vertical) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1471 Tm (spread measured on the shots, and the spread velocity alone would make at that distance by the solver, flown in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1559 Tm (the conditions on the day. Conditions on the day \(1\), under the block once it has readings, holds them: closed,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1647 Tm (one line says what is in use and where it came from; open, the temperature, the altitude \(or Use station pressure) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1735 Tm (instead of altitude\), the humidity and the shot angle, in your own units, with Fill from Ballistics for this rifle and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1823 Tm (load, Standard day to clear them, a link to the rifle's page for its sight height and zero, and Remember for my) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1911 Tm (next sheet, which offers them to your next sheet of the same day. Each one left blank comes from Ballistics,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1999 Tm (when that screen has the session's rifle and load chosen, and then from the standard day; a line compares) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2087 Tm (velocity alone with these against a standard day. On the phone the card's Conditions row opens the same as a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2175 Tm (sheet, with Use these. Nothing is ever filled from a location or a weather service. Where the range reaches all of) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2263 Tm (it, it says the data cannot tell, and more readings and shots narrow it. Where each reading was paired with its) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2351 Tm (shot when the readings were accepted, a chart of height against velocity draws the measured slope and the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2439 Tm (solver's, and a sentence says whether they agree, and if not, to check the distance, the BC or the order the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2527 Tm (readings were paired in. Its why lists the readings' own spread, the solver's height per 10 fps, both vertical) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2615 Tm (spreads, and that the range errs wide, never narrow. It also says which conditions were used and where they) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2703 Tm (came from, or that the standard day was assumed. Velocity band \(2\), beside the plot's other toggles, draws the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2791 Tm (band velocity alone would make about the group center in amber, with the measured spread as dotted lines; it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2879 Tm (starts on and is remembered. On the phone the same is a card above All figures, with Velocity band under the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2967 Tm (plot; with no readings its Import a file and Type them in open a page to import your chronograph's file or type the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3055 Tm (readings. On the computer, with no readings the block says what readings add and offers Import a file, Type) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3143 Tm (them in and a place to drop a Garmin Xero, LabRadar or CSV file. Type them in opens a box for the speeds in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3231 Tm (the order fired \("12 of 23 entered"\), and Match to shots pairs them as Ballistics proposes. Ballistics' Chronograph) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3319 Tm (section is still there: import a file from your chronograph \(CSV, TXT or Excel\), or paste the velocities, then Accept) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3407 Tm (the mapping.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1207 Tm (Velocity and the vertical, directly under the group's figures, says how much of the group's up-and-down spread) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1295 Tm (comes from velocity alone. It needs the session's chronograph readings \(Ballistics, Chronograph\), the shot) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1383 Tm (distance and the load's BC; without one of them it says which, with a button to it. The share is in amber with its) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1471 Tm (range, at the confidence it states, then a meter from none to all of it and two bars on one scale: the vertical) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1559 Tm (spread measured on the shots, and the spread velocity alone would make at that distance by the solver, flown in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1647 Tm (the conditions on the day. Conditions on the day \(1\), under the block once it has readings, holds them: closed,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1735 Tm (one line says what is in use and where it came from; open, the temperature, the altitude \(or Use station pressure) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1823 Tm (instead of altitude\), the humidity and the shot angle, in your own units, with Fill from Ballistics for this rifle and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1911 Tm (load, Standard day to clear them, a link to the rifle's page for its sight height and zero, and Remember for my) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1999 Tm (next sheet, which offers them to your next sheet of the same day. Each one left blank comes from Ballistics,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2087 Tm (when that screen has the session's rifle and load chosen, and then from the standard day; a line compares) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2175 Tm (velocity alone with these against a standard day. On the phone the card's Conditions row opens the same as a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2263 Tm (sheet, with Use these. Nothing is ever filled from a location or a weather service. Where the range reaches all of) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2351 Tm (it, it says the data cannot tell, and more readings and shots narrow it. Where each reading was paired with its) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2439 Tm (shot when the readings were accepted, a chart of height against velocity draws the measured slope and the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2527 Tm (solver's, and a sentence says whether they agree, and if not, to check the distance, the BC or the order the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2615 Tm (readings were paired in. Its why lists the readings' own spread, the solver's height per 10 fps, both vertical) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2703 Tm (spreads, and that the range errs wide, never narrow. It also says which conditions were used and where they) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2791 Tm (came from, or that the standard day was assumed. Velocity band \(2\), beside the plot's other toggles, draws the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2879 Tm (band velocity alone would make about the group center in amber, with the measured spread as dotted lines; it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2967 Tm (starts on and is remembered. On the phone the same is a card above All figures, with Velocity band under the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3055 Tm (plot; with no readings its Import a file and Type them in open a page to import your chronograph's file or type the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3143 Tm (readings. On the computer, with no readings the block says what readings add and offers Import a file, Type) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3231 Tm (them in and a place to drop a Garmin Xero, LabRadar or CSV file. Type them in opens a box for the speeds in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3319 Tm (the order fired \("12 of 23 entered"\), and Match to shots pairs them as Ballistics proposes. Ballistics' Chronograph) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3407 Tm (section is still there: import a file from your chronograph \(CSV, TXT or Excel\), or paste the velocities, then Accept) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3495 Tm (the mapping.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 23 of 50) Tj ET
 Q
 endstream
@@ -27860,13 +27868,13 @@ endobj
 << /Title (When a picture names no sheet) /Parent 165 0 R /Prev 166 0 R /Next 168 0 R /Dest [34 0 R /XYZ 0 565.228346 null] >>
 endobj
 168 0 obj
-<< /Title (Change an answer) /Parent 165 0 R /Prev 167 0 R /Next 169 0 R /Dest [38 0 R /XYZ 0 84.047244 null] >>
+<< /Title (Change an answer) /Parent 165 0 R /Prev 167 0 R /Next 169 0 R /Dest [40 0 R /XYZ 0 730.062992 null] >>
 endobj
 169 0 obj
-<< /Title (Name the caliber if you know it) /Parent 165 0 R /Prev 168 0 R /Next 170 0 R /Dest [40 0 R /XYZ 0 675.212598 null] >>
+<< /Title (Name the caliber if you know it) /Parent 165 0 R /Prev 168 0 R /Next 170 0 R /Dest [40 0 R /XYZ 0 648 null] >>
 endobj
 170 0 obj
-<< /Title (Holes between bulls, and marks off the grid) /Parent 165 0 R /Prev 169 0 R /Dest [40 0 R /XYZ 0 580.677165 null] >>
+<< /Title (Holes between bulls, and marks off the grid) /Parent 165 0 R /Prev 169 0 R /Dest [40 0 R /XYZ 0 553.464567 null] >>
 endobj
 171 0 obj
 << /Title (5. Read the analysis) /Parent 138 0 R /Prev 165 0 R /Next 184 0 R /First 172 0 R /Last 183 0 R /Count -12 /Dest [42 0 R /XYZ 0 730.062992 null] >>
@@ -27878,16 +27886,16 @@ endobj
 << /Title (From the keyboard) /Parent 171 0 R /Prev 172 0 R /Next 174 0 R /Dest [44 0 R /XYZ 0 386.220472 null] >>
 endobj
 174 0 obj
-<< /Title (Click a hole to edit it) /Parent 171 0 R /Prev 173 0 R /Next 175 0 R /Dest [46 0 R /XYZ 0 675.212598 null] >>
+<< /Title (Click a hole to edit it) /Parent 171 0 R /Prev 173 0 R /Next 175 0 R /Dest [46 0 R /XYZ 0 662.740157 null] >>
 endobj
 175 0 obj
-<< /Title (Words underlined with dots) /Parent 171 0 R /Prev 174 0 R /Next 176 0 R /Dest [46 0 R /XYZ 0 328.393701 null] >>
+<< /Title (Words underlined with dots) /Parent 171 0 R /Prev 174 0 R /Next 176 0 R /Dest [46 0 R /XYZ 0 315.92126 null] >>
 endobj
 176 0 obj
-<< /Title (Six figures stay in view) /Parent 171 0 R /Prev 175 0 R /Next 177 0 R /Dest [46 0 R /XYZ 0 221.385827 null] >>
+<< /Title (Six figures stay in view) /Parent 171 0 R /Prev 175 0 R /Next 177 0 R /Dest [46 0 R /XYZ 0 208.913386 null] >>
 endobj
 177 0 obj
-<< /Title (Velocity and the vertical) /Parent 171 0 R /Prev 176 0 R /Next 178 0 R /Dest [48 0 R /XYZ 0 662.740157 null] >>
+<< /Title (Velocity and the vertical) /Parent 171 0 R /Prev 176 0 R /Next 178 0 R /Dest [48 0 R /XYZ 0 650.267717 null] >>
 endobj
 178 0 obj
 << /Title (The zero correction) /Parent 171 0 R /Prev 177 0 R /Next 179 0 R /Dest [50 0 R /XYZ 0 189.212598 null] >>
@@ -28061,192 +28069,192 @@ xref
 0000054801 00000 n 
 0000058961 00000 n 
 0000059117 00000 n 
-0000062391 00000 n 
-0000062547 00000 n 
-0000066021 00000 n 
-0000066149 00000 n 
-0000072051 00000 n 
-0000072179 00000 n 
-0000077497 00000 n 
-0000077653 00000 n 
-0000081228 00000 n 
-0000081356 00000 n 
-0000088325 00000 n 
-0000088453 00000 n 
-0000093469 00000 n 
-0000093625 00000 n 
-0000097513 00000 n 
-0000097641 00000 n 
-0000103652 00000 n 
-0000103808 00000 n 
-0000107335 00000 n 
-0000107491 00000 n 
-0000110399 00000 n 
-0000110555 00000 n 
-0000113711 00000 n 
-0000113867 00000 n 
-0000117856 00000 n 
-0000118012 00000 n 
-0000121170 00000 n 
-0000121298 00000 n 
-0000125385 00000 n 
-0000125541 00000 n 
-0000126619 00000 n 
-0000126775 00000 n 
-0000130297 00000 n 
-0000130425 00000 n 
-0000136707 00000 n 
-0000136835 00000 n 
-0000141974 00000 n 
-0000142130 00000 n 
-0000146115 00000 n 
-0000146243 00000 n 
-0000153038 00000 n 
-0000153166 00000 n 
-0000160228 00000 n 
-0000160384 00000 n 
-0000163797 00000 n 
-0000163953 00000 n 
-0000167443 00000 n 
-0000167599 00000 n 
-0000171253 00000 n 
-0000171409 00000 n 
-0000172565 00000 n 
-0000172721 00000 n 
-0000174216 00000 n 
-0000174372 00000 n 
-0000178131 00000 n 
-0000178287 00000 n 
-0000181436 00000 n 
-0000181592 00000 n 
-0000184869 00000 n 
-0000184997 00000 n 
-0000191594 00000 n 
-0000191750 00000 n 
-0000196132 00000 n 
-0000196290 00000 n 
-0000198774 00000 n 
-0000198932 00000 n 
-0000202378 00000 n 
-0000304051 00000 n 
-0000406527 00000 n 
-0000527482 00000 n 
-0000794287 00000 n 
-0001064267 00000 n 
-0001206422 00000 n 
-0001414090 00000 n 
-0001565985 00000 n 
-0001770191 00000 n 
-0001979882 00000 n 
-0002178185 00000 n 
-0002301991 00000 n 
-0002521801 00000 n 
-0002788983 00000 n 
-0003033516 00000 n 
-0003305169 00000 n 
-0003396792 00000 n 
-0003538471 00000 n 
-0003751213 00000 n 
-0003953102 00000 n 
-0004210501 00000 n 
-0004446103 00000 n 
-0004720630 00000 n 
-0004836629 00000 n 
-0004971980 00000 n 
-0005111305 00000 n 
-0005211906 00000 n 
-0005308937 00000 n 
-0005567102 00000 n 
-0005650962 00000 n 
-0005712894 00000 n 
-0005788628 00000 n 
-0005858546 00000 n 
-0005912882 00000 n 
-0005912960 00000 n 
-0005913108 00000 n 
-0005913232 00000 n 
-0005913374 00000 n 
-0005913503 00000 n 
-0005913620 00000 n 
-0005913791 00000 n 
-0005913933 00000 n 
-0005914072 00000 n 
-0005914232 00000 n 
-0005914392 00000 n 
-0005914551 00000 n 
-0005914685 00000 n 
-0005914820 00000 n 
-0005914955 00000 n 
+0000063328 00000 n 
+0000063484 00000 n 
+0000066897 00000 n 
+0000067025 00000 n 
+0000073016 00000 n 
+0000073144 00000 n 
+0000078462 00000 n 
+0000078618 00000 n 
+0000082226 00000 n 
+0000082354 00000 n 
+0000089319 00000 n 
+0000089447 00000 n 
+0000094619 00000 n 
+0000094775 00000 n 
+0000098663 00000 n 
+0000098791 00000 n 
+0000104802 00000 n 
+0000104958 00000 n 
+0000108485 00000 n 
+0000108641 00000 n 
+0000111549 00000 n 
+0000111705 00000 n 
+0000114861 00000 n 
+0000115017 00000 n 
+0000119006 00000 n 
+0000119162 00000 n 
+0000122320 00000 n 
+0000122448 00000 n 
+0000126535 00000 n 
+0000126691 00000 n 
+0000127769 00000 n 
+0000127925 00000 n 
+0000131447 00000 n 
+0000131575 00000 n 
+0000137857 00000 n 
+0000137985 00000 n 
+0000143124 00000 n 
+0000143280 00000 n 
+0000147265 00000 n 
+0000147393 00000 n 
+0000154188 00000 n 
+0000154316 00000 n 
+0000161378 00000 n 
+0000161534 00000 n 
+0000164947 00000 n 
+0000165103 00000 n 
+0000168593 00000 n 
+0000168749 00000 n 
+0000172403 00000 n 
+0000172559 00000 n 
+0000173715 00000 n 
+0000173871 00000 n 
+0000175366 00000 n 
+0000175522 00000 n 
+0000179281 00000 n 
+0000179437 00000 n 
+0000182586 00000 n 
+0000182742 00000 n 
+0000186019 00000 n 
+0000186147 00000 n 
+0000192744 00000 n 
+0000192900 00000 n 
+0000197282 00000 n 
+0000197440 00000 n 
+0000199924 00000 n 
+0000200082 00000 n 
+0000203528 00000 n 
+0000305201 00000 n 
+0000407677 00000 n 
+0000528632 00000 n 
+0000795437 00000 n 
+0001065417 00000 n 
+0001207572 00000 n 
+0001415240 00000 n 
+0001567135 00000 n 
+0001771341 00000 n 
+0001981032 00000 n 
+0002179335 00000 n 
+0002303141 00000 n 
+0002522951 00000 n 
+0002790133 00000 n 
+0003034666 00000 n 
+0003306319 00000 n 
+0003397942 00000 n 
+0003539621 00000 n 
+0003752363 00000 n 
+0003954252 00000 n 
+0004211651 00000 n 
+0004447253 00000 n 
+0004721780 00000 n 
+0004837779 00000 n 
+0004973130 00000 n 
+0005112455 00000 n 
+0005213056 00000 n 
+0005310087 00000 n 
+0005568252 00000 n 
+0005652112 00000 n 
+0005714044 00000 n 
+0005789778 00000 n 
+0005859696 00000 n 
+0005914032 00000 n 
+0005914110 00000 n 
+0005914258 00000 n 
+0005914382 00000 n 
+0005914524 00000 n 
+0005914653 00000 n 
+0005914770 00000 n 
+0005914941 00000 n 
 0005915083 00000 n 
-0005915223 00000 n 
-0005915365 00000 n 
-0005915493 00000 n 
-0005915639 00000 n 
-0005915768 00000 n 
-0005915885 00000 n 
-0005916011 00000 n 
-0005916188 00000 n 
-0005916341 00000 n 
-0005916501 00000 n 
-0005916631 00000 n 
-0005916823 00000 n 
-0005916951 00000 n 
-0005917095 00000 n 
-0005917225 00000 n 
-0005917371 00000 n 
-0005917515 00000 n 
-0005917690 00000 n 
-0005917819 00000 n 
-0005917951 00000 n 
-0005918089 00000 n 
-0005918230 00000 n 
-0005918369 00000 n 
-0005918509 00000 n 
-0005918643 00000 n 
-0005918771 00000 n 
-0005918922 00000 n 
-0005919077 00000 n 
-0005919208 00000 n 
-0005919329 00000 n 
-0005919509 00000 n 
-0005919611 00000 n 
-0005919783 00000 n 
-0005919933 00000 n 
-0005920077 00000 n 
-0005920293 00000 n 
-0005920414 00000 n 
-0005920554 00000 n 
-0005920683 00000 n 
-0005920817 00000 n 
-0005920947 00000 n 
-0005921065 00000 n 
-0005921249 00000 n 
-0005921370 00000 n 
-0005921560 00000 n 
-0005921699 00000 n 
-0005921827 00000 n 
-0005922008 00000 n 
-0005922125 00000 n 
-0005922291 00000 n 
-0005922410 00000 n 
-0005922576 00000 n 
-0005922705 00000 n 
-0005922840 00000 n 
-0005922996 00000 n 
-0005923119 00000 n 
-0005923276 00000 n 
-0005923400 00000 n 
-0005923522 00000 n 
-0005923666 00000 n 
-0005923812 00000 n 
-0005923945 00000 n 
-0005924110 00000 n 
-0005924241 00000 n 
-0005924366 00000 n 
-0005924509 00000 n 
-0005924657 00000 n 
+0005915222 00000 n 
+0005915382 00000 n 
+0005915542 00000 n 
+0005915701 00000 n 
+0005915835 00000 n 
+0005915970 00000 n 
+0005916105 00000 n 
+0005916233 00000 n 
+0005916373 00000 n 
+0005916515 00000 n 
+0005916643 00000 n 
+0005916789 00000 n 
+0005916918 00000 n 
+0005917035 00000 n 
+0005917161 00000 n 
+0005917338 00000 n 
+0005917491 00000 n 
+0005917651 00000 n 
+0005917781 00000 n 
+0005917973 00000 n 
+0005918101 00000 n 
+0005918245 00000 n 
+0005918376 00000 n 
+0005918515 00000 n 
+0005918659 00000 n 
+0005918834 00000 n 
+0005918963 00000 n 
+0005919095 00000 n 
+0005919233 00000 n 
+0005919373 00000 n 
+0005919512 00000 n 
+0005919652 00000 n 
+0005919786 00000 n 
+0005919914 00000 n 
+0005920065 00000 n 
+0005920220 00000 n 
+0005920351 00000 n 
+0005920472 00000 n 
+0005920652 00000 n 
+0005920754 00000 n 
+0005920926 00000 n 
+0005921076 00000 n 
+0005921220 00000 n 
+0005921436 00000 n 
+0005921557 00000 n 
+0005921697 00000 n 
+0005921826 00000 n 
+0005921960 00000 n 
+0005922090 00000 n 
+0005922208 00000 n 
+0005922392 00000 n 
+0005922513 00000 n 
+0005922703 00000 n 
+0005922842 00000 n 
+0005922970 00000 n 
+0005923151 00000 n 
+0005923268 00000 n 
+0005923434 00000 n 
+0005923553 00000 n 
+0005923719 00000 n 
+0005923848 00000 n 
+0005923983 00000 n 
+0005924139 00000 n 
+0005924262 00000 n 
+0005924419 00000 n 
+0005924543 00000 n 
+0005924665 00000 n 
+0005924809 00000 n 
+0005924955 00000 n 
+0005925088 00000 n 
+0005925253 00000 n 
+0005925384 00000 n 
+0005925509 00000 n 
+0005925652 00000 n 
+0005925800 00000 n 
 trailer
 << /Size 222 /Root 1 0 R >>
 startxref
-5924790
+5925933
 %%EOF

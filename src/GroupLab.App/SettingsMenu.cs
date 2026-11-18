@@ -349,6 +349,11 @@ public static class DefaultsWords
     public static IReadOnlyList<string> AnalysisChoices { get; } = ["The main figures", "Every figure"];
 
     public const string OnTheComputer = "Rounds fired and the rifle and load are set for each target on the computer.";
+
+    /// <summary>Entry 499 section 2: the marking toolbar's switch, also on Shooting defaults.</summary>
+    public const string SnapToHoles = "Snap to holes";
+
+    public const string SnapSays = "On, a hole you place by hand moves onto the hole near your click. Off, it goes exactly where you click. Hold Alt (Option on a Mac) as you click to skip the snap for one hole.";
 }
 
 /// <summary>NOTES-FROM-PLANNING.md entry 468 section 2.6: text size and Reduce motion, the same words on the computer and the phones.</summary>

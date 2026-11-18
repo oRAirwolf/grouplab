@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-18, after entry 498; entries 499, 500 and 501 are next in the inbox.
+**Last rewritten:** 2026-11-18, after entry 499; entries 500 and 501 are next in the inbox.
 
 ---
 
@@ -18,12 +18,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 498 (2026-11-18)**: question 114 answered (a); report 50's two holes in the diamonds left (no honest fix); the App Store audit
   fixed 6 findings; a pooled set changed on two devices reaches the Sessions banner and a plain prompt (look: DESIGN NEEDED). Not taken:
   speed on a scan. Still to check: nightly 232 reaching TestFlight as 1.0.232.
-- **The nightly backup of 18 November never started**: Windows Update restarted the computer twice at 20:15 Denver on the 17th and nobody
-  signed in until 06:16, and the task runs only while signed in (entry 499 section 0). Run by hand at 15:21 UTC: backup-2026-11-18 ok.
-- **2026-11-17, by Alan's word**: GroupLab 1.0 (build 226) **released on the App Store** (READY_FOR_DISTRIBUTION,
-  https://apps.apple.com/app/id6817635137) by `testflight.py --release`, run only from the testflight workflow's hand-filled input; the
-  README, site, guide and PLATFORM-SUPPORT.md say so. Suggestion 48 closed as built in nightly 199. **Error report 50, part two**: Find
-  holes now finds a ring on paper (`AnyTargetHoleFinder.PaperRings`), 9 of the tester's 11 holes instead of 1; ships in nightly 231.
+- **Entry 499 (2026-11-18)**: Snap to holes (toolbar and Shooting defaults) and Alt for one click; the snap keeps a click on its own
+  touching ring and stays put when it finds no hole's edge. The missed backup night is caught at the start of every Code run now.
 - **Entry 495 (2026-11-16)**, done but two parts: a pooled set is a record of its own (schema 7, `pools`, `SessionPools`,
   `PoolPackage`) on both platforms, in Session records, Compare, sharing, export, import and sync; not built: a screen to choose
   between two devices' versions of a pool (built in entry 498), and the sheet question on the phone (it deletes no session).
@@ -83,10 +79,12 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entries 499, 500 and 501.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entries 500 and 501.
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **Snap to holes can be off** (entry 499): a hole placed by hand then goes exactly where it is clicked; Alt does it for one click.
+  **At the start of every run, `python scripts/automation-report.py`** (CLAUDE.md, backups rule 6) catches a night that never started.
 - **A pooled set changed on two devices waits like a session** (entry 498): the banner counts it, its row is tagged, and the session
   prompt's card shows it as plain rows with no plot until its own screen is drawn; a pool reaching a device before its sheets asks nothing.
 - **Every phone sheet closes through `ProblemSheet.PutBack`** (error report 43), and a choice handed to `ProblemSheet.Over` that the

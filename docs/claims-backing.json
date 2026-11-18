@@ -8685,6 +8685,12 @@
    "match": "A pooled set changed on two devices waits the same way|a pooled set the same way as a plain list",
    "kind": "code",
    "where": "src/GroupLab.Core/Sync/SyncEngine.cs (PoolVersions, Resolve), src/GroupLab.Core/Sync/SyncScreens.cs (ComparePools, ToChooseBanner, KeepBothPools), src/GroupLab.Core/Records/SessionPools.cs (Version); src/GroupLab.App/MainWindow.Sync.cs (PoolsToChoose, ShowSyncConflict) and mobile/GroupLab.Mobile/PhoneSync.cs (PoolsToChoose, ShowConflict); held by CloudClientTests.APooledSetChangedOnTwoDevicesKeepsBothUntilChosen, SyncScreensTests.APooledSetsTwoVersionsSayWhatEachHolds, Entry463Tests and Entry463PhoneTests (entry 498 section 3)"
+  },
+  {
+   "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$|^site:tour/|^site:features/",
+   "match": "A hole you place by hand snaps to the hole near your click|Holding \\*\\*Alt\\*\\* \\(Option on a Mac\\)|held as you place a hole puts it exactly where you click|it snaps to the hole near your click, or goes exactly where you click|Where it cannot find a hole's edge and the dark around the click would pull the mark onto print",
+   "kind": "code",
+   "where": "src/GroupLab.App/MarkingCanvas.cs (SnapToHoles, Placement, OnPointerReleased) and src/GroupLab.Core/Marking/AutomaticMarking.cs (Snapping.ToHole, UnsureShare, NearShare, StayedPut); src/GroupLab.App/MainWindow.cs (snapToggle, SetSnapToHoles) and MainWindow.SettingsMenu.cs (Shooting defaults); held by App Entry499Tests and Core SnapStaysPutTests (entry 499 sections 2 and 3)"
   }
  ]
 }

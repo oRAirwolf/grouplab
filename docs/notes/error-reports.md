@@ -53,6 +53,17 @@ hourly while waiting on CI, and writes each new one here.
   refused as straight sided (0.87 round), and printed squares on the same scan measure 0.83 to 0.88, so no line between them is honest.
   Not kept: over the other local pictures (store-bought blanks, range photographs and camera tests) the same pass added at least 40 marks on 18 of them, 7 of those on 5 store-bought blanks never
   shot. Both holes are placed by a click; entry 499 makes the snap and a switch better for exactly these.
+- **Part three, 2026-11-18 (the tester's reply on Discord, build 231; entry 499):** Find holes worked much better; placing by hand still
+  struggled with the touching rings and the holes in the black diamonds, and a switch for true manual placement might help. Alan said
+  yes on Discord and in chat (entry 499), recorded here as a yes. **Their run against ours:** their screenshot shows 8 marks, one of them
+  doubted on box 4's printed "4" and the touching pair as one mark. Run on the same scan, the finder gives exactly that when the scale
+  reads the scan as about 800 dots an inch instead of its true 600 (the "4" proposed; with a caliber entered, the pair as one): their scale
+  line across box 3 was most likely given a length about a quarter short. Find holes is that sensitive to the scale: at 550 or 650 dots an
+  inch it finds 7 or 9 rather than 9, so a scale off by a tenth costs holes. **Built:** Snap to holes, a switch in the marking toolbar and
+  on Shooting defaults, and Alt held for one click, each placing a hole exactly where it is clicked; the snap now keeps a click on one of
+  two touching rings on that ring (it went to the other), and where it finds no hole's edge and the dark would pull the mark onto print,
+  it leaves the mark where it was clicked and says so. On the scan the torn hole in box 4 now keeps 4 of 6 clicks a quarter of a hole off
+  where they were made (the others go nearer the hole), and box 5's lands on one place about a fifth of a hole from its white middle.
 
 ## 47, 2026-11-16, nightly 226 on the computer (a Discord post in bug-reports, with two screenshots)
 

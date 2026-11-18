@@ -779,6 +779,37 @@ that the asked device's two versions are the desk's and the phone's, and that ea
 `Entry463Tests` and `Entry463PhoneTests` hold the banner, the tag and keeping both. The screen's look is a DESIGN NEEDED line in
 for-alan.md. The user guide and the Features sentence say it.
 
+## Entry 499: Snap to holes, the snap staying put when unsure, and a night with no backup (2026-11-18)
+
+**0.** The nightly backup of 18 November never started: Windows Update restarted the computer twice at 20:15 Denver on the 17th and
+nobody signed in until 06:16, and the task runs only while somebody is signed in, so at 02:30 there was no session to run in (its
+StartWhenAvailable did not help, since the task could not run signed out). Run by hand: backup-2026-11-18, "result: backup ok", and its
+restore test passed (8 files, 2 joined from parts). `automation-report.py` now writes "No nightly backup since <day>" in for-alan.md when
+the newest backup is more than 26 hours old, and CLAUDE.md has Code run it at the start of every run (backup tests 27 of 27). The
+Discord attachments step of the hand run left two folders on the server "would not unpack": run from Git Bash, GNU tar came first on the
+PATH and read C:\ as a host; `Get-DiscordAttachments.ps1` now calls Windows' tar by its path, and both folders were fetched and
+checked. **1.** The tester's reply is recorded under report 50 as Alan's yes. **2.** Snap to holes, on by default, in the marking toolbar
+beside the tools and on Shooting defaults (Find a setting finds it by "snap" or "manual"), remembered in settings: off, a new impact goes
+exactly where it is let go and the preview is a ring at the pointer with no dashed line; Alt (Option on a Mac) held does the same for
+one placement; the log notes "snap off" or "snap skipped (Alt)" at debug level. Alt clashes with nothing: holding it shows the shortcut
+labels as before, and the window has no menu bar for its release to move the focus to. A dragged shot was already placed exactly where it
+is let go (`MoveShot`, no snap); the Impact tool's summary now says that only a new impact snaps. The phone does not snap, and the parity
+table and the guide say nothing about snapping there. `Entry499Tests` holds the default, the switch, Alt and a restart. **3.** Rebuilt
+from report 50's measurements: a ring torn where orange meets the black band, and two rings touching 41 pixels apart (a hole 52
+across). Measured before: a click on the lower ring's centre went 41 pixels to the upper ring, and clicks on the torn ring moved 6 to 32
+pixels and ended 19 to 23 off it. Now the outline step takes a passing circle within half a hole of the click before a cleaner one
+farther off (`Snapping.NearShare`), so every click on either ring lands within 0.2 pixels of its own centre; and with no outline found, a
+dark weight that would move the mark more than a quarter of a hole (`UnsureShare`, 13 pixels here) leaves it where it was clicked, with
+"Placed where you clicked: GroupLab could not find the edge of a hole here" on the notice line. The quarter: on the rebuilt torn ring
+the weight never landed nearer than 19 pixels, so a smaller move cannot be trusted either, and a hole on paper is found by its outline
+and never reaches it. On the rebuilt torn ring the outline step itself accepts a circle shifted onto the orange, so that case is not
+fixed; on the real scan box 4's torn hole keeps 4 of 6 off-centre clicks where they were made and box 5's lands on one place about a
+fifth of a hole from its white middle. A light hole closed in by dark print found by its outline was not built. `SnapStaysPutTests` holds
+the touching pair, a click on print with no hole near it, and a hole on paper; the 598 Core marking and snap tests pass unchanged.
+**4.** The tester's build 231 result is reproduced when the scale reads the scan as about 800 dots an inch instead of 600 (the "4"
+proposed; with a caliber, the pair as one): their scale was most likely about a quarter short. Find holes finds 7 holes at 550 or 650
+against 9 at 600. **5.** The line for Alan to post on Discord is in for-alan.md.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
