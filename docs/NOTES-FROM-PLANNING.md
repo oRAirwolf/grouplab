@@ -245,7 +245,7 @@ name and where it is, Alt for one click, the snap now staying where they click w
 
 ## 2026-11-17, entry 498: question 114 answered (a); three pieces of work for the rest of the week
 
-**Status: actioned 2026-11-18. Not done: section 1.1 left as it is (the two holes in the diamonds have no honest fix; the numbers are in error-reports.md under report 50); section 1.3 not taken (the speed work was optional, and the week went to sections 2 and 3 and entry 499); section 0's check that nightly 232 reaches TestFlight as 1.0.232 waits for the nightly this commit makes.**
+**Status: actioned 2026-11-18. Not done: section 1.1 left as it is (the two holes in the diamonds have no honest fix; the numbers are in error-reports.md under report 50); section 1.3 not taken (the speed work was optional, and the week went to sections 2 and 3 and entry 499); section 0's check: nightly 232's iPhone job never got a Mac runner (twice), and 233's was signed and sent to TestFlight as 1.0.233.**
 
 From the planning session, on Alan's word in chat at 15:40 Denver on 2026-11-17. The week is 40% used and resets on Friday
 2026-11-20 at 06:00 UTC. Alan chose these three, in this order. Nothing here needs Alan. The usage guard stays at 85% (88% for a

@@ -17,7 +17,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entry 498 (2026-11-18)**: question 114 answered (a); report 50's two holes in the diamonds left (no honest fix); the App Store audit
   fixed 6 findings; a pooled set changed on two devices reaches the Sessions banner and a plain prompt (look: DESIGN NEEDED). Not taken:
-  speed on a scan. Still to check: nightly 232 reaching TestFlight as 1.0.232.
+  speed on a scan. 1.0.233 reached TestFlight.
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by mac-store.yml after each nightly; signed ad hoc the sandbox stops it at LaunchServices, so its proof needs TestFlight on a Mac; signing waits on request 107.
 - **Entry 500 (2026-11-18)**: the App Store is the way in on iPhone and iPad; the public TestFlight invitation is retired wording.
 - **Entry 499 (2026-11-18)**: Snap to holes (toolbar and Shooting defaults) and Alt for one click; the snap keeps a click on its own
@@ -70,9 +70,8 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (114 answered (a) in entry 498):
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.231 (2026-11-17), with Find holes' rings (report 50); its iPhone build was refused by TestFlight
-  because releasing 1.0 closed Apple's 1.0 train, so from 232 the iPhone builds are 1.0.<build> (question 114). The iOS jobs are held
-  to .NET 10 since the Mac runners gained .NET 11 (the restore failures of 230 and 231).
+- **Last nightly:** 1.0.0-nightly.233 (2026-11-18), with entries 498, 499 and 501; its iPhone build went to TestFlight as 1.0.233
+  (232's never got a Mac runner, twice). GitHub's Mac runners are short today: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
 ## The inbox
