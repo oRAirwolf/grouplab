@@ -111,19 +111,25 @@ jobs:
           done
           codesign --force --sign - --entitlements out/sandbox-only.entitlements "$app"
           codesign --display --entitlements - "$app" | grep -q app-sandbox || { echo "::error::the sandbox entitlement is not on the bundle"; exit 1; }
+          # Started the way a double click starts it, through LaunchServices, which sets the sandbox up; its output goes to files.
           set +e
-          ( "$main" --self-check > out/self-check.out 2>&1 ) &
+          ( open -W -n --stdout "$PWD/out/self-check.out" --stderr "$PWD/out/self-check.err" "$app" --args --self-check ) &
           pid=$!
           for i in $(seq 1 120); do kill -0 $pid 2>/dev/null || break; sleep 5; done
-          if kill -0 $pid 2>/dev/null; then kill $pid; echo "::error::the self-check did not finish in ten minutes"; tail -40 out/self-check.out; exit 1; fi
+          if kill -0 $pid 2>/dev/null; then kill $pid; pkill -f "GroupLab.App --self-check"; echo "::error::the self-check did not finish in ten minutes"; tail -40 out/self-check.out out/self-check.err; exit 1; fi
           wait $pid
           code=$?
           set -e
+          why() {
+            tail -40 out/self-check.out out/self-check.err 2>/dev/null || true
+            log show --last 5m --style compact --predicate 'process == "GroupLab.App" OR (sender == "Sandbox" AND eventMessage CONTAINS "GroupLab")' 2>/dev/null | tail -40 || true
+            for f in "$HOME"/Library/Logs/DiagnosticReports/*GroupLab*; do [ -f "$f" ] && head -80 "$f"; done
+          }
           result="$HOME/Library/Containers/org.grouplab.app/Data/.config/GroupLab/self-check.json"
           { echo "### The Mac App Store copy, ${{ steps.which.outputs.tag }}, inside the sandbox: exit $code"; echo '```'; cat "$result" 2>/dev/null || tail -40 out/self-check.out; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
-          test -f "$result" || { echo "::error::no self-check.json in the container, so the copy did not run inside the sandbox"; tail -40 out/self-check.out; exit 1; }
+          test -f "$result" || { echo "::error::no self-check.json in the container, so the copy did not run inside the sandbox"; why; exit 1; }
           cat "$result"
-          [ $code -eq 0 ] || { echo "::error::a step of the self-check failed; the summary says which"; exit 1; }
+          grep -q '"ok": true' "$result" || { echo "::error::a step of the self-check failed; the summary says which"; why; exit 1; }
 
       - name: The store secrets
         id: secrets
