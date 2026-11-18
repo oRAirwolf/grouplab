@@ -40,7 +40,7 @@
       27
     ],
     "Close this target": [
-      373,
+      377,
       8,
       20,
       20
@@ -118,7 +118,7 @@
       40
     ],
     "Open another target": [
-      407,
+      411,
       6,
       30,
       22
@@ -148,7 +148,7 @@
       34
     ],
     "Redo (Ctrl+Y)": [
-      422,
+      547,
       141,
       34,
       34
@@ -219,6 +219,12 @@
       187,
       27
     ],
+    "SnapToHoles": [
+      382,
+      142,
+      108,
+      32
+    ],
     "Some bulls took two or more. Then tap those bulls on the sheet.": [
       1058,
       872,
@@ -238,7 +244,7 @@
       34
     ],
     "Undo (Ctrl+Z)": [
-      384,
+      509,
       141,
       34,
       34
@@ -255,10 +261,10 @@
       34,
       34
     ],
-    "grouplab-codeless-4a3e5cf236744d2e829aa4b521624db5.png, Marking": [
+    "grouplab-codeless-1a36db411c144cc8b0c7f01ab0110ead.png, Marking": [
       61,
       4,
-      308,
+      312,
       27
     ],
     "why ▸": [
