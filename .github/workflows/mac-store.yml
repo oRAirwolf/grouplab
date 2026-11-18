@@ -225,8 +225,13 @@ jobs:
           else
             printf '%s' "$APPLE_API_KEY_P8" | base64 --decode > "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
           fi
+          build="${{ steps.which.outputs.build }}"
           if xcrun altool --upload-app --type macos --file out/GroupLab.pkg --apiKey "$APPLE_API_KEY_ID" --apiIssuer "$APPLE_API_ISSUER_ID" > upload.log 2>&1; then
-            echo "### The Mac App Store copy, build ${{ steps.which.outputs.build }}, signed and sent to TestFlight (internal group only; nothing submitted for review)." >> "$GITHUB_STEP_SUMMARY"
+            echo "### The Mac App Store copy, build $build, signed and sent to TestFlight (internal group only; nothing submitted for review)." >> "$GITHUB_STEP_SUMMARY"
+          # As the nightly does: a run again for a build Apple already has says so and goes on to the group, which is all it has left to do.
+          elif grep -F "previously uploaded version: " upload.log | grep -q "[^0-9]$build[^0-9]"; then
+            echo "::notice::TestFlight already has Mac build $build from an earlier run; it is not sent twice."
+            echo "### The Mac App Store copy, build $build, was already on TestFlight from an earlier run, so it was not sent twice." >> "$GITHUB_STEP_SUMMARY"
           else
             grep -vi "key" upload.log | tail -30
             echo "::error::TestFlight did not take the Mac build; the lines above say why."
@@ -252,4 +257,7 @@ jobs:
           APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
-        run: python3 current/scripts/testflight.py --mac-internal "${{ steps.which.outputs.build }}" --wait-minutes 30
+        # The App Store Connect key signs its requests with pyjwt, as testflight.yml installs it.
+        run: |
+          python3 -m pip install --quiet --disable-pip-version-check --break-system-packages "pyjwt[crypto]==2.10.1"
+          python3 current/scripts/testflight.py --mac-internal "${{ steps.which.outputs.build }}" --wait-minutes 30
