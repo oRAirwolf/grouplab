@@ -12,6 +12,18 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.233
+
+**2026-11-18**, commit `829c7ff`. Nightly.
+
+**Under the hood**
+
+- A Mac App Store copy of GroupLab is now built after each nightly and checked inside Apple's sandbox; it is not offered anywhere yet.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.233)
+
+---
+
 ## 1.0.0-nightly.232
 
 **2026-11-18**, commit `43aff07`. Nightly.
