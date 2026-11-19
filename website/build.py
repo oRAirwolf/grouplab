@@ -1319,7 +1319,7 @@ def page_support() -> str:
 </section>
 <section class="wrap section-sm grid-2">
 <div class="panel pad stack tight"><h2 class="h3">No GitHub account?</h2><p>Email the report package instead, with the build line and a line about what you were doing.</p><p><a class="mono" href="mailto:{SUPPORT_EMAIL}">{SUPPORT_EMAIL}</a></p></div>
-<div class="panel pad stack tight"><h2 class="h3">On a phone</h2><p>On Android, iPhone and iPad, open Settings, then Help and problems: <strong>Send to GroupLab</strong> sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; <strong>Send diagnostics</strong> puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email. On the iPhone and iPad beta, <strong>Send Beta Feedback</strong> in TestFlight, or a screenshot shared to it, reaches the project too.</p></div>
+<div class="panel pad stack tight"><h2 class="h3">On a phone</h2><p>On Android, iPhone and iPad, open Settings, then Help and problems: <strong>Send to GroupLab</strong> sends the newest logs and any crash record straight to the project, with a note if you write one, and gives you a reference; <strong>Send diagnostics</strong> puts the newest logs and crash records in one zip and hands it to the share sheet, so you can attach it to an issue or an email. Testers still on the TestFlight beta can also use <strong>Send Beta Feedback</strong> in TestFlight, or share a screenshot to it.</p></div>
 <div class="panel pad stack tight"><h2 class="h3">If a new build will not start</h2><p>No installer or uninstaller touches your records: on Windows they live in <code>%APPDATA%\\GroupLab</code>, under your home folder on a Mac or Linux, and in the app's own storage on a phone. A fault in a build can still change them, so GroupLab keeps a daily copy, the newest 14. To go back, take one of the newest thirty builds from the releases list and install it over the broken one; an older build is gone, and the newest is usually the fix. The Microsoft Store copy goes back only by uninstalling it and installing the zip or the installer.</p><a href="{GITHUB}/releases">All builds on GitHub</a></div>
 <div class="panel pad stack tight"><h2 class="h3">If sessions are missing</h2><p>Open Settings, Sync and your data, then <strong>Restore a copy</strong>, and choose a copy from before they went missing. Your records as they are now are copied first, so nothing is lost by trying one.</p></div>
 </section>
@@ -1353,7 +1353,7 @@ GUIDES = [
     ("user-guide", "USER-GUIDE.md", "user-guide.pdf", "User guide",
      "The GroupLab user guide: one sheet from the printer to the analysis, with renders of the current build."),
     ("testing-guide", "TESTING-GUIDE.md", "testing-guide.pdf", "Trying GroupLab",
-     "Trying GroupLab for the first time: getting the test build, the first minute with no rifle, and what is not done yet."),
+     "Trying GroupLab for the first time: getting the newest build, the first minute with no rifle, and what is not done yet."),
     # Entry 438: the statistics primer, for a reader who has never taken a statistics class.
     ("statistics-primer", "STATISTICS-PRIMER.md", "statistics-primer.pdf", "Statistics for shooters",
      "Statistics for shooters, from the beginning: group size, sigma, CEP, confidence and p-values in plain words, with what each "

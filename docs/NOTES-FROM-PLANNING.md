@@ -25,6 +25,101 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-19, entry 503: consistency audit, 2026-11-19
+
+**Status: actioned 2026-11-19. Every section done. Finding 2 in part, as the entry allows: the factual line about 1.0 is in the README, and what the eight checks are now for is question 115, so RELEASE-PLAN.md and readme.py's description are unchanged. Finding 6's cards have no link (the card format has none) and no picture; the App Store card's note phrase is nightly 226's "GroupLab is now version 1.0", since the notFeatures phrase is in no published build's notes. DESIGN.md has no state table, so finding 1 changed only the README.**
+
+From the scheduled consistency audit (entry 267 section 2b), run 2026-11-19 about 16:50 UTC against main at 8b65a955 and the live
+grouplab.org. Read: README.md, the live home, /download/, /features/, /tour/, /tour/how-it-works/, /shoot-a-target/, /guides/,
+/releases/ and /support/, website/features.json, docs/RELEASE-NOTES.md (233 to 230), STATE.md, for-alan.md, PLATFORM-SUPPORT.md,
+PHONE-PARITY.md, ANDROID.md, TESTING-GUIDE.md, RELEASE-PLAN.md, the inbox and the last few days of commits. No open GitHub issue labelled
+`consistency` (issue 1 is closed), so nothing here repeats the weekly check. Seven findings. Nothing here needs Alan.
+
+Checked and found right, so not to be touched: the App Store and 1.0 wording on the home page, /download/, README and PLATFORM-SUPPORT.md;
+the retired TestFlight invitation (entry 500) is gone from the download page and README; the Microsoft Store line (1.0.230, which is
+what external-status.md says the Store carries); "GroupLab is not in the Mac App Store" (true until Alan says to submit, entry 501);
+Snap to holes and Alt on /features/ (other-targets), in the user guide and in the release notes of 232; the Play closed test wording on
+/download/, README and ANDROID.md; credits in Thanks (Unholy, Jylee, Quack; no surname for Justin anywhere public); no line says a lawyer
+is reviewing anything; "What GroupLab is not" is not in the README.
+
+### 1. The README's phase states call the shipped application "not usable"
+
+- Where: README.md line 394, the four states table: "**In progress** | being built, not usable". Lines 407, 409 and 411 then give
+  **4. Windows application**, **6. Android** and **8. iOS** the state In progress.
+- Why it is wrong: the same README (line 5 and the Download table), the home page, /download/ and both stores say GroupLab 1.0 is ready
+  to use, released on the App Store on 2026-11-17 and in the Microsoft Store. So the Planned table says the three applications people
+  install today are "not usable".
+- Should say: a definition of In progress that fits an application in use and still being built, for example "being built; parts may
+  already be in use, and the rest of the phase is not yet proven", or a state that says so. Keep DESIGN.md section 21 in step, since
+  ReadmeTests compares the two.
+
+### 2. "Before the first beta or stable release" after 1.0 reached two stores
+
+- Where: README.md line 364, the heading "Before the first beta or stable release" and the line under it, "No beta or stable release
+  happens until Alan asks for one by name"; docs/RELEASE-PLAN.md title and lines 3 to 4 say the same; scripts/readme.py line 11
+  describes the block the same way.
+- Why it is wrong: GroupLab 1.0 (build 226) was released on the App Store on Alan's word on 2026-11-17 and the Microsoft Store carries
+  1.0.230.0. A reader of the README is told no release has happened yet, two screens below "Version 1.0 is on the App Store".
+- Should say: what the eight checks are now for (for example the first numbered release made by `release.yml` from a tag), and one
+  line that 1.0 went to the App Store and the Microsoft Store from nightly builds on Alan's word on 2026-11-17, with which of the eight
+  checks were met then if that is known. If the rewording would change what Alan decided a release means (entry 119 section 8, entry
+  488), ask it as a question in QUESTIONS-FOR-PLANNING.md instead of deciding it.
+
+### 3. The testing guide still sends people to the internal test (missed by entry 497)
+
+- Where: docs/TESTING-GUIDE.md line 24 (also in TESTING-GUIDE.pdf and wherever the guide is published on the site): "if a phone there
+  still refuses one, ask on the Discord for the Google Play internal test instead".
+- Why it is wrong: entry 497 changed this sentence in README.md line 131, docs/ANDROID.md line 414 and the /download/ fold to the closed
+  test, which anyone can join; this one copy was left.
+- Should say, as ANDROID.md line 414 does: "if a phone there still refuses one, take GroupLab from Google Play's closed test instead,
+  which anyone can join (the three steps are at https://grouplab.org/android-test/)". Regenerate the PDF. Consider adding "for the Google
+  Play internal test instead" to docs/RETIRED-WORDING.json so the weekly check catches it next time.
+
+### 4. "Test build" on the guides page and in the testing guide
+
+- Where: website/build.py line 1356, live at https://grouplab.org/guides/: "Trying GroupLab for the first time: getting the test build,
+  the first minute with no rifle, and what is not done yet." And docs/TESTING-GUIDE.md line 99: "copy that line into any report, because
+  a test build changes whenever the code does."
+- Why it is wrong: entry 488 and entry 497 section 2 retired calling GroupLab a test build; TESTING-GUIDE.md line 7 already says
+  "GroupLab 1.0 is ready to use and still in active development".
+- Should say, for example: "getting the newest build, the first minute with no rifle, and what is not done yet", and "because a new
+  build arrives often". Regenerate the PDF.
+
+### 5. The support page still points iPhone users at "the iPhone and iPad beta"
+
+- Where: website/build.py line 1322, live at https://grouplab.org/support/ under On a phone: "On the iPhone and iPad beta, Send Beta
+  Feedback in TestFlight, or a screenshot shared to it, reaches the project too."
+- Why it is wrong: since entry 500 the App Store is the way in on iPhone and iPad and the public is no longer invited to the beta, so
+  most iPhone readers are on the App Store copy, where TestFlight feedback does not exist. The sentence reads as if the beta were the
+  iPhone product.
+- Should say, for example: "Testers still on the TestFlight beta can also use Send Beta Feedback in TestFlight, or share a screenshot to
+  it." Everything else in that paragraph (Send to GroupLab, Send diagnostics) is right for the App Store copy.
+
+### 6. The Features page has no word about iPhone and iPad or Google Play
+
+- Where: https://grouplab.org/features/, group "Updates and platforms" (website/features.json). It has a card "Builds for the Mac" and
+  cards for GroupLab Dev and Android updates, but no card for GroupLab on iPhone and iPad from the App Store, nor for Google Play's closed
+  test, open to anyone. The words "App Store" do not appear on the page at all. features.json line 133 lists "GroupLab for iPhone and
+  iPad is now on the App Store" under notFeatures.
+- Why it matters: the page is titled "Everything GroupLab does"; the biggest change of the week (1.0 on the App Store, 2026-11-17) and
+  the way most Android people now get GroupLab are missing from it, while the home page and /download/ lead with both.
+- Should say: a card such as "On iPhone and iPad, from the App Store" (since 1.0.0-nightly.226, its release-note phrase the one now in
+  notFeatures, moved out of that list) and one for "Google Play's closed test, open to anyone" (entry 490), each linking to its part of
+  /download/. Add their rows to docs/PHONE-PARITY.md as the site build requires.
+
+### 7. How it works calls the iPhone app "Planned"
+
+- Where: website/how-it-works.json line 1146, live at https://grouplab.org/tour/how-it-works/ (part "iPhone and iPad", sub "On the App
+  Store"): "Planned the same way: an Avalonia shell around the same Core, ... version 1.0 is on the App Store."
+- Why it is wrong: the iPhone and iPad app is built and released; "Planned" sits beside its own "On the App Store".
+- Should say: "Built the same way: an Avalonia shell around the same Core, with OpenCV built as a static iOS framework and builds from
+  GitHub's macOS runners; version 1.0 is on the App Store."
+
+### When done
+
+Fix all seven in one change with the generated files (README blocks, PDFs, the site) regenerated, record it in STATE.md, and commit as
+"Entry 503: consistency audit of 19 November, seven findings". Nothing here goes to for-alan.md unless finding 2 becomes a question.
+
 ## 2026-11-19, entry 502: could GroupLab run on iOS 18 without tying the project to old phones? A study first, nothing shipped
 
 **Status: actioned 2026-11-19. Every section done. On the unmerged branch `ios/floor-18-trial` an iOS 18 floor builds with 0 platform warnings and passes all 88 self-test checks on iOS 18.6 (ios app run 44559880612); Real taps and the camera were not run (no camera on the simulator, no Real taps leg in that workflow). Recommendation (a), keep iOS 26, in IOS-PLAN.md and for-alan.md. The branch waits for Alan's answer, then goes to the trash.**

@@ -74,6 +74,8 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | The E bull | `e-bull` | on the phone | | on iOS |
 | The C bull | `c-bull` | on the phone | | on iOS |
 | Large format on a home printer | `large-on-letter` | on the phone | | on a device |
+| On iPhone and iPad, from the App Store | `app-store` | left out | the App Store is Apple's; on Android the same job is Google Play's closed test, `play-closed-test` | on iOS |
+| Google Play's closed test, open to anyone | `play-closed-test` | on the phone | entry 490: the three steps at grouplab.org/android-test/, then every nightly through Google Play | left out |
 | GroupLab Dev for testers | `dev-build` | on the phone | | left out |
 | Sync between your devices | `sync` | on the phone | entry 463: Settings, Sync and your data, Sync between devices, a page of its own with the same items stacked; the folder through Android's folder picker; a session changed on two devices stacked on a centred sheet | on iOS |
 | Settings in eight categories | `settings-menu` | on the phone | entry 468: Settings opens the list of the same eight categories, each with its choices in one line and Find a setting at the top; a page has ‹ Settings back and Put this page back as it came; the text follows the phone's own size, as it always has, and Reduce motion is offered | on iOS |

@@ -436,6 +436,15 @@
       ]
     },
     {
+      "phrase": "for the Google Play internal test instead",
+      "why": "entries 490 and 497: Google Play's closed test, which anyone can join, is what a phone is pointed at; the internal test is for those invited by name",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
       "phrase": "testflight.apple.com/join/A3xyT6C6",
       "why": "entry 500, Alan, 2026-11-18: the App Store is the way in on iPhone and iPad, and the public is no longer invited to the TestFlight beta; the beta itself carries on for existing testers",
       "allowedIn": [

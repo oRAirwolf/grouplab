@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-19, after entry 502 (and error report 6); entry 503 is waiting.
+**Last rewritten:** 2026-11-19, after entry 503 (and 502, error report 6); the inbox is empty.
 
 ---
 
@@ -66,7 +66,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Two, in `docs/QUESTIONS-FOR-PLANNING.md` (114 answered (a) in entry 498):
+Three, in `docs/QUESTIONS-FOR-PLANNING.md`; **115** (entry 503) what the eight release checks are for now, (a) recommended:
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
@@ -82,7 +82,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 503.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
 
