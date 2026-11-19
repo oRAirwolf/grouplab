@@ -3,9 +3,9 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-19 18:27 UTC
+## TestFlight, 2026-11-19 23:52 UTC
 
-- Build 234 for Public Beta: waiting for beta review, review waiting for review.
+- Build 234 for Public Beta: in beta review, review in review.
 - Both groups have build 233.
 - GroupLab Team also has build 234, newer than Public Beta's; it was added by hand and is left there.
 <!-- /status:testflight -->
