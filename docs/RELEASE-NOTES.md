@@ -12,6 +12,20 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.234
+
+**2026-11-19**, commit `91278db`. Nightly.
+
+**What you will notice**
+
+- On iPhone and iPad, GroupLab no longer reports that it closed without shutting down when the system simply ended it in the background; a close while you are using it is still reported. (Report 6) (found from an automatic error report).
+
+From your reports and targets in this build: 1 fix from 1 error report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.234)
+
+---
+
 ## 1.0.0-nightly.233
 
 **2026-11-18**, commit `829c7ff`. Nightly.
