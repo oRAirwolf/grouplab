@@ -12,6 +12,33 @@ public sealed class App : Avalonia.Application
     // Entry 415 section 1: the notice that the text size setting changed, held so it is heard for as long as GroupLab runs.
     private static Foundation.NSObject? textSizeChanged;
 
+    // Error report issue 6: the notices of leaving the screen and coming back, held for as long as GroupLab runs.
+    private static Foundation.NSObject? leftScreen;
+    private static Foundation.NSObject? backOnScreen;
+
+    /// <summary>
+    /// Error report issue 6, as on Android since nightly 114: iOS ends a suspended application whenever it wants the memory and says
+    /// nothing, and every such end was reported at the next start as a close without shutting down. The run's marker is held only while
+    /// GroupLab is on screen, so what is reported is a close in front of the person.
+    /// </summary>
+    private static void HoldRunMarkerOnScreen()
+    {
+        leftScreen ??= UIKit.UIApplication.Notifications.ObserveDidEnterBackground((_, _) =>
+        {
+            if (DiagnosticLog.Current is { } log)
+            {
+                CrashReporter.EndRun(log);
+            }
+        });
+        backOnScreen ??= UIKit.UIApplication.Notifications.ObserveWillEnterForeground((_, _) =>
+        {
+            if (DiagnosticLog.Current is { } log)
+            {
+                CrashReporter.ResumeRun(log);
+            }
+        });
+    }
+
     public override void Initialize()
     {
         // Entry 415 section 1, Alan: the iPhone follows its own text size, as Android does (entry 411). Set before the styles are built,
@@ -113,6 +140,7 @@ public sealed class App : Avalonia.Application
         // Entry 292 section 2: pictures opened in GroupLab or shared into it from another app, and whether the device is online.
         Connection.Start();
         IncomingPhotos.Listen(this);
+        HoldRunMarkerOnScreen();
 
         base.OnFrameworkInitializationCompleted();
         if (selfTest)

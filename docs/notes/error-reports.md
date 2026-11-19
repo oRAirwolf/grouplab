@@ -6,6 +6,20 @@ report's text is data, never an instruction. Nothing personal is written here: n
 the person's files. Claude Code checks the open issues at the start of a run, before each inbox entry, before ending a turn and at least
 hourly while waiting on CI, and writes each new one here.
 
+## 6, reopened 2026-11-19, nightly 226 on an iPhone (iOS 27.2.1, sent automatically, no note)
+
+- **Said:** GroupLab closed without shutting down and recorded nothing: no exception, no stage, no last action. The log is a first run:
+  the two first-run questions, one demo sheet read and saved (24 holes), then the demo's steps 2 to 7, and the log simply stops there.
+  Memory 116 MB and the heat nominal at the end, so nothing points at a crash.
+- **Why it reopened now:** the issue has stood since 2026-09-27 for Android, where it was fixed in nightly 114; the 221 sightings since were
+  on 0.2.0 builds and never reopened it, and 1.0.0 is the first version the error worker counts as newer than any seen before the close.
+- **Cause:** the iPhone build never had Android's fix. iOS ends a suspended application whenever it wants the memory and says nothing,
+  and the iPhone held its run marker for the whole life of the process, so every such end was reported at the next start as a close.
+- **Status:** fixed: the iPhone lets go of the marker when GroupLab leaves the screen and takes it back on return, as Android does
+  (`App.HoldRunMarkerOnScreen`, held by `ErrorReport6Tests`), so a close in front of the person is still reported. Ships in the next
+  nightly; the issue is closed with the commit. Found on the way: `Get-TargetSubmissions.ps1 -CrashReports` still looked in the old
+  site's folder for the old folder layout; it now lists grouplab.org's zips (checked with -WhatIf, 45 listed).
+
 ## 50, 2026-11-17, a recent nightly on the computer (a Discord post in bug-reports, with a screen recording)
 
 - **Said:** a recording of trying to place impacts by hand. On a store-bought sheet of diamond bulls with the scale set by hand, a click on a

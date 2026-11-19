@@ -108,7 +108,9 @@ $ErrorActionPreference = 'Stop'
 # ------------------------------------------------------------------- mode --
 if ($CrashReports) {
     $itemNoun  = 'crash report'
-    $defRemote = '/home/airwolf/web/pissinhot.com/private/crash_reports'
+    # Error report issue 6, 2026-11-19: since the receiver moved to grouplab.org each report is one zip named date_id.zip, with no
+    # folder or meta.json beside it, so this pulls the zip into a folder of the same name and has no server hash to check it against.
+    $defRemote = '/home/airwolf/web/grouplab.org/private/crash-reports'
     $defLocal  = 'C:\Dev\grouplab-crashreports'
 } else {
     $itemNoun  = 'submission'
@@ -283,6 +285,7 @@ Write-Host "Listing ${itemNoun}s on $ServerHost ..." -ForegroundColor Cyan
 # cheerful and wrong message "No submissions on the server yet". Ask for the bare
 # listing, let the exit code mean what it says, and sort here instead.
 $remote = @(Invoke-Remote "sudo ls -1 '$RemoteRoot'" |
+            ForEach-Object { if ($CrashReports) { $_ -replace '\.zip$', '' } else { $_ } } |
             Where-Object { $_ -match '^\d{4}-\d{2}-\d{2}_[0-9a-f]{8}$' } |
             Sort-Object)
 
@@ -338,7 +341,8 @@ foreach ($dir in $new) {
         # nothing is wrong, and PowerShell would otherwise treat that as fatal.
         $keyQuoted = '"' + $KeyFile + '"'
         $argLine   = ($sshArgs | ForEach-Object { if ($_ -eq $KeyFile) { $keyQuoted } else { $_ } }) -join ' '
-        $sshLine   = "ssh $argLine `"sudo tar cf - -C '$RemoteRoot' '$dir'`" > `"$tmp`" 2> `"$tmpErr`""
+        $item      = if ($CrashReports) { "$dir.zip" } else { $dir }
+        $sshLine   = "ssh $argLine `"sudo tar cf - -C '$RemoteRoot' '$item'`" > `"$tmp`" 2> `"$tmpErr`""
         $fetched = Invoke-Native cmd /c $sshLine
         if ($fetched.ExitCode -ne 0) {
             $why = if (Test-Path $tmpErr) { (Get-Content $tmpErr -Raw).Trim() } else { '' }
@@ -349,7 +353,9 @@ foreach ($dir in $new) {
             throw "the archive came back empty, so nothing was pulled`n$why"
         }
 
-        $unpacked = Invoke-Native tar xf $tmp -C $LocalRoot
+        $into = $LocalRoot
+        if ($CrashReports) { $into = Join-Path $LocalRoot $dir; New-Item -ItemType Directory -Force $into | Out-Null }
+        $unpacked = Invoke-Native tar xf $tmp -C $into
         $unpacked.Errors | ForEach-Object { Write-Verbose "tar: $_" }
         if ($unpacked.ExitCode -ne 0) { throw "local tar returned $($unpacked.ExitCode)" }
 
@@ -378,6 +384,13 @@ $toCheck = if ($VerifyAll) { $remote | Where-Object { Test-Path (Join-Path $Loca
 $bad = @(); $checked = 0; $optOut = @(); $notScanned = 0; $states = @()
 foreach ($dir in $toCheck) {
     $metaPath = Join-Path $LocalRoot "$dir\meta.json"
+    if ($CrashReports -and -not (Test-Path $metaPath)) {
+        # grouplab.org's receiver keeps no hash beside the zip: say the zip is here and readable, and that nothing was compared.
+        $zip = Join-Path $LocalRoot "$dir\$dir.zip"
+        if (-not (Test-Path $zip -PathType Leaf)) { $bad += "$dir/$dir.zip : missing" }
+        else { Write-Host "  $dir : pulled; the server keeps no hash for it, so none was compared" }
+        continue
+    }
     if (-not (Test-Path $metaPath)) {
         $bad += "$dir : no meta.json"
         continue

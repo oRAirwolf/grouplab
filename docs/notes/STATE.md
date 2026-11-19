@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-18, after entry 501 (in part); the inbox is empty.
+**Last rewritten:** 2026-11-19, after error report 6 (the iPhone's background close); the inbox is empty.
 
 ---
 
@@ -91,7 +91,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
   prompt's card shows it as plain rows with no plot until its own screen is drawn; a pool reaching a device before its sheets asks nothing.
 - **Every phone sheet closes through `ProblemSheet.PutBack`** (error report 43), and a choice handed to `ProblemSheet.Over` that the
   caller did not place is shown under the body.
-
+- **Both phones hold the run marker only on screen** (error report 6, iPhone from 2026-11-19), so a background end is not a close.
 - **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words, or `Screens.LeavesPage` for a Done,
   Cancel, Skip or "Another target" that is the page's way out (entry 472); `Entry472BackTests` fails on a new page Back was never pressed on.
 - **Sync change files carry `sha256`** of their records (entry 472); a file is taken only when it matches and every record applies.
