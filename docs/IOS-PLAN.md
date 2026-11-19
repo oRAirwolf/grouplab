@@ -48,6 +48,40 @@ thirty days. The head links it statically and calls it through `__Internal`.
 every iPhone from the 11 of 2019 on and on the iPad mini (6th generation), which is the test device; one floor lets the camera code use
 one set of AVFoundation calls with no version checks; and nothing older can be tested, since there is no device to test it on.
 
+**Could it be iOS 18? Measured 2026-11-19 (entry 502), nothing changed on main.** Someone asked; Alan wants the answer without being tied
+to old phones. On the trial branch `ios/floor-18-trial` (never merged) the app, the share extension and OpenCV were built for iOS 18.0
+with Xcode 26 and the iOS 26 SDK, and the `ios app` workflow ran once there (run 44559880612):
+
+- **It builds with nothing to change.** No call GroupLab makes needs anything newer than iOS 18: the platform analyzer listed 0
+  warnings on the simulator build, and the device build passed with warnings counted as errors. That covers the camera, the photos and
+  files pickers, the share extension, printing, text sizes and the window code. The one version check in the iPhone code is about the
+  top of the range, not the floor: iOS 27 retires `canOpenURL`, and the photos self-test stops asking it from 27 on. The Duo work
+  (entry 480) is the same: it is about the SDK GroupLab is built with, and adds nothing an iOS 18 floor rules out.
+- **It runs.** On an iPhone 16 Pro Max and an iPad mini (A17 Pro), both on iOS 18.6, all 88 self-test checks passed and none failed (the
+  screens, the pickers, the share and print sheets, OpenCV and the sample scan, 25 shots and mean radius 0.232 in as on 26), and the dark
+  theme, the iPad, landscape and the desktop comparison passed too. Real taps and the camera itself were not run: the simulator has no
+  camera and the Real taps leg is not in this workflow. GitHub's Mac image carries no iOS 18 simulator, so the run downloaded iOS 18.6
+  (8.86 GB), about 18 minutes before the boot.
+- **Apple would take it.** Uploads must be built with the iOS 26 SDK, which does not change, and must run on iOS 13 or later (Apple's
+  upcoming requirements, since 2026-09-09); App Store Connect keeps no floor of its own, and `scripts/testflight.py` never reads one.
+- **Who it helps.** Per Apple's lists, iOS 18 runs on the iPhone XS, XS Max and XR (2018) and the iPad 7th generation (2019), and iOS
+  26 does not; every other device on iOS 18 can install 26 for free, and is better served by updating.
+- **What it would cost to keep.** Today no code: 0 version checks, and none of the 75 iPhone changes since 2026-09-19 used a call newer
+  than iOS 18. Testing it every night would be one more Mac leg of about 55 minutes (37 for the simulator job, 18 for the runtime), free
+  on this public repository but on the Mac runners that already left nightly 232 without one twice. The real cost is the unknown: no
+  device on iOS 18 to try the camera on, and every error report from one would have to be weighed.
+- **A way out, if it were lowered.** The floor goes back to 26, with no fallback ever written, at the first of: the platform analyzer
+  flagging a call (it fails the build already, so nobody can add one by accident), a fix or feature that would need different code on
+  18, or Apple's last security update for iOS 18. Whoever installed GroupLab keeps the build they have, and the App Store offers a person
+  who once downloaded GroupLab its last compatible version (Apps & Purchase History); somebody new on iOS 18 could no longer get it.
+- **A middle way.** Lower the floor to 18 and promise nothing beyond the build passing: no iOS 18 leg, no testing on 18, and the way
+  out above written into this file before the change.
+
+**Recommendation: keep iOS 26** ((a) of entry 502). It costs nothing to lower today, but it helps four devices from 2018 and 2019, its
+camera cannot be tried, and a version listed on the App Store is a promise. The sentence to give the person who asked: GroupLab needs
+iOS 26 or later, which every iPhone from the 11 on can install for free in Settings, General, Software Update. If their phone is an XS,
+XS Max or XR, the middle way is ready and costs nothing until the way out is met.
+
 **What is built (entry 290 section 2 items 3 and 4):** the head, `ios/GroupLab.iOS`, with the shared screens, the sheets in its bundle,
 the icon from the desktop's mark, OpenCV linked statically, and the camera's place holding the files picker until the camera arrives. The
 workflow `ios app` builds it for the simulator and for a device, unsigned, and runs a self-test on an iOS 26 simulator: every place along

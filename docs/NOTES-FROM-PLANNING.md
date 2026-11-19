@@ -25,6 +25,66 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-19, entry 502: could GroupLab run on iOS 18 without tying the project to old phones? A study first, nothing shipped
+
+**Status: actioned 2026-11-19. Every section done. On the unmerged branch `ios/floor-18-trial` an iOS 18 floor builds with 0 platform warnings and passes all 88 self-test checks on iOS 18.6 (ios app run 44559880612); Real taps and the camera were not run (no camera on the simulator, no Real taps leg in that workflow). Recommendation (a), keep iOS 26, in IOS-PLAN.md and for-alan.md. The branch waits for Alan's answer, then goes to the trash.**
+
+From the planning session, on Alan's word in chat on 2026-11-19. Someone asked whether GroupLab can work on iOS 18. Alan: "Yes code should
+look into iOS 18 but I dont want to get stuck supporting old phones because one person refuses to update." Nothing here needs Alan until
+the report. **Nothing in this entry changes what ships:** no change to `SupportedOSPlatformVersion` on main, no App Store or TestFlight
+upload with a lower floor, and no public wording change, until Alan says yes to the report's recommendation.
+
+### Background, read 2026-11-19
+
+- The floor is iOS 26 because `ios/GroupLab.iOS/GroupLab.iOS.csproj` and `ios/GroupLab.Share/GroupLab.Share.csproj` say
+  `<SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>`, and `ios/opencv/build-extern.sh` builds OpenCV for `$IOS_MIN`.
+  IOS-PLAN.md ("The lowest iOS version: 26", entry 206 section 4) gives the reasons: iOS 26 runs on every iPhone from the 11 on, one floor
+  lets the camera code use one set of AVFoundation calls with no version checks, and there was nothing older to test on.
+- The iPhone Duo work (entry 480) is about the SDK GroupLab is built with (iOS 27.1 or later), not the lowest version it runs on, so it
+  does not by itself rule out a lower floor. Check that this is true for everything the Duo leg adds.
+- As far as the planning session knows, iOS 26 dropped the iPhone XS, XS Max and XR (2018); those stay on iOS 18. An iPhone 11 or newer on
+  iOS 18 can update to 26 for free. Check Apple's own lists for both iPhone and iPad (iPadOS 26's dropped models too) and correct this if wrong.
+
+### 1. Measure, on a branch, never merged
+
+1. On a trial branch, set the floor to 18.0 for the app and the share extension, rebuild OpenCV with `IOS_MIN` 18, and build. List every
+   error and every platform-compatibility warning (CA1416 and its like) that says a call needs iOS 19 or later, with the file and what the
+   call is for. The camera (AVFoundation), the photos picker, the share extension, the Duo and window-scene code, text sizes (Dynamic
+   Type), and anything Avalonia or .NET 10 itself needs are the likely places.
+2. For each: is there an iOS 18 way to do the same thing, or would the feature be missing or different on 18? Say which features would be
+   lost or worse on iOS 18, in a shooter's words.
+3. If it builds, run the existing self-test (the tour, the photos self-test, Real taps if it can) on an iOS 18 simulator on GitHub's Mac
+   machines, as a one-off run on the trial branch only. Say what passed and what did not. Do not add an iOS 18 leg to nightly.yml.
+4. Check that the App Store record, TestFlight and `testflight.py` would accept a build with a lower floor with no other change (GET
+   only; upload nothing).
+
+### 2. The cost of keeping it, which is what Alan cares about
+
+Alan does not want to be stuck supporting old phones. So the report must say plainly, for a lower floor:
+
+1. **The ongoing cost:** how many version checks the code would carry, the extra CI leg and its minutes each night, and how often a new
+   feature would need an iOS 18 fallback (judge from the last two months of iPhone changes).
+2. **Who it actually helps:** which devices can run iOS 18 but not iOS 26. Anyone whose phone can update is helped more by being told to
+   update.
+3. **A way out, written down before any yes:** a rule for raising the floor again later (for example, when Apple stops shipping security
+   updates for iOS 18, or the first time an iOS 18 fallback would hold back or complicate a feature), and what a person on iOS 18 would
+   then keep (the last build that ran stays installed; App Store "last compatible version" behaviour, checked against Apple's docs).
+   Alan never wants a feature held back or a test burden carried for the sake of iOS 18.
+4. **A middle option, if one exists**, such as iOS 18 support with features that need 26 simply missing, and no promise to test on 18
+   beyond the build passing.
+
+### 3. Report and stop
+
+Write the result in `docs/IOS-PLAN.md` under the lowest iOS version, and in for-alan.md as a short, plain line (not a request): the
+answer to "can GroupLab run on iOS 18", what it would cost to keep, who it helps, and Code's recommendation, one of: (a) keep iOS 26, and
+here is the one line to tell the person who asked; (b) lower it to 18 with the way-out rule; (c) the middle option. Then tell the planning
+session in the panel. The trial branch stays unmerged; move it to the trash with the usual compare when Alan answers.
+
+If the recommendation is (a), add one sentence a person can be given: GroupLab needs iOS 26 or later, which every iPhone from the 11 on
+can install for free in Settings, General, Software Update.
+
+Usage guard at 85% (88% for a finishing block), as usual.
+
 ## 2026-11-18, entry 501: GroupLab for Mac on the Mac App Store, up to TestFlight; submission waits on Alan's word
 
 **Status: actioned in part 2026-11-18. Done: section 1 (docs/MAC-APP-STORE.md; nothing needs a temporary exception), section 2 (universal purchase; Alan did request 110, first numbered 107), sections 3.1 to 3.3 as far as a machine can go: nightly 233's store copy signed, sent to TestFlight, processed as valid and in GroupLab Team only, nothing submitted. Not done: whether it runs in the sandbox on a real Mac (request 111), section 3.4 (Mac screenshots, the Mac listing text; the App Privacy answers were checked), and section 4's for-alan line, which waits for request 111.**

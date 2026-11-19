@@ -8740,6 +8740,12 @@
    "surface": "^docs/MAC-APP-STORE\\.md$",
    "kind": "code",
    "where": "entry 501 (Alan, 2026-11-18) and the code it describes: scripts/macos/GroupLab.store.entitlements, scripts/macos-bundle.py (--store-build, --profile), .github/workflows/mac-store.yml, src/GroupLab.App/MacSandbox.cs, SelfCheck.cs, MainWindow.KeptHere, MainWindow.Sync.cs (syncBookmark), PrintPanel.cs (Save for a printer app), Diagnostics/AppInfo.cs (Sandboxed), MainWindow.Updates.cs (MacStoreUpdateWords); the audit read from the code on 2026-11-18; held by Core MacBundleTests and App Entry501Tests, and on a Mac by mac-store.yml's --self-check"
+  },
+  {
+   "surface": "^docs/IOS-PLAN\\.md$",
+   "match": "entry 502|iOS 18|version check in the iPhone code|The Duo work \\(entry 480\\)|Uploads must be built with the iOS 26 SDK|Testing it every night|try the camera on|Whoever installed GroupLab keeps|A middle way|Recommendation: keep iOS 26|It costs nothing to lower today|GroupLab needs\\s+iOS 26 or later",
+   "kind": "measured",
+   "where": "entry 502's study of 2026-11-19: ios app run 44559880612 on the unmerged branch ios/floor-18-trial (0 platform warnings, 88 self-test checks passed on iOS 18.6, the 8.86 GB runtime download); ios app run 44384875384 for the 37 minute simulator job; ios/GroupLab.iOS/Photos/PhotosSelfTest.cs for the one version check; Apple's compatibility pages for iOS 18, iOS 26, iPadOS 18 and iPadOS 26, Apple's upcoming requirements page, and App Store Connect's last compatible version help, read that day"
   }
  ]
 }

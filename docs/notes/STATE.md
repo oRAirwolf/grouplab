@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-19, after error report 6 (the iPhone's background close); the inbox is empty.
+**Last rewritten:** 2026-11-19, after entry 502 (and error report 6); entry 503 is waiting.
 
 ---
 
@@ -19,7 +19,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   fixed 6 findings; a pooled set changed on two devices reaches the Sessions banner and a plain prompt (look: DESIGN NEEDED). Not taken:
   speed on a scan. 1.0.233 reached TestFlight.
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by mac-store.yml after each nightly; signed ad hoc the sandbox stops it at LaunchServices, so its proof needs TestFlight on a Mac; request 110 (first numbered 107) answered 2026-11-18: nightly 233's copy is signed, on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is request 111; never submitted without Alan's word.
-- **Entry 500 (2026-11-18)**: the App Store is the way in on iPhone and iPad; the public TestFlight invitation is retired wording.
+- **Entry 502 (2026-11-19)**: an iOS 18 floor builds and passes every self-test check unchanged (`ios/floor-18-trial`, unmerged);
+  recommendation (a), keep iOS 26 (IOS-PLAN.md). Waits on Alan's answer; the branch then goes to the trash. (500: App Store is the way in.)
 - **Entry 499 (2026-11-18)**: Snap to holes (toolbar and Shooting defaults) and Alt for one click; the snap keeps a click on its own
   touching ring and stays put when it finds no hole's edge. The missed backup night is caught at the start of every Code run now.
 - **Entry 495 (2026-11-16)**, done but two parts: a pooled set is a record of its own (schema 7, `pools`, `SessionPools`,
@@ -81,7 +82,7 @@ they differ.
 
 **Holds:** none
 
-Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
+Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: entry 503.
 
 ## Things that would surprise somebody who was not here yesterday
 
