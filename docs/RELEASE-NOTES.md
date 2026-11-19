@@ -468,7 +468,7 @@ This build has no change to the application; it behaves exactly as nightly 204 d
 
 - A phone now updates to the newest nightly that has an Android file, even when a newer nightly's Android download is late or missing, and says plainly when it already has the newest.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.204)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
