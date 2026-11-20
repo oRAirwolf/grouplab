@@ -3,13 +3,10 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-20 16:23 UTC
+## TestFlight, 2026-11-20 19:31 UTC
 
-- Build 235 for Public Beta: waiting for beta review, review waiting for review.
-- Both groups have build 234.
-- GroupLab Team also has build 235, newer than Public Beta's; it was added by hand and is left there.
-- Mac build 233 for Mac testers: in beta review, review in review.
-- Mac testers has no Mac build its testers can install yet.
+- Both groups have build 235.
+- Apple approved Mac build 233 for Mac testers, who can install it; Alan copies the public link from App Store Connect (Apps, GroupLab, TestFlight, Mac testers, Public Link). The link is never written here.
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
