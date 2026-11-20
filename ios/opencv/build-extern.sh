@@ -14,7 +14,8 @@ set -euo pipefail
 OPENCV_VERSION=4.13.0
 # The managed OpenCvSharp4 package GroupLab references; the native half has to be built from the same tag.
 OPENCVSHARP_VERSION=4.13.0.20260627
-IOS_MIN=26.0
+# Entry 505 section 1: the application's floor, iOS 18.0 (supported from 26).
+IOS_MIN=18.0
 MODULES=core,imgproc,imgcodecs,calib3d,features2d,flann,objdetect,dnn,aruco,wechat_qrcode
 # Entry points GroupLab's own code reaches through OpenCvSharp, one or more for each module it uses, checked by name in both archives.
 # Taken from the OpenCvSharpExtern sources at the tag above, not guessed.

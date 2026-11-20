@@ -172,8 +172,28 @@ public sealed class Shell : UserControl
         Begin();
     }
 
-    /// <summary>The first run's questions where they are still open, and then Capture.</summary>
+    /// <summary>
+    /// Entry 505 section 1: on an iOS version below 26, the warning first, until it is accepted on this version; then the first run's
+    /// questions where they are still open, and then Capture.
+    /// </summary>
     private void Begin()
+    {
+        string? ios = Phone.Platform.IosVersion;
+        if (UnsupportedIos.Due(ios, Phone.Settings.LoadUnsupportedOsAccepted()))
+        {
+            Content = new UnsupportedIosView(ios!, () =>
+            {
+                Phone.Settings.SaveUnsupportedOsAccepted(ios!.Trim());
+                Questions();
+            });
+            return;
+        }
+
+        Questions();
+    }
+
+    /// <summary>The first run's questions where they are still open, and then Capture.</summary>
+    private void Questions()
     {
         if (FirstRunView.Due(Phone.Settings))
         {

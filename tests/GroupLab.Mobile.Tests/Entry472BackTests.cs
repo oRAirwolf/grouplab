@@ -23,6 +23,7 @@ public class Entry472BackTests
     internal static readonly Dictionary<string, string> NotOnePressAway = new()
     {
         ["FirstRunView"] = "shown before the shell's frame; its own Back is walked by BackOnTheFirstRunGoesAStepBackAndSavesNothing",
+        ["UnsupportedIosView"] = "shown before the shell's frame below iOS 26 only; its two buttons are walked by Entry505UnsupportedIosTests",
         ["MarkingAPage"] = "opened by a hand-marked target's + Aim point, which needs a picture marked by hand (ParityTour on iOS)",
         ["WhichTargetPage"] = "opened only when a picture's sheet is not recognised, from Capture's reading",
         ["PairingView"] = "opened from a chronograph file's import, which needs a file picked; its way back is a BackButton (Entry470Tests)",

@@ -56,6 +56,12 @@ public interface IPhonePlatform
     bool ReduceMotion() => false;
 
     /// <summary>
+    /// Entry 505 section 1: the iOS or iPadOS version as the device gives it, such as "18.6.2", so a device below the supported floor is
+    /// warned once (<see cref="UnsupportedIos"/>). Null on Android, and on a Mac running the iPad application.
+    /// </summary>
+    string? IosVersion => null;
+
+    /// <summary>
     /// Entry 468 section 2.3: whether the phone itself requires the camera's sound, so GroupLab's setting cannot turn it off: the iPhone makes
     /// it for every picture, and Android says where the law requires it.
     /// </summary>

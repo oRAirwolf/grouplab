@@ -40,7 +40,7 @@ xcode_old = """      - name: Xcode 26
           xcodebuild -version | head -1
 """
 xcode_new = """      # Entry 480 section 2: Xcode {XCODE}, one of the Xcodes that build an application filling the iPhone Duo's inner screen. GitHub's xcode-27
-      # image carries it; the lowest iOS the application runs on stays 26 (SupportedOSPlatformVersion).
+      # image carries it; the lowest iOS the application installs on stays 18 (SupportedOSPlatformVersion, entry 505).
       - name: Xcode {XCODE}
         run: |
           xcode=$(ls -d /Applications/Xcode_{XCODE}*.app | grep -iv -e beta -e release_candidate | head -1)

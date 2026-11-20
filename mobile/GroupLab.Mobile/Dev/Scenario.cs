@@ -155,6 +155,12 @@ internal static class Scenario
     /// <summary>The first run's questions answered where they are still open: nothing sent, and the scope in MOA with inches.</summary>
     internal static void AnswerFirstRun(GroupLab.App.AppSettingsStore store)
     {
+        // Entry 505 section 1: a scripted run on a device below iOS 26 accepts the warning as a person would, on this version.
+        if (Phone.Platform?.IosVersion is { } ios && UnsupportedIos.Below(ios))
+        {
+            store.SaveUnsupportedOsAccepted(ios.Trim());
+        }
+
         if (store.LoadSending().Choice == GroupLab.Core.Publication.SendingChoice.Unset)
         {
             store.SaveSending(GroupLab.Core.Publication.SendingChoice.Never, null);

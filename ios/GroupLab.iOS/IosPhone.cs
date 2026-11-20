@@ -224,6 +224,9 @@ internal sealed class IosPhone : IPhonePlatform
 
     public bool ReduceMotion() => UIAccessibility.IsReduceMotionEnabled;
 
+    /// <summary>Entry 505 section 1: what the device says it runs; not asked of a Mac running the iPad application, which is never warned.</summary>
+    public string? IosVersion => NSProcessInfo.ProcessInfo.IsiOSApplicationOnMac ? null : UIDevice.CurrentDevice.SystemVersion;
+
     // Entry 468 section 2.3: AVFoundation makes the camera's sound for every picture taken, and GroupLab cannot turn it off.
     public bool ShutterSoundRequired() => true;
 

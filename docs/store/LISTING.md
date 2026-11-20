@@ -126,6 +126,7 @@ Set by the planning session in App Store Connect (GroupLab, Apple ID 6817635137)
   review contact is Alan, at support@grouplab.org; the phone number stays in App Store Connect only.
 - **Release:** manual. After approval nothing is public until Alan says to release it, through the planning session.
 - **Screenshots:** from the simulators (entry 487 section 4, `docs/store/apple/`).
+- **Next version:** the description gains "Requires iOS 26 or later. It also installs on iOS 18 to 25, without support.", set by the planning session in App Store Connect with the version (entry 505 section 1.7); nothing is submitted for it before then.
 
 ### Submitted to App Review, 2026-11-15 (entry 491)
 

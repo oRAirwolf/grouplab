@@ -850,6 +850,25 @@ entry. **4.** Nothing was submitted; the line saying GroupLab for Mac is ready t
 
 **Signed and on TestFlight, 2026-11-18, request 110 answered** (first numbered 107, which the Discord tester notes already had; renumbered, archived, and `ForAlanTests.EveryRequestNumberIsUsedOnce` holds the numbers apart). Two faults were found before the first upload and fixed in 94827fba: `testflight.py` read every build on the record, so the first Mac build, sharing the iPhone build's number, would have been taken for the newest iPhone build and added to Public Beta and submitted for Beta App Review; it now reads the iPhone and iPad builds only (`filter[preReleaseVersion.platform]`), and `--mac-internal` gives a Mac build to GroupLab Team and nothing else. And .NET's `createdump`, a second executable the store refuses without a sandbox of its own, is left out of the store copy. The first run (44409935372) found one more executable in the bundle, the command line `grouplab`, and signed it into the app's sandbox (app-sandbox with inherit); the copy was signed with Apple Distribution, packaged by `productbuild` with the Mac Installer Distribution certificate, and altool sent it; its GroupLab Team step stopped on a missing pyjwt. The second run (44411686807, 14a27170) found Apple already had build 233, waited for nothing, and read Mac build 233 as valid and already in GroupLab Team (the internal group's automatic distribution). The half-hourly TestFlight step on 14a27170 then moved the iPhone 1.0.233 on as before and never touched the Mac build. Whether the copy runs in the sandbox, reads a sheet and saves a session is request 111, on a real Mac.
 
+## Entry 505: iOS 18 allowed with an unsupported warning, question 116 (a), and the week's queue (2026-11-20)
+
+**1.** The iPhone and iPad application, its share extension and OpenCV are built for iOS 18.0 (`SupportedOSPlatformVersion` in both
+projects, `IOS_MIN` in `ios/opencv/build-extern.sh`), the three lines entry 502 measured on `ios/floor-18-trial`; the trial's workflow
+changes were not taken, so there is no iOS 18 leg and the self-test stays on iOS 26. The branch is in the trash
+(`C:\Dev\grouplab-trash\2026-11-20\ios-floor-18-trial.bundle`, verified) and deleted here and on GitHub. Below iOS 26 the phone's start
+shows `UnsupportedIosView` before the first run's questions (`Shell.Begin`), in Alan's words, with the switch that turns "Try GroupLab
+anyway" on; the acceptance is kept with the version (`unsupportedOsAccepted`), and `UnsupportedIos.Due` shows it again only below 26
+on a version not accepted, never on 26 or later, never on Android or a Mac running the iPad application (`IosPhone.IosVersion`).
+**"Not now" differs from the words:** iOS gives an application no way to close itself and Apple's guidelines ask that it never does,
+so it stops the start, saves nothing, and says "GroupLab has not started" with a way to read the warning again. Settings, About says
+"Unsupported iOS version (18.6): no support, no guarantee." on such a device. A scripted run accepts it as a person would
+(`Scenario.AnswerFirstRun`). Error reports from below 26 are headed "unsupported iOS" in `docs/notes/error-reports.md` (section 5).
+The way out in IOS-PLAN.md is live, unchanged. README, PLATFORM-SUPPORT.md (and so the download page), the user guide and its PDF say
+"Requires iOS 26 or later. It also installs on iOS 18 to 25, without support."; the App Store description gains it with the next
+version Alan releases, set in App Store Connect (docs/store/LISTING.md); nothing was submitted. **Tests:** `Entry505UnsupportedIosTests`
+(the show and hide rule over 12 versions, Alan's words, the switch and Not now, the shell remembering the version and asking again on a
+new one, the About line). The OpenCV archive is rebuilt for 18.0 by the next `ios` run on main, before the nightly's iPhone build.
+
 ## Entry 504: the pooled set's choice as concept A, question 115 (a), and Mac testers for request 111 (2026-11-20)
 
 **1.** Entry 498's plain rows are replaced by concept A on both platforms, from one shared model, `PoolChoices.Build`

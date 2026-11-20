@@ -455,6 +455,14 @@ public sealed class AppSettingsStore(string path)
     public bool SavePrinterOffered() => Save(file => file["printerOffered"] = true);
 
     /// <summary>
+    /// Entry 505 section 1: the iOS version on which the person accepted that a version below iOS 26 has no support and no guarantee, or
+    /// null where nobody has; the warning is shown again only when the device's version is no longer this one.
+    /// </summary>
+    public string? LoadUnsupportedOsAccepted() => Read(file => (string?)file["unsupportedOsAccepted"]);
+
+    public bool SaveUnsupportedOsAccepted(string version) => Save(file => file["unsupportedOsAccepted"] = version);
+
+    /// <summary>
     /// Entry 281 section 2, Alan's choice: how a target is saved. False, the default, is A: by itself as soon as it is changed or accepted.
     /// True is B: with a Save button, and a question before an unsaved target is left or closed.
     /// </summary>

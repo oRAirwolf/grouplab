@@ -10,8 +10,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0-ios</TargetFramework>
-    <!-- Entry 206 section 4 and docs/IOS-PLAN.md: iOS 26, an iPhone 11 or later and the iPad mini (6th generation). -->
-    <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
+    <!-- Entry 206 section 4 and docs/IOS-PLAN.md: supported on iOS 26, an iPhone 11 or later and the iPad mini (6th generation). Entry 505
+         section 1: it installs from iOS 18.0, what entry 502 measured, with a warning below 26 (UnsupportedIos); never lower. -->
+    <SupportedOSPlatformVersion>18.0</SupportedOSPlatformVersion>
     <ApplicationId>org.grouplab.app</ApplicationId>
     <ApplicationTitle>GroupLab</ApplicationTitle>
     <ApplicationVersion>1</ApplicationVersion>

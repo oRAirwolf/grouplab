@@ -8754,6 +8754,12 @@
    "match": "entry 502|iOS 18|version check in the iPhone code|The Duo work \\(entry 480\\)|Uploads must be built with the iOS 26 SDK|Testing it every night|try the camera on|Whoever installed GroupLab keeps|A middle way|Recommendation: keep iOS 26|It costs nothing to lower today|GroupLab needs\\s+iOS 26 or later",
    "kind": "measured",
    "where": "entry 502's study of 2026-11-19: ios app run 44559880612 on the unmerged branch ios/floor-18-trial (0 platform warnings, 88 self-test checks passed on iOS 18.6, the 8.86 GB runtime download); ios app run 44384875384 for the 37 minute simulator job; ios/GroupLab.iOS/Photos/PhotosSelfTest.cs for the one version check; Apple's compatibility pages for iOS 18, iOS 26, iPadOS 18 and iPadOS 26, Apple's upcoming requirements page, and App Store Connect's last compatible version help, read that day"
+  },
+  {
+   "surface": "^((docs/IOS-PLAN|docs/PLATFORM-SUPPORT|docs/USER-GUIDE|README)\\.md|site:(download|guides/user-guide)/index\\.html)$",
+   "match": "installs on iOS 18 to 25|Requires iOS 26 or later|The supported floor is an iPhone 11|warning screen comes first|first shows one screen saying so|Software Update installs iOS 26 for free|Entry 206 section 4 had worked the floor out",
+   "kind": "decided",
+   "where": "entry 505 section 1 (Alan, 2026-11-20) and the code it describes: ios/GroupLab.iOS/GroupLab.iOS.csproj, ios/GroupLab.Share/GroupLab.Share.csproj and ios/opencv/build-extern.sh (SupportedOSPlatformVersion and IOS_MIN 18.0); mobile/GroupLab.Mobile/UnsupportedIosView.cs (UnsupportedIos, UnsupportedIosView), Shell.Begin, SettingsView.BuildAbout; held by Mobile Entry505UnsupportedIosTests; entry 502's build and self-test measurement on iOS 18.6"
   }
  ]
 }

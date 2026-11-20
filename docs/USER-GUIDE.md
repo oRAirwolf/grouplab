@@ -75,7 +75,7 @@ Every click GroupLab gives is corrected by the factor, the turret reading being 
 
 The download page, grouplab.org/download/, has every build. On Windows, the Microsoft Store carries GroupLab too
 and gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself ([Get it from
-Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build the moment it is made. On an iPhone or iPad, GroupLab is on [the App Store](https://apps.apple.com/app/id6817635137).
+Microsoft](https://apps.microsoft.com/detail/9NWJCXBKZNPZ)); the installer and the zip there are the newest test build the moment it is made. On an iPhone or iPad, GroupLab is on [the App Store](https://apps.apple.com/app/id6817635137). Requires iOS 26 or later. It also installs on iOS 18 to 25, without support. On a device below iOS 26, GroupLab first shows one screen saying so, before the first questions: it asks you to turn on "I understand there is no support and no guarantee on this version" before "Try GroupLab anyway" works, and "Not now" stops the start. Settings, General, Software Update installs iOS 26 for free.
 
 ## 1. Print a sheet
 

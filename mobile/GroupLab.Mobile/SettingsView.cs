@@ -706,6 +706,12 @@ public sealed class SettingsView : UserControl
         // Entry 488: the exact version for a report, and that GroupLab is still in active development.
         about.Children.Add(Screens.Quiet(AppInfo.ShortVersion));
         about.Children.Add(Screens.Quiet(ActiveDevelopment.Sentence));
+        // Entry 505 section 1: a device below iOS 26 is told, every time, that it runs GroupLab without support.
+        if (Phone.Platform.IosVersion is { } ios && UnsupportedIos.Below(ios))
+        {
+            about.Children.Add(Screens.Line(UnsupportedIos.AboutLine(ios.Trim())).Id("settings-unsupported-ios"));
+        }
+
         column.Children.Add(aboutCard);
         // Entry 288: the updater's version, its train's newest, Update now and the automatic switch, in a build that has one.
         if (Phone.Platform.UpdateCard() is { } updates)

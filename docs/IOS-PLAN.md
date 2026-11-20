@@ -38,17 +38,17 @@ About three weeks of work in all, done a piece at a time around the rest of the 
 **OpenCV for iOS is built (entry 290 section 2).** `ios/opencv/build-extern.sh` builds OpenCV and opencv_contrib 4.13.0 as static
 libraries, with the same modules as Android and none that need the camera, the screen or the GPU, then OpenCvSharp's native half from the
 same tag as the managed package, cut to the same bindings as on Android and made a static library. It does this twice, for iPhone and
-iPad (iphoneos arm64) and for the simulator on Apple silicon (iphonesimulator arm64), both with iOS 26 as the lowest version, merges each
+iPad (iphoneos arm64) and for the simulator on Apple silicon (iphonesimulator arm64), both with iOS 18.0 as the lowest version, merges each
 into one archive with every third party library OpenCV built, checks that the archive defines the entry points GroupLab calls, and wraps
 the two in `OpenCvSharpExtern.xcframework`, zipped with its SHA-256. The `ios` workflow runs it on `macos-26` with Xcode 26, caches the
 result under a key made from the script, so it is rebuilt only when the script changes, and keeps it as the artifact `ios-opencv` for
 thirty days. The head links it statically and calls it through `__Internal`.
 
-**The lowest iOS version: 26.** Entry 206 section 4 worked the floor out as an iPhone 11 on iOS 26 or later, and it stands: iOS 26 runs on
+**The lowest iOS version: 18.0 to install, 26 supported** (entry 505 section 1, 2026-11-20, Alan's answer to entry 502: the middle way plus a warning screen). Entry 206 section 4 had worked the floor out as an iPhone 11 on iOS 26 or later, which stays the supported version: iOS 26 runs on
 every iPhone from the 11 of 2019 on and on the iPad mini (6th generation), which is the test device; one floor lets the camera code use
 one set of AVFoundation calls with no version checks; and nothing older can be tested, since there is no device to test it on.
 
-**Could it be iOS 18? Measured 2026-11-19 (entry 502), nothing changed on main.** Someone asked; Alan wants the answer without being tied
+**Could it be iOS 18? Measured 2026-11-19 (entry 502); chosen 2026-11-20 (entry 505).** Someone asked; Alan wants the answer without being tied
 to old phones. On the trial branch `ios/floor-18-trial` (never merged) the app, the share extension and OpenCV were built for iOS 18.0
 with Xcode 26 and the iOS 26 SDK, and the `ios app` workflow ran once there (run 44559880612):
 
@@ -70,17 +70,14 @@ with Xcode 26 and the iOS 26 SDK, and the `ios app` workflow ran once there (run
   than iOS 18. Testing it every night would be one more Mac leg of about 55 minutes (37 for the simulator job, 18 for the runtime), free
   on this public repository but on the Mac runners that already left nightly 232 without one twice. The real cost is the unknown: no
   device on iOS 18 to try the camera on, and every error report from one would have to be weighed.
-- **A way out, if it were lowered.** The floor goes back to 26, with no fallback ever written, at the first of: the platform analyzer
+- **The way out, now live and unchanged.** The floor goes back to 26, with no fallback ever written, at the first of: the platform analyzer
   flagging a call (it fails the build already, so nobody can add one by accident), a fix or feature that would need different code on
   18, or Apple's last security update for iOS 18. Whoever installed GroupLab keeps the build they have, and the App Store offers a person
   who once downloaded GroupLab its last compatible version (Apps & Purchase History); somebody new on iOS 18 could no longer get it.
-- **A middle way.** Lower the floor to 18 and promise nothing beyond the build passing: no iOS 18 leg, no testing on 18, and the way
-  out above written into this file before the change.
+- **The middle way, now chosen.** The floor is 18 and nothing is promised beyond the build passing: no iOS 18 leg, no testing on 18, and the way
+  out above. On a device below iOS 26 a warning screen comes first, and the person must accept no support and no guarantee to go on.
 
-**Recommendation: keep iOS 26** ((a) of entry 502). It costs nothing to lower today, but it helps four devices from 2018 and 2019, its
-camera cannot be tried, and a version listed on the App Store is a promise. The sentence to give the person who asked: GroupLab needs
-iOS 26 or later, which every iPhone from the 11 on can install for free in Settings, General, Software Update. If their phone is an XS,
-XS Max or XR, the middle way is ready and costs nothing until the way out is met.
+Keeping iOS 26 was the recommendation ((a) of entry 502); Alan chose the middle way with the warning screen on 2026-11-20 (entry 505).
 
 **What is built (entry 290 section 2 items 3 and 4):** the head, `ios/GroupLab.iOS`, with the shared screens, the sheets in its bundle,
 the icon from the desktop's mark, OpenCV linked statically, and the camera's place holding the files picker until the camera arrives. The

@@ -203,6 +203,9 @@ internal sealed class TestPhone : IPhonePlatform
 
     public bool IsDevBuild { get; set; }
 
+    /// <summary>Entry 505: the iOS version a test gives the phone; null, as on Android, unless a test sets it.</summary>
+    public string? IosVersion { get; set; }
+
     /// <summary>Entry 347's three conditions, unknown until a test sets them, as on a head that cannot tell.</summary>
     public bool? Unmetered { get; set; }
 
