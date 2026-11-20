@@ -75,7 +75,7 @@ Three, in `docs/QUESTIONS-FOR-PLANNING.md` (116 closed (a) by entry 505); **117*
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.235 (2026-11-20), with entry 504. GitHub's Mac runners are sometimes short: rerun a job
+- **Last nightly:** 1.0.0-nightly.236 (2026-11-20), with entry 505 (the iOS 18 floor, the "?" and the light-hole snap). GitHub's Mac runners are sometimes short: rerun a job
   "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
