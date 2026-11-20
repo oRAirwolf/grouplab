@@ -7,6 +7,15 @@ the person's files. Claude Code checks the open issues at the start of a run, be
 hourly while waiting on CI, and writes each new one here. **A report from an iPhone or iPad below iOS 26** (entry 505 section 5) is
 headed "unsupported iOS" and still assessed, but goes ahead of feature work only when the same fault also happens on iOS 26 or later.
 
+## 51, 2026-11-20, nightly 183 on Android (API 37, sent automatically, no note)
+
+- **Said:** a tap on the result's sheet picture raised "NoElements" in `ResultView.SheetPicture.BullAt`; GroupLab kept running. No last
+  action was recorded.
+- **Cause:** the same fault as report 36: a tap near no hole, no line and no bull asked for the nearest of none. Fixed on 2026-10-19
+  (entry 457 section 1, commit 0af39fc2): the line search takes the first of none instead. Nightly 183 is older than that.
+- **Status:** already fixed, first shipped in nightly 206; nothing new to change. The issue is closed saying so. The person is on a build
+  about seven weeks old; any build from 206 on, including the newest (235), has the fix.
+
 ## 6, reopened 2026-11-19, nightly 226 on an iPhone (iOS 27.2.1, sent automatically, no note)
 
 - **Said:** GroupLab closed without shutting down and recorded nothing: no exception, no stage, no last action. The log is a first run:
