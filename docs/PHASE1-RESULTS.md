@@ -900,6 +900,10 @@ through solid black on a white-lid scan, which used to stay where it was clicked
 no light middle and goes on to the outline as before; a ring on paper finds its own centre either way. The touching pair, a click on print
 with no hole and a hole on paper are unchanged, and all 3250 Core tests and the 63 App marking and snap tests pass.
 
+**3.3.** Nothing to write that needs nobody. Of the 45 articles 44 are published; the one draft, `aim-points-by-optic-class`, waits on
+request 86 (the range sitting through other optics), which the entry skips. Every other row under "Worth an article?" in RESEARCH.md
+already carries its decision and reason; today's snap fix is added there as not written.
+
 ## Entry 504: the pooled set's choice as concept A, question 115 (a), and Mac testers for request 111 (2026-11-20)
 
 **1.** Entry 498's plain rows are replaced by concept A on both platforms, from one shared model, `PoolChoices.Build`

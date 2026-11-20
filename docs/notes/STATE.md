@@ -21,8 +21,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   no saved sheet). **3.2, approved and not built, smallest first:** (a) done: look 1A's "?" kept clear of the tags (tags on the
   phone's result picture are a DESIGN NEEDED line); (b) is question 117 (how printers travel in sync, for App Store 1.0's sake): both checks of a same-named printer kept, with a question
   which to use (entry 493 section 2: a per-printer sync record with a deleted mark; the question's look goes to for-alan as DESIGN
-  NEEDED); (c) done: a light hole inside dark print found by its light middle. **In flight: 3.3 articles**, then 3.4 speed,
-  3.5 audits and automation.
+  NEEDED); (c) done: a light hole inside dark print found by its light middle. 3.3: no article needs nobody (the draft waits on
+  request 86). **In flight: 3.4 speed**, then 3.5 audits and automation.
 - **Entry 504 (2026-11-20)**: the pooled set's choice is concept A on both platforms (`PoolChoices`); Mac testers' link stays in
   App Store Connect (question 116 (a)); request 111.
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by mac-store.yml after each nightly; signed ad hoc the sandbox stops it at LaunchServices, so its proof needs TestFlight on a Mac; request 110 (first numbered 107) answered 2026-11-18: nightly 233's copy is signed, on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is request 111; never submitted without Alan's word.
