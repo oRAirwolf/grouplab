@@ -70,8 +70,8 @@ Three, in `docs/QUESTIONS-FOR-PLANNING.md`; **116** (entry 504) where Mac tester
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.233 (2026-11-18), with entries 498, 499 and 501; its iPhone build went to TestFlight as 1.0.233
-  (232's never got a Mac runner, twice). GitHub's Mac runners are short today: rerun a job "not acquired" with --failed.
+- **Last nightly:** 1.0.0-nightly.235 (2026-11-20), with entry 504. GitHub's Mac runners are sometimes short: rerun a job
+  "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
 ## The inbox
