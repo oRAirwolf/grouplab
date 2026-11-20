@@ -470,7 +470,7 @@ From your reports and targets in this build: 1 fix from 5 error reports.
 
 This build has no change to the application; it behaves exactly as nightly 204 does. Only the consent record beside the Windows download's sample sheet is longer.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.205)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
