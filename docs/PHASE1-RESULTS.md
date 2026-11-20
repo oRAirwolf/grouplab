@@ -908,6 +908,13 @@ already carries its decision and reason; today's snap fix is added there as not 
 what is left is the photograph's codes (question 106 (b)), hole finding (taken four times) and the marker step, which is OpenCV's
 detector over the page and could only be made cheaper by moving the corners.
 
+**3.5.** The consistency pass (docs-sonnet) read the README, PLATFORM-SUPPORT.md, the user and testing guides, the store listings and the
+site's features, links and tour against 1.0 and this entry, and found nothing false: every iPhone line says the App Store and the iOS 18
+sentence, every Android line the open closed test, the newest nightly is 235, and no retired wording is left. The tour's two sentences
+about the "?" ("beside the hole") still hold. `Get-TargetSubmissions.ps1` is **not retired**: submissions no longer need it, but its
+`-CrashReports` pull is still the only way to fetch an error report's log package, and the issue each report becomes says to use it;
+for-alan.md says so.
+
 ## Entry 504: the pooled set's choice as concept A, question 115 (a), and Mac testers for request 111 (2026-11-20)
 
 **1.** Entry 498's plain rows are replaced by concept A on both platforms, from one shared model, `PoolChoices.Build`
