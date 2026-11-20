@@ -3,12 +3,13 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-20 02:43 UTC
+## TestFlight, 2026-11-20 03:46 UTC
 
+- Build 235 added to Public Beta, with its release notes as What to Test.
+- Build 235 submitted for Beta App Review.
+- Build 235 for Public Beta: waiting for beta review, review waiting for review.
 - Both groups have build 234.
-- Made the external group Mac testers, with a public link for at most 5 testers.
-- Mac build 233 added to Mac testers, with its release notes as What to Test.
-- Mac build 233 submitted for Beta App Review, for Mac testers only.
+- GroupLab Team also has build 235, newer than Public Beta's; it was added by hand and is left there.
 - Mac build 233 for Mac testers: waiting for beta review, review waiting for review.
 - Mac testers has no Mac build its testers can install yet.
 <!-- /status:testflight -->
