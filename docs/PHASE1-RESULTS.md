@@ -904,6 +904,10 @@ with no hole and a hole on paper are unchanged, and all 3250 Core tests and the 
 request 86 (the range sitting through other optics), which the entry skips. Every other row under "Worth an article?" in RESEARCH.md
 already carries its decision and reason; today's snap fix is added there as not written.
 
+**3.4.** Measured again and nothing changed (PERFORMANCE.md, entry 505 section 3.4): the scan's stages 795.5 ms, the photograph's 811.7;
+what is left is the photograph's codes (question 106 (b)), hole finding (taken four times) and the marker step, which is OpenCV's
+detector over the page and could only be made cheaper by moving the corners.
+
 ## Entry 504: the pooled set's choice as concept A, question 115 (a), and Mac testers for request 111 (2026-11-20)
 
 **1.** Entry 498's plain rows are replaced by concept A on both platforms, from one shared model, `PoolChoices.Build`

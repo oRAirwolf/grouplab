@@ -48,6 +48,17 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 505 section 3.4, 2026-11-20: the measurement area again, and the marker step looked at, nothing changed
+
+`grouplab bench --area measurement --runs 5` (Release, TACIT-BLUE, commit 5620fb5c): a 600 dpi scan stage by stage 795.5 ms (2604.2
+in the record below, before entries 474 to 484), a phone photograph 811.7, Find holes on a store-bought target 105.7. The largest stages
+left: the photograph's codes (S0.identify, 458 ms), kept as they are by question 106 (b); hole finding on the scan (S5 to S8, 330 ms),
+taken three times already (entries 392, 433, 447, 474); and the markers (S2.fiducials, 94 ms on the scan, 84 on the photograph), which
+no entry had looked at. On a scan that step is one pass of OpenCV's marker detector over the whole page; on a photograph it is two by
+design, a first pass sized from a guess and a second sized from the markers it read (entry 322 section 1). The only cheaper way, finding
+the markers on a reduced picture and refining their corners at full size, moves the corners by fractions of a pixel, so no figure would
+stay the same, and it was not tried. Nothing was changed.
+
 ## Entry 484 section 2, 2026-11-08: the chance of a hit in a little over half the time, and Find holes on a store-bought target in about a third, every result the same
 
 **Measured first** (`grouplab bench --runs 5` on commit 5dfdb5f4, then timers put into `HitProbability` for this and taken out after):
