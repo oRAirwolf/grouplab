@@ -12,6 +12,20 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.236
+
+**2026-11-20**, commit `5620fb5`. Nightly.
+
+**What you will notice**
+
+- A click on a hole through dark print, such as a hole in a black bull scanned with the lid closed, now lands on the hole instead of staying where you clicked.
+- The question mark beside an unsure line to its bull no longer covers that hole's number; it now goes where it lies on no number, tag or hole.
+- GroupLab for iPhone and iPad now also installs on iOS 18 to 25, without support: below iOS 26 it first shows a warning you accept once for that version.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.236)
+
+---
+
 ## 1.0.0-nightly.235
 
 **2026-11-20**, commit `afd202c`. Nightly.
