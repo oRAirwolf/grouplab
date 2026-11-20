@@ -19,10 +19,10 @@ If something here disagrees with the logs, the logs are right and this file is o
   (`UnsupportedIos`, remembered with the version; Settings, About says so). The App Store description gains the sentence with the next
   version Alan releases. Question 116 closed (a). **Section 3, the week's queue, in flight:** 3.1 needed no build (the phone deletes
   no saved sheet). **3.2, approved and not built, smallest first:** (a) done: look 1A's "?" kept clear of the tags (tags on the
-  phone's result picture are a DESIGN NEEDED line); **(b), in flight:** both checks of a same-named printer kept, with a question
+  phone's result picture are a DESIGN NEEDED line); (b) is question 117 (how printers travel in sync, for App Store 1.0's sake): both checks of a same-named printer kept, with a question
   which to use (entry 493 section 2: a per-printer sync record with a deleted mark; the question's look goes to for-alan as DESIGN
-  NEEDED); (c) a light hole inside dark print found by its outline (entry 499 section 3.3, measured, not built). Then 3.3 articles,
-  3.4 speed, 3.5 audits and automation.
+  NEEDED); (c) done: a light hole inside dark print found by its light middle. **In flight: 3.3 articles**, then 3.4 speed,
+  3.5 audits and automation.
 - **Entry 504 (2026-11-20)**: the pooled set's choice is concept A on both platforms (`PoolChoices`); Mac testers' link stays in
   App Store Connect (question 116 (a)); request 111.
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by mac-store.yml after each nightly; signed ad hoc the sandbox stops it at LaunchServices, so its proof needs TestFlight on a Mac; request 110 (first numbered 107) answered 2026-11-18: nightly 233's copy is signed, on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is request 111; never submitted without Alan's word.
@@ -69,7 +69,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Two, in `docs/QUESTIONS-FOR-PLANNING.md` (116 closed (a) by entry 505):
+Three, in `docs/QUESTIONS-FOR-PLANNING.md` (116 closed (a) by entry 505); **117** how printers travel in sync, (a) recommended:
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site

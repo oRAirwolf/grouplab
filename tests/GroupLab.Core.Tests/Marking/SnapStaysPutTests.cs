@@ -137,6 +137,52 @@ public class SnapStaysPutTests(ITestOutputHelper output)
     }
 
     /// <summary>
+    /// Entry 505 section 3.2: the hole torn where the orange meets the black is a light middle closed in by dark all round (the black on one
+    /// side, its burnt rim across the orange on the other), and a click on it or a quarter of a hole off it lands on its centre, saying
+    /// nothing. Before, its outline step took a circle shifted onto the orange and every click ended 19 to 23 pixels off.
+    /// </summary>
+    [Fact]
+    public void ALightHoleClosedInByDarkPrintSnapsToItsCentre()
+    {
+        var page = Page();
+        foreach (var click in Clicks(TornThrough))
+        {
+            var snap = Snapping.ToHole(page, click, Radius, null);
+            output.WriteLine($"{click} -> {snap.At} ({Distance(snap.At, TornThrough):0.0})");
+            Assert.True(Distance(snap.At, TornThrough) < 2, $"a click at {click} on the torn hole at {TornThrough} went to {snap.At}");
+            Assert.Null(snap.NotSnapped);
+        }
+    }
+
+    /// <summary>
+    /// A hole through solid black print, scanned with a white lid: a light disc in the black, found by its light middle. Before, no outline
+    /// was found and the dark weight was not trusted, so the mark stayed where it was clicked.
+    /// </summary>
+    [Fact]
+    public void AHoleThroughSolidBlackSnapsToItsCentre()
+    {
+        var pixels = new byte[200 * 200];
+        Array.Fill(pixels, (byte)255);
+        var hole = new PointD(100, 100);
+        for (int y = 30; y < 170; y++)
+        {
+            for (int x = 30; x < 170; x++)
+            {
+                double r = Math.Sqrt(((x - hole.X) * (x - hole.X)) + ((y - hole.Y) * (y - hole.Y)));
+                pixels[(y * 200) + x] = r < 20 ? (byte)248 : (byte)(14 + (((x * 7) + (y * 3)) % 9));
+            }
+        }
+
+        var page = new GrayImage(200, 200, pixels);
+        foreach (var click in Clicks(hole))
+        {
+            var snap = Snapping.ToHole(page, click, Radius, null);
+            Assert.True(Distance(snap.At, hole) < 1.5, $"a click at {click} on the hole at {hole} went to {snap.At}");
+            Assert.Null(snap.NotSnapped);
+        }
+    }
+
+    /// <summary>
     /// A click on the black band near its edge, with no hole within reach: no hole's outline is there, and the dark weight would pull the mark
     /// into the band, so it stays where it was placed and the notice line says so.
     /// </summary>

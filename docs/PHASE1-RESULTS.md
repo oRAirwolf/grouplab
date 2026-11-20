@@ -886,6 +886,20 @@ four zooms and the hand-marked target at three, with every hole asked about at o
 with corners alone 2 of 26 did at the smallest zoom, hence the sides. The phone's result picture still draws no tags: whether it should is
 a DESIGN NEEDED line in for-alan.md, and the next item was taken.
 
+**3.2 (b).** Not built: question 117. Keeping both checks of one printer means each printer travelling in sync on its own, and the
+App Store's GroupLab 1.0 and earlier nightlies sync the printers as one whole list, so a newer build that stopped writing it would look
+to them like a device that deleted every printer. (a), a record per printer with the whole list still written for older builds, is
+recommended; the "which to use?" question would then be a DESIGN NEEDED line.
+
+**3.2 (c).** Entry 499 section 3.3's light hole closed in by dark print, built. With no design known the snap now looks first for a light
+middle with dark all round it (`Snapping.LightOutline`): centres within half a hole of the click, light themselves, a light-middle radius
+from a quarter to three quarters of a hole, counted where 41 of the 48 directions (`LightShare`, 0.85) show light just inside and dark
+just outside, then refined twice by a circle fitted where the dark starts. On the rebuilt torn ring of error report 50 (orange meeting
+black, `SnapStaysPutTests`) every one of the seven clicks lands 0.5 to 0.6 pixels from the centre, against 19 to 23 off before; a hole
+through solid black on a white-lid scan, which used to stay where it was clicked, lands within 1.5 pixels. A hole dark all through finds
+no light middle and goes on to the outline as before; a ring on paper finds its own centre either way. The touching pair, a click on print
+with no hole and a hole on paper are unchanged, and all 3250 Core tests and the 63 App marking and snap tests pass.
+
 ## Entry 504: the pooled set's choice as concept A, question 115 (a), and Mac testers for request 111 (2026-11-20)
 
 **1.** Entry 498's plain rows are replaced by concept A on both platforms, from one shared model, `PoolChoices.Build`

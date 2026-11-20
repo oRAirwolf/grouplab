@@ -320,7 +320,8 @@
         "On a target GroupLab did not print, you can now place each bull by hand",
         "offers its own stated resolution as the scale",
         "Marking by hand on a store-bought target, a click on a hole",
-        "Find holes now finds holes that show as rings", "Snap to holes on the marking screen", "a click the snap cannot match to a hole now stays where you clicked"
+        "Find holes now finds holes that show as rings", "Snap to holes on the marking screen", "a click the snap cannot match to a hole now stays where you clicked",
+        "Find holes now finds holes that show as rings", "Snap to holes on the marking screen", "A click on a hole through dark print now lands on the hole"
       ],
       "tour": "marking",
       "guide": "3-photograph-or-scan-it",

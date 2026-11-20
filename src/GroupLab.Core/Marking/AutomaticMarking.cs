@@ -509,6 +509,116 @@ public static class Snapping
     }
 
     /// <summary>
+    /// How many of the 48 directions round a light middle must show light just inside and dark just outside for <see cref="LightOutline"/>
+    /// to call it a hole: nearly all, since a light disc closed in by dark on every side is what a hole through print looks like, and an
+    /// open patch of paper between shapes is not closed in.
+    /// </summary>
+    internal const double LightShare = 0.85;
+
+    /// <summary>
+    /// Entry 505 section 3.2, the part of entry 499 section 3.3 not built then: a light hole closed in by dark print, found by its own light
+    /// middle. Scanned with a white lid, a hole through black print, or torn where orange meets black (error report 50's sheet, rebuilt in
+    /// <c>SnapStaysPutTests</c>), is a light disc with dark all round it: the black, or the hole's burnt rim where it crosses the orange. It
+    /// has no dark rim with light paper beyond, so <see cref="Outline"/> either finds nothing or takes a circle shifted onto the print.
+    /// Centres within <see cref="NearShare"/> of the radius of the click are tried, light themselves, with light-middle radii from a quarter
+    /// to three quarters of the radius; a circle counts where in <see cref="LightShare"/> of the directions the paper's light reaches just
+    /// inside it and the dark starts just outside. The best wins, the nearer to the click on a tie, and its centre is refined twice by
+    /// fitting a circle to where the dark starts in those directions. Null where none qualifies, which is every hole dark all through.
+    /// A ring on paper with a light middle (entry 417) qualifies too, with the same centre its outline gives.
+    /// </summary>
+    internal static PointD? LightOutline(GrayImage value, PointD click, double radiusPixels)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        double r = radiusPixels;
+        if (r < 4)
+        {
+            return null;
+        }
+
+        double delta = Math.Max(1.5, 0.08 * r);
+        int reach = (int)Math.Ceiling((NearShare * r) + (0.75 * r) + (3 * delta) + 3);
+        int x0 = Math.Max(0, (int)(click.X - reach)), x1 = Math.Min(value.Width - 1, (int)(click.X + reach));
+        int y0 = Math.Max(0, (int)(click.Y - reach)), y1 = Math.Min(value.Height - 1, (int)(click.Y + reach));
+        if (x1 <= x0 || y1 <= y0)
+        {
+            return null;
+        }
+
+        int paper = PaperLevel(value, x0, x1, y0, y1);
+        bool Dark(double x, double y)
+        {
+            int xi = (int)Math.Round(x), yi = (int)Math.Round(y);
+            return xi < x0 || xi > x1 || yi < y0 || yi > y1 || paper - value.Pixels[(yi * value.Width) + xi] - 40 > 0;
+        }
+
+        // In one direction: whether the light reaches just inside the circle and the dark starts just outside it.
+        bool Closes(double cx, double cy, double c, double s, double rim) =>
+            !Dark(cx + (c * (rim - delta)), cy + (s * (rim - delta))) && !Dark(cx + (c * rim * 0.5), cy + (s * rim * 0.5))
+            && (Dark(cx + (c * (rim + delta)), cy + (s * (rim + delta))) || Dark(cx + (c * (rim + (2 * delta))), cy + (s * (rim + (2 * delta)))));
+
+        double step = Math.Max(1, r / 26);
+        int n = (int)(NearShare * r / step);
+        int best = int.MinValue;
+        double bestAway = double.MaxValue, bestRim = 0;
+        PointD centre = click;
+        for (int j = -n; j <= n; j++)
+        {
+            for (int i = -n; i <= n; i++)
+            {
+                double away = Math.Sqrt(((i * step) * (i * step)) + ((j * step) * (j * step)));
+                double cx = click.X + (i * step), cy = click.Y + (j * step);
+                if (away > NearShare * r || Dark(cx, cy))
+                {
+                    continue;
+                }
+
+                for (int k = 0; k <= 10; k++)
+                {
+                    double rim = r * (0.25 + (0.05 * k));
+                    int score = Directions.Count(d => Closes(cx, cy, d.Cos, d.Sin, rim));
+                    if (score > best || (score == best && away < bestAway))
+                    {
+                        (best, bestAway, bestRim, centre) = (score, away, rim, new PointD(cx, cy));
+                    }
+                }
+            }
+        }
+
+        if (best < LightShare * OutlineDirections)
+        {
+            return null;
+        }
+
+        var found = centre;
+        for (int pass = 0; pass < 2; pass++)
+        {
+            // Where the dark starts in each direction, marching out from the middle.
+            var edge = new List<(double X, double Y)>();
+            foreach (var (c, s) in Directions)
+            {
+                for (double t = bestRim * 0.5; t <= bestRim + (3 * delta); t += 0.5)
+                {
+                    if (Dark(centre.X + (c * t), centre.Y + (s * t)))
+                    {
+                        edge.Add((centre.X + (c * t), centre.Y + (s * t)));
+                        break;
+                    }
+                }
+            }
+
+            if (edge.Count < LightShare * OutlineDirections || Detection.RenderDifferenceHoleDetector.FitCircle(edge) is not { } fit
+                || Math.Sqrt(((fit.X - found.X) * (fit.X - found.X)) + ((fit.Y - found.Y) * (fit.Y - found.Y))) > bestRim)
+            {
+                break;
+            }
+
+            centre = new PointD(fit.X, fit.Y);
+        }
+
+        return centre;
+    }
+
+    /// <summary>
     /// The snap on a sheet whose printed artwork is known, NOTES-FROM-PLANNING.md entry 40 section 1: taps on a rendered, unshot sheet
     /// snapped to bull 13's inner ring, because a printed ring is darker than paper. The expected artwork says which dark pixels were
     /// printed. When most of the dark weight under the tap is printed, the tap is placed where it was made and
@@ -521,6 +631,11 @@ public static class Snapping
         ArgumentNullException.ThrowIfNull(value);
         if (artwork is null || artwork.Width != value.Width || artwork.Height != value.Height)
         {
+            if (LightOutline(value, click, radiusPixels) is { } light)
+            {
+                return new SnapResult(light, null);
+            }
+
             if (Outline(value, click, radiusPixels) is { } found)
             {
                 return new SnapResult(found, null);
