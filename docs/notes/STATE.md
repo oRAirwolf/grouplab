@@ -9,19 +9,23 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-20, after entry 504; the inbox is empty.
+**Last rewritten:** 2026-11-20, during entry 505 (sections 1 and 2 done, section 3's queue in flight); the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 504 (2026-11-20)**: the pooled set's choice is concept A on both platforms (`PoolChoices`, tags same, only in this one, not
-  here yet; phone page "Choose a version"); question 115 (a), "numbered release"; the testflight run makes the external group Mac testers
-  (Mac builds only, link limit 5) and submits the newest Mac build for beta review. Its link is never written in the repository
-  (question 116); Alan copies it from App Store Connect for his friend (request 111).
+- **Entry 505 (2026-11-20)**: iOS 18.0 is the install floor, 26 the supported one; below 26 the phone shows Alan's warning first
+  (`UnsupportedIos`, remembered with the version; Settings, About says so). The App Store description gains the sentence with the next
+  version Alan releases. Question 116 closed (a). **Section 3, the week's queue, in flight:** 3.1 needed no build (the phone deletes
+  no saved sheet). **3.2, approved and not built, smallest first:** (a) look 1A's "?" kept clear of the tags, and tags on the phone's
+  result picture (entry 465, to check first: a month of work since); (b) both checks of a same-named printer kept, with a question
+  which to use (entry 493 section 2: a per-printer sync record with a deleted mark; the question's look goes to for-alan as DESIGN
+  NEEDED); (c) a light hole inside dark print found by its outline (entry 499 section 3.3, measured, not built). Then 3.3 articles,
+  3.4 speed, 3.5 audits and automation.
+- **Entry 504 (2026-11-20)**: the pooled set's choice is concept A on both platforms (`PoolChoices`); Mac testers' link stays in
+  App Store Connect (question 116 (a)); request 111.
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by mac-store.yml after each nightly; signed ad hoc the sandbox stops it at LaunchServices, so its proof needs TestFlight on a Mac; request 110 (first numbered 107) answered 2026-11-18: nightly 233's copy is signed, on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is request 111; never submitted without Alan's word.
-- **Entry 502 (2026-11-19)**: an iOS 18 floor builds and passes every self-test check unchanged (`ios/floor-18-trial`, unmerged);
-  recommendation (a), keep iOS 26 (IOS-PLAN.md). Waits on Alan's answer; the branch then goes to the trash. (500: App Store is the way in.)
 - **Entry 499 (2026-11-18)**: Snap to holes (toolbar and Shooting defaults) and Alt for one click; the snap keeps a click on its own
   touching ring and stays put when it finds no hole's edge. The missed backup night is caught at the start of every Code run now.
 
@@ -65,7 +69,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, in `docs/QUESTIONS-FOR-PLANNING.md`; **116** (entry 504) where Mac testers' public link goes, (a) recommended, Alan copies it:
+Two, in `docs/QUESTIONS-FOR-PLANNING.md` (116 closed (a) by entry 505):
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
@@ -85,18 +89,14 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **GroupLab installs on iOS 18 to 25 without support** (entry 505): a new screen comes before the first run's questions there, and a
+  scripted run accepts it (`Scenario.AnswerFirstRun`). Reports from below 26 are headed "unsupported iOS" in error-reports.md.
 - **Snap to holes can be off** (entry 499): a hole placed by hand then goes exactly where it is clicked; Alt does it for one click.
   **At the start of every run, `python scripts/automation-report.py`** (CLAUDE.md, backups rule 6) catches a night that never started.
 - **A pooled set changed on two devices waits like a session** (entries 498, 504): the banner counts it, its row is tagged, and it opens
   concept A, each sheet tagged; a sheet not here yet is never counted. A pool reaching a device before its sheets asks nothing.
-- **Every phone sheet closes through `ProblemSheet.PutBack`** (error report 43), and a choice handed to `ProblemSheet.Over` that the
-  caller did not place is shown under the body.
-- **Both phones hold the run marker only on screen** (error report 6, iPhone from 2026-11-19), so a background end is not a close.
 - **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words, or `Screens.LeavesPage` for a Done,
   Cancel, Skip or "Another target" that is the page's way out (entry 472); `Entry472BackTests` fails on a new page Back was never pressed on.
-- **Sync change files carry `sha256`** of their records (entry 472); a file is taken only when it matches and every record applies.
-- **The records are copied daily** beside the database in `copies/` (trash in `trash/copies/`); `RecordsCopies` makes and restores them.
-- **The server's logs are in Denver time** (-0600, -0700 from 1 November), not UTC; a log paste converts its window (request 99).
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
 - **Find holes looks for rings on paper first** (report 50): nothing inside a ring's outline is proposed again; not on dark targets.

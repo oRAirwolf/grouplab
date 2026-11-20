@@ -25,6 +25,70 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-20, entry 505: iOS 18 allowed with an unsupported warning, question 116 (a), and a queue of work for the week
+
+**Status: actioned in part 2026-11-20. Sections 1 and 2 done; section 3 is the week's queue, taken in order, and STATE.md names the item in flight. Section 1.2 differs from the words in one place: "Not now" cannot close the app, since iOS gives an application no way to close itself and Apple asks that it never does, so it stops the start, saves nothing and says so, with a way to read the warning again. Section 1.7: the App Store description is set in App Store Connect with the next version Alan releases (docs/store/LISTING.md); nothing was submitted. Section 2 needed one wording change: the TestFlight run's line already kept the link out (entry 504). Section 3.1 needs no build: the phone has no way to delete a saved sheet, so no sheet can be deleted from under a pool there; the computer's question is ready for the day it gets one.**
+
+From the planning session, Alan's words in chat on 2026-11-20 at about 19:00 UTC. Take the sections in order. Commit each section on its
+own. The usual guard applies (stop at 85% of the week, 88% for a finishing block); the week resets 2026-11-26 02:00 UTC.
+
+## 1. Entry 502 answered: lower the floor to iOS 18, with a warning the person must accept below iOS 26
+
+Alan: "if somebody tries an older version of ios, it says that iOS 26 is the minimum supported OS and that they have to acknowledge that
+if there are any issues, they will not receive support and there is no guarantee it will continue to work in the future? It should then
+allow them to try."
+
+This is the middle way in docs/IOS-PLAN.md, with a screen added:
+
+1. Merge what `ios/floor-18-trial` measured into main: the app, the share extension and OpenCV built for iOS 18.0 as the lowest version
+   the App Store will install on. iOS 18.0 is the floor because it is what entry 502 measured; do not go lower. No iOS 18 leg in the
+   nightly, no promise beyond the build passing. Then move the trial branch to the trash as usual (backup first).
+2. On first start on any iOS or iPadOS version below 26, before the first-run questions, show one screen. Wording, kept plain:
+   - Title: "iOS 26 is the minimum supported version"
+   - Text: "This device has iOS <version>. GroupLab is built and tested for iOS 26 and later. You can still try it here, but if anything
+     goes wrong you will not receive support, and there is no guarantee GroupLab will keep working on this version in the future.
+     If your device can update, Settings, General, Software Update installs iOS 26 for free."
+   - A checkbox or switch: "I understand there is no support and no guarantee on this version." The continue button stays off until it
+     is turned on.
+   - Buttons: "Try GroupLab anyway" (goes on to the app) and "Not now" (closes the app's start, nothing saved).
+3. The acceptance is remembered with the iOS version it was given on. Show the screen again only if the device is still below 26 and
+   its version changed. Never show it on 26 or later.
+4. Settings, Updates and about shows one line on such a device: "Unsupported iOS version (<version>): no support, no guarantee."
+5. Error reports from a device below 26 carry the OS version as they already do; in docs/notes/error-reports.md mark them "unsupported
+   iOS", still assess them, but they do not go ahead of feature work unless the same fault also happens on 26.
+6. The way out in IOS-PLAN.md stays as written (the floor goes back to 26 at the first of its conditions), and is now live.
+7. Same change, everything public (entry 267): README, download page, user guide, PLATFORM-SUPPORT.md and the App Store description say
+   "Requires iOS 26 or later. It also installs on iOS 18 to 25, without support." Tests for the screen's show/hide rule and the
+   remembered version. This is a small screen of Alan's own wording, so build it in the look of the first-run questions; post DESIGN
+   NEEDED only if a real look question comes up.
+8. Release notes say it in one line. Do not submit anything to the App Store for it; it reaches the App Store with the next version
+   Alan releases, on his word as always.
+
+## 2. Question 116 answered (a)
+
+The Mac testers public link is never written in the repository, its workflow logs or external-status.md. When Apple approves the Mac
+build for Mac testers, for-alan.md says only that it is approved and that Alan copies the link from App Store Connect (Apps, GroupLab,
+TestFlight, Mac testers, Public Link). Close question 116.
+
+## 3. The queue for the rest of the week (Alan: "Do all of the optional work")
+
+In this order, each one finished, recorded and committed before the next, until the guard stops it:
+
+1. Entry 495's last unbuilt part: the phone's sheet question.
+2. Approved features not yet built: everything Alan has said yes to that STATE.md, NOTES-FROM-PLANNING.md or for-alan.md still lists as
+   not built. List them in STATE first, then build them smallest first. Anything that needs a look goes to for-alan.md as DESIGN NEEDED
+   and the next one is taken.
+3. The research rows still "not yet": write the articles that need nobody (entry 393: ready articles are published without asking).
+   Row 86 waits on Alan and is skipped.
+4. Phase 9 speed work: the next slowest measured steps, every result identical, numbers into PERFORMANCE.md.
+5. Audits and automation: a full consistency pass of README, site, guides and store listings against 1.0 and this entry; any automation
+   that takes a chore off Alan (for example the stale Get-TargetSubmissions.ps1, which can be retired, backup first).
+
+Anything in this queue that would need a secret, a device or a decision from Alan is written in for-alan.md and skipped, not waited on.
+STATE.md says which item is in flight at every rewrite.
+
+---
+
 ## 2026-11-20, entry 504: Alan's answers: the pooled set conflict screen as concept A, question 115 (a), and a Mac testers group for request 111
 
 **Status: actioned 2026-11-20. Every section done, two parts differently from the words: section 3's public link is not written into for-alan.md, because this repository is public and anybody reading it could take the five places (question 116, (a) recommended: Alan copies it from App Store Connect); and the group, its build and its beta review are made by the next scheduled TestFlight run after the push, so whether Apple approves is not known yet. No screenshot showed this screen before; a new one, pool-conflict, is in the guide.**

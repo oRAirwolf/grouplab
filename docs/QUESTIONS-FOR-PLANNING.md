@@ -12,31 +12,12 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
-## 2026-11-20, question 116: where Mac testers' public link goes, since this repository is public
-
-**Status: open.** From entry 504 section 3.
-
-Entry 504 section 3 says: "When Apple approves it, put the public link and these steps for the friend at the top of for-alan.md, under
-request 111". `docs/notes/for-alan.md` is committed to `oRAirwolf/grouplab`, which is public, and so are the testflight workflow's logs
-and `docs/notes/external-status.md`. Anybody reading any of them could open the link and take one of the five places meant for Alan's
-friend. So `scripts/testflight.py` (`mac_testers`) never prints the link; it says when the group can install and where the link is in
-App Store Connect, and request 111 now tells Alan to copy it from there and send it himself.
-
-- **(a)** Keep it so: Alan copies the link from App Store Connect, one minute. Cost: one step for Alan.
-- **(b)** Put the link in for-alan.md as the entry asks. Cost: the five places are open to anybody who reads the repository.
-- **(c)** The workflow files the link as an issue in the private `oRAirwolf/grouplab-crash-reports`, and the planning session passes it
-  on. Cost: a small change to the workflow, and the link reaches Alan through the planning session rather than the file.
-
-I would choose (a), because it keeps the places for the friend and costs Alan one copy.
-
----
-
 ## Answered, and moved
 
-These 61 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 62 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 36, 34.
+> 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 36, 34.
 
 ---
 

@@ -324,8 +324,9 @@ def mac_testers(store: Store, notes: Callable[[int], str]) -> tuple[list[str], s
     if not link:
         return lines + [f"{MAC_TESTERS} can install Mac build {shared.number}, but the group has no public link turned on."], None
     # The repository and its Actions logs are public, and five places are meant for Alan's friend, so the link itself is never printed.
-    lines.append(f"{MAC_TESTERS} can install Mac build {shared.number}; its public link is on (App Store Connect, TestFlight, "
-                 f"{MAC_TESTERS}, Public Link), and is kept out of this public log.")
+    # Question 116, answered (a) in entry 505 section 2: the line says only that the build is approved and where Alan copies the link.
+    lines.append(f"Apple approved Mac build {shared.number} for {MAC_TESTERS}, who can install it; Alan copies the public link from App Store "
+                 f"Connect (Apps, GroupLab, TestFlight, {MAC_TESTERS}, Public Link). The link is never written here.")
     return lines, link
 
 

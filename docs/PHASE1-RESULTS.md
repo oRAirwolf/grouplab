@@ -869,6 +869,15 @@ version Alan releases, set in App Store Connect (docs/store/LISTING.md); nothing
 (the show and hide rule over 12 versions, Alan's words, the switch and Not now, the shell remembering the version and asking again on a
 new one, the About line). The OpenCV archive is rebuilt for 18.0 by the next `ios` run on main, before the nightly's iPhone build.
 
+**2.** Question 116 is closed, (a): `scripts/testflight.py` (`mac_testers`) already returned the link and never printed it; its line now
+says only that Apple approved the Mac build for Mac testers and where Alan copies the link (Apps, GroupLab, TestFlight, Mac testers,
+Public Link), and that line is what reaches external-status.md and so for-alan.md. Self-test passed.
+
+**3.1.** Nothing to build. Entry 495's "sheet question on the phone" is the computer's question before a sheet a pool uses is deleted
+(`SessionPools.DeleteSheetQuestion`); the phone deletes a session only when it is a reading nobody saw (a stopped reading, a picture
+taken again), so no saved sheet can be deleted from under a pool there. The day the phone gains a delete for a saved sheet, it asks
+that question.
+
 ## Entry 504: the pooled set's choice as concept A, question 115 (a), and Mac testers for request 111 (2026-11-20)
 
 **1.** Entry 498's plain rows are replaced by concept A on both platforms, from one shared model, `PoolChoices.Build`

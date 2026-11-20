@@ -5,6 +5,27 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-11-20, question 116: where Mac testers' public link goes, since this repository is public
+
+**Status: answered 2026-11-20 by Alan (entry 505 section 2): (a).** The link is never written in the repository, the workflow's logs
+or external-status.md; when Apple approves a Mac build for Mac testers, the line says only that, and Alan copies the link from App
+Store Connect (Apps, GroupLab, TestFlight, Mac testers, Public Link). From entry 504 section 3.
+
+Entry 504 section 3 says: "When Apple approves it, put the public link and these steps for the friend at the top of for-alan.md, under
+request 111". `docs/notes/for-alan.md` is committed to `oRAirwolf/grouplab`, which is public, and so are the testflight workflow's logs
+and `docs/notes/external-status.md`. Anybody reading any of them could open the link and take one of the five places meant for Alan's
+friend. So `scripts/testflight.py` (`mac_testers`) never prints the link; it says when the group can install and where the link is in
+App Store Connect, and request 111 now tells Alan to copy it from there and send it himself.
+
+- **(a)** Keep it so: Alan copies the link from App Store Connect, one minute. Cost: one step for Alan.
+- **(b)** Put the link in for-alan.md as the entry asks. Cost: the five places are open to anybody who reads the repository.
+- **(c)** The workflow files the link as an issue in the private `oRAirwolf/grouplab-crash-reports`, and the planning session passes it
+  on. Cost: a small change to the workflow, and the link reaches Alan through the planning session rather than the file.
+
+I would choose (a), because it keeps the places for the friend and costs Alan one copy.
+
+---
+
 ## 2026-11-19, question 115: what "the first beta or stable release" now means, after 1.0 reached two stores
 
 **Status: answered 2026-11-20 by Alan (entry 504 section 2): (a), the eight checks stay the checklist for the first numbered release made by `release.yml` from a tag; "beta or stable" reworded to "numbered release" in README.md, scripts/readme.py and docs/RELEASE-PLAN.md.**
