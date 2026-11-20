@@ -175,6 +175,9 @@ public static class MarkTags
     }
 
     /// <summary>Up and left first, then down and left, up and right, down and right, each a unit vector on screen, y down.</summary>
+    /// <summary>Left, right, up and down, tried after the corners for a "?" (entry 505).</summary>
+    private static readonly PointD[] Sides = [new(-1, 0), new(1, 0), new(0, -1), new(0, 1)];
+
     private static readonly PointD[] Corners = [new(-Math.Sqrt(0.5), -Math.Sqrt(0.5)), new(-Math.Sqrt(0.5), Math.Sqrt(0.5)), new(Math.Sqrt(0.5), -Math.Sqrt(0.5)), new(Math.Sqrt(0.5), Math.Sqrt(0.5))];
 
     /// <summary>A box just outside a circle of radius <paramref name="r"/> round <paramref name="centre"/>, in the direction <paramref name="way"/>.</summary>
@@ -236,6 +239,35 @@ public static class MarkTags
     }
 
     /// <summary>How many rings further out, a tag's height at a time, a tag is tried at before the least crowded place is taken.</summary>
+    /// <summary>
+    /// Entry 465 section 1A, the part left from it (entry 505 section 3.2): the "?" beside each hole on an unsure line to its bull, at the
+    /// first corner round the hole, top left first as before, then the four sides, that lies on no tag, no bull's number, no other hole and no "?" already
+    /// placed; where none is clear, the corner with fewest things under it. Before this the "?" was always drawn at the top left, so it
+    /// sat on the hole's own tag whenever the tag had gone there. Keyed by shot; a shot not among <paramref name="holes"/> gets none.
+    /// </summary>
+    public static IReadOnlyDictionary<int, TagBox> Questions(IEnumerable<int> shots, double width, double height, TagLayout layout, IReadOnlyList<TagHole> holes)
+    {
+        ArgumentNullException.ThrowIfNull(shots);
+        ArgumentNullException.ThrowIfNull(layout);
+        ArgumentNullException.ThrowIfNull(holes);
+        var taken = layout.Bulls.Select(b => b.Box).Concat(layout.Holes.Select(h => h.Box)).ToList();
+        var placed = new Dictionary<int, TagBox>();
+        foreach (int shot in shots)
+        {
+            if (placed.ContainsKey(shot) || holes.FirstOrDefault(h => h.ShotId == shot) is not { } hole)
+            {
+                continue;
+            }
+
+            int Cost(TagBox box) => taken.Count(t => t.Overlaps(box, Spacing)) + holes.Count(h => box.Overlaps(h.At, h.Radius + 1));
+            var at = Best(Enumerable.Range(0, Steps).SelectMany(step => Corners.Concat(Sides).Select(way => Outside(hole.At, hole.Radius + Gap + (step * height), way, width, height))), Cost);
+            taken.Add(at);
+            placed[shot] = at;
+        }
+
+        return placed;
+    }
+
     private const int Steps = 5;
 
     /// <summary>The first candidate that is clear, in the order of preference, or where none is, the one with fewest things under it.</summary>

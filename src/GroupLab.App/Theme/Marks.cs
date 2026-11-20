@@ -186,6 +186,17 @@ public static class Marks
     /// A mark's label: light mono text on a dark plate, with a bar in the mark's colour down its left edge. Text in the mark's own colour on
     /// the halo was unreadable in the first screenshots, red on near black at 11.5 point, so the colour moved to the bar and the text is light.
     /// </summary>
+    /// <summary>The size of a label's plate and text, as <see cref="Label"/> draws it, for placing it clear of the tags (entry 505).</summary>
+    public static (double Width, double Height) LabelSize(string text)
+    {
+        var formatted = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(Tokens.Mono), Tokens.TableRowSize, LabelText);
+        return (formatted.Width + 7, formatted.Height + 2);
+    }
+
+    /// <summary>A label in the box its placing gave it: the plate fills the box, as <see cref="LabelSize"/> measured it.</summary>
+    public static void Label(DrawingContext context, string text, IBrush brush, GroupLab.Core.Marking.TagBox box) =>
+        Label(context, text, brush, new Point(box.X + 3, box.Y + 1));
+
     public static void Label(DrawingContext context, string text, IBrush brush, Point at)
     {
         ArgumentNullException.ThrowIfNull(context);

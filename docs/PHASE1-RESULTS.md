@@ -878,6 +878,14 @@ Public Link), and that line is what reaches external-status.md and so for-alan.m
 taken again), so no saved sheet can be deleted from under a pool there. The day the phone gains a delete for a saved sheet, it asks
 that question.
 
+**3.2 (a).** Look 1A's "?" beside an unsure line's hole was drawn at the hole's top left whatever lay there, on the computer and on the
+phone's Fix holes page, so it sat on the hole's own tag whenever the tag had gone there. Now it is drawn after the tags, at the first
+corner round the hole (top left first, then the other corners, then the four sides, further out in steps) that lies on no tag, bull
+number, hole or other "?" (`MarkTags.Questions`; `MarkingCanvas`, `BullLineInk.Questions` on `MarkingAPage`). On the crowded sheet at
+four zooms and the hand-marked target at three, with every hole asked about at once, none lies on anything (`MarkTagsTests`, 2 new);
+with corners alone 2 of 26 did at the smallest zoom, hence the sides. The phone's result picture still draws no tags: whether it should is
+a DESIGN NEEDED line in for-alan.md, and the next item was taken.
+
 ## Entry 504: the pooled set's choice as concept A, question 115 (a), and Mac testers for request 111 (2026-11-20)
 
 **1.** Entry 498's plain rows are replaced by concept A on both platforms, from one shared model, `PoolChoices.Build`

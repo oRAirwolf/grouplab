@@ -30,7 +30,8 @@ internal static class BullLineInk
     /// <param name="picking">Whether that bull is chosen to give holes to, which dims every other line.</param>
     /// <param name="linesOn">"Lines to bulls"; off, only the lit bull's lines are drawn.</param>
     /// <param name="moved">Where a hole being moved is now, to draw its line to.</param>
-    internal static void Draw(DrawingContext context, MarkingState state, Func<PointD, Point> toScreen, int? lit, bool picking, bool linesOn, Func<int, PointD?>? moved = null)
+    /// <param name="questions">Whether to draw each unsure line's "?" here; a page that places tags draws them with <see cref="Questions"/>.</param>
+    internal static void Draw(DrawingContext context, MarkingState state, Func<PointD, Point> toScreen, int? lit, bool picking, bool linesOn, Func<int, PointD?>? moved = null, bool questions = true)
     {
         foreach (var line in BullLines.For(state))
         {
@@ -47,11 +48,38 @@ internal static class BullLineInk
                 : line.Unsure ? new Pen(Unsure, 2.5, Dashes)
                 : new Pen(Plain, 1.5);
             context.DrawLine(pen, from, to);
-            if (line.Unsure && !picking && !mine)
+            if (questions && line.Unsure && !picking && !mine)
             {
-                var mark = new FormattedText("?", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, FontWeight.Bold), 15, Unsure);
-                context.DrawText(mark, new Point(to.X - 22, to.Y - 22));
+                context.DrawText(Mark(), new Point(to.X - 22, to.Y - 22));
             }
+        }
+    }
+
+    private static FormattedText Mark() =>
+        new("?", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, FontWeight.Bold), 15, Unsure);
+
+    /// <summary>
+    /// Entry 505 section 3.2, the part of entry 465's look 1A left over: each unsure line's "?" placed once the tags are, at the first
+    /// corner round its hole that lies on no tag, number or hole (<see cref="MarkTags.Questions"/>), the shots chosen as
+    /// <see cref="Draw"/> chooses them.
+    /// </summary>
+    internal static void Questions(DrawingContext context, MarkingState state, int? lit, bool picking, bool linesOn, TagLayout tags, IReadOnlyList<TagHole> holes)
+    {
+        if (picking || !linesOn)
+        {
+            return;
+        }
+
+        var shots = BullLines.For(state).Where(l => l.Unsure && l.Bull != lit).Select(l => l.Shot).ToList();
+        if (shots.Count == 0)
+        {
+            return;
+        }
+
+        var mark = Mark();
+        foreach (var box in MarkTags.Questions(shots, mark.Width, mark.Height, tags, holes).Values)
+        {
+            context.DrawText(mark, new Point(box.X, box.Y));
         }
     }
 }

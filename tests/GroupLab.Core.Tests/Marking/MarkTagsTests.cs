@@ -193,4 +193,47 @@ public class MarkTagsTests
         var rings = MarkTags.OuterRingInches(BuiltIns.Load("GL-CF25-LTR.gltd.json"));
         Assert.InRange(rings[0], 0.2, 1.5);
     }
+
+    /// <summary>
+    /// Entry 505 section 3.2: the "?" beside an unsure line's hole lies on no tag, no bull's number, no hole and no other "?", on the crowded
+    /// sheet at every zoom and on the hand-marked target where several holes share a bull; before, it sat at the hole's top left whatever was
+    /// there, which was the hole's own tag whenever the tag had gone to the top left.
+    /// </summary>
+    [Theory]
+    [InlineData(18, 0.0)]
+    [InlineData(26, 0.0)]
+    [InlineData(40, 0.0)]
+    [InlineData(90, 0.0)]
+    [InlineData(0, 0.35)]
+    [InlineData(0, 0.6)]
+    [InlineData(0, 1.5)]
+    public void EveryUnsureQuestionMarkLiesOnNothingElse(double ring, double zoom)
+    {
+        var (bulls, holes) = ring > 0 ? (Crowded(ring).Bulls, Crowded(ring).Holes) : AnyTarget(zoom);
+        var layout = MarkTags.Place(bulls, holes);
+        var shots = holes.Select(h => h.ShotId).ToList();
+        var marks = MarkTags.Questions(shots, 13, 17, layout, holes);
+        Assert.Equal(shots.Count, marks.Count);
+        var boxes = marks.Values.ToList();
+        var tags = layout.Bulls.Select(b => b.Box).Concat(layout.Holes.Select(h => h.Box)).ToList();
+        int clear = boxes.Count(box => !tags.Any(t => t.Overlaps(box)) && !holes.Any(h => box.Overlaps(h.At, h.Radius))
+            && boxes.Count(o => o.Overlaps(box)) == 1);
+        // Every hole on these sheets is asked about at once, far more than a real marking has, and still none lies on anything.
+        Assert.True(clear == boxes.Count, $"{boxes.Count - clear} of {boxes.Count} question marks lie on something");
+        foreach (var hole in holes)
+        {
+            var box = marks[hole.ShotId];
+            double far = Math.Sqrt(Math.Pow(box.Centre.X - hole.At.X, 2) + Math.Pow(box.Centre.Y - hole.At.Y, 2));
+            Assert.True(far < hole.Radius + 120, $"shot {hole.ShotId}'s question mark is {far:0} away from its hole");
+        }
+    }
+
+    [Fact]
+    public void ALoneUnsureQuestionMarkStaysTopLeftWhenNothingIsThere()
+    {
+        var hole = new TagHole(1, new PointD(200, 200), 6, null, 0, 0);
+        var marks = MarkTags.Questions([1, 2], 13, 17, new TagLayout([], []), [hole]);
+        var box = Assert.Single(marks).Value;
+        Assert.True(box.Right <= 200 && box.Bottom <= 200, "the question mark should be up and left of its hole");
+    }
 }

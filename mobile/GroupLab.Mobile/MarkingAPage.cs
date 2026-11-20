@@ -749,7 +749,7 @@ internal sealed class MarkingAPage : UserControl
             // crosshair, the one being moved, or the bull chosen) blue with its holes. Entry 407 section 1: the unsure ones dashed in orange
             // with a "?", and while a bull is chosen every other line dims.
             var lit = BullLineInk.Lit;
-            BullLineInk.Draw(context, session.State, ToScreen, Lit, Picking, LinesToBulls, id => id == Held ? HeldAt : null);
+            BullLineInk.Draw(context, session.State, ToScreen, Lit, Picking, LinesToBulls, id => id == Held ? HeldAt : null, questions: false);
 
             var labels = ShotLabels.For(session.State).ToDictionary(l => l.ShotId, l => l.Text);
             var tagBulls = new List<TagBull>();
@@ -830,6 +830,8 @@ internal sealed class MarkingAPage : UserControl
 
                 Marks.Tag(context, text, ink, tag.Box, ActualThemeVariant, selected);
             }
+
+            BullLineInk.Questions(context, session.State, Lit, Picking, LinesToBulls, tags, tagHoles);
 
             // The crosshair, fixed at the middle while no hole is being moved; its ring the bullet's real size where the scale and caliber are
             // known.

@@ -18,8 +18,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 505 (2026-11-20)**: iOS 18.0 is the install floor, 26 the supported one; below 26 the phone shows Alan's warning first
   (`UnsupportedIos`, remembered with the version; Settings, About says so). The App Store description gains the sentence with the next
   version Alan releases. Question 116 closed (a). **Section 3, the week's queue, in flight:** 3.1 needed no build (the phone deletes
-  no saved sheet). **3.2, approved and not built, smallest first:** (a) look 1A's "?" kept clear of the tags, and tags on the phone's
-  result picture (entry 465, to check first: a month of work since); (b) both checks of a same-named printer kept, with a question
+  no saved sheet). **3.2, approved and not built, smallest first:** (a) done: look 1A's "?" kept clear of the tags (tags on the
+  phone's result picture are a DESIGN NEEDED line); **(b), in flight:** both checks of a same-named printer kept, with a question
   which to use (entry 493 section 2: a per-printer sync record with a deleted mark; the question's look goes to for-alan as DESIGN
   NEEDED); (c) a light hole inside dark print found by its outline (entry 499 section 3.3, measured, not built). Then 3.3 articles,
   3.4 speed, 3.5 audits and automation.

@@ -509,7 +509,8 @@
       "note": [
         "A line now runs from each bull to the holes given to it",
         "Shots are now named by their bull",
-        "Every hole now has a line to the bull it was given"
+        "Every hole now has a line to the bull it was given",
+        "The question mark beside an unsure line to its bull"
       ],
       "tour": "analysis",
       "guide": "5-read-the-analysis",

@@ -813,6 +813,7 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
         var labels = ShotLabels.For(state).ToDictionary(l => l.ShotId);
         var lines = BullLines.For(state).ToDictionary(l => l.Shot);
         var tagHoles = new List<TagHole>();
+        var unsure = new List<int>();
         var tagWords = new Dictionary<int, (string Text, IBrush Ink)>();
         foreach (var shot in state.Shots)
         {
@@ -875,7 +876,8 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
 
                 if (line.Unsure && PickingBull is null)
                 {
-                    Marks.Label(context, "?", Marks.Unsure, c + new Vector(-radius - 14, -radius - 8));
+                    // Entry 505 section 3.2: drawn once the tags are placed, where it lies on none of them.
+                    unsure.Add(shot.Id);
                 }
             }
 
@@ -938,6 +940,15 @@ public sealed class MarkingCanvas : Control, ICustomHitTest
             }
 
             Marks.Tag(context, text, ink, tag.Box, ActualThemeVariant, selected);
+        }
+
+        if (unsure.Count > 0)
+        {
+            var (qw, qh) = Marks.LabelSize("?");
+            foreach (var box in MarkTags.Questions(unsure, qw, qh, tags, tagHoles).Values)
+            {
+                Marks.Label(context, "?", Marks.Unsure, box);
+            }
         }
 
         // An impact being placed is "this one", in amber: a cross where the pointer is, and a ring where it will snap when let go (entry 39 section 4).
