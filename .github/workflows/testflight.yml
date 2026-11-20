@@ -5,6 +5,8 @@ name: testflight
 # GroupLab Team once Public Beta's testers can install it. After every nightly it waits up to 30 minutes for Apple to finish processing the
 # upload, on a small Linux runner rather than a Mac; every half hour it looks again, so an approval reaches the team within half an hour.
 # It never fails for a missing group or key: it says so in the summary and does nothing.
+# Entry 504 section 3: the same step keeps the external group Mac testers (made if missing, a public link for at most five) on the newest
+# Mac App Store build, submitted for Beta App Review; the link itself is never printed, since this repository and its logs are public.
 on:
   workflow_run:
     workflows: ["nightly"]

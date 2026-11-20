@@ -5,6 +5,30 @@ number is never reused and never lost: the live file lists every number that has
 
 ---
 
+## 2026-11-19, question 115: what "the first beta or stable release" now means, after 1.0 reached two stores
+
+**Status: answered 2026-11-20 by Alan (entry 504 section 2): (a), the eight checks stay the checklist for the first numbered release made by `release.yml` from a tag; "beta or stable" reworded to "numbered release" in README.md, scripts/readme.py and docs/RELEASE-PLAN.md.**
+
+From the consistency audit of entry 503, finding 2.
+
+README.md's block "Before the first beta or stable release" says: "No beta or stable release happens until Alan asks for one by name"
+(entry 119 section 8), and `docs/RELEASE-PLAN.md` and `scripts/readme.py` say the same. GroupLab 1.0 (build 226) was then released on the
+App Store, and the Microsoft Store carries 1.0.230, on Alan's word on 2026-11-17 and from nightly builds (entry 488), not from a numbered
+release made by `release.yml` from a tag. The README now says that in one added line. What it cannot decide alone is what the eight checks
+are for now.
+
+- **(a)** They stay the checklist for the first numbered release made by `release.yml` from a tag, and "beta or stable" is reworded to
+  "numbered release". Cost: three words and a title change in three files; the decision stays Alan's.
+- **(b)** They become the checklist for every store submission, so 1.0's own release is judged against them after the fact. Cost: it
+  says which of the eight were met on 2026-11-17, which nobody has recorded.
+- **(c)** The block is dropped, since the stores' own review is the release gate. Cost: the signed-installer and update-path checks lose
+  their home.
+
+I would choose (a), because it changes least and leaves the release decision with Alan. Which of the eight were met on 2026-11-17 is not
+written down, so none is claimed.
+
+---
+
 ## 2026-11-17, question 114: the iPhone builds' version after the App Store release of 1.0
 
 **Status: answered 2026-11-18 by Alan (entry 498 section 0): (a), the iPhone builds stay 1.0.<build>, as built from nightly 232; nightly.yml unchanged.**

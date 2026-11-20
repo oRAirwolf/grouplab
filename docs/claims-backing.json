@@ -8734,9 +8734,9 @@
   },
   {
    "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$|^site:features/",
-   "match": "A pooled set changed on two devices waits the same way|a pooled set the same way as a plain list",
+   "match": "A pooled set changed on two devices waits the same way|a pooled set the same way as a plain list|The line under the title gives the pool's|a pooled set the same way, each sheet tagged",
    "kind": "code",
-   "where": "src/GroupLab.Core/Sync/SyncEngine.cs (PoolVersions, Resolve), src/GroupLab.Core/Sync/SyncScreens.cs (ComparePools, ToChooseBanner, KeepBothPools), src/GroupLab.Core/Records/SessionPools.cs (Version); src/GroupLab.App/MainWindow.Sync.cs (PoolsToChoose, ShowSyncConflict) and mobile/GroupLab.Mobile/PhoneSync.cs (PoolsToChoose, ShowConflict); held by CloudClientTests.APooledSetChangedOnTwoDevicesKeepsBothUntilChosen, SyncScreensTests.APooledSetsTwoVersionsSayWhatEachHolds, Entry463Tests and Entry463PhoneTests (entry 498 section 3)"
+   "where": "Entry 504 section 1: src/GroupLab.Core/Sync/PoolChoices.cs (Build, the three tags and the count, held by PoolChoicesTests), src/GroupLab.App/MainWindow.Sync.cs (ShowPoolConflict), mobile/GroupLab.Mobile/PhoneSync.cs (ShowPoolChoice), src/GroupLab.App/DashedTag.cs; src/GroupLab.Core/Sync/SyncEngine.cs (PoolVersions, Resolve), src/GroupLab.Core/Sync/SyncScreens.cs (ComparePools, ToChooseBanner, KeepBothPools), src/GroupLab.Core/Records/SessionPools.cs (Version); src/GroupLab.App/MainWindow.Sync.cs (PoolsToChoose, ShowSyncConflict) and mobile/GroupLab.Mobile/PhoneSync.cs (PoolsToChoose, ShowConflict); held by CloudClientTests.APooledSetChangedOnTwoDevicesKeepsBothUntilChosen, SyncScreensTests.APooledSetsTwoVersionsSayWhatEachHolds, Entry463Tests and Entry463PhoneTests (entry 498 section 3)"
   },
   {
    "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$|^site:tour/|^site:features/",

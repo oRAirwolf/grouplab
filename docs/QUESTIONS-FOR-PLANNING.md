@@ -12,34 +12,31 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
-## 2026-11-19, question 115: what "the first beta or stable release" now means, after 1.0 reached two stores
+## 2026-11-20, question 116: where Mac testers' public link goes, since this repository is public
 
-**Status: open.** From the consistency audit of entry 503, finding 2.
+**Status: open.** From entry 504 section 3.
 
-README.md's block "Before the first beta or stable release" says: "No beta or stable release happens until Alan asks for one by name"
-(entry 119 section 8), and `docs/RELEASE-PLAN.md` and `scripts/readme.py` say the same. GroupLab 1.0 (build 226) was then released on the
-App Store, and the Microsoft Store carries 1.0.230, on Alan's word on 2026-11-17 and from nightly builds (entry 488), not from a numbered
-release made by `release.yml` from a tag. The README now says that in one added line. What it cannot decide alone is what the eight checks
-are for now.
+Entry 504 section 3 says: "When Apple approves it, put the public link and these steps for the friend at the top of for-alan.md, under
+request 111". `docs/notes/for-alan.md` is committed to `oRAirwolf/grouplab`, which is public, and so are the testflight workflow's logs
+and `docs/notes/external-status.md`. Anybody reading any of them could open the link and take one of the five places meant for Alan's
+friend. So `scripts/testflight.py` (`mac_testers`) never prints the link; it says when the group can install and where the link is in
+App Store Connect, and request 111 now tells Alan to copy it from there and send it himself.
 
-- **(a)** They stay the checklist for the first numbered release made by `release.yml` from a tag, and "beta or stable" is reworded to
-  "numbered release". Cost: three words and a title change in three files; the decision stays Alan's.
-- **(b)** They become the checklist for every store submission, so 1.0's own release is judged against them after the fact. Cost: it
-  says which of the eight were met on 2026-11-17, which nobody has recorded.
-- **(c)** The block is dropped, since the stores' own review is the release gate. Cost: the signed-installer and update-path checks lose
-  their home.
+- **(a)** Keep it so: Alan copies the link from App Store Connect, one minute. Cost: one step for Alan.
+- **(b)** Put the link in for-alan.md as the entry asks. Cost: the five places are open to anybody who reads the repository.
+- **(c)** The workflow files the link as an issue in the private `oRAirwolf/grouplab-crash-reports`, and the planning session passes it
+  on. Cost: a small change to the workflow, and the link reaches Alan through the planning session rather than the file.
 
-I would choose (a), because it changes least and leaves the release decision with Alan. Which of the eight were met on 2026-11-17 is not
-written down, so none is claimed.
+I would choose (a), because it keeps the places for the friend and costs Alan one copy.
 
 ---
 
 ## Answered, and moved
 
-These 60 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 61 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 36, 34.
+> 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 36, 34.
 
 ---
 

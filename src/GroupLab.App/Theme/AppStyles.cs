@@ -131,6 +131,9 @@ public static class AppStyles
     /// </summary>
     public const string ProblemCard = "problem-card";
 
+    /// <summary>Entry 504 section 1: one version's card in the choice between two versions of a pooled set, a line all round.</summary>
+    public const string ChoiceCard = "choice-card";
+
     /// <summary>Entry 439: the guided demo's spotlight, an amber outline inside a halo of the window's own background, and its numbered badge.</summary>
     public const string DemoHalo = "demo-halo";
 
@@ -374,6 +377,7 @@ public static class AppStyles
         Rule(x => x.OfType<Border>().Class(DemoSpot), (Border.BorderBrushProperty, Brush(p.Amber)), (Border.BorderThicknessProperty, new Thickness(2)), (Border.CornerRadiusProperty, new CornerRadius(7))),
         Rule(x => x.OfType<Border>().Class(DemoBadge), (Border.BackgroundProperty, Brush(p.Amber)), (Border.BorderBrushProperty, Brush(p.Bg)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(11))),
         Rule(x => x.OfType<TextBlock>().Class(DemoBadgeText), (TextBlock.ForegroundProperty, Brush(p.OnAmber)), (TextBlock.FontWeightProperty, FontWeight.SemiBold), (TextBlock.FontSizeProperty, Tokens.LabelSize)),
+        Rule(x => x.OfType<Border>().Class(ChoiceCard), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(6)), (Border.PaddingProperty, new Thickness(Tokens.Space12))),
         Rule(x => x.OfType<Border>().Class(ProblemCard), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Line2)), (Border.BorderThicknessProperty, new Thickness(1)), (Border.CornerRadiusProperty, new CornerRadius(8)), (Border.PaddingProperty, new Thickness(Tokens.Space24))),
         Rule(x => x.OfType<Border>().Class(QuestionBar), (Border.BackgroundProperty, Brush(p.Panel)), (Border.BorderBrushProperty, Brush(p.Amber)), (Border.BorderThicknessProperty, new Thickness(0, 2, 0, 0)), (Border.PaddingProperty, new Thickness(Tokens.Space16, Tokens.Space12))),
         Rule(x => x.OfType<Border>().Class(ProblemBar), (Border.BackgroundProperty, Brush(p.AmberTint)), (Border.BorderBrushProperty, Brush(p.AmberTintBorder)), (Border.BorderThicknessProperty, new Thickness(0, 0, 0, 1)), (Border.PaddingProperty, new Thickness(Tokens.Space16, Tokens.Space8))),

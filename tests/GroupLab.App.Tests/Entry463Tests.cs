@@ -1,5 +1,7 @@
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.VisualTree;
 using Avalonia.Threading;
 using GroupLab.App;
 using GroupLab.Core.Marking;
@@ -153,6 +155,15 @@ public sealed class Entry463Tests : IDisposable
             window.ShowSyncConflict(waiting.Conflict.Id);
             Dispatcher.UIThread.RunJobs();
             Assert.Equal(SyncScreens.PoolConflictTitle, window.ProblemTitle);
+
+            // Entry 504 section 1, concept A: the line counts only the amber items; this computer's third sheet is only in its version.
+            Assert.Equal([SyncScreens.DecideLater, SyncScreens.KeepBothPools, "Keep this computer's", "Keep the Alan's phone's"], window.ProblemChoices);
+            var words = window.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text ?? "").ToList();
+            Assert.Contains(words, w => w.Contains("2 differences: how the sheets were pooled, and sheet 3.", StringComparison.Ordinal));
+            Assert.Single(words, w => w == PoolChoices.Words(PoolSheetTag.OnlyInThisOne));
+            Assert.Equal(4, words.Count(w => w == PoolChoices.Words(PoolSheetTag.Same)));
+            Assert.Equal(2, words.Count(w => w == SyncScreens.Differs));
+            Assert.Contains(words, w => w.StartsWith("This computer (", StringComparison.Ordinal));
             window.PressProblemChoice(SyncScreens.KeepBothPools);
             Dispatcher.UIThread.RunJobs();
             Assert.Empty(window.PoolsToChoose());

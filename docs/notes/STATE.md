@@ -9,23 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-19, after entry 503 (and 502, error report 6); the inbox is empty.
+**Last rewritten:** 2026-11-20, after entry 504; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 498 (2026-11-18)**: question 114 answered (a); report 50's two holes in the diamonds left (no honest fix); the App Store audit
-  fixed 6 findings; a pooled set changed on two devices reaches the Sessions banner and a plain prompt (look: DESIGN NEEDED). Not taken:
-  speed on a scan. 1.0.233 reached TestFlight.
+- **Entry 504 (2026-11-20)**: the pooled set's choice is concept A on both platforms (`PoolChoices`, tags same, only in this one, not
+  here yet; phone page "Choose a version"); question 115 (a), "numbered release"; the testflight run makes the external group Mac testers
+  (Mac builds only, link limit 5) and submits the newest Mac build for beta review. Its link is never written in the repository
+  (question 116); Alan copies it from App Store Connect for his friend (request 111).
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by mac-store.yml after each nightly; signed ad hoc the sandbox stops it at LaunchServices, so its proof needs TestFlight on a Mac; request 110 (first numbered 107) answered 2026-11-18: nightly 233's copy is signed, on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is request 111; never submitted without Alan's word.
 - **Entry 502 (2026-11-19)**: an iOS 18 floor builds and passes every self-test check unchanged (`ios/floor-18-trial`, unmerged);
   recommendation (a), keep iOS 26 (IOS-PLAN.md). Waits on Alan's answer; the branch then goes to the trash. (500: App Store is the way in.)
 - **Entry 499 (2026-11-18)**: Snap to holes (toolbar and Shooting defaults) and Alt for one click; the snap keeps a click on its own
   touching ring and stays put when it finds no hole's edge. The missed backup night is caught at the start of every Code run now.
-- **Entry 495 (2026-11-16)**, done but two parts: a pooled set is a record of its own (schema 7, `pools`, `SessionPools`,
-  `PoolPackage`) on both platforms, in Session records, Compare, sharing, export, import and sync; not built: a screen to choose
-  between two devices' versions of a pool (built in entry 498), and the sheet question on the phone (it deletes no session).
 
 ## The next three
 
@@ -46,7 +44,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft follows the nightlies (entry 369); Play's closed test is open (entry 490); Test Lab waits on request 62.
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
-- **A beta or stable release**: only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
+- **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
 1. Request 83, the M834 printing from the computer, now that the phone's prints are true both ways.
 2. The range kit in `range-next` waits for Alan's next trip; its results come back as an entry.
@@ -54,7 +52,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## Blocked, and on what
 
-- **The Mac App Store copy**: request 111 (open the TestFlight build on a real Mac), then Alan's word to submit (entry 501 section 4).
+- **The Mac App Store copy**: request 111 (the TestFlight build opened on a real Mac, now also through Mac testers for Alan's friend once
+  Apple's beta review approves it), then Alan's word to submit (entry 501 section 4).
 - **The iPhone Duo's inner screen**: the Duo leg on Xcode 27.2 (simulator starts folded; IOS-PLAN.md); nothing needed from Alan.
 - **Entry 380 section 3**: measuring the M220 labels waits on request 77's photos in `m220-labels`.
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
@@ -66,7 +65,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, in `docs/QUESTIONS-FOR-PLANNING.md`; **115** (entry 503) what the eight release checks are for now, (a) recommended:
+Three, in `docs/QUESTIONS-FOR-PLANNING.md`; **116** (entry 504) where Mac testers' public link goes, (a) recommended, Alan copies it:
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
@@ -88,8 +87,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 - **Snap to holes can be off** (entry 499): a hole placed by hand then goes exactly where it is clicked; Alt does it for one click.
   **At the start of every run, `python scripts/automation-report.py`** (CLAUDE.md, backups rule 6) catches a night that never started.
-- **A pooled set changed on two devices waits like a session** (entry 498): the banner counts it, its row is tagged, and the session
-  prompt's card shows it as plain rows with no plot until its own screen is drawn; a pool reaching a device before its sheets asks nothing.
+- **A pooled set changed on two devices waits like a session** (entries 498, 504): the banner counts it, its row is tagged, and it opens
+  concept A, each sheet tagged; a sheet not here yet is never counted. A pool reaching a device before its sheets asks nothing.
 - **Every phone sheet closes through `ProblemSheet.PutBack`** (error report 43), and a choice handed to `ProblemSheet.Over` that the
   caller did not place is shown under the body.
 - **Both phones hold the run marker only on screen** (error report 6, iPhone from 2026-11-19), so a background end is not a close.

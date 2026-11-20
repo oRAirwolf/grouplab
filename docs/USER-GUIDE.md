@@ -901,9 +901,16 @@ device's name and time, its holes drawn small on one scale, and its figures, wit
 it can be got back. On the phone the two stack, one above the other.
 
 A pooled set changed on two devices waits the same way: the banner counts it, "1 pooled set to choose between", and its row in Session
-records has the **2 versions** tag. For now the two are a plain list, each device's sheets, how they were pooled and when, with **differs**
-beside what is not the same; **Keep** one device's version, **Keep both as two pooled sets**, or **Decide later**. A sheet that has not
-reached this device yet is listed as not here yet, and is not a reason to choose on its own.
+records has the **2 versions** tag. Either opens **This pooled set was changed on two devices**. The line under the title gives the pool's
+name and date and how many differences there are, and what they are, such as "2 differences: how the sheets were pooled, and sheet 3".
+This computer's version is on the left and the other device's on the right, each with when it was made or arrived, how its sheets were
+pooled (an amber **differs** where the two disagree), and its sheets in order. Each sheet is tagged **same** when both versions have it,
+**only in this one** (amber) when the other does not, or **not here yet** (gray, with a dashed edge) when the sheet has not reached this
+device; a sheet not here yet is never counted as a difference by itself. Then **Decide later**, **Keep both as two pooled sets**, **Keep
+this computer's**, or **Keep** the other device's. On the phone it is a page of its own, **Choose a version**, with Back: the two versions
+stacked, this phone's first, and the four choices along the bottom.
+
+![A pooled set changed on two devices: this computer's version and the other's side by side, each sheet tagged](figures/screens/current/pool-conflict-light-1400x900.png)
 
 ![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png)
 <!-- marks: Keep both as two sessions | Decide later -->

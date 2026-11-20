@@ -1491,7 +1491,7 @@
      "key": "sync",
      "group": "Updates and platforms",
      "name": "Sync between your devices",
-     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync and your data, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, a pooled set the same way as a plain list, and the original photographs travel only if you ask. Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder's own trash, keeps it there 14 days, and says what it tidied; a device that will not sync again can be forgotten, so tidying stops waiting for it, with nothing in the folder deleted. A change file the cloud app has not finished copying, or that arrived damaged, is waited for and taken only once it is whole. It is held in tests against simulated OneDrive, Google Drive and Dropbox folders but has not yet run for weeks on two real devices, so keep the daily copies on.",
+     "sentence": "Your sessions, rifles, loads and designed sheets kept the same on your computer and your phones through a folder your own cloud app already keeps in step, such as OneDrive, Dropbox, Google Drive or iCloud Drive: there is no GroupLab account, and nothing goes anywhere but that folder. Settings, Sync and your data, Sync between devices, chooses the folder and says when it last synced; a session changed on two devices is kept both ways and laid out side by side until you choose, a pooled set the same way, each sheet tagged same, only in one version, or not here yet, and the original photographs travel only if you ask. Once every device has read an old change file and a newer one has replaced all it holds, GroupLab tidies it into the folder's own trash, keeps it there 14 days, and says what it tidied; a device that will not sync again can be forgotten, so tidying stops waiting for it, with nothing in the folder deleted. A change file the cloud app has not finished copying, or that arrived damaged, is waited for and taken only once it is whole. It is held in tests against simulated OneDrive, Google Drive and Dropbox folders but has not yet run for weeks on two real devices, so keep the daily copies on.",
      "shot": "sync-settings",
      "platforms": [
       "Windows",
@@ -1508,7 +1508,8 @@
       "old change files",
       "Forget this device",
       "Choosing a different, empty sync folder",
-        "a sync file a cloud service left damaged now waits until it arrives whole", "a pooled set is changed on two of your synced devices"
+        "a sync file a cloud service left damaged now waits until it arrives whole", "a pooled set is changed on two of your synced devices",
+      "each sheet marked as in both, only in one, or not on this device yet"
      ],
      "tour": "settings",
      "guide": "sync-between-devices",

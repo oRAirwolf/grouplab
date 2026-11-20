@@ -430,7 +430,6 @@ public partial class MainWindow
         string here = Sync.DeviceName;
         SyncConflict conflict;
         SyncComparison compared;
-        bool pool = false;
         if (SessionsToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } c } waiting)
         {
             conflict = c;
@@ -438,10 +437,8 @@ public partial class MainWindow
         }
         else if (PoolsToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } p } pooled)
         {
-            // Entry 498 section 3: until the pooled set's own screen is drawn, its two versions as plain rows, with no plot.
-            (conflict, pool) = (p, true);
-            compared = SyncScreens.ComparePools(pooled.Here is { } ours ? SessionPools.Version(sessions, ours) : null, SessionPools.Version(sessions, pooled.There), here,
-                SyncDeviceName(conflict.FromDevice), conflict.FoundUtc);
+            ShowPoolConflict(p, pooled.Here, pooled.There);
+            return;
         }
         else
         {
@@ -455,11 +452,7 @@ public partial class MainWindow
             var side = new StackPanel { Spacing = Tokens.Space8 };
             side.Children.Add(new TextBlock { Text = device, FontWeight = FontWeight.SemiBold });
             side.Children.Add(new TextBlock { Text = when, Classes = { AppStyles.Secondary } });
-            if (!pool)
-            {
-                side.Children.Add(new SyncHolesPlot(holes, reach) { HorizontalAlignment = HorizontalAlignment.Left });
-            }
-
+            side.Children.Add(new SyncHolesPlot(holes, reach) { HorizontalAlignment = HorizontalAlignment.Left });
             foreach (var row in compared.Rows)
             {
                 var line = new WrapPanel { ItemSpacing = Tokens.Space8 };
@@ -490,7 +483,7 @@ public partial class MainWindow
         {
             (SyncScreens.KeepThis(here), () => ResolveSync(conflict.Id, SyncChoice.KeepThisOne)),
             (SyncScreens.KeepThis(there), () => ResolveSync(conflict.Id, SyncChoice.KeepTheOther)),
-            (pool ? SyncScreens.KeepBothPools : SyncScreens.KeepBoth, () => ResolveSync(conflict.Id, SyncChoice.KeepBoth)),
+            (SyncScreens.KeepBoth, () => ResolveSync(conflict.Id, SyncChoice.KeepBoth)),
             (SyncScreens.DecideLater, () => { }),
         };
         var row = new WrapPanel { ItemSpacing = Tokens.Space8, LineSpacing = Tokens.Space8 };
@@ -500,8 +493,92 @@ public partial class MainWindow
         }
 
         body.Children.Add(row);
-        string title = pool ? SyncScreens.PoolConflictTitle : SyncScreens.ConflictTitle;
-        OpenProblem(title, ProblemCard(title, 760, body), choices);
+        OpenProblem(SyncScreens.ConflictTitle, ProblemCard(SyncScreens.ConflictTitle, 760, body), choices);
+    }
+
+    /// <summary>
+    /// Entry 504 section 1, concept A: a pooled set changed on two devices. The title, a line with the pool's name and date, how many
+    /// differences and what they are; this computer's version and the other's side by side, each with how it was pooled and its sheets in
+    /// order, tagged same, only in this one or not here yet; then Decide later, Keep both, and each version.
+    /// </summary>
+    private void ShowPoolConflict(SyncConflict conflict, PoolRecord? mine, PoolRecord theirs)
+    {
+        if (sessions is null)
+        {
+            return;
+        }
+
+        string there = SyncDeviceName(conflict.FromDevice);
+        var choice = PoolChoices.Build(mine, mine is null ? [] : SessionPools.InOrder(sessions, mine), theirs, SessionPools.InOrder(sessions, theirs),
+            Sync.DeviceName, there, conflict.FoundUtc, phone: false);
+
+        static Control Amber(string words) =>
+            new Border { Child = new TextBlock { Text = words, Classes = { AppStyles.PillText, AppStyles.Warn } }, Classes = { AppStyles.Pill, AppStyles.Warn }, VerticalAlignment = VerticalAlignment.Center };
+
+        static Control Tag(PoolSheetTag tag) => tag switch
+        {
+            PoolSheetTag.Same => new TextBlock { Text = PoolChoices.Words(tag), Classes = { AppStyles.Secondary }, VerticalAlignment = VerticalAlignment.Center },
+            PoolSheetTag.OnlyInThisOne => Amber(PoolChoices.Words(tag)),
+            _ => new DashedTag(new TextBlock { Text = PoolChoices.Words(tag), Classes = { AppStyles.PillText } }),
+        };
+
+        static Control Row(Control left, Control? right)
+        {
+            var row = new DockPanel();
+            if (right is not null)
+            {
+                DockPanel.SetDock(right, Dock.Right);
+                right.Margin = new Thickness(Tokens.Space8, 0, 0, 0);
+                row.Children.Add(right);
+            }
+
+            row.Children.Add(left);
+            return row;
+        }
+
+        static Control Card(PoolChoiceCard card)
+        {
+            var column = new StackPanel { Spacing = Tokens.Space8 };
+            column.Children.Add(Row(new TextBlock { Text = card.Device, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap },
+                new TextBlock { Text = card.When, Classes = { AppStyles.Secondary }, VerticalAlignment = VerticalAlignment.Center }));
+            column.Children.Add(new TextBlock { Text = PoolChoices.PooledAsLabel, Classes = { AppStyles.Label } });
+            column.Children.Add(Row(new TextBlock { Text = card.PooledAs, TextWrapping = TextWrapping.Wrap }, card.PooledAsDiffers ? Amber(SyncScreens.Differs) : null));
+            column.Children.Add(new Border { Height = 1, Classes = { AppStyles.Divider } });
+            column.Children.Add(new TextBlock { Text = PoolChoices.SheetsLabel, Classes = { AppStyles.Label } });
+            foreach (var sheet in card.Sheets)
+            {
+                column.Children.Add(Row(new TextBlock { Text = sheet.Name, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center }, Tag(sheet.Tag)));
+            }
+
+            return new Border { Child = column, Classes = { AppStyles.ChoiceCard } };
+        }
+
+        var columns = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = Tokens.Space16 };
+        var left = Card(choice.Here);
+        var right = Card(choice.There);
+        Grid.SetColumn(right, 1);
+        columns.Children.Add(left);
+        columns.Children.Add(right);
+
+        var choices = new List<(string Label, Action Act)>
+        {
+            (SyncScreens.DecideLater, () => { }),
+            (SyncScreens.KeepBothPools, () => ResolveSync(conflict.Id, SyncChoice.KeepBoth)),
+            (PoolChoices.KeepThisDevice(phone: false), () => ResolveSync(conflict.Id, SyncChoice.KeepThisOne)),
+            (PoolChoices.KeepOther(there, phone: false), () => ResolveSync(conflict.Id, SyncChoice.KeepTheOther)),
+        };
+        var buttons = new WrapPanel { ItemSpacing = Tokens.Space8, LineSpacing = Tokens.Space8, HorizontalAlignment = HorizontalAlignment.Right };
+        buttons.Children.Add(ProblemButton(choices[0].Label, link: ""));
+        for (int k = 1; k < choices.Count; k++)
+        {
+            buttons.Children.Add(ProblemButton(choices[k].Label));
+        }
+
+        var body = new StackPanel { Spacing = Tokens.Space12 };
+        body.Children.Add(new TextBlock { Text = choice.Line, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        body.Children.Add(columns);
+        body.Children.Add(buttons);
+        OpenProblem(SyncScreens.PoolConflictTitle, ProblemCard(SyncScreens.PoolConflictTitle, 820, body), choices);
     }
 
     private void ResolveSync(long conflictId, SyncChoice choice)

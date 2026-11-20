@@ -172,9 +172,22 @@ public sealed class Entry463PhoneTests : IDisposable
             PhoneSync.ShowConflict(page, PhoneSync.PoolsToChoose()[0].Conflict.Id, () => { });
             Dispatcher.UIThread.RunJobs();
             window.UpdateLayout();
-            Assert.Contains(SyncScreens.PoolConflictTitle, Words(window));
-            Assert.Contains(SyncScreens.Differs, Words(window));
-            var choose = window.GetLogicalDescendants().OfType<Button>().First(b => Equals(b.Content, SyncScreens.KeepBothPools) || (b.Content is TextBlock t && t.Text == SyncScreens.KeepBothPools));
+            // Entry 504 section 1, concept A: a full page with Back, the same two sheets in another order are the same, so the one
+            // difference is how they were pooled; the four choices sit in two rows of two, each at least 44 tall.
+            Assert.Contains(PoolChoices.PhoneTitle, Words(window));
+            Assert.Contains(Words(window), w => w.EndsWith(". 1 difference: how pooled.", StringComparison.Ordinal));
+            Assert.Equal(2, Words(window).Count(w => w == SyncScreens.Differs));
+            Assert.Equal(4, Words(window).Count(w => w == PoolChoices.Words(PoolSheetTag.Same)));
+            Assert.Contains(Words(window), w => w.StartsWith("This phone (", StringComparison.Ordinal));
+            var buttons = window.GetLogicalDescendants().OfType<Button>().ToList();
+            string Said(Button b) => b.Content as string ?? (b.Content as TextBlock)?.Text ?? "";
+            foreach (string label in new[] { "Keep this phone's", "Keep Desk's", PoolChoices.KeepBothShort, SyncScreens.DecideLater })
+            {
+                Assert.True(buttons.Single(b => Said(b) == label).Bounds.Height >= 44, label);
+            }
+
+            Assert.Single(buttons, b => b.Classes.Contains(PhoneStyles.PageBack));
+            var choose = buttons.Single(b => Said(b) == PoolChoices.KeepBothShort);
             choose.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
             Assert.Empty(PhoneSync.PoolsToChoose());

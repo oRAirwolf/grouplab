@@ -103,6 +103,33 @@ public static class SessionPools
     }
 
     /// <summary>
+    /// Entry 504 section 1: the pool's sheets in its own order, each the session here or null where it has not reached this device, read
+    /// as <see cref="SheetsOf"/> reads them (one identity named twice is two sessions sharing it, oldest first).
+    /// </summary>
+    public static IReadOnlyList<SessionRecord?> InOrder(SessionStore store, PoolRecord pool)
+    {
+        ArgumentNullException.ThrowIfNull(store);
+        ArgumentNullException.ThrowIfNull(pool);
+        var identities = store.SessionIdentities();
+        var taken = new List<long>();
+        var sheets = new List<SessionRecord?>();
+        foreach (string identity in pool.Sheets)
+        {
+            if (identities.TryGetValue(identity, out var sharing) && sharing.FirstOrDefault(i => !taken.Contains(i)) is var id and > 0 && store.Get(id) is { } sheet)
+            {
+                taken.Add(id);
+                sheets.Add(sheet);
+            }
+            else
+            {
+                sheets.Add(null);
+            }
+        }
+
+        return sheets;
+    }
+
+    /// <summary>
     /// Entry 498 section 3: one version of a pool as this device reads it, for the choice between two: its sheets that are here, named as
     /// Session records names them, and how many it names that are not here yet.
     /// </summary>

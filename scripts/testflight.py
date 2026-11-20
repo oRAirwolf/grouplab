@@ -19,6 +19,11 @@ Entry 501: the app record also carries the Mac App Store copy, whose builds shar
 builds only, so a Mac build never reaches Public Beta or Beta App Review. --mac-internal gives the Mac build named to GroupLab Team and
 does nothing else: no Public Beta, no review, nothing submitted.
 
+Entry 504 section 3: each --run also keeps the external group Mac testers (made by the run where it is missing, with a public link for at
+most five testers) on the newest Mac App Store build, submitted for Beta App Review the way Public Beta's builds are. It takes Mac builds
+only, Public Beta never takes one, and nothing here submits anything for App Store review. Once its testers can install a build, the run
+says so, and that line reaches docs/notes/external-status.md; the public link itself is never printed, because this repository is public.
+
     python3 scripts/testflight.py --run [--wait-minutes N]   one step, with the key from APPLE_API_ISSUER_ID, APPLE_API_KEY_ID, APPLE_API_KEY_P8
     python3 scripts/testflight.py --mac-internal 233 [--wait-minutes N]   Mac App Store build 233 to GroupLab Team only (entry 501)
     python3 scripts/testflight.py --app-store                  the App Store version's review state, read only (entry 491)
@@ -53,6 +58,8 @@ from typing import Callable
 BUNDLE_ID = "org.grouplab.app"
 TEAM = "GroupLab Team"
 BETA = "Public Beta"
+MAC_TESTERS = "Mac testers"    # entry 504 section 3: external, Mac builds only, a public link for at most five
+MAC_TESTERS_LIMIT = 5
 API = "https://api.appstoreconnect.apple.com"
 NOTES = Path(__file__).resolve().parent.parent / "docs" / "RELEASE-NOTES.md"
 
@@ -127,6 +134,8 @@ class Store:
     def what_to_test(self, build: str, text: str) -> None: raise NotImplementedError
     def versions(self, app: str) -> list["Version"]: raise NotImplementedError
     def release(self, version: str) -> None: raise NotImplementedError
+    def make_group(self, app: str, name: str, limit: int) -> str: raise NotImplementedError
+    def public_link(self, group: str) -> str | None: raise NotImplementedError
 
 
 def whats_new(number: int, notes: str) -> str:
@@ -258,6 +267,66 @@ def mac_internal(store: Store, number: int, wait_minutes: int = 0, sleep: Callab
         store.add(team, build.id)
         lines.append(f"Mac build {number} given to {TEAM} (internal testers only; nothing submitted for review).")
     return lines, True
+
+
+def mac_testers(store: Store, notes: Callable[[int], str]) -> tuple[list[str], str | None]:
+    """Entry 504 section 3: the external group Mac testers, Mac App Store builds only, with a public link for at most five testers.
+
+    Made once where it does not exist. The newest Mac build Apple has finished goes in with its What to Test and is submitted for Beta App
+    Review; while a Mac build of the group is still with Apple's review nothing newer is added, so it keeps its place in the queue (as entry
+    319 does for Public Beta). An iPhone or iPad build never goes in, and nothing here touches Public Beta or an App Store version. Returns
+    the lines and, once testers can install a build, the public link. Anybody with the link may join, up to five, and this repository is
+    public, so the link is returned, never printed.
+    """
+    app = store.app(BUNDLE_ID)
+    if app is None:
+        return [f"{MAC_TESTERS}: App Store Connect has no app {BUNDLE_ID}."], None
+    lines: list[str] = []
+    groups = store.groups(app)
+    if MAC_TESTERS not in groups:
+        groups[MAC_TESTERS] = store.make_group(app, MAC_TESTERS, MAC_TESTERS_LIMIT)
+        lines.append(f"Made the external group {MAC_TESTERS}, with a public link for at most {MAC_TESTERS_LIMIT} testers.")
+    group = groups[MAC_TESTERS]
+    usable = [b for b in store.builds(app, "MAC_OS") if b.processing == "VALID" and not b.expired]
+    if not usable:
+        return lines + [f"{MAC_TESTERS}: no Mac build Apple has finished processing yet."], None
+    newest = usable[0]
+    members = store.in_group(group)
+    waiting = next((b for b in usable if b.id in members
+                    and (store.review(b.id) in PENDING or store.external_state(b.id) in WAITING_STATES)), None)
+    if waiting is not None and waiting.id != newest.id:
+        lines.append(f"{MAC_TESTERS}: Mac build {waiting.number} is with Apple's beta review; nothing newer is added until it is decided.")
+    else:
+        if store.external_state(newest.id) == "MISSING_EXPORT_COMPLIANCE":
+            store.no_encryption(newest.id)
+            lines.append(f"Mac build {newest.number}: answered the export question (GroupLab uses only the system's encryption).")
+        if newest.id not in members:
+            store.what_to_test(newest.id, notes(newest.number))
+            store.add(group, newest.id)
+            members.add(newest.id)
+            lines.append(f"Mac build {newest.number} added to {MAC_TESTERS}, with its release notes as What to Test.")
+        if store.external_state(newest.id) == "READY_FOR_BETA_SUBMISSION" and store.review(newest.id) is None:
+            try:
+                store.submit(newest.id)
+                lines.append(f"Mac build {newest.number} submitted for Beta App Review, for {MAC_TESTERS} only.")
+            except Refused as said:
+                lines.append(f"Mac build {newest.number} not submitted yet: Apple said {said}. The next run tries again.")
+        state, review = store.external_state(newest.id), store.review(newest.id)
+        if state == "BETA_REJECTED" or review == "REJECTED":
+            lines.append(f"Apple's beta review turned down Mac build {newest.number}; App Store Connect, TestFlight, macOS says why.")
+        elif state not in AVAILABLE:
+            lines.append(f"Mac build {newest.number} for {MAC_TESTERS}: {state.replace('_', ' ').lower()}"
+                         + (f", review {review.replace('_', ' ').lower()}" if review else "") + ".")
+    shared = next((b for b in usable if b.id in members and store.external_state(b.id) in AVAILABLE), None)
+    if shared is None:
+        return lines + [f"{MAC_TESTERS} has no Mac build its testers can install yet."], None
+    link = store.public_link(group)
+    if not link:
+        return lines + [f"{MAC_TESTERS} can install Mac build {shared.number}, but the group has no public link turned on."], None
+    # The repository and its Actions logs are public, and five places are meant for Alan's friend, so the link itself is never printed.
+    lines.append(f"{MAC_TESTERS} can install Mac build {shared.number}; its public link is on (App Store Connect, TestFlight, "
+                 f"{MAC_TESTERS}, Public Link), and is kept out of this public log.")
+    return lines, link
 
 
 def app_store(store: Store) -> tuple[list[str], str | None]:
@@ -394,6 +463,18 @@ class Apple(Store):
                                  a.get("createdDate", ""), int(number) if number else None, v.get("id", "")))
         return found
 
+    def make_group(self, app, name, limit):
+        made = self.call("POST", "/v1/betaGroups", {"data": {
+            "type": "betaGroups",
+            "attributes": {"name": name, "publicLinkEnabled": True, "publicLinkLimitEnabled": True, "publicLinkLimit": limit,
+                           "feedbackEnabled": True},
+            "relationships": {"app": {"data": {"type": "apps", "id": app}}}}})
+        return made["data"]["id"]
+
+    def public_link(self, group):
+        a = self.call("GET", f"/v1/betaGroups/{group}")["data"]["attributes"]
+        return a.get("publicLink") if a.get("publicLinkEnabled") else None
+
     def release(self, version):
         self.call("POST", "/v1/appStoreVersionReleaseRequests",
                   {"data": {"type": "appStoreVersionReleaseRequests",
@@ -434,6 +515,17 @@ class Pretend(Store):
     def review(self, build): return self.reviews.get(build)
     def no_encryption(self, build): self.states[build] = "READY_FOR_BETA_SUBMISSION"
     def what_to_test(self, build, text): self.notes[build] = text
+    links: dict[str, str] = field(default_factory=dict)
+    made: list[tuple[str, int]] = field(default_factory=list)
+
+    def make_group(self, app, name, limit):
+        self.names[name] = "mac"
+        self.members["mac"] = set()
+        self.links["mac"] = "https://testflight.apple.com/join/MADEUP"
+        self.made.append((name, limit))
+        return "mac"
+
+    def public_link(self, group): return self.links.get(group)
 
     def add(self, group, build):
         self.members[group].add(build)
@@ -555,6 +647,28 @@ def self_test() -> int:
     lines, done = mac_internal(s, 237)
     expect("mac invalid said", not done and "invalid" in lines[0] and "m237" not in s.members["team"])
 
+    # Entry 504 section 3: Mac testers is made once, holds Mac builds only, and is submitted for review; nothing reaches Public Beta.
+    s = Pretend(builds_=[Build("b240", 240, "VALID")], mac_builds=[Build("m240", 240, "VALID"), Build("m239", 239, "VALID")],
+                states={"b240": "IN_BETA_TESTING"})
+    s.members["beta"].add("b240")
+    lines, link = mac_testers(s, no_notes)
+    expect("mac testers made once with five", s.made == [(MAC_TESTERS, 5)] and "Made the external group" in lines[0])
+    expect("newest mac build in and submitted", s.members["mac"] == {"m240"} and s.reviews.get("m240") == "WAITING_FOR_REVIEW"
+           and "m240" in s.notes and link is None)
+    expect("no iPhone build for mac testers", "b240" not in s.members["mac"])
+    step(s, no_notes)
+    expect("no mac build for public beta", not {"m239", "m240"} & (s.members["beta"] | s.members["team"]))
+    mac_testers(s, no_notes)
+    expect("mac testers made only once", len(s.made) == 1)
+    s.mac_builds.insert(0, Build("m241", 241, "VALID"))
+    lines, link = mac_testers(s, no_notes)
+    expect("mac review held", "m241" not in s.members["mac"] and "m241" not in s.reviews and link is None
+           and any("with Apple's beta review" in l for l in lines))
+    s.states["m240"], s.reviews["m240"] = "BETA_APPROVED", "APPROVED"
+    lines, link = mac_testers(s, no_notes)
+    expect("after approval the link, and the next build on", link == "https://testflight.apple.com/join/MADEUP"
+           and "m241" in s.members["mac"] and "240" in lines[-1] and not any(link in l for l in lines))
+
     # What to Test from the release notes.
     notes = ("## 0.2.0-nightly.142\n\n**2026-10-01**\n\n**What you will notice**\n\n- First thing.\n- Second thing.\n\n"
              "**Under the hood**\n\n- Hidden.\n\n## 0.2.0-nightly.141\n")
@@ -620,11 +734,16 @@ def main(argv: list[str]) -> int:
         lines, alan = ["TestFlight: the App Store Connect key is not set, so this step distributed nothing."], None
     else:
         notes = NOTES.read_text(encoding="utf-8") if NOTES.is_file() else ""
+        store = Apple(os.environ["APPLE_API_ISSUER_ID"], os.environ["APPLE_API_KEY_ID"], key_text(os.environ["APPLE_API_KEY_P8"]))
         try:
-            store = Apple(os.environ["APPLE_API_ISSUER_ID"], os.environ["APPLE_API_KEY_ID"], key_text(os.environ["APPLE_API_KEY_P8"]))
             lines, alan = step(store, lambda n: whats_new(n, notes), wait)
         except Refused as said:
             lines, alan = [f"TestFlight: App Store Connect refused a request ({said}); nothing further was done this run."], None
+        # Entry 504 section 3: the Mac testers group after the iPhone and iPad groups, on its own, so a refusal here moves nothing there.
+        try:
+            lines += mac_testers(store, lambda n: whats_new(n, notes))[0]
+        except Refused as said:
+            lines.append(f"{MAC_TESTERS}: App Store Connect refused a request ({said}); the next run tries again.")
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     with open(summary, "a", encoding="utf-8") if summary else open(os.devnull, "w") as out:
         out.write("### TestFlight\n\n" + "".join(f"- {line}\n" for line in lines))

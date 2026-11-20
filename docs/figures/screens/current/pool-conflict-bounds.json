@@ -1,0 +1,211 @@
+{
+  "about": "Entry 437: each named control on this screen as [x, y, width, height] in the picture's pixels; written by Entry109Tests.",
+  "width": 1400,
+  "height": 900,
+  "controls": {
+    "2 versions": [
+      1207,
+      400,
+      87,
+      27
+    ],
+    "2026-11-13, GroupLab 5x5 Load Development, Letter, Test rifle, Second load, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
+      109,
+      532,
+      1187,
+      19
+    ],
+    "2026-11-19, 17:00, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
+      109,
+      500,
+      1187,
+      19
+    ],
+    "2026-11-19, 18:00, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
+      109,
+      468,
+      1187,
+      19
+    ],
+    "2026-11-19, 19:00, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
+      109,
+      436,
+      1187,
+      19
+    ],
+    "2026-11-19, 19:00, Pooled set of 3 sheets, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 72, 0.131 in (0.117 to 0.148)": [
+      109,
+      404,
+      1096,
+      19
+    ],
+    "Analyze": [
+      4,
+      4,
+      38,
+      38
+    ],
+    "Ballistics": [
+      4,
+      122,
+      34,
+      34
+    ],
+    "Choose": [
+      294,
+      334,
+      71,
+      27
+    ],
+    "Close this target": [
+      280,
+      8,
+      20,
+      20
+    ],
+    "Compare loads": [
+      4,
+      160,
+      34,
+      34
+    ],
+    "Compare the chosen": [
+      79,
+      201,
+      149,
+      27
+    ],
+    "Compare the session Second load, GroupLab 5x5 Load Development, Letter": [
+      77,
+      526,
+      32,
+      32
+    ],
+    "Compare the session Test load, 41.7 gr, 2026-11-19, 17:00, GroupLab 5x5 Load Development, Letter": [
+      77,
+      494,
+      32,
+      32
+    ],
+    "Compare the session Test load, 41.7 gr, 2026-11-19, 18:00, GroupLab 5x5 Load Development, Letter": [
+      77,
+      462,
+      32,
+      32
+    ],
+    "Compare the session Test load, 41.7 gr, 2026-11-19, 19:00, session -1, Pooled set of 3 sheets, GroupLab 5x5 Load Development, Letter": [
+      77,
+      398,
+      32,
+      32
+    ],
+    "Compare the session Test load, 41.7 gr, 2026-11-19, 19:00, session 1, GroupLab 5x5 Load Development, Letter": [
+      77,
+      430,
+      32,
+      32
+    ],
+    "Decide later": [
+      222,
+      596,
+      105,
+      17
+    ],
+    "Delete": [
+      1298,
+      400,
+      76,
+      27
+    ],
+    "Dismiss": [
+      867,
+      274,
+      32,
+      32
+    ],
+    "Equipment": [
+      4,
+      198,
+      34,
+      34
+    ],
+    "Keep both as two pooled sets": [
+      335,
+      584,
+      209,
+      42
+    ],
+    "Keep the Range laptop's": [
+      721,
+      584,
+      178,
+      42
+    ],
+    "Keep this computer's": [
+      552,
+      584,
+      161,
+      42
+    ],
+    "Load": [
+      337,
+      155,
+      180,
+      32
+    ],
+    "Open another target": [
+      314,
+      6,
+      30,
+      22
+    ],
+    "Pool the chosen": [
+      79,
+      244,
+      121,
+      27
+    ],
+    "Rifle": [
+      112,
+      155,
+      180,
+      32
+    ],
+    "Session records": [
+      4,
+      84,
+      34,
+      34
+    ],
+    "Settings": [
+      4,
+      858,
+      34,
+      34
+    ],
+    "StatusLine": [
+      69,
+      881,
+      1014,
+      15
+    ],
+    "Targets": [
+      4,
+      46,
+      34,
+      34
+    ],
+    "This pooled set was changed on two devices": [
+      104,
+      249,
+      820,
+      402
+    ],
+    "gl-cf25-ltr-scan.png, Analysis": [
+      61,
+      4,
+      215,
+      27
+    ]
+  }
+}

@@ -680,6 +680,49 @@ public class Entry109Tests
                         Dispatcher.UIThread.RunJobs();
                         Save(window, $"sync-conflict-{name}-{size}");
                         window.PressProblemChoice(GroupLab.Core.Sync.SyncScreens.KeepThis(window.Sync.DeviceName));
+
+                        // Entry 504 section 1, concept A: a pooled set changed on both, here pooled as pictures and on the laptop with one
+                        // sheet fewer, so the picture shows "differs", "same" and "only in this one". The walk has one session here, so two
+                        // copies of it, an hour apart, make the pool's three sheets; they and the pool are deleted after the picture, so no
+                        // later picture shows them.
+                        var mine = window.Sessions!;
+                        var first = mine.Get(mine.List().First().Id)!;
+                        var added = new List<long>();
+                        for (int hour = 1; hour <= 2; hour++)
+                        {
+                            string earlier = DateTime.Parse(first.CreatedUtc, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal)
+                                .AddHours(-hour).ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", System.Globalization.CultureInfo.InvariantCulture);
+                            added.Add(mine.Save(first with { Id = 0, CreatedUtc = earlier }));
+                        }
+
+                        var three = new List<long> { first.Id }.Concat(added).ToList();
+                        var pool = GroupLab.Core.Records.SessionPools.Save(mine, null, three, GroupLab.Core.Records.SessionPools.Choices(pictures: false), DateTime.UtcNow);
+                        Synced(window.SyncNowAsync());
+                        GroupLab.Core.Sync.SyncEngine.Run(laptop, laptopLocal, cloud, "Range laptop", DateTime.UtcNow);
+                        GroupLab.Core.Records.SessionPools.Save(mine, pool.Id, three, GroupLab.Core.Records.SessionPools.Choices(pictures: true), DateTime.UtcNow);
+                        var onLaptop = laptop.PoolByKey(pool.Key);
+                        Assert.NotNull(onLaptop);
+                        GroupLab.Core.Records.SessionPools.Save(laptop, onLaptop.Id, GroupLab.Core.Records.SessionPools.SheetsOf(laptop, onLaptop).Ids.Take(2).ToList(),
+                            GroupLab.Core.Records.SessionPools.Choices(pictures: false), DateTime.UtcNow);
+                        Synced(window.SyncNowAsync());
+                        GroupLab.Core.Sync.SyncEngine.Run(laptop, laptopLocal, cloud, "Range laptop", DateTime.UtcNow.AddSeconds(1));
+                        Synced(window.SyncNowAsync());
+                        var pooled = Assert.Single(window.PoolsToChoose());
+                        window.ShowSessions();
+                        window.ShowSyncConflict(pooled.Conflict.Id);
+                        Dispatcher.UIThread.RunJobs();
+                        Save(window, $"pool-conflict-{name}-{size}");
+                        window.PressProblemChoice(GroupLab.Core.Sync.PoolChoices.KeepThisDevice(phone: false));
+                        foreach (var made in mine.Pools())
+                        {
+                            mine.DeletePool(made.Id);
+                        }
+
+                        foreach (long id in added)
+                        {
+                            mine.Delete(id);
+                        }
+
                         window.StopSyncing();
                         Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
 

@@ -283,7 +283,6 @@ internal static class PhoneSync
         string here = Setup.DeviceName;
         SyncConflict conflict;
         SyncComparison compared;
-        bool pool = false;
         if (ToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } c } waiting)
         {
             conflict = c;
@@ -291,11 +290,8 @@ internal static class PhoneSync
         }
         else if (PoolsToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } p } pooled)
         {
-            // Entry 498 section 3: until the pooled set's own screen is drawn, its two versions as plain rows, with no plot.
-            var store = PhoneAnalysis.Store();
-            (conflict, pool) = (p, true);
-            compared = SyncScreens.ComparePools(pooled.Here is { } mine ? SessionPools.Version(store, mine) : null, SessionPools.Version(store, pooled.There), here,
-                DeviceName(conflict.FromDevice), conflict.FoundUtc);
+            ShowPoolChoice(page, behind, p, pooled.Here, pooled.There, done);
+            return;
         }
         else
         {
@@ -309,11 +305,7 @@ internal static class PhoneSync
             var side = new StackPanel { Spacing = 6 };
             side.Children.Add(Screens.Heading(device));
             side.Children.Add(Screens.Quiet(when));
-            if (!pool)
-            {
-                side.Children.Add(new SyncHolesPlot(holes, reach) { HorizontalAlignment = HorizontalAlignment.Left });
-            }
-
+            side.Children.Add(new SyncHolesPlot(holes, reach) { HorizontalAlignment = HorizontalAlignment.Left });
             foreach (var row in compared.Rows)
             {
                 var line = new WrapPanel { ItemSpacing = 8 };
@@ -352,7 +344,7 @@ internal static class PhoneSync
         [
             ProblemSheet.Choice(SyncScreens.KeepThis(here), () => Choose(SyncChoice.KeepThisOne), primary: true),
             ProblemSheet.Choice(SyncScreens.KeepThis(there), () => Choose(SyncChoice.KeepTheOther)),
-            ProblemSheet.Choice(pool ? SyncScreens.KeepBothPools : SyncScreens.KeepBoth, () => Choose(SyncChoice.KeepBoth)),
+            ProblemSheet.Choice(SyncScreens.KeepBoth, () => Choose(SyncChoice.KeepBoth)),
             ProblemSheet.Choice(SyncScreens.DecideLater, Close),
         ];
         var buttons = new StackPanel { Spacing = 8 };
@@ -363,7 +355,116 @@ internal static class PhoneSync
 
         body.Children.Add(buttons);
         page.Content = null;
-        page.Content = ProblemSheet.Over(behind, pool ? SyncScreens.PoolConflictTitle : SyncScreens.ConflictTitle, body, choices, Close);
+        page.Content = ProblemSheet.Over(behind, SyncScreens.ConflictTitle, body, choices, Close);
+    }
+
+    /// <summary>
+    /// Entry 504 section 1, concept A on the phone: a full page, "Choose a version", with Back. One line with the pool's name, date and
+    /// differences; this phone's version and the other's as two cards, each with how it was pooled and its sheets tagged same, only in this
+    /// one or not here yet; the four choices fixed at the bottom in two rows of two. Back and Decide later put the page underneath back.
+    /// </summary>
+    private static void ShowPoolChoice(UserControl page, Control behind, SyncConflict conflict, PoolRecord? mine, PoolRecord theirs, Action done)
+    {
+        var store = PhoneAnalysis.Store();
+        string there = DeviceName(conflict.FromDevice);
+        var choice = PoolChoices.Build(mine, mine is null ? [] : SessionPools.InOrder(store, mine), theirs, SessionPools.InOrder(store, theirs),
+            Setup.DeviceName, there, conflict.FoundUtc, phone: true);
+
+        void Close()
+        {
+            ProblemSheet.PutBack(page, behind);
+            done();
+        }
+
+        void Choose(SyncChoice chosen)
+        {
+            SyncEngine.Resolve(PhoneAnalysis.Store(), Local(), conflict.Id, chosen, DateTime.UtcNow);
+            DiagnosticLog.Info("sync.choose", ("choice", chosen.ToString()));
+            Close();
+        }
+
+        static Control Amber(string words) =>
+            new Border { Child = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap }, Padding = new Thickness(6, 1), VerticalAlignment = VerticalAlignment.Center, Classes = { PhoneStyles.Pill } };
+
+        static Control Tag(PoolSheetTag tag) => tag switch
+        {
+            PoolSheetTag.Same => new TextBlock { Text = PoolChoices.Words(tag), TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center, Classes = { PhoneStyles.Dim } },
+            PoolSheetTag.OnlyInThisOne => Amber(PoolChoices.Words(tag)),
+            _ => new DashedTag(new TextBlock { Text = PoolChoices.Words(tag), TextWrapping = TextWrapping.Wrap, Classes = { PhoneStyles.Dim } }),
+        };
+
+        static Control Row(Control left, Control? right)
+        {
+            var row = new DockPanel();
+            if (right is not null)
+            {
+                DockPanel.SetDock(right, Dock.Right);
+                right.Margin = new Thickness(8, 0, 0, 0);
+                row.Children.Add(right);
+            }
+
+            row.Children.Add(left);
+            return row;
+        }
+
+        static Control Card(PoolChoiceCard card)
+        {
+            var column = new StackPanel { Spacing = 6 };
+            column.Children.Add(Row(Screens.Heading(card.Device), Screens.Quiet(card.When)));
+            column.Children.Add(Screens.Quiet(PoolChoices.PooledAsLabel));
+            column.Children.Add(Row(Screens.Line(card.PooledAs), card.PooledAsDiffers ? Amber(SyncScreens.Differs) : null));
+            column.Children.Add(Screens.Quiet(PoolChoices.SheetsLabel));
+            foreach (var sheet in card.Sheets)
+            {
+                column.Children.Add(Row(Screens.Line(sheet.ShortName), Tag(sheet.Tag)));
+            }
+
+            return new Border { Child = column, Classes = { PhoneStyles.Card } };
+        }
+
+        var column = new StackPanel { Spacing = 10 };
+        column.Children.Add(Screens.BackButton("Back", Close).Id("pool-choice-back"));
+        column.Children.Add(Screens.Title(PoolChoices.PhoneTitle));
+        column.Children.Add(Screens.Line(choice.PhoneLine));
+        column.Children.Add(Card(choice.Here));
+        column.Children.Add(Card(choice.There));
+
+        Button Bottom(string words, Action chosen, bool textOnly = false)
+        {
+            var button = textOnly
+                ? new Button { Content = words, HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Center, Classes = { GroupLab.App.Theme.AppStyles.Link } }
+                : Screens.Choice(words, chosen);
+            if (textOnly)
+            {
+                button.Click += (_, _) => chosen();
+            }
+
+            button.MinHeight = Math.Max(44, Screens.Touch);
+            Avalonia.Automation.AutomationProperties.SetName(button, words);
+            return button;
+        }
+
+        var bar = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), RowDefinitions = new RowDefinitions("Auto,Auto"), ColumnSpacing = 8, RowSpacing = 8, Margin = new Thickness(0, 8, 0, 0) };
+        Control[] buttons =
+        [
+            Bottom(PoolChoices.KeepThisDevice(phone: true), () => Choose(SyncChoice.KeepThisOne)),
+            Bottom(PoolChoices.KeepOther(there, phone: true), () => Choose(SyncChoice.KeepTheOther)),
+            Bottom(PoolChoices.KeepBothShort, () => Choose(SyncChoice.KeepBoth)),
+            Bottom(SyncScreens.DecideLater, Close, textOnly: true),
+        ];
+        for (int k = 0; k < buttons.Length; k++)
+        {
+            Grid.SetRow(buttons[k], k / 2);
+            Grid.SetColumn(buttons[k], k % 2);
+            bar.Children.Add(buttons[k]);
+        }
+
+        var whole = new DockPanel();
+        DockPanel.SetDock(bar, Dock.Bottom);
+        whole.Children.Add(bar);
+        whole.Children.Add(new ScrollViewer { Content = column });
+        page.Content = null;
+        page.Content = whole;
     }
 }
 

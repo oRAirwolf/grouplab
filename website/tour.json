@@ -825,6 +825,11 @@
      "A session changed on two devices is kept both ways and laid out side by side, each with its holes and what differs, until you keep one, keep both or decide later."
     ],
     [
+     "pool-conflict",
+     "A pooled set changed on two devices, this computer's version beside the other's",
+     "A pooled set changed on two devices: the line says how many differences there are and what they are, each version shows how its sheets were pooled and its sheets in order, each tagged same, only in this one or not here yet, and you decide later, keep both as two pooled sets, or keep either one."
+    ],
+    [
      "settings-data",
      "Settings, Sync and your data: the daily copies first, with Back up now, Restore a copy and Open the folder, then Sync between devices, Saving and Your data",
      "Sync and your data. GroupLab keeps a daily copy of your records, the newest 14, and restores one after copying your records as they are; beneath it, sync, how a target is saved, and Export all my data and Import data."

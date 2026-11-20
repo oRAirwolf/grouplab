@@ -25,6 +25,49 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-20, entry 504: Alan's answers: the pooled set conflict screen as concept A, question 115 (a), and a Mac testers group for request 111
+
+**Status: actioned 2026-11-20. Every section done, two parts differently from the words: section 3's public link is not written into for-alan.md, because this repository is public and anybody reading it could take the five places (question 116, (a) recommended: Alan copies it from App Store Connect); and the group, its build and its beta review are made by the next scheduled TestFlight run after the push, so whether Apple approves is not known yet. No screenshot showed this screen before; a new one, pool-conflict, is in the guide.**
+
+Written by the planning session from Alan's words in chat on 2026-11-20 (about 01:30 UTC). Three parts, in this order.
+
+### 1. The screen for a pooled set changed on two devices (entry 498 section 3): concept A
+
+Alan: "Go with concept A." Canvas QBp6xJuNvjFpEmu3YPmbaH (Claude Design, private to Alan; the description below is complete, so the canvas is not needed). Replace the plain card built in entry 498 with this, on the computer and the phone. Sample names below are samples.
+
+**Computer (a dialog over the window):**
+- Title: "This pooled set was changed on two devices".
+- Line under it: the pool's name and date, then the count and what differs, then "Both versions are kept until you choose." Example: "6.5 Creedmoor, 41.5 gr, 19 November. 2 differences: how the sheets were pooled, and sheet 3. Both versions are kept until you choose."
+- Two cards side by side, this device's on the left, the other's on the right. Each card, top to bottom:
+  1. The device name (this one as "This computer (<name>)"), and on the right "made <date, time>" for this device's version or "arrived <date, time>" for the other's.
+  2. "Pooled as" (small label), then the way it was pooled ("The sheets of one set" or "Pictures, each its own sheet"), with an amber "differs" tag when the two versions differ on it. A thin rule under this block.
+  3. "Sheets, in order" (small label), then one row per sheet, named as Session records names it, with a tag on the right: "same" (plain grey text, no fill) when both versions have that sheet; "only in this one" (amber tag, the same amber as "differs") when the other version does not have it; "not here yet" (grey fill, dashed border) when the sheet has not reached this device. A "not here yet" sheet is never counted as a difference by itself and never gets the amber tag.
+- Buttons along the bottom, right-aligned: "Decide later" (text only), "Keep both as two pooled sets", "Keep this computer's", "Keep the <other device>'s".
+- The count in the line under the title counts only amber items.
+
+**Phone (a full page, "Choose a version", with Back):**
+- One line: pool name, short date, and the count of differences with what they are, e.g. "6.5 Creedmoor, 41.5 gr, 19 Nov. 3 differences: how pooled, sheets 3 and 4."
+- The two versions as two cards stacked, this phone's first ("This phone (<name>)", "made <time>"), then the other's ("<name>", "arrived <time>"). Each card: the pooled-as line with its "differs" tag, then the sheets with short names ("Sheet 1, 19 Nov") and the same three tags.
+- Buttons fixed at the bottom in two rows of two, each at least 44 px tall: "Keep this phone's", "Keep <other device>'s"; "Keep both", "Decide later" (text only).
+- Reached as now: the Sessions banner ("1 pooled set to choose between") and the pool row's "2 versions" tag.
+
+Dark theme for the phone as in every concept; the light theme follows the app's existing colours. Keep the existing tests and add ones for the three tags, the count, and "not here yet" never counting. Update the user guide's sync part and any screenshot that shows this screen. Remove the DESIGN NEEDED line for entry 498 section 3 from for-alan.md.
+
+### 2. Question 115: answer (a)
+
+Alan: "For 115 go with A." The eight checks stay the checklist for the first numbered release made by release.yml from a tag; reword "beta or stable" to "numbered release" in README.md (and scripts/readme.py), docs/RELEASE-PLAN.md and anywhere else the consistency check finds it. Move question 115 to the answered archive.
+
+### 3. Request 111: a Mac testers group for Alan's friend
+
+Alan: "Yes for the mac testers group." A friend of Alan's with a MacBook will open the Mac App Store build. Make an external TestFlight group named "Mac testers" for the Mac build only, with a public link limited to 5 testers, and submit the newest Mac App Store build to it for beta review. Never write a tester's name or email anywhere. Do not submit anything for App Store review (entry 501's rule stands: submission only on Alan's word). Keep the iPhone and iPad builds out of this group, and keep Mac builds out of Public Beta. When Apple approves it, put the public link and these steps for the friend at the top of for-alan.md, under request 111:
+1. A Mac with Apple silicon (M1 or newer) and macOS 12 or later.
+2. Install TestFlight from the Mac App Store, open the link, install GroupLab, open it.
+3. Mark the holes on one sheet (or Walk me through a demo, then Keep this demo in Sessions), let it save.
+4. Quit GroupLab, open it again, check the session is still listed. If anything fails: Settings, Help and problems, Report a problem.
+Then request 111 closes on Alan's report of the result.
+
+Not in this entry: entry 502 (iOS 26 or iOS 18). Alan has not answered it yet; leave it waiting.
+
 ## 2026-11-19, entry 503: consistency audit, 2026-11-19
 
 **Status: actioned 2026-11-19. Every section done. Finding 2 in part, as the entry allows: the factual line about 1.0 is in the README, and what the eight checks are now for is question 115, so RELEASE-PLAN.md and readme.py's description are unchanged. Finding 6's cards have no link (the card format has none) and no picture; the App Store card's note phrase is nightly 226's "GroupLab is now version 1.0", since the notFeatures phrase is in no published build's notes. DESIGN.md has no state table, so finding 1 changed only the README.**

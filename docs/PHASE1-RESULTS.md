@@ -850,6 +850,29 @@ entry. **4.** Nothing was submitted; the line saying GroupLab for Mac is ready t
 
 **Signed and on TestFlight, 2026-11-18, request 110 answered** (first numbered 107, which the Discord tester notes already had; renumbered, archived, and `ForAlanTests.EveryRequestNumberIsUsedOnce` holds the numbers apart). Two faults were found before the first upload and fixed in 94827fba: `testflight.py` read every build on the record, so the first Mac build, sharing the iPhone build's number, would have been taken for the newest iPhone build and added to Public Beta and submitted for Beta App Review; it now reads the iPhone and iPad builds only (`filter[preReleaseVersion.platform]`), and `--mac-internal` gives a Mac build to GroupLab Team and nothing else. And .NET's `createdump`, a second executable the store refuses without a sandbox of its own, is left out of the store copy. The first run (44409935372) found one more executable in the bundle, the command line `grouplab`, and signed it into the app's sandbox (app-sandbox with inherit); the copy was signed with Apple Distribution, packaged by `productbuild` with the Mac Installer Distribution certificate, and altool sent it; its GroupLab Team step stopped on a missing pyjwt. The second run (44411686807, 14a27170) found Apple already had build 233, waited for nothing, and read Mac build 233 as valid and already in GroupLab Team (the internal group's automatic distribution). The half-hourly TestFlight step on 14a27170 then moved the iPhone 1.0.233 on as before and never touched the Mac build. Whether the copy runs in the sandbox, reads a sheet and saves a session is request 111, on a real Mac.
 
+## Entry 504: the pooled set's choice as concept A, question 115 (a), and Mac testers for request 111 (2026-11-20)
+
+**1.** Entry 498's plain rows are replaced by concept A on both platforms, from one shared model, `PoolChoices.Build`
+(`src/GroupLab.Core/Sync/PoolChoices.cs`): each version's sheets in its own order, read by `SessionPools.InOrder`, each tagged
+**same** (both have it), **only in this one** (amber, counted) or **not here yet** (grey with a dashed edge, `DashedTag`, never counted
+and never amber, even when the other version lacks it too); a pool naming one sheet twice is the same only as often as the other names
+it. The count is the amber items only, how it was pooled once plus each sheet only in one version, and the line names them ("2
+differences: how the sheets were pooled, and sheet 3"; the phone's "3 differences: how pooled, sheets 3 and 4"). The computer's
+`ShowPoolConflict` is a dialog 820 wide: the line, the two cards side by side (this computer's on the left, "made", the other's
+"arrived"), and Decide later (text only), Keep both as two pooled sets, Keep this computer's, Keep the other's, right-aligned. The phone's
+`ShowPoolChoice` is a full page, Choose a version, with Back, the cards stacked and the four choices fixed at the bottom in two rows of
+two, each 48 tall. The pool is named by the rifle and load its sheets share, else "Pooled set of N sheets", dated by its newest sheet.
+Held by `PoolChoicesTests` (five: the three tags, the count and both lines, not here yet never counting, a sheet named twice),
+`Entry463Tests` (the computer's choices, line and tags) and `Entry463PhoneTests` (the page, its line, tags, Back and 44 or taller
+buttons); entry 498's own tests are kept. The guide's sync part describes it, with a new screenshot, `pool-conflict`, rendered by
+`Entry109Tests`. **2.** Question 115 answered (a): "beta or stable" is "numbered release" in README.md, scripts/readme.py and
+docs/RELEASE-PLAN.md; the consistency check finds it nowhere else. **3.** `scripts/testflight.py` (`mac_testers`, run by every testflight
+workflow run after the iPhone and iPad step, on its own so a refusal there moves nothing here) makes the external group Mac testers where
+it is missing, with a public link limited to 5, puts the newest Mac App Store build in it with its notes as What to Test, answers the
+export question and submits it for Beta App Review; while a Mac build of the group waits for review nothing newer is added. Only Mac
+builds go in, Public Beta never takes one, and nothing is submitted for App Store review; the self-test holds all of that. The link is
+never printed (question 116), and request 111 carries the friend's four steps.
+
 ## Entry 503: consistency audit of 19 November, seven findings (2026-11-19)
 
 All seven fixed in one change, by docs-sonnet and checked by the main model: the README's In progress state now fits an application in use and still being built; the README says 1.0 reached the App Store and the Microsoft Store from nightly builds on Alan's word, and what the eight release checks are now for is question 115; the testing guide points at Google Play's closed test (PDF regenerated, the old phrase in RETIRED-WORDING.json) and no longer says test build; the guides page says the newest build; the support page names TestFlight feedback for testers still on the beta; Features has cards for the App Store and Google Play's closed test, with their PHONE-PARITY.md rows; How it works says Built, not Planned. Checks: readme --check, claims --check (all backed), consistency 0 findings, the site build ok, 98 Core tests on the README, features, wording, guides, parity and claims passed.

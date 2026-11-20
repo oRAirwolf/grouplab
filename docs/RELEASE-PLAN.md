@@ -1,6 +1,6 @@
-# The first beta or stable release: what must be true, and how Windows builds get signed
+# The first numbered release: what must be true, and how Windows builds get signed
 
-NOTES-FROM-PLANNING.md entry 219 item D4. **A plan only.** No beta or stable release happens until Alan asks for one by name (entry 119
+NOTES-FROM-PLANNING.md entry 219 item D4. **A plan only.** No numbered release happens until Alan asks for one by name (entry 119
 section 8); `release.yml` makes it, from a tag, as a draft first.
 
 ## What must be true first

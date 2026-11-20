@@ -66,6 +66,14 @@ source that is not on the list below, or if any test writing into this folder co
 | `equipment-light-1400x900.png` | no sheet at all |
 | `equipment-light-1920x1080.png` | no sheet at all |
 | `equipment-light-2560x1440.png` | no sheet at all |
+| `pool-conflict-dark-1280x720.png` | Entry109Tests synthetic sheet |
+| `pool-conflict-dark-1400x900.png` | Entry109Tests synthetic sheet |
+| `pool-conflict-dark-1920x1080.png` | Entry109Tests synthetic sheet |
+| `pool-conflict-dark-2560x1440.png` | Entry109Tests synthetic sheet |
+| `pool-conflict-light-1280x720.png` | Entry109Tests synthetic sheet |
+| `pool-conflict-light-1400x900.png` | Entry109Tests synthetic sheet |
+| `pool-conflict-light-1920x1080.png` | Entry109Tests synthetic sheet |
+| `pool-conflict-light-2560x1440.png` | Entry109Tests synthetic sheet |
 | `scale-markers-dark-1280x720.png` | built-in library sheet |
 | `scale-markers-dark-1400x900.png` | built-in library sheet |
 | `scale-markers-dark-1920x1080.png` | built-in library sheet |

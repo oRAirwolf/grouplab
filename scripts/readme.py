@@ -8,7 +8,7 @@ cannot drift from it:
     newest     the newest build, its date and its downloads               docs/RELEASE-NOTES.md
     whats-new  what the newest few builds changed that a person notices  docs/RELEASE-NOTES.md, website/features.json
     features   every feature, short, linked to the Features page         website/features.json
-    plan       what must be true before the first beta or stable release docs/RELEASE-PLAN.md
+    plan       what must be true before the first numbered release docs/RELEASE-PLAN.md
 
 The platform statement and its minimums table are written by scripts/platform-support.py, as before.
 
