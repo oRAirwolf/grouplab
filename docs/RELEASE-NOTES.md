@@ -12,6 +12,18 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.235
+
+**2026-11-20**, commit `afd202c`. Nightly.
+
+**What you will notice**
+
+- When a pooled set is changed on two of your synced devices, GroupLab now shows both versions side by side, with each sheet marked as in both, only in one, or not on this device yet, and says how many differences there are.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.235)
+
+---
+
 ## 1.0.0-nightly.234
 
 **2026-11-19**, commit `91278db`. Nightly.
