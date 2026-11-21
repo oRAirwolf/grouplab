@@ -528,3 +528,413 @@ audit names: the link to change the rifle's figures ran past a wide window's edg
 by the screenshot job from main (it runs when a screen's files change), so they show section 3's fixes; local renders matched CI's but for
 the status line's clock. **Not done:** phone pictures beside the new Features entries, which need the emulator's walk.
 
+## Entry 462 section 0: question 106 answered, a photograph's codes left as they are (2026-10-21)
+
+Alan chose (b): every place on a photograph is still read, so a picture showing two sheets is still caught. Question 106 is archived
+as answered in `docs/notes/archive/questions-answered.md`, the measurement stays in `docs/PERFORMANCE.md` with the answer under it, and
+Phase 9 has no next step queued. Nothing in the application changed.
+
+## Entry 463: the three sync screens Alan chose (1A, 2A, 3B), and sync a person can reach (2026-10-21)
+
+**Shared.** `src/GroupLab.Core/Sync/SyncScreens.cs` holds the three screens' words and figures for the computer and the phone alike: the
+status line ("Synced 2 minutes ago: 3 changes in, 1 out."; the engine counts changes, not sessions, so the line says changes), the other
+devices seen from the folder's device files, the side by side of a session changed on two devices (rows for holes with what was added,
+taken away or moved, mean radius, rifle, barrel, load, caliber, distance and notes, each that differs marked), and the two cards' sizes,
+now and a year at the person's pace (their own rate where there are ten sessions over sixty days, else 200 a year, and it says which).
+`SyncEngine.Versions` finds a waiting session's two versions and `SyncEngine.Measure` what the records weigh. `SyncSetup` keeps this
+device's folder, name, originals choice and last run in the settings, never synchronized itself.
+
+**1A, the computer:** Settings has a "Sync between devices" section: the folder in full with Change folder, this device's name, the status
+line with Sync now, the other devices with when each last wrote, the two cards, and Stop syncing with "Stops on this device only. Nothing
+here or in the folder is deleted." It runs every five minutes while GroupLab is open and at once from Sync now. A folder that cannot be
+reached is said at the top of the section in amber with Choose the folder again, and the first time in a run in the centred warning;
+nothing is changed or deleted. **The phone:** the same items stacked on a Sync page under Settings; the folder through Android's folder
+picker (`SafSyncFolder`) or a folder in Files on iPhone and iPad (`BookmarkSyncFolder`), both from entry 461, now reached through the
+platform (`ChooseSyncFolder`, `WithSyncFolder`). **2A:** a centred dialog headed "This session was changed on two devices", the session's
+load, sheet and date, "Both versions are kept until you choose.", two columns (each device's name and time, a small plot of its holes on
+one scale, its rows), and Keep each device's, Keep both as two sessions and Decide later; on the phone the two stack. A waiting choice is
+found again from a banner on Sessions and a "2 versions" tag on its row, on both. **3B:** the two cards with bars on one scale a row and
+the line under them; the "Only on Wi-Fi" choice was not built.
+
+**Reachable:** the user guide's Settings part has Sync between devices and When a session was changed on two devices, each with a marked
+picture the walk renders (`sync-settings`, `sync-conflict`); Features has "Sync between your devices" with its own picture; the README and
+the home page no longer say synchronization is not built; Phase 7 reads Built, not proven. Option B is not mentioned anywhere.
+
+**Tests:** `SyncScreensTests` (Core, four), `Entry463Tests` (computer, three: a folder chosen, run and stopped with nothing deleted; a folder
+gone said in the section and once in the middle; a session changed on two devices found on Sessions and kept both ways), and
+`Entry463PhoneTests` (phone, three, the same, with the layout audit at a phone's width). The layout audit's overlap check now decides what
+covers what from the tree rather than a hit test, which missed a dialog's card at 1280 by 720. The Android head builds here; the iPhone's
+picker is proved by ios-app.yml on its next run. **Not done:** the phone's pictures of the Sync page and the side by side, which need the
+emulator's walk; and sync is not proven on two real devices.
+
+## Entry 466: request 107 answered "not for now" (2026-10-21)
+
+Alan read drafts of what `scripts/tester-notes.py` would post and said "Lets just not do the notes for now", replacing the yes of
+entry 464 section 0. Request 107 is closed and moved whole to `docs/notes/for-alan-archive.md` with that answer and the four
+conditions for taking it up again; `for-alan.md` now counts 25 open. `scripts/tester-notes.py` and its step in nightly.yml stay as
+built, switched off while `DISCORD_TESTERS_WEBHOOK` does not exist, and nobody is asked for it. `docs/notes/AUTOMATION.md` says so.
+The "For ..." notes stay in `for-alan.md` for Alan to pass on by hand.
+
+## Entry 465: the eleven interface looks Alan chose, built (2026-10-21)
+
+Built by five helpers in their own worktrees under entry 467, merged and tested together here. Each item is its own commit.
+
+| item | what a person sees now | held by |
+|---|---|---|
+| 1A Marking (645d83f3) | bull numbers outside the outer ring at the top left; hole tags just outside the ring, never on a tag, a bull number or a hole; the selected shot an open magenta ring with four ticks and a magenta tag; close holes on Any target fanned in a column on leader lines | `MarkTags.Place` (Core, shared by both); `MarkTagsTests`, `Entry465MarkingTests`, `Entry465PhoneMarkingTests` |
+| 2A Analysis (95c9e91b) | the shots headings carry the unit chosen ("across, in"); the plot's key in a box under the plot, two columns where it fits | `Entry465Tests`, `Entry465PhoneTests` |
+| 3B Store-bought (54c20722) | "Which target is this?" a bar along the bottom of the picture, the bull moved up whole above it; a bottom sheet on the phone | `StoreTargetScreenTests`, `StoreTargetPhoneTests` |
+| 4B Set tab (4294d76e, c30b4505) | the Scale checked pill at the top of the side panel with one line saying how the scale was found, built only from what each sheet's scale records | `ScaleSaid`, `ScalePillTests`, `ScaleSaidTests` |
+| 5A First run (eea0a1e7) | one question a step, "Question N of M", a step bar, Back, Next and Skip for now; every step fits 1280 by 720; every question's words compared with a recording taken before the change | `FirstRunSteps`, `FirstRunWordsBefore` (both suites) |
+| 6A Demo tour (0742f96f, 30cb8ac7) | the card beside the outlined part with a pointer, the bottom of the window only where no side has room; on the phone the step's number moves clear of the card | `DemoCardPlacement`, `Entry465PhoneDemoTests`, the phone sweep |
+| 7B Compare loads (06ccbfac) | with two loads, "What the difference means": the main figures side by side and GroupLab's existing sentence on whether these shots tell them apart and how many would | `LoadComparison.Compare`, `Entry465CompareTests` |
+| 8A Phone, Scale markers (fd3e362d) | plain body text, a "What is this?" button by each marker's name; five new glossary entries; the Targets library rows and the optic card made plain too; Settings, Capture, Sessions, Ballistics and the figures left as they read well | `Entry465PhoneWordsTests` |
+| 9A Phone, Targets at largest text (fd3e362d) | one field to a row, the label above, when a label would not fit half the width on one line | `Entry465PhoneWordsTests` |
+| 10B Site links (3d5edaef) | a 1 px underline at 55% in sentences, full 2 px on hover and focus, in both themes: the light theme had the same fault on six links | `scripts/site-audit.cjs`, 82 pages, 0 findings |
+| 11A Site, How it works (3d5edaef) | a white panel behind the amber numbers, stage labels and strips, passing 4.5 to 1 | `scripts/site-audit.cjs` |
+
+**Merging.** Three helpers each named a new test file `Entry465PhoneTests` or `Entry465Tests`; the later ones became
+`Entry465PhoneWordsTests`, `Entry465MarkingTests` and `Entry465PhoneMarkingTests`, and the backing names them. Put together, the phone
+sweep found the tour's step number under the card's title on the result plot, which now fills the screen since its key moved under it;
+fixed in 30cb8ac7. A temp folder reused across ended test runs carried a "did not exit" marker into the next run and put GroupLab's own
+error bar on the first screen; a fresh folder cleared it, so nothing in the application was wrong there.
+
+**Tests** on the merged head: Core 3112 passed (the two local-only failures were the inbox line, which CI sees empty, and one British
+spelling in a site comment, fixed); App 624 passed before 5A, 6A, 3B and 4B were merged and 638 on the merged head (30cb8ac7); Mobile 219 passed with the sweep and demo tests passing after the fix. Claims 5726, all backed; README
+current; site build ok. **Is it worth an article?** No: these are GroupLab's own screens, and nothing in them changes what another
+shooter does or another developer builds.
+
+## Entry 464: sync tidying, proofs, two articles, speed and an audit (2026-10-21)
+
+Worked by four helpers under entry 467, then the audit on docs-sonnet, merged and tested here. Section 0 (request 107) was replaced by
+entry 466 before it was started.
+
+**1. Sync tidying (1a9850bb).** Each device writes the change files it has read, and the records waiting for a choice there, to
+`GroupLab sync/read/<device>.json`, and that is the only basis for tidying. Once a day a device moves only its own files, and only one
+that every other device lists as read, whose every record a later file of its own carries newer, and in which nothing waits for a
+choice anywhere. The move copies the file whole to `GroupLab sync/trash/<device>/`, reads it back and compares it before the original
+goes; the trash is emptied 14 days after the move, counted from the move. A device with no read position, or one that cannot be read,
+holds everything back, and a write to a folder that has gone missing now refuses rather than making a new empty one. The Sync block on
+the computer and the phone and `grouplab sync` say what was tidied and what it freed. Tests: two devices, one away a month; a choice
+waiting; the folder going missing at six points; the 14 days; the phone's layout. Built, not proven, until two real devices run it.
+Question 109: a device that never comes back holds tidying back for ever.
+
+**2. Proofs (551d39cd).** Of the 27 rows still built, not proven in `docs/PROOF-CHECKLIST.md`, eleven moved to Done with their
+evidence named: significance testing, subgroups, doubles, comparing photos, rounds fired, session records, the report, the target
+library (a gate written for it), the Garmin Xero import (this computer only), load against load, and `grouplab bench` on its recorded
+passes of entries 388, 415 and 433. The other sixteen each have a line saying the material that would prove them (a camera and a shot
+sheet, a printer and paper, a range and a chronograph, a person timed, a phone sitting, Google Play). Nothing of entry 465's was moved.
+
+**3. Articles (2ad2524f, 053746fe).** No row in "Worth an article?" still said not yet; every "not written" row's reason still holds,
+and the aim-points draft still waits on request 86. Two pieces never decided passed the test and are published: "How much of your
+vertical is your velocity?" and "Where a first-round miss comes from", each with seeded figures held by `ArticleFiguresTests`. The
+canted-scope article's source line named a file that does not exist; it now names the ballistics code.
+
+**4. Speed and the audit (c4217def, 3d15f53d, 4b255fc8).** Measured stage by stage from opening a picture to its analysis on the
+computer and the phone's path (`docs/PERFORMANCE.md`): on a photograph the codes are the largest stage, as question 106 left them; on a
+600 dpi scan, the holes and the PNG's decode. One gain taken: a JPEG's grey and colour copies are decoded side by side, opening a phone
+photograph about a third sooner, held to the bit by `ImageLoaderSameResultTests`, and the corpus, synthetic scoreboard and counts are the
+same line for line. A larger gain on the first picture after start-up, publishing precompiled, is question 110. The consistency audit
+after entry 465 found one stale page (`docs/SURVEY.md` still described the first run as one screen), fixed; consistency 0 findings.
+
+**Is it worth an article?** Sync tidying and the speed gain: no, ordinary engineering a shooter never sees. The proofs: no, a record.
+
+## Entry 467: helpers in parallel until 20:00 Denver (2026-10-21)
+
+Nine main-model helpers started at 19:55 UTC, each in its own worktree on a piece whose files did not overlap. **The five-hour window,
+not the week, was the limit**: nine helpers took it from 14 to 33 percent in about twelve minutes, which would have spent it well
+before its 22:10 reset and stopped everything. So the four entry 464 helpers were paused at once and the 2A and 7B helper stopped once
+its work was merged, and resumed with their context when the window reset; `scripts/usage-statusline.js` now writes the five-hour
+window's reset into `usage-now.json` so the next run can see it. Entry 465's five finished first, as entry 467 section 5 asks, then
+464's four and the audit on docs-sonnet. The week went from 45 to 57 percent.
+
+**Merging.** Each helper's commits were cherry-picked onto phase-1 in turn. The only real conflicts were the claims backing, resolved as
+JSON (both sides kept), the register regenerated, and three test files given the same name by different helpers, renamed. The merged
+tree's App suite is the test that counts, because no helper saw the others' work: it found the phone tour's badge under the card. Two
+stopped helpers left shell processes running, ended by number; a temp folder reused across ended runs carried a "did not exit" marker
+into the next run, so every run now starts from an empty one.
+
+## Entry 468: Settings in eight categories, and six new settings (2026-10-22)
+
+Alan found Settings "very cluttered" and chose concept A on the canvas, with every proposed new setting. The computer, Android and the
+iPhone and iPad changed together; every setting kept its stored key and meaning.
+
+**1. The structure (c4e1ab07, 8aae8700, c01a659e).** `SettingsMenu` and `SettingsPages` (`src/GroupLab.App/SettingsMenu.cs`, shared with the phones) hold the
+eight categories, their one line, what each row is found by, and what putting a page back does. On the computer
+(`MainWindow.SettingsMenu.cs`) the side menu is a column of buttons reached by Tab and moved through with Up and Down, each named to a
+screen reader, with Find a setting above it, one page of cards at a time beside it, the status line under both, and the page shown last
+remembered (`settingsPage`). On the phone (`SettingsView`) Settings opens the list of the eight with their current choices in one line,
+the search box at the top, and each page with "‹ Settings" back (a page back, so Android's Back returns to the list). A search filters
+the same controls in place on every page, so a choice made among the results is the one on its page. "Put this page back as it came"
+asks first (the computer's centred question, the phone's inline one) and resets only that page's settings, never data, printers, copies or
+sync. **Saving** (by itself or with a Save button) had no category in the entry; it sits on Sync and your data. The desktop's Printers
+section moved from a long column to its own page; the phone's About split into Updates and about and Help and problems. The tests that
+read the old long page now open the page they mean; the control bench, the keyboard sweep, the screen reader and layout audits walk all
+eight pages (`Entry447Tests`, `DesktopSweepTests`, `ControlBenchTests`); the phone's scripted walks press the category first.
+
+**2.1 Daily copies (c4e1ab07).** `RecordsCopies` (Core) makes a `VACUUM INTO` copy beside the database at the first open of a day, on by
+default (`dailyCopies`), keeps the newest 14 in `copies/`, moves older ones to `trash/copies/` named by the day they moved, and removes
+them 14 days later. Back up now, Restore a copy (each copy with its day, sessions and size) and, on the computer, Open the folder; a
+restore copies the records as they are first, so it can be undone the same way. GroupLab then reads the restored records afresh in place
+(the record book, Sessions and the library) rather than restarting the process: the session store holds no connection open, so nothing
+of the old file survives, and the phones open the store each time anyway. `RecordsCopiesTests`: a copy made while sessions are being
+written passes SQLite's integrity check, the restore round trip, the fourteen kept and the trash's fourteen days, and a full disk leaving
+nothing half written with the records and the earlier copy byte for byte unchanged. `docs/RESTORE.md` has the section.
+
+**2.2 to 2.6, the other new settings (7ce223ff, 4882f861).**
+- **Shooting defaults:** the distance (last used, or always this one; stored `newTargetDistance`), and on the computer rounds fired and
+  rifle and load. Today's computer behaviour for rounds fired is that it is asked for and marked until answered, so the default is named
+  **Ask**, as the entry's rule that today's behaviour is the default requires; One a bull fills the count from the sheet's bulls once
+  detection finds them, and Not known pre-answers it. Rounds fired and rifle and load are computer only, because the phone asks for
+  neither per target; its page says so. **Paper** (Letter or A4, `paper`) is one setting shown on Shooting defaults and on Printers and
+  paper; every sheet, report and printer check that chose by region now asks `AppSettingsStore.LetterPaper()`, which is the region's
+  until one is chosen.
+- **The camera (phone):** Starts in Guided or Manual (`cameraStarts`); until it is chosen the camera starts as it was last left, as it
+  always has, which is Guided on a new install. The shutter sound is on unless turned off; the iPhone's AVFoundation makes its own sound for
+  every picture, and Android 13 and later say where the law requires one, so there the switch is shown on and cannot be changed, with a line
+  saying why.
+- **The analysis opens with** the main figures or every figure (`analysisOpens`): every figure opens More figures, Advanced and the full
+  CEP table on the computer and every folded section on the phone, without changing the fold the computer remembers.
+- **Search and reset** as in section 1.
+- **Text size on the computer** (Normal, Larger 1.15, Largest 1.3, `textSize`) through `TextSize.Choose`, the same path the phones use to
+  follow their system size, so every token-sized style grows alike. `Entry468Tests.NothingIsCutOffAtAnyTextSize` runs the layout audit on
+  the analysis, Sessions, Targets, Ballistics, Compare and all eight Settings pages at all three sizes: one finding at Largest, "Keep these
+  on the records" on Ballistics two pixels past its column, fixed by letting its words wrap. The phones keep following the system and say
+  so. **Reduce motion** (`reduceMotion`: follow the system, on, off) is read by `Landing.Still()`, which the landing flash and both phones'
+  camera flash now use; the camera's flash becomes a still tint held a moment.
+
+**Tests.** Core 7 new (`RecordsCopiesTests`), App 10 new and Mobile 9 new (`Entry468Tests`). CI on 4882f861 is green on all three
+systems (Core 3138, App 649, Mobile 231). **What the pushes found.** The iPhone app's data round trip on ios-app.yml found that a
+`.grouplab` file opened from another app no longer showed its import plan: the hand-off opened Settings at its list, and
+`Shell.ShowSettings` built Settings twice so the first copy took the waiting file (8aae8700, c01a659e, with a test). Then the App suite
+took 48 minutes on macOS and 72 on Linux, where the job ran out of its 90 before the Mobile suite: every window asked
+`TextSize.Choose` for Normal and each call rebuilt the whole application's styles; it now does nothing when the size has not changed
+(4882f861), and the App suite went back to 21 minutes on macOS and 30 on Linux. The iPhone app's own screen-reader audit has timed out on Apple's side on the result
+screen in the last three runs (once on Targets as well), while Settings has no findings; the result screen took 67 s against 36 s in
+the last green run with every screen slower, so it is recorded here, not changed blind. Locally the two test-host stops in the full
+App run were the 10-minute hang limit dumping the screenshot walk, which takes 10.5 minutes, not crashes.
+
+**Documentation.** The guide's section 12 rewritten around the eight pages with a section for the daily copies, and its other references
+to Settings, About and the old headings moved to the new pages; the tour's Settings page; three Features entries (Settings in eight
+categories, Daily copies, Shooting defaults) with their pictures; README; claims backed.
+
+**Is it worth an article?** No: a settings screen and a backup are ordinary engineering; nothing here changes what another shooter does.
+
+## Entry 469: the consistency audit of 2026-10-22 (2026-10-23)
+
+**Section 1, Settings' old page names.** Every place the audit listed now names the eight pages: the support page's three steps and
+"On a phone", the download page's Which build and GroupLab Dev lines, the README (Which build, GroupLab Dev, Phase 7), the Features
+`sync` sentence (reworded for nightly 219), the hardware survey block, what-grouplab-sends, the tour's first run, both guides and their
+PDFs, PHONE-PARITY, ANDROID and UPDATES. Two more found on the way: CONTRIBUTING (the Detailed logging box) and SURVEY (Sharing). The
+eight retired forms are in docs/RETIRED-WORDING.json with entry 468 as the reason, allowed in the release notes, features.json and the
+claims files that quote them; "top of Settings" is also allowed in three places where it means the first row of a page, which is still
+right. Wording by docs-sonnet, checked here.
+
+**Section 2, nightly 218's notes.** The two import lines fixed a fault that c4e1ab07 brought in and c01a659e and 8aae8700 took out inside
+the same build. The guide line got through because 457bc019 also touched two shipping files, though only their comments, so the generator
+rightly counted it and read its trailer: the trailer was the fault, not the generator. A correction with no notes now takes a commit out
+(scripts/release-notes.py), and the three are corrected that way. Nightly 218's published text is not edited (CLAUDE.md); nightly 219's
+notes carry one line, through the correction of 6feb3f9a, saying the import works as it did in 217. Question 111 asks planning whether
+that is right.
+
+**Section 3, the phone's pictures of Settings.** The audit missed a commit: the walk ran on nightly 218's code and 583a38fe (13:32 UTC on
+2026-10-22) replaced fold-settings and tab-settings-landscape with the list of categories, and made-from.json says 218. The walk pictured
+only the list, so it now also opens Shooting defaults and Sync and your data (`settings-shooting`, `settings-data`); the Settings feature
+uses `fold-settings` for its phone side, and the two pages wait in SCREENSHOTS.md for the walk's next run.
+
+**Section 4.** RESTORE.md says the Discord posts are off by Alan's decision (entry 466) and oracle-backups.yml is off until request 106's
+secrets are set.
+
+**Is it worth an article?** No: wording kept in step with the application.
+
+## Entry 470: Android's back on Settings, Sync and your data (2026-10-23)
+
+**The fault.** Alan: the back gesture did not leave Settings, Sync and your data. `Screens.Pill` marked every phone button whose words
+began with "Back" as the page's way back, and entry 468 put "Back up now" below "‹ Settings" on that page, so `Shell.WayBack()`, which
+takes the last way back showing (entry 376 item B1), pressed "Back up now": each back made a copy of the records and the page stayed.
+
+**The fix.** The rule is gone. `Screens.BackButton(words, chosen)` makes a way back and says so, and every real one uses it: Compare,
+the CSV import (two), Fix holes, the Fudd buster, the one page report, the chronograph pairing, Sync, the printer check, Sessions, the set,
+Share (two), Shots, Shots to zero, Targets, the velocity pages (three), Zero from, the first run's Back and each Settings page's
+"‹ Settings". On nested pages the last one showing is still the innermost page's: within Settings only the open page's "‹ Settings" is
+visible, and Sync replaces the Settings view rather than sitting over it. The desktop has no way back chosen by words, and on the iPhone
+nothing raises Avalonia's BackRequested, so only the guided demo's Back step used `WayBack` there, fixed by the same change.
+
+**The copies.** `RecordsCopies.Make` keeps the newest 14 and moves the rest to `trash/copies` for 14 days. The copies began with nightly
+218 on 2026-10-22, so on any phone the oldest a stray back could have pushed out is that day's own copy, of records that are still in
+place, and it waits in the trash until 5 November at the earliest. No device needs its copies put back.
+
+**Tests.** `Entry470Tests`: on every category page Back presses "‹ Settings", returns to the list and makes no copy; from Sync, Back
+returns to Sync and your data, then to the list, then to Capture (the entry's "a second Back returns to Capture" skips the list, which
+sits between them); and a source check that every phone button whose words are a way back is made with `BackButton` and that no
+`BackButton` has words that are not one. `BackEverywhereTests` now builds its inner page's way back the same way. Mobile suite 234 passed.
+The emulator walk does not drive Back, so nothing was added to it.
+
+**Is it worth an article?** No: an ordinary fault in how a button was marked; nothing here changes what another shooter does.
+
+## Entry 471: Alan's answers to questions 107 to 110, and the push of entry 469 (2026-10-23)
+
+**Section 1.** `gh auth status` showed the GroupLab account active. Entry 469's commit was rebased onto nightly 219's notes commits
+(351e9918) and pushed; its site went live at 351e9918. Nightly 219 had been built from entry 470 alone, so its notes carry entry 470's line
+and not the "Correction:" line entry 469 had put on 6feb3f9a. That correction now leaves 6feb3f9a with the note 219 published and rides in
+this entry's commit instead, so nightly 220 says it once (question 111 (a)).
+
+**Question 107 (a).** On the phone, a found hole's tag fell back to its count where `ShotLabels` gives no text, which is every hole on a
+marking with no bulls; it now has no tag there, as on the computer (`MarkingAPage.Viewer`). `Entry471PhoneTagTests`: no hole tags on a
+marking with no bulls, one on a bull.
+
+**Question 108 (b).** Nothing built; `StatedResolutionScale.Offer` is still reached by no screen.
+
+**Question 109 (a).** "Forget this device" beside each device under Other devices in the folder, on the computer and the phones (Android
+and iPhone share the phone page), asks once on the page in the way "Put this page back as it came" does, saying nothing in the folder is
+deleted. Placed in the plainest place, the device's own line, inside the 1A look, so no look question was raised. `SyncForget.Forget`
+writes `GroupLab sync/forgotten/<device>.json`; tidying leaves a forgotten device out of the devices it waits for, and the list leaves it
+out. Nothing is deleted. A forgotten device that syncs again writes the forgetting's identity into its own device file and is seen again;
+tidying in the meantime is safe for it, because a change file is tidied only when a later one holds a newer version of all it carries.
+**The new folder fault** is fixed by an identity: the first device in a folder writes `GroupLab sync/folder.json`, the database keeps the
+identity its records were last written to (`SessionStore.SyncFolderId`), and a different one sets every record to be written again
+(`MarkSyncUnwritten`). A device upgrading from an older GroupLab whose change files are already in the folder takes it as its own and
+writes nothing again. `SyncForgetTests` (four), `Entry471SyncForgetWindowTests` and `Entry471SyncForgetPhoneTests`.
+
+**Question 110 (a).** `PublishReadyToRun` on any publish of the desktop app for a runtime; the phones are unchanged. Checked first, the
+command line published both ways for win-x64: the four local corpus scoreboards and the synthetic one identical but for their times, and
+the 600 dpi sample's marking identical in all 1,080 values. Cold, a fresh process on the Fold 7's picture-1, five runs alternated: median
+1,534 ms before and 1,109 precompiled. The desktop app for win-x64 zips to 102.8 MB against 91.2; the published Windows zip went from
+114.4 MB in nightly 219 to 126.5 in nightly 220, the figures the download page gives (corrected the same evening: it first said 103
+rather than 91, the bare app's figures). `docs/PERFORMANCE.md` has the figures.
+
+**Is it worth an article?** No: a forgetting button, a tag rule and a build switch; the precompiled measurement is in PERFORMANCE.md and
+would change nothing another shooter does.
+
+## Entry 472: the overnight queue, work that needs nobody (2026-10-24)
+
+**Section 1, the class of fault entry 470 found.** `Entry472BackTests` opens every place along the bottom, a result, each of the eight
+Settings pages, Sync and the printer check, presses each button on them as the phone sweep does, and then Back: it must go to the screen
+the press came from (to Capture where the press went to another place), and change nothing the phone keeps: every file under its folder
+by content, the copies of the records, and what was shared, printed or opened. A page class no button reaches fails `EveryPageIsWalked`
+until it is reached or named with its reason. It found five ways back Android's back could not see, all now fixed:
+- **A result** had no marked way back: on Capture, back closed GroupLab; on Sessions it went to Capture. "Another target" is now the
+  result's way back (to Capture's start, or to the list on Sessions).
+- **How did you shoot this sheet** had only Done, unmarked, so back closed GroupLab. Done is now its way back, and saves only when the
+  answer changed (before, Done saved the session every time).
+- **The picture's check** before a result had none; back now goes to Capture's start and keeps the reading, as it already is in Sessions.
+- **Add a store-bought target**'s own back arrow was unmarked, so back went to Capture; **the printer check**'s first step had only
+  "Skip for now", so back went to Capture rather than Printers. Both marked. Marking A's Cancel is marked too.
+- **A target switched to from another place** (Sessions' row for a target already open on Capture, or the open targets sheet) now returns
+  to that place on back, not to the start of Capture.
+The mark for a way out not worded as Back is `Screens.LeavesPage`. The iPhone has no system back and Avalonia raises none there (entry
+470), so on iOS the change is the same shared screens; the screen sweep both the emulator and the simulator run
+(`scripts/scenarios/phone-sweep.json`) now presses Back instead of each page's back button by name, six times, with a wait for the page
+it should land on, and `PhoneSweepScenarioTests` runs it headlessly. On the computer every Escape handler was read: each closes a
+dialog, ends a choosing or clears a field, and none saves or deletes beyond the guided tour's own sample (entry 439); the store-bought
+target question's Escape pressed the last button in its row and now names "Not sure". **Other behaviour chosen from words**, three found
+and replaced with explicit marks: the plot's key decided which sheet a tap showed alone by reading "Sheet N:" from the row's words; the
+benchmark's bar was hidden by comparing the status line's words; the phone's guided tour found the picture check's button by its words.
+
+**Section 2, every importer against bad files.** `BadFilesTests` gives a session file (.grouplab), a marking, a CSV of shots, a GroupLab
+data file, a picture (JPEG, PNG, TIFF and BMP) and its Orientation, and a sync change file nothing, one byte, about sixty truncations,
+120 changed bytes, 30 cut-out runs, a placeholder of zeros, a picture, words, a zip of something else, and the file twice; the text formats
+also in UTF-8 with and without a mark, UTF-16 both ways and Latin-1, each with LF, CRLF and CR line endings; and very large or deeply
+nested input. Each must end in what it read or in the refusal its callers catch, in words, inside 30 seconds. Found and fixed:
+- **A session file** damaged inside its zip, or with a value of the wrong kind, faulted (`InvalidDataException`, `InvalidOperationException`)
+  instead of being refused: now "This session file is damaged, so it was not opened. Share it again from the device it came from."
+- **A marking** with a damaged value faulted (an unknown name, a missing value): now refused as damaged in words.
+- **A GroupLab data file** that was not UTF-8 faulted, and one with a session's sheet name, a chronograph string's source or readings
+  missing passed the check and then **stopped part way through the import** on the database's rule, leaving the sessions before it
+  imported. Everything the database needs is now checked before anything is written, so it is imported whole or refused.
+- **A sync change file** damaged so that it still parsed was **applied in part** (one record of two), then marked read, so the whole copy
+  arriving later was never taken; others faulted the run on a missing value. A change file is now taken only when every record in it can
+  be applied, and files GroupLab writes now carry a checksum of their records (older files have none and are read as before), so a
+  damaged copy is left as still arriving and the whole one is taken when it comes.
+- **An empty picture** faulted inside OpenCV: now "is empty, so there is no picture in it yet".
+The CSV of shots, the chronograph exports (now with every line ending as well) and a photograph's Orientation (the values 0 to 9 and 255,
+missing, said as another type, and damaged) needed nothing. Nothing was unclear enough to need Alan.
+
+**Section 3, sync as close to proven as it can be without two devices.** `CloudClientTests` gives each of three simulated devices its own
+copy of the folder, as a cloud client does, and a simulated cloud moves files between the copies: up to six minutes late each way, in any
+order, a quarter of them arriving first as part of the file, now and then a file kept twice as a conflicted copy named the way OneDrive
+("name-PHONE.json"), Google Drive ("name (1).json") or Dropbox ("name (Alan's conflicted copy 2026-10-24).json") names it, and a write
+to a name another device changed meanwhile kept as such a copy. Over two simulated hours the devices make targets, change them, take some
+away, add rifles and change a setting, syncing after each; the phone's clock is five hours ahead and the tablet's three behind; the
+tablet's folder goes away for twenty minutes and later part way through a run; and the computer forgets the tablet while the tablet goes
+on writing. Then everything arrives, the questions are answered on one device at a time, and the test holds that every device has the same
+targets with the same marks, the same rifles and the same setting, and that every version anybody saved and did not change or take away
+themselves is still there, as a target or kept beside it. Six runs, two for each company's naming. A deliberate fault (a half-arrived file
+marked read) fails all six. **Found:** nothing wrong in GroupLab beyond section 2's change file fix. One thing a person could meet: the same
+question answered on two devices before they have synced makes each answer a new version the other device then asks about; answering on
+one device and letting it sync settles it. **Proven in tests now:** delays, order, half files, conflicted copies, the folder going and
+coming back, clocks hours wrong, three devices, and forgetting a device that is still writing. **Still needs Alan's two devices:** a real
+cloud client's own behaviour (OneDrive on Windows, Google Drive or Dropbox on Android, iCloud on the iPhone through Files), the phones'
+own folder access (Android's folder picker, the iPhone's bookmark) over weeks, and a device away for days.
+
+**Section 4, the phone's new Settings pictures.** The emulator's walk of 2026-10-23 (run 40018305491, nightly 220) took
+`fold-settings-shooting` and `fold-settings-data` in both themes and committed them (0fc0fed8). The Features page now shows them as the
+phone's side of Shooting defaults and Daily copies of your records, in place of the line saying they waited; `docs/figures/SCREENSHOTS.md`
+says so. The README links the two features and shows no phone picture of Settings, so it needed nothing. The tour's Settings page names the
+computer's pages and is unchanged.
+
+**Section 5, the proof checklist.** Read again. Nothing has come into `grouplab-local` since entry 464 (the range kit waits for its trip),
+so no row moved on material. Row 27's two halves are each held by a machine (the desktop opening a phone's session file in
+`SessionFileTests`; the phone's own Share this session writing a file that reader opens with every shot where it was, in the new
+`Entry472ShareTests`), and what is left is Android's share sheet carrying it across, which needs the
+phone. `docs/PROOF-CHECKLIST.md` now opens with one line per thing still needing Alan, what it proves and about how long, shortest first:
+fifteen lines, from five minutes at the phone sitting (row 27) to a range with 300 yards (row 25), and sync's real devices among them.
+
+**Section 6.** The panel note and `docs/notes/STATE.md` say what was done, found and fixed; nothing in this entry needs Alan. The week's usage
+was 12 percent after section 5, well under the 50 percent the entry set.
+
+## Entry 473: the consistency audit's five fixes, and error reports 38 to 40 (2026-10-26)
+
+**Before the entry: error reports 38, 39 and 40**, all from one Windows computer on nightly 221. 40 and 39 were the same fault: somebody
+marking each sheet by hand on copies of one clean picture of the target lost each sheet to the next, because entry 420 section 3 took
+the same picture (SHA-256 and design) for the same sheet. The logs showed a new picture's first save going to the existing session as
+the same sheet. Now the same picture is the same sheet only where at least half the holes of each match (`SessionRecords.SameHoles`, a
+quarter inch where the scale is known), and an updated record is kept first (60e60bc1, `Entry420Tests`). 38 asked to delete rifles and
+loads: Delete on a rifle, barrel or load, asked first, on the computer and the phone (1147821e, `EquipmentDeleteTests` in three suites).
+A fourth package, from an iPhone, showed the demo's session number reused after the demo deleted its own session: not a fault.
+
+**Section 1.** The sync card said "coming in the next build" because its phrase read "on your computer and phones" and nightly 215's
+note says "your phones". Copied exactly; the page now reads "Since nightly.215, changed in nightly.220". `never_published` in
+website/build.py holds the Features page back when a feature that has arrived has a phrase in no published note and in no commit since
+the newest nightly.
+
+**Section 2.** The phone walk now has a `sync-sample` step: a folder in GroupLab's own storage with a second device, Workshop computer,
+in it (`PhoneSync.Sample`), since Android's folder picker cannot be driven; it opens Sync between devices, takes `settings-sync` and puts
+everything back. `PhoneScreensScenarioTests` runs it headless. The picture comes from the emulator run dispatched on 2026-10-26.
+
+**Section 3.** Nightly 221's archives, their files summed: Windows 266.1, Linux 258.8, macOS 231.3 (Apple silicon) and 261.5 (Intel)
+MB, against nightly 103's 226, 219 and 185. The tables say 270, 260, and 240 on Apple silicon or 270 on Intel.
+
+**Section 4.** "In the settings" and "the top of Settings" now name the page: Updates and about (the update check and This build),
+General (the demo), Units and figures (the scope and length units), Help and problems (Report a problem).
+
+**Section 5.** The guide's sync section and the Features sentence say a change file still being copied, or damaged, is left alone until
+it is whole.
+
+## Entry 474: the overnight queue (2026-10-26)
+
+**Section 1, speed.** Finding the holes on the 600 dpi scan 403 to 310 ms, the generated sheet 189 to 117, a phone photograph 125 to
+97, one sheet from file to figures 327 to 267, a batch of ten 2,755 to 2,126 (`grouplab bench --runs 5`). Three exact changes: the
+sheet drawn in bands of rows at once (`SceneRasterizer`, 81 to 19 ms), the moved print check's darkest and lightest taken row by row
+(`DiscExtremes`, 46 to 10), the residual's paper level placed once per row and column (44 to 30). The four corpus scoreboards, the
+synthetic and any-target boards and `analyze --json` on 16 pictures are identical before and after; the bench gate passed; the window's
+gate fails on "a new window ready to use" before and after alike (docs/PERFORMANCE.md).
+
+**Section 2, audits.** New: `SettingsSearchAuditTests` on both platforms (every Settings row found by the words on it, and 25 everyday
+words), `PagesUnderPlacesAuditTests` (every phone Settings page, Sync, the rifle and load forms and their Delete question at the largest
+text, layout and screen reader), and the marking screen and Equipment added to the computer's every-text-size audit. Fixed: field names
+on the marking screen ran past their box at Larger and Largest; OneDrive found nothing on either, and bigger, millimeters, bug and rifle
+nothing on the phone; a phone's default name in a sync folder was GroupLab's version line, now its maker and model. Back was already
+walked on every phone page. The phone's Sync picture, taken by the emulator walk, is on Features.
+
+**Section 3, tests.** `scripts/slowest-tests.py` writes each suite's 15 slowest tests into every CI leg's summary. The phone's blind close
+test 87 to 21 s, the band test 115 to 7 s. The desktop screenshot walk (291 s, a quarter of the App suite) was measured without writing
+its pictures and took the same time, so nothing was changed there. The proof checklist's open rows all need hardware or a person.
+
+**Section 4, light installer.** Framework-dependent: 165.3 MB unpacked, 67.2 MB zipped against 245.8 and 102.8; start-up the same (679
+and 672 ms against 682 and 679); missing only the .NET runtime. Recommendation in question 36: not the light installer; leave out
+OpenCV's unused video reader (11.9 MB of every zip) instead.
+
+**Section 5, learning loop.** Score every three minutes, nightly at 13:45 UTC and tune on the 1st at 16:00 UTC, every run finishing;
+72 submissions read, 26 corrected of the 50 tuning needs, 15 with marks moved (54), added (37) or removed (9); 380 of 383 holes found.
+
