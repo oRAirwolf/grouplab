@@ -20,10 +20,15 @@ public sealed class Entry508LaunchScreenTests
     [
         ("LaunchBackground", p => p.Bg),
         ("LaunchPanel", p => p.Panel),
-        ("LaunchPanel2", p => p.Panel2),
         ("LaunchLine", p => p.Line),
-        ("LaunchLine2", p => p.Line2),
-        ("LaunchAmber", p => p.Amber),
+    ];
+
+    /// <summary>Each rounded shape, drawn as a stretchable image, with the roles of its fill and its edge (the fill where it has none).</summary>
+    private static readonly (string Name, Func<Palette, Color> Fill, Func<Palette, Color> Edge)[] Shapes =
+    [
+        ("LaunchCard", p => p.Panel, p => p.Line),
+        ("LaunchTake", p => p.Amber, p => p.Amber),
+        ("LaunchChoice", p => p.Panel2, p => p.Line2),
     ];
 
     [Fact]
@@ -48,7 +53,10 @@ public sealed class Entry508LaunchScreenTests
         string[] wordy = ["label", "textView", "textField", "button", "progressView", "activityIndicatorView"];
         Assert.DoesNotContain(story.Descendants(), e => wordy.Contains(e.Name.LocalName));
         var images = story.Descendants("imageView").Select(e => (string?)e.Attribute("image")).ToList();
-        Assert.Equal(["LaunchLockup"], images);
+        Assert.Equal(["LaunchLockup", "LaunchCard", "LaunchTake", "LaunchChoice", "LaunchChoice"], images);
+
+        // ibtool refuses a launch screen with user-defined runtime attributes, which is why the corners are images (ios app run 44903286973).
+        Assert.DoesNotContain(story.Descendants(), e => e.Name.LocalName == "userDefinedRuntimeAttributes");
 
         // Every color it draws with is one of the launch colors, all of which exist in the asset catalog.
         var used = story.Descendants("color").Select(e => (string?)e.Attribute("name")).Where(n => n is not null).Distinct().ToList();
@@ -82,6 +90,33 @@ public sealed class Entry508LaunchScreenTests
             Assert.Equal(darkRole.R, Unit(copy, "red"));
             Assert.Equal(darkRole.G, Unit(copy, "green"));
             Assert.Equal(darkRole.B, Unit(copy, "blue"));
+        }
+    }
+
+    /// <summary>Each shape is filled and edged in the palette's colors, light and dark, and stretches only between its caps.</summary>
+    [Fact]
+    public void ItsShapesAreDrawnInTheApplicationsColors()
+    {
+        foreach (var (name, fill, edge) in Shapes)
+        {
+            string set = Path.Combine(Ios, "Assets.xcassets", name + ".imageset");
+            using var json = JsonDocument.Parse(File.ReadAllText(Path.Combine(set, "Contents.json")));
+            var images = json.RootElement.GetProperty("images").EnumerateArray().ToList();
+            Assert.Equal(2, images.Count);
+            foreach (var image in images)
+            {
+                bool dark = image.TryGetProperty("appearances", out _);
+                var palette = dark ? Tokens.Dark : Tokens.Light;
+                Assert.Equal("3x", image.GetProperty("scale").GetString());
+                var caps = image.GetProperty("resizing").GetProperty("cap-insets");
+                using var picture = SkiaSharp.SKBitmap.Decode(Path.Combine(set, image.GetProperty("filename").GetString()!));
+                int width = picture.Width, height = picture.Height;
+                Assert.True(caps.GetProperty("left").GetInt32() * 3 * 2 < width, name + ": its caps read as points still leave a middle");
+                Color At(int x, int y) => picture.GetPixel(x, y) is var p ? Color.FromRgb(p.Red, p.Green, p.Blue) : default;
+                Assert.Equal(fill(palette), At(width / 2, height / 2));
+                Color top = At(width / 2, 1), wanted = edge(palette);
+                Assert.True(Math.Abs(top.R - wanted.R) <= 2 && Math.Abs(top.G - wanted.G) <= 2 && Math.Abs(top.B - wanted.B) <= 2, $"{name} edge {top}");
+            }
         }
     }
 

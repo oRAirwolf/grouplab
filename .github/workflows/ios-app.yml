@@ -131,10 +131,10 @@ jobs:
           test "$(plutil -extract UILaunchStoryboardName raw "$app/Info.plist")" = "LaunchScreen" || { echo "::error::Info.plist names no launch storyboard"; exit 1; }
           test -d "$app/LaunchScreen.storyboardc" || { echo "::error::The application carries no compiled launch screen"; ls "$app" | head -40; exit 1; }
           xcrun assetutil --info "$app/Assets.car" > assets.json
-          for name in LaunchBackground LaunchPanel LaunchPanel2 LaunchLine LaunchLine2 LaunchAmber LaunchLockup; do
+          for name in LaunchBackground LaunchPanel LaunchLine LaunchLockup LaunchCard LaunchTake LaunchChoice; do
             grep -qE "\"Name\" ?: ?\"$name\"" assets.json || { echo "::error::The asset catalog carries no $name"; exit 1; }
           done
-          echo "the launch screen is in the bundle with its seven assets"
+          echo "the launch screen is in the bundle with its seven assets (three colors, the lockup and three shapes)"
           # Entry 292 section 2.3: the share extension inside the application, and a share-services extension. The simulator self-test
           # proves the app group, which the simulator grants from the entitlements the build embeds.
           appex="$app/PlugIns/GroupLab.Share.appex"

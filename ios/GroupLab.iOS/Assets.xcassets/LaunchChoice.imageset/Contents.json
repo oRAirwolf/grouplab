@@ -1,0 +1,46 @@
+{
+  "images": [
+    {
+      "filename": "choice-light@3x.png",
+      "idiom": "universal",
+      "resizing": {
+        "cap-insets": {
+          "left": 70,
+          "right": 70
+        },
+        "center": {
+          "mode": "stretch",
+          "width": 1
+        },
+        "mode": "3-part-horizontal"
+      },
+      "scale": "3x"
+    },
+    {
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "filename": "choice-dark@3x.png",
+      "idiom": "universal",
+      "resizing": {
+        "cap-insets": {
+          "left": 70,
+          "right": 70
+        },
+        "center": {
+          "mode": "stretch",
+          "width": 1
+        },
+        "mode": "3-part-horizontal"
+      },
+      "scale": "3x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}
