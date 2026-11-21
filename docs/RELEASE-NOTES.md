@@ -12,6 +12,23 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.239
+
+**2026-11-21**, commit `0d16cb7`. Nightly.
+
+**What you will notice**
+
+- On the iPhone and iPad, the start screen is now an empty outline of GroupLab's home screen in your phone's light or dark appearance, so GroupLab seems to open straight onto it.
+
+**Under the hood**
+
+- The iPhone's new start screen now draws its rounded shapes in a way Apple's build tools accept.
+- The phone's screenshots for grouplab.org now include the result's picture zoomed in with each hole's number beside it.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.239)
+
+---
+
 ## 1.0.0-nightly.238
 
 **2026-11-21**, commit `020b7c7`. Nightly.
