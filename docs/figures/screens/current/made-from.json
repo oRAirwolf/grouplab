@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 235,
+  "afterNightly": 236,
   "screens": {
     "analysis": "697139a984fdda8319e6ac21423c25278b5670f421ce0d62e489b2169784acd0",
     "analysis-open": "1c32242479b01fa1398b656f0e1a3d261ff2fb1cc3d516719b8052ec05fb7c14",
@@ -23,7 +23,7 @@
     "optic-4x": "13b5c5708f7e9c5f1e28bfc997725b802174e136de484837a26837897971bd3e",
     "pairing": "8f65eb2d7681f9fcd9ab3840582f0ab020ec02056dbc7eb463b8a275a8582366",
     "paper-fold": "df82bcfc59fef3f6689139879d8398c6d44741cc6afe263df491f9b24303c93a",
-    "pool-conflict": "ec86b1236d6abf808910f1130e1f5d5f3c4a20df0cdbb9a676b6f88bb52761e9",
+    "pool-conflict": "7838d053c0bc396b9b1cf117b8b3b5688e5c72474b3a76b07b62c141af286c06",
     "problem-dialog": "d2f31f2b157fa1c1f1abddfdcd10f6e5892274bb8588ac15591f0dbb9d787d34",
     "problem-dismissed": "00fa31a23a0895a81e6eff8301e6d1f6288b583b717a839562de2dbaf01ae563",
     "readings-here": "612045c0640b90dddd8be413774ba35d35db34efceb98e05fde2d1feda1b2e71",
@@ -58,8 +58,8 @@
     "shots-to-zero": "d73f1a1c01d7231ded68d9c0d2152b03808b07599e1a8d6acf3fdffd64023262",
     "shots-window": "2a1e5914481a069dbdff99632c76f19a9eee6fa388122a49cc33175f4742aae8",
     "store-target": "f5e1bf295710304aefbaad299944b49cece02b2e149a537f6ebb9f3eb6dfb266",
-    "sync-conflict": "119cb65eeb278d65f043219f20d7036cb5272976495125dc0b1bdc4237c85ca1",
-    "sync-settings": "f995e27d0aa875abba84c17167676a78dc80d3957094488cb3b434899a1b541e",
+    "sync-conflict": "a3f76def132e5663e518ee365cd0ce778ab8462f795e558dd5d5381a470f79dc",
+    "sync-settings": "8bb237e44c20726a7d5a13361d754d0eb9d62b5762078f7d91d9c3c2232ae08f",
     "targets": "19a7bdeaede7c566199446672396fe419148fc6997190631788ed090fa97758e",
     "targets-zero": "e566891a3263ef2ec0d93ba7ce689d950c0a2f4391b0574b99821ef770835de0",
     "velocity": "a3159f0527937f30cea42767073057e660b6b92f5d88b9230ddeb7d1d97dd343",
