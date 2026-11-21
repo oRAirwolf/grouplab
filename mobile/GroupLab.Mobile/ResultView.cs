@@ -489,6 +489,7 @@ public sealed class ResultView : UserControl, IOpenTarget
             }
 
             picturePane.Marking = () => session.State;
+            picturePane.BullRings = MarkTags.OuterRingInches(definition);
             picturePane.LinesToBulls = Phone.Settings.LoadLinesToBulls();
             picturePane.LitChanged += SayLit;
             full.BullChosen = bull =>
@@ -1189,10 +1190,109 @@ public sealed class ResultView : UserControl, IOpenTarget
         /// <summary>How near a tap has to be to a hole, a bull or a line to count, in screen units: a fingertip.</summary>
         private const double Reach = 22;
 
+        /// <summary>The most the picture is enlarged past fitting it, entry 506 section 3.</summary>
+        internal const double MostZoom = 8;
+
+        /// <summary>Entry 506 section 3: how many times larger than fitted the picture is shown, 1 when it fits, and where it has been moved to.</summary>
+        private double zoom = 1;
+        private Point offset;
+        private Point? last;
+        private Point? pressedAt;
+        private double pinch = 1;
+
+        /// <summary>The printed outer ring of each bull, inches, so a hole's tag goes outside it as on Fix holes; none where not known.</summary>
+        internal IReadOnlyDictionary<int, double> BullRings { get; set; } = new Dictionary<int, double>();
+
+        /// <summary>For a test: the zoom past fitting, 1 when the picture fits.</summary>
+        internal double Zoom => zoom;
+
+        /// <summary>For a test: whether the holes' tags were drawn the last time the picture was, and where.</summary>
+        internal bool TagsShown { get; private set; }
+
+        internal (TagLayout Layout, IReadOnlyList<TagHole> Holes)? LastTags { get; private set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            ClipToBounds = true;
             Tapped += (_, e) => TapAt(e.GetPosition(this));
+            // Entry 506 section 3: the picture pinches in and out about its middle, as Fix holes does, and the tags appear once they fit.
+            GestureRecognizers.Add(new PinchGestureRecognizer());
+            AddHandler(InputElement.PinchEvent, (_, e) =>
+            {
+                if (pinch > 0 && e.Scale > 0)
+                {
+                    ZoomBy(e.Scale / pinch);
+                }
+
+                pinch = e.Scale;
+                e.Handled = true;
+            });
+            AddHandler(InputElement.PinchEndedEvent, (_, _) => pinch = 1);
+        }
+
+        /// <summary>Makes the picture <paramref name="factor"/> times as large about its middle, never smaller than fitted; for a pinch and a test.</summary>
+        internal void ZoomBy(double factor)
+        {
+            double to = Math.Clamp(zoom * factor, 1, MostZoom);
+            var middle = new Point(Bounds.Width / 2, Bounds.Height / 2);
+            var under = new Point((middle.X - offset.X) / zoom, (middle.Y - offset.Y) / zoom);
+            zoom = to;
+            offset = Kept(new Point(middle.X - (under.X * zoom), middle.Y - (under.Y * zoom)));
+            InvalidateVisual();
+        }
+
+        /// <summary>An offset that keeps the enlarged picture over the whole of its place, so no gap opens at an edge.</summary>
+        private Point Kept(Point wanted)
+        {
+            double width = Shown.Width * Scale * zoom, height = Shown.Height * Scale * zoom;
+            return new Point(Math.Clamp(wanted.X, Math.Min(0, Bounds.Width - width), 0), Math.Clamp(wanted.Y, Math.Min(0, Bounds.Height - height), 0));
+        }
+
+        /// <summary>
+        /// While the picture is enlarged it keeps a drag and moves with the finger (entry 374 section 4: the page must not scroll under it);
+        /// fitted, a drag on it still scrolls the page.
+        /// </summary>
+        private bool KeepsDrags => zoom > 1.02;
+
+        protected override void OnPointerPressed(PointerPressedEventArgs e)
+        {
+            base.OnPointerPressed(e);
+            last = pressedAt = e.GetPosition(this);
+            if (KeepsDrags)
+            {
+                e.PreventGestureRecognition();
+                e.Pointer.Capture(this);
+                e.Handled = true;
+            }
+        }
+
+        protected override void OnPointerMoved(PointerEventArgs e)
+        {
+            base.OnPointerMoved(e);
+            if (!KeepsDrags || last is not { } was || pinch != 1)
+            {
+                return;
+            }
+
+            e.PreventGestureRecognition();
+            var now = e.GetPosition(this);
+            last = now;
+            offset = Kept(offset + (now - was));
+            InvalidateVisual();
+        }
+
+        protected override void OnPointerReleased(PointerReleasedEventArgs e)
+        {
+            base.OnPointerReleased(e);
+            if (KeepsDrags && pressedAt is { } from && Distance(from, e.GetPosition(this)) < 6)
+            {
+                // A tap on an enlarged picture: the drag was kept, so the tap is taken here.
+                TapAt(e.GetPosition(this));
+            }
+
+            last = pressedAt = null;
+            e.Pointer.Capture(null);
         }
 
         /// <summary>The bull a tap at this point lights: a hole's, a line's, or the bull's own; null on nothing.</summary>
@@ -1263,14 +1363,59 @@ public sealed class ResultView : UserControl, IOpenTarget
         private Point ToScreen(PointD image)
         {
             var shown = ViewRotation.ToDisplay(image, turns, PixelWidth, PixelHeight);
-            return new Point(shown.X * Scale, shown.Y * Scale);
+            double k = Scale * zoom;
+            return new Point((shown.X * k) + offset.X, (shown.Y * k) + offset.Y);
+        }
+
+        /// <summary>Screen units an inch of the target takes at <paramref name="at"/>, from the marking's scale, or null where it is not known.</summary>
+        private double? ScreenPerInch(MarkingState state, PointD at)
+        {
+            if (state.Scale is not { } scale)
+            {
+                return null;
+            }
+
+            var a = scale.ToTarget(at);
+            var dx = scale.ToTarget(new PointD(at.X + 1, at.Y));
+            var dy = scale.ToTarget(new PointD(at.X, at.Y + 1));
+            double inchesPerPixel = (Math.Sqrt(Math.Pow(dx.X - a.X, 2) + Math.Pow(dx.Y - a.Y, 2)) + Math.Sqrt(Math.Pow(dy.X - a.X, 2) + Math.Pow(dy.Y - a.Y, 2))) / 2;
+            return inchesPerPixel > 1e-12 ? Scale * zoom / inchesPerPixel : null;
+        }
+
+        /// <summary>
+        /// Entry 506 section 3: the holes' tags, placed by look 1A's rule as on Fix holes, and whether they fit: only once the picture is enlarged,
+        /// and only where no tag touches another or a hole. Null where they are not shown, which is always at the fitted size, because the shots
+        /// are listed right under the picture.
+        /// </summary>
+        private (TagLayout Layout, IReadOnlyList<TagHole> Holes, Dictionary<int, string> Words)? Tags(IReadOnlyList<MarkedShot> all, IReadOnlyList<BullAim> aims, IReadOnlySet<int> marked)
+        {
+            if (zoom <= 1.02 || Marking?.Invoke() is not { } state)
+            {
+                return null;
+            }
+
+            var words = ShotLabels.For(state).Where(l => l.Text is not null).ToDictionary(l => l.ShotId, l => l.Text!);
+            var tagBulls = aims.Select(bull =>
+            {
+                var at = ToScreen(bull.Image);
+                double ring = BullRings.TryGetValue(bull.Index, out double inches) && ScreenPerInch(state, bull.Image) is { } perInch ? inches * perInch : 0;
+                return new TagBull(bull.Index, new PointD(at.X, at.Y), ring, 0, 0);
+            }).ToList();
+            var tagHoles = all.Select(shot =>
+            {
+                var at = ToScreen(shot.Image);
+                var (w, h) = words.TryGetValue(shot.Id, out string? text) && text is not null ? GroupLab.App.Theme.Marks.TagSize(text) : (0, 0);
+                return new TagHole(shot.Id, new PointD(at.X, at.Y), marked.Contains(shot.Id) ? 15 : 9, shot.Bull, w, h);
+            }).ToList();
+            var layout = MarkTags.Place(tagBulls, tagHoles);
+            return MarkTags.Overlaps(layout, tagHoles).Count == 0 ? (layout, tagHoles, words) : null;
         }
 
         public override void Render(DrawingContext context)
         {
             var (a, b, c, d, e, f) = ViewRotation.Affine(turns, PixelWidth, PixelHeight);
-            double k = Scale;
-            using (context.PushTransform(new Matrix(a * k, d * k, b * k, e * k, c * k, f * k)))
+            double k = Scale * zoom;
+            using (context.PushTransform(new Matrix(a * k, d * k, b * k, e * k, (c * k) + offset.X, (f * k) + offset.Y)))
             {
                 context.DrawImage(image, new Rect(image.Size), new Rect(0, 0, PixelWidth, PixelHeight));
             }
@@ -1285,9 +1430,12 @@ public sealed class ResultView : UserControl, IOpenTarget
             var all = shots();
             // Entry 376 section A3: the lines first, under the rings, thin so the holes stay readable. Entry 407 section 1: the unsure ones
             // dashed in orange with a "?", the lit bull's blue, and all of them hidden but the lit bull's when "Lines to bulls" is off.
+            var tags = Tags(all, aims, marked);
+            TagsShown = tags is not null;
+            LastTags = tags is { } shownTags ? (shownTags.Layout, shownTags.Holes) : null;
             if (Marking?.Invoke() is { } marking)
             {
-                BullLineInk.Draw(context, marking, ToScreen, Lit, picking: false, LinesToBulls);
+                BullLineInk.Draw(context, marking, ToScreen, Lit, picking: false, LinesToBulls, questions: tags is null);
             }
 
             if (Lit is { } shown && aims.FirstOrDefault(x => x.Index == shown) is { } litAim)
@@ -1304,6 +1452,24 @@ public sealed class ResultView : UserControl, IOpenTarget
                 {
                     context.DrawEllipse(null, check, ToScreen(shot.Image), 15, 15);
                 }
+            }
+
+            if (tags is { } placed && Marking?.Invoke() is { } state)
+            {
+                // Entry 506 section 3: zoomed in far enough, each hole's dark tag beside it as on Fix holes, and the "?" kept clear of them.
+                foreach (var tag in placed.Layout.Holes)
+                {
+                    var shot = all.First(x => x.Id == tag.ShotId);
+                    var ink = shot.Bull is { } own && own == Lit ? lit : colour?.Invoke(shot) ?? Brushes.OrangeRed;
+                    if (tag.LeaderFrom is { } from && tag.LeaderTo is { } to)
+                    {
+                        GroupLab.App.Theme.Marks.Leader(context, ink, from, to);
+                    }
+
+                    GroupLab.App.Theme.Marks.Tag(context, placed.Words[tag.ShotId], ink, tag.Box, ActualThemeVariant, selected: false);
+                }
+
+                BullLineInk.Questions(context, state, Lit, false, LinesToBulls, placed.Layout, placed.Holes);
             }
         }
     }

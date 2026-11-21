@@ -2267,41 +2267,43 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 138 0 R >> >> /Contents 101 0 R >>
 endobj
 101 0 obj
-<< /Length 4329 >>
+<< /Length 4639 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
 BT /F1 71 Tf 1 0 0 -1 381 452 Tm (every hole and a line from each hole to its bull; Lines to bulls turns them off. Unsure lines are dashed in orange) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (with a ?. In Fix holes, Next unsure hole goes to the next one, tapping a bull chooses it, and tapping holes gives) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (them to it or takes them away; Done with bull C3 ends it. Bull by bull in the figures does the same from a list,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 716 Tm (which is the way to check which bull each shot was given to. Fix holes opens it under a crosshair fixed in the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 804 Tm (middle: pinch to zoom and drag the picture until the crosshair is on a hole, then Add a hole here, or Remove this) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 892 Tm (hole, with Undo for each. After adding or moving a hole, GroupLab asks which bull it was fired at, its own choice) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 980 Tm (first. Each hole's circle is drawn at your bullet's diameter, so a correct circle sits on the edge of its hole; with no) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1068 Tm (caliber set, a line says that setting it makes the circles true size. Move this hole leaves the circle where it was:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1156 Tm (drag the circle itself with your finger, ringed in magenta with four short ticks pointing at its center, while a dashed) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1244 Tm (ghost stays where it started and a line says how far it has moved, and the picture scrolls when the circle nears an) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1332 Tm (edge; Put the hole here drops it and Cancel puts it back. On the computer, every hole's circle is the caliber's size) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1420 Tm (too once one is set, with the size GroupLab measured dashed beside it, and a hole dragged with the select tool) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1508 Tm (leaves the same dashed ghost. Done takes the changes back to the result, which measures again; leaving any) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1596 Tm (other way asks whether to keep them. From the result: How you shot this sheet \(the same two parts as the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1684 Tm (computer's Groups section, loads included\), Shots Needed to Zero, Ballistics with the group carried in, sharing) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1772 Tm (the session, and sharing the shots as a CSV file. Import shots from a CSV file, under Sessions, shows the group) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1860 Tm (as it will be read and a card of GroupLab's guesses at what each column is, each line tapped to change, then) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1948 Tm (Import and the result. Several files with the same columns can be chosen at once and are read as one group.) Tj ET
-q 3555 0 0 -1346 381 3374 cm /Im0 Do Q
-BT /F1 56 Tf 1 0 0 -1 381 3430 Tm (The result held sideways, with Fix holes and the start of the sheet on the left, the unit choice and the figures on the right) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (with a ?. Pinch the picture to zoom in and drag it to move around; once it is large enough for every hole's tag to fit) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (without touching another tag or a hole, the tags appear, as on Fix holes, and they go again when you pinch back) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 716 Tm (out. In Fix holes, Next unsure hole goes to the next one, tapping a bull chooses it, and tapping holes gives them) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 804 Tm (to it or takes them away; Done with bull C3 ends it. Bull by bull in the figures does the same from a list, which is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 892 Tm (the way to check which bull each shot was given to. Fix holes opens it under a crosshair fixed in the middle:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 980 Tm (pinch to zoom and drag the picture until the crosshair is on a hole, then Add a hole here, or Remove this hole,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1068 Tm (with Undo for each. After adding or moving a hole, GroupLab asks which bull it was fired at, its own choice first.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1156 Tm (Each hole's circle is drawn at your bullet's diameter, so a correct circle sits on the edge of its hole; with no caliber) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1244 Tm (set, a line says that setting it makes the circles true size. Move this hole leaves the circle where it was: drag the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1332 Tm (circle itself with your finger, ringed in magenta with four short ticks pointing at its center, while a dashed ghost) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1420 Tm (stays where it started and a line says how far it has moved, and the picture scrolls when the circle nears an edge;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1508 Tm (Put the hole here drops it and Cancel puts it back. On the computer, every hole's circle is the caliber's size too) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1596 Tm (once one is set, with the size GroupLab measured dashed beside it, and a hole dragged with the select tool) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1684 Tm (leaves the same dashed ghost. Done takes the changes back to the result, which measures again; leaving any) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1772 Tm (other way asks whether to keep them. From the result: How you shot this sheet \(the same two parts as the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1860 Tm (computer's Groups section, loads included\), Shots Needed to Zero, Ballistics with the group carried in, sharing) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1948 Tm (the session, and sharing the shots as a CSV file. Import shots from a CSV file, under Sessions, shows the group) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2036 Tm (as it will be read and a card of GroupLab's guesses at what each column is, each line tapped to change, then) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2124 Tm (Import and the result. Several files with the same columns can be chosen at once and are read as one group.) Tj ET
+q 3555 0 0 -1346 381 3550 cm /Im0 Do Q
+BT /F1 56 Tf 1 0 0 -1 381 3606 Tm (The result held sideways, with Fix holes and the start of the sheet on the left, the unit choice and the figures on the right) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 3623 Tm (Several targets open at once) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 3799 Tm (Several targets open at once) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 3749 Tm (Every target you read on Capture or open from Sessions stays open until you close it, each as you left it, marks) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3837 Tm (not yet saved included. The target's name at the top of its result, or above the step while you mark it by hand,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3925 Tm (opens Open targets: a row for each, with a small picture of it, whether it is at Analysis or Marking, not saved, and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4013 Tm (a close button. Tap a row to switch to it; Open another target goes to the start of Capture with the others kept. A) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4101 Tm (result is saved in Sessions as you go, so closing it loses nothing; marking by hand is saved only when it is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4189 Tm (finished, so closing a target with marks not saved asks first. Opening a session that is already open switches to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4277 Tm (it. Up to eight are kept open; past that the oldest that would lose nothing is closed, and it stays in Sessions.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3925 Tm (Every target you read on Capture or open from Sessions stays open until you close it, each as you left it, marks) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4013 Tm (not yet saved included. The target's name at the top of its result, or above the step while you mark it by hand,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4101 Tm (opens Open targets: a row for each, with a small picture of it, whether it is at Analysis or Marking, not saved, and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4189 Tm (a close button. Tap a row to switch to it; Open another target goes to the start of Capture with the others kept. A) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4277 Tm (result is saved in Sessions as you go, so closing it loses nothing; marking by hand is saved only when it is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4365 Tm (finished, so closing a target with marks not saved asks first. Opening a session that is already open switches to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4453 Tm (it. Up to eight are kept open; past that the oldest that would lose nothing is closed, and it stays in Sessions.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 49 of 51) Tj ET
 Q
 endstream
@@ -28932,7 +28934,7 @@ endobj
 << /Title (The result) /Parent 213 0 R /Prev 220 0 R /Next 222 0 R /Dest [98 0 R /XYZ 0 108.566929 null] >>
 endobj
 222 0 obj
-<< /Title (Several targets open at once) /Parent 213 0 R /Prev 221 0 R /Next 223 0 R /Dest [100 0 R /XYZ 0 289.984252 null] >>
+<< /Title (Several targets open at once) /Parent 213 0 R /Prev 221 0 R /Next 223 0 R /Dest [100 0 R /XYZ 0 265.03937 null] >>
 endobj
 223 0 obj
 << /Title (Sessions, Ballistics and Targets) /Parent 213 0 R /Prev 222 0 R /Next 224 0 R /Dest [102 0 R /XYZ 0 314.220472 null] >>
@@ -29044,131 +29046,131 @@ xref
 0000189141 00000 n 
 0000195705 00000 n 
 0000195863 00000 n 
-0000200246 00000 n 
-0000200404 00000 n 
-0000202888 00000 n 
-0000203046 00000 n 
-0000206492 00000 n 
-0000308940 00000 n 
-0000411409 00000 n 
-0000532354 00000 n 
-0000799169 00000 n 
-0001069158 00000 n 
-0001212894 00000 n 
-0001420470 00000 n 
-0001572275 00000 n 
-0001778132 00000 n 
-0001989192 00000 n 
-0002189042 00000 n 
-0002313954 00000 n 
-0002535199 00000 n 
-0002802381 00000 n 
-0003046902 00000 n 
-0003318569 00000 n 
-0003410189 00000 n 
-0003551887 00000 n 
-0003764525 00000 n 
-0003966325 00000 n 
-0004223637 00000 n 
-0004459141 00000 n 
-0004733668 00000 n 
-0004849681 00000 n 
-0004985068 00000 n 
-0005124510 00000 n 
-0005235261 00000 n 
-0005335858 00000 n 
-0005432889 00000 n 
-0005691028 00000 n 
-0005774888 00000 n 
-0005836820 00000 n 
-0005912554 00000 n 
-0005982472 00000 n 
-0006035647 00000 n 
-0006035725 00000 n 
-0006035873 00000 n 
-0006035997 00000 n 
-0006036139 00000 n 
-0006036268 00000 n 
-0006036385 00000 n 
-0006036556 00000 n 
-0006036698 00000 n 
-0006036837 00000 n 
-0006036997 00000 n 
-0006037157 00000 n 
-0006037316 00000 n 
-0006037450 00000 n 
-0006037585 00000 n 
-0006037720 00000 n 
-0006037848 00000 n 
-0006037988 00000 n 
-0006038130 00000 n 
-0006038258 00000 n 
-0006038404 00000 n 
-0006038533 00000 n 
-0006038650 00000 n 
-0006038776 00000 n 
-0006038953 00000 n 
-0006039106 00000 n 
-0006039266 00000 n 
-0006039396 00000 n 
-0006039588 00000 n 
-0006039716 00000 n 
-0006039860 00000 n 
-0006039991 00000 n 
-0006040130 00000 n 
-0006040274 00000 n 
-0006040449 00000 n 
-0006040578 00000 n 
-0006040710 00000 n 
-0006040848 00000 n 
-0006040988 00000 n 
-0006041127 00000 n 
-0006041267 00000 n 
-0006041401 00000 n 
-0006041529 00000 n 
-0006041680 00000 n 
-0006041835 00000 n 
-0006041966 00000 n 
-0006042087 00000 n 
-0006042267 00000 n 
-0006042369 00000 n 
-0006042541 00000 n 
-0006042691 00000 n 
-0006042835 00000 n 
-0006043051 00000 n 
-0006043172 00000 n 
-0006043312 00000 n 
-0006043441 00000 n 
-0006043575 00000 n 
-0006043705 00000 n 
-0006043823 00000 n 
-0006044007 00000 n 
-0006044128 00000 n 
-0006044318 00000 n 
-0006044457 00000 n 
-0006044585 00000 n 
-0006044766 00000 n 
-0006044883 00000 n 
-0006045049 00000 n 
-0006045168 00000 n 
-0006045334 00000 n 
-0006045463 00000 n 
-0006045598 00000 n 
-0006045754 00000 n 
-0006045877 00000 n 
-0006046034 00000 n 
-0006046158 00000 n 
-0006046280 00000 n 
-0006046424 00000 n 
-0006046570 00000 n 
-0006046703 00000 n 
-0006046868 00000 n 
-0006046999 00000 n 
-0006047124 00000 n 
-0006047268 00000 n 
-0006047416 00000 n 
+0000200556 00000 n 
+0000200714 00000 n 
+0000203198 00000 n 
+0000203356 00000 n 
+0000206802 00000 n 
+0000309250 00000 n 
+0000411719 00000 n 
+0000532664 00000 n 
+0000799479 00000 n 
+0001069468 00000 n 
+0001213204 00000 n 
+0001420780 00000 n 
+0001572585 00000 n 
+0001778442 00000 n 
+0001989502 00000 n 
+0002189352 00000 n 
+0002314264 00000 n 
+0002535509 00000 n 
+0002802691 00000 n 
+0003047212 00000 n 
+0003318879 00000 n 
+0003410499 00000 n 
+0003552197 00000 n 
+0003764835 00000 n 
+0003966635 00000 n 
+0004223947 00000 n 
+0004459451 00000 n 
+0004733978 00000 n 
+0004849991 00000 n 
+0004985378 00000 n 
+0005124820 00000 n 
+0005235571 00000 n 
+0005336168 00000 n 
+0005433199 00000 n 
+0005691338 00000 n 
+0005775198 00000 n 
+0005837130 00000 n 
+0005912864 00000 n 
+0005982782 00000 n 
+0006035957 00000 n 
+0006036035 00000 n 
+0006036183 00000 n 
+0006036307 00000 n 
+0006036449 00000 n 
+0006036578 00000 n 
+0006036695 00000 n 
+0006036866 00000 n 
+0006037008 00000 n 
+0006037147 00000 n 
+0006037307 00000 n 
+0006037467 00000 n 
+0006037626 00000 n 
+0006037760 00000 n 
+0006037895 00000 n 
+0006038030 00000 n 
+0006038158 00000 n 
+0006038298 00000 n 
+0006038440 00000 n 
+0006038568 00000 n 
+0006038714 00000 n 
+0006038843 00000 n 
+0006038960 00000 n 
+0006039086 00000 n 
+0006039263 00000 n 
+0006039416 00000 n 
+0006039576 00000 n 
+0006039706 00000 n 
+0006039898 00000 n 
+0006040026 00000 n 
+0006040170 00000 n 
+0006040301 00000 n 
+0006040440 00000 n 
+0006040584 00000 n 
+0006040759 00000 n 
+0006040888 00000 n 
+0006041020 00000 n 
+0006041158 00000 n 
+0006041298 00000 n 
+0006041437 00000 n 
+0006041577 00000 n 
+0006041711 00000 n 
+0006041839 00000 n 
+0006041990 00000 n 
+0006042145 00000 n 
+0006042276 00000 n 
+0006042397 00000 n 
+0006042577 00000 n 
+0006042679 00000 n 
+0006042851 00000 n 
+0006043001 00000 n 
+0006043145 00000 n 
+0006043361 00000 n 
+0006043482 00000 n 
+0006043622 00000 n 
+0006043751 00000 n 
+0006043885 00000 n 
+0006044015 00000 n 
+0006044133 00000 n 
+0006044317 00000 n 
+0006044438 00000 n 
+0006044628 00000 n 
+0006044767 00000 n 
+0006044895 00000 n 
+0006045076 00000 n 
+0006045193 00000 n 
+0006045359 00000 n 
+0006045478 00000 n 
+0006045644 00000 n 
+0006045773 00000 n 
+0006045908 00000 n 
+0006046064 00000 n 
+0006046187 00000 n 
+0006046344 00000 n 
+0006046468 00000 n 
+0006046590 00000 n 
+0006046734 00000 n 
+0006046880 00000 n 
+0006047013 00000 n 
+0006047178 00000 n 
+0006047309 00000 n 
+0006047434 00000 n 
+0006047577 00000 n 
+0006047725 00000 n 
 trailer
 << /Size 225 /Root 1 0 R >>
 startxref
-6047549
+6047858
 %%EOF

@@ -946,6 +946,43 @@ All seven fixed in one change, by docs-sonnet and checked by the main model: the
 
 On `ios/floor-18-trial`, never merged, the app, the share extension and OpenCV were built for iOS 18.0 with the iOS 26 SDK and `ios app` ran once (run 44559880612). The platform analyzer listed 0 warnings on the simulator build, and the device build passed with warnings as errors, so no call GroupLab makes needs more than iOS 18. On an iPhone 16 Pro Max and an iPad mini (A17 Pro) on iOS 18.6 all 88 self-test checks passed, none failed, the sample scan gave 25 shots and mean radius 0.232 in as on 26, and the dark theme, iPad, landscape and desktop comparison steps passed. Not run: Real taps (not in that workflow) and the camera (none on the simulator). The runner had no iOS 18 runtime, so it downloaded iOS 18.6, 8.86 GB, about 18 minutes with the boot; a nightly leg would be about 55 minutes of a Mac runner. Apple takes uploads built with the iOS 26 SDK down to iOS 13, and `testflight.py` reads no floor. The devices helped are the iPhone XS, XS Max, XR and the iPad 7th generation. Recommendation (a), keep iOS 26, with the way out and the middle way written down in `docs/IOS-PLAN.md` in case Alan prefers (c).
 
+## Entry 506: the 2 MOA center dot, printers in sync one by one (question 117 (a)), and tags on the phone's zoomed result (2026-11-21)
+
+**1.** Error reports 52 (diagnostics, package 2026-11-20_5e12187f, pulled read only with `Get-TargetSubmissions.ps1 -CrashReports
+-KeepOnServer`) and 53 (the Discord post naming it) were one report: a photograph of `GL-CF9-LTR` read on nightlies 233 and 235 as 16
+holes, nine real .30 caliber holes and the printed center dot (0.197 in) of seven bulls, found as 0.14 in marks 0.004 to 0.013 in from
+the bulls' centers. With no caliber named the hole size came from the smaller marks, so each real hole was flagged as about 3.3 holes.
+The dots read darker in the photograph than the rest of the print the residual is scaled by. `RenderDifferenceHoleDetector` now refuses
+a dark mark lying wholly inside a printed solid disc no wider than the largest hole (`PrintedDots`, `InsideAPrintedDot` with 0.02 in of
+slack, `DarkerThanThePrint`); a hole beside or across a dot, or one showing light through it, is still found. `PrintedDotTests` darkens
+the dots of a synthetic 2 MOA sheet and failed before the change. The photograph was not in the package, so the mechanism is inferred
+from the log and the screenshots; the Discord reply asks for the photograph through grouplab.org/targets. Commit ac96c06b; issues
+closed.
+
+**2.** Question 117 (a). `SyncEngine` writes each printer's check as its own record (`PrinterKind`, keyed by name) beside the whole
+`printers` setting, which it still writes, marked `perPrinter`, for GroupLab 1.0 (build 226) and older nightlies. `MergePrinterList`:
+a list from a newer build changes nothing (its printers arrive one by one); an older build's list is merged by name and each printer's
+own date, which is taken as the later of its `measuredOn` and its `changedOn` (the entry says "changedOn"; in the code `changedOn` is
+only set when a printer is marked calibrated or serviced, so on its own it would be empty for most printers). A printer not here is
+added unless it was deleted here on or after its date; a newer check replaces this one, which is kept aside; an older one is left; two
+of the same date wait for the person. Nothing missing from an older build's list is removed, and where the merge leaves a different
+list, it is sent back as the newer one, so 1.0 takes every printer kept. Two devices changing any record to the same content are no
+longer asked about it. The question is `PrinterChoices` in concept A's pattern, on the computer (`ShowPrinterConflict`) and the phone
+(`ShowPrinterChoice`), counted in the Sessions banner and offered under the printer in Printers and paper. `PrinterSyncTests` plays 1.0
+by its own rules for the list and covers: add and delete between two new builds, Keep both and Use the other's, 1.0 and a nightly
+ending with every printer, 1.0 never deleting on the nightly, a nightly's delete not undone by 1.0's stale list, 1.0's newer and older
+checks, 1.0's same-day check waiting, and two nightlies merging one 1.0 list without a question. Commit 46d07536.
+
+**3.** The phone's result picture (`ResultView.SheetPicture`) now pinches in and out about its middle (1 to 8 times the fitted size), is
+dragged while enlarged without the page scrolling under it, and a tap on it still lights a bull. At the fitted size nothing changes. Once
+enlarged, the holes' tags are placed by look 1A's rule (`MarkTags.Place`, the bulls' printed rings where known) and drawn only where
+`MarkTags.Overlaps` finds nothing, with the "?" kept clear of them as on Fix holes; pinched back out they go. **What differs from what
+the answer pictured:** look 1A moves a tag outward until it is clear, so on every sheet tried, a crowded one of sixteen holes on two
+touching bulls included, the tags fit as soon as the picture is enlarged at all; in practice they appear on the first pinch in. If Alan
+wants a larger threshold it is one number. `Entry506PhoneTagsTests`. The phone's code is the same on Android and the iPhone.
+
+**4.** STATE.md rewritten.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

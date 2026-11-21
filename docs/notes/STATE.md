@@ -9,26 +9,26 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-20, after entry 505; the inbox is empty.
+**Last rewritten:** 2026-11-21, after entry 506; the inbox is empty.
 
 ---
 
 ## In flight
 
+- **Entry 506 (2026-11-21)**: error reports 52 and 53 (one report, nightly 235): the 2 MOA sheet's printed center dot read darker than
+  the print and was taken for a hole; a dark mark wholly inside a printed dot is now refused (`PrintedDotTests`); issues closed; the
+  Discord reply is drafted in for-alan.md. **Question 117 (a) built:** each printer syncs as its own record beside the whole list, which
+  1.0 and older nightlies still get; an older list is merged by name and date and never deletes; two checks of one printer open side
+  by side (`PrinterChoices`, concept A's pattern) on both platforms. **The phone's result picture pinches in and out**, and shows the
+  tags once zoomed in (they fit on the first pinch in, because look 1A moves them clear). **Left that needs nobody:** the live
+  NOTES-FROM-PLANNING.md holds about 50 entries again (split-logs.py, a chores-haiku job); a phone picture of the zoomed result with
+  its tags for the Features page and the tour, from the weekly screenshot walk; a test from report 52's own photograph if the person
+  sends it.
 - **Entry 505 (2026-11-20)**: iOS 18.0 is the install floor, 26 the supported one; below 26 the phone shows Alan's warning first
-  (`UnsupportedIos`, remembered with the version; Settings, About says so). The App Store description gains the sentence with the next
-  version Alan releases. Question 116 closed (a). **Section 3, the week's queue, in flight:** 3.1 needed no build (the phone deletes
-  no saved sheet). **3.2, approved and not built, smallest first:** (a) done: look 1A's "?" kept clear of the tags (tags on the
-  phone's result picture are a DESIGN NEEDED line); (b) is question 117 (how printers travel in sync, for App Store 1.0's sake): both checks of a same-named printer kept, with a question
-  which to use (entry 493 section 2: a per-printer sync record with a deleted mark; the question's look goes to for-alan as DESIGN
-  NEEDED); (c) done: a light hole inside dark print found by its light middle. 3.3: no article needs nobody (the draft waits on
-  request 86). 3.4: measured, nothing changed. 3.5: audit clean; Get-TargetSubmissions.ps1 kept (crash log pulls).
-  **The queue is done** apart from question 117 and the DESIGN NEEDED line.
-- **Entry 504 (2026-11-20)**: the pooled set's choice is concept A on both platforms (`PoolChoices`); Mac testers' link stays in
-  App Store Connect (question 116 (a)); request 111.
-- **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by mac-store.yml after each nightly; signed ad hoc the sandbox stops it at LaunchServices, so its proof needs TestFlight on a Mac; request 110 (first numbered 107) answered 2026-11-18: nightly 233's copy is signed, on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is request 111; never submitted without Alan's word.
-- **Entry 499 (2026-11-18)**: Snap to holes (toolbar and Shooting defaults) and Alt for one click; the snap keeps a click on its own
-  touching ring and stays put when it finds no hole's edge. The missed backup night is caught at the start of every Code run now.
+  (`UnsupportedIos`). The App Store description gains the sentence with the next version Alan releases. Question 116 closed (a).
+- **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by
+  mac-store.yml after each nightly; nightly 233's copy is on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is
+  request 111; never submitted without Alan's word.
 
 ## The next three
 
@@ -70,13 +70,13 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, in `docs/QUESTIONS-FOR-PLANNING.md` (116 closed (a) by entry 505); **117** how printers travel in sync, (a) recommended:
+Two, in `docs/QUESTIONS-FOR-PLANNING.md` (117 closed (a) by entry 506):
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.236 (2026-11-20), with entry 505 (the iOS 18 floor, the "?" and the light-hole snap). GitHub's Mac runners are sometimes short: rerun a job
-  "not acquired" with --failed.
+- **Last nightly:** 1.0.0-nightly.236 (2026-11-20). Entry 506's three commits are on main and reach the next nightly (237). GitHub's
+  Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
 ## The inbox
@@ -90,21 +90,19 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **Printers sync one by one** (entry 506): kind `printer` beside the whole `printers` setting (marked `perPrinter`), which only 1.0 and
+  older nightlies read; their list is merged by name and date (`MergePrinterList`) and never deletes a printer here. A printer's date is
+  the later of `measuredOn` and `changedOn`. Two devices changing any record to the same content are not asked about it.
+- **A dark mark wholly inside a printed dot of a hole's size is the dot** (report 52, `RenderDifferenceHoleDetector.PrintedDot`).
 - **GroupLab installs on iOS 18 to 25 without support** (entry 505): a new screen comes before the first run's questions there, and a
   scripted run accepts it (`Scenario.AnswerFirstRun`). Reports from below 26 are headed "unsupported iOS" in error-reports.md.
-- **Snap to holes can be off** (entry 499): a hole placed by hand then goes exactly where it is clicked; Alt does it for one click.
-  **At the start of every run, `python scripts/automation-report.py`** (CLAUDE.md, backups rule 6) catches a night that never started.
+- **At the start of every run, `python scripts/automation-report.py`** (CLAUDE.md, backups rule 6) catches a night that never started.
 - **A pooled set changed on two devices waits like a session** (entries 498, 504): the banner counts it, its row is tagged, and it opens
   concept A, each sheet tagged; a sheet not here yet is never counted. A pool reaching a device before its sheets asks nothing.
 - **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words, or `Screens.LeavesPage` for a Done,
   Cancel, Skip or "Another target" that is the page's way out (entry 472); `Entry472BackTests` fails on a new page Back was never pressed on.
 - **A Features sentence changed since the newest nightly fails the site build** (entry 421) unless one of its note phrases is still to
   come, or it carries `"reworded"` naming that nightly; a widened feature reads "Since nightly.N, changed in nightly.M".
-- **Find holes looks for rings on paper first** (report 50): nothing inside a ring's outline is proposed again; not on dark targets.
-- **With no design known, the snap looks for a hole's outline first** (error report 50, `Snapping.Outline`), then weighs the dark as
-  before if it finds none; a sheet with its design known snaps as it did. Backups over 1 GB are in parts (`backup.py --join`).
-- **A hole can be a ring** (entry 417): on a flatbed with a white lid a hole is as light as the paper; detection fits a circle through its
-  rim (`FitCircle`) and the snap does the same. **Restyling adds the new styles before removing the old** (a macOS crash in between).
 - **The database is schema version 7** (entry 495 added `pools`, listed by negated id): each upgrade's first open copies the database first.
 - **OpenCV's QR detectors are never run on several threads** (entry 414): reading a sheet's codes at once crashed Linux in native code
   in 3 of 12 gate runs and hung macOS before. A job dying with exit 134 or 139 is tabulated against what was in effect, not rerun.

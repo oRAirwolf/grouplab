@@ -1032,7 +1032,7 @@ picture itself: mostly what GroupLab corrected, sometimes what would help next t
 ### The result
 
 The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell, and tap a
-number to switch its units. The picture of the sheet stands upright across the screen, with a ring on every hole and a line from each hole to its bull; **Lines to bulls** turns them off. Unsure lines are dashed in orange with a **?**. In Fix holes, **Next unsure hole** goes to the next one, tapping a bull chooses it, and tapping holes gives them to it or takes them away; **Done with bull C3** ends it. **Bull by bull** in the
+number to switch its units. The picture of the sheet stands upright across the screen, with a ring on every hole and a line from each hole to its bull; **Lines to bulls** turns them off. Unsure lines are dashed in orange with a **?**. Pinch the picture to zoom in and drag it to move around; once it is large enough for every hole's tag to fit without touching another tag or a hole, the tags appear, as on Fix holes, and they go again when you pinch back out. In Fix holes, **Next unsure hole** goes to the next one, tapping a bull chooses it, and tapping holes gives them to it or takes them away; **Done with bull C3** ends it. **Bull by bull** in the
 figures does the same from a list, which is the way to check which bull each shot was given to. **Fix holes** opens it under a crosshair fixed in the middle: pinch to zoom and drag the picture until the crosshair is on a hole,
 then **Add a hole here**, or **Remove this hole**, with **Undo** for each. After adding or moving a hole, GroupLab asks which bull it
 was fired at, its own choice first. Each hole's circle is drawn at your bullet's diameter, so a

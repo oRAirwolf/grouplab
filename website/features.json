@@ -438,7 +438,7 @@
       ],
       "since": "0.2.0-nightly.28",
       "note": ["You can now click a hole to edit it", "each bull's number now sits outside its ring", "On a crinkled sheet, GroupLab no longer marks a hole", "On a flatbed scan, GroupLab now finds the holes that show the scanner", "holes found on a target with no bulls",
-        "Finding the holes in a photograph is about a sixth quicker", "On the 2 MOA sheet, a printed center dot"],
+        "Finding the holes in a photograph is about a sixth quicker", "On the 2 MOA sheet, a printed center dot", "On the phone, the result's picture now pinches in and out"],
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue",
       "article": "one-hole-or-two",
