@@ -222,7 +222,7 @@ public sealed class Entry507SplashTests : IDisposable
         window.Close();
     }
 
-    /// <summary>The phones keep their system start screens, on GroupLab's dark ground whatever the phone's own light or dark setting.</summary>
+    /// <summary>Android keeps its system start screen, on GroupLab's dark ground whatever the phone's own light or dark setting.</summary>
     [Fact]
     public void ThePhonesStartScreensStandOnTheDarkGround()
     {
@@ -230,19 +230,6 @@ public sealed class Entry507SplashTests : IDisposable
         string android = File.ReadAllText(Path.Combine(root, "android", "GroupLab.Android", "Resources", "values-v31", "styles.xml"));
         Assert.Contains("<item name=\"android:windowSplashScreenBackground\">@color/ic_launcher_background</item>", android, StringComparison.Ordinal);
         Assert.Contains("#131417", File.ReadAllText(Path.Combine(root, "android", "GroupLab.Android", "Resources", "values", "ic_launcher_background.xml")), StringComparison.Ordinal);
-        foreach (string plist in new[] { "Info.plist", "Info.dev.plist" })
-        {
-            string text = File.ReadAllText(Path.Combine(root, "ios", "GroupLab.iOS", plist));
-            int screen = text.IndexOf("<key>UILaunchScreen</key>", StringComparison.Ordinal);
-            Assert.True(screen >= 0, plist);
-            string launch = text[screen..text.IndexOf("</dict>", screen, StringComparison.Ordinal)];
-            Assert.Contains("<key>UIColorName</key>", launch, StringComparison.Ordinal);
-            Assert.Contains("<string>LaunchBackground</string>", launch, StringComparison.Ordinal);
-        }
-
-        string color = File.ReadAllText(Path.Combine(root, "ios", "GroupLab.iOS", "Assets.xcassets", "LaunchBackground.colorset", "Contents.json"));
-        Assert.Contains("\"red\" : \"0x13\"", color, StringComparison.Ordinal);
-        Assert.Contains("\"green\" : \"0x14\"", color, StringComparison.Ordinal);
-        Assert.Contains("\"blue\" : \"0x17\"", color, StringComparison.Ordinal);
+        // The iPhone's launch screen became an outline of the home screen in entry 508; Entry508LaunchScreenTests holds it.
     }
 }

@@ -148,4 +148,13 @@
     <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
   </ItemGroup>
 
+  <!-- Entry 508 section 1: the launch screen, an empty outline of the home screen (Info.plist's UILaunchStoryboardName), named here
+       rather than left to the SDK's default items, so a change to those can never drop it without a build error. -->
+  <PropertyGroup>
+    <EnableDefaultInterfaceDefinitionItems>false</EnableDefaultInterfaceDefinitionItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="LaunchScreen.storyboard" />
+  </ItemGroup>
+
 </Project>

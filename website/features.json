@@ -1296,16 +1296,16 @@
       "key": "splash",
       "group": "Updates and platforms",
       "name": "A start window that shows what is loading",
-      "sentence": "On the computer, a small window shows while GroupLab starts: the version, the step it is on, and a five shot group that fills in as each step finishes, the last drawing the group's spread. It closes as soon as the main window is ready and is never waited for; with your computer's animations turned off it shows the finished picture and only the steps change. The phones keep their own start screens, now on GroupLab's dark ground.",
+      "sentence": "On the computer, a small window shows while GroupLab starts: the version, the step it is on, and a five shot group that fills in as each step finishes, the last drawing the group's spread. It closes as soon as the main window is ready and is never waited for; with your computer's animations turned off it shows the finished picture and only the steps change. On Android the start screen is GroupLab's icon on its dark ground; on the iPhone and iPad it is an empty outline of the home screen in the phone's light or dark appearance, so GroupLab seems to open straight onto it.",
       "shot": null,
       "platforms": [
         "Windows",
         "macOS",
         "Linux"
       ],
-      "mobile": {"words": "The phones keep the system's own start screen with GroupLab's icon, now on GroupLab's dark ground, rather than a start window of GroupLab's own."},
+      "mobile": {"words": "The phones keep the system's own start screen rather than a start window of GroupLab's own: on Android GroupLab's icon on its dark ground, on the iPhone and iPad an empty outline of the home screen with only the name in it, as Apple asks."},
       "since": "next",
-      "note": "While GroupLab starts on the computer",
+      "note": ["While GroupLab starts on the computer", "the start screen is now an empty outline"],
       "noPicture": "it shows for under a second while GroupLab starts, and the screenshot walk opens GroupLab already started"
     },
     {
