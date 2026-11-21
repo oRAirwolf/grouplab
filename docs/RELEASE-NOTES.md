@@ -12,6 +12,22 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.237
+
+**2026-11-21**, commit `a9fc669`. Nightly.
+
+**What you will notice**
+
+- On the phone, the result's picture now pinches in and out, and once you zoom in each hole's number appears beside it, placed clear of the other numbers and holes.
+- A printer checked on two of your synced devices now shows both checks side by side so you choose which numbers to use, or keep both under two names, and a printer you delete on one device stays deleted on the others.
+- On the 2 MOA sheet, a printed center dot that photographs darker than the rest of the print is no longer counted as a shot, so the real holes beside it are no longer flagged as several shots each (found from an error report sent from GroupLab and a Discord post).
+
+From your reports and targets in this build: 1 fix from 2 error reports.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.237)
+
+---
+
 ## 1.0.0-nightly.236
 
 **2026-11-20**, commit `5620fb5`. Nightly.
