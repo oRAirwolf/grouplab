@@ -36,8 +36,9 @@ public sealed class Entry508LaunchScreenTests
     {
         foreach (string plist in new[] { "Info.plist", "Info.dev.plist" })
         {
-            string text = File.ReadAllText(Path.Combine(Ios, plist));
-            Assert.Contains("<key>UILaunchStoryboardName</key>\r\n\t<string>LaunchScreen</string>", text, StringComparison.Ordinal);
+            // A checkout on Linux or a Mac has LF where Windows has CRLF (ubuntu-latest and macos-latest, run 44911312400).
+            string text = File.ReadAllText(Path.Combine(Ios, plist)).ReplaceLineEndings("\n");
+            Assert.Contains("<key>UILaunchStoryboardName</key>\n\t<string>LaunchScreen</string>", text, StringComparison.Ordinal);
             Assert.DoesNotContain("<key>UILaunchScreen</key>", text, StringComparison.Ordinal);
         }
 
