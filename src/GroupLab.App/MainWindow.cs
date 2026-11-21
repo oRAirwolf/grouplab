@@ -4021,7 +4021,32 @@ public sealed partial class MainWindow : Window
         return new ScrollViewer { Content = column, IsVisible = false };
     }
 
-    private const string SessionColumns = "96,*,150,150,76,56,220,Auto";
+    /// <summary>
+    /// The Session records columns. Error report 54: the date and the mean radius were cut off on a Mac at fixed widths of 96 and 220,
+    /// so those two are as wide as their widest text in the font they are drawn in, never narrower than before and never wider than a
+    /// limit that keeps the sheet's name readable.
+    /// </summary>
+    internal static string SessionColumnsFor(IEnumerable<string> dates, IEnumerable<string> radii)
+    {
+        double Widest(IEnumerable<string> texts, string heading, double least, double most)
+        {
+            double widest = Measured(heading, Tokens.Sans);
+            foreach (string text in texts)
+            {
+                widest = Math.Max(widest, Measured(text, Mono));
+            }
+
+            // The cell's own right margin, and two pixels so rounding never trims the last character.
+            return Math.Clamp(Math.Ceiling(widest + Tokens.Space8 + 2), least, most);
+        }
+
+        static double Measured(string text, FontFamily font) => new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+            new Typeface(font), Tokens.DetailSize, Brushes.Black).WidthIncludingTrailingWhitespace;
+
+        double date = Widest(dates, "date", 96, 200);
+        double radius = Widest(radii, "mean radius, interval", 220, 340);
+        return string.Create(CultureInfo.InvariantCulture, $"{date},*,150,150,76,56,{radius},Auto");
+    }
 
     private const double SessionBoxWidth = 32;
 
@@ -4075,9 +4100,16 @@ public sealed partial class MainWindow : Window
             return;
         }
 
+        // Entry 295 section 3: a session is called what tells it from the others, and the date column gains the time where two would read the same.
+        var named = SessionNames.For(list);
+        string RadiusWords(SessionSummary s) => s.MeanRadiusInches is { } r
+            ? units.Length(r) + (s.MeanRadiusLowerInches is { } lo && s.MeanRadiusUpperInches is { } hi ? $" ({units.Number(lo)} to {units.Number(hi)})" : "")
+            : "";
+        string columns = SessionColumnsFor(named.Select(n => n.When), list.Select(RadiusWords));
+
         Grid Cells(IEnumerable<string> texts, bool heading)
         {
-            var grid = new Grid { ColumnDefinitions = new ColumnDefinitions(SessionColumns) };
+            var grid = new Grid { ColumnDefinitions = new ColumnDefinitions(columns) };
             int c = 0;
             foreach (string text in texts)
             {
@@ -4111,14 +4143,10 @@ public sealed partial class MainWindow : Window
         heading.Children.Add(head);
         sessionRows.Children.Add(heading);
         int index = 0;
-        // Entry 295 section 3: a session is called what tells it from the others, and the date column gains the time where two would read the same.
-        var named = SessionNames.For(list);
         foreach (var (s, name) in list.Zip(named))
         {
             string distance = s.DistanceInches is { } d ? string.Create(CultureInfo.InvariantCulture, $"{UnitSettings.DistanceFromInches(d, units.Distance):0} {UnitSettings.Symbol(units.Distance)}") : "";
-            string radius = s.MeanRadiusInches is { } r
-                ? units.Length(r) + (s.MeanRadiusLowerInches is { } lo && s.MeanRadiusUpperInches is { } hi ? $" ({units.Number(lo)} to {units.Number(hi)})" : "")
-                : "";
+            string radius = RadiusWords(s);
             var cells = Cells([name.When, s.SheetName, s.Rifle ?? "", s.Load ?? "", distance, s.ShotCount.ToString(CultureInfo.InvariantCulture), radius], heading: false);
             long id = s.Id;
             var open = new Button { Content = cells, HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch, Classes = { AppStyles.TableRow } };

@@ -831,7 +831,7 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.71",
-      "note": "The Session records screen now draws one load's sessions over time",
+      "note": ["The Session records screen now draws one load's sessions over time", "In Session records on the computer, the date column"],
       "tour": "sessions",
       "guide": "6-sessions-and-the-report",
       "mobile": {

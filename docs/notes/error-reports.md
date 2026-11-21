@@ -7,6 +7,18 @@ the person's files. Claude Code checks the open issues at the start of a run, be
 hourly while waiting on CI, and writes each new one here. **A report from an iPhone or iPad below iOS 26** (entry 505 section 5) is
 headed "unsupported iOS" and still assessed, but goes ahead of feature work only when the same fault also happens on iOS 26 or later.
 
+## 54, 2026-11-21, nightly 236 on a Mac (posted in the Discord's bug-reports forum, with a screenshot)
+
+- **Said:** in Session records the date column is too narrow and cannot be widened, so a date with its time ("2026-11-15, 21:06")
+  shows as "2026-11-15,..."; the time is seen only by hovering. The screenshot also shows the mean radius column cut off inside its
+  interval.
+- **Cause:** both columns had fixed widths, 96 and 220 pixels, chosen on Windows. A date gains its time only where two sessions would
+  otherwise read the same (entry 295), and the Mac draws the monospaced figures a little wider, so neither text fitted.
+- **Status:** fixed: the date and mean radius columns now take the width of their widest text in the font they are drawn in, never
+  narrower than before and capped (200 and 340) so the sheet's name keeps its room; held by `CrashReport54Tests`, which failed before
+  the change. Columns cannot be dragged wider; that would be a feature of its own and is not proposed, since nothing is cut off now.
+  Ships in the next nightly; issue 54 closes with the commit. Discord reply drafted in for-alan.md.
+
 ## 52 and 53, 2026-11-20, nightly 235 on Android (API 37, sent by a person with a note, and posted in the Discord's bug-reports forum)
 
 - **Said:** "auto recognition is struggling here": some holes were called about 3.3 bullets' worth, and most of the bullseyes were
