@@ -12,6 +12,21 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.238
+
+**2026-11-21**, commit `020b7c7`. Nightly.
+
+**What you will notice**
+
+- While GroupLab starts on the computer, a small window now shows the version, the step it is on and a group of shots that fills in as each step finishes, and on phones the start screen now has GroupLab's dark background.
+- In Session records on the computer, the date column now shows the time in full and the mean radius shows its whole interval, where on a Mac both were cut off (found from a Discord post).
+
+From your reports and targets in this build: 1 fix from 1 error report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.238)
+
+---
+
 ## 1.0.0-nightly.237
 
 **2026-11-21**, commit `a9fc669`. Nightly.
