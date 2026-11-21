@@ -26,6 +26,29 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-21, entry 508: the four items left that need nobody
+
+**Status: actioned 2026-11-21. Every section done.** Section 1: the iPhone's launch screen is now a storyboard drawing the Capture page's outline (the lockup, the caliber card, Take a picture and its pair, the bar along the bottom) in the light and dark palettes, no words but the name; it follows the real first screen rather than the canvas's top bar, which the real screen does not have. ibtool refuses runtime attributes in a launch screen, so the rounded shapes are stretchable images (scripts/ios-launch.py). Section 2: ios app run 44903839710 passed on all three jobs, with the compiled launch screen, its plist key and all seven assets checked inside the bundle; its one screenshot at launch came before iOS drew anything, so a burst of shots was added and run again (see PHASE1-RESULTS.md). Section 3: the notes and results split by the chores worker, nothing lost. Section 4: the walk now pictures the zoomed result (fold-result-zoomed), on the Features page and the tour's marking page.
+
+From the planning session, Alan's words in chat on 2026-11-21: "do them", about the list STATE gave after entry 507. Take them in this
+order and commit each on its own. The usual guard applies (stop at 85% of the week); the week resets 2026-11-26 02:00 UTC.
+
+1. **The iPhone launch screen outline.** Replace the plain #131417 launch color with a launch storyboard drawing the empty outline of the
+   home screen, as on the Phones board of canvas WCwPSyKjAF3gDNzrTKgX1E (read project/canvas.json, then project/Phones.dc.html): the
+   dark ground, a top bar with "GroupLab" in the bar's own font and size, three empty panels where the home screen's first blocks sit,
+   and the bottom bar, all in the app's own dark colors; it must line up with the real first screen so the change from launch screen to
+   app is barely seen. Light and dark appearance if the app follows the system's; the iPad and the iPhone Duo's sizes too. No text but
+   the name, no version, no progress (Apple's rule).
+2. **Prove the iOS start color and the new launch screen with an ios-app run**, and say the result (run number, passed or not) in STATE.
+3. **Split the live docs/notes/NOTES-FROM-PLANNING.md** (about 50 entries) with split-logs.py, as a chores-haiku job; backup first as
+   always; nothing lost, every link still resolving.
+4. **A phone picture of the zoomed result with its tags** for the Features page and the tour, through the weekly screenshot walk or a run
+   of it now; sample data only, nothing from any tester.
+
+Then rewrite STATE.md. If the week still has room, list anything else that needs nobody.
+
+---
+
 ## 2026-11-21, entry 507: the newest Discord bug report first, then the splash screen as concept C, animated
 
 **Status: actioned 2026-11-21. Every section done, one part of section 2 not as drawn.** Section 1: the new Discord report was error report 54 (nightly 236 on a Mac, Session records' date column cut off), not 52 or 53 again; fixed (f7d53745) and closed. Section 2: the splash on the computer, concept C, built and animated by real progress; the iPhone's launch screen got GroupLab's dark ground but not the empty outline of the home screen, which would need a storyboard drawn for every screen size (the canvas's own note says only the icon and the color change). The splash costs the main window about 14 ms as it ships (precompiled), inside the launches' spread, and about 100 ms in the gate's plain Release build, inside the gate. Section 3: STATE.md rewritten.

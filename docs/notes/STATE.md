@@ -9,21 +9,18 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-21, after entry 507; the inbox is empty.
+**Last rewritten:** 2026-11-21, after entry 508; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 507 (2026-11-21)**: error report 54 (nightly 236, Mac): Session records' date and mean radius columns now fit their text
-  (`CrashReport54Tests`); issue closed, Discord reply in for-alan.md. **The splash on the computer, concept C**, animated by real
-  progress (`StartupSplash`, `StartupSequence`, `StartupWork`): records and target library open beside Avalonia from `Main`, the main
-  window shows the moment it is built; about 14 ms as it ships, 100 ms in the gate's Release build (inside the gate). Phones: Android
-  12+ start screen and the iPhone launch color on #131417; the iPhone's home screen outline not done (needs a storyboard). **Left
-  that needs nobody:** split the live NOTES-FROM-PLANNING.md (about 50 entries; split-logs.py, chores-haiku); a phone picture of the
-  zoomed result with tags for the Features page and tour (weekly walk); prove the iOS color with an ios-app run; a test from report
-  52's photograph if the person sends it.
-- **Entry 506 (2026-11-21)**: the 2 MOA center dot refused; printers sync one by one (117 (a)); the phone's result picture zooms.
+- **Entry 508 (2026-11-21)**: the iPhone's launch screen is an outline of the Capture page (`LaunchScreen.storyboard`, written with
+  its colors and shapes by `scripts/ios-launch.py`, light and dark; `Entry508LaunchScreenTests`). **ios app run 44903839710 passed**,
+  the compiled launch screen and its seven assets checked in the bundle; run 44906341195 takes a burst of launch screenshots (the single
+  one came before iOS drew anything). The live notes and results split again (79 KB notes). The walk pictures the zoomed result with its
+  tags (`fold-result-zoomed`), now on the Features page and the tour's marking page. All of it reaches nightly 239.
+- **Entries 506 and 507 (2026-11-21)**: the 2 MOA center dot; printers sync one by one; the result picture zooms; the splash.
 - **Entry 505 (2026-11-20)**: iOS 18.0 installs, 26 is supported; below 26 Alan's warning first (`UnsupportedIos`).
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by
   mac-store.yml after each nightly; nightly 233's copy is on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is
@@ -74,7 +71,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (117 closed (a) by entry 506):
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.237 (2026-11-21, 06:04 UTC). Entry 507 is on main and reaches the next nightly (238). GitHub's
+- **Last nightly:** 1.0.0-nightly.238 (2026-11-21), with entry 507. Entry 508 is on main and reaches nightly 239. GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
@@ -89,6 +86,11 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **The iPhone's launch screen is generated** (entry 508): edit `scripts/ios-launch.py`, never the storyboard; ibtool refuses runtime
+  attributes in a launch screen, so rounded corners there are stretchable images. It follows the system's light or dark appearance.
+- **Needs nobody, after entry 508:** the iOS real-tap step on Targets' keyboard Next fails now and then (ios app runs 44891904639 and
+  44906341195: the button covered by a light-dismiss overlay, or not showing; passed in 44903839710), from before entry 508; find what
+  opens the overlay. Everything else waits on Alan's requests, a tester's photograph (report 52), or a sitting.
 - **The computer starts behind a splash** (entry 507): `Main` begins `StartupWork` (records, target library) before Avalonia; the first
   `MainWindow` over the same settings takes them (`TakeRecords`, `TakeLibrary`), tests and later windows open their own. The log's
   `app.startup` line times each part; `startup-time.ps1` finds the main window by its title "GroupLab", the splash being "GroupLab is starting".

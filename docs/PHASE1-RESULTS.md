@@ -303,6 +303,49 @@ unchanged.
 
 **3.** STATE.md rewritten.
 
+## Entry 508: the iPhone's launch screen as an outline of the home screen, proved on the simulator, the logs split, the zoomed result pictured (2026-11-21)
+
+**1.** `LaunchScreen.storyboard` replaces the plain launch color (Info.plist and Info.dev.plist name it with `UILaunchStoryboardName`; the
+project names it as an `InterfaceDefinition`, its default items off, so it can never be left out silently). It draws the Capture page
+as the iPhone shows it at the usual text size, measured from the Fold's screenshot and the code: the lockup at its least height (36, the
+page's 16 plus the logo's 8 from the top of the safe area, `CapturePage.LogoLeast`), the caliber card (147 down, 88 high, corner 10),
+Take a picture (250 down, 48 high, the amber pill) and the pair Choose a photo and Print a target (314 down, two equal pills 8 apart),
+and the bar along the bottom (72 above the home indicator's area to the edge, the panel color under a one point rule). No words but the
+name, which is the application's own lockup, light and dark. The colors are `Tokens.Light` and `Tokens.Dark`, in light and dark
+appearances, since the phone follows the system's appearance unless the person chose one in Settings (a launch screen cannot read that
+choice, so someone who chose dark on a light phone sees the light outline first). Auto Layout to the safe area makes it the same on
+the iPad, the iPhone Duo and sideways. **Where it differs from the canvas:** the Phones board drew a top bar with "GroupLab" in it and
+three equal panels; the real first screen has no top bar but the lockup, so the outline follows the screen, as the entry's own rule
+(line up with the real first screen) asks. The intro sentence and anything below the pair are left out: their height depends on the
+width and the text size. **ibtool refuses user-defined runtime attributes in a launch screen** (ios app run 44903286973), so the
+rounded corners are stretchable 3x images whose caps hold the corners, written with the colors and the storyboard by
+`scripts/ios-launch.py`. `Entry508LaunchScreenTests`: the plists, the project item, no text and no runtime attributes, each color and
+each shape's fill and edge against the palette in both appearances, the lockup byte for byte the application's.
+
+**2.** The ios app workflow now checks, after the simulator build, that Info.plist names the storyboard, that
+`LaunchScreen.storyboardc` is in the bundle, and that the compiled asset catalog holds the three colors, the lockup and the three
+shapes. **Run 44903286973 failed** at ibtool (the runtime attributes, above). **Run 44903839710 passed** on all three jobs, the launch
+screen's checks among them, but its one screenshot at launch came before iOS had drawn anything (all black). **Run 44906341195 passed**
+on all three jobs (GroupLab Dev's after one rerun of its real-tap step, below) and its burst caught the launch screen in its first
+shot, light: the lockup, the empty card, the amber pill, the two choice pills and the bar, then the Capture page over it. On that
+440 point iPhone the intro wraps to two lines, so the real card and buttons sit about 20 points higher than the outline, which was
+measured where it wraps to three (402 points); on a phone of the common width they meet. **Not caused by this entry:** GroupLab Dev's
+real-tap step on Targets' keyboard Next fails now and then (44891904639 at 09:56, before any of this entry's commits, and 44906341195's
+first attempt: the button covered by a light-dismiss overlay or not showing); it passed on the rerun and in 44903839710. What opens the
+overlay is listed in STATE.md as work that needs nobody.
+
+**3.** `scripts/split-logs.py`, run by the chores worker after copying the three logs and the archive to the trash folder: 36 notes
+entries and 33 results sections moved (a new `notes-2026-11.md` and `results-476-500.md`); every heading of the 278 in the notes, 48 in
+the results and 15 in the questions is still in the live file or the archive, and no link in the repository points into the notes by
+anchor. The live notes went from 278 KB to 79 KB.
+
+**4.** GroupLab Dev's scenarios gained a `zoom` step: the result's picture put at the top of the page and enlarged by a quarter at a
+time until the holes' tags show (failing if they never do), or by a given factor. The screenshot walk takes `result-zoomed` on the
+Fold after the result and zooms back out; `PhoneScreensScenarioTests` runs the walk headless and holds it. The emulator run 44903608845 took it (eede5ffb, `fold-result-zoomed-light` and `-dark`): the whole sample sheet at the first step
+in, 1.25 times, every hole's number in its tag clear of the rest, as entry 506 found. It is now the phone picture of "Every hole
+found" on the Features page and of the tour's marking page, whose caption and parts were rewritten for it (the landscape result it
+replaces there is still taken and still on the analysis page's list of sources). Commit c3fad756.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
