@@ -17,12 +17,12 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:app-store -->
 
 <!-- status:store -->
-## The Microsoft Store, 2026-11-20 20:20 UTC
+## The Microsoft Store, 2026-11-21 07:08 UTC
 
 - Microsoft Entra gave the Store API a token: HTTP 200.
 - The Store login works: the Store API answered 200 and the product is named GroupLab. Nothing was submitted.
 - Published in the Store: yes.
-- The Store carries package version 1.0.235.0.
+- The Store carries package version 1.0.237.0.
 - No submission is waiting on Microsoft.
 <!-- /status:store -->
 
