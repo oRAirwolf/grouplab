@@ -7,6 +7,23 @@ the person's files. Claude Code checks the open issues at the start of a run, be
 hourly while waiting on CI, and writes each new one here. **A report from an iPhone or iPad below iOS 26** (entry 505 section 5) is
 headed "unsupported iOS" and still assessed, but goes ahead of feature work only when the same fault also happens on iOS 26 or later.
 
+## 52 and 53, 2026-11-20, nightly 235 on Android (API 37, sent by a person with a note, and posted in the Discord's bug-reports forum)
+
+- **Said:** "auto recognition is struggling here": some holes were called about 3.3 bullets' worth, and most of the bullseyes were
+  recorded as shots. Issue 52 is the diagnostics (package 2026-11-20_5e12187f), issue 53 the Discord post naming the same package, with
+  two screenshots of the result: the 2 MOA Letter sheet (`GL-CF9-LTR`), nine large holes, a small red mark on seven bulls' center dots.
+- **What the log shows:** the same photograph read on nightly 233 and again on 235, both times 16 holes. All 26 markers and the code
+  read, registration 0.004 in rms, no caliber named. The marks fell into two sizes, about 0.14 and 0.29 in; seven of the sixteen sat
+  0.004 to 0.013 in from a bull's center, on bulls 1, 2, 3, 4, 6, 8 and 9. The person corrected the sheet to 9 shots by hand, matching
+  the nine readings of their chronograph file.
+- **Cause:** the printed center dot (0.197 in across) read darker in the photograph than the rest of the print the detector measures the
+  ink level from, so the inside of each dot stood out as a dark round mark of a hole's size. With no caliber named, GroupLab took the
+  hole size from the smaller of the two sizes, the dots, so every real hole looked like three holes merged and was flagged.
+- **Status:** fixed: a dark mark lying wholly inside a printed dot of a hole's size is now refused as the bull's own dot (a hole across
+  the dot, beside it, or showing light through it is still a hole), held by `PrintedDotTests`, which darkens the dots of a synthetic
+  2 MOA sheet as the photograph showed them and failed before the change. Ships in the next nightly; issues 52 and 53 close with the
+  commit. The photograph itself was not in the package; if the person sends it through grouplab.org/targets it becomes a test of its own.
+
 ## 51, 2026-11-20, nightly 183 on Android (API 37, sent automatically, no note)
 
 - **Said:** a tap on the result's sheet picture raised "NoElements" in `ResultView.SheetPicture.BullAt`; GroupLab kept running. No last

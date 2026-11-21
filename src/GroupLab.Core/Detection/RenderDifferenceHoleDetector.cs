@@ -331,6 +331,7 @@ public static partial class RenderDifferenceHoleDetector
         // S8: filters, declared zones, the position prior, and the weighted centre.
         var zones = Zones(definition, scene, tile);
         var printed = Printed(definition, tile);
+        var dots = PrintedDots(scene, options);
         // NOTES-FROM-PLANNING.md entry 83 section 2: every size is converted at the blob's own scale. One scale for the whole image read holes
         // on the near side of an oblique photograph up to 30 percent large, which is what the oversize flags on those frames were.
         double largestSquareInches = Math.PI * Math.Pow(options.MaximumDiameterInches / 2, 2);
@@ -411,8 +412,14 @@ public static partial class RenderDifferenceHoleDetector
             bool movedPrint = shape is null && zone is null && !pastThePrint && words is null && nearTheGrid && !cleanHole
                 && ExplainedByMovedPrint(observed, expected, paper, block, binary, width, blob, inkFraction, range, threshold, MovedPrintInches * ppi, open);
 
+            // Error report 52: a dark mark lying wholly inside a printed dot of a hole's size is the dot, read darker than the rest of the print.
+            bool printedDot = shape is null && zone is null && dots.Count > 0
+                && InsideAPrintedDot(dots, blob.Hull, registration, PrintedDotSlackInches * 254)
+                && DarkerThanThePrint(observed, expected, paper, block, blob, width, inkFraction);
+
             string? why = shape
                 ?? (zone is not null ? $"inside {zone.Name}"
+                : printedDot ? PrintedDot
                 : pastThePrint ? PastThePrint
                 : words is not null ? $"the sheet's own printed words, \"{words}\""
                 : !nearTheGrid ? OutsideTheGrid.TooFarOut
@@ -421,7 +428,7 @@ public static partial class RenderDifferenceHoleDetector
 
             // Entry 291 section 7 item 4: a mark large enough that it may be a hole joined to what lies beside it is kept aside, whatever its
             // shape made of it, and looked at again once the size of a single hole is known.
-            if (!tooSmall && zone is null && !pastThePrint && words is null && nearTheGrid && !movedPrint && diameterIn >= options.JoinedDiameters * options.SmallestHoleInches)
+            if (!tooSmall && zone is null && !printedDot && !pastThePrint && words is null && nearTheGrid && !movedPrint && diameterIn >= options.JoinedDiameters * options.SmallestHoleInches)
             {
                 large.Add((blob, hx, hy, ppi, markAreaIn));
             }
@@ -665,6 +672,60 @@ public static partial class RenderDifferenceHoleDetector
     }
 
     /// <summary>What a mark the sheet's own printing explains, moved or blurred within <see cref="MovedPrintInches"/>, is refused with.</summary>
+    internal const string PrintedDot = "the bull's own printed center dot, read darker than the rest of the print, and wholly inside it";
+
+    /// <summary>
+    /// How far past a printed dot's edge a mark may reach and still lie inside it, inches: the registration's worst residual on the reported
+    /// photograph was 0.009 in, and a photograph's blur spreads a dot's edge by about as much again.
+    /// </summary>
+    internal const double PrintedDotSlackInches = 0.02;
+
+    /// <summary>
+    /// Error report 52: the solid dots of a bull no wider than the largest hole, in page dmm. The 2 MOA sheet's center dot is 0.197 in across;
+    /// the C bull's black disc and every ring are far wider, and a ring is not a solid disc.
+    /// </summary>
+    private static List<(double X, double Y, double Radius)> PrintedDots(Scene scene, RenderDifferenceOptions options) =>
+        [.. scene.Items.OfType<DiscBand>()
+            .Where(d => d.Layer == SceneLayer.Bulls && d.InnerRadius == 0 && d.OuterShape == DiscShape.Circle
+                && (d.Colour.R + d.Colour.G + d.Colour.B) < 3 * 128 && d.OuterRadius / 254.0 <= options.LargestHoleInches)
+            .Select(d => (d.CentreX / 2.0, d.CentreY / 2.0, d.OuterRadius / 2.0))];
+
+    /// <summary>Whether every corner of a mark's hull lies within a printed dot, widened by <paramref name="slack"/> page dmm.</summary>
+    private static bool InsideAPrintedDot(List<(double X, double Y, double Radius)> dots, IReadOnlyList<PointD> hull, IPageMapping registration, double slack)
+    {
+        if (hull.Count == 0)
+        {
+            return false;
+        }
+
+        var corners = hull.Select(registration.ToPage).ToList();
+        return dots.Any(d => corners.All(c => Math.Sqrt(((c.X - d.X) * (c.X - d.X)) + ((c.Y - d.Y) * (c.Y - d.Y))) <= d.Radius + slack));
+    }
+
+    /// <summary>
+    /// Whether a mark reads darker than the render expects there, on average: a hole seen through to a light backing makes print lighter, and
+    /// one seen through to a dark backing inside a solid dot cannot be told from the dot. A dot the photograph shows darker than the rest of
+    /// the print is darker.
+    /// </summary>
+    private static bool DarkerThanThePrint(GrayImage observed, GrayImage expected, double[] paper, int block, ImageBlob blob, int width, double inkFraction)
+    {
+        double sum = 0;
+        int n = 0;
+        for (int y = blob.Top; y < blob.Top + blob.Height; y++)
+        {
+            var (from, to) = RowInside(blob, y);
+            for (int x = from; x <= to; x++)
+            {
+                int i = (y * width) + x;
+                double e = 1 - ((1 - (expected.Pixels[i] / 255.0)) * (1 - inkFraction));
+                sum += (observed.Pixels[i] / Math.Max(1, PaperAt(paper, block, observed.Width, observed.Height, x, y))) - e;
+                n++;
+            }
+        }
+
+        return n > 0 && sum < 0;
+    }
+
     internal const string MovedPrint = "the sheet's own printing, moved or blurred by a crinkle, and not a clean round hole";
 
     /// <summary>
