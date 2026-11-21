@@ -168,13 +168,20 @@ public sealed class Entry507SplashTests : IDisposable
         bitmap.Render(content);
         Color At(Point box)
         {
-            using var copy = new WriteableBitmap(new PixelSize(600, 360), new Vector(96, 96), Avalonia.Platform.PixelFormat.Bgra8888, Avalonia.Platform.AlphaFormat.Premul);
-            using var buffer = copy.Lock();
-            bitmap.CopyPixels(new PixelRect(0, 0, 600, 360), buffer.Address, buffer.RowBytes * 360, buffer.RowBytes);
             int x = (int)Math.Round(282 + (box.X * 3)), y = (int)Math.Round(30 + (box.Y * 3));
-            byte[] pixel = new byte[4];
-            System.Runtime.InteropServices.Marshal.Copy(buffer.Address + (y * buffer.RowBytes) + (x * 4), pixel, 0, 4);
-            return Color.FromRgb(pixel[2], pixel[1], pixel[0]);
+            var buffer = System.Runtime.InteropServices.Marshal.AllocHGlobal(4);
+            try
+            {
+                bitmap.CopyPixels(new PixelRect(x, y, 1, 1), buffer, 4, 4);
+                byte[] px = new byte[4];
+                System.Runtime.InteropServices.Marshal.Copy(buffer, px, 0, 4);
+                // The bitmap's own byte order: BGRA on Windows and Linux, RGBA on macOS (Entry204Tests learned it first; this test on 7474fc9e again).
+                return bitmap.Format == Avalonia.Platform.PixelFormat.Rgba8888 ? Color.FromRgb(px[0], px[1], px[2]) : Color.FromRgb(px[2], px[1], px[0]);
+            }
+            finally
+            {
+                System.Runtime.InteropServices.Marshal.FreeHGlobal(buffer);
+            }
         }
 
         foreach (var shot in StartupSplash.Shots.Where(s => s != StartupSplash.Shots[0]))
