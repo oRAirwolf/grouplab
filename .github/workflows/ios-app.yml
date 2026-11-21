@@ -190,8 +190,12 @@ jobs:
           xcrun simctl install "$UDID" "$APP"
           # The first start as a person sees it, with the first run's questions if this build asks them.
           xcrun simctl launch "$UDID" org.grouplab.app
-          # Entry 508 section 1: the launch screen, if the first frame has not replaced it yet (best effort, not a check).
-          xcrun simctl io "$UDID" screenshot shots/00-launch-screen.png > /dev/null || true
+          # Entry 508 section 1: the launch screen, in a burst over the first two seconds, since iOS draws it only after a moment and the
+          # first frame replaces it soon after (best effort, not a check; ios app run 44903839710's single shot came before it).
+          for n in 1 2 3 4 5 6 7 8; do
+            xcrun simctl io "$UDID" screenshot "shots/00-launch-screen-$n.png" > /dev/null 2>&1 || true
+            sleep 0.25
+          done
           sleep 25
           xcrun simctl io "$UDID" screenshot shots/00-first-start.png > /dev/null
           xcrun simctl terminate "$UDID" org.grouplab.app || true

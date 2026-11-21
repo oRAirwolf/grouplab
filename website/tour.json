@@ -198,12 +198,20 @@
     ]
    ],
    "mobile": {
-    "shot": "fold-result-landscape",
-    "caption": "Held sideways, the phone puts Fix holes and the sheet on the left and the figures on the right; Fix holes opens the holes on a page of their own.",
+    "shot": "fold-result-zoomed",
+    "caption": "The result's picture of the sheet pinched in a little: each hole ringed, its number in a dark tag beside it, and the unsure holes dashed in orange. Fix holes opens the holes on a page of their own.",
     "parts": [
      [
       "The rings",
-      "One on each hole GroupLab found, on the photograph itself, which is for looking only."
+      "One on each hole GroupLab found, on the photograph itself, which is for looking only; while Lines to bulls is ticked, a line runs from each to its bull."
+     ],
+     [
+      "The numbers",
+      "Pinch the picture in and each hole's number appears in a dark tag beside it, placed clear of the other tags and holes; pinch back out and they go."
+     ],
+     [
+      "Unsure holes",
+      "Dashed in orange, as the line under the picture says; Fix holes steps through them."
      ],
      [
       "Fix holes",
@@ -223,7 +231,7 @@
      ]
     ],
     "steps": [
-     "Look over the rings on the sheet under the figures.",
+     "Look over the rings on the sheet under the figures, and pinch the picture in to see each hole's number.",
      "Press Fix holes, then pinch and drag until the crosshair is on the hole to change.",
      "Press Done: the figures follow and the change is saved. Leaving any other way asks whether to keep the changes."
     ],

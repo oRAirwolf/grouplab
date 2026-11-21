@@ -18,6 +18,7 @@ the lower figures are partly out of view.
 | `fold-firstrun-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Before you start: the scope question, sizes, and sending targets |
 | `fold-capture-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Capture, empty |
 | `fold-result-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | The result of the sample sheet: the figures and the plot |
+| `fold-result-zoomed-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | The result's picture of the sample sheet pinched in until each hole's number shows in its tag, with Lines to bulls and the three unsure holes dashed (entry 508) |
 | `fold-settings-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Settings, Units |
 | `fold-targets-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Targets, Made for your optic, Letter chosen by the phone's region; no sample |
 | `fold-scale-markers-light.png`, `-dark` | Galaxy Z Fold 7, cover screen | Targets, the Scale markers card from its heading: brackets, bars, stickers and labels (entry 388) |
