@@ -395,17 +395,39 @@ public partial class MainWindow
         return waiting;
     }
 
-    /// <summary>The banner over Sessions while a session or a pooled set waits to be chosen between, or null.</summary>
+    /// <summary>Entry 506 section 2: the printers with two checks waiting, each with this computer's check (null where it is gone here) and the other's.</summary>
+    internal IReadOnlyList<(SyncConflict Conflict, System.Text.Json.Nodes.JsonObject? Here, System.Text.Json.Nodes.JsonObject There)> PrintersToChoose()
+    {
+        if (sessions is null)
+        {
+            return [];
+        }
+
+        var local = SyncLocal();
+        var waiting = new List<(SyncConflict, System.Text.Json.Nodes.JsonObject?, System.Text.Json.Nodes.JsonObject)>();
+        foreach (var conflict in sessions.SyncConflicts().Where(c => c.Kind == SyncEngine.PrinterKind))
+        {
+            if (SyncEngine.PrinterVersions(local, conflict) is { } versions)
+            {
+                waiting.Add((conflict, versions.Here, versions.There));
+            }
+        }
+
+        return waiting;
+    }
+
+    /// <summary>The banner over Sessions while a session, a pooled set or a printer's two checks wait to be chosen between, or null.</summary>
     private Control? SyncChooseBanner(IReadOnlyList<(SyncConflict Conflict, SessionRecord? Here, SessionRecord There)> waiting,
         IReadOnlyList<(SyncConflict Conflict, PoolRecord? Here, PoolRecord There)> pools)
     {
-        if (waiting.Count + pools.Count == 0)
+        var printers = PrintersToChoose();
+        if (waiting.Count + pools.Count + printers.Count == 0)
         {
             return null;
         }
 
-        long first = waiting.Count > 0 ? waiting[0].Conflict.Id : pools[0].Conflict.Id;
-        var line = new TextBlock { Text = SyncScreens.ToChooseBanner(waiting.Count, pools.Count), FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center };
+        long first = waiting.Count > 0 ? waiting[0].Conflict.Id : pools.Count > 0 ? pools[0].Conflict.Id : printers[0].Conflict.Id;
+        var line = new TextBlock { Text = SyncScreens.ToChooseBanner(waiting.Count, pools.Count, printers.Count), FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center };
         var open = Button("Choose", () => ShowSyncConflict(first));
         return new Border
         {
@@ -438,6 +460,11 @@ public partial class MainWindow
         else if (PoolsToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } p } pooled)
         {
             ShowPoolConflict(p, pooled.Here, pooled.There);
+            return;
+        }
+        else if (PrintersToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } printer } checks)
+        {
+            ShowPrinterConflict(printer, checks.Here, checks.There);
             return;
         }
         else
@@ -581,16 +608,82 @@ public partial class MainWindow
         OpenProblem(SyncScreens.PoolConflictTitle, ProblemCard(SyncScreens.PoolConflictTitle, 820, body), choices);
     }
 
-    private void ResolveSync(long conflictId, SyncChoice choice)
+    /// <summary>
+    /// Entry 506 section 2, in concept A's pattern (entry 504): two checks of one printer. The title, a line naming the printer and when the other
+    /// check arrived; this computer's check and the other's side by side, each with the device, when it was checked, across, down and how it
+    /// was made, a row that differs tagged; then Decide later, Keep both under two names, and each check.
+    /// </summary>
+    private void ShowPrinterConflict(SyncConflict conflict, System.Text.Json.Nodes.JsonObject? mine, System.Text.Json.Nodes.JsonObject theirs)
+    {
+        string there = SyncDeviceName(conflict.FromDevice);
+        var choice = PrinterChoices.Build(mine, theirs, PoolChoices.ThisDevice(Sync.DeviceName, phone: false), there, conflict.FoundUtc, phone: false);
+
+        static Control Card(PrinterChoiceCard card)
+        {
+            var column = new StackPanel { Spacing = Tokens.Space8 };
+            var head = new DockPanel();
+            var when = new TextBlock { Text = card.When, Classes = { AppStyles.Secondary }, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(Tokens.Space8, 0, 0, 0) };
+            DockPanel.SetDock(when, Dock.Right);
+            head.Children.Add(when);
+            head.Children.Add(new TextBlock { Text = card.Device, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
+            column.Children.Add(head);
+            foreach (var row in card.Rows)
+            {
+                column.Children.Add(new TextBlock { Text = row.What, Classes = { AppStyles.Label } });
+                var line = new DockPanel();
+                if (row.Differs)
+                {
+                    var tag = new Border { Child = new TextBlock { Text = SyncScreens.Differs, Classes = { AppStyles.PillText, AppStyles.Warn } }, Classes = { AppStyles.Pill, AppStyles.Warn }, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(Tokens.Space8, 0, 0, 0) };
+                    DockPanel.SetDock(tag, Dock.Right);
+                    line.Children.Add(tag);
+                }
+
+                line.Children.Add(new TextBlock { Text = row.Value, TextWrapping = TextWrapping.Wrap });
+                column.Children.Add(line);
+            }
+
+            return new Border { Child = column, Classes = { AppStyles.ChoiceCard } };
+        }
+
+        var columns = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = Tokens.Space16 };
+        var left = Card(choice.Here);
+        var right = Card(choice.There);
+        Grid.SetColumn(right, 1);
+        columns.Children.Add(left);
+        columns.Children.Add(right);
+
+        var choices = new List<(string Label, Action Act)>
+        {
+            (SyncScreens.DecideLater, () => { }),
+            (PrinterChoices.KeepBoth, () => ResolveSync(conflict.Id, SyncChoice.KeepBoth, there)),
+            (PrinterChoices.UseThisDevice(phone: false), () => ResolveSync(conflict.Id, SyncChoice.KeepThisOne)),
+            (PrinterChoices.UseOther(there, phone: false), () => ResolveSync(conflict.Id, SyncChoice.KeepTheOther)),
+        };
+        var buttons = new WrapPanel { ItemSpacing = Tokens.Space8, LineSpacing = Tokens.Space8, HorizontalAlignment = HorizontalAlignment.Right };
+        buttons.Children.Add(ProblemButton(choices[0].Label, link: ""));
+        for (int k = 1; k < choices.Count; k++)
+        {
+            buttons.Children.Add(ProblemButton(choices[k].Label));
+        }
+
+        var body = new StackPanel { Spacing = Tokens.Space12 };
+        body.Children.Add(new TextBlock { Text = choice.Line, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Secondary } });
+        body.Children.Add(columns);
+        body.Children.Add(buttons);
+        OpenProblem(PrinterChoices.Title, ProblemCard(PrinterChoices.Title, 760, body), choices);
+    }
+
+    private void ResolveSync(long conflictId, SyncChoice choice, string? otherDevice = null)
     {
         if (sessions is null)
         {
             return;
         }
 
-        SyncEngine.Resolve(sessions, SyncLocal(), conflictId, choice, DateTime.UtcNow);
+        SyncEngine.Resolve(sessions, SyncLocal(), conflictId, choice, DateTime.UtcNow, otherDevice);
         DiagnosticLog.Info("sync.choose", ("choice", choice.ToString()));
         FillSessions();
+        ShowPrinters();
     }
 
     /// <summary>The other device's name as it wrote it in the folder, or its code where the folder is not reachable now.</summary>

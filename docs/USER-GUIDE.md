@@ -910,6 +910,8 @@ device; a sheet not here yet is never counted as a difference by itself. Then **
 this computer's**, or **Keep** the other device's. On the phone it is a page of its own, **Choose a version**, with Back: the two versions
 stacked, this phone's first, and the four choices along the bottom.
 
+A printer checked on two devices under the same name waits the same way: the banner counts it, "1 printer to choose between", and Printers and paper says so under the printer with a **Choose** button. Either opens **Two checks of this printer**: this computer's check and the other device's side by side, each with when it was checked, its across and down numbers and how it was made (card, scan, typed in, caliper or ruler), an amber **differs** where they disagree. Then **Decide later**, **Keep both under two names** (the other check is kept as, for example, "Office laser (Desk)"), **Use this computer's**, or **Use** the other device's. On the phone it is a page of its own, **Choose a check**. Each printer travels on its own, so a printer you delete on one device stays deleted on the others; GroupLab 1.0 and older nightlies, which only know the whole list, never lose a printer from a newer build, and a newer build never deletes one because an older build's list leaves it out.
+
 ![A pooled set changed on two devices: this computer's version and the other's side by side, each sheet tagged](figures/screens/current/pool-conflict-light-1400x900.png)
 
 ![A session changed on two devices, side by side: 1 Keep both as two sessions, 2 Decide later](figures/screens/current/sync-conflict-light-1400x900.png)

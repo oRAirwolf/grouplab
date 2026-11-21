@@ -1512,7 +1512,8 @@
       "Forget this device",
       "Choosing a different, empty sync folder",
         "a sync file a cloud service left damaged now waits until it arrives whole", "a pooled set is changed on two of your synced devices",
-      "each sheet marked as in both, only in one, or not on this device yet"
+      "each sheet marked as in both, only in one, or not on this device yet",
+      "A printer checked on two of your synced devices"
      ],
      "tour": "settings",
      "guide": "sync-between-devices",

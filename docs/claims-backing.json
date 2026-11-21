@@ -8733,6 +8733,12 @@
    "where": "the research index card repeats the description of website/research/where-a-first-miss-comes-from.md, whose numbers are held by tests/GroupLab.Core.Tests/Ballistics/ArticleFiguresTests.cs TheMissArticlesFiguresHold and whose sources are in its front matter (entry 464 section 3)"
   },
   {
+   "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/",
+   "match": "A printer checked on two devices under the same name waits the same way|Each printer travels on its own, so a printer you delete on one device stays deleted",
+   "kind": "code",
+   "where": "Entry 506 section 2 (question 117 (a)): src/GroupLab.Core/Sync/SyncEngine.cs (PrinterKind, MergePrinterList, PrinterVersions, Resolve) and src/GroupLab.Core/Sync/PrinterChoices.cs (Build, BothName); src/GroupLab.App/MainWindow.Sync.cs (PrintersToChoose, ShowPrinterConflict), src/GroupLab.App/MainWindow.Printer.cs, mobile/GroupLab.Mobile/PhoneSync.cs (ShowPrinterChoice), SettingsView.cs and SessionsPage.cs; held by PrinterSyncTests (every mix of 1.0 and newer builds), Entry506Tests and Entry506PhoneTests"
+  },
+  {
    "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$|^site:features/",
    "match": "A pooled set changed on two devices waits the same way|a pooled set the same way as a plain list|The line under the title gives the pool's|a pooled set the same way, each sheet tagged",
    "kind": "code",

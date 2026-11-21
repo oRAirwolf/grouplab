@@ -91,6 +91,19 @@ public static class SyncEngine
     /// <summary>Entry 495 section 4: a pooled set, by its key, naming its sheets by their identity.</summary>
     public const string PoolKind = "pool";
 
+    /// <summary>
+    /// Entry 506 section 2 (question 117 (a)): one printer's check, keyed by its name, so two checks of one printer can stand side by side and
+    /// a printer deleted on one device stays deleted. The whole list still travels beside it as the <c>printers</c> setting, for GroupLab 1.0
+    /// (build 226) and the nightlies before this, which know only the list.
+    /// </summary>
+    public const string PrinterKind = "printer";
+
+    /// <summary>The setting that holds the whole list of printers.</summary>
+    public const string PrintersSetting = "printers";
+
+    /// <summary>The mark a build that also writes each printer on its own puts on the whole list it writes; older builds read only "value".</summary>
+    internal const string PerPrinter = "perPrinter";
+
     internal static readonly JsonSerializerOptions Options = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -208,7 +221,8 @@ public static class SyncEngine
     }
 
     /// <summary>The person's choice for a record changed on two devices: whichever is kept, the other is kept as it was too.</summary>
-    public static void Resolve(SessionStore store, ISyncLocal local, long conflictId, SyncChoice choice, DateTime nowUtc)
+    /// <param name="otherDevice">The other device's name as the person knows it, for the name a printer's check kept beside this one takes.</param>
+    public static void Resolve(SessionStore store, ISyncLocal local, long conflictId, SyncChoice choice, DateTime nowUtc, string? otherDevice = null)
     {
         ArgumentNullException.ThrowIfNull(store);
         ArgumentNullException.ThrowIfNull(local);
@@ -258,6 +272,14 @@ public static class SyncEngine
                 // Entry 495: the other device's pool as one of its own, with a key of its own, so it travels as new.
                 var pool = JsonNode.Parse(bothPools).Deserialize<PoolRecord>(Options)!;
                 store.SavePool(pool with { Id = 0, Key = SessionPools.NewKey(), CreatedUtc = now });
+                store.SetSyncEntry(entry with { Vector = merged });
+                break;
+            case SyncChoice.KeepBoth when conflict.Kind == PrinterKind && conflict.Payload is { } bothPrinters:
+                // Entry 506 section 2: the other device's check kept beside this one, under its own name, so it travels as a printer of its own.
+                var theirPrinter = (JsonObject)JsonNode.Parse(bothPrinters)!;
+                var list = Printers(local.Settings()[PrintersSetting]).ToList();
+                theirPrinter["name"] = PrinterChoices.BothName((string?)theirPrinter["name"] ?? conflict.Key, otherDevice ?? conflict.FromDevice, list.Select(p => (string)p["name"]!));
+                SavePrinters(local, [.. list, theirPrinter]);
                 store.SetSyncEntry(entry with { Vector = merged });
                 break;
             default:
@@ -326,7 +348,17 @@ public static class SyncEngine
         {
             if (value is not null && DataExport.PortableSettings.Contains(key))
             {
-                Add(all, SettingKind, key, new JsonObject { ["key"] = key, ["value"] = value.DeepClone() });
+                var setting = new JsonObject { ["key"] = key, ["value"] = value.DeepClone() };
+                if (key == PrintersSetting)
+                {
+                    setting[PerPrinter] = true;
+                    foreach (var printer in Printers(value))
+                    {
+                        Add(all, PrinterKind, (string)printer["name"]!, (JsonObject)printer.DeepClone());
+                    }
+                }
+
+                Add(all, SettingKind, key, setting);
             }
         }
 
@@ -478,6 +510,7 @@ public static class SyncEngine
             BarrelKind => data.Deserialize<Barrel>(Options) is { Name.Length: > 0 },
             LoadKind => data.Deserialize<Load>(Options) is { Name.Length: > 0 },
             SheetKind => DataExport.Whole(data.Deserialize<ExportedSheet>(Options)),
+            PrinterKind => PrinterProfile.FromJson(data) is not null,
             PoolKind => DataExport.Whole(data.Deserialize<PoolRecord>(Options)),
             _ => true,
         };
@@ -599,6 +632,11 @@ public static class SyncEngine
     private static bool Merge(SessionStore store, ISyncLocal local, Dictionary<(string Kind, string Key), Here> current, ChangeRecord record, string from, string me, string now)
     {
         var key = (record.Kind, record.Key);
+        if (record.Kind == SettingKind && record.Key == PrintersSetting)
+        {
+            return MergePrinterList(store, local, current, record, from, me, now);
+        }
+
         bool deleted = record.DeletedUtc is not null || record.Data is null;
         if (store.SyncEntryOf(record.Kind, record.Key) is not { } entry)
         {
@@ -678,6 +716,13 @@ public static class SyncEngine
                     return true;
                 }
 
+                if (here is not null && here.Hash == Hash(record.Data!))
+                {
+                    // Entry 506 section 2: changed on both to the same thing, as two devices merging one older build's list both do: nothing to ask.
+                    store.SetSyncEntry(entry with { Vector = merged, Written = merged });
+                    return false;
+                }
+
                 // Changed on both since they last met: kept both ways, this device's in place and the other's waiting for the person. A
                 // later version from the same device replaces its earlier one in the list.
                 foreach (var older in store.SyncConflicts().Where(c => c.Kind == record.Kind && c.Key == record.Key && c.FromDevice == from && c.Vector.Compare(record.Vector) is Order.Older))
@@ -726,6 +771,11 @@ public static class SyncEngine
                 local.SaveSetting((string?)data["key"] ?? record.Key, data["value"]?.DeepClone());
                 store.SetSyncEntry(entry);
                 break;
+            case PrinterKind:
+                KeepFirst(store, entry, keep);
+                SavePrinters(local, [.. Printers(local.Settings()[PrintersSetting]).Where(p => !SameName(p, record.Key)), (JsonObject)data.DeepClone()]);
+                store.SetSyncEntry(entry);
+                break;
             default:
                 // A kind a newer GroupLab writes and this one does not know: remembered, so it is not asked about again, and left alone.
                 store.SetSyncEntry(entry);
@@ -765,6 +815,11 @@ public static class SyncEngine
                 local.SaveSetting(key, null);
                 store.SetSyncEntry(entry);
                 break;
+            case PrinterKind:
+                KeepFirst(store, entry, keep);
+                SavePrinters(local, [.. Printers(local.Settings()[PrintersSetting]).Where(p => !SameName(p, key))]);
+                store.SetSyncEntry(entry);
+                break;
             default:
                 store.SetSyncEntry(entry);
                 break;
@@ -785,6 +840,123 @@ public static class SyncEngine
         BarrelKind => book with { Barrels = [.. book.Barrels.Where(b => b.Name.ToLowerInvariant() != key)] },
         _ => book with { Loads = [.. book.Loads.Where(l => l.Name.ToLowerInvariant() != key)] },
     };
+
+    // ---- The printers, entry 506 section 2.
+
+    /// <summary>The two checks of a printer waiting to be chosen between: this device's (null where it is gone here) and the other's; null where the waiting record is not a printer's check.</summary>
+    public static (JsonObject? Here, JsonObject There)? PrinterVersions(ISyncLocal local, SyncConflict conflict)
+    {
+        ArgumentNullException.ThrowIfNull(local);
+        ArgumentNullException.ThrowIfNull(conflict);
+        if (conflict.Kind != PrinterKind || conflict.Payload is null || JsonNode.Parse(conflict.Payload) is not JsonObject there || PrinterProfile.FromJson(there) is null)
+        {
+            return null;
+        }
+
+        return (Printers(local.Settings()[PrintersSetting]).FirstOrDefault(p => SameName(p, conflict.Key)), there);
+    }
+
+    /// <summary>The printers in a <c>printers</c> setting's list that have a name, as the settings file holds them.</summary>
+    private static IEnumerable<JsonObject> Printers(JsonNode? list) =>
+        list is JsonArray all ? all.OfType<JsonObject>().Where(p => p["name"]?.GetValueKind() == JsonValueKind.String && ((string)p["name"]!).Length > 0) : [];
+
+    private static bool SameName(JsonObject printer, string key) => string.Equals((string?)printer["name"], key, StringComparison.OrdinalIgnoreCase);
+
+    private static void SavePrinters(ISyncLocal local, IReadOnlyList<JsonObject> printers) =>
+        local.SaveSetting(PrintersSetting, new JsonArray([.. printers.Select(p => (JsonNode)p.DeepClone())]));
+
+    /// <summary>A list as text that does not depend on its order, to tell whether two lists hold the same printers.</summary>
+    private static string ListText(IEnumerable<JsonObject> printers) =>
+        string.Join("|", printers.Select(p => p.ToJsonString()).Order(StringComparer.Ordinal));
+
+    /// <summary>A printer's own date: the later of the day it was checked and the day it was said to be calibrated or serviced.</summary>
+    internal static DateOnly PrinterDate(JsonObject printer) =>
+        PrinterProfile.FromJson(printer) is { } p ? (p.ChangedOn is { } changed && changed > p.MeasuredOn ? changed : p.MeasuredOn) : DateOnly.MinValue;
+
+    /// <summary>
+    /// Entry 506 section 2: the whole list of printers from another device. A build that also writes each printer on its own marks its list,
+    /// and its printers arrive one by one, so the list itself changes nothing here. An older build's list is merged by name and each printer's
+    /// own date: a printer not here is added unless it was deleted here on or after its date, a newer check replaces this one, an older one is
+    /// left, and two checks of the same date wait for the person. A printer missing from the list is never removed, because an older build
+    /// cannot say it deleted one; and where the merge leaves this device with a different list, it goes back as the newer one, so the older
+    /// build takes every printer kept here.
+    /// </summary>
+    private static bool MergePrinterList(SessionStore store, ISyncLocal local, Dictionary<(string Kind, string Key), Here> current, ChangeRecord record, string from, string me, string now)
+    {
+        var entry = store.SyncEntryOf(SettingKind, PrintersSetting) ?? new SyncEntry(SettingKind, PrintersSetting, null, VersionVector.Empty, null, VersionVector.Empty);
+        if (record.Vector.Compare(entry.Vector) is Order.Same or Order.Older)
+        {
+            return false;
+        }
+
+        bool fromNewer = record.Data?[PerPrinter]?.GetValueKind() == JsonValueKind.True;
+        var theirs = record.DeletedUtc is null ? Printers(record.Data?["value"]).ToList() : [];
+        var seen = entry.Vector.Merge(record.Vector);
+        bool changed = false, sendBack = false;
+        if (!fromNewer)
+        {
+            var mine = Printers(local.Settings()[PrintersSetting]).ToList();
+            var ledger = store.SyncLedger();
+            foreach (var printer in theirs)
+            {
+                string name = (string)printer["name"]!, key = name.ToLowerInvariant();
+                int at = mine.FindIndex(p => SameName(p, name));
+                if (at < 0)
+                {
+                    if (ledger.TryGetValue((PrinterKind, key), out var gone) && gone.DeletedUtc is { } deletedUtc
+                        && DateOnly.FromDateTime(DateTime.Parse(deletedUtc, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal)) >= PrinterDate(printer))
+                    {
+                        continue;
+                    }
+
+                    mine.Add((JsonObject)printer.DeepClone());
+                    changed = true;
+                    continue;
+                }
+
+                if (mine[at].ToJsonString() == printer.ToJsonString())
+                {
+                    continue;
+                }
+
+                var (theirDate, myDate) = (PrinterDate(printer), PrinterDate(mine[at]));
+                if (theirDate > myDate)
+                {
+                    store.Keep(PrinterKind, key, mine[at].ToJsonString(), $"replaced by a newer check from device {from}", now);
+                    mine[at] = (JsonObject)printer.DeepClone();
+                    changed = true;
+                }
+                else if (theirDate == myDate)
+                {
+                    // Two checks of one printer on the same day: this device's stays in place and the other's waits for the person.
+                    foreach (var older in store.SyncConflicts().Where(c => c.Kind == PrinterKind && c.Key == key && c.FromDevice == from))
+                    {
+                        store.RemoveSyncConflict(older.Id);
+                    }
+
+                    store.AddSyncConflict(PrinterKind, key, VersionVector.Empty, printer.ToJsonString(), from, now);
+                }
+            }
+
+            if (changed)
+            {
+                SavePrinters(local, mine);
+            }
+
+            sendBack = ListText(mine) != ListText(theirs);
+        }
+
+        var hereNow = Refresh(store, local, current, SettingKind, PrintersSetting, null);
+        var vector = sendBack ? seen.Bump(me) : seen;
+        store.SetSyncEntry(entry with
+        {
+            Hash = hereNow?.Hash,
+            Vector = vector,
+            DeletedUtc = hereNow is null ? entry.DeletedUtc ?? now : null,
+            Written = sendBack ? entry.Written : vector,
+        });
+        return changed;
+    }
 
     // ---- The original photographs.
 

@@ -263,6 +263,23 @@ internal static class PhoneSync
         return waiting;
     }
 
+    /// <summary>Entry 506 section 2: the printers with two checks waiting, each with this phone's check (null where it is gone here) and the other's.</summary>
+    internal static IReadOnlyList<(SyncConflict Conflict, System.Text.Json.Nodes.JsonObject? Here, System.Text.Json.Nodes.JsonObject There)> PrintersToChoose()
+    {
+        var store = PhoneAnalysis.Store();
+        var local = Local();
+        var waiting = new List<(SyncConflict, System.Text.Json.Nodes.JsonObject?, System.Text.Json.Nodes.JsonObject)>();
+        foreach (var conflict in store.SyncConflicts().Where(c => c.Kind == SyncEngine.PrinterKind))
+        {
+            if (SyncEngine.PrinterVersions(local, conflict) is { } versions)
+            {
+                waiting.Add((conflict, versions.Here, versions.There));
+            }
+        }
+
+        return waiting;
+    }
+
     /// <summary>The other device's name as it wrote it in the folder, where it can be read now.</summary>
     internal static string DeviceName(string code) =>
         (Phone.Platform is { } platform ? With(platform, folder =>
@@ -291,6 +308,11 @@ internal static class PhoneSync
         else if (PoolsToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } p } pooled)
         {
             ShowPoolChoice(page, behind, p, pooled.Here, pooled.There, done);
+            return;
+        }
+        else if (PrintersToChoose().FirstOrDefault(w => w.Conflict.Id == conflictId) is { Conflict: { } printer } checks)
+        {
+            ShowPrinterChoice(page, behind, printer, checks.Here, checks.There, done);
             return;
         }
         else
@@ -450,6 +472,104 @@ internal static class PhoneSync
             Bottom(PoolChoices.KeepThisDevice(phone: true), () => Choose(SyncChoice.KeepThisOne)),
             Bottom(PoolChoices.KeepOther(there, phone: true), () => Choose(SyncChoice.KeepTheOther)),
             Bottom(PoolChoices.KeepBothShort, () => Choose(SyncChoice.KeepBoth)),
+            Bottom(SyncScreens.DecideLater, Close, textOnly: true),
+        ];
+        for (int k = 0; k < buttons.Length; k++)
+        {
+            Grid.SetRow(buttons[k], k / 2);
+            Grid.SetColumn(buttons[k], k % 2);
+            bar.Children.Add(buttons[k]);
+        }
+
+        var whole = new DockPanel();
+        DockPanel.SetDock(bar, Dock.Bottom);
+        whole.Children.Add(bar);
+        whole.Children.Add(new ScrollViewer { Content = column });
+        page.Content = null;
+        page.Content = whole;
+    }
+
+    /// <summary>
+    /// Entry 506 section 2, in concept A's pattern (entry 504): a full page, "Choose a check", with Back. One line with the printer's name; this
+    /// phone's check and the other's as two cards, each with the device, when it was checked, across, down and how it was made, a row that
+    /// differs tagged; the four choices fixed at the bottom in two rows of two. Back and Decide later put the page underneath back.
+    /// </summary>
+    private static void ShowPrinterChoice(UserControl page, Control behind, SyncConflict conflict, System.Text.Json.Nodes.JsonObject? mine, System.Text.Json.Nodes.JsonObject theirs, Action done)
+    {
+        string there = DeviceName(conflict.FromDevice);
+        var choice = PrinterChoices.Build(mine, theirs, PoolChoices.ThisDevice(Setup.DeviceName, phone: true), there, conflict.FoundUtc, phone: true);
+
+        void Close()
+        {
+            ProblemSheet.PutBack(page, behind);
+            done();
+        }
+
+        void Choose(SyncChoice chosen)
+        {
+            SyncEngine.Resolve(PhoneAnalysis.Store(), Local(), conflict.Id, chosen, DateTime.UtcNow, there);
+            DiagnosticLog.Info("sync.choose", ("choice", chosen.ToString()), ("kind", "printer"));
+            Close();
+        }
+
+        static Control Row(Control left, Control? right)
+        {
+            var row = new DockPanel();
+            if (right is not null)
+            {
+                DockPanel.SetDock(right, Dock.Right);
+                right.Margin = new Thickness(8, 0, 0, 0);
+                row.Children.Add(right);
+            }
+
+            row.Children.Add(left);
+            return row;
+        }
+
+        static Control Card(PrinterChoiceCard card)
+        {
+            var column = new StackPanel { Spacing = 6 };
+            column.Children.Add(Row(Screens.Heading(card.Device), Screens.Quiet(card.When)));
+            foreach (var row in card.Rows)
+            {
+                var differs = row.Differs
+                    ? new Border { Child = new TextBlock { Text = SyncScreens.Differs, TextWrapping = TextWrapping.Wrap }, Padding = new Thickness(6, 1), VerticalAlignment = VerticalAlignment.Center, Classes = { PhoneStyles.Pill } }
+                    : null;
+                column.Children.Add(Screens.Quiet(row.What));
+                column.Children.Add(Row(Screens.Line(row.Value), differs));
+            }
+
+            return new Border { Child = column, Classes = { PhoneStyles.Card } };
+        }
+
+        var column = new StackPanel { Spacing = 10 };
+        column.Children.Add(Screens.BackButton("Back", Close).Id("printer-choice-back"));
+        column.Children.Add(Screens.Title(PrinterChoices.PhoneTitle));
+        column.Children.Add(Screens.Line(choice.PhoneLine));
+        column.Children.Add(Card(choice.Here));
+        column.Children.Add(Card(choice.There));
+
+        Button Bottom(string words, Action chosen, bool textOnly = false)
+        {
+            var button = textOnly
+                ? new Button { Content = words, HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Center, Classes = { GroupLab.App.Theme.AppStyles.Link } }
+                : Screens.Choice(words, chosen);
+            if (textOnly)
+            {
+                button.Click += (_, _) => chosen();
+            }
+
+            button.MinHeight = Math.Max(44, Screens.Touch);
+            Avalonia.Automation.AutomationProperties.SetName(button, words);
+            return button;
+        }
+
+        var bar = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), RowDefinitions = new RowDefinitions("Auto,Auto"), ColumnSpacing = 8, RowSpacing = 8, Margin = new Thickness(0, 8, 0, 0) };
+        Control[] buttons =
+        [
+            Bottom(PrinterChoices.UseThisDevice(phone: true), () => Choose(SyncChoice.KeepThisOne)),
+            Bottom(PrinterChoices.UseOther(there, phone: true), () => Choose(SyncChoice.KeepTheOther)),
+            Bottom(PrinterChoices.KeepBothShort, () => Choose(SyncChoice.KeepBoth)),
             Bottom(SyncScreens.DecideLater, Close, textOnly: true),
         ];
         for (int k = 0; k < buttons.Length; k++)

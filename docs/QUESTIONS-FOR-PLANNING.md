@@ -12,38 +12,12 @@ Questions going out from the Claude Code session to the planning session, which 
 
 ---
 
-## 2026-11-20, question 117: how a printer's check travels in sync so both checks of one printer can be kept
-
-**Status: open.** From entry 505 section 3.2, the part of entry 493 section 2 not built: "If a printer with the same name already exists
-on the receiving device with a different check, keep both and ask which to use, rather than replacing one silently."
-
-Today the printers travel as one setting, `printers`, the whole list (`SyncEngine`, `SettingKind`, `DataExport.PortableSettings`): the
-newer list wins whole and the replaced one is among the kept copies, so a printer deleted on one device can come back from another, and
-two checks of one printer never stand side by side. Keeping both needs each printer to travel on its own, with a mark when one is
-deleted. The catch is the App Store's GroupLab 1.0 (build 226) and every nightly before this change: they sync the whole list, and a
-newer build that stopped writing it would look, to them, like a device that deleted every printer.
-
-- **(a)** A record per printer (a new kind, `printer`, keyed by name), and the whole-list setting still written beside it for older
-  builds; a newer build reading an older build's whole list merges it by name and by each printer's own `changedOn` date, and removes a
-  printer only on a per-printer delete. Cost: two forms of the same data for as long as older builds sync (until 1.0 is replaced on the
-  App Store and the nightlies move on), and the most tests; the safest for a person with a phone on 1.0.
-- **(b)** Only the whole list, merged by name and date instead of taken whole, with a list of deleted printers' names and dates as one
-  more travelling setting (older builds ignore a setting they do not carry). Cost: less code, one form; but an older build still takes a
-  newer list whole until it is updated.
-- **(c)** Leave it as built: Import names the difference and keeps this device's; sync takes the newer list whole and keeps the other.
-
-Either (a) or (b) also needs the question itself, "two checks of this printer: which to use?", on both platforms, which is a look for
-Alan (it would go in for-alan.md as DESIGN NEEDED). I would choose (a), because a person with GroupLab 1.0 on a phone and a nightly on
-the computer is exactly who syncs printers, and it is the only one where neither build can lose a printer. Nothing waits on it.
-
----
-
 ## Answered, and moved
 
-These 62 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
+These 63 are in [`docs/notes/archive/questions-answered.md`](notes/archive/questions-answered.md), whole. They are listed here so a
 number is never reused and a question is never lost:
 
-> 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 36, 34.
+> 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 43, 36, 34.
 
 ---
 

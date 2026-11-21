@@ -112,18 +112,34 @@ public static class SyncScreens
         ? "The cloud app that keeps it may have signed out, or the folder was moved or deleted."
         : "The drive it is on may be unplugged, its cloud app signed out, or the folder moved or deleted.";
 
-    /// <summary>The Sessions banner: "1 session to choose between", and from entry 498 the pooled sets with them.</summary>
-    public static string ToChooseBanner(int n, int pools = 0)
+    /// <summary>
+    /// The Sessions banner: "1 session to choose between", from entry 498 the pooled sets with them, and from entry 506 the printers with two
+    /// checks waiting: "1 session, 1 pooled set and 1 printer to choose between".
+    /// </summary>
+    public static string ToChooseBanner(int n, int pools = 0, int printers = 0)
     {
-        string sessions = n == 1 ? "1 session" : $"{n} sessions";
-        string pooled = pools == 1 ? "1 pooled set" : $"{pools} pooled sets";
-        return (n, pools) switch
+        var parts = new List<string>();
+        if (n > 0 || (pools == 0 && printers == 0))
         {
-            (_, 0) => sessions,
-            (0, _) => pooled,
-            _ => sessions + " and " + pooled,
-        } + " to choose between";
+            parts.Add(n == 1 ? "1 session" : $"{n} sessions");
+        }
+
+        if (pools > 0)
+        {
+            parts.Add(pools == 1 ? "1 pooled set" : $"{pools} pooled sets");
+        }
+
+        if (printers > 0)
+        {
+            parts.Add(printers == 1 ? "1 printer" : $"{printers} printers");
+        }
+
+        string said = parts.Count == 1 ? parts[0] : string.Join(", ", parts.Take(parts.Count - 1)) + " and " + parts[^1];
+        return said + " to choose between";
     }
+
+    /// <summary>Entry 506 section 2: the line under a printer in Printers and paper while two checks of it wait, with a Choose button beside it.</summary>
+    public const string PrinterWaiting = "Two checks of this printer, from two devices, are waiting for you to choose.";
 
     public static string KeepThis(string device) => $"Keep {device}'s";
 

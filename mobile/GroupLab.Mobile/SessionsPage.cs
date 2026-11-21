@@ -51,20 +51,28 @@ public sealed class SessionsPage : UserControl
         // Entry 498 section 3: a pooled set changed on two devices waits the same way, its row tagged by the pool's row id.
         IReadOnlyList<(SyncConflict Conflict, SessionRecord? Here, SessionRecord There)> toChoose;
         IReadOnlyList<(SyncConflict Conflict, PoolRecord? Here, PoolRecord There)> poolsToChoose;
+        // Entry 506 section 2: a printer with two checks waiting is counted in the same banner, and Choose opens it last.
+        int printersToChoose;
+        long? firstPrinter;
         try
         {
             toChoose = PhoneSync.ToChoose();
             poolsToChoose = PhoneSync.PoolsToChoose();
+            var printers = PhoneSync.PrintersToChoose();
+            printersToChoose = printers.Count;
+            firstPrinter = printers.Count > 0 ? printers[0].Conflict.Id : null;
         }
         catch (Microsoft.Data.Sqlite.SqliteException)
         {
             toChoose = [];
             poolsToChoose = [];
+            printersToChoose = 0;
+            firstPrinter = null;
         }
 
-        if (toChoose.Count + poolsToChoose.Count > 0)
+        if (toChoose.Count + poolsToChoose.Count + printersToChoose > 0)
         {
-            long first = toChoose.Count > 0 ? toChoose[0].Conflict.Id : poolsToChoose[0].Conflict.Id;
+            long first = toChoose.Count > 0 ? toChoose[0].Conflict.Id : poolsToChoose.Count > 0 ? poolsToChoose[0].Conflict.Id : firstPrinter!.Value;
             column.Children.Add(new Border
             {
                 Child = new StackPanel
@@ -72,7 +80,7 @@ public sealed class SessionsPage : UserControl
                     Spacing = 8,
                     Children =
                     {
-                        Screens.Heading(GroupLab.Core.Sync.SyncScreens.ToChooseBanner(toChoose.Count, poolsToChoose.Count)),
+                        Screens.Heading(GroupLab.Core.Sync.SyncScreens.ToChooseBanner(toChoose.Count, poolsToChoose.Count, printersToChoose)),
                         Screens.Primary("Choose", () => PhoneSync.ShowConflict(this, first, ToList)).Id("sessions-sync-choose"),
                     },
                 },

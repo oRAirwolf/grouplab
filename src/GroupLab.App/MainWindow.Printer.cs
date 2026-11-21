@@ -162,6 +162,12 @@ public sealed partial class MainWindow
             printerList.Children.Add(use);
             // Entry 493: both numbers plainly, so another GroupLab can be given them under Numbers from another GroupLab.
             printerList.Children.Add(Line(p.CopyLine));
+            // Entry 506 section 2: two checks of this printer from two devices, waiting to be chosen between.
+            if (PrintersToChoose().FirstOrDefault(w => string.Equals(w.Conflict.Key, p.Name, StringComparison.OrdinalIgnoreCase)).Conflict is { } waiting)
+            {
+                printerList.Children.Add(Line(GroupLab.Core.Sync.SyncScreens.PrinterWaiting));
+                printerList.Children.Add(Row(Button("Choose", () => ShowSyncConflict(waiting.Id))));
+            }
             // Entry 291 section 5.2: a check holds for the sheets printed before the printer changed, and says so once it may not.
             if (p.Stale(Today()) is { } stale)
             {

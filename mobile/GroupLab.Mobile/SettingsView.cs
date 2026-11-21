@@ -32,6 +32,22 @@ public sealed class SettingsView : UserControl
     private readonly TextBlock nothing = Screens.Dim(SettingsMenu.NothingFound);
     private readonly Border riflesFound;
 
+    /// <summary>Entry 506 section 2: the waiting choice between two checks of the printer named, or null.</summary>
+    private static long? PrinterWaiting(string name)
+    {
+        try
+        {
+            return PhoneSync.PrintersToChoose().FirstOrDefault(w => string.Equals(w.Conflict.Key, name, StringComparison.OrdinalIgnoreCase)).Conflict?.Id;
+        }
+        catch (Microsoft.Data.Sqlite.SqliteException)
+        {
+            return null;
+        }
+    }
+
+    private void ChoosePrinterCheck(long conflictId) =>
+        PhoneSync.ShowConflict(this, conflictId, () => Shell.Current?.ShowSettings(SettingsCategory.Printers));
+
     /// <summary>
     /// Entry 482 section 2 (question 112, Alan's 2A): the row between Shooting defaults and Printers and paper that opens Ballistics at the
     /// rifle and load forms, because a person looking in Settings for their rifles did not find them (error report 42).
@@ -391,6 +407,12 @@ public sealed class SettingsView : UserControl
             column.Children.Add(use);
             // Entry 493: both numbers plainly, so another GroupLab can be given them under Numbers from another GroupLab.
             column.Children.Add(Screens.Dim(p.CopyLine));
+            // Entry 506 section 2: two checks of this printer from two devices, waiting to be chosen between.
+            if (PrinterWaiting(p.Name) is { } waitingId)
+            {
+                column.Children.Add(Screens.Line(GroupLab.Core.Sync.SyncScreens.PrinterWaiting));
+                column.Children.Add(Screens.Primary("Choose", () => ChoosePrinterCheck(waitingId)).Id("printer-choose"));
+            }
             // Entry 291 section 5.2: a check holds for the sheets printed before the printer changed, and says so once it may not.
             if (p.Stale(DateOnly.FromDateTime(DateTime.Now)) is { } stale)
             {
