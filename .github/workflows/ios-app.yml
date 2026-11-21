@@ -126,6 +126,15 @@ jobs:
             test -f "$app/$item" || { echo "::error::The application does not carry $item"; exit 1; }
           done
           ls "$app/targets/frozen" | head -3
+          # Entry 508 section 1: the launch screen compiled into the bundle, named by its Info.plist, with its colors and the lockup in
+          # the compiled asset catalog.
+          test "$(plutil -extract UILaunchStoryboardName raw "$app/Info.plist")" = "LaunchScreen" || { echo "::error::Info.plist names no launch storyboard"; exit 1; }
+          test -d "$app/LaunchScreen.storyboardc" || { echo "::error::The application carries no compiled launch screen"; ls "$app" | head -40; exit 1; }
+          xcrun assetutil --info "$app/Assets.car" > assets.json
+          for name in LaunchBackground LaunchPanel LaunchPanel2 LaunchLine LaunchLine2 LaunchAmber LaunchLockup; do
+            grep -qE "\"Name\" ?: ?\"$name\"" assets.json || { echo "::error::The asset catalog carries no $name"; exit 1; }
+          done
+          echo "the launch screen is in the bundle with its seven assets"
           # Entry 292 section 2.3: the share extension inside the application, and a share-services extension. The simulator self-test
           # proves the app group, which the simulator grants from the entitlements the build embeds.
           appex="$app/PlugIns/GroupLab.Share.appex"
@@ -181,6 +190,8 @@ jobs:
           xcrun simctl install "$UDID" "$APP"
           # The first start as a person sees it, with the first run's questions if this build asks them.
           xcrun simctl launch "$UDID" org.grouplab.app
+          # Entry 508 section 1: the launch screen, if the first frame has not replaced it yet (best effort, not a check).
+          xcrun simctl io "$UDID" screenshot shots/00-launch-screen.png > /dev/null || true
           sleep 25
           xcrun simctl io "$UDID" screenshot shots/00-first-start.png > /dev/null
           xcrun simctl terminate "$UDID" org.grouplab.app || true
