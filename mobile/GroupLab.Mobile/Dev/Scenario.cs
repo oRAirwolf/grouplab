@@ -47,7 +47,9 @@ namespace GroupLab.Mobile.Dev;
 /// outside taps the control named <c>"tap"</c> with a real touch, and <c>expect</c>, what that tap should have done (entry 353, see
 /// <see cref="Hold"/>); <c>audit</c>, a wait while a script outside reads the screen as a screen reader would (entry 461, see
 /// <see cref="Audit"/>); <c>close</c>, the system's own sheet over the screen, such as the photo picker, closed as its Cancel would, or
-/// else the camera. A step it does not know fails and says so. Before the
+/// else the camera; <c>zoom</c>, the result's picture of the sheet put at the top of the page and enlarged <c>"by"</c> so many times about
+/// its middle, or with <c>"until": "tags"</c> a little at a time until the holes' tags show (entry 508 section 4). A step it does not know
+/// fails and says so. Before the
 /// application starts, the first run's questions are answered unless the scenario has <c>"firstRun": "ask"</c>, and <c>"caliber"</c> with
 /// <c>"distanceInches"</c> are saved as the Capture screen's setup. <c>"stopOnFailure": false</c> carries on past a step that failed.
 /// </summary>
@@ -565,6 +567,8 @@ internal static class Scenario
                 return await Demo(TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 20), 1, 600)), (int)step.Number("screenshotAt", 0), Name(step.Text("name"), "demo"));
             case "sync-sample":
                 return await SyncSample(step.Text("text") != "off");
+            case "zoom":
+                return await Zoom(step.Number("by", 0), step.Text("until"), TimeSpan.FromSeconds(Math.Clamp(step.Number("seconds", 20), 1, 120)));
             case "log":
                 int lines = (int)Math.Clamp(step.Number("lines", 200), 1, 100_000);
                 string file = Path.Combine(Results, Name(step.Text("name"), "log") + ".txt");
@@ -1191,6 +1195,63 @@ internal static class Scenario
     /// it 2.8 s after it showed (run 38513312105), past the quiet time, and this failed in the moment between the asking and the picker
     /// appearing; so such a picker is waited for, and closed, within <paramref name="most"/>, and only one still unseen then is a failure.
     /// </summary>
+    /// <summary>
+    /// Entry 508 section 4: the result's picture of the sheet zoomed, for the walk's picture of the holes' tags. The picture is put at the top
+    /// of the page first, so the screenshot shows it. "by" enlarges it that many times at once (a number under 1 makes it smaller, and fitted
+    /// again at the least); "until": "tags" enlarges it by a quarter at a time, letting each be drawn, until the tags show, and fails if
+    /// they never do by the most it zooms or the time given.
+    /// </summary>
+    private static async Task<(bool, string)> Zoom(double by, string? until, TimeSpan most)
+    {
+        var picture = await OnUi(() =>
+        {
+            var found = Showing().OfType<ResultView.SheetPicture>().FirstOrDefault();
+            if (found?.FindAncestorOfType<ScrollViewer>() is { Content: Visual content } holder && found.TranslatePoint(default, content) is { } at)
+            {
+                holder.Offset = new Vector(holder.Offset.X, Math.Clamp(at.Y, 0, Math.Max(0, holder.Extent.Height - holder.Viewport.Height)));
+            }
+
+            if (found is not null && by > 0)
+            {
+                found.ZoomBy(by);
+            }
+
+            return found;
+        });
+        if (picture is null)
+        {
+            return (false, "no picture of a sheet is showing");
+        }
+
+        if (until == "tags")
+        {
+            var stop = Stopwatch.StartNew();
+            while (true)
+            {
+                await Task.Delay(300);
+                var (shown, zoom) = await OnUi(() => (picture.TagsShown, picture.Zoom));
+                if (shown)
+                {
+                    break;
+                }
+
+                if (zoom >= ResultView.SheetPicture.MostZoom - 1e-9 || stop.Elapsed > most)
+                {
+                    return (false, string.Create(CultureInfo.InvariantCulture, $"no tags by {zoom:0.##} times"));
+                }
+
+                await OnUi(() =>
+                {
+                    picture.ZoomBy(1.25);
+                    return true;
+                });
+            }
+        }
+
+        double now = await OnUi(() => picture.Zoom);
+        return (true, string.Create(CultureInfo.InvariantCulture, $"{now:0.##} times"));
+    }
+
     private static async Task<(bool, string)> Close(TimeSpan most)
     {
         var closed = new List<string>();

@@ -56,11 +56,17 @@ public class PhoneScreensScenarioTests
             (Repo.PathTo("scripts", "scenarios", "stand-in-poster.jpg"), "stand-in-poster.jpg"));
         var failed = Failed(results);
         Assert.True(failed.Count == 0, string.Join(Environment.NewLine, failed));
-        foreach (string screen in new[] { "scale-markers", "settings-shooting", "settings-data", "fingerprint", "pairing", "open-targets" })
+        foreach (string screen in new[] { "result-zoomed", "scale-markers", "settings-shooting", "settings-data", "fingerprint", "pairing", "open-targets" })
         {
             Assert.True(File.Exists(Path.Combine(Scenario.Results, screen + ".png")), screen + " was not pictured");
             Assert.True(File.Exists(Path.Combine(Scenario.Results, screen + ".quality.json")), screen + " has no quality file");
         }
+
+        // Entry 508 section 4: the zoomed result is pictured with the holes' tags showing, and zoomed back out before the walk goes on.
+        var zooms = results["steps"]!.AsArray().Where(s => s!["do"]!.GetValue<string>() == "zoom").Select(s => s!["detail"]!.GetValue<string>()).ToList();
+        Assert.Equal(2, zooms.Count);
+        Assert.NotEqual("1 times", zooms[0]);
+        Assert.Equal("1 times", zooms[1]);
     }
 
     [AvaloniaFact]
