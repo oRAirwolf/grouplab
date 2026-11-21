@@ -470,7 +470,7 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 
 - The development build's scripted test on the iPhone simulator no longer gives up on a button the simulator has not yet finished drawing after its first keyboard.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.209)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
