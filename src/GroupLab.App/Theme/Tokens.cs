@@ -332,6 +332,9 @@ public static class Tokens
     public const double MarkSelectedCoreWidth = 2;
     public static Color MarkImpact { get; } = Hex(0xc8442f);
     public static Color MarkSelected { get; } = Hex(0xe0912f);
+
+    /// <summary>Entry 507 section 2: the splash's faint 30 pixel grid on the dark ground, as the splash canvas draws it.</summary>
+    public static Color SplashGrid { get; } = Hex(0x1f2226);
     public static Color MarkExcluded { get; } = Hex(0x9aa1a9);
     /// <summary>
     /// NOTES-FROM-PLANNING.md entry 425, a person's report passed on by Alan: in a pooled set the selected shot was the same orange as the

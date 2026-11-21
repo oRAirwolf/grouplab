@@ -270,7 +270,7 @@ public sealed partial class MainWindow
     /// <summary>Every sheet the library lists: the built-in ones in the catalogue's order, then the person's own by name.</summary>
     private IReadOnlyList<LibrarySheet> LibrarySheets()
     {
-        builtInSheets ??= PrintPanel.BuiltIn();
+        builtInSheets ??= StartupWork.TakeLibrary(settingsStore) ?? PrintPanel.BuiltIn();
         return [.. builtInSheets, .. ownSheets.List()];
     }
 

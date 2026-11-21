@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Entry 507 section 2: Android 12 and later always show the system's start screen. It keeps GroupLab's icon and, whatever the phone's
+     light or dark setting, stands on GroupLab's dark ground (#131417) with the icon on a slightly lighter circle (#1a1c20), as the splash
+     canvas's Phones board draws it. The rest of the theme is values/styles.xml's, repeated because a style is replaced whole. -->
+<resources>
+  <style name="GroupLabTheme" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
+    <item name="android:windowActionBar">false</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowSplashScreenBackground">@color/ic_launcher_background</item>
+    <item name="android:windowSplashScreenIconBackgroundColor">#1a1c20</item>
+  </style>
+</resources>

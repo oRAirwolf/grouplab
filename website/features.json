@@ -321,7 +321,7 @@
         "offers its own stated resolution as the scale",
         "Marking by hand on a store-bought target, a click on a hole",
         "Find holes now finds holes that show as rings", "Snap to holes on the marking screen", "a click the snap cannot match to a hole now stays where you clicked",
-        "Find holes now finds holes that show as rings", "Snap to holes on the marking screen", "A click on a hole through dark print now lands on the hole"
+        "Find holes now finds holes that show as rings", "Snap to holes on the marking screen", "A click on a hole through dark print, such as a hole in a black bull"
       ],
       "tour": "marking",
       "guide": "3-photograph-or-scan-it",
@@ -1291,6 +1291,22 @@
       "since": "0.2.0-nightly.91",
       "note": "GroupLab now publishes Mac builds",
       "noPicture": "the Mac builds look like the others; it is a platform, not a screen"
+    },
+    {
+      "key": "splash",
+      "group": "Updates and platforms",
+      "name": "A start window that shows what is loading",
+      "sentence": "On the computer, a small window shows while GroupLab starts: the version, the step it is on, and a five shot group that fills in as each step finishes, the last drawing the group's spread. It closes as soon as the main window is ready and is never waited for; with your computer's animations turned off it shows the finished picture and only the steps change. The phones keep their own start screens, now on GroupLab's dark ground.",
+      "shot": null,
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "mobile": {"words": "The phones keep the system's own start screen with GroupLab's icon, now on GroupLab's dark ground, rather than a start window of GroupLab's own."},
+      "since": "next",
+      "note": "While GroupLab starts on the computer",
+      "noPicture": "it shows for under a second while GroupLab starts, and the screenshot walk opens GroupLab already started"
     },
     {
       "key": "pool-set",

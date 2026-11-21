@@ -825,8 +825,16 @@ public sealed partial class MainWindow : Window
         try
         {
             ownSheets = new GroupLab.Core.Rendering.OwnSheets(settings.SheetsFolder);
-            sessions = SessionStore.Open(settings.DatabasePath, RecordsPath);
-            book = sessions.LoadBook();
+            // Entry 507 section 2: the first window finds them opened already, beside Avalonia's own start-up; a failure is thrown here alike.
+            if (StartupWork.TakeRecords(settings) is { } ready)
+            {
+                (sessions, book) = (ready.Store, ready.Book);
+            }
+            else
+            {
+                sessions = SessionStore.Open(settings.DatabasePath, RecordsPath);
+                book = sessions.LoadBook();
+            }
         }
         catch (Exception ex) when (ex is Microsoft.Data.Sqlite.SqliteException or InvalidDataException or IOException or UnauthorizedAccessException)
         {
@@ -4041,7 +4049,7 @@ public sealed partial class MainWindow : Window
         }
 
         static double Measured(string text, FontFamily font) => new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-            new Typeface(font), Tokens.DetailSize, Brushes.Black).WidthIncludingTrailingWhitespace;
+            new Typeface(font), Tokens.DetailSize, null).WidthIncludingTrailingWhitespace;
 
         double date = Widest(dates, "date", 96, 200);
         double radius = Widest(radii, "mean radius, interval", 220, 340);

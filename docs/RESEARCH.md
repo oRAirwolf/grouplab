@@ -107,6 +107,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
+| A splash's cost at start-up, precompiled and not (entry 507 section 2) | not written | One application on one machine: a first window costs about 200 ms of JIT work in a plain build and almost nothing precompiled, which is the expected effect of precompiling, recorded in PERFORMANCE.md. |
 | A light hole closed in by dark print, found by its light middle (entry 505 section 3.2) | not written | A fix to the snap with no design known, measured on one rebuilt page from a tester's scan whose pixels cannot be published; nothing a shooter does changes beyond installing it, which the release note says. |
 | Whether GroupLab could run on iOS 18 (entry 502) | not written | A decision about GroupLab's own floor; that a .NET iOS app built with the iOS 26 SDK needed no change at an iOS 18 floor is one measurement of one code base, which would not change what another developer builds; the study is in IOS-PLAN.md |
 | OpenCV's video reader in every Windows download, found listing files for the light installer (entry 474 section 4, entry 481 part B) | **written**, as the section "Found the same way again, six weeks later" of `/research/smaller-installer/` (entry 481 part C) | It is the same lesson as the article found the same way: 12 MB of every Windows zip that never ran, found only by listing the files for another question. A section, not an article, because the article already makes the point and this is its second instance. |

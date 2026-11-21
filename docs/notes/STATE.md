@@ -9,23 +9,22 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-21, after entry 506; the inbox is empty.
+**Last rewritten:** 2026-11-21, after entry 507; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 506 (2026-11-21)**: error reports 52 and 53 (one report, nightly 235): the 2 MOA sheet's printed center dot read darker than
-  the print and was taken for a hole; a dark mark wholly inside a printed dot is now refused (`PrintedDotTests`); issues closed; the
-  Discord reply is drafted in for-alan.md. **Question 117 (a) built:** each printer syncs as its own record beside the whole list, which
-  1.0 and older nightlies still get; an older list is merged by name and date and never deletes; two checks of one printer open side
-  by side (`PrinterChoices`, concept A's pattern) on both platforms. **The phone's result picture pinches in and out**, and shows the
-  tags once zoomed in (they fit on the first pinch in, because look 1A moves them clear). **Left that needs nobody:** the live
-  NOTES-FROM-PLANNING.md holds about 50 entries again (split-logs.py, a chores-haiku job); a phone picture of the zoomed result with
-  its tags for the Features page and the tour, from the weekly screenshot walk; a test from report 52's own photograph if the person
-  sends it.
-- **Entry 505 (2026-11-20)**: iOS 18.0 is the install floor, 26 the supported one; below 26 the phone shows Alan's warning first
-  (`UnsupportedIos`). The App Store description gains the sentence with the next version Alan releases. Question 116 closed (a).
+- **Entry 507 (2026-11-21)**: error report 54 (nightly 236, Mac): Session records' date and mean radius columns now fit their text
+  (`CrashReport54Tests`); issue closed, Discord reply in for-alan.md. **The splash on the computer, concept C**, animated by real
+  progress (`StartupSplash`, `StartupSequence`, `StartupWork`): records and target library open beside Avalonia from `Main`, the main
+  window shows the moment it is built; about 14 ms as it ships, 100 ms in the gate's Release build (inside the gate). Phones: Android
+  12+ start screen and the iPhone launch color on #131417; the iPhone's home screen outline not done (needs a storyboard). **Left
+  that needs nobody:** split the live NOTES-FROM-PLANNING.md (about 50 entries; split-logs.py, chores-haiku); a phone picture of the
+  zoomed result with tags for the Features page and tour (weekly walk); prove the iOS color with an ios-app run; a test from report
+  52's photograph if the person sends it.
+- **Entry 506 (2026-11-21)**: the 2 MOA center dot refused; printers sync one by one (117 (a)); the phone's result picture zooms.
+- **Entry 505 (2026-11-20)**: iOS 18.0 installs, 26 is supported; below 26 Alan's warning first (`UnsupportedIos`).
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by
   mac-store.yml after each nightly; nightly 233's copy is on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is
   request 111; never submitted without Alan's word.
@@ -75,7 +74,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (117 closed (a) by entry 506):
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.236 (2026-11-20). Entry 506's three commits are on main and reach the next nightly (237). GitHub's
+- **Last nightly:** 1.0.0-nightly.237 (2026-11-21, 06:04 UTC). Entry 507 is on main and reaches the next nightly (238). GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
@@ -90,13 +89,14 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
-- **Printers sync one by one** (entry 506): kind `printer` beside the whole `printers` setting (marked `perPrinter`), which only 1.0 and
-  older nightlies read; their list is merged by name and date (`MergePrinterList`) and never deletes a printer here. A printer's date is
-  the later of `measuredOn` and `changedOn`. Two devices changing any record to the same content are not asked about it.
+- **The computer starts behind a splash** (entry 507): `Main` begins `StartupWork` (records, target library) before Avalonia; the first
+  `MainWindow` over the same settings takes them (`TakeRecords`, `TakeLibrary`), tests and later windows open their own. The log's
+  `app.startup` line times each part; `startup-time.ps1` finds the main window by its title "GroupLab", the splash being "GroupLab is starting".
+- **Printers sync one by one** (entry 506): kind `printer` beside the whole `printers` setting, which only 1.0 and older nightlies read;
+  their list is merged by name and date (`MergePrinterList`) and never deletes a printer here.
 - **A dark mark wholly inside a printed dot of a hole's size is the dot** (report 52, `RenderDifferenceHoleDetector.PrintedDot`).
 - **GroupLab installs on iOS 18 to 25 without support** (entry 505): a new screen comes before the first run's questions there, and a
   scripted run accepts it (`Scenario.AnswerFirstRun`). Reports from below 26 are headed "unsupported iOS" in error-reports.md.
-- **At the start of every run, `python scripts/automation-report.py`** (CLAUDE.md, backups rule 6) catches a night that never started.
 - **A pooled set changed on two devices waits like a session** (entries 498, 504): the banner counts it, its row is tagged, and it opens
   concept A, each sheet tagged; a sheet not here yet is never counted. A pool reaching a device before its sheets asks nothing.
 - **A phone page's way back is `Screens.BackButton`** (entry 470), never guessed from words, or `Screens.LeavesPage` for a Done,

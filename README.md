@@ -41,7 +41,7 @@ Mil or MOA, your choice: GroupLab asks which your scope is in and works in that 
 
 **Sharing and privacy:** [Send a target to the project](https://grouplab.org/features/#send-targets), [Error reports](https://grouplab.org/features/#error-reports), [The hardware survey](https://grouplab.org/features/#survey), [Words explained where they appear](https://grouplab.org/features/#explain-words), [A picture to share](https://grouplab.org/features/#share-picture), [The one-page report](https://grouplab.org/features/#one-page-report), [Daily copies of your records](https://grouplab.org/features/#daily-copies).
 
-**Updates and platforms:** [Updates that list what you skipped](https://grouplab.org/features/#updates), [Builds for the Mac](https://grouplab.org/features/#mac), [GroupLab Dev for testers](https://grouplab.org/features/#dev-build) (Android), [GroupLab updates itself on Android](https://grouplab.org/features/#android-updates) (Android), [On iPhone and iPad, from the App Store](https://grouplab.org/features/#app-store), [Google Play's closed test, open to anyone](https://grouplab.org/features/#play-closed-test) (Android), [Sync between your devices](https://grouplab.org/features/#sync), [Settings in eight categories](https://grouplab.org/features/#settings-menu).
+**Updates and platforms:** [Updates that list what you skipped](https://grouplab.org/features/#updates), [Builds for the Mac](https://grouplab.org/features/#mac), [A start window that shows what is loading](https://grouplab.org/features/#splash), [GroupLab Dev for testers](https://grouplab.org/features/#dev-build) (Android), [GroupLab updates itself on Android](https://grouplab.org/features/#android-updates) (Android), [On iPhone and iPad, from the App Store](https://grouplab.org/features/#app-store), [Google Play's closed test, open to anyone](https://grouplab.org/features/#play-closed-test) (Android), [Sync between your devices](https://grouplab.org/features/#sync), [Settings in eight categories](https://grouplab.org/features/#settings-menu).
 
 Each one, with its picture, its platforms and the build it arrived in, is on the [Features page](https://grouplab.org/features/).
 <!-- /readme:features -->
@@ -169,7 +169,7 @@ What the newest builds changed that you would notice, from their release notes.
 
 **1.0.0-nightly.236**, 2026-11-20
 
-- A click on a hole through dark print, such as a hole in a black bull scanned with the lid closed, now lands on the hole instead of staying where you clicked.
+- A click on a hole through dark print, such as a hole in a black bull scanned with the lid closed, now lands on the hole instead of staying where you clicked. [Any target you already shoot](https://grouplab.org/features/#other-targets)
 - The question mark beside an unsure line to its bull no longer covers that hole's number; it now goes where it lies on no number, tag or hole. [Which bull each shot belongs to](https://grouplab.org/features/#bull-lines)
 - GroupLab for iPhone and iPad now also installs on iOS 18 to 25, without support: below iOS 26 it first shows a warning you accept once for that version.
 

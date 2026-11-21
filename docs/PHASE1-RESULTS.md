@@ -983,6 +983,42 @@ wants a larger threshold it is one number. `Entry506PhoneTagsTests`. The phone's
 
 **4.** STATE.md rewritten.
 
+## Entry 507: error report 54, and the splash on the computer as concept C, animated (2026-11-21)
+
+**1.** The new Discord report was error report 54, not 52 or 53 again: nightly 236 on a Mac, Session records' date column a fixed 96
+pixels and the mean radius column a fixed 220, so "2026-11-15, 21:06" read "2026-11-15,..." and the interval was cut. Both columns now
+take the width of their widest text in the font they are drawn in (`MainWindow.SessionColumnsFor`), never narrower than before and
+capped at 200 and 340 so the sheet's name keeps its room. Columns still cannot be dragged; nothing is cut off now, so that is not
+proposed. `CrashReport54Tests` failed before the change. Commit f7d53745; issue closed; the Discord reply is in for-alan.md.
+
+**2.** The splash (`StartupSplash`), concept C as the canvas draws it: 600 by 360, the dark ground and its 30 pixel grid, the mark, name
+and `SemanticVersion.Words` ("GroupLab 1.0, build 236"), the group on its crosshair and ring with "0.47 in", and the steps bottom left,
+the current one bright and finished ones dimmed with ", done". Three real steps: **Opening your records** and **Loading the target
+library**, which now run on the thread pool from the first line of `Main` beside Avalonia's own start-up (`StartupWork`; the window's
+constructor takes what they opened, and a failure is thrown in the constructor exactly where the window always reported it), then
+**Getting the screens ready**, the main window's constructor. `StartupSequence` marks each step as it really ends: one shot drops in a
+step (twice its size to its own, 150 ms), the last fills the group, draws the extreme spread (200 ms) and shows the teal center and the
+label; the main window is shown the moment it is built and the splash closes when it opens (or 300 ms after first drawing, if later),
+with no taskbar entry, no close button, never taking the focus, centered on the screen (Avalonia's CenterScreen; the main window opens where the system puts a new window, normally the same screen, and a person with two screens is worth asking). The
+movement is composition animations on the render thread, so it continues while the window's thread builds; between steps start-up waits
+for one frame (at most 100 ms if none comes). With less motion asked for (Settings, or the system: Windows' animation effects, macOS's
+Reduce motion, GNOME's animations), the finished picture shows from the start and only the lines change. A window that cannot be built
+closes the splash and is thrown from `Main` as before. **What differs from the canvas:** its spread line joined two shots that are not
+the farthest apart; the splash joins the two that are, as an extreme spread does; and the mark and name are the brand's lockup art, as in the header, rather than a typed 34 pixel name, which is not on GroupLab's type scale. **Phones:** Android 12 and later's system start screen
+stands on #131417 with the icon on #1a1c20 (`values-v31/styles.xml`) whatever the phone's light or dark setting; the iPhone's launch
+screen is #131417 (`LaunchBackground` color in both Info.plists). **Not done:** the iPhone's empty outline of the home screen, which
+needs a storyboard drawn for every screen size; the canvas's own note says only the icon and the color change. **Time**
+(`scripts/startup-time.ps1` now finds the main window by title and prints the splash's time): as it ships, precompiled, 697 ms to the
+main window without the splash and 711 with it, the splash showing at 361; in the gate's plain Release build 1,210 before and 1,316
+after, inside the gate, the extra being the first window's one-time setup. PERFORMANCE.md has the table. `Entry507SplashTests` (14):
+the shots following the steps for three, four and five steps, no added wait when the work is already done, the window waiting for the
+work and not the splash, a failed build, less motion, the version words, the window's manners, the drawn picture, the records handed
+over once, a records failure reported by the window, and the phones' grounds. The Features page lists it, without a picture: it shows
+for under a second and the screenshot walk opens GroupLab already started. The user guide does not describe the first seconds, so it is
+unchanged.
+
+**3.** STATE.md rewritten.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

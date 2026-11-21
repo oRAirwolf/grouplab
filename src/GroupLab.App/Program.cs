@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Themes.Fluent;
@@ -40,10 +41,15 @@ internal static class Program
         App.SelfCheck = args.Contains("--self-check", StringComparer.Ordinal);
         DiagnosticLog.Info("app.start", [.. AppInfo.EnvironmentFields(), ("units", $"{units.Linear} {units.Angular} {units.Distance}"), ("verbose", verbose), ("logdir", described)]);
         var clock = Stopwatch.StartNew();
+        // Entry 507 section 2: the records and the target library open beside Avalonia's own start-up, which the splash then shows.
+        Landing.MotionChosen = settings.LoadReduceMotion;
+        StartupWork.Current = StartupWork.Begin(settings);
         int code = -1;
         try
         {
             code = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+            // A window that could not be built stops start-up as it did before there was a splash: thrown from here, and recorded.
+            App.StartFailure?.Throw();
             return code;
         }
         finally
@@ -74,21 +80,71 @@ public sealed class App : Application
         SpokenNames.Attach();
     }
 
+    /// <summary>Entry 507 section 2: the main window could not be built behind the splash; <c>Main</c> throws it once the loop has ended.</summary>
+    internal static ExceptionDispatchInfo? StartFailure { get; private set; }
+
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow();
-
-            // Entry 414 section 1.2: once the window is up, the solver warmed on a thread of the lowest priority, so Ballistics' first
-            // tables do not wait for it.
-            desktop.MainWindow.Opened += (_, _) => GroupLab.Core.Ballistics.SolverUse.WarmInBackground();
-            if (SelfCheck && desktop.MainWindow is MainWindow window)
+            if (StartupWork.Current is { } work)
             {
-                window.Opened += async (_, _) => desktop.Shutdown(await GroupLab.App.SelfCheck.RunAsync(window));
+                _ = StartBehindSplashAsync(desktop, work);
+            }
+            else
+            {
+                Opening(desktop, new MainWindow());
             }
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    /// <summary>
+    /// Entry 507 section 2: the splash first, then the main window as soon as it is built. The splash has no taskbar entry, no close
+    /// button and never takes the focus; it closes once the main window is open, and if start-up fails it closes and the failure is
+    /// thrown as before.
+    /// </summary>
+    private static async Task StartBehindSplashAsync(IClassicDesktopStyleApplicationLifetime desktop, StartupWork work)
+    {
+        StartupSequence.Mark("framework");
+        var splash = new StartupSplash(StartupSplash.VersionLine(AppInfo.Version), Landing.Still());
+        StartupSequence.Mark("splash");
+        splash.Show();
+        StartupSequence.Mark("shown");
+        try
+        {
+            await StartupSequence.RunAsync(splash, [work.Records, work.Library], () => new MainWindow(), () => StartupSequence.NextFrame(splash), main =>
+            {
+                Opening(desktop, main);
+                main.Opened += (_, _) =>
+                {
+                    StartupSequence.Mark("opened");
+                    DiagnosticLog.Info("app.startup", [.. StartupSequence.Marks.Select(m => (m.Part, (object?)m.Ms))]);
+                };
+                main.Show();
+            });
+        }
+#pragma warning disable CA1031 // Whatever stopped the window is thrown again from Main, where it was always thrown from.
+        catch (Exception e)
+#pragma warning restore CA1031
+        {
+            StartFailure = ExceptionDispatchInfo.Capture(e);
+            desktop.Shutdown(1);
+        }
+    }
+
+    /// <summary>The main window becoming the application's, with what runs once it is open.</summary>
+    private static void Opening(IClassicDesktopStyleApplicationLifetime desktop, MainWindow window)
+    {
+        desktop.MainWindow = window;
+
+        // Entry 414 section 1.2: once the window is up, the solver warmed on a thread of the lowest priority, so Ballistics' first
+        // tables do not wait for it.
+        window.Opened += (_, _) => GroupLab.Core.Ballistics.SolverUse.WarmInBackground();
+        if (SelfCheck)
+        {
+            window.Opened += async (_, _) => desktop.Shutdown(await GroupLab.App.SelfCheck.RunAsync(window));
+        }
     }
 }

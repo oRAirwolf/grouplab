@@ -70,6 +70,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Updates that list what you skipped | `updates` | left out | Google Play updates the phone's application; the desktop's update bar has nothing to do there. The sideloaded GroupLab Dev has its own updater, `android-updates` | left out |
 | GroupLab updates itself on Android | `android-updates` | on the phone | entries 288 and 386: the Android updater, in GroupLab Dev's APK and the plain APK, never in the copy for Google Play | left out |
 | Builds for the Mac | `mac` | left out | a platform, not something a phone can do | left out |
+| A start window that shows what is loading | `splash` | left out | entry 507 section 2: the phones keep the system's own start screen, now on GroupLab's dark ground | left out |
 | Pool the sheets of a set | `pool-set` | on the phone | entry 259 screen 6, the set as a checklist, which since entry 420 also opens the pooled plot (See the pooled group): the saved sheets of the set's design shot the same day; since entry 495 the pooled group is saved as a pool record, listed in Sessions, shared as one file and deletable, as on the computer | on iOS |
 | The E bull | `e-bull` | on the phone | | on iOS |
 | The C bull | `c-bull` | on the phone | | on iOS |

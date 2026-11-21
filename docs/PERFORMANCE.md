@@ -48,6 +48,31 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Entry 507 section 2, 2026-11-21: the splash on the computer, and what it costs
+
+The splash (concept C) shows while GroupLab starts and closes as soon as the main window is open. Opening the records and reading the
+target library now run on the thread pool from the first line of `Main`, beside Avalonia's own start-up, instead of inside the main
+window's constructor; they are the splash's first two steps, and building the screens is the third. `scripts/startup-time.ps1` now finds
+the main window by its title, because Windows takes the splash for the process's main window while it is up, and it prints when the
+splash first showed. Seven launches each, this machine, nothing else working:
+
+| Build | Main window before | Main window after | Splash first showing |
+|---|---|---|---|
+| Release, as the gate measures it | 1,210 | 1,316 | 657 |
+| Published and precompiled, as it ships | 697 (with the splash turned off) | 711 | 361 |
+
+- **As it ships, the splash costs about 14 ms**, inside the spread of the launches (651 to 706 without it, 706 to 720 with it), and the
+  person sees GroupLab at 361 ms instead of nothing until 697.
+- **In the gate's plain Release build it costs about 100 ms**, because creating the first window of the process (about 100 ms) and showing
+  it (about 100 ms) is mostly first-time work done by the JIT, which the precompiled build has already done; the main window then builds
+  about 90 ms sooner and shows as quickly. 1,316 is inside the gate (a quarter and 20 ms over 1,081), which passed.
+- **The work moved off the window's thread was small:** the log's `app.startup.work` lines say 35 ms for the records and 62 ms for the
+  library, both finished before the splash first draws. Without the splash it saves nothing measurable (1,238 against 1,210).
+- **Nothing waits for the movement.** The shots, the spread and the label run on the render thread, so they keep moving while the window's
+  thread builds the screens; between steps start-up waits for one frame (5 to 8 ms in the log) so the shots already dropped are drawn
+  before that thread is busy. The splash closes once the main window is open, or 300 ms after it first drew if that is later; the main
+  window is never held back for it. The log's `app.startup` line gives each part's time from the process starting.
+
 ## Entry 505 section 3.4, 2026-11-20: the measurement area again, and the marker step looked at, nothing changed
 
 `grouplab bench --area measurement --runs 5` (Release, TACIT-BLUE, commit 5620fb5c): a 600 dpi scan stage by stage 795.5 ms (2604.2
