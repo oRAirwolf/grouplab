@@ -241,6 +241,10 @@ jobs:
       - name: The Discord worker, against a stand-in Discord and GitHub
         run: python3 tests/python/discord-worker-tests.py
 
+      # Request 117: the one-off that changes the last line of the bot's earlier replies, against a stand-in Discord.
+      - name: The Discord replies' last line, against a stand-in Discord
+        run: python3 tests/python/discord-old-line-tests.py
+
       # Entries 207 and 208: the survey worker counts reports into an aggregate and publishes nothing smaller than ten.
       - name: The survey worker
         run: python3 tests/python/survey-worker-tests.py
