@@ -1179,9 +1179,11 @@ public static class SceneBuilder
                 {
                     AddSymbol(items, SceneLayer.DataBlockContent, textColour, symbol,
                         square.X + (square.Width / 2), square.Y + (square.Height / 2), InstanceModuleSize);
+                    return;
                 }
 
-                return;
+                // Error report 55 (entry 510): a serial that is not four letters or digits, or none, or fields too long for the code, left
+                // this square empty on paper while the preview showed words in it. Without a code it carries the words, the serial as typed.
             }
 
             string id = _encoding!.DefinitionId;

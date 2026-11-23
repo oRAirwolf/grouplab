@@ -417,6 +417,7 @@ internal sealed class MarkingAPage : UserControl
         private Point offset;
         private Point? last;
         private double pinch = 1;
+        private readonly TwoFingers fingers = new();
 
         public Viewer(Bitmap image, MarkingSession session, IReadOnlyList<PointD> ends, int turns = 0)
         {
@@ -650,8 +651,10 @@ internal sealed class MarkingAPage : UserControl
             base.OnPointerPressed(e);
             last = e.GetPosition(this);
             pressedAt = last;
-            if (KeepsDrags)
+            if (KeepsDrags || fingers.Pinching)
             {
+                // Error report 53's reply: the recognizers never see this finger, so the picture follows a pinch itself.
+                fingers.Press(e.Pointer.Id, last.Value);
                 e.PreventGestureRecognition();
                 e.Pointer.Capture(this);
             }
@@ -662,9 +665,28 @@ internal sealed class MarkingAPage : UserControl
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             base.OnPointerMoved(e);
-            if (KeepsDrags)
+            if (KeepsDrags || fingers.Has(e.Pointer.Id))
             {
                 e.PreventGestureRecognition();
+            }
+
+            if (fingers.Has(e.Pointer.Id))
+            {
+                if (fingers.Move(e.Pointer.Id, e.GetPosition(this)) is { } factor)
+                {
+                    if (HeldAt is null)
+                    {
+                        ZoomAboutCentre(factor);
+                    }
+
+                    e.Handled = true;
+                    return;
+                }
+
+                if (fingers.Pinching)
+                {
+                    return;
+                }
             }
 
             if (last is { } was && pinch == 1)
@@ -712,7 +734,9 @@ internal sealed class MarkingAPage : UserControl
         {
             base.OnPointerReleased(e);
             last = null;
-            if (pressedAt is { } from && pinch == 1 && HeldAt is null && Point.Distance(from, e.GetPosition(this)) <= TapSlop)
+            bool pinched = fingers.Pinching;
+            fingers.Release(e.Pointer.Id);
+            if (!pinched && pressedAt is { } from && pinch == 1 && HeldAt is null && Point.Distance(from, e.GetPosition(this)) <= TapSlop)
             {
                 TapAt(from);
             }
@@ -722,6 +746,12 @@ internal sealed class MarkingAPage : UserControl
             {
                 e.Pointer.Capture(null);
             }
+        }
+
+        protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+        {
+            base.OnPointerCaptureLost(e);
+            fingers.Release(e.Pointer.Id);
         }
 
         public override void Render(DrawingContext context)

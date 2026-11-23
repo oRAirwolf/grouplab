@@ -346,6 +346,37 @@ in, 1.25 times, every hole's number in its tag clear of the rest, as entry 506 f
 found" on the Features page and of the tour's marking page, whose caption and parts were rewritten for it (the landscape result it
 replaces there is still taken and still on the analysis page's list of sources). Commit c3fad756.
 
+## Entry 510: the reply with a video on closed issue 53, two new reports, and the worker that reopens a closed issue (2026-11-22)
+
+**1, the suggestions.** Two open: issue 56 asks to rename a session so Session records can tell rows apart; the computer already has
+"This sheet's own label" in the shot column, shown after the sheet's name in Session records, but it is hard to find, and the phone has
+none. Issue 55's thread adds a large sheet number and tag in the load block's square. Both in `docs/notes/suggestions.md` with a
+recommendation (a Rename on Session records rows and the label on the phone; the numeral later, with it); nothing built.
+
+**1, the reply with the video.** Listing every `discord` issue's comments since 2026-11-20 found it on closed issue 53: a 43 second
+screen recording on an iPhone, build 238 (2.7 MB, kept on the issue and pulled to `C:\Dev\grouplab-discord`). Frames read with OpenCV
+in a scratch environment: caliber chosen first, 9 shots found, no center dot taken, so entry 506's fix holds. Two new faults on the
+result's picture (entry 506 section 3's zoom): every hole circle a fixed 9 units whatever the zoom, and after the first pinch the
+picture kept every touch from the gesture recognizers (entry 374 section 4's guard against the page scrolling), the pinch's own
+included, so it could be zoomed neither further nor back. Fix holes' viewer had the same guard and the same fault. Fixed by
+`TwoFingers`, which both pictures use to follow two fingers themselves while enlarged, and by `SheetPicture.HoleRadius` (9 units fitted,
+the bullet's own size once enlarged, as Fix holes draws it). `Entry510PinchTests` raise real touch pointers; the two pinch tests fail
+with the tracking switched off. Issue 53 reopened for the reply, closed with the commit.
+
+**Also, new bug report 55** (taken first, CLAUDE.md): a filled load block printed its bottom-right square empty when the serial was not
+four Crockford characters ("T-0002", or none), because the refused instance code drew nothing, and the preview always drew the blank
+block. Now the square carries the sheet's code and the serial in words when it has no code, `PrintPanel.Options` draws the preview
+with the PDF's own choices and follows the fields as typed, and the line under the preview says what the code needs
+(`Report55LoadBlockSquareTests`, `PrintScreenTests.TheFilledPreviewIsThePdfsPageAndTheLineSaysWhatTheSquareNeeds`).
+
+**2, the gap.** `grouplab-discord-worker.py` now reopens a closed issue and labels it `new-reply` when a later message in its thread
+is by anybody but the server's owner (read once from Discord and kept in the state); the owner's own answers stay comments.
+`tests/python/discord-worker-tests.py`: 45 pass, four of them new. Installing it needs sudo and Alan's look at the Oracle backup, so it
+is request 112, with its install and undo written in `docs/RESTORE.md`. Until it is proven, `scripts/closed-replies.py` lists closed
+`discord` issues with a reply after closing that nothing has answered, beside the open issue list (CLAUDE.md).
+
+**Worth an article?** No: a fix of two faults, nothing another shooter or developer would do differently.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

@@ -1199,6 +1199,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         private Point? last;
         private Point? pressedAt;
         private double pinch = 1;
+        private readonly TwoFingers fingers = new();
 
         /// <summary>The printed outer ring of each bull, inches, so a hole's tag goes outside it as on Fix holes; none where not known.</summary>
         internal IReadOnlyDictionary<int, double> BullRings { get; set; } = new Dictionary<int, double>();
@@ -1258,9 +1259,12 @@ public sealed class ResultView : UserControl, IOpenTarget
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
             base.OnPointerPressed(e);
-            last = pressedAt = e.GetPosition(this);
-            if (KeepsDrags)
+            var at = e.GetPosition(this);
+            last = pressedAt = at;
+            if (KeepsDrags || fingers.Pinching)
             {
+                // Error report 53's reply: the recognizers never see this finger, so the picture follows a pinch itself.
+                fingers.Press(e.Pointer.Id, at);
                 e.PreventGestureRecognition();
                 e.Pointer.Capture(this);
                 e.Handled = true;
@@ -1270,6 +1274,22 @@ public sealed class ResultView : UserControl, IOpenTarget
         protected override void OnPointerMoved(PointerEventArgs e)
         {
             base.OnPointerMoved(e);
+            if (fingers.Has(e.Pointer.Id))
+            {
+                e.PreventGestureRecognition();
+                if (fingers.Move(e.Pointer.Id, e.GetPosition(this)) is { } factor)
+                {
+                    ZoomBy(factor);
+                    e.Handled = true;
+                    return;
+                }
+
+                if (fingers.Pinching)
+                {
+                    return;
+                }
+            }
+
             if (!KeepsDrags || last is not { } was || pinch != 1)
             {
                 return;
@@ -1285,14 +1305,38 @@ public sealed class ResultView : UserControl, IOpenTarget
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
             base.OnPointerReleased(e);
-            if (KeepsDrags && pressedAt is { } from && Distance(from, e.GetPosition(this)) < 6)
+            bool pinched = fingers.Pinching;
+            fingers.Release(e.Pointer.Id);
+            if (!pinched && KeepsDrags && pressedAt is { } from && Distance(from, e.GetPosition(this)) < 6)
             {
                 // A tap on an enlarged picture: the drag was kept, so the tap is taken here.
                 TapAt(e.GetPosition(this));
             }
 
             last = pressedAt = null;
-            e.Pointer.Capture(null);
+            if (e.Pointer.Captured == this)
+            {
+                e.Pointer.Capture(null);
+            }
+        }
+
+        protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+        {
+            base.OnPointerCaptureLost(e);
+            fingers.Release(e.Pointer.Id);
+        }
+
+        /// <summary>
+        /// Error report 53's reply: a hole's circle on screen. At the fitted size it is the old fixed ring, which a fingertip can find; enlarged,
+        /// it grows with the picture to the bullet's own size where the caliber and scale are known, as on Fix holes, so it sits on the hole's
+        /// edge instead of shrinking inside it.
+        /// </summary>
+        internal double HoleRadius(PointD at)
+        {
+            const double fixedRing = 9;
+            return Marking?.Invoke() is { Calibre.DiameterInches: var bullet } state && bullet > 0 && ScreenPerInch(state, at) is { } perInch
+                ? Math.Max(fixedRing, bullet / 2 * perInch)
+                : fixedRing;
         }
 
         /// <summary>The bull a tap at this point lights: a hole's, a line's, or the bull's own; null on nothing.</summary>
@@ -1405,7 +1449,7 @@ public sealed class ResultView : UserControl, IOpenTarget
             {
                 var at = ToScreen(shot.Image);
                 var (w, h) = words.TryGetValue(shot.Id, out string? text) && text is not null ? GroupLab.App.Theme.Marks.TagSize(text) : (0, 0);
-                return new TagHole(shot.Id, new PointD(at.X, at.Y), marked.Contains(shot.Id) ? 15 : 9, shot.Bull, w, h);
+                return new TagHole(shot.Id, new PointD(at.X, at.Y), HoleRadius(shot.Image) + (marked.Contains(shot.Id) ? 6 : 0), shot.Bull, w, h);
             }).ToList();
             var layout = MarkTags.Place(tagBulls, tagHoles);
             return MarkTags.Overlaps(layout, tagHoles).Count == 0 ? (layout, tagHoles, words) : null;
@@ -1447,10 +1491,11 @@ public sealed class ResultView : UserControl, IOpenTarget
             {
                 var ring = shot.Bull is { } own && own == Lit ? new Pen(lit, 3, shot.Exclusion is null ? null : new DashStyle([2, 2], 0))
                     : colour?.Invoke(shot) is { } brush ? new Pen(brush, 2, shot.Exclusion is null ? null : new DashStyle([2, 2], 0)) : shot.Exclusion is null ? pen : leftOut;
-                context.DrawEllipse(null, ring, ToScreen(shot.Image), 9, 9);
+                double radius = HoleRadius(shot.Image);
+                context.DrawEllipse(null, ring, ToScreen(shot.Image), radius, radius);
                 if (marked.Contains(shot.Id))
                 {
-                    context.DrawEllipse(null, check, ToScreen(shot.Image), 15, 15);
+                    context.DrawEllipse(null, check, ToScreen(shot.Image), radius + 6, radius + 6);
                 }
             }
 

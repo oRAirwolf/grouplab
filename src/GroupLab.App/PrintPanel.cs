@@ -158,8 +158,9 @@ public sealed class PrintPanel : UserControl
         this.own = own;
 
         BuildDesigner();
-        blank.Click += (_, _) => ShowFields();
-        filled.Click += (_, _) => ShowFields();
+        blank.Click += (_, _) => FieldsChanged();
+        filled.Click += (_, _) => FieldsChanged();
+        serial.TextChanged += (_, _) => ShowPreview();
 
         var details = new StackPanel { Margin = new Thickness(16), Spacing = Tokens.Space12 };
         details.Children.Add(designer);
@@ -672,10 +673,59 @@ public sealed class PrintPanel : UserControl
     {
         filled.IsChecked = value;
         blank.IsChecked = !value;
-        ShowFields();
+        FieldsChanged();
     }
 
+    private void FieldsChanged()
+    {
+        ShowFields();
+        ShowPreview();
+    }
+
+    /// <summary>
+    /// Error report 55 (entry 510): the options a sheet is drawn with, the same for the preview and for the PDF, so the preview shows the load
+    /// block as it will print, filled or blank, code or words, and not always blank as it did.
+    /// </summary>
+    private RenderOptions Options(int? tile)
+    {
+        bool fill = filled.IsChecked == true && selected?.Definition.DataBlock is not null;
+        string? serialText = string.IsNullOrWhiteSpace(serial.Text) ? null : serial.Text.Trim();
+        Instance? instance = fill
+            ? new Instance(serialText, DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                [.. fieldBoxes.Where(f => !string.IsNullOrWhiteSpace(f.Value.Text)).Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Text!.Trim()))])
+            : serialText is null ? null : new Instance(serialText, null, null);
+        return new RenderOptions(
+            TileIndex: tile,
+            Mode: fill ? DataBlockMode.Filled : DataBlockMode.Blank,
+            Instance: instance,
+            PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null,
+            BullColour: Head is null ? Colour : BullColour.Black);
+    }
+
+    /// <summary>
+    /// Error report 55: what the square at the bottom right of a filled load block holds and why, when it cannot hold the code of the fields;
+    /// null when it holds the code, or the block is blank.
+    /// </summary>
+    internal static string? CodeWords(IEnumerable<Diagnostic> diagnostics)
+    {
+        var refused = diagnostics.Where(d => d.Severity == Severity.Error && d.Code.StartsWith("instance.", StringComparison.Ordinal)).Select(d => d.Code).ToList();
+        if (refused.Count == 0)
+        {
+            return null;
+        }
+
+        return refused.Contains("instance.serial") ? CodeNeedsSerial : CodeFieldsTooLong;
+    }
+
+    internal const string CodeNeedsSerial =
+        "The square at the bottom right of the load block holds a code of these fields only with a serial of four letters or digits (not I, L, O or U), such as T002. Without one it prints the sheet's code and your serial in words.";
+
+    internal const string CodeFieldsTooLong =
+        "The fields are too long for the code in the square at the bottom right of the load block, so it prints the sheet's code and serial in words instead. Shorter fields put the code back.";
+
     internal void SetField(string key, string value) => fieldBoxes[key].Text = value;
+
+    internal void SetSerial(string value) => serial.Text = value;
 
     /// <summary>Renders the selected sheet as this screen is set, or null with the reason in the message line.</summary>
     internal RenderResult? Render()
@@ -686,17 +736,7 @@ public sealed class PrintPanel : UserControl
         }
 
         bool fill = filled.IsChecked == true && selected.Definition.DataBlock is not null;
-        string? serialText = string.IsNullOrWhiteSpace(serial.Text) ? null : serial.Text.Trim();
-        Instance? instance = fill
-            ? new Instance(serialText, DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-                [.. fieldBoxes.Where(f => !string.IsNullOrWhiteSpace(f.Value.Text)).Select(f => new KeyValuePair<string, string>(f.Key, f.Value.Text!.Trim()))])
-            : serialText is null ? null : new Instance(serialText, null, null);
-        var result = TargetRenderer.Render(selected.Definition, new RenderOptions(
-            Mode: fill ? DataBlockMode.Filled : DataBlockMode.Blank,
-            Instance: instance,
-            PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null,
-            OneSheet: Head is null && oneSheet.IsVisible && oneSheet.IsChecked == true,
-            BullColour: Head is null ? Colour : BullColour.Black));
+        var result = TargetRenderer.Render(selected.Definition, Options(null) with { OneSheet = Head is null && oneSheet.IsVisible && oneSheet.IsChecked == true });
         if (result.Pdf is null)
         {
             Fail("This sheet cannot be printed as set", "This sheet cannot be printed as set: " + string.Join(" ", result.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message)));
@@ -704,7 +744,8 @@ public sealed class PrintPanel : UserControl
             return null;
         }
 
-        SetStatus("", StatusKind.Information);
+        // Error report 55: printing goes ahead, and the line says why the square carries words rather than a code.
+        SetStatus(CodeWords(result.Diagnostics) ?? "", StatusKind.Information);
         return result;
     }
 
@@ -758,6 +799,7 @@ public sealed class PrintPanel : UserControl
             foreach (string key in FieldKeys(block))
             {
                 fieldBoxes[key] = new TextBox { Width = 260, Text = key == "date" ? DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) : "" };
+                fieldBoxes[key].TextChanged += (_, _) => ShowPreview();
             }
 
             loadBlock.Children.Add(fields);
@@ -824,12 +866,31 @@ public sealed class PrintPanel : UserControl
         }
 
         // Entry 300: the scene itself, not a picture of it; the preview draws it as vectors at the screen's own resolution.
-        var scenes = SceneBuilder.Build(selected.Definition, new RenderOptions(TileIndex: page, PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null, BullColour: Head is null ? Colour : BullColour.Black));
+        var scenes = SceneBuilder.Build(selected.Definition, Options(page));
         shown = scenes.Pages.Count > 0 ? scenes.Pages[0] : null;
+        ShowCodeWords(scenes.Diagnostics);
         PageShown?.Invoke(shown);
         ShowDots();
         pageCaption.Text = string.Create(CultureInfo.InvariantCulture, $"Sheet {page + 1} of {selected.Sheets}");
     }
+
+    /// <summary>Error report 55: the line says why the square carries words, as the preview changes; only its own words are taken away again.</summary>
+    private void ShowCodeWords(IEnumerable<Diagnostic> diagnostics)
+    {
+        string? words = CodeWords(diagnostics);
+        if (codeWords is not null && status.Text == codeWords && words != codeWords)
+        {
+            SetStatus("", StatusKind.Information);
+        }
+
+        codeWords = words;
+        if (words is not null)
+        {
+            SetStatus(words, StatusKind.Information);
+        }
+    }
+
+    private string? codeWords;
 
     /// <summary>
     /// Entry 358 section 2: with a thermal printer chosen, the preview is the one-bit image as it will print, and anything the head cannot

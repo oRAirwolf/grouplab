@@ -7,6 +7,38 @@ the person's files. Claude Code checks the open issues at the start of a run, be
 hourly while waiting on CI, and writes each new one here. **A report from an iPhone or iPad below iOS 26** (entry 505 section 5) is
 headed "unsupported iOS" and still assessed, but goes ahead of feature work only when the same fault also happens on iOS 26 or later.
 
+## 55, 2026-11-22, nightly 239 on a Mac (posted in the Discord's bug-reports forum, with a screenshot)
+
+- **Said:** printing a set from the Load development family (the 3x3 2 MOA C bull set of 3, Letter) with "Filled in now, from these
+  fields" and a serial typed as "T-0002", the square at the bottom right of the load block is empty in the PDF and on paper, while the
+  preview shows words in it. The poster asks what the square is for, and in a later message suggests a large sheet number and a short
+  tag there, to tell batches of sheets apart (taken as a suggestion in suggestions.md).
+- **Cause:** that square holds a code of the filled fields (the instance code) only when the serial is exactly four letters or digits
+  without I, L, O or U; "T-0002", or no serial at all, was refused, and the refusal drew nothing and said nothing. The preview always drew
+  the blank load block, whose square carries the sheet's code and "Serial ____" in words, so the two disagreed. GroupLab does not yet read
+  that code back from a photograph; the sheet's own codes and markers carry what it reads.
+- **Status:** fixed: without a code the square now carries the sheet's code and the serial as typed, in words; the preview is drawn
+  with the same choices as the PDF (filled or blank, code or words) and follows the fields as they are typed; and the line under the
+  preview says what the square needs. Held by `Report55LoadBlockSquareTests` and
+  `PrintScreenTests.TheFilledPreviewIsThePdfsPageAndTheLineSaysWhatTheSquareNeeds`. Ships in the next nightly; issue 55 closes with
+  the commit. Discord reply drafted in for-alan.md.
+
+## 53, the tester's reply with a screen recording, 2026-11-21, build 238 on an iPhone (a comment on the closed issue)
+
+- **Said:** the caliber had been chosen first; reading the same photo again found only the 9 real holes. Two new points: on the result's
+  picture (under Fix holes), the marked hole size does not grow as the picture is zoomed; and the picture zooms in and out while the
+  first pinch is held, but once let go it cannot be zoomed out.
+- **What the recording shows** (2.7 MB, kept on the issue and pulled to this computer; 43 seconds): 7mm PRC chosen, a photo from the
+  library, 9 shots found with one unsure, no center dot taken for a hole. So the earlier fix holds. Pinched in, the orange circles stay
+  9 units across while the holes grow under them; after the fingers lift, the next pinch moves nothing and the page scrolls instead.
+- **Cause:** (1) the result's picture drew every hole's circle at a fixed 9 units whatever the zoom. (2) Once the picture is enlarged,
+  every touch on it is kept from the gesture recognizers so the page does not scroll under a drag (entry 374 section 4); that kept the
+  pinch recognizer from seeing either finger of a second pinch. Fix holes had the same fault.
+- **Status:** fixed: the circles stay 9 units at the fitted size and grow to the bullet's own size once enlarged, where the caliber and
+  scale are known, as on Fix holes; and the enlarged picture follows two fingers itself, on the result's picture and on Fix holes. Held
+  by `Entry510PinchTests`, whose two pinch tests fail with the finger tracking switched off. Ships in the next nightly; the issue was
+  reopened for the reply and closes with the commit. Discord reply drafted in for-alan.md.
+
 ## 54, 2026-11-21, nightly 236 on a Mac (posted in the Discord's bug-reports forum, with a screenshot)
 
 - **Said:** in Session records the date column is too narrow and cannot be widened, so a date with its time ("2026-11-15, 21:06")

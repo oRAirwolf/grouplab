@@ -5,7 +5,8 @@ Every five minutes this reads the GroupLab Discord server's **bug-reports** foru
 through Discord's REST API with a bot token, and keeps one issue per forum post in the private oRAirwolf/grouplab-crash-reports, labelled
 `discord`, and a feature request also `suggestion`: the post's title, its first message
 quoted as untrusted text, the poster's handle as Discord shows it publicly, the time, a link to the thread and its attachments shown.
-Later messages in the thread are added as comments. Nothing is filed twice: the state file keeps each thread's issue and the last
+Later messages in the thread are added as comments; since entry 510, one arriving on a closed issue reopens it and labels it
+`new-reply`, so a check of the open issues sees it, unless every new message is the server owner's own. Nothing is filed twice: the state file keeps each thread's issue and the last
 message read. When an issue is made the bot replies in the thread once, "Thank you, this is filed for the developer.", and posts
 nothing else anywhere. The server and the forum are found from the token, never typed by anybody.
 
@@ -59,6 +60,8 @@ FORUM_NAME = "bug-reports"
 FORUM = 15
 LABEL = "discord"
 SUGGESTION = "suggestion"
+# Entry 510 section 2: a reply in the thread of a closed issue sat unseen, because the usual check reads open issues only.
+NEW_REPLY = "new-reply"
 # Entry 492: each forum read, its issues' labels and what a post there is called. bug-reports must be there; feature-requests is read
 # when the bot can see it, and a server without it is still filed.
 FORUMS = {
@@ -328,6 +331,32 @@ def issue_body(state: dict, thread: dict, first: dict, reread=None, token: str =
     ])
 
 
+def owner_of(state: dict, discord_token: str) -> str | None:
+    """The Discord server's owner, found once and kept: the owner's own posts in a thread never reopen its issue."""
+    if "owner" not in state:
+        _, guild = discord(f"/guilds/{state['guild']}", discord_token)
+        state["owner"] = (guild or {}).get("owner_id")
+    return state.get("owner")
+
+
+def reopen_for_reply(number: int, new: list[dict], state: dict, discord_token: str, github_token: str) -> None:
+    """
+    Entry 510 section 2: a later message on an issue already closed reopens it and labels it `new-reply`, so the usual check of open
+    issues sees it. Only for somebody else's message: the server owner posting an answer in the thread leaves a closed issue closed.
+    """
+    owner = owner_of(state, discord_token)
+    if not any((m.get("author") or {}).get("id") != owner for m in new):
+        return
+    code, issue = github(f"/repos/{REPOSITORY}/issues/{number}", github_token)
+    if code != 200 or (issue or {}).get("state") != "closed":
+        return
+    code, _ = github(f"/repos/{REPOSITORY}/issues/{number}", github_token, "PATCH", {"state": "open", "state_reason": "reopened"})
+    if code != 200:
+        raise Unreachable(f"issue #{number} could not be reopened, GitHub answered {code}")
+    github(f"/repos/{REPOSITORY}/issues/{number}/labels", github_token, "POST", {"labels": [NEW_REPLY]})
+    log(f"issue #{number}: reopened for a new reply in its thread")
+
+
 def file_thread(thread: dict, state: dict, discord_token: str, github_token: str, forum: str = FORUM_NAME) -> None:
     """One forum post into its issue, its later messages into comments, and the one reply."""
     seen = state["threads"].setdefault(thread["id"], {})
@@ -338,6 +367,7 @@ def file_thread(thread: dict, state: dict, discord_token: str, github_token: str
     new = [m for m in messages(discord_token, thread["id"], seen.get("last", "0")) if (m.get("author") or {}).get("id") != state["bot"]]
     if not new and seen.get("issue"):
         return
+    earlier = bool(seen.get("issue"))
     if not seen.get("issue"):
         if not new:
             return
@@ -356,6 +386,9 @@ def file_thread(thread: dict, state: dict, discord_token: str, github_token: str
         if code != 201:
             raise Unreachable(f"a comment could not be added, GitHub answered {code}")
         seen["last"] = m["id"]
+        save(state)
+    if earlier and new:
+        reopen_for_reply(seen["issue"], new, state, discord_token, github_token)
         save(state)
     if not seen.get("replied"):
         code, _ = discord(f"/channels/{thread['id']}/messages", discord_token, "POST", {"content": THANKS, "allowed_mentions": {"parse": []}})

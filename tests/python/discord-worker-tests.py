@@ -76,6 +76,9 @@ class World:
         self.issues: dict[int, dict] = {}
         self.files: dict[str, bytes] = {}
         self.comments: dict[int, list[str]] = {}
+        # Entry 510: which issues are closed, and the labels added to an issue after it was made.
+        self.closed: set[int] = set()
+        self.added_labels: dict[int, list[str]] = {}
         self.replies: list[tuple[str, dict]] = []
         self.calls: list[str] = []
 
@@ -106,6 +109,11 @@ def serve(world: World) -> HTTPServer:
                 return self.reply(401, {"message": "401: Unauthorized"})
             if p == "/discord/users/@me":
                 return self.reply(200, {"id": "900"})
+            if p == "/discord/guilds/1":
+                return self.reply(200, {"id": "1", "owner_id": "42"})
+            if p.startswith("/github/repos/oRAirwolf/grouplab-crash-reports/issues/") and p.split("/")[-1].isdigit():
+                number = int(p.split("/")[-1])
+                return self.reply(200, {"number": number, "state": "closed" if number in world.closed else "open"})
             if p == "/discord/users/@me/guilds":
                 return self.reply(200, [{"id": "1", "name": "GroupLab"}])
             if p == "/discord/guilds/1/channels":
@@ -146,6 +154,9 @@ def serve(world: World) -> HTTPServer:
                 world.replies.append((thread, payload))
                 world.messages[thread].append(message(str(int(world.messages[thread][-1]["id"]) + 1), "900", payload["content"]))
                 return self.reply(200, {"id": "1"})
+            if "/issues/" in p and p.endswith("/labels"):
+                world.added_labels.setdefault(int(p.split("/")[-2]), []).extend(payload["labels"])
+                return self.reply(200, [{"name": n} for n in payload["labels"]])
             if p.endswith("/labels"):
                 return self.reply(201, {"name": payload["name"]})
             if p.endswith("/issues"):
@@ -155,6 +166,16 @@ def serve(world: World) -> HTTPServer:
             if "/issues/" in p and p.endswith("/comments"):
                 world.comments.setdefault(int(p.split("/")[-2]), []).append(payload["body"])
                 return self.reply(201, {"id": 1})
+            return self.reply(404, {"message": "unknown"})
+
+        def do_PATCH(self) -> None:
+            length = int(self.headers.get("Content-Length") or 0)
+            payload = json.loads(self.rfile.read(length) or b"{}")
+            world.calls.append("PATCH " + self.path)
+            p = self.path
+            if p.startswith("/github/repos/oRAirwolf/grouplab-crash-reports/issues/") and payload.get("state") == "open":
+                world.closed.discard(int(p.split("/")[-1]))
+                return self.reply(200, {"state": "open"})
             return self.reply(404, {"message": "unknown"})
 
         def do_PUT(self) -> None:
@@ -307,6 +328,26 @@ def main() -> int:
               and world.files.get("discord/500/500/73-log.txt") == PICTURE, up["body"])
         after = next((i for i in world.issues.values() if i["title"] == "Discord: After the uploads"), {"body": ""})
         check("a refused upload stops no other thread", f"![after.png]({SHOWN}discord/600/600/80-after.png?raw=true)" in after["body"], after["body"])
+
+        # Entry 510 section 2: a reply in the thread of a closed issue reopens it with a label; the owner's own does not, and an open
+        # issue is left as it is.
+        world.closed.add(1)
+        world.messages["100"].append(message("160", "42", "Here is what was fixed."))
+        world.calls.clear()
+        r = run(root, port[0])
+        check("the server owner's own reply on a closed issue is a comment and leaves it closed", r.returncode == 0 and 1 in world.closed
+              and "Here is what was fixed." in world.comments[1][-1] and 1 not in world.added_labels
+              and not any(c.startswith("PATCH ") for c in world.calls), r.stdout + str(world.calls))
+        world.messages["100"].append(message("170", "7", "Here is a screen recording, it still happens."))
+        r = run(root, port[0])
+        check("somebody else's reply on a closed issue reopens it and labels it new-reply", r.returncode == 0 and 1 not in world.closed
+              and world.added_labels.get(1) == ["new-reply"] and "screen recording" in world.comments[1][-1], r.stdout + str(world.added_labels))
+        check("and the log says so", "issue #1: reopened for a new reply in its thread" in (root / "worker.log").read_text(encoding="utf-8"))
+        world.messages["100"].append(message("180", "7", "One more thing."))
+        world.calls.clear()
+        r = run(root, port[0])
+        check("a reply on an open issue only adds the comment", r.returncode == 0 and world.added_labels.get(1) == ["new-reply"]
+              and not any(c.startswith("PATCH ") for c in world.calls), str(world.calls))
 
         world.refuse_discord = True
         (root / "discord" / "state.json").unlink()

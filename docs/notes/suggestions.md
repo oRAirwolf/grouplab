@@ -12,6 +12,33 @@ it ships in. A suggestion that is really a bug goes to `docs/notes/error-reports
 Claude Code lists the open `suggestion` issues at the same points as the error reports (the start of a run, before each inbox entry,
 before ending a turn, and at least hourly while waiting on CI) and writes each new one here at once.
 
+## Issue 56, 2026-11-22: name a session, so Session records can tell sheets apart
+
+- **Asked:** on the computer (macOS, nightly 239), a way to rename a session (right-click and Rename, or click the title and type),
+  because Session records fills with rows all named after the same target ("GroupLab 3x3 2 MOA, C Bull, Set of 3 Letter Sheets"); the
+  target used should still be kept, just not as the session's only name. A screenshot shows eight such rows.
+- **Already done?** Partly, on the computer only. The analysis screen's shot column has a box headed "This sheet's own label" (hint:
+  "such as the letter in its serial box"); what is typed there is saved with the session and Session records shows it after the target's
+  name ("GroupLab 3x3 2 MOA, ..., Rifle A"), and the tab takes it as its name. The poster did not find it, which says it is in the wrong
+  place for this. Not done: renaming from Session records itself, and any label on the phone, whose sessions carry none.
+- **Size:** small for a Rename in Session records (a row's menu, writing the same label); small to medium for the phone (a label field on
+  the result page, kept in sync as the computer's is). **Fits:** yes; it is the same label, made easier to find.
+- **Recommendation:** yes, in two parts: (a) Rename on each Session records row, and the label box moved up beside the sheet's name on
+  the analysis screen with the plainer heading "Name this session"; (b) the same on the phone's result page. Meanwhile the Discord reply
+  tells the poster where the box is today.
+
+## Issue 55's thread, 2026-11-22: a large sheet number and a short tag in the load block's square
+
+- **Asked** (a later message in the bug report of issue 55, about the empty square in a filled load block): put a large numeral there,
+  1, 2, 3 for each sheet of a set, with a short custom tag above it, to tell batches of sheets apart and see which one in a sequence it is.
+- **Already done?** Partly. Each sheet of a set already prints its place in the set beside its human-readable code, and since the fix of
+  report 55 the square of a filled load block carries the serial as typed, in words, whenever it does not carry the code. A big numeral
+  and a separate tag are not done.
+- **Size:** small to medium (the square's layout, a tag field beside the serial, and keeping the code where there is one).
+  **Fits:** yes, if it does not displace the code GroupLab may later read back.
+- **Recommendation:** later, and together with issue 56: one name per session or batch, typed once, printed in the square and shown in
+  Session records, would answer both posts. Waits for Alan's word.
+
 ## Issue 49, 2026-11-16: type in a printer's check from another GroupLab
 
 - **Asked:** on Check your printer (Settings, Printers and paper), a way to type in the across and down scale a printer check found on

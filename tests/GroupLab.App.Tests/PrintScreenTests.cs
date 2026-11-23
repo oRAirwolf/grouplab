@@ -100,6 +100,35 @@ public class PrintScreenTests
         }
     }
 
+    /// <summary>
+    /// Error report 55 (entry 510): the preview showed the blank load block whatever was chosen, so it showed words in the square at the
+    /// bottom right while the filled PDF had it empty. The preview is now drawn as the PDF is, and the line says why the square carries
+    /// words instead of the code when the serial is not four letters or digits.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheFilledPreviewIsThePdfsPageAndTheLineSaysWhatTheSquareNeeds()
+    {
+        var window = TargetsScreen.Open(1200, 800);
+        Dispatcher.UIThread.RunJobs();
+        window.Select("GL-CF9-T-C.gltd.json");
+        window.SetFilled(true);
+        window.SetField("cartridge", "7mm PRC");
+        window.SetSerial("T-0002");
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains(window.PreviewSource!.Items.OfType<GroupLab.Core.Rendering.TextRun>(), t => t.Text == "7mm PRC");
+        Assert.Contains(window.PreviewSource!.Items.OfType<GroupLab.Core.Rendering.TextRun>(), t => t.Text == "Serial T-0002");
+        Assert.Equal(PrintPanel.CodeNeedsSerial, window.StatusText);
+        var printed = window.Render();
+        Assert.NotNull(printed);
+        Assert.Equal(PrintPanel.CodeNeedsSerial, window.StatusText);
+        Assert.Equal(window.PreviewSource!.Items, printed.Pages[0].Items);
+
+        window.SetSerial("T002");
+        Dispatcher.UIThread.RunJobs();
+        Assert.DoesNotContain(window.PreviewSource!.Items.OfType<GroupLab.Core.Rendering.TextRun>(), t => t.Text.StartsWith("Serial", StringComparison.Ordinal));
+        Assert.NotEqual(PrintPanel.CodeNeedsSerial, window.StatusText);
+    }
+
     [AvaloniaFact]
     public void TheLibraryListsEverySheetAndSavesAPdfThatAsksForNoScaling()
     {
