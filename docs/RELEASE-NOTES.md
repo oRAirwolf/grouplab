@@ -12,6 +12,21 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.242
+
+**2026-11-23**, commit `a07ad52`. Nightly.
+
+**What you will notice**
+
+- Each sheet of a set now prints its place in the set in large figures, such as 2 of 3, in the square at the bottom right of its load block, and on the computer a session name typed on Targets before printing prints above it whenever that square carries words (suggested in 2 Discord posts).
+- On the computer, a loose sheet with the same bulls as the set's sheets can now stand in for a spoiled sheet when you pool a set: it counts as the sheet missing from those ticked, and GroupLab asks which one where several are missing. (Error report 57, entry 512).
+
+From your reports and targets in this build: 1 change suggested in 2 Discord posts.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.242)
+
+---
+
 ## 1.0.0-nightly.241
 
 **2026-11-23**, commit `0d77956`. Nightly.
