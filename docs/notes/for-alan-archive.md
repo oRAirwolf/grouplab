@@ -3,6 +3,35 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 112. The Discord bot reopens a closed report when somebody replies, one look and one paste, about five minutes, whenever suits (entry 510 section 2)
+
+**Answered 2026-11-23:** Alan checked that day's Oracle boot volume backup and ran the paste: six files OK, the dry run found both forums with nothing unfiled, the backup `2026-11-23T043024Z-discord-worker-new-reply`, the timer active, both sites 200, no STOP. Claude Code confirmed the installed worker matches the repository and that its runs since finish cleanly; recorded in `docs/RESTORE.md`.
+
+**Opened 2026-11-22.** The tester's reply with a screen recording sat for two days on report 53, which was already closed, because
+the bot adds a reply as a comment and the check Claude Code runs reads open reports only. The new bot reopens a closed report and
+labels it `new-reply` when anybody but you (the Discord server's owner) replies in its thread; your own answers stay comments and
+reopen nothing. It is written and tested (45 checks); installing it on the server needs today's server backup confirmed first, which
+Claude Code cannot see (RESTORE.md rule 5). Until it is installed, Claude Code checks closed reports for replies itself, so nothing is
+missed meanwhile.
+
+**First, one look:** in the Oracle console, **Storage**, **Block Storage**, **Boot Volume Backups**: is there a backup created in the
+last day? If there is none, stop and say so instead.
+
+**Then this paste**, in your usual bash session on the server. It fetches the six files at 3034cd23 and checks each against the
+repository, shows what the bot would file without filing anything, backs up the bot's script, installs the new one, runs it once,
+shows its log and timer, and checks both sites.
+
+```
+mkdir -p /home/ubuntu/grouplab-server-510 && cd /home/ubuntu/grouplab-server-510 && for f in install.py grouplab-change-backup.py grouplab-discord-worker.py grouplab-set-discord-token grouplab-discord-worker.service grouplab-discord-worker.timer; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/3034cd23/website/server/$f" || { echo "STOP: $f could not be fetched"; break; }; done; printf '%s\n' 'b76c3e8fe6a37df0cdedc2c6e46a46dec93abda2335da812d087e03ea1f137ed  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' 'b6821c3ee7b6f511016f51c530527a9799504e52f53057d5e64cdf90ece00abd  grouplab-discord-worker.py' '82fca876d79928b20520154ec424b8530465b9b49bb055bb0a33d1d0d3220fb7  grouplab-set-discord-token' '9fab3f90ad7202f01d47f217e016a9c3f3caa43fd139cbd970c92f4507d607ec  grouplab-discord-worker.service' '759a3ced54099155cc524aed9c83879f5fd4148bf2c97445e1cfcbe50cc0de3f  grouplab-discord-worker.timer' | sha256sum -c || { echo "STOP: a file is not what the repository holds"; false; } && sudo systemd-run --quiet --wait --pipe --collect -p LoadCredential=discord-token:/etc/grouplab/discord-token /usr/bin/python3 /home/ubuntu/grouplab-server-510/grouplab-discord-worker.py --dry-run || { echo "STOP: the dry run did not finish"; false; } && sudo python3 grouplab-change-backup.py --label discord-worker-new-reply --file /usr/local/sbin/grouplab-discord-worker.py || { echo "STOP: the backup did not finish"; false; } && sudo python3 install.py --discord || { echo "STOP: the install did not finish"; false; } && sudo systemctl start grouplab-discord-worker.service || { echo "STOP: the worker did not run; its log follows"; false; }; sudo tail -n 15 /home/airwolf/logs/grouplab-discord-worker.log; systemctl list-timers grouplab-discord-worker.timer --no-pager; for s in grouplab.org pissinhot.com; do echo "$s $(curl -s -o /dev/null -w '%{http_code}' https://$s/)"; done
+```
+
+**A good result:** six `OK`; `dry run: forums found: bug-reports, feature-requests` with a line for each forum; the backup folder's
+name; the install's done; a log with no Traceback or STOP (a line `issue #N: reopened for a new reply in its thread` only if somebody
+other than you has replied on a closed report since); the timer listed with its next run within five minutes; and `grouplab.org 200`
+and `pissinhot.com 200`. **A good answer:** paste back what it printed. **To undo:** `sudo install -m 755 -o root -g root` the backup
+folder's copy of the script over `/usr/local/sbin/grouplab-discord-worker.py`; reports it reopened stay open until Claude Code closes
+them.
+
 ## 110. Three Apple steps for GroupLab on the Mac App Store, about fifteen minutes, whenever suits (entry 501)
 
 **Answered 2026-11-18:** Alan added macOS to GroupLab's App Store record (macOS App 1.0, Prepare for Submission) and set MACOS_INSTALLER_CERT_P12, MACOS_INSTALLER_CERT_PASSWORD and MACOS_STORE_PROFILE (the profile "GroupLab Mac App Store", Mac App Store Connect, org.grouplab.app, the Apple Distribution certificate). First numbered 107, which the Discord tester notes already had; renumbered 110 the same day. With them, nightly 233's Mac App Store copy was signed, packaged and sent to TestFlight (run 44409935372), Apple processed it as valid, and GroupLab Team has it (run 44411686807); nothing submitted. Opening it on a real Mac is request 111. The request as it was follows.

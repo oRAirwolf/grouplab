@@ -101,16 +101,17 @@ server is limited to GroupLab's own files and its installer.
 **Changes made under rule 5** (newest first). The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from
 09:02 UTC that day when these were made.
 
-- **Prepared 2026-11-22, not yet run: the Discord worker reopens a closed issue on a new reply** (entry 510 section 2, request 112, to
-  be run by Alan). Changes: `/usr/local/sbin/grouplab-discord-worker.py` only (a later message by anybody but the server's owner on a
-  closed issue reopens it and labels it `new-reply`; the owner's id is read once from Discord and kept in the worker's state file).
-  Before: Alan checks that the newest Oracle boot volume backup is under a day old; the paste fetches the files at the pinned commit and
-  checks each sha256, makes `grouplab-change-backup.py --label discord-worker-new-reply --file /usr/local/sbin/grouplab-discord-worker.py`,
-  runs the dry run, then `install.py --discord` and one run, and checks both sites answer 200. After: the timer is checked with
-  `systemctl list-timers grouplab-discord-worker.timer`. Undo: `sudo install -m 755 -o root -g root` the backup folder's copy over the
-  worker, then `sudo systemctl start grouplab-discord-worker.service`; check with `sha256sum` against the backup. Issues it reopened
-  stay open until Code closes them; the `owner` key it adds to the state file is ignored by the older worker. Until it is proven,
-  `scripts/closed-replies.py` is Code's own check.
+- **2026-11-23 04:30 UTC, the Discord worker reopens a closed issue on a new reply** (entry 510 section 2, request 112, run by Alan;
+  recorded 2026-11-23). Alan checked the Oracle boot volume backup from that day first. Fetched at 3034cd23, six files `OK` against
+  the repository. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only (a later message by anybody but the server's owner on a
+  closed issue reopens it and labels it `new-reply`; the owner's id is read once from Discord and kept in the worker's state file);
+  the installed worker's sha256 is b6821c3e..., the repository's. Backup:
+  `/home/ubuntu/grouplab-server/backups/2026-11-23T043024Z-discord-worker-new-reply/`, holding the previous worker. The dry run before
+  it found both forums with nothing to file, the run at 04:30:25 UTC and the timer's runs after it finished with no Traceback and no
+  STOP, the timer is active, and grouplab.org and pissinhot.com both answered 200. Undo: `sudo install -m 755 -o root -g root` the
+  backup folder's copy over the worker, then `sudo systemctl start grouplab-discord-worker.service`; check with `sha256sum` against
+  the backup. Issues it reopened stay open until Code closes them; the `owner` key it adds to the state file is ignored by the older
+  worker. `scripts/closed-replies.py` stays in Code's routine until the worker has reopened an issue by itself.
 - **2026-11-16 11:49 UTC, the Discord worker reads the feature-requests forum too** (entry 492 section 1, request 109, run by Alan;
   recorded by entry 494). Alan checked the Oracle boot volume backup from that day first. Fetched at 05b289ab, six files `OK` against
   the repository. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only (it files a feature-requests post as an issue labelled

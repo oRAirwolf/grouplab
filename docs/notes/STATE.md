@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-22, after entries 510 and 509; the inbox is empty.
+**Last rewritten:** 2026-11-23, after request 112 was installed; the inbox is empty.
 
 ---
 
@@ -18,8 +18,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Entry 509 (2026-11-22)**: the audit's five findings fixed; the download page reads the App Store's version and build itself.
 - **Entry 510 (2026-11-22)**: report 53's reply (a video, iPhone build 238): the phone's zoomed pictures pinch again after the first
   and hole circles grow to the bullet (`TwoFingers`, `Entry510PinchTests`); report 55: a filled load block's square carries words when
-  it has no code, and the Targets preview is the PDF's page. Suggestion 56 and the numeral idea assessed. The Discord worker reopens a
-  closed issue on a reply (`new-reply`), tested, waiting on **request 112** to install; meanwhile `scripts/closed-replies.py`.
+  it has no code, the Targets preview is the PDF's page; in nightly 240. The Discord worker reopening a closed issue on a reply is
+  installed (request 112, 2026-11-23); `scripts/closed-replies.py` stays until it reopens one itself (label `new-reply`).
 - **Entries 506 to 508 (2026-11-21)**: the 2 MOA dot; printers sync one by one; the result zooms; the splash; the iPhone's launch screen.
 - **Entry 505 (2026-11-20)**: iOS 18.0 installs, 26 is supported; below 26 Alan's warning first (`UnsupportedIos`).
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by
@@ -60,7 +60,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **27**; waiting on him: 112 (install the Discord worker that reopens closed issues), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **26**; waiting on him: 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -71,7 +71,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (117 closed (a) by entry 506):
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.238 (2026-11-21), with entry 507. Entry 508 is on main and reaches nightly 239. GitHub's
+- **Last nightly:** 1.0.0-nightly.240 (2026-11-23), with entries 508 to 510; submitted to the Store. GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
