@@ -12,6 +12,22 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.243
+
+**2026-11-23**, commit `2b49884`. Nightly.
+
+**What you will notice**
+
+- On iPhone and iPad, the bar with Next above the keyboard no longer disappears while you are still typing in a box, and if it ever does go, it comes back by itself while the keyboard is up.
+
+**Under the hood**
+
+- The Mac App Store copy now shows its build in its version number, 1.0 followed by the build, as on iPhone and iPad.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.243)
+
+---
+
 ## 1.0.0-nightly.242
 
 **2026-11-23**, commit `a07ad52`. Nightly.
