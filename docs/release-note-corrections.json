@@ -221,6 +221,15 @@
           "kind": "fixed"
         }
       ]
+    },
+    "bb3ec3530d2a57e06d953e9daf447ebba0d7146b": {
+      "why": "Entry 513: the Mac App Store copy is not public yet, so its new version number is not something a person can notice; the trailer said changed and is internal.",
+      "notes": [
+        {
+          "note": "The Mac App Store copy now shows its build in its version number, 1.0 followed by the build, as on iPhone and iPad. (Entry 513)",
+          "kind": "internal"
+        }
+      ]
     }
   }
 }

@@ -9,12 +9,16 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-23, after request 115 and question 118's answer; the inbox is empty.
+**Last rewritten:** 2026-11-23, after entry 513; next entry 515 (the bot's new last line), then entry 514's overnight queue.
 
 ---
 
 ## In flight
 
+- **Entry 513 (2026-11-23)**: every new build to every store; Apple releases by itself once approved (CLAUDE.md). App Review has
+  iPhone and iPad 1.0.242 (build 242, the iOS 18 to 25 one) and the Mac's 1.0 (build 240), submitted 11:59 UTC by `scripts/app-store.py`;
+  when the iPhone one is released, reply in question 59's thread (Quack, issue 59). Play production waits on Google (14 days of 12
+  testers, about 2 December, then Alan's application). `STORE_SUBMISSIONS_PAUSED` stops all three stores.
 - **Request 115 is in** (2026-11-23 11:02 UTC, run by Code on Alan's word: "I give you permission to run commands on the web host"):
   the worker at d893e027 reads bug-reports, feature-requests and help; the server has no support forum, which is now a warning and is
   read by itself once made. A dry run prints its own lines only and writes no log, state or status. Help threads became questions 58
@@ -38,7 +42,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Synchronization** (Phase 7): built on every platform with tidying (entries 461, 463, 464); in tests a simulated cloud with three
   devices, late, out of order and half-written files, conflicted copies and wrong clocks (entry 472); a real cloud client over weeks
   needs Alan's two devices (PROOF-CHECKLIST.md, line 4 of entry 472's list).
-- **iOS** (Phase 8): on the App Store (1.0, build 226, released 2026-11-17 on Alan's word); the nightlies go to TestFlight for
+- **iOS** (Phase 8): on the App Store (1.0, build 226); 1.0.242 in App Review (entry 513), and every nightly after it; TestFlight for
   the testers already in it; the device checks need a sitting (50), GroupLab Dev on the iPad request 61.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
@@ -46,21 +50,20 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Every new Discord message, at every check: replies in `discord-replies/`; request 116 decides when iOS 18 to 25 reach the App Store.
+1. Entry 515, then entry 514's queue in order; every new Discord message at every check, replies in `discord-replies/`.
 2. The phone's Session name box on Targets (desktop only in entry 512).
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
 ## Blocked, and on what
 
-- **iOS 18 to 25 from the App Store**: request 116 (Alan's word to submit a version after 1.0).
-- **The Mac App Store copy**: request 111 (the TestFlight build opened on a real Mac, now also through Mac testers for Alan's friend once
-  Apple's beta review approves it), then Alan's word to submit (entry 501 section 4).
+- **The App Store versions**: Apple's review of 1.0.242 and the Mac's 1.0 (entry 513); request 111 stays a check on a real Mac only.
+- **Google Play production**: Google's 14 days (about 2 December) and Alan's application.
 - **The iPhone Duo's inner screen**: the Duo leg on Xcode 27.2 (simulator starts folded; IOS-PLAN.md); nothing needed from Alan.
 - **Entry 380 section 3**: measuring the M220 labels waits on request 77's photos in `m220-labels`.
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **27**; waiting on him: 116 (the next App Store version), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **26**; waiting on him: 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

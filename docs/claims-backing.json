@@ -5617,6 +5617,10 @@
    "kind": "code",
    "where": "src/GroupLab.App/AppSettings.cs AppSettingsStore.Default: Environment.SpecialFolder.ApplicationData, which is %APPDATA% on Windows and a folder under the home folder on macOS and Linux (entry 373 section 11)"
   },
+  "Release of 1.0 was manual; from entry 513 (2026-11-23) every new build is submitted and, once Apple approves it, released automatically (version 1.0.242 went to review that day).": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: all new builds are submitted to every store and an Apple-approved build is released automatically; version 1.0.242 (build 242) was submitted to App Review at 11:59 UTC on 2026-11-23"
+  },
   "On Windows, macOS, Linux and Android, and on iPhone and iPad in a public beta through TestFlight.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entries 335 to 337: the TestFlight Public Beta approved and published on 2026-10-01; entry 373 sections 1 and 6"

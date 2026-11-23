@@ -488,6 +488,22 @@ page's load block line say both.
 
 **Worth an article?** No: neither is research or a measurement.
 
+## Entry 513: every new build to every store, Apple releasing by itself (2026-11-23)
+
+- **App Store, iPhone, iPad and Mac:** `scripts/app-store.py --run`, from `testflight.yml` after every nightly and every half hour. The
+  newest processed build from a nightly with published notes goes on an App Store version named by its own version, release type after
+  approval, then to App Review through review submissions; one review per platform at a time, never cancelled; an approved version held
+  for release is released; a turned-down version is reused by the next build and said in for-alan.md. The listing is made whole first
+  (the iOS 18 to 25 sentence; for a first Mac version the iPhone listing's keywords and links, `docs/store/apple/mac-description.txt`,
+  five screenshots fitted to 2880 by 1800 from the desktop screens by `apple-screens.py mac`, and the iPhone version's review contact).
+  `--inspect` reads only (run 45169660718 found what the script expects). Self-test of 21 checks, held by `TestFlightTests`.
+- **Submitted 2026-11-23 11:59 UTC** (run 45170084864): iPhone and iPad 1.0.242 (build 242) and the Mac's 1.0 (build 240).
+- **Mac store copy numbered 1.0.<build>** (`macos-bundle.py`): every store build said 1.0, which Apple would refuse after the first Mac
+  release. `MacBundleTests`.
+- **Google Play production:** `play-upload.py --production` takes the closed track's newest completed release; until Google allows it,
+  one dated blocked line a day in external-status.md. `play-upload-tests.py`, 19 checks.
+- **Pause:** `STORE_SUBMISSIONS_PAUSED`, a repository variable or a file, in testflight.yml, play-upload.yml and store-follow.yml.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

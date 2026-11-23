@@ -1,8 +1,7 @@
 # GroupLab for Mac on the Mac App Store
 
 NOTES-FROM-PLANNING.md entry 501 (2026-11-18, on Alan's word): the desktop application, the same one as the notarized Mac download, on
-the Mac App Store, as far as TestFlight's internal group. **Nothing is submitted for review without Alan's word**, as 1.0 for the iPhone
-waited for his "Submit now" (entry 491). The README, the site and the guides say nothing about it until the Mac App Store copy is released.
+the Mac App Store, as far as TestFlight's internal group. **Entry 513 (2026-11-23) replaced that:** the Mac App Store copy is submitted with every new build and released automatically once Apple approves it. Its first version, 1.0 (build 240), went to App Review at 11:59 UTC on 2026-11-23 and is not approved yet. The README, the site and the guides say nothing about it until it is released.
 
 ## The two copies
 

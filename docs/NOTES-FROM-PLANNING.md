@@ -26,6 +26,64 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-23, entry 513: every new build goes to every store, and Apple releases by itself once approved
+
+**Status: actioned 2026-11-23. Every section done; two waits on others: Apple's review of iPhone and iPad 1.0.242 (build 242) and the Mac's 1.0 (build 240), both submitted at 11:59 UTC and released by themselves once approved, then the reply to Quack in question 59's thread; and Google Play production, which Google allows only after 14 days of 12 testers (about 2 December) and Alan's application (entry 514 section 1).** scripts/app-store.py from testflight.yml, play-upload.py --production, the STORE_SUBMISSIONS_PAUSED switch in all three stores' workflows, the Mac store copy numbered 1.0.N, CLAUDE.md's new rule, request 116 closed.
+
+From the planning session, Alan's words in chat on 2026-11-23: "All new builds should be submitted to all of the app stores including the
+apple app store, play store, and microsoft store." Asked two follow-ups, he chose: **an Apple-approved build is released automatically**
+(no word from him each time), and, in a later message the same day, **the Mac App Store copy joins now too**: "For request 111, just release it to the mac store already. I will prioritize asking my friend to check but as far as we know, it works fine." This replaces
+the standing rule that App Store submissions and releases happen only on Alan's word (entries 491 and 501) for iPhone and iPad; write the
+new rule into CLAUDE.md and STATE. The usual guard applies.
+
+### 1. The rule
+
+After each nightly passes its checks, the newest build goes to each store automatically, by the workflows, never by hand:
+
+- **Microsoft Store:** as now (each nightly submitted; a submission still in certification is replaced or the newer one waits, whichever
+  the Store API allows without losing the one in review).
+- **Google Play:** as now to internal and alpha; and **production**, too, from the first day Google allows it (the closed test's 12
+  testers for 14 days). Until then, the workflow says once a day in external-status.md that production is blocked and why, and submits
+  there by itself the first night it is allowed. Staged rollout at 100% unless Play requires otherwise.
+- **Apple App Store, iPhone and iPad:** each nightly's build is put on a new App Store version and **submitted for App Review**, with
+  **automatic release** once approved. Apple allows one version in review at a time: when one is waiting for or in review, the newer nightly
+  waits, and the newest waiting build is submitted as soon as the review ends (approved and released, or rejected). Never cancel a review
+  in progress to put a newer build in. Version strings: each submission needs a higher version than the last released; use 1.0.N (N the
+  build) as the iPhone builds already are, unless App Store Connect refuses it, then say so.
+- **Mac App Store:** now, the same as iPhone and iPad: the newest Mac App Store build (`org.grouplab.app`, mac-store.yml) to App Review
+  with automatic release, then every nightly's Mac build under the same one-in-review rule. Request 111 stays open as a check Alan's
+  friend will do soon, but no longer holds the submission. Before the first Mac submission, make sure its store record has everything
+  App Review needs (screenshots at the Mac sizes from the simulator or the Mac runner, description, category, privacy answers as for
+  iPhone); anything only Alan can give is a request. If Apple rejects it because it does not start in the sandbox, say so plainly in
+  for-alan.md with the reviewer's words and Code's fix.
+- **What's New** on each store: the nightly's release notes, "What you will notice" only, cut to the store's limit; never a tester's name.
+- **A rejection** from any store goes into for-alan.md the same day in plain words, with what Apple or Google said and Code's fix; Code
+  fixes what it can and the next build is submitted. A rejection that needs Alan (a legal answer, a demo account, an age rating question)
+  is a request.
+- Export compliance, age rating, privacy answers and review notes: reuse 1.0's answers each time; anything a store asks that 1.0 did not
+  answer is a request for Alan, not a guess.
+
+### 2. Make it safe
+
+- A nightly whose checks fail goes nowhere, as now.
+- The iOS 18 to 25 warning (entry 505) reaches the App Store with the first submission; make sure its App Store description sentence goes
+  with it, and the download page follows the version the App Store shows (entry 509).
+- external-status.md says, per store, which build is live, which is in review, and which waits.
+- PAUSED switch: a file or repository variable `STORE_SUBMISSIONS_PAUSED` stops all store submissions (not the nightlies); write the exact
+  steps to set and clear it in for-alan.md as a standing note.
+- README, site, PLATFORM-SUPPORT.md and the user guide: the App Store and Play builds now follow the nightlies (once each store accepts
+  them); say so plainly where they say releases happen only on Alan's word.
+
+### 3. Request 116 is answered by this entry
+
+Yes: the newest iPhone and iPad build goes to App Review now under this rule (the first submission since 1.0), released by itself once
+approved. Close request 116. When Apple releases it, reply in Quack's help thread (question 59) that GroupLab now installs on iOS 18 to 25
+from the App Store, unsupported, with the warning.
+
+### 4. Then
+
+Rewrite STATE.md, and say in for-alan.md (not a request) what changed, in a few lines.
+
 ## 2026-11-23, entry 512: Code reads and replies to every message in the help, support, feature-requests and bug-reports forums
 
 **Status: actioned 2026-11-23. Not done: the worker change is installed by request 115 (Alan's look at the Oracle backup, then one paste), so the help and support threads already there are answered once it is in; where the name and "2 of 3" go when the load's code fills the square is question 118 (both print whenever the square carries words); the phone has no Session name box yet (each sheet's place in its set prints from the phone too); the replies in threads 55, 56 and 57 wait for the nightly that carries this.**

@@ -3,6 +3,19 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 116. Should the next iPhone version go to the App Store now? One question, a minute, whenever suits (request 115's first help thread)
+
+**Opened 2026-11-23.** Quack asked in the help forum (question 59) why the App Store still refuses GroupLab on an iPhone XS Max on
+iOS 18.7. The App Store copy is version 1.0, build 226, made before entry 505 lowered the floor, so it needs iOS 26. Every build since
+236 installs on iOS 18 to 25 with your "not supported" warning, but only through TestFlight, and since entry 500 the public is no longer
+invited there. So a person on iOS 18 to 25 has no way to install GroupLab until a newer App Store version is submitted, and that is your
+word, as it was for 1.0 (entry 505 section 8; the planning session's note after entry 511). The reply posted to Quack says the developer
+has the question and gives no date.
+
+**A good answer:** (a) yes, submit the newest iPhone build as version 1.1 now; (b) not yet, wait for something first (say what); or (c)
+leave it, the App Store stays at 1.0 for now. With (a), Claude Code sends it for Apple's review the way 1.0 went (entry 491) and tells Quack in the
+thread once Apple releases it.
+
 ## 115. The Discord bot reads help and support too, and marks every new message for Claude Code to answer, one look and one paste, about five minutes, whenever suits (entry 512)
 
 **Opened 2026-11-23.** You asked for Claude Code to read and answer every message in the help, support, feature-requests and

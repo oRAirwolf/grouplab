@@ -309,8 +309,8 @@ he can grant it. No other project's GPL code enters the iOS build: the AprilTag 
 Font License, the packages are MIT or Apache-2.0, and OpenCV, opencv_contrib and OpenCvSharp are Apache-2.0 (`THIRD-PARTY-NOTICES.md`).
 **Submitted, 2026-11-15 (entry 491).** At Alan's word, the planning session attached build 226 to version 1.0 and submitted it at
 20:36 Denver time; its state is "Waiting for Review" (Apple says up to 48 hours). It is free in all 175 countries or regions, and not
-offered on Apple silicon Macs or Apple Vision Pro, which nobody has tried. Release is manual: after approval nothing is public until Alan
-says to release it. The testflight workflow reads the version's state beside TestFlight's into `docs/notes/external-status.md`, read
+offered on Apple silicon Macs or Apple Vision Pro, which nobody has tried. Release of 1.0 was manual; from entry 513 (2026-11-23) every new build is
+submitted and, once Apple approves it, released automatically (version 1.0.242 went to review that day). The testflight workflow reads the version's state beside TestFlight's into `docs/notes/external-status.md`, read
 only, so a nightly never takes the version out of review. Version 1.0 was released on 2026-11-17; TestFlight stays the way in for the nightlies. The details are in
 docs/store/LISTING.md.
 
