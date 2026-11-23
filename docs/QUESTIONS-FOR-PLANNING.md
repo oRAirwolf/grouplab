@@ -23,7 +23,7 @@ number is never reused and a question is never lost:
 
 ## 2026-11-23, question 118: where a session's name and "2 of 3" go when the load's code fills the square
 
-**Status: open (entry 512 section 3).** Entry 512 says, for request 114's (b): "When a name is typed on Targets before printing, the
+**Status: answered 2026-11-23: (a), leave it as built** (Alan, in the Claude Code session, 2026-11-23). Asked in entry 512 section 3. Entry 512 says, for request 114's (b): "When a name is typed on Targets before printing, the
 square prints it, and each sheet of a set prints its place in the set large ("2 of 3"), both beside the code. The code keeps its size and
 its quiet zone and is never shrunk to make room." On every built-in sheet with a load block the square is the block's `reserve`, 280 dmm
 (`InstanceCodec.MinimumReserveForCode`), and the instance code is version 11 at 4 dmm a module, 61 modules or 244 dmm, which leaves 18

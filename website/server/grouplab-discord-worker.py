@@ -44,7 +44,9 @@ reopening it, so Code does not answer over him.
 issue, no reply, no state, no log. It needs only the bot token. Since entry 511 it also says whether the bot may post in each forum's
 threads and, given the GitHub token, what each waiting reply would do, still posting and moving nothing. Since entry 512 it lists
 every forum channel the bot can see and which it reads, names each permission the bot lacks in a forum it reads, and then ends with
-code 3, so a paste stops before installing.
+code 3, so a paste stops before installing. Since request 115 (Alan, 2026-11-23) a forum not found is a warning, in the dry run and
+in a run, and never a stop: the worker looks for it again every run and reads it from the first run after it is made. A dry run's own
+lines carry no time, and it never writes the log, the state or the status file, whatever path it takes.
 """
 
 from __future__ import annotations
@@ -133,10 +135,11 @@ class Unreachable(Exception):
 
 
 def log(message: str) -> None:
-    line = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") + " " + message
     if DRY:
-        print(line, flush=True)
+        # A dry run keeps no log: what a run would have logged is shown as one of its own lines (request 115, Alan, 2026-11-23).
+        print("dry run: " + message, flush=True)
         return
+    line = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") + " " + message
     try:
         LOG.parent.mkdir(parents=True, exist_ok=True)
         with LOG.open("a", encoding="utf-8") as f:
@@ -147,7 +150,9 @@ def log(message: str) -> None:
 
 
 def status(**fields) -> None:
-    """What the worker last found, for the pull to show; never a token."""
+    """What the worker last found, for the pull to show; never a token. A dry run writes none (request 115, Alan, 2026-11-23)."""
+    if DRY:
+        return
     fields["checked_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     ROOT.mkdir(parents=True, exist_ok=True)
     tmp = STATUS.with_suffix(".tmp")
@@ -199,14 +204,17 @@ def canonical(name: str | None) -> str:
 def find_forum(token: str, state: dict, always: bool = False) -> list[str]:
     """
     The bot's own id, the GroupLab server and its forums, found from the token and kept in the state: `forum` is bug-reports, as before
-    entry 492, and `forums` maps each of FORUMS found to its channel. Looked for again while one of FORUMS is missing, so a forum made
-    later is found. Returns the name of every forum channel the bot can see in that server, as Discord shows it (entry 512: the dry
-    run lists them, so a forum named a little differently shows up), or nothing when nothing was looked up.
+    entry 492, and `forums` maps each of FORUMS found to its channel. Looked for again every run while one of FORUMS is missing, so a
+    forum made later is read from the next run on, with nobody installing anything (request 115, Alan, 2026-11-23). A forum not found
+    is a warning, logged once until it appears, never a stop; only a server with none of FORUMS at all is. The server chosen is the one with bug-reports, or
+    failing that the one with most of FORUMS. Returns the name of every forum channel the bot can see in that server, as Discord shows
+    it (entry 512: the dry run lists them, so a forum named a little differently shows up), or nothing when nothing was looked up.
     """
-    if not always and state.get("forum") and set(state.get("forums") or {}) == set(FORUMS):
+    if not always and state.get("guild") and set(state.get("forums") or {}) == set(FORUMS):
         return []
     _, me = discord("/users/@me", token)
     _, guilds = discord("/users/@me/guilds", token)
+    best = None
     for guild in guilds or []:
         _, channels = discord(f"/guilds/{guild['id']}/channels", token)
         forums = [c for c in channels or [] if c.get("type") == FORUM]
@@ -214,17 +222,25 @@ def find_forum(token: str, state: dict, always: bool = False) -> list[str]:
         for c in forums:
             found.setdefault(canonical(c.get("name")), c["id"])
         found = {n: i for n, i in found.items() if n in FORUMS}
-        if FORUM_NAME in found:
-            for name in sorted(set(found) - set(state.get("forums") or {})):
-                log(f"found the {name} forum in {guild.get('name', 'the server')}")
-            state.update(bot=me["id"], guild=guild["id"], forum=found[FORUM_NAME], forums=found, threads=state.get("threads", {}))
-            return [c.get("name") or "" for c in forums]
-    raise LookupError(f"the bot can see no forum named {FORUM_NAME} in any server it is in")
+        if found and (best is None or (FORUM_NAME in found, len(found)) > (FORUM_NAME in best[1], len(best[1]))):
+            best = (guild, found, forums)
+    if best is None:
+        raise LookupError("the bot can see none of the forums " + ", ".join(FORUMS) + " in any server it is in")
+    guild, found, forums = best
+    for name in sorted(set(found) - set(state.get("forums") or {})):
+        log(f"found the {name} forum in {guild.get('name', 'the server')}, and reads it from now on")
+    missing = [n for n in FORUMS if n not in found]
+    if missing != state.get("missing_forums", []):
+        for name in [n for n in missing if n not in state.get("missing_forums", [])]:
+            log(f"warning: no {name} forum found, so nothing is read there; it is read by itself once one is made")
+    state.update(bot=me["id"], guild=guild["id"], forum=found.get(FORUM_NAME), forums=found, missing_forums=missing,
+                 threads=state.get("threads", {}))
+    return [c.get("name") or "" for c in forums]
 
 
 def threads(token: str, state: dict) -> list[tuple[str, dict]]:
     """Every post in every forum, open and archived, oldest first, each with the name of its forum."""
-    forums = state.get("forums") or {FORUM_NAME: state["forum"]}
+    forums = state.get("forums") or ({FORUM_NAME: state["forum"]} if state.get("forum") else {})
     named = {fid: name for name, fid in forums.items()}
     found: dict[str, tuple[str, dict]] = {}
     _, active = discord(f"/guilds/{state['guild']}/threads/active", token)
@@ -802,6 +818,9 @@ def make_labels(state: dict, github_token: str) -> None:
 
 
 def save(state: dict) -> None:
+    if DRY:
+        # Request 115: a dry run changes nothing on the server, whichever path it takes.
+        return
     ROOT.mkdir(parents=True, exist_ok=True)
     tmp = STATE.with_suffix(".tmp")
     tmp.write_text(json.dumps(state, indent=1) + "\n", encoding="utf-8")
@@ -831,7 +850,7 @@ def dry_run(discord_token: str, state: dict, github_token: str = "") -> int:
         print(f"dry run: forum channel {quiet(shown)!r}: " + (f"read as {canonical(shown)}" if canonical(shown) in FORUMS else "not read"))
     for name in FORUMS:
         if name not in (state.get("forums") or {}):
-            print(f"dry run: {name}: no forum by that name, so nothing is read there")
+            print(f"dry run: warning: no {name} forum found, so nothing is read there; the worker reads it by itself once one is made")
             continue
         posts = [t for forum, t in found if forum == name]
         filed = [t["id"] for t in posts if (state["threads"].get(t["id"]) or {}).get("issue")]

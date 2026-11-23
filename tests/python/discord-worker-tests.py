@@ -331,9 +331,18 @@ def main() -> int:
               and (root / "discord" / "state.json").read_text(encoding="utf-8") == state_before
               and (root / "worker.log").read_text(encoding="utf-8") == log_before, str(world.calls))
         check("a dry run never shows a post's words", "Mac" not in r.stdout and "printer" not in r.stdout, r.stdout)
+        check("a forum not found is a warning in the dry run, never a stop (request 115)", r.returncode == 0
+              and "dry run: warning: no support forum found, so nothing is read there; the worker reads it by itself once one is made" in r.stdout
+              and "no forum by that name" not in r.stdout, r.stdout)
+        check("every line a dry run prints is its own, with no time on it, the forum it finds included",
+              all(line.startswith("dry run: ") for line in r.stdout.splitlines()) and "dry run: found the feature-requests forum" in r.stdout, r.stdout)
         world.calls.clear()
         r = run(root, port[0])
         wishes = [i for i in world.issues.values() if "suggestion" in i["labels"]]
+        logged = (root / "worker.log").read_text(encoding="utf-8")
+        check("a run warns in its log once that a forum is not found, however many runs follow, and goes on (request 115)",
+              logged.count("warning: no support forum found, so nothing is read there") == 1
+              and "found the feature-requests forum in GroupLab, and reads it from now on" in logged, logged[-800:])
         check("a worker that ran before the forum existed finds it and files its posts, open and archived",
               r.returncode == 0 and len(wishes) == 2 and len(world.issues) == 4, r.stdout + str([i["title"] for i in world.issues.values()]))
         check("a feature request is labelled discord and suggestion", all(i["labels"] == ["discord", "suggestion"] for i in wishes))
@@ -553,6 +562,8 @@ def main() -> int:
         world.deny_help = 0
         r = run(root, port[0], True, "--dry-run")
         check("with the permission given, the dry run passes", r.returncode == 0 and "may NOT" not in r.stdout, f"{r.returncode} {r.stdout}")
+        check("and the forums found by the dry run are not kept: the state still lacks them", "\"40\"" not in
+              (root / "discord" / "state.json").read_text(encoding="utf-8"))
         posted_before = len(world.replies)
         world.labels.clear()
         r = run(root, port[0])
@@ -579,6 +590,9 @@ def main() -> int:
         r = run(root, port[0])
         check("Alan's answer there labels it alan-replied, and the bot still posts nothing of its own",
               world.added_labels.get(number) == ["new-reply", "alan-replied"] and len(world.replies) == posted_before, str(world.added_labels.get(number)))
+        logged = (root / "worker.log").read_text(encoding="utf-8")
+        check("a support forum made after the worker started is found and read by the worker itself",
+              "found the support forum in GroupLab, and reads it from now on" in logged, logged[-800:])
         r = run(root, port[0])
         check("nothing in help or support is filed twice", sum("question" in i["labels"] for i in world.issues.values()) == 2)
 
