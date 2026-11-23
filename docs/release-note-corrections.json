@@ -8,8 +8,7 @@
       "reports": 3,
       "via": "error reports sent from GroupLab",
       "why": "Entry 476 finding 2: 1147821e (Delete for rifles, barrels and loads, error report 38) and 60e60bc1 (a sheet on a reused clean picture replaced the earlier session, error reports 39 and 40) carry no Reported-via trailer, so nightly 222's notes did not count them."
-    }
-,
+    },
     {
       "build": "0.2.0-nightly.224",
       "fixes": -1,
@@ -211,6 +210,15 @@
         {
           "note": "The iPhone and iPad build now carries Apple's privacy declaration, which the App Store asks for, saying the same about your data as GroupLab's privacy answers. (Entry 489, 2)",
           "kind": "changed"
+        }
+      ]
+    },
+    "0b4f69db5bdf5d86524066e6055164f29d92c40e": {
+      "why": "Error report 57's note spelled gray the British way, which the release notes refuse; corrected before nightly 241.",
+      "notes": [
+        {
+          "note": "When Pool the chosen cannot pool the sessions you ticked, it now says why in amber, naming each target design and how many sheets of it, and the status bar says it too, instead of a small gray line that was easy to miss. (Error report 57)",
+          "kind": "fixed"
         }
       ]
     }
