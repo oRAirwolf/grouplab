@@ -453,6 +453,26 @@
         "docs/claims-backing.json",
         "docs/CLAIMS.md"
       ]
+    },
+    {
+      "phrase": "newest test build",
+      "why": "entries 488, 497, 503 and 509: GroupLab is not called a test build any more; say the newest build, or trying GroupLab",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "trying the test build",
+      "why": "entries 488, 497, 503 and 509: GroupLab is not called a test build any more; say the newest build, or trying GroupLab",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
     }
   ],
   "settled": []

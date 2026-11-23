@@ -403,8 +403,9 @@ first.
 
 **Automatic upload (entry 384), working since 2026-10-07.** `.github/workflows/play-upload.yml` runs after every nightly that
 published, once the whole nightly run has ended, which is after its Android files were added (entry 450), and by hand for a given version: it downloads that nightly's AAB and native symbols from its numbered release and sends them
-to internal testing through the Play Developer API (`scripts/play-upload.py`: an edit, the bundle, the symbols as native code, the
-internal track at status completed, the commit). It does nothing while the repository secret `PLAY_SERVICE_ACCOUNT_JSON` is absent, and
+to internal testing and, since entry 487 section 1, to the closed test, open to anyone, through the Play Developer API
+(`scripts/play-upload.py --tracks internal,alpha`: an edit, the bundle, the symbols as native code, the internal track at status
+completed, the closed track only when its newest release is completed and nothing is in review, the commit). It does nothing while the repository secret `PLAY_SERVICE_ACCOUNT_JSON` is absent, and
 never holds up a nightly. The secret is a Google Cloud service account with release rights on this app only, invited in the Play
 Console, its JSON key added by Alan on 2026-10-07 (request 80). Internal testing showed nightly 110 until then; nightly 176 was sent
 once by hand and Play took it as version code 176, and every nightly after it goes by itself. **The plain APK updates itself since entry 386** (nightly 177 on): it carries GroupLab Dev's

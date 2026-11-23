@@ -10,7 +10,8 @@ Entry 147 section 3.2, as entry 168 section 5 amended it: the statement appears 
 
 **iPhone and iPad, on the App Store** (entry 278 section 6, Alan's decision of 2026-09-28; entry 206 section 4 recorded the facts). iPhone is
 about 60 percent of phones in the United States and half in the United Kingdom (StatCounter, August 2026). The supported floor is an iPhone 11 on
-iOS 26 or later, and it also installs on iOS 18 to 25, without support (entry 505); Avalonia runs on iOS; the engine needs OpenCV built for iOS, which GitHub's macOS build machines do without anyone owning
+iOS 26 or later, and from build 236 it also installs on iOS 18 to 25, without support (entry 505), though the App Store copy (version
+1.0, build 226) still needs iOS 26 until its next version; Avalonia runs on iOS; the engine needs OpenCV built for iOS, which GitHub's macOS build machines do without anyone owning
 a Mac; and distribution needs the paid Apple developer program, which the project joined. `docs/IOS-PLAN.md` is the plan. **The iPhone Duo** (entry 480): GroupLab runs on it, but until it is built with Apple's iOS 27.1 tools its inner screen shows
 GroupLab in an iPhone-sized window; that build waits on a fix in Microsoft's iOS tools (dotnet/macios issue 26969). The Duo's sizes are
 held in GroupLab's own tests only, and nobody on the project has one.
@@ -35,7 +36,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 | **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 240 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 240 MB on Apple silicon, 270 MB on Intel | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 260 MB installed | as Windows |
-| **iPhone and iPad** | Requires iOS 26 or later (an iPhone 11 or newer). It also installs on iOS 18 to 25, without support. | arm64, from the App Store (version 1.0, released 2026-11-17) | not measured yet | not measured yet | as Android |
+| **iPhone and iPad** | Requires iOS 26 or later (an iPhone 11 or newer). From build 236 GroupLab also installs on iOS 18 to 25, without support; the App Store copy (version 1.0, build 226) still needs iOS 26 until its next version. | arm64, from the App Store (version 1.0, released 2026-11-17) | not measured yet | not measured yet | as Android |
 | **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's closed test, open to anyone | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
 
 Where the figures come from:

@@ -26,6 +26,92 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-22, entry 509: consistency audit, 2026-11-22
+
+**Status: actioned 2026-11-22. Every finding done.** Finding 1: README, PLATFORM-SUPPORT.md and the user guide (and its PDF) say iOS 18 to 25 is from build 236 and the App Store copy (1.0, build 226) still needs iOS 26. Finding 2: the download page's App Store panel reads the version and build from external-status.md (`app_store_copy` in website/build.py) and says later builds reach the App Store with its next version; the Features card says the same (reworded for nightly 239). Finding 3: "newest build" in the user guide, "trying GroupLab" in the guides page description, both phrases in RETIRED-WORDING.json. Finding 4: README and ANDROID.md name the closed track (entry 487). Finding 5: STATE's iOS line rewritten. Nothing submitted to the App Store.
+
+From the scheduled consistency audit (entry 267 section 2b), run 2026-11-22 about 16:50 UTC. The local checkout is at 0d16cb7f;
+origin/main is at 02d1db7c, ahead only by `[notes]` and `[screens]` commits (nightly 239's notes, README and Store status), which
+were read from GitHub directly. Read: README.md, the live home page, /download/, /features/, /tour/, /shoot-a-target/, /guides/,
+/releases/ and /support/, website/features.json, docs/RELEASE-NOTES.md (239 to 234), STATE.md, for-alan.md, external-status.md,
+PLATFORM-SUPPORT.md, PHONE-PARITY.md, ANDROID.md, TESTING-GUIDE.md, USER-GUIDE.md, the inbox (empty) and the commits since
+2026-11-17. The only GitHub issue labelled `consistency` (issue 1) is closed, so nothing here repeats the weekly check.
+Five findings. None of them needs Alan to fix the wording; finding 1 has a decision behind it that is his (see the end).
+
+Checked and found right, so not to be touched: the seven findings of entry 503 are all fixed on the live site and in the files
+(the In progress state, "Before the first numbered release", the support page's TestFlight line, the guides page's link text, the
+App Store and closed test cards on /features/, the testing guide's closed test sentence); the Microsoft Store line on /download/
+(1.0.239, which is what external-status.md on origin says the Store carries); "GroupLab is not in the Mac App Store"; the closed
+test wording on /download/, the README and ANDROID.md line 414; the start window card and nightly 239's notes; the tour's thirteen
+pages and "these are from nightly 239"; credits in Thanks (Unholy, Jylee, Fenix, Quack; Justin named nowhere public); no line says a
+lawyer is reviewing anything; "What GroupLab is not" is not in the README.
+
+### 1. The iOS 18 to 25 line sits beside the App Store copy, which still needs iOS 26
+
+- Where: README.md line 211 and docs/PLATFORM-SUPPORT.md line 38 (the minimums table, also live on https://grouplab.org/download/
+  under What each device needs): "Requires iOS 26 or later (an iPhone 11 or newer). It also installs on iOS 18 to 25, without
+  support." in the same row as "arm64, from the App Store (version 1.0, released 2026-11-17)". The same in docs/PLATFORM-SUPPORT.md
+  line 13 and docs/USER-GUIDE.md line 78 ("On an iPhone or iPad, GroupLab is on the App Store. Requires iOS 26 or later. It also
+  installs on iOS 18 to 25, without support").
+- Why it is wrong: the iOS 18.0 floor came in entry 505 (a51d8396, 2026-11-20, nightly 236). The App Store copy is version 1.0,
+  build 226 (external-status.md, "App Store version 1.0 (build 226): released"), built with the iOS 26 floor, and no newer App Store
+  version has been submitted. Since entry 500 the public is no longer invited to TestFlight. So a reader on iOS 18 to 25 is told it
+  installs, goes to the App Store link in the same row, and cannot install it.
+- Should say, for example: "Requires iOS 26 or later (an iPhone 11 or newer). From build 236 GroupLab also installs on iOS 18 to
+  25, without support; the App Store copy (version 1.0, build 226) still needs iOS 26 until its next version." Generate the README
+  and the download page from PLATFORM-SUPPORT.md as usual, and regenerate USER-GUIDE.pdf.
+
+### 2. iPhone and iPad changes since build 226 read as if App Store users have them
+
+- Where: https://grouplab.org/features/, for example the start window card (website/features.json, `splash`): "on the iPhone and
+  iPad it is an empty outline of the home screen ... Since nightly.238, changed in nightly.239", and the phone result zoom, Snap to
+  holes and the printer sync cards, which list iPhone and iPad among their platforms. The release notes of 239 ("On the iPhone and
+  iPad, the start screen is now an empty outline") and 236 (the iOS 18 line) say the same.
+- Why it matters: the only way in on iPhone and iPad for the public is the App Store copy, version 1.0 (build 226, entry 500).
+  Everything the nightlies changed on iPhone and iPad since 226 reaches only the remaining TestFlight testers. The pages are right
+  about the nightlies, but nothing tells an App Store reader that these are not in their copy yet.
+- Should say: one sentence, in the App Store panel of /download/ (website/build.py line 929, beside "The App Store copy is version
+  1.0, released on 17 November 2026") and in the Features card "On iPhone and iPad, from the App Store", for example: "The App Store
+  copy is version 1.0, from build 226; what later builds changed on iPhone and iPad reaches it with the next App Store version." Keep
+  it generated from external-status.md's App Store build number if that is simple, so it goes away by itself when a new version is
+  released.
+
+### 3. "Test build" still in the user guide and in the guides page's description
+
+- Where: docs/USER-GUIDE.md line 78 (also USER-GUIDE.pdf and https://grouplab.org/guides/user-guide/): "the installer and the zip
+  there are the newest test build the moment it is made". And website/build.py line 2845, the /guides/ page's description (its meta
+  description, shown by search engines and link previews): "the guide to trying the test build for the first time".
+- Why it is wrong: entries 488, 497 and 503 (finding 4) retired calling GroupLab a test build; the guides page's visible text was
+  fixed in entry 503 but this description and the user guide were not.
+- Should say, for example: "the installer and the zip there are the newest build the moment it is made", and "the guide to trying
+  GroupLab for the first time". Regenerate the PDF. Consider adding "newest test build" and "trying the test build" to
+  docs/RETIRED-WORDING.json so the weekly check catches them.
+
+### 4. The README and ANDROID.md say the nightlies go to Play's internal test only
+
+- Where: README.md line 643, For developers: "Each nightly also goes to TestFlight for the iPhone and iPad and to Google Play's
+  internal test as a bundle". docs/ANDROID.md lines 404 to 407, "Automatic upload (entry 384)": "sends them to internal testing
+  through the Play Developer API (... the internal track at status completed, the commit)".
+- Why it is wrong: since entry 487 section 1, play-upload.yml line 81 sends every nightly with `--tracks internal,alpha`, to the
+  internal track and to the closed track (sent when its newest release is completed and nothing is in review), and the closed test is
+  how the public gets GroupLab from Play (the /download/ page: "Each nightly reaches Play by itself").
+- Should say, for example: "to Google Play's internal test and its closed test, open to anyone, as a bundle (the closed track only
+  when Google is not reviewing an earlier one)", and the same in ANDROID.md, naming entry 487.
+
+### 5. STATE.md still calls iOS a public beta through TestFlight
+
+- Where: docs/notes/STATE.md line 42: "**iOS** (Phase 8): in a public beta through TestFlight; ... App Store 1.0 released
+  2026-11-17 on Alan's word."
+- Why it is wrong: entry 500 made the App Store the way in on iPhone and iPad and retired the public TestFlight invitation; the
+  Public Beta group still gets builds for those already in it (external-status.md). Not public, but both sessions read STATE first.
+- Should say, for example: "on the App Store (1.0, build 226, released 2026-11-17 on Alan's word); the nightlies go to TestFlight
+  for the testers already in it; ...", at the next rewrite of STATE.
+
+### For Alan, not for this entry
+
+Finding 2 only closes for good when a newer App Store version is submitted. That is Alan's word (as for 1.0), so do not submit;
+the wording above is the fix for now. If Code sees a reason to ask, it goes in for-alan.md as a question, not a request.
+
 ## 2026-11-23, entry 510: new suggestions, and a reply with a video on a bug report thread that may already be closed
 
 **Status: actioned 2026-11-22. Not done: the install of section 2's worker on the server, which is request 112 (Alan's paste, after his look at the Oracle backup); everything else done.** Section 1: the two open suggestions (issue 56, naming a session, and the large sheet number asked in issue 55's thread) are assessed in suggestions.md, nothing built. The reply with the video is on closed issue 53 (an iPhone, build 238; 2.7 MB, kept and pulled): the 2 MOA fix holds, and it showed two new faults on the phone's result picture, hole circles a fixed size when zoomed and no second pinch once let go (Fix holes had the second too); both fixed, issue 53 reopened and closed with the commit, Discord reply drafted. New bug report 55 (the filled load block's square empty in the PDF, the preview showing words) found and fixed ahead of the entry, as CLAUDE.md asks. Section 2: the worker reopens a closed issue on a reply by anybody but the server owner and labels it new-reply (45 worker tests pass); install and undo in RESTORE.md, the paste is request 112; meanwhile scripts/closed-replies.py runs with the open issue check (CLAUDE.md).

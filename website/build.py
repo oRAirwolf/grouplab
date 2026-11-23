@@ -82,6 +82,28 @@ def store_version() -> str | None:
         return None
     m = re.search(r"The Store carries package version (\d+)\.(\d+)\.(\d+)\.\d+", status.read_text(encoding="utf-8"))
     return ".".join(m.groups()) if m else None
+
+
+def app_store_copy() -> tuple[str, str] | None:
+    """Entry 509 finding 2: the App Store's version and the build it was made from, as the status check last wrote them in
+    docs/notes/external-status.md ("App Store version 1.0 (build 226): released"); None where it has recorded no released version."""
+    status = Path(__file__).resolve().parent.parent / "docs" / "notes" / "external-status.md"
+    if not status.exists():
+        return None
+    m = re.search(r"App Store version ([0-9.]+) \(build (\d+)\): released", status.read_text(encoding="utf-8"))
+    return (m.group(1), m.group(2)) if m else None
+
+
+def app_store_words() -> str:
+    """The App Store panel's line on which copy it carries, generated so it follows the next released version by itself."""
+    copy = app_store_copy()
+    if copy is None:
+        return "The App Store copy is version 1.0, released on 17 November 2026"
+    version, build = copy
+    return (f"The App Store copy is version {version}, from build {build}; what later builds changed on iPhone and iPad reaches it "
+            f"with the next App Store version")
+
+
 APP_STORE = "https://apps.apple.com/app/id6817635137"
 # Entry 129 section 1: the upload page moves to grouplab.org. It stays pointed at the old one until
 # the receiver is installed on the server and tested, because a button that leads nowhere is worse
@@ -926,7 +948,7 @@ def page_download() -> str:
 <div class="card-head"><h3 class="h3">The App Store</h3><span class="badge mono">Released</span></div>
 <div>{btn("Get GroupLab on the App Store", APP_STORE, True, big=True)}</div>
 <p>GroupLab 1.0 is on Apple's App Store for iPhone and iPad. The App Store gets a new version when one is submitted and approved.</p>
-{points(["Free, like every GroupLab download", "The App Store copy is version 1.0, released on 17 November 2026"])}
+{points(["Free, like every GroupLab download", "Released on 17 November 2026", app_store_words()])}
 </article>""",
         "Get GroupLab from the App Store.",
         [], single=True)
@@ -2842,7 +2864,7 @@ def page_guides_index() -> str:
 {''.join(cards)}
 </section>
 """
-    return shell("/guides/", "Guides", "The GroupLab user guide, the guide to trying the test build for the first time, and statistics for shooters from the beginning.", body, "Guides")
+    return shell("/guides/", "Guides", "The GroupLab user guide, the guide to trying GroupLab for the first time, and statistics for shooters from the beginning.", body, "Guides")
 
 
 # ---------------------------------------------------------------- the tour, entry 146

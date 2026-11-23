@@ -377,6 +377,22 @@ is request 112, with its install and undo written in `docs/RESTORE.md`. Until it
 
 **Worth an article?** No: a fix of two faults, nothing another shooter or developer would do differently.
 
+## Entry 509: the consistency audit of 2026-11-22, five findings (2026-11-22)
+
+**1.** The iOS 18 to 25 line no longer sits beside the App Store link as if the App Store copy installed there: README, PLATFORM-SUPPORT.md
+(and so the download page's table), USER-GUIDE.md and its PDF say GroupLab installs on iOS 18 to 25 from build 236, and the App Store
+copy (version 1.0, build 226) still needs iOS 26 until its next version. **2.** The download page's App Store panel now reads the
+released version and its build from `docs/notes/external-status.md` (`app_store_copy`, `app_store_words` in website/build.py), so it
+follows the next release by itself, and says what later builds changed on iPhone and iPad reaches the App Store with its next version;
+the Features card "On iPhone and iPad, from the App Store" says the same, marked reworded for nightly 239. **3.** "the newest build" in
+the user guide and "the guide to trying GroupLab for the first time" in the guides page's description; "newest test build" and "trying
+the test build" are in `docs/RETIRED-WORDING.json`. **4.** README and ANDROID.md say each nightly goes to Play's internal test and its
+closed test, the closed track only when Google is not reviewing an earlier one (entry 487, play-upload.yml `--tracks internal,alpha`).
+**5.** STATE's iOS line: on the App Store, the nightlies to TestFlight for the testers already in it. The new site sentences are backed
+in claims-backing.json. Nothing was submitted to the App Store; that stays Alan's word.
+
+**Worth an article?** No: wording kept in step with what GroupLab does.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.
