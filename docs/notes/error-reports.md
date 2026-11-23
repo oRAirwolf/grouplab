@@ -7,6 +7,20 @@ the person's files. Claude Code checks the open issues at the start of a run, be
 hourly while waiting on CI, and writes each new one here. **A report from an iPhone or iPad below iOS 26** (entry 505 section 5) is
 headed "unsupported iOS" and still assessed, but goes ahead of feature work only when the same fault also happens on iOS 26 or later.
 
+## 57, 2026-11-23, nightly 240 on a Mac (posted in the Discord's bug-reports forum, with screenshots and the three sessions)
+
+- **Said:** three sheets ticked in Session records, two of the 3x3 2 MOA C bull set of 3 and one loose 3x3 2 MOA C bull sheet used as a
+  spare in place of a spoiled sheet of the set, each given a rifle and load after the first Accept; Pool the chosen "does nothing". The
+  poster then found the cause: the two set sheets pool, the loose one with them does not, and suggests pooling sheets of different
+  designs (taken as a suggestion in suggestions.md). The rifle and load, and going Back to add them, play no part.
+- **Cause:** Pool the chosen pools only the sheets of one set (entry 243), and it did answer: "These are sheets of different designs.
+  Pooling reads the sheets of one set together; tick only those." The poster's screenshot shows the line, but it was drawn like the
+  explanatory lines around it, small and grey under the buttons, and nothing else changed, so it read as no answer at all.
+- **Status:** fixed: the refusal is in amber, semi-bold, names each design ticked with how many of its sheets ("GroupLab 3x3 2 MOA, C
+  Bull, Letter (1 sheet) and ... (2 sheets)"), says that pooling another sheet with a set is not built yet, is said in the status bar
+  too and is brought into view. Held by `Report57PoolRefusalTests`. Ships in nightly 241; issue 57 closes with the commit. Discord reply
+  57-1 waits in `discord-replies/` for nightly 241.
+
 ## 55, 2026-11-22, nightly 239 on a Mac (posted in the Discord's bug-reports forum, with a screenshot)
 
 - **Said:** printing a set from the Load development family (the 3x3 2 MOA C bull set of 3, Letter) with "Filled in now, from these

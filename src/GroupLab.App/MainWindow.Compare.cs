@@ -75,9 +75,7 @@ public sealed partial class MainWindow
         var states = records.Select(r => MarkingFile.Read(r.MarkingJson).State).ToList();
         if (definition is null || definition.Tiling is not { } set || set.Cols * set.Rows < 2 || states.Any(s => s.SetSheet is null))
         {
-            sessionPoolPanel.Children.Add(Line(ids.Count > 1
-                ? "These are sheets of different designs. Pooling reads the sheets of one set together; tick only those."
-                : "These are not sheets of a set. A set is what Made for your optic makes when the shots need several sheets; each sheet's codes say which of the set it is."));
+            Refused(ids.Count > 1 ? PoolRefusal.DifferentDesigns(records) : PoolRefusal.NotASet);
             return;
         }
 
@@ -103,6 +101,23 @@ public sealed partial class MainWindow
             poolSources = PooledSessions(records);
         }
     }
+
+    /// <summary>
+    /// Error report 57: Pool the chosen refused a loose sheet ticked with two sheets of a set in a small grey line under the buttons, which
+    /// the person did not see, so the button seemed to do nothing. The refusal is now in amber, names the designs ticked, is said in the
+    /// status bar too, and is brought into view.
+    /// </summary>
+    private void Refused(string words)
+    {
+        var said = new TextBlock { Text = words, TextWrapping = TextWrapping.Wrap, MaxWidth = 900, FontWeight = FontWeight.SemiBold, Classes = { AppStyles.Warn } };
+        sessionPoolPanel.Children.Add(said);
+        status.Text = words;
+        DiagnosticLog.Info("sessions.pool.refused", ("sheets", sessionChosen.Count));
+        Avalonia.Threading.Dispatcher.UIThread.Post(() => said.BringIntoView(), Avalonia.Threading.DispatcherPriority.Background);
+    }
+
+    /// <summary>Whether Pool the chosen's last answer was a refusal shown in amber, for the headless tests.</summary>
+    internal bool PoolRefusedInAmber => sessionPoolPanel.Children.OfType<TextBlock>().Any(t => t.Classes.Contains(AppStyles.Warn));
 
     /// <summary>
     /// Entry 420 section 1: a pooled set in its own tab, on the analysis screen: every shot on one plot about its own bull, each sheet in its
@@ -427,4 +442,24 @@ public sealed partial class MainWindow
     internal LoadGroups? CompareGroups => compareGroupsCard;
 
     private LoadGroups? compareGroupsCard;
+}
+
+/// <summary>What Pool the chosen says when it will not pool the sessions ticked, error report 57.</summary>
+internal static class PoolRefusal
+{
+    internal const string NotASet = "These are not sheets of a set, so Pool the chosen cannot read them as one group. A set is what Made for your "
+        + "optic makes when the shots need several sheets; each sheet's codes say which of the set it is.";
+
+    /// <summary>The designs ticked, each with how many of its sheets, and what to tick instead.</summary>
+    internal static string DifferentDesigns(IReadOnlyList<SessionRecord> records)
+    {
+        var designs = records
+            .GroupBy(r => r.DefinitionId ?? "")
+            .Select(g => (Name: SessionNames.TargetOf(g.First().SheetName, SessionNames.LabelOf(g.First().MarkingJson)), Count: g.Count()))
+            .Select(d => $"{d.Name} ({(d.Count == 1 ? "1 sheet" : d.Count.ToString(CultureInfo.InvariantCulture) + " sheets")})")
+            .ToList();
+        string named = designs.Count == 2 ? $"{designs[0]} and {designs[1]}" : string.Join(", ", designs.Take(designs.Count - 1)) + " and " + designs[^1];
+        return $"These are sheets of different designs: {named}. Pool the chosen reads only the sheets of one set together, so tick only those; "
+            + "pooling another sheet with a set is not built yet.";
+    }
 }

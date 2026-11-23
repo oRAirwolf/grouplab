@@ -12,6 +12,21 @@ it ships in. A suggestion that is really a bug goes to `docs/notes/error-reports
 Claude Code lists the open `suggestion` issues at the same points as the error reports (the start of a run, before each inbox entry,
 before ending a turn, and at least hourly while waiting on CI) and writes each new one here at once.
 
+## Issue 57's thread, 2026-11-23: pool a loose sheet with the sheets of a set
+
+- **Asked** (in the bug report of issue 57): allow Pool the chosen to pool sheets of different designs, here a loose 3x3 2 MOA C bull
+  sheet used in place of a spoiled sheet of the 3x3 2 MOA C bull set of 3, "as the only thing you're looking at is the offset from the
+  bull's center".
+- **Already done?** No. Pool the chosen takes only the sheets of one set (entry 243), and the user guide says pooling saved sessions that
+  are not one set is not built yet: separate sheets each have their own center, and what a pooled figure means depends on which center
+  it is measured from, which is still being decided (question 51 waits on request 9). Since report 57's fix the refusal says so plainly.
+- **Size:** small for this case, where the loose sheet has the same bulls as a sheet of the set (one design's sheet standing in for a
+  set's sheet, each shot about its own bull, as a set already pools); medium for any mix of designs. **Fits:** yes for the first, and it
+  is how people replace a spoiled sheet; the general mix waits on question 51.
+- **Recommendation:** yes to the narrow case, later for the general one: let Pool the chosen take a loose sheet whose bulls match a
+  set's sheet and count it as that sheet (asking which one where it could be several), so a spoiled sheet can be replaced. Waits for
+  Alan's word.
+
 ## Issue 56, 2026-11-22: name a session, so Session records can tell sheets apart
 
 - **Answered 2026-11-23, yes to (a) and (b)** (entry 511 section 1): built. On the computer, Rename on each Session records row (its menu, and F2), and the box moved to the top of the analysis column as "Name this session", beside the target's name; on the phone, the same box on the result page and Rename a session under Sessions. The name comes first in Session records, the tab and Compare, with the target's name after it, and synchronizes with the session. Ships in nightly 241; issue 56 closed with the commit.

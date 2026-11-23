@@ -19,7 +19,8 @@ If something here disagrees with the logs, the logs are right and this file is o
   F2 in Session records, "Name this session" atop the analysis, the phone's result page and Rename a session), for nightly 241. The
   Discord worker posts `discord-replies/` from the crash-reports repo (9cf53235): waiting for request 113's install; 53-1, 55-1, 56-1
   and 56-2 (post-after 241) are waiting there. If 56-1 is still unposted when 241 is out, merge it into 56-2 (one reply a thread).
-- **Entry 509 (2026-11-22)**: the audit's five findings fixed; the download page reads the App Store's version and build itself.
+- **Report 57 (2026-11-23)**: Pool the chosen's refusal was a grey line nobody saw; now amber, naming the designs, in the status
+  bar (`PoolRefusal`), for nightly 241, reply 57-1 waiting. Its thread's suggestion (a loose sheet standing in for a set's) waits for Alan.
 - **Entry 510 (2026-11-22)**: report 53's reply (a video, iPhone build 238): the phone's zoomed pictures pinch again after the first
   and hole circles grow to the bullet (`TwoFingers`, `Entry510PinchTests`); report 55: a filled load block's square carries words when
   it has no code, the Targets preview is the PDF's page; in nightly 240. The Discord worker reopening a closed issue on a reply is
