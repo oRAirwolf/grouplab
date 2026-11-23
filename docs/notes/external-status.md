@@ -43,3 +43,16 @@ Written by scripts/status-note.py from the testflight and store status workflows
 
 - Store search for GroupLab: found
 <!-- /status:store-search -->
+
+<!-- status:play -->
+## Google Play production, 2026-11-23 13:53 UTC
+
+- Production, 2026-11-23: blocked: Google refused it (HTTP 400: {
+-   "error": {
+-     "code": 400,
+-     "message": "Precondition check failed.",
+-     "status": "FAILED_PRECONDITION"
+-   }
+- }
+- ). It goes by itself the first night Google allows it.
+<!-- /status:play -->
