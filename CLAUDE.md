@@ -276,6 +276,21 @@ passes and the table is better on the held-out share and worse on nothing. Anyth
 large jump, a line that improved for no reason the table explains) is not merged: say why in the pull request and in the report, and it
 waits for the planning session. The merge commit carries a plain Release-note naming what got better, in a shooter's words. Main model.
 
+## Every new build goes to every store (entry 513)
+
+Alan, 2026-11-23: "All new builds should be submitted to all of the app stores including the apple app store, play store, and microsoft
+store." This replaces the rule that App Store submissions and releases happen only on his word (entries 491 and 501).
+
+- **By the workflows, never by hand**, and only a nightly that passed its checks and published its notes: the Microsoft Store by
+  `store-follow.yml`, Google Play's internal, closed and (once Google allows it) production tracks by `play-upload.yml`, and the App Store
+  for iPhone, iPad and the Mac by `scripts/app-store.py` from `testflight.yml`.
+- **Apple releases by itself once approved** (release type after approval). One review at a time on each platform: the newer build
+  waits, and a review in progress is never cancelled.
+- **A rejection from any store** goes into `for-alan.md` the same day with the store's words and Code's fix; what only Alan can answer is
+  a request, never a guess. Age rating, privacy answers and export compliance are 1.0's, reused.
+- **`STORE_SUBMISSIONS_PAUSED`**, a repository variable set to `true` or a file of that name at the top of the repository, stops every
+  store's submissions; the nightlies and TestFlight go on. The steps are a standing note in `for-alan.md`.
+
 ## Tokens are the budget, NOTES-FROM-PLANNING.md entry 160
 
 Alan: "I would like going forward is for cowork and code to be more efficient with tokens without sacrificing the quality of research or the application." Three log files weighed 2.1 MB between them and both sessions read some version of them most days, which is most of a day's allowance spent before a line of work happens.

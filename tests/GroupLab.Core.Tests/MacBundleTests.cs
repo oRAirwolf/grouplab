@@ -122,7 +122,7 @@ public class MacBundleTests
 
     /// <summary>
     /// Entry 501: the Mac App Store copy is the iPhone and iPad app's identifier, org.grouplab.app, for one App Store record; its version is
-    /// the release's, 1.0, and its build the nightly's number; it says its encryption is exempt; and it carries its provisioning profile.
+    /// 1.0.<build> (entry 513), and its build the nightly's number; it says its encryption is exempt; and it carries its provisioning profile.
     /// </summary>
     [Fact]
     public void TheStoreCopySaysWhatTheMacAppStoreReads()
@@ -140,8 +140,9 @@ public class MacBundleTests
             string plist = File.ReadAllText(Path.Combine(contents, "Info.plist"));
             Assert.Contains("<string>org.grouplab.app</string>", plist, StringComparison.Ordinal);
             Assert.DoesNotContain("org.grouplab.GroupLab", plist, StringComparison.Ordinal);
-            // The release's version a person sees, and the nightly's number as the build, never the nightly's whole name.
-            Assert.Contains("<string>1.0</string>", plist, StringComparison.Ordinal);
+            // Entry 513: the version a person sees is 1.0.<build>, as the iPhone's, and the nightly's number is the build, never the
+            // nightly's whole name.
+            Assert.Contains("<string>1.0.232</string>", plist, StringComparison.Ordinal);
             Assert.Contains("<string>232</string>", plist, StringComparison.Ordinal);
             Assert.DoesNotContain("nightly", plist, StringComparison.Ordinal);
             Assert.Contains("<key>ITSAppUsesNonExemptEncryption</key>", plist, StringComparison.Ordinal);

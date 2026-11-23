@@ -53,8 +53,9 @@ def plist(version: str, arch: str, store_build: int | None = None) -> dict:
     """
     short = version.split("-")[0] or "0.0.0"
     if store_build is not None:
-        # Entry 488 for the App Store, kept for the Mac by entry 501: the version a person sees is the release's, 1.0, and the build is the
-        # nightly's number, which only ever grows.
+        # Entry 488 for the App Store, kept for the Mac by entry 501: the build is the nightly's number, which only ever grows. Entry 513:
+        # the version a person sees is 1.0.<build>, as the iPhone's are, because each build now goes to the App Store as its own version
+        # and Apple takes only a version higher than the last one released.
         return {
             "CFBundleName": DISPLAY_NAME,
             "CFBundleDisplayName": DISPLAY_NAME,
@@ -62,7 +63,7 @@ def plist(version: str, arch: str, store_build: int | None = None) -> dict:
             "CFBundleExecutable": EXECUTABLE,
             "CFBundleIconFile": "grouplab.icns",
             "CFBundlePackageType": "APPL",
-            "CFBundleShortVersionString": ".".join(short.split(".")[:2]),
+            "CFBundleShortVersionString": ".".join(short.split(".")[:2]) + f".{store_build}",
             "CFBundleVersion": str(store_build),
             "CFBundleInfoDictionaryVersion": "6.0",
             "LSMinimumSystemVersion": MINIMUM_SYSTEM,
