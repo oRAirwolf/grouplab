@@ -26,6 +26,24 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-23, entry 515: the bot's replies end "This is an AI generated response."
+
+**Status: actioned 2026-11-23. Every section done.** SIGNED is "This is an AI generated response." and reply_problems refuses the old line, none, or a reply naming Alan; no reply was waiting, so none was rewritten; installed by Code over ssh at 12:15 UTC (5eeeed2b, backup 2026-11-23T121526Z-discord-worker-ai-line, recorded in RESTORE.md); request 117 asks Alan whether the nine earlier replies should be edited.
+
+From the planning session, Alan's words in chat on 2026-11-23: "When the discord bot replies to messages in the discord, it should not
+say "for alan" just say "This is an AI generated response"". Take this next, before the rest of entry 514 (finish the item in hand first).
+
+- Every reply the bot posts ends with the one line **"This is an AI generated response."** in place of "(Posted by the GroupLab bot for
+  Alan.)". Nothing else names Alan in a reply.
+- The worker: `SIGNED` in website/server/grouplab-discord-worker.py and `reply_problems`, so a reply with the old line or none is
+  refused; tests updated. The standing rule in CLAUDE.md and STATE (entries 511 and 512) changes to the new line.
+- Every reply file still waiting in `discord-replies/` is rewritten with the new line before the worker posts it.
+- Install on the server the same way request 115 was installed (Alan's standing word to Code of 2026-11-23: "I give you permission to
+  run commands on the web host"), within the standing rules: backup of the worker first (RESTORE.md rule 5), file hashes checked, a
+  dry run that posts nothing, then install, one run, log, timer and both sites checked; record it in RESTORE.md.
+- Replies already posted with the old line are left as they are. Alan has not asked for them to be edited; ask him in for-alan.md
+  (one line, not urgent) whether the bot should edit its earlier replies to the new line.
+
 ## 2026-11-23, entry 513: every new build goes to every store, and Apple releases by itself once approved
 
 **Status: actioned 2026-11-23. Every section done; two waits on others: Apple's review of iPhone and iPad 1.0.242 (build 242) and the Mac's 1.0 (build 240), both submitted at 11:59 UTC and released by themselves once approved, then the reply to Quack in question 59's thread; and Google Play production, which Google allows only after 14 days of 12 testers (about 2 December) and Alan's application (entry 514 section 1).** scripts/app-store.py from testflight.yml, play-upload.py --production, the STORE_SUBMISSIONS_PAUSED switch in all three stores' workflows, the Mac store copy numbered 1.0.N, CLAUDE.md's new rule, request 116 closed.

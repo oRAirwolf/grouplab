@@ -102,7 +102,20 @@ server is limited to GroupLab's own files and its installer.
 **Changes made under rule 5** (newest first). The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from
 09:02 UTC that day when these were made.
 
-- **Waiting for request 115, the Discord worker reads help and support, and marks every new message** (entry 512 section 1). Changes only `/usr/local/sbin/grouplab-discord-worker.py`: it also files the help and support forums' threads as issues labelled `question` (posting nothing in them), labels an issue `new-reply` on every later message from anybody but the server's owner, open or closed, and `alan-replied` on the owner's own; the state file gains a `labels` key, which the older worker ignores. Before it: that day's Oracle boot volume backup seen by Alan, the six files checked against the repository at ddb1e8fd, a dry run that files and posts nothing and stops on a missing forum or permission, and `grouplab-change-backup.py` keeping the previous worker. Undo: `sudo install -m 755 -o root -g root` the backup folder's copy over the worker, then `sudo systemctl start grouplab-discord-worker.service`; check with `sha256sum` against the backup. Issues it filed stay filed; labels it added stay until Code removes them.
+- **2026-11-23 12:15 UTC, the bot's replies end "This is an AI generated response."** (entry 515, run by Code over ssh on Alan's
+  standing word of 2026-11-23, announced in panel.md). Fetched at 5eeeed2b, six files `OK` against the repository; the dry run filed
+  and posted nothing. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only (the reply's required last line, and a reply naming
+  Alan refused). Backup: `/home/ubuntu/grouplab-server/backups/2026-11-23T121526Z-discord-worker-ai-line/`, holding the previous
+  worker; `install.py --discord` also kept it as `grouplab-discord-worker.py.20261123-051526.bak`. Its first run found nothing new, the
+  timer's next run was within five minutes, and grouplab.org and pissinhot.com answered 200. **Undo:** `sudo install -m 755 -o root
+  -g root` the backup folder's copy over that path; **check:** `sudo sha256sum` of it matches the backup's.
+- **2026-11-23 11:02 UTC, the Discord worker reads help (and support once it exists), and a missing forum is a warning** (request 115,
+  entry 512 section 1, run by Code over ssh on Alan's word that day, announced in panel.md). Fetched at d893e027, six files `OK`; the
+  dry run found bug-reports, feature-requests and help, warned that there is no support forum, and found the bot may post in all
+  three. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only. Backup:
+  `/home/ubuntu/grouplab-server/backups/2026-11-23T110227Z-discord-worker-forums/`; `install.py --discord` also kept it as
+  `grouplab-discord-worker.py.20261123-040227.bak`. Its first run filed the help forum's two threads as issues 58 and 59; both sites
+  200. **Undo and check:** as above, from that folder.
 - **2026-11-23 08:03 UTC, the Discord worker posts the replies Code writes** (entry 511 section 2, request 113, run by Alan;
   recorded by entry 512). Alan checked the Oracle boot volume backup from that day first. Fetched at 9cf53235, six files `OK`
   against the repository. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only (each run reads `discord-replies/` in

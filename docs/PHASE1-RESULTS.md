@@ -504,6 +504,14 @@ page's load block line say both.
   one dated blocked line a day in external-status.md. `play-upload-tests.py`, 19 checks.
 - **Pause:** `STORE_SUBMISSIONS_PAUSED`, a repository variable or a file, in testflight.yml, play-upload.yml and store-follow.yml.
 
+## Entry 515: the Discord bot's replies end "This is an AI generated response." (2026-11-23)
+
+- `SIGNED` in `website/server/grouplab-discord-worker.py` is the new line; `reply_problems` refuses a reply ending with the old line or
+  none, and any reply naming Alan. `discord-worker-tests.py`, 89 checks. No reply was waiting; the nine posted before are unchanged
+  (request 117).
+- Installed by Code at 12:15 UTC from 5eeeed2b: hashes `OK`, dry run posting nothing, backup first, one run, timer, both sites 200;
+  recorded in `docs/RESTORE.md` with request 115's install of 11:02 UTC.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

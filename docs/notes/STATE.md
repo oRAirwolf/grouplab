@@ -9,20 +9,20 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-23, after entry 513; next entry 515 (the bot's new last line), then entry 514's overnight queue.
+**Last rewritten:** 2026-11-23, after entry 515; next entry 514's overnight queue, item 1 (the Play drafts).
 
 ---
 
 ## In flight
 
+- **Entry 515 (2026-11-23)**: the bot's replies end "This is an AI generated response.", installed 12:15 UTC; request 117 asks about
+  the nine earlier replies.
 - **Entry 513 (2026-11-23)**: every new build to every store; Apple releases by itself once approved (CLAUDE.md). App Review has
   iPhone and iPad 1.0.242 (build 242, the iOS 18 to 25 one) and the Mac's 1.0 (build 240), submitted 11:59 UTC by `scripts/app-store.py`;
   when the iPhone one is released, reply in question 59's thread (Quack, issue 59). Play production waits on Google (14 days of 12
   testers, about 2 December, then Alan's application). `STORE_SUBMISSIONS_PAUSED` stops all three stores.
-- **Request 115 is in** (2026-11-23 11:02 UTC, run by Code on Alan's word: "I give you permission to run commands on the web host"):
-  the worker at d893e027 reads bug-reports, feature-requests and help; the server has no support forum, which is now a warning and is
-  read by itself once made. A dry run prints its own lines only and writes no log, state or status. Help threads became questions 58
-  and 59; replies 58-1 and 59-1 posted at 11:09. 55-2, 56-3 and 57-2 posted at 10:59 after nightly 242.
+- **Request 115 is in** (11:02 UTC, run by Code): help is read, a missing support forum is a warning and is read once made, a dry
+  run writes nothing; questions 58 (closed) and 59 answered.
 - **Entry 512 (2026-11-23)**: every new message labels its issue `new-reply` (Alan's `alan-replied`); a Session name and a set's
   "2 of 3" print in the load block's square when it carries words; question 118 answered (a), leave it as built.
 - **Entry 510 (2026-11-22)**: `scripts/closed-replies.py` stays beside the issue check until the worker reopens an issue itself.
@@ -50,7 +50,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 515, then entry 514's queue in order; every new Discord message at every check, replies in `discord-replies/`.
+1. Entry 514's queue in order (item 1 first); every new Discord message at every check, replies in `discord-replies/`.
 2. The phone's Session name box on Targets (desktop only in entry 512).
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
