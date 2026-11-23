@@ -152,6 +152,44 @@ public sealed class BadFilesTests : IDisposable
         return stream.ToArray();
     }
 
+    /// <summary>
+    /// Entry 514 section 4: a pooled set's file, which entry 495 added after this list was made, given the same: nothing, every
+    /// truncation, damaged bytes, another kind of file under its name, and contents that claim what they do not hold.
+    /// </summary>
+    [Fact]
+    public void APooledSetFileIsOpenedOrRefusedInWords()
+    {
+        using var made = new MemoryStream();
+        PoolPackage.Write(made, SessionPools.Choices(pictures: true), [Package(), Package()], "GroupLab on the computer", new DateTime(2026, 11, 23, 12, 0, 0, DateTimeKind.Utc));
+        byte[] good = made.ToArray();
+        Assert.Equal(2, PoolPackage.Read(new MemoryStream(good)).Sheets.Count);
+        var files = new List<(string, byte[])>(Bad(good, 4731))
+        {
+            ("a session file under a pool's name", Package()),
+            ("no session", Zip(("pool.json", "{}"))),
+            ("a session that is a list", Zip(("session.json", "[1]"))),
+            ("a pool that says it holds sheets it has not", Zip(("session.json", "{\"schema\":\"grouplab-pool-1\",\"sheets\":3}"))),
+            ("a sheet count that is a word", Zip(("session.json", "{\"schema\":\"grouplab-pool-1\",\"sheets\":\"three\"}"))),
+        };
+        int refused = ReadOrRefused<SessionPackageException>("a pooled set file", files, bytes => PoolPackage.Read(new MemoryStream(bytes)));
+        Assert.True(refused > 60, $"only {refused} refused");
+    }
+
+    /// <summary>Entry 514 section 4: a good picture under another kind's name is read by what it is, not refused for its name.</summary>
+    [Fact]
+    public void APictureUnderAnotherKindsNameIsReadByWhatItIs()
+    {
+        using var sheet = new Mat(300, 400, MatType.CV_8UC3, Scalar.White);
+        Cv2.Circle(sheet, new Point(200, 150), 40, Scalar.Black, -1);
+        foreach (var (made, named) in new[] { (".png", ".jpg"), (".jpg", ".png"), (".png", ".tif"), (".jpg", ".jpeg") })
+        {
+            Cv2.ImEncode(made, sheet, out byte[] bytes);
+            string path = Path.Combine(root, $"named{named}");
+            File.WriteAllBytes(path, bytes);
+            Assert.Equal(400, ImageLoader.Load(path, 12).Image.Width);
+        }
+    }
+
     [Fact]
     public void ASessionFileIsOpenedOrRefusedInWords()
     {
