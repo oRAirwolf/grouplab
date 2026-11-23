@@ -9,25 +9,23 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-23, entry 514 in flight: item 1 done (requests 118 and 119), item 2 next (the iOS real-tap flake).
+**Last rewritten:** 2026-11-23, after entry 514; the inbox is empty.
 
 ---
 
 ## In flight
 
+- **Entry 514 (2026-11-23)**: done; question 119 withdrawn the same day (Android was already compiled ahead of time). The iOS
+  keyboard bar fix (da3502ac): proved by three green runs in a row.
 - **Entry 515 (2026-11-23)**: the bot's replies end "This is an AI generated response.", installed 12:15 UTC; request 117 asks about
   the nine earlier replies.
 - **Entry 513 (2026-11-23)**: every new build to every store; Apple releases by itself once approved (CLAUDE.md). App Review has
   iPhone and iPad 1.0.242 (build 242, the iOS 18 to 25 one) and the Mac's 1.0 (build 240), submitted 11:59 UTC by `scripts/app-store.py`;
   when the iPhone one is released, reply in question 59's thread (Quack, issue 59). Play production waits on Google (14 days of 12
   testers, about 2 December, then Alan's application). `STORE_SUBMISSIONS_PAUSED` stops all three stores.
-- **Request 115 is in** (11:02 UTC, run by Code): help is read, a missing support forum is a warning and is read once made, a dry
-  run writes nothing; questions 58 (closed) and 59 answered.
-- **Entry 512 (2026-11-23)**: every new message labels its issue `new-reply` (Alan's `alan-replied`); a Session name and a set's
-  "2 of 3" print in the load block's square when it carries words; question 118 answered (a), leave it as built.
+- **Request 115 is in** (11:02 UTC, by Code): help is read; a support forum is read once made. Question 118 answered (a).
 - **Entry 510 (2026-11-22)**: `scripts/closed-replies.py` stays beside the issue check until the worker reopens an issue itself.
-- **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by
-  mac-store.yml after each nightly; whether it runs on a real Mac is request 111; never submitted without Alan's word.
+- **Entry 501 (2026-11-18)**: the Mac App Store copy, built by mac-store.yml after each nightly, is with App Review (entry 513).
 
 ## The next three
 
@@ -50,7 +48,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 514 items 2 to 6 in order; every new Discord message at every check, replies in `discord-replies/`.
+1. When Apple releases 1.0.242: reply in question 59's thread, and update the README's and download page's "with Apple" wording
+   and the Features sentence's "from build 226"; the same for the Mac's 1.0. Every new Discord message at every check.
 2. The phone's Session name box on Targets (desktop only in entry 512).
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
@@ -69,7 +68,7 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Two, in `docs/QUESTIONS-FOR-PLANNING.md` (118 answered (a) by Alan, 2026-11-23):
+Two, in `docs/QUESTIONS-FOR-PLANNING.md` (118 answered (a); 119 withdrawn, 2026-11-23):
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site

@@ -26,6 +26,39 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-23, entry 514: an overnight queue, after entry 513
+
+**Status: actioned 2026-11-23. Every item done; one waits on an answer.** 1: requests 118 (the Discord post) and 119 (Google's production questions, from 2 December). 2: the keyboard bar's cause found in GroupLab Dev's own log and fixed (da3502ac, Entry514KeyboardTests); proved by 3 green runs of the iOS app workflow in a row, 45174815465, 45179981633 and 45187081635. 3: the computer audited in all three themes and the phone's reading order by the accessibility tree, nothing found (docs/ACCESSIBILITY-AUDIT.md). 4: pooled set files and mislabeled pictures added to the bad-file tests, both already refused or read plainly. 5: measured on the Android emulator in three runs; nothing published changed (question 119, asked on a wrong reading that the build was compiled just in time, was withdrawn the same day: Android's Release build is already compiled ahead of time). 6: the README, guide and download page say the stores follow the nightlies.
+
+From the planning session, Alan in chat on 2026-11-23 about 12:00 UTC: "Is there anything code can work on overnight? I am about to go to
+sleep". Take entry 513 first, then these in order, each finished, recorded and committed before the next, until the guard stops it (85%
+of the week; the week resets 2026-11-26 02:00 UTC). Nothing here needs Alan; anything that turns out to need him is written in
+for-alan.md and skipped, never waited on. STATE says which item is in flight at every rewrite.
+
+1. **Two drafts for Google Play's public listing** (Play Console, 2026-11-23: 12 testers opted in for 5 days continuously; 14 days
+   about 2 December if all 12 stay; exactly 12, so one leaving restarts the count):
+   - A short Discord post in Alan's voice (casual, contractions fine, no bold, says GroupLab is his project) asking for two or three
+     more Android testers, with the three steps from grouplab.org/android-test/. In for-alan.md for him to post; the bot does not post it.
+   - Answers to Google's "Apply for production" questions about the closed test, drawn from the real record only (how testers were
+     found, how many, how they used it, the feedback that came in through Discord and Make a report, and what changed because of it,
+     with build numbers), plain and short, in for-alan.md under a heading he can copy from on or after 2 December. Nothing invented;
+     no tester's name or email.
+2. **The flaky iOS real-tap step** on Targets' keyboard Next (STATE: ios app runs 44891904639 and 44906341195): find what opens the
+   light-dismiss overlay, fix it, and prove it with several green runs in a row.
+3. **An accessibility pass that needs no person** (ahead of request 105's screen reader sitting): on the computer and on Android (the
+   emulator), every screen checked by automation for a name on every control, a sensible focus order by keyboard and by the
+   accessibility tree, contrast in both themes (4.5:1 for text), and text at 200% on the phone without clipping. Fix what is found;
+   anything that is a look question goes to for-alan.md as DESIGN NEEDED. Record the results in a short table in docs.
+4. **Robustness of every file GroupLab opens:** photos and scans (truncated, wrong extension, huge, zero bytes), PDFs, session and pool
+   files, sync change files, printer checks, chronograph exports. Each refused plainly, never a crash or a hang; add the cases to the
+   tests.
+5. **Phase 9 speed on the phone:** the slowest measured steps of reading a phone photograph on Android, results identical, numbers in
+   PERFORMANCE.md.
+6. **A last consistency look** at the README, the download page and the store descriptions after entry 513's changes, so they say
+   plainly that the stores now follow the nightlies.
+
+Then rewrite STATE.md with what is done, and a short note at the top of for-alan.md (not a request) saying what happened overnight.
+
 ## 2026-11-23, entry 515: the bot's replies end "This is an AI generated response."
 
 **Status: actioned 2026-11-23. Every section done.** SIGNED is "This is an AI generated response." and reply_problems refuses the old line, none, or a reply naming Alan; no reply was waiting, so none was rewritten; installed by Code over ssh at 12:15 UTC (5eeeed2b, backup 2026-11-23T121526Z-discord-worker-ai-line, recorded in RESTORE.md); request 117 asks Alan whether the nine earlier replies should be edited.

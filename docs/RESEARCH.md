@@ -107,7 +107,7 @@ separate the effect from the confounds" and "already covered by article N".
 
 | investigation | decision | why |
 |---|---|---|
-| Entry 514 section 5: a phone photograph's stages on the Android emulator, compiled just in time and ahead of time | not now | the data cannot separate the effect from the confounds: an emulator in CI, not a phone; worth one if question 119 is answered and a phone is measured |
+| Entry 514 section 5: a phone photograph's stages on the Android emulator | not now | the data cannot separate the effect from the confounds: an emulator in CI, not a phone, and runs of the same code differ by a third |
 | A splash's cost at start-up, precompiled and not (entry 507 section 2) | not written | One application on one machine: a first window costs about 200 ms of JIT work in a plain build and almost nothing precompiled, which is the expected effect of precompiling, recorded in PERFORMANCE.md. |
 | A light hole closed in by dark print, found by its light middle (entry 505 section 3.2) | not written | A fix to the snap with no design known, measured on one rebuilt page from a tester's scan whose pixels cannot be published; nothing a shooter does changes beyond installing it, which the release note says. |
 | Whether GroupLab could run on iOS 18 (entry 502) | not written | A decision about GroupLab's own floor; that a .NET iOS app built with the iOS 26 SDK needed no change at an iOS 18 floor is one measurement of one code base, which would not change what another developer builds; the study is in IOS-PLAN.md |

@@ -23,7 +23,7 @@ number is never reused and a question is never lost:
 
 ## 2026-11-23, question 119: should Android's build be compiled ahead of time, now that the phone's read is measured?
 
-**Status: open (entry 514 section 5).** Question 110 (answered (a), entry 471) put ReadyToRun on the computer's builds and left
+**Status: withdrawn 2026-11-23, the same day: the measurement was wrong.** Both emulator builds were already compiled ahead of time (a Release build for Android compiles every assembly so, and the published app holds 109 such libraries); the difference between the runs was the emulator's, and a third run shows it. docs/PERFORMANCE.md has the corrected figures. As asked: Question 110 (answered (a), entry 471) put ReadyToRun on the computer's builds and left
 Android's ahead-of-time compiling for later. On the Android emulator a phone photograph's read is dominated by GroupLab's own code:
 finding the holes takes a median 6,416 ms, 66 times the computer's 97, while OpenCV's stages are 5 to 12 times. Built ahead of time
 (`RunAOTCompilation`, one run by hand, 45176570502), the same pictures read with the holes in 4,207 ms and the codes in 1,291 instead of

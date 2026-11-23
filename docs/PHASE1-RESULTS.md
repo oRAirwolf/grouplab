@@ -512,6 +512,25 @@ page's load block line say both.
 - Installed by Code at 12:15 UTC from 5eeeed2b: hashes `OK`, dry run posting nothing, backup first, one run, timer, both sites 200;
   recorded in `docs/RESTORE.md` with request 115's install of 11:02 UTC.
 
+## Entry 514: an overnight queue (2026-11-23)
+
+1. **Google Play's public listing:** request 118, a Discord post in Alan's voice for two or three more Android testers (12 opted in, 5
+   days of 14); request 119, answers to Google's Apply for production questions from the record only, for 2 December or after.
+2. **The iOS real-tap flake on Targets' keyboard Next:** GroupLab Dev's log of run 44891904639 showed the keyboard room recording the
+   keyboard closed seven seconds after it came up, with the box still focused and no tap from anybody, and nothing raising the bar again.
+   An input pane saying Open with no rectangle was taken for closed; now it takes the pane's own or changes nothing, the watch runs
+   while a box has the focus and raises the bar again, and every close says why (`keyboard.closed why=`). `Entry514KeyboardTests`, four
+   cases that fail without it; the phone suite passes (293). proved by 3 green runs of the iOS app workflow in a row, 45174815465, 45179981633 and 45187081635.
+3. **Accessibility by machine:** `Entry514AccessibilityTests` (every computer screen, Settings page and window in dark, light and high
+   contrast) and `Entry514PhoneReadingOrderTests` (every phone place read top to bottom by the automation tree, both themes); nothing
+   found. `docs/ACCESSIBILITY-AUDIT.md`.
+4. **Every file GroupLab opens:** a pooled set's file and a picture under another kind's name added to `BadFilesTests`; both pass as
+   the code is. GroupLab opens no PDF.
+5. **A phone photograph on Android:** the emulator's stages in three runs of the same code, in `docs/PERFORMANCE.md`: the holes 4,207
+   to 6,416 ms, the codes 1,291 to 2,497. Question 119 was asked on a wrong reading (the build is already compiled ahead of time) and
+   withdrawn; the measuring switch builds with Mono's LLVM code generator instead.
+6. **Consistency after entry 513:** the README, the guide and the download page say every store follows the nightlies.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

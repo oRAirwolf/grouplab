@@ -48,34 +48,38 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
-## Entry 514 section 5, 2026-11-23: a phone photograph on Android, stage by stage, and what Android's runtime costs
+## Entry 514 section 5, 2026-11-23: a phone photograph on Android, stage by stage
 
 **Measured** on the Android emulator in CI (x86_64, android-emulator.yml), not a phone: GroupLab Dev's own `read.stage` lines for the
-seven pictures its sweep and audit read in one run, median ms. Run 45159520629 is GroupLab Dev as published (Release, compiled just in
-time); run 45176570502 is the same commit's code built compiled ahead of time (`-p:RunAOTCompilation=true`, a run by hand for measuring
-only). The computer's column is `grouplab bench --area measurement --runs 3` on the bench's phone photograph (Release, this desktop).
+seven pictures its sweep and audit read in one run, median ms, in three runs of the same code (45159520629, 45176570502 and
+45192535919). The computer's column is `grouplab bench --area measurement --runs 3` on the bench's phone photograph (Release, this
+desktop).
 
-| stage | emulator, as published | emulator, ahead of time | computer |
-|---|---|---|---|
-| prepare (the working copy) | 889 | 668 | |
-| load | 384 | 311 | |
-| S0.identify (the codes) | 2,497 | 1,291 | 464 |
-| S2.fiducials (the markers) | 1,000 | 938 | 86 |
-| P0.bulls | 722 | 602 | 23 |
-| S5-S8.holes | 6,416 | 4,207 | 97 |
-| S9.assign | 144 | 98 | |
+| stage | emulator, three runs | computer |
+|---|---|---|
+| prepare (the working copy) | 668 to 889 | |
+| load | 268 to 384 | |
+| S0.identify (the codes) | 1,291 to 2,497 | 464 |
+| S2.fiducials (the markers) | 590 to 1,000 | 86 |
+| P0.bulls | 586 to 722 | 23 |
+| S5-S8.holes | 4,207 to 6,416 | 97 |
+| S9.assign | 98 to 144 | |
 
 **Where the time goes on Android.** Finding the holes is about half of a photograph's read on the emulator, then the codes, the
-markers and the bulls. Against the computer, the stages that are mostly OpenCV (the codes, the markers) are 5 to 12 times slower, and
-the ones that are mostly GroupLab's own code (the holes, the bulls) 30 to 66 times. That is not the vector code falling back: with the
-computer's hardware vectors turned off (`DOTNET_EnableHWIntrinsic=0`) the holes went from 97 to 135 ms, nowhere near. It is how
-Android's runtime runs managed code compiled just in time. Compiled ahead of time, the holes took a third less and the codes about half;
-the results are the same code's, and the sweep's checks passed on both runs.
+markers and the bulls. Against the computer, the stages that are mostly OpenCV (the codes, the markers) are about 3 to 12 times slower,
+and the ones that are mostly GroupLab's own code (the holes, the bulls) 25 to 66 times. It is not the vector code falling back: with the
+computer's hardware vectors turned off (`DOTNET_EnableHWIntrinsic=0`) the holes went from 97 to 135 ms, nowhere near.
 
-**Nothing published changed.** Question 110 (entry 471) left Android's ahead-of-time compiling for later, so the figures go back to
-planning as question 119, with the download's size from the next run made that way. The codes stay as question 106 left them; the
-holes and the markers were each taken already on the computer (entries 474, 484 and 505) without any figure moving, and nothing exact
-was found that would change Android's share of them.
+**A correction, the same day.** The second run was first taken for GroupLab Dev compiled ahead of time, against the first compiled just
+in time, and the difference between them for the effect of it. Both were compiled ahead of time: the project turns off only the
+profiled kind (`AndroidEnableProfiledAot=false`), and a Release build for Android then compiles every assembly ahead of time; the
+published app holds 109 such libraries, GroupLab's own among them, and both measuring builds were the same size within 4 KB. The
+difference was the emulator's from run to run, which the third run shows. Question 119, asked on that reading, is withdrawn. Android's
+managed code is already compiled ahead of time; what is not on is Mono's LLVM code generator for it (`EnableLLVM`), which the measuring
+switch on the emulator's workflow now builds instead, for a later look across several runs, since one run cannot be told from another.
+
+**Nothing published changed.** The codes stay as question 106 left them; the holes and the markers were each taken already on the
+computer (entries 474, 484 and 505) without any figure moving, and nothing exact was found that would change Android's share of them.
 
 ## Entry 507 section 2, 2026-11-21: the splash on the computer, and what it costs
 
