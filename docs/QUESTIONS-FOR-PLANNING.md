@@ -21,6 +21,25 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-11-23, question 119: should Android's build be compiled ahead of time, now that the phone's read is measured?
+
+**Status: open (entry 514 section 5).** Question 110 (answered (a), entry 471) put ReadyToRun on the computer's builds and left
+Android's ahead-of-time compiling for later. On the Android emulator a phone photograph's read is dominated by GroupLab's own code:
+finding the holes takes a median 6,416 ms, 66 times the computer's 97, while OpenCV's stages are 5 to 12 times. Built ahead of time
+(`RunAOTCompilation`, one run by hand, 45176570502), the same pictures read with the holes in 4,207 ms and the codes in 1,291 instead of
+2,497; docs/PERFORMANCE.md has every stage. These are an emulator's figures, not a phone's, and the download's size made that way is
+not yet measured: the next run by hand with aot says it in its log.
+
+**The options:**
+- (a) Compile the Android builds ahead of time (Play's and GroupLab Dev), checked against the corpus as the computer's were: a third off
+  the holes and half off the codes on the emulator, at the cost of a larger download and a longer build.
+- (b) Profiled ahead of time only (Android's default, now off in the project): smaller, compiles the start-up path, and would leave the
+  analysis mostly as now.
+- (c) Leave it.
+
+**What I would choose:** (a), measured on Alan's Fold 7 first if he has the time, since a photograph read on the phone is the wait a
+person sees most; the size from the next measuring run goes with it before anything ships.
+
 ## 2026-11-23, question 118: where a session's name and "2 of 3" go when the load's code fills the square
 
 **Status: answered 2026-11-23: (a), leave it as built** (Alan, in the Claude Code session, 2026-11-23). Asked in entry 512 section 3. Entry 512 says, for request 114's (b): "When a name is typed on Targets before printing, the
