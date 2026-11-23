@@ -12,6 +12,21 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.241
+
+**2026-11-23**, commit `0d77956`. Nightly.
+
+**What you will notice**
+
+- A session can now be given a name of its own: Rename on its row in Session records (or F2), or the Name this session box at the top of the analysis screen, and on the phone the result page or Rename a session under Sessions; the name shows first, with the target after it.
+- When Pool the chosen cannot pool the sessions you ticked, it now says why in amber, naming each target design and how many sheets of it, and the status bar says it too, instead of a small gray line that was easy to miss. (Error report 57) (found from a Discord post).
+
+From your reports and targets in this build: 1 fix from 1 error report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.241)
+
+---
+
 ## 1.0.0-nightly.240
 
 **2026-11-23**, commit `dff1aa5`. Nightly.
