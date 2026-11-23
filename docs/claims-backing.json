@@ -8400,6 +8400,14 @@
   "On the computer, a **Session name** typed before printing, such as Rifle A 140 gr, prints in the square at the block's bottom right, and each sheet of a set prints its place in the set there in large figures, such as 2 of 3.": {
    "kind": "code",
    "where": "src/GroupLab.Core/Rendering/SceneBuilder.cs AddSquareWords and src/GroupLab.App/PrintPanel.cs SquareWords, held by Entry512SquareNameTests and PrintScreenTests.ASessionNameTypedOnTargetsPrintsInTheSquareAndTheLineSaysWhenTheCodeLeavesNoRoom (entry 512 section 3)"
+  },
+  "# Accessibility checked by machine NOTES-FROM-PLANNING.md entry 514 section 3, on 2026-11-23: what is held by automation, ahead of request 105's sitting with a real screen reader, which no machine replaces.": {
+   "kind": "decided",
+   "where": "Entry 514 section 3, 2026-11-23: the accessibility pass by machine (Entry514AccessibilityTests, Entry514PhoneReadingOrderTests); request 105 is the twenty-minute screen reader sitting in docs/notes/for-alan.md"
+  },
+  "Still for a person: request 105, twenty minutes with a real screen reader, since a machine can say that a control has a name but not whether the name makes sense read aloud in that place.": {
+   "kind": "decided",
+   "where": "Entry 514 section 3, 2026-11-23: the accessibility pass by machine (Entry514AccessibilityTests, Entry514PhoneReadingOrderTests); request 105 is the twenty-minute screen reader sitting in docs/notes/for-alan.md"
   }
  },
  "rules": [
