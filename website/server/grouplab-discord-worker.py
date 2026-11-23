@@ -24,8 +24,19 @@ put in fenced blocks, an at sign is broken so nobody is notified, and words that
 LoadCredential: the bot token from /etc/grouplab/discord-token, which Alan fills with grouplab-set-discord-token, and the GitHub token
 the error worker already uses for the same repository, from /etc/grouplab/error-token (Issues, and since entry 429 Contents, read and write).
 
+**Replies written by Claude Code** (entry 511 section 2). Code writes a reply as a file in the crash-reports repository,
+`discord-replies/<issue>-<n>.md`: a few header lines (`issue:`, `thread:`, `written:` and, for a reply that speaks of a fix,
+`post-after: nightly <N>`), a blank line, then the words. Each run posts at most five of them, each once, in its issue's thread as the
+bot, as plain text with mentions switched off, so nobody is pinged and no @everyone ever works; then it comments on the issue with the
+words and the message's link and moves the file to `discord-replies/posted/`. The thread is the one this worker filed the issue from,
+and a `thread:` line that disagrees is refused. Not posted, with a line on the issue and the file moved to `discord-replies/not-posted/`:
+a thread that is locked or gone, one where the server's owner (Alan) has written since the reply was, and words that break the rules
+(no bold, no at sign, no link but grouplab.org and GroupLab's GitHub releases, at most 1900 characters, ending with SIGNED). A reply
+waiting for a nightly stays until GroupLab's releases list that nightly. **A file `discord-replies/PAUSED` stops all posting.**
+
 **--dry-run** (entry 492) finds the forums and says, by count and thread id, what a run would file, and writes nothing anywhere: no
-issue, no reply, no state, no log. It needs only the bot token.
+issue, no reply, no state, no log. It needs only the bot token. Since entry 511 it also says whether the bot may post in each forum's
+threads and, given the GitHub token, what each waiting reply would do, still posting and moving nothing.
 """
 
 from __future__ import annotations
@@ -75,6 +86,19 @@ MOST_ATTACHMENT_BYTES = 25 * 1024 * 1024
 # A run stops starting new threads after this many seconds, well inside the unit's own time limit, and carries on next time.
 RUN_SECONDS = 180
 FENCE = "~~~~"
+# Entry 511 section 2: replies Claude Code writes for the bot to post.
+REPLIES = "discord-replies"
+REPLY_NAME = re.compile(r"^(\d+)-(\d+)\.md$")
+SIGNED = "(Posted by the GroupLab bot for Alan.)"
+MOST_REPLIES_A_RUN = 5
+MOST_REPLY_CHARACTERS = 1900
+APP_REPOSITORY = os.environ.get("GROUPLAB_APP_REPO", "oRAirwolf/grouplab")
+# The only links a reply may carry: grouplab.org's pages and GroupLab's releases on GitHub.
+ALLOWED_LINK = re.compile(r"^(https?://)?(www\.)?(grouplab\.org(/\S*)?|github\.com/oRAirwolf/grouplab/releases(/\S*)?)$", re.IGNORECASE)
+LINK_LIKE = re.compile(r"(https?://\S+|\b(?:[a-z0-9-]+\.)+(?:com|org|net|io|gg|ly|me|co|app|dev|info|us)\b(?:/\S*)?)", re.IGNORECASE)
+# Discord's permission bits the bot needs to answer in a forum's threads.
+VIEW_CHANNEL, READ_HISTORY, SEND_IN_THREADS, ADMINISTRATOR = 1 << 10, 1 << 16, 1 << 38, 1 << 3
+DISCORD_EPOCH_MS = 1420070400000
 # Shown on the issue as a picture; any other file is a link to it.
 PICTURE = re.compile(r"\.(png|jpe?g|gif|webp)$", re.IGNORECASE)
 
@@ -397,6 +421,325 @@ def file_thread(thread: dict, state: dict, discord_token: str, github_token: str
         save(state)
 
 
+def reply_problems(text: str) -> list[str]:
+    """What breaks the rules for a reply Code writes (entry 511 section 2); empty when it may be posted."""
+    words = text.strip()
+    if not words:
+        return ["it has no words"]
+    problems = []
+    if len(words) > MOST_REPLY_CHARACTERS:
+        problems.append(f"it is {len(words)} characters, more than {MOST_REPLY_CHARACTERS}")
+    if "**" in words or "__" in words:
+        problems.append("it has bold")
+    if "@" in words:
+        problems.append("it has an at sign")
+    for link in LINK_LIKE.findall(words):
+        if not ALLOWED_LINK.match(link.rstrip(".,;:)!?")):
+            problems.append(f"it links somewhere other than grouplab.org and GroupLab's releases ({link[:60]})")
+    if words.splitlines()[-1].strip() != SIGNED:
+        problems.append(f"its last line is not {SIGNED}")
+    return problems
+
+
+def parse_reply(raw: str) -> tuple[dict, str]:
+    """A reply file's header lines and its words; the header ends at the first blank line."""
+    head, _, words = raw.replace("\r\n", "\n").partition("\n\n")
+    fields = {}
+    for line in head.splitlines():
+        key, sep, value = line.partition(":")
+        if sep:
+            fields[key.strip().lower()] = value.strip()
+    return fields, words.strip()
+
+
+def newest_nightly() -> int | None:
+    """The newest nightly GroupLab's public releases list, read without a token; None when GitHub does not say."""
+    try:
+        code, body = request(f"{GITHUB}/repos/{APP_REPOSITORY}/releases?per_page=30",
+                             headers={"Accept": "application/vnd.github+json", "User-Agent": "grouplab-discord-worker"}, raw=True)
+        releases = json.loads(body) if code == 200 and body else None
+    except (Unreachable, ValueError):
+        return None
+    numbers = [int(m.group(1)) for r in releases or [] if not r.get("draft")
+               and (m := re.search(r"nightly\.(\d+)$", r.get("tag_name") or ""))]
+    return max(numbers) if numbers else None
+
+
+def thread_of(state: dict, issue: int) -> str | None:
+    """The thread this worker filed <issue> from, out of its own state, never out of anybody's words."""
+    return next((t for t, info in state.get("threads", {}).items() if info.get("issue") == issue), None)
+
+
+def snowflake(written: str) -> int:
+    """The smallest Discord message id that could have been sent at <written>."""
+    at = datetime.strptime(written.rstrip("Z")[:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+    return max(0, int(at.timestamp() * 1000) - DISCORD_EPOCH_MS) << 22
+
+
+def assess_reply(name: str, raw: str, state: dict, discord_token: str, nightly) -> tuple[str, str, dict]:
+    """
+    What a waiting reply would do, by reads alone: ("post", thread, facts), ("wait", why, {}) or ("refuse", why, {}). <nightly> gives
+    the newest nightly, read at most once a run and only when a reply asks for one.
+    """
+    fields, words = parse_reply(raw)
+    issue = int(REPLY_NAME.match(name).group(1))
+    if fields.get("issue") != str(issue):
+        return "refuse", f"its issue line says {fields.get('issue') or 'nothing'}, not {issue}", {}
+    problems = reply_problems(words)
+    if problems:
+        return "refuse", "; ".join(problems), {}
+    if not re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ?", fields.get("written", "")):
+        return "refuse", "it has no written: time", {}
+    thread = thread_of(state, issue)
+    if not thread:
+        return "refuse", f"no Discord thread was filed as issue #{issue}", {}
+    if fields.get("thread") and fields["thread"] != thread:
+        return "refuse", f"its thread line does not match the thread issue #{issue} was filed from", {}
+    if after := fields.get("post-after"):
+        wanted = re.search(r"(\d+)", after)
+        if not wanted:
+            return "refuse", f"its post-after line names no nightly ({after[:40]})", {}
+        newest = nightly()
+        if newest is None or newest < int(wanted.group(1)):
+            return "wait", f"waits for nightly {wanted.group(1)}" + (f"; the newest is {newest}" if newest else ""), {}
+    code, body = request(f"{DISCORD}/channels/{thread}", headers={"Authorization": f"Bot {discord_token}", "User-Agent": AGENT}, raw=True)
+    if code in (403, 404):
+        return "refuse", "the thread is gone, or the bot can no longer see it", {}
+    if code != 200:
+        return "wait", f"Discord answered {code} for the thread", {}
+    meta = (json.loads(body) or {}).get("thread_metadata") or {}
+    if meta.get("locked"):
+        return "refuse", "the thread is locked", {}
+    owner = owner_of(state, discord_token)
+    _, since = discord(f"/channels/{thread}/messages?limit=100&after={snowflake(fields['written'])}", discord_token)
+    if owner and any((m.get("author") or {}).get("id") == owner for m in since or []):
+        return "refuse", "Alan has written in the thread since this reply was", {}
+    mine = [m for m in since or [] if (m.get("author") or {}).get("id") == state.get("bot") and (m.get("content") or "").strip() == words]
+    return "post", thread, {"words": words, "archived": bool(meta.get("archived")), "already": mine[0]["id"] if mine else None}
+
+
+def contents(path: str, github_token: str, method: str = "GET", payload: dict | None = None) -> tuple[int, dict | list | None]:
+    """A file or folder in the crash-reports repository through GitHub's contents API; never an exception for a refusal."""
+    url = f"{GITHUB}/repos/{REPOSITORY}/contents/{path}" + (f"?ref={BRANCH}" if method == "GET" else "")
+    headers = {"Authorization": f"Bearer {github_token}", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28",
+               "User-Agent": "grouplab-discord-worker"}
+    code, body = request(url, method, headers, payload, raw=True)
+    try:
+        return code, json.loads(body) if body else None
+    except ValueError:
+        return code, None
+
+
+def waiting_replies(github_token: str) -> tuple[bool, list[tuple[str, str]]]:
+    """Whether posting is paused, and every waiting reply's name and sha, in issue and number order."""
+    code, listing = contents(REPLIES, github_token)
+    if code != 200 or not isinstance(listing, list):
+        return False, []
+    files = {f["name"]: f.get("sha", "") for f in listing if f.get("type") == "file"}
+    names = sorted((n for n in files if REPLY_NAME.match(n)), key=lambda n: tuple(int(x) for x in REPLY_NAME.match(n).groups()))
+    return "PAUSED" in files, [(n, files[n]) for n in names]
+
+
+def read_reply(name: str, github_token: str) -> tuple[str, str] | None:
+    """A waiting reply's text and sha, or None when GitHub does not give it."""
+    code, f = contents(f"{REPLIES}/{name}", github_token)
+    if code != 200 or not isinstance(f, dict) or "content" not in f:
+        return None
+    return base64.b64decode(f["content"]).decode("utf-8", errors="replace"), f.get("sha", "")
+
+
+def finish_reply(name: str, raw: str, sha: str, rec: dict, state: dict, github_token: str) -> None:
+    """
+    A reply posted or refused: its line on the issue, then its file moved to posted/ or not-posted/. Each step is kept in the state, so
+    a run that stops part way finishes it next time without saying it twice.
+    """
+    issue = int(REPLY_NAME.match(name).group(1))
+    _, words = parse_reply(raw)
+    if not rec.get("commented"):
+        if rec.get("link"):
+            body = f"The GroupLab bot posted this reply in the Discord thread ({REPLIES}/{name}): {rec['link']}\n\n{FENCE}\n{words}\n{FENCE}"
+        else:
+            body = (f"A reply waiting in {REPLIES}/{name} was not posted: {rec['refused']}. It is kept in {REPLIES}/not-posted/; "
+                    "a corrected reply goes in a new file.")
+        code, _ = github(f"/repos/{REPOSITORY}/issues/{issue}/comments", github_token, "POST", {"body": body})
+        if code != 201:
+            raise Unreachable(f"a comment could not be added to issue #{issue}, GitHub answered {code}")
+        rec["commented"] = True
+        save(state)
+    folder = "posted" if rec.get("link") else "not-posted"
+    note = f"posted: {rec['link']}\n" if rec.get("link") else f"not posted: {rec['refused']}\n"
+    code, _ = contents(f"{REPLIES}/{folder}/{name}", github_token, "PUT",
+                       {"message": f"Discord reply {name} {folder.replace('-', ' ')}", "branch": BRANCH,
+                        "content": base64.b64encode((note + raw).encode("utf-8")).decode("ascii")})
+    if code not in (200, 201, 422):
+        raise Unreachable(f"{REPLIES}/{folder}/{name} could not be written, GitHub answered {code}")
+    code, _ = contents(f"{REPLIES}/{name}", github_token, "DELETE",
+                       {"message": f"Discord reply {name} moved to {folder}", "sha": sha, "branch": BRANCH})
+    if code not in (200, 404):
+        raise Unreachable(f"{REPLIES}/{name} could not be moved, GitHub answered {code}")
+    rec["done"] = True
+    save(state)
+
+
+def post_reply(thread: str, facts: dict, state: dict, rec: dict, discord_token: str) -> str | None:
+    """The words posted once in <thread>: the message's link, or None with the reason in <rec>."""
+    headers = {"Authorization": f"Bot {discord_token}", "User-Agent": AGENT}
+    if facts.get("already"):
+        # Posted by a run that stopped before it could keep the link: the link is kept now, and nothing is posted twice.
+        return f"https://discord.com/channels/{state['guild']}/{thread}/{facts['already']}"
+    if facts.get("archived"):
+        # A forum post archives itself when quiet; one that is not locked may be opened again by anybody who may post there.
+        code, _ = request(f"{DISCORD}/channels/{thread}", "PATCH", headers, {"archived": False}, raw=True)
+        if code != 200:
+            rec["refused"] = f"the thread is archived and could not be opened again (Discord answered {code})"
+            return None
+    rec["posting"] = True
+    save(state)
+    # flags 4: no preview of a link; allowed_mentions empty: nobody is notified, whatever the words hold.
+    code, body = request(f"{DISCORD}/channels/{thread}/messages", "POST", headers,
+                         {"content": facts["words"], "allowed_mentions": {"parse": []}, "flags": 4}, raw=True)
+    if code not in (200, 201):
+        if code == 401:
+            raise TokenRefused("discord.com answered 401")
+        rec.pop("posting", None)
+        rec["refused"] = f"Discord would not take it (HTTP {code})"
+        return None
+    return f"https://discord.com/channels/{state['guild']}/{thread}/{(json.loads(body) or {}).get('id', '')}"
+
+
+def post_replies(state: dict, discord_token: str, github_token: str) -> int:
+    """Entry 511 section 2: each waiting reply posted once, at most five a run; how many were posted."""
+    paused, waiting = waiting_replies(github_token)
+    if paused:
+        if not state.get("replies_paused"):
+            log(f"{REPLIES}/PAUSED is there, so no reply is posted until it is removed")
+            state["replies_paused"] = True
+            save(state)
+        return 0
+    if state.pop("replies_paused", None):
+        log(f"{REPLIES}/PAUSED is gone, so replies are posted again")
+        save(state)
+    newest: list = []
+
+    def nightly():
+        if not newest:
+            newest.append(newest_nightly())
+        return newest[0]
+
+    posted = 0
+    for name, sha in waiting:
+        if posted >= MOST_REPLIES_A_RUN:
+            log(f"{MOST_REPLIES_A_RUN} replies posted this run; the rest wait for the next")
+            break
+        try:
+            got = read_reply(name, github_token)
+            if got is None:
+                continue
+            raw, sha = got
+            rec = state.setdefault("replies", {}).setdefault(name, {})
+            if not rec.get("link") and not rec.get("refused"):
+                verdict, detail, facts = assess_reply(name, raw, state, discord_token, nightly)
+                if verdict == "wait":
+                    if rec.get("waiting") != detail:
+                        log(f"reply {name}: {detail}")
+                        rec["waiting"] = detail
+                        save(state)
+                    continue
+                if verdict == "refuse":
+                    rec["refused"] = detail
+                else:
+                    link = post_reply(detail, facts, state, rec, discord_token)
+                    if link:
+                        rec.update(link=link, posted_utc=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))
+                        rec.pop("posting", None)
+                        rec.pop("waiting", None)
+                        posted += 0 if facts.get("already") else 1
+                        log(f"reply {name}: posted in thread {detail}")
+                save(state)
+                if rec.get("refused"):
+                    log(f"reply {name}: not posted ({rec['refused']})")
+            finish_reply(name, raw, sha, rec, state, github_token)
+        except (TokenRefused, Unreachable):
+            raise
+        except Exception as e:
+            where = traceback.extract_tb(e.__traceback__)[-1].lineno if e.__traceback__ else 0
+            log(f"reply {name}: not handled this run ({type(e).__name__} at line {where}); the next is taken")
+    return posted
+
+
+def thread_permissions(state: dict, discord_token: str) -> dict[str, bool]:
+    """Whether the bot may read and post in each forum's threads, worked out as Discord does from its roles and the forum's overwrites."""
+    guild_id, bot = state["guild"], state["bot"]
+    _, guild = discord(f"/guilds/{guild_id}", discord_token)
+    _, member = discord(f"/guilds/{guild_id}/members/{bot}", discord_token)
+    _, channels = discord(f"/guilds/{guild_id}/channels", discord_token)
+    roles = {r["id"]: int(r.get("permissions") or 0) for r in (guild or {}).get("roles", [])}
+    mine = list((member or {}).get("roles", []))
+    base = roles.get(guild_id, 0)
+    for r in mine:
+        base |= roles.get(r, 0)
+    out = {}
+    for name, fid in (state.get("forums") or {}).items():
+        if base & ADMINISTRATOR:
+            out[name] = True
+            continue
+        channel = next((c for c in channels or [] if c.get("id") == fid), {})
+        over = {o["id"]: (int(o.get("allow") or 0), int(o.get("deny") or 0)) for o in channel.get("permission_overwrites", [])}
+        p = base
+        if guild_id in over:
+            p = (p & ~over[guild_id][1]) | over[guild_id][0]
+        allow = deny = 0
+        for r in mine:
+            if r in over:
+                allow, deny = allow | over[r][0], deny | over[r][1]
+        p = (p & ~deny) | allow
+        if bot in over:
+            p = (p & ~over[bot][1]) | over[bot][0]
+        out[name] = all(p & bit for bit in (VIEW_CHANNEL, READ_HISTORY, SEND_IN_THREADS))
+    return out
+
+
+def dry_run_replies(state: dict, discord_token: str, github_token: str) -> None:
+    """Entry 511: whether the bot may post in each forum, and what each waiting reply would do; nothing is posted, moved or kept."""
+    allowed = thread_permissions(state, discord_token)
+    yes = sorted(n for n, ok in allowed.items() if ok)
+    no = sorted(n for n, ok in allowed.items() if not ok)
+    if yes:
+        print("dry run: the bot may post in the threads of " + ", ".join(yes))
+    if no:
+        print("dry run: the bot may NOT post in the threads of " + ", ".join(no)
+              + " (it needs View Channel, Read Message History and Send Messages in Threads there)")
+    if not github_token:
+        print("dry run: replies: the GitHub token is not set, so the waiting replies were not read")
+        return
+    paused, waiting = waiting_replies(github_token)
+    if paused:
+        print(f"dry run: replies: {REPLIES}/PAUSED is there, so nothing would be posted")
+        return
+    print(f"dry run: replies: {len(waiting)} waiting")
+    newest: list = []
+
+    def nightly():
+        if not newest:
+            newest.append(newest_nightly())
+        return newest[0]
+
+    would = 0
+    for name, _ in waiting:
+        got = read_reply(name, github_token)
+        if got is None:
+            print(f"dry run: reply {name}: could not be read")
+            continue
+        verdict, detail, _ = assess_reply(name, got[0], state, discord_token, nightly)
+        if verdict == "post":
+            would += 1
+            print(f"dry run: reply {name}: would be posted in thread {detail}" + ("" if would <= MOST_REPLIES_A_RUN else ", in a later run"))
+        elif verdict == "wait":
+            print(f"dry run: reply {name}: {detail}")
+        else:
+            print(f"dry run: reply {name}: would not be posted ({detail})")
+
+
 def save(state: dict) -> None:
     ROOT.mkdir(parents=True, exist_ok=True)
     tmp = STATE.with_suffix(".tmp")
@@ -411,7 +754,7 @@ def token(path: Path) -> str:
         return ""
 
 
-def dry_run(discord_token: str, state: dict) -> int:
+def dry_run(discord_token: str, state: dict, github_token: str = "") -> int:
     """Entry 492: what a run would file, by forum, count and thread id; nothing is written, posted or filed."""
     try:
         find_forum(discord_token, state)
@@ -429,6 +772,11 @@ def dry_run(discord_token: str, state: dict) -> int:
         new = [t["id"] for t in posts if t["id"] not in filed]
         print(f"dry run: {name}: {len(posts)} posts, {len(filed)} filed already, {len(new)} would be filed"
               + (f" ({', '.join(new)})" if new else "") + f", labelled {', '.join(FORUMS[name]['labels'])}")
+    try:
+        dry_run_replies(state, discord_token, github_token)
+    except (TokenRefused, Unreachable) as e:
+        print(f"dry run: replies: stopped ({e})")
+        return 1
     return 0
 
 
@@ -440,7 +788,7 @@ def main() -> int:
             return 1
         state = json.loads(STATE.read_text(encoding="utf-8")) if STATE.is_file() else {}
         state.setdefault("threads", {})
-        return dry_run(discord_token, state)
+        return dry_run(discord_token, state, github_token)
     if not discord_token or not github_token:
         missing = " and ".join(n for n, t in (("the Discord bot token", discord_token), ("the GitHub token", github_token)) if not t)
         log(f"{missing} not set, so nothing was read")
@@ -472,6 +820,7 @@ def main() -> int:
                 log(f"thread {thread['id']}: not filed this run ({type(e).__name__} at line {where}); the next thread is taken")
                 continue
             done += state["threads"].get(thread["id"], {}) != before
+        replied = post_replies(state, discord_token, github_token)
     except TokenRefused as e:
         log(f"a token was refused ({e}); nothing more is filed until it is replaced")
         status(state="token refused", detail=str(e))
@@ -484,7 +833,7 @@ def main() -> int:
         log(str(e))
         status(state="no forum", detail=str(e))
         return 1
-    status(state="ok", threads=len(state["threads"]), changed=done)
+    status(state="ok", threads=len(state["threads"]), changed=done, replies_posted=replied)
     return 0
 
 

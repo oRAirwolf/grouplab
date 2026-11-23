@@ -80,6 +80,12 @@ class World:
         self.closed: set[int] = set()
         self.added_labels: dict[int, list[str]] = {}
         self.replies: list[tuple[str, dict]] = []
+        # Entry 511: the newest nightly GroupLab's releases list, threads archived, locked or gone, and a forum the bot may not post in.
+        self.nightly = 240
+        self.archived: set[str] = set()
+        self.locked: set[str] = set()
+        self.gone: set[str] = set()
+        self.deny_feature = False
         self.calls: list[str] = []
 
 
@@ -104,13 +110,29 @@ def serve(world: World) -> HTTPServer:
                     return self.reply(403, raw=b"error code: 1010")
                 return self.reply(CDN.get(p, 200), raw=PICTURE if CDN.get(p, 200) == 200 else b"")
             if p.startswith(CONTENTS):
-                return self.reply(200 if p[len(CONTENTS):].split("?")[0] in world.files else 404, {})
+                path = p[len(CONTENTS):].split("?")[0]
+                if path == "discord-replies":
+                    inside = [f[len(path) + 1:] for f in world.files if f.startswith(path + "/") and "/" not in f[len(path) + 1:]]
+                    return self.reply(200, [{"name": n, "type": "file", "sha": "sha-" + n} for n in inside]) if inside else self.reply(404, {})
+                if path.startswith("discord-replies/") and path in world.files:
+                    return self.reply(200, {"type": "file", "sha": "sha-" + path, "content": base64.b64encode(world.files[path]).decode("ascii")})
+                return self.reply(200 if path in world.files else 404, {})
+            if p == "/github/repos/oRAirwolf/grouplab/releases?per_page=30":
+                return self.reply(200, [{"tag_name": "v1.0.0-nightly.999", "draft": True}, {"tag_name": f"v1.0.0-nightly.{world.nightly}", "draft": False}])
             if world.refuse_discord:
                 return self.reply(401, {"message": "401: Unauthorized"})
             if p == "/discord/users/@me":
                 return self.reply(200, {"id": "900"})
             if p == "/discord/guilds/1":
-                return self.reply(200, {"id": "1", "owner_id": "42"})
+                return self.reply(200, {"id": "1", "owner_id": "42", "roles": [{"id": "1", "permissions": "0"},
+                                                                                {"id": "r1", "permissions": str(1 << 10 | 1 << 16 | 1 << 38)}]})
+            if p == "/discord/guilds/1/members/900":
+                return self.reply(200, {"roles": ["r1"]})
+            if p.startswith("/discord/channels/") and p.count("/") == 3:
+                thread = p.split("/")[3]
+                if thread in world.gone:
+                    return self.reply(404, {"message": "Unknown Channel"})
+                return self.reply(200, {"id": thread, "thread_metadata": {"archived": thread in world.archived, "locked": thread in world.locked}})
             if p.startswith("/github/repos/oRAirwolf/grouplab-crash-reports/issues/") and p.split("/")[-1].isdigit():
                 number = int(p.split("/")[-1])
                 return self.reply(200, {"number": number, "state": "closed" if number in world.closed else "open"})
@@ -118,7 +140,9 @@ def serve(world: World) -> HTTPServer:
                 return self.reply(200, [{"id": "1", "name": "GroupLab"}])
             if p == "/discord/guilds/1/channels":
                 return self.reply(200, [{"id": "10", "type": 0, "name": "general"}, {"id": "20", "type": 15, "name": "bug-reports"}]
-                                  + ([{"id": "30", "type": 15, "name": "feature-requests"}] if world.feature_forum else []))
+                                  + ([{"id": "30", "type": 15, "name": "feature-requests", "permission_overwrites":
+                                       [{"id": "r1", "type": 0, "allow": "0", "deny": str(1 << 38)}] if world.deny_feature else []}]
+                                     if world.feature_forum else []))
             if p == "/discord/guilds/1/threads/active":
                 return self.reply(200, {"threads": world.threads_active})
             if p.startswith("/discord/channels/20/threads/archived/public"):
@@ -152,8 +176,9 @@ def serve(world: World) -> HTTPServer:
                 if thread == "200":
                     return self.reply(400, {"code": 50083, "message": "Thread is archived"})
                 world.replies.append((thread, payload))
-                world.messages[thread].append(message(str(int(world.messages[thread][-1]["id"]) + 1), "900", payload["content"]))
-                return self.reply(200, {"id": "1"})
+                mid = str(int(world.messages[thread][-1]["id"]) + 1)
+                world.messages[thread].append(message(mid, "900", payload["content"]))
+                return self.reply(200, {"id": mid})
             if "/issues/" in p and p.endswith("/labels"):
                 world.added_labels.setdefault(int(p.split("/")[-2]), []).extend(payload["labels"])
                 return self.reply(200, [{"name": n} for n in payload["labels"]])
@@ -173,10 +198,23 @@ def serve(world: World) -> HTTPServer:
             payload = json.loads(self.rfile.read(length) or b"{}")
             world.calls.append("PATCH " + self.path)
             p = self.path
+            if p.startswith("/discord/channels/") and p.count("/") == 3 and payload == {"archived": False}:
+                world.archived.discard(p.split("/")[3])
+                return self.reply(200, {"id": p.split("/")[3]})
             if p.startswith("/github/repos/oRAirwolf/grouplab-crash-reports/issues/") and payload.get("state") == "open":
                 world.closed.discard(int(p.split("/")[-1]))
                 return self.reply(200, {"state": "open"})
             return self.reply(404, {"message": "unknown"})
+
+        def do_DELETE(self) -> None:
+            length = int(self.headers.get("Content-Length") or 0)
+            payload = json.loads(self.rfile.read(length) or b"{}")
+            world.calls.append("DELETE " + self.path)
+            path = self.path[len(CONTENTS):] if self.path.startswith(CONTENTS) else ""
+            if path in world.files and payload.get("sha") == "sha-" + path and payload.get("branch") == "main":
+                del world.files[path]
+                return self.reply(200, {"commit": {}})
+            return self.reply(404 if path not in world.files else 409, {"message": "no"})
 
         def do_PUT(self) -> None:
             length = int(self.headers.get("Content-Length") or 0)
@@ -274,7 +312,7 @@ def main() -> int:
               and "bug-reports: 2 posts, 2 filed already, 0 would be filed" in r.stdout
               and "feature-requests: 2 posts, 0 filed already, 2 would be filed (700, 710), labelled discord, suggestion" in r.stdout, r.stdout + r.stderr)
         check("and writes nothing: no issue, no reply, no state, no log, nothing sent but reads",
-              len(world.issues) == 2 and not any(not c.startswith("GET /discord/") for c in world.calls)
+              len(world.issues) == 2 and not any(not c.startswith("GET ") for c in world.calls)
               and (root / "discord" / "state.json").read_text(encoding="utf-8") == state_before
               and (root / "worker.log").read_text(encoding="utf-8") == log_before, str(world.calls))
         check("a dry run never shows a post's words", "Mac" not in r.stdout and "printer" not in r.stdout, r.stdout)
@@ -348,6 +386,125 @@ def main() -> int:
         r = run(root, port[0])
         check("a reply on an open issue only adds the comment", r.returncode == 0 and world.added_labels.get(1) == ["new-reply"]
               and not any(c.startswith("PATCH ") for c in world.calls), str(world.calls))
+
+        # Entry 511 section 2: replies Code writes into discord-replies/, posted by the bot. Issues 1 to 7 are threads 100, 200, 700,
+        # 710, 400, 500 and 600.
+        R = "discord-replies/"
+        sign = "(Posted by the GroupLab bot for Alan.)"
+        written = "2026-11-23T05:00:00Z"
+
+        def reply_file(issue: int, thread: str, words: str, after: int | None = None) -> bytes:
+            head = [f"issue: {issue}", f"thread: {thread}", f"written: {written}"] + ([f"post-after: nightly {after}"] if after else [])
+            return ("\n".join(head) + "\n\n" + words + "\n").encode("utf-8")
+
+        def later(stamp: str) -> str:
+            from datetime import datetime, timezone
+            at = datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+            return str((int(at.timestamp() * 1000) - 1420070400000) << 22)
+
+        ready = "Thanks, this is now being built. See https://grouplab.org/features/ when it is out.\n" + sign
+        world.archived.add("700")
+        world.locked.add("710")
+        world.gone.add("200")
+        world.files[R + "3-1.md"] = reply_file(3, "700", ready, after=240)
+        world.files[R + "1-1.md"] = reply_file(1, "100", "The fix is in the next build.\n" + sign, after=241)
+        world.files[R + "2-1.md"] = reply_file(2, "200", "An old thread.\n" + sign)
+        world.files[R + "4-1.md"] = reply_file(4, "710", "A locked thread.\n" + sign)
+        world.files[R + "5-1.md"] = reply_file(5, "400", "Alan answered first.\n" + sign)
+        world.messages["400"].append(message(later("2026-11-23T06:00:00Z"), "42", "I answered this myself."))
+        world.files[R + "6-1.md"] = reply_file(6, "500", "Some **bold**, https://example.com/x and hello @everyone\n" + sign)
+        world.files[R + "6-2.md"] = reply_file(6, "600", "A thread line that is not the issue's.\n" + sign)
+        world.files[R + "7-1.md"] = reply_file(7, "600", "No line at the end saying who posted it.")
+        before_files = dict(world.files)
+        world.calls.clear()
+        r = run(root, port[0], True, "--dry-run")
+        out = r.stdout
+        check("a dry run says the bot may post in both forums' threads",
+              r.returncode == 0 and "dry run: the bot may post in the threads of bug-reports, feature-requests" in out, out + r.stderr)
+        check("and lists what each waiting reply would do", "replies: 8 waiting" in out
+              and "reply 1-1.md: waits for nightly 241; the newest is 240" in out
+              and "reply 3-1.md: would be posted in thread 700" in out
+              and "reply 2-1.md: would not be posted (the thread is gone" in out
+              and "reply 4-1.md: would not be posted (the thread is locked)" in out
+              and "reply 5-1.md: would not be posted (Alan has written in the thread since this reply was)" in out
+              and "reply 6-1.md: would not be posted (it has bold; it has an at sign; it links somewhere other than grouplab.org" in out
+              and "reply 6-2.md: would not be posted (its thread line does not match" in out
+              and "reply 7-1.md: would not be posted (its last line is not (Posted by the GroupLab bot for Alan.))" in out, out)
+        check("a dry run of the replies only reads: nothing posted, opened again or moved",
+              not any(not c.startswith("GET ") for c in world.calls) and world.files == before_files and "700" in world.archived, str(world.calls))
+        world.deny_feature = True
+        r = run(root, port[0], True, "--dry-run")
+        check("a forum where the bot may not post in threads is named", "may NOT post in the threads of feature-requests" in r.stdout
+              and "may post in the threads of bug-reports" in r.stdout, r.stdout)
+        world.deny_feature = False
+
+        world.calls.clear()
+        posted_before = len(world.replies)
+        r = run(root, port[0])
+        three = [(t, pl) for t, pl in world.replies[posted_before:]]
+        check("a ready reply is posted once in its thread, as plain text with mentions off",
+              r.returncode == 0 and three == [("700", {"content": ready, "allowed_mentions": {"parse": []}, "flags": 4})], r.stdout + str(three))
+        check("an archived thread is opened again before the reply", "700" not in world.archived
+              and world.calls.index("PATCH /discord/channels/700") < world.calls.index("POST /discord/channels/700/messages"), str(world.calls))
+        link = f"https://discord.com/channels/1/700/{world.messages['700'][-1]['id']}"
+        check("its file moves to posted/ with the message's link", R + "3-1.md" not in world.files
+              and world.files.get(R + "posted/3-1.md", b"").decode().startswith(f"posted: {link}\nissue: 3"), str(list(world.files)))
+        check("and the issue gets the words and the link", any(link in c and "now being built" in c and "The GroupLab bot posted this reply" in c
+                                                               for c in world.comments.get(3, [])), json.dumps(world.comments.get(3)))
+        check("a reply waiting for a nightly not out yet is left where it is", R + "1-1.md" in world.files
+              and not any(t == "100" for t, _ in world.replies[posted_before:])
+              and "reply 1-1.md: waits for nightly 241" in (root / "worker.log").read_text(encoding="utf-8"))
+        for name, issue, why in (("2-1", 2, "the thread is gone"), ("4-1", 4, "the thread is locked"),
+                                 ("5-1", 5, "Alan has written in the thread since"), ("6-1", 6, "it has bold"),
+                                 ("6-2", 6, "its thread line does not match"), ("7-1", 7, "its last line is not")):
+            check(f"reply {name} is not posted: {why}, a line on the issue, and the file kept in not-posted/",
+                  R + f"{name}.md" not in world.files and world.files.get(R + f"not-posted/{name}.md", b"").decode().startswith(f"not posted: {why}")
+                  and any(f"discord-replies/{name}.md was not posted: {why}" in c for c in world.comments.get(issue, [])),
+                  str(list(world.files)) + json.dumps(world.comments.get(issue)))
+        check("nothing is posted in a thread whose reply was refused",
+              not any(t in ("200", "710", "400", "500", "600") for t, _ in world.replies[posted_before:]), str(world.replies[posted_before:]))
+
+        world.calls.clear()
+        r = run(root, port[0])
+        check("a posted reply is never posted again", len(world.replies) == posted_before + 1
+              and not any(c.startswith("POST /discord/") for c in world.calls), str(world.calls))
+        world.nightly = 241
+        r = run(root, port[0])
+        check("once its nightly is out, the waiting reply is posted", world.replies[-1][0] == "100" and R + "posted/1-1.md" in world.files, r.stdout)
+
+        # The pause file, the five-a-run limit, and a run that stopped between posting and keeping the link.
+        world.files[R + "PAUSED"] = b""
+        for i in range(2, 9):
+            world.files[R + f"7-{i}.md"] = reply_file(7, "600", f"Reply number {i}.\n" + sign)
+        world.calls.clear()
+        r = run(root, port[0])
+        check("with discord-replies/PAUSED there, nothing is posted", r.returncode == 0 and not any(c.startswith("POST /discord/") for c in world.calls)
+              and all(R + f"7-{i}.md" in world.files for i in range(2, 9))
+              and "PAUSED is there, so no reply is posted" in (root / "worker.log").read_text(encoding="utf-8"), str(world.calls))
+        r = run(root, port[0], True, "--dry-run")
+        check("and a dry run says so", "PAUSED is there, so nothing would be posted" in r.stdout, r.stdout)
+        del world.files[R + "PAUSED"]
+        world.calls.clear()
+        r = run(root, port[0])
+        to_600 = [c for c in world.calls if c == "POST /discord/channels/600/messages"]
+        check("without it, at most five replies are posted in a run", len(to_600) == 5 and sum(R + f"7-{i}.md" in world.files for i in range(2, 9)) == 2
+              and "5 replies posted this run; the rest wait for the next" in (root / "worker.log").read_text(encoding="utf-8"), str(len(to_600)))
+        r = run(root, port[0])
+        check("and the rest in the next", not any(R + f"7-{i}.md" in world.files for i in range(2, 9))
+              and [pl["content"].splitlines()[0] for t, pl in world.replies if t == "600"][1:] == [f"Reply number {i}." for i in range(2, 9)],
+              str([pl["content"].splitlines()[0] for t, pl in world.replies if t == "600"]) + str([f for f in world.files if f.startswith(R)]))
+        state = json.loads((root / "discord" / "state.json").read_text(encoding="utf-8"))
+        state["replies"]["7-9.md"] = {"posting": True}
+        (root / "discord" / "state.json").write_text(json.dumps(state), encoding="utf-8")
+        words9 = "Reply number 9.\n" + sign
+        mid = later("2026-11-23T07:00:00Z")
+        world.messages["600"].append(message(mid, "900", words9))
+        world.files[R + "7-9.md"] = reply_file(7, "600", words9)
+        world.calls.clear()
+        r = run(root, port[0])
+        check("a reply posted by a run that stopped before keeping its link is not posted twice",
+              not any(c.startswith("POST /discord/channels/600") for c in world.calls)
+              and world.files.get(R + "posted/7-9.md", b"").decode().startswith(f"posted: https://discord.com/channels/1/600/{mid}"), r.stdout + str(world.calls))
 
         world.refuse_discord = True
         (root / "discord" / "state.json").unlink()
