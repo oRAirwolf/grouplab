@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""File the GroupLab Discord's bug reports and suggestions as issues, NOTES-FROM-PLANNING.md entries 419 and 492.
+"""File the GroupLab Discord's bug reports, suggestions and questions as issues, NOTES-FROM-PLANNING.md entries 419, 492 and 512.
 
 Every five minutes this reads the GroupLab Discord server's **bug-reports** forum, and since entry 492 its **feature-requests** forum,
 through Discord's REST API with a bot token, and keeps one issue per forum post in the private oRAirwolf/grouplab-crash-reports, labelled
@@ -34,9 +34,17 @@ a thread that is locked or gone, one where the server's owner (Alan) has written
 (no bold, no at sign, no link but grouplab.org and GroupLab's GitHub releases, at most 1900 characters, ending with SIGNED). A reply
 waiting for a nightly stays until GroupLab's releases list that nightly. **A file `discord-replies/PAUSED` stops all posting.**
 
+**Every message, in four forums** (entry 512). The help and support forums are read too, each thread an issue labelled `question`
+and its forum's name, with no "filed" message, since Code answers them. Forums are matched by name whatever the case or a leading
+emoji or dash. Every later message on an issue labels it `new-reply`, open or closed, and reopens it if closed, so Code's check sees
+it and answers it; a message from the server's owner (Alan) is marked his on the issue and labels it `alan-replied` instead, never
+reopening it, so Code does not answer over him.
+
 **--dry-run** (entry 492) finds the forums and says, by count and thread id, what a run would file, and writes nothing anywhere: no
 issue, no reply, no state, no log. It needs only the bot token. Since entry 511 it also says whether the bot may post in each forum's
-threads and, given the GitHub token, what each waiting reply would do, still posting and moving nothing.
+threads and, given the GitHub token, what each waiting reply would do, still posting and moving nothing. Since entry 512 it lists
+every forum channel the bot can see and which it reads, names each permission the bot lacks in a forum it reads, and then ends with
+code 3, so a paste stops before installing.
 """
 
 from __future__ import annotations
@@ -75,10 +83,19 @@ SUGGESTION = "suggestion"
 NEW_REPLY = "new-reply"
 # Entry 492: each forum read, its issues' labels and what a post there is called. bug-reports must be there; feature-requests is read
 # when the bot can see it, and a server without it is still filed.
+# Entry 512 section 1: help and support too, each thread an issue labelled `question` and its forum's name, with no "filed" message,
+# because a real answer follows. A forum is matched by name without regard to case or a leading emoji or dash (`canonical`).
+QUESTION = "question"
 FORUMS = {
-    FORUM_NAME: {"labels": [LABEL], "called": "a bug report"},
-    "feature-requests": {"labels": [LABEL, SUGGESTION], "called": "a suggestion"},
+    FORUM_NAME: {"labels": [LABEL], "called": "a bug report", "thanks": True},
+    "feature-requests": {"labels": [LABEL, SUGGESTION], "called": "a suggestion", "thanks": True},
+    "help": {"labels": [LABEL, QUESTION, "help"], "called": "a question", "thanks": False},
+    "support": {"labels": [LABEL, QUESTION, "support"], "called": "a question", "thanks": False},
 }
+# Entry 512: Alan's own message in a thread is filed and labels its issue so, and never reopens it, so Code does not answer over him.
+ALAN_REPLIED = "alan-replied"
+LABEL_COLOURS = {LABEL: "5865f2", SUGGESTION: "a2eeef", QUESTION: "d876e3", "help": "c5def5", "support": "c5def5",
+                 NEW_REPLY: "fbca04", ALAN_REPLIED: "0e8a16"}
 DRY = "--dry-run" in sys.argv[1:]
 THANKS = "Thank you, this is filed for the developer."
 MOST_THREADS_A_RUN = 40
@@ -174,23 +191,34 @@ def github(path: str, token: str, method: str = "GET", payload: dict | None = No
                                            "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "grouplab-discord-worker"}, payload)
 
 
-def find_forum(token: str, state: dict) -> None:
+def canonical(name: str | None) -> str:
+    """A forum's name as FORUMS has it: lower case, with any leading emoji, dash, dot or space taken off, so "-Bug-Reports" is bug-reports."""
+    return re.sub(r"^[^a-z0-9]+", "", (name or "").strip().lower()).strip()
+
+
+def find_forum(token: str, state: dict, always: bool = False) -> list[str]:
     """
     The bot's own id, the GroupLab server and its forums, found from the token and kept in the state: `forum` is bug-reports, as before
-    entry 492, and `forums` names every forum found. Looked for again while one of FORUMS is missing, so a forum made later is found.
+    entry 492, and `forums` maps each of FORUMS found to its channel. Looked for again while one of FORUMS is missing, so a forum made
+    later is found. Returns the name of every forum channel the bot can see in that server, as Discord shows it (entry 512: the dry
+    run lists them, so a forum named a little differently shows up), or nothing when nothing was looked up.
     """
-    if state.get("forum") and set(state.get("forums") or {}) == set(FORUMS):
-        return
+    if not always and state.get("forum") and set(state.get("forums") or {}) == set(FORUMS):
+        return []
     _, me = discord("/users/@me", token)
     _, guilds = discord("/users/@me/guilds", token)
     for guild in guilds or []:
         _, channels = discord(f"/guilds/{guild['id']}/channels", token)
-        found = {c.get("name"): c["id"] for c in channels or [] if c.get("type") == FORUM and c.get("name") in FORUMS}
+        forums = [c for c in channels or [] if c.get("type") == FORUM]
+        found: dict[str, str] = {}
+        for c in forums:
+            found.setdefault(canonical(c.get("name")), c["id"])
+        found = {n: i for n, i in found.items() if n in FORUMS}
         if FORUM_NAME in found:
             for name in sorted(set(found) - set(state.get("forums") or {})):
                 log(f"found the {name} forum in {guild.get('name', 'the server')}")
             state.update(bot=me["id"], guild=guild["id"], forum=found[FORUM_NAME], forums=found, threads=state.get("threads", {}))
-            return
+            return [c.get("name") or "" for c in forums]
     raise LookupError(f"the bot can see no forum named {FORUM_NAME} in any server it is in")
 
 
@@ -365,20 +393,23 @@ def owner_of(state: dict, discord_token: str) -> str | None:
 
 def reopen_for_reply(number: int, new: list[dict], state: dict, discord_token: str, github_token: str) -> None:
     """
-    Entry 510 section 2: a later message on an issue already closed reopens it and labels it `new-reply`, so the usual check of open
-    issues sees it. Only for somebody else's message: the server owner posting an answer in the thread leaves a closed issue closed.
+    Entries 510 and 512: a later message from somebody other than the server's owner (Alan) labels its issue `new-reply`, open or
+    closed, and reopens it if closed, so Code's usual check of open issues sees it and answers it. Alan's own message labels it
+    `alan-replied` and never reopens it, so Code does not answer over him.
     """
     owner = owner_of(state, discord_token)
+    if any((m.get("author") or {}).get("id") == owner for m in new):
+        github(f"/repos/{REPOSITORY}/issues/{number}/labels", github_token, "POST", {"labels": [ALAN_REPLIED]})
+        log(f"issue #{number}: Alan wrote in its thread")
     if not any((m.get("author") or {}).get("id") != owner for m in new):
         return
     code, issue = github(f"/repos/{REPOSITORY}/issues/{number}", github_token)
-    if code != 200 or (issue or {}).get("state") != "closed":
-        return
-    code, _ = github(f"/repos/{REPOSITORY}/issues/{number}", github_token, "PATCH", {"state": "open", "state_reason": "reopened"})
-    if code != 200:
-        raise Unreachable(f"issue #{number} could not be reopened, GitHub answered {code}")
+    if code == 200 and (issue or {}).get("state") == "closed":
+        code, _ = github(f"/repos/{REPOSITORY}/issues/{number}", github_token, "PATCH", {"state": "open", "state_reason": "reopened"})
+        if code != 200:
+            raise Unreachable(f"issue #{number} could not be reopened, GitHub answered {code}")
+        log(f"issue #{number}: reopened for a new reply in its thread")
     github(f"/repos/{REPOSITORY}/issues/{number}/labels", github_token, "POST", {"labels": [NEW_REPLY]})
-    log(f"issue #{number}: reopened for a new reply in its thread")
 
 
 def file_thread(thread: dict, state: dict, discord_token: str, github_token: str, forum: str = FORUM_NAME) -> None:
@@ -404,15 +435,21 @@ def file_thread(thread: dict, state: dict, discord_token: str, github_token: str
         seen.update(issue=made["number"], last=first["id"])
         log(f"thread {thread['id']} in {forum}: issue #{made['number']}")
         save(state)
+    owner = owner_of(state, discord_token) if new else None
     for m in new:
+        who = handle_of(m) + (" (Alan, the server's owner)" if owner and (m.get("author") or {}).get("id") == owner else "")
         code, _ = github(f"/repos/{REPOSITORY}/issues/{seen['issue']}/comments", github_token, "POST",
-                         {"body": f"**{handle_of(m)}** on Discord, {when(m)}:\n\n" + text_block(m, thread["id"], reread(m), github_token)})
+                         {"body": f"**{who}** on Discord, {when(m)}:\n\n" + text_block(m, thread["id"], reread(m), github_token)})
         if code != 201:
             raise Unreachable(f"a comment could not be added, GitHub answered {code}")
         seen["last"] = m["id"]
         save(state)
     if earlier and new:
         reopen_for_reply(seen["issue"], new, state, discord_token, github_token)
+        save(state)
+    if not seen.get("replied") and not FORUMS[forum].get("thanks", True):
+        # Entry 512: a question in help or support gets a real answer from Code, not the "filed" line.
+        seen["replied"] = "not for this forum"
         save(state)
     if not seen.get("replied"):
         code, _ = discord(f"/channels/{thread['id']}/messages", discord_token, "POST", {"content": THANKS, "allowed_mentions": {"parse": []}})
@@ -667,8 +704,14 @@ def post_replies(state: dict, discord_token: str, github_token: str) -> int:
     return posted
 
 
-def thread_permissions(state: dict, discord_token: str) -> dict[str, bool]:
-    """Whether the bot may read and post in each forum's threads, worked out as Discord does from its roles and the forum's overwrites."""
+PERMISSION_NAMES = ((VIEW_CHANNEL, "View Channel"), (SEND_IN_THREADS, "Send Messages in Threads"), (READ_HISTORY, "Read Message History"))
+
+
+def thread_permissions(state: dict, discord_token: str) -> dict[str, list[str]]:
+    """
+    What the bot is missing to read and post in each forum's threads, worked out as Discord does from its roles and the forum's
+    overwrites: an empty list where it has all it needs (entry 512 names each missing one).
+    """
     guild_id, bot = state["guild"], state["bot"]
     _, guild = discord(f"/guilds/{guild_id}", discord_token)
     _, member = discord(f"/guilds/{guild_id}/members/{bot}", discord_token)
@@ -681,7 +724,7 @@ def thread_permissions(state: dict, discord_token: str) -> dict[str, bool]:
     out = {}
     for name, fid in (state.get("forums") or {}).items():
         if base & ADMINISTRATOR:
-            out[name] = True
+            out[name] = []
             continue
         channel = next((c for c in channels or [] if c.get("id") == fid), {})
         over = {o["id"]: (int(o.get("allow") or 0), int(o.get("deny") or 0)) for o in channel.get("permission_overwrites", [])}
@@ -695,27 +738,31 @@ def thread_permissions(state: dict, discord_token: str) -> dict[str, bool]:
         p = (p & ~deny) | allow
         if bot in over:
             p = (p & ~over[bot][1]) | over[bot][0]
-        out[name] = all(p & bit for bit in (VIEW_CHANNEL, READ_HISTORY, SEND_IN_THREADS))
+        out[name] = [said for bit, said in PERMISSION_NAMES if not p & bit]
     return out
 
 
-def dry_run_replies(state: dict, discord_token: str, github_token: str) -> None:
-    """Entry 511: whether the bot may post in each forum, and what each waiting reply would do; nothing is posted, moved or kept."""
-    allowed = thread_permissions(state, discord_token)
-    yes = sorted(n for n, ok in allowed.items() if ok)
-    no = sorted(n for n, ok in allowed.items() if not ok)
+def dry_run_replies(state: dict, discord_token: str, github_token: str) -> bool:
+    """
+    Entry 511: whether the bot may post in each forum, and what each waiting reply would do; nothing is posted, moved or kept. False
+    when the bot is missing a permission in a forum it reads (entry 512), so the paste stops before installing.
+    """
+    missing = thread_permissions(state, discord_token)
+    yes = [n for n in FORUMS if n in missing and not missing[n]]
     if yes:
         print("dry run: the bot may post in the threads of " + ", ".join(yes))
-    if no:
-        print("dry run: the bot may NOT post in the threads of " + ", ".join(no)
-              + " (it needs View Channel, Read Message History and Send Messages in Threads there)")
+    for name in [n for n in FORUMS if missing.get(n)]:
+        lack = missing[name]
+        print(f"dry run: the bot may NOT post in the threads of {name}: give its role "
+              + (", ".join(lack[:-1]) + " and " + lack[-1] if len(lack) > 1 else lack[0]) + " there")
+    allowed = not any(missing.values())
     if not github_token:
         print("dry run: replies: the GitHub token is not set, so the waiting replies were not read")
-        return
+        return allowed
     paused, waiting = waiting_replies(github_token)
     if paused:
         print(f"dry run: replies: {REPLIES}/PAUSED is there, so nothing would be posted")
-        return
+        return allowed
     print(f"dry run: replies: {len(waiting)} waiting")
     newest: list = []
 
@@ -738,6 +785,20 @@ def dry_run_replies(state: dict, discord_token: str, github_token: str) -> None:
             print(f"dry run: reply {name}: {detail}")
         else:
             print(f"dry run: reply {name}: would not be posted ({detail})")
+    return allowed
+
+
+def make_labels(state: dict, github_token: str) -> None:
+    """The labels the forums read use, and new-reply and alan-replied, made once each and kept in the state (entry 512)."""
+    wanted = [LABEL, NEW_REPLY, ALAN_REPLIED] + [x for f in (state.get("forums") or {}) for x in FORUMS[f]["labels"]]
+    made = state.setdefault("labels", [])
+    for name in dict.fromkeys(wanted):
+        if name in made:
+            continue
+        code, _ = github(f"/repos/{REPOSITORY}/labels", github_token, "POST", {"name": name, "color": LABEL_COLOURS.get(name, "ededed")})
+        if code in (200, 201, 422):
+            made.append(name)
+    save(state)
 
 
 def save(state: dict) -> None:
@@ -757,7 +818,7 @@ def token(path: Path) -> str:
 def dry_run(discord_token: str, state: dict, github_token: str = "") -> int:
     """Entry 492: what a run would file, by forum, count and thread id; nothing is written, posted or filed."""
     try:
-        find_forum(discord_token, state)
+        seen = find_forum(discord_token, state, always=True)
         found = threads(discord_token, state)
     except TokenRefused as e:
         print(f"dry run: the bot token was refused ({e})")
@@ -765,22 +826,31 @@ def dry_run(discord_token: str, state: dict, github_token: str = "") -> int:
     except (Unreachable, LookupError) as e:
         print(f"dry run: stopped ({e})")
         return 1
-    print("dry run: forums found: " + ", ".join(sorted(state.get("forums") or {})))
+    print("dry run: forums found: " + ", ".join(n for n in FORUMS if n in (state.get("forums") or {})))
+    for shown in seen:
+        print(f"dry run: forum channel {quiet(shown)!r}: " + (f"read as {canonical(shown)}" if canonical(shown) in FORUMS else "not read"))
     for name in FORUMS:
+        if name not in (state.get("forums") or {}):
+            print(f"dry run: {name}: no forum by that name, so nothing is read there")
+            continue
         posts = [t for forum, t in found if forum == name]
         filed = [t["id"] for t in posts if (state["threads"].get(t["id"]) or {}).get("issue")]
         new = [t["id"] for t in posts if t["id"] not in filed]
         print(f"dry run: {name}: {len(posts)} posts, {len(filed)} filed already, {len(new)} would be filed"
               + (f" ({', '.join(new)})" if new else "") + f", labelled {', '.join(FORUMS[name]['labels'])}")
     try:
-        dry_run_replies(state, discord_token, github_token)
+        allowed = dry_run_replies(state, discord_token, github_token)
     except (TokenRefused, Unreachable) as e:
         print(f"dry run: replies: stopped ({e})")
         return 1
-    return 0
+    return 0 if allowed else 3
 
 
 def main() -> int:
+    # A forum's name may hold an emoji (entry 512); a console that cannot show it gets an escape, never a crash.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(errors="backslashreplace")
     discord_token, github_token = token(DISCORD_TOKEN_FILE), token(GITHUB_TOKEN_FILE)
     if DRY:
         if not discord_token:
@@ -801,9 +871,7 @@ def main() -> int:
     try:
         find_forum(discord_token, state)
         save(state)
-        github(f"/repos/{REPOSITORY}/labels", github_token, "POST", {"name": LABEL, "color": "5865f2"})
-        if "feature-requests" in (state.get("forums") or {}):
-            github(f"/repos/{REPOSITORY}/labels", github_token, "POST", {"name": SUGGESTION, "color": "a2eeef"})
+        make_labels(state, github_token)
         for forum, thread in threads(discord_token, state):
             if done >= MOST_THREADS_A_RUN or time.monotonic() - started > RUN_SECONDS:
                 log("stopped for this run; the rest are taken next time")
