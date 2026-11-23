@@ -17,6 +17,10 @@ on:
         description: "Entry 388 section 4: also measure Phase 9's baseline on the emulator (start-up, the 600 dpi scan, switching targets)"
         type: boolean
         default: false
+      aot:
+        description: "Entry 514 section 5, measuring only: build GroupLab Dev compiled ahead of time, to compare its reading times and size"
+        type: boolean
+        default: false
 
 concurrency:
   group: android-emulator-${{ github.ref }}
@@ -73,10 +77,15 @@ jobs:
           cp "$RUNNER_TEMP/android-native-x86_64/x86_64/libOpenCvSharpExtern.so" android/native/x86_64/
           # Release, signed with the build machine's debug key, as android.yml builds it: a Debug APK expects Visual Studio's fast
           # deployment and does not start on its own (entry 202).
-          dotnet build android/GroupLab.Android --configuration Release -p:GroupLabDev=true -p:GroupLabEmulator=true \
+          # Entry 514 section 5: a run by hand with aot builds the same app compiled ahead of time, for measuring only; nothing
+          # published is built this way (question 110 left Android's AOT for later).
+          aot=""
+          if [ "${{ inputs.aot }}" = "true" ]; then aot="-p:RunAOTCompilation=true"; fi
+          dotnet build android/GroupLab.Android --configuration Release -p:GroupLabDev=true -p:GroupLabEmulator=true $aot \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" > build.log 2>&1 || { grep -E 'error|Error' build.log | head -40; exit 1; }
           apk=$(find android/GroupLab.Android/bin/Release -name 'org.grouplab.app.dev-Signed.apk' | head -1)
           test -n "$apk"
+          echo "### GroupLab Dev for the emulator: $(( $(stat -c %s "$apk") / 1048576 )) MB${aot:+, compiled ahead of time}" >> "$GITHUB_STEP_SUMMARY"
           for item in lib/x86_64/libOpenCvSharpExtern.so assets/targets/GL-CF25-LTR.gltd.json; do
             unzip -l "$apk" | grep -q " $item$" || { echo "::error::GroupLab Dev for x86_64 does not carry $item"; exit 1; }
           done
