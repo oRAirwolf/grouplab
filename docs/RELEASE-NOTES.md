@@ -481,7 +481,7 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 - The shot you select now stands out further in the dark themes: its magenta is purer, and further from every other color on the plot.
 - Reading a 600 dpi scan is faster again: finding the holes takes about a fifth less time, and finds exactly the same holes. (Phase 9).
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.212)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
