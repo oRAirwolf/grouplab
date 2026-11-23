@@ -9,18 +9,18 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-23, after entry 512; the inbox is empty.
+**Last rewritten:** 2026-11-23, after request 115 and question 118's answer; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 512 (2026-11-23)**: the Discord worker reads help and support too and labels every new message `new-reply` (Alan's
-  `alan-replied`), committed at ddb1e8fd, installed by request 115; the standing rule to reply to every message is in CLAUDE.md. A
-  Session name typed on Targets and a set's "2 of 3" print in the load block's square when it carries words (question 118 asks about
-  the code's case); Pool the chosen counts a loose sheet with the set's bulls as a missing sheet (report 57's suggestion). Both for
-  nightly 242; replies 55-2, 56-3 and 57-2 wait for it in `discord-replies/`.
-- **Request 113 is in** (2026-11-23 08:03 UTC): 53-1, 55-1, 56-2 and 57-1 were posted at 08:04, links in for-alan.md's Discord note.
+- **Request 115 is in** (2026-11-23 11:02 UTC, run by Code on Alan's word: "I give you permission to run commands on the web host"):
+  the worker at d893e027 reads bug-reports, feature-requests and help; the server has no support forum, which is now a warning and is
+  read by itself once made. A dry run prints its own lines only and writes no log, state or status. Help threads became questions 58
+  and 59; replies 58-1 and 59-1 posted at 11:09. 55-2, 56-3 and 57-2 posted at 10:59 after nightly 242.
+- **Entry 512 (2026-11-23)**: every new message labels its issue `new-reply` (Alan's `alan-replied`); a Session name and a set's
+  "2 of 3" print in the load block's square when it carries words; question 118 answered (a), leave it as built.
 - **Entry 510 (2026-11-22)**: `scripts/closed-replies.py` stays beside the issue check until the worker reopens an issue itself.
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by
   mac-store.yml after each nightly; whether it runs on a real Mac is request 111; never submitted without Alan's word.
@@ -46,13 +46,13 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Once request 115 is in: answer the help and support threads already there, newest first, and every new message after.
-2. The phone's Session name box on Targets (desktop only in entry 512), then question 118's answer when it comes.
+1. Every new Discord message, at every check: replies in `discord-replies/`; request 116 decides when iOS 18 to 25 reach the App Store.
+2. The phone's Session name box on Targets (desktop only in entry 512).
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
 ## Blocked, and on what
 
-- **The bot reading help and support, and marking every message**: request 115 (Alan's look at the Oracle backup, then one paste).
+- **iOS 18 to 25 from the App Store**: request 116 (Alan's word to submit a version after 1.0).
 - **The Mac App Store copy**: request 111 (the TestFlight build opened on a real Mac, now also through Mac testers for Alan's friend once
   Apple's beta review approves it), then Alan's word to submit (entry 501 section 4).
 - **The iPhone Duo's inner screen**: the Duo leg on Xcode 27.2 (simulator starts folded; IOS-PLAN.md); nothing needed from Alan.
@@ -60,19 +60,18 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **27**; waiting on him: 115 (the bot reads help and support, one paste), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **27**; waiting on him: 116 (the next App Store version), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, in `docs/QUESTIONS-FOR-PLANNING.md`:
-- **118** where a session's name and "2 of 3" go when the load's code fills the square (entry 512)
+Two, in `docs/QUESTIONS-FOR-PLANNING.md` (118 answered (a) by Alan, 2026-11-23):
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.241 (2026-11-23), with entry 511 and report 57's fix. GitHub's
+- **Last nightly:** 1.0.0-nightly.242 (2026-11-23), with entry 512. GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 

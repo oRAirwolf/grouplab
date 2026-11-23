@@ -3,6 +3,38 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 115. The Discord bot reads help and support too, and marks every new message for Claude Code to answer, one look and one paste, about five minutes, whenever suits (entry 512)
+
+**Opened 2026-11-23.** You asked for Claude Code to read and answer every message in the help, support, feature-requests and
+bug-reports forums. The bot now files each help or support thread as a report labelled `question` (and posts no "filed" line there,
+because Claude Code answers it instead), and labels any report `new-reply` whenever anybody but you writes in its thread, reopening it
+if closed. Your own messages are marked as yours and label it `alan-replied`, so Claude Code never answers over you. It finds the
+forums by name whatever the case or a leading emoji. It is written and tested (84 checks); installing it needs today's server backup
+confirmed first, which Claude Code cannot see (RESTORE.md rule 5).
+
+**First, one look:** in the Oracle console, **Storage**, **Block Storage**, **Boot Volume Backups**: is there a backup created in the
+last day? If there is none, stop and say so instead.
+
+**Then this paste**, in your usual bash session on the server. It fetches the six files at ddb1e8fd and checks each against the
+repository, shows every forum the bot can see and what it would file, without filing or posting anything (and stops if a forum is not
+found or the bot lacks a permission in one, naming the permission), backs up the bot's script, installs the new one, runs it once
+(which files the help and support threads already there, and posts nothing in them), shows its log and timer, and checks both sites.
+
+```
+mkdir -p /home/ubuntu/grouplab-server-512 && cd /home/ubuntu/grouplab-server-512 && for f in install.py grouplab-change-backup.py grouplab-discord-worker.py grouplab-set-discord-token grouplab-discord-worker.service grouplab-discord-worker.timer; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/ddb1e8fd/website/server/$f" || { echo "STOP: $f could not be fetched"; break; }; done; printf '%s\n' 'b76c3e8fe6a37df0cdedc2c6e46a46dec93abda2335da812d087e03ea1f137ed  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' '1ec49d481815e5264f351ca5e4ae421e6e291c4ff888067c10682e1b193dd7a5  grouplab-discord-worker.py' '82fca876d79928b20520154ec424b8530465b9b49bb055bb0a33d1d0d3220fb7  grouplab-set-discord-token' '9fab3f90ad7202f01d47f217e016a9c3f3caa43fd139cbd970c92f4507d607ec  grouplab-discord-worker.service' '759a3ced54099155cc524aed9c83879f5fd4148bf2c97445e1cfcbe50cc0de3f  grouplab-discord-worker.timer' | sha256sum -c || { echo "STOP: a file is not what the repository holds"; false; } && sudo systemd-run --quiet --wait --pipe --collect -p LoadCredential=discord-token:/etc/grouplab/discord-token -p LoadCredential=github-token:/etc/grouplab/error-token /usr/bin/python3 /home/ubuntu/grouplab-server-512/grouplab-discord-worker.py --dry-run > dry-run.txt; d=$?; cat dry-run.txt; if [ $d -eq 3 ]; then echo "STOP: the bot lacks a permission named above; give it there, then paste this again"; false; elif [ $d -ne 0 ]; then echo "STOP: the dry run did not finish"; false; elif grep -q 'no forum by that name' dry-run.txt; then echo "STOP: a forum was not found by its name; paste back what it printed"; false; fi && sudo python3 grouplab-change-backup.py --label discord-worker-questions --file /usr/local/sbin/grouplab-discord-worker.py || { echo "STOP: the backup did not finish"; false; } && sudo python3 install.py --discord || { echo "STOP: the install did not finish"; false; } && sudo systemctl start grouplab-discord-worker.service || { echo "STOP: the worker did not run; its log follows"; false; }; sudo tail -n 15 /home/airwolf/logs/grouplab-discord-worker.log; systemctl list-timers grouplab-discord-worker.timer --no-pager; for s in grouplab.org pissinhot.com; do echo "$s $(curl -s -o /dev/null -w '%{http_code}' https://$s/)"; done
+```
+
+**A good result:** six `OK`; `dry run: forums found: bug-reports, feature-requests, help, support`; a `forum channel` line for each
+forum the bot can see, saying which it reads; a line for help and for support saying how many posts would be filed; `dry run: the
+bot may post in the threads of bug-reports, feature-requests, help, support`; the backup folder's name; the install's done; a log with
+`found the help forum`, `found the support forum` and a line `in help: issue #...` or `in support: issue #...` for each thread there, and
+no Traceback or STOP; the timer listed with its next run within five minutes; and `grouplab.org 200` and `pissinhot.com 200`. **If it
+stops on a permission**, the line above the STOP names it and the forum, for example "give its role Send Messages in Threads and Read
+Message History there": in Discord, open that forum's settings, Permissions, add the bot's role and turn those on, then paste again.
+**A good answer:** paste back what it printed. **To undo:** `sudo install -m 755 -o root -g root` the backup folder's copy of the script
+over `/usr/local/sbin/grouplab-discord-worker.py`; reports already filed stay filed. **To stop posting without undoing anything:** the
+`discord-replies/PAUSED` switch near the top of this file.
+
 ## 114. Should a session's name also print in the load block's square? One question, a minute, whenever suits (entry 511 section 1)
 
 **Answered 2026-11-23:** left to the planning session, which chose (b), carefully (entry 512 section 3): a name typed on Targets before printing prints in the square beside the code, and each sheet of a set prints its place in the set large ("2 of 3"); the code keeps its size and quiet zone, and a name that does not fit is cut with an ellipsis.

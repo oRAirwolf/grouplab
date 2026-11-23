@@ -12,6 +12,16 @@ it ships in. A suggestion that is really a bug goes to `docs/notes/error-reports
 Claude Code lists the open `suggestion` issues at the same points as the error reports (the start of a run, before each inbox entry,
 before ending a turn, and at least hourly while waiting on CI) and writes each new one here at once.
 
+## Issue 59, 2026-11-19 (filed 2026-11-23 from the help forum): the App Store copy on an iPhone on iOS 18
+
+- **Asked** (a question in the help forum, labelled `question`): GroupLab from the App Store refuses an iPhone XS Max on iOS 18.7, a
+  phone kept for the range; could it be built for older iOS. Alan answered in the thread that iOS 18 would be allowed without support.
+- **Already done?** In part. Since build 236 (entry 505) GroupLab installs on iOS 18 to 25 with a "not supported" warning, but only
+  through TestFlight, which the public is no longer invited to (entry 500). The App Store copy is 1.0, build 226, which needs iOS 26.
+- **Size:** small: submitting a newer iPhone build as the App Store's next version. **Fits:** yes, Alan already chose to allow iOS 18.
+- **Recommendation:** submit the next App Store version when Alan says; asked as request 116. The reply 59-1 told the poster it comes
+  with the next App Store version and gave no date.
+
 ## Issue 57's thread, 2026-11-23: pool a loose sheet with the sheets of a set
 
 - **Answered 2026-11-23, yes to the narrow case** (entry 512 section 3): built on the computer. Pool the chosen counts a loose sheet whose bulls are the set's as the set's sheet missing from those ticked, asks which where several are missing, refuses in amber where none is, and a saved pool keeps its place (`SetPool.StandsIn`, `SetPool.FindStandIn`, `Entry512StandInPoolTests`). Mixing other designs stays later (question 51). Ships in the nightly after 241; the reply in its thread waits for it.
