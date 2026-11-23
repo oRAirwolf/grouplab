@@ -17,8 +17,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entry 511 (2026-11-23)**: suggestion 56 built, a session's own name (`SessionStore.Rename`, `SessionNames` name first; Rename and
   F2 in Session records, "Name this session" atop the analysis, the phone's result page and Rename a session), for nightly 241. The
-  Discord worker posts `discord-replies/` from the crash-reports repo (9cf53235): waiting for request 113's install; 53-1, 55-1, 56-1
-  and 56-2 (post-after 241) are waiting there. If 56-1 is still unposted when 241 is out, merge it into 56-2 (one reply a thread).
+  Discord worker posts `discord-replies/` from the crash-reports repo (9cf53235): waiting for request 113's install; 53-1, 55-1,
+  56-2 (56-1 merged into it once 241 was out) and 57-1 are waiting there, all postable.
 - **Report 57 (2026-11-23)**: Pool the chosen's refusal was a grey line nobody saw; now amber, naming the designs, in the status
   bar (`PoolRefusal`), for nightly 241, reply 57-1 waiting. Its thread's suggestion (a loose sheet standing in for a set's) waits for Alan.
 - **Entry 510 (2026-11-22)**: report 53's reply (a video, iPhone build 238): the phone's zoomed pictures pinch again after the first
@@ -75,7 +75,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (117 closed (a) by entry 506):
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.240 (2026-11-23), with entries 508 to 510; submitted to the Store. GitHub's
+- **Last nightly:** 1.0.0-nightly.241 (2026-11-23), with entry 511 and report 57's fix. GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
