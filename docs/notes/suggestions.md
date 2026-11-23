@@ -14,6 +14,7 @@ before ending a turn, and at least hourly while waiting on CI) and writes each n
 
 ## Issue 57's thread, 2026-11-23: pool a loose sheet with the sheets of a set
 
+- **Answered 2026-11-23, yes to the narrow case** (entry 512 section 3): built on the computer. Pool the chosen counts a loose sheet whose bulls are the set's as the set's sheet missing from those ticked, asks which where several are missing, refuses in amber where none is, and a saved pool keeps its place (`SetPool.StandsIn`, `SetPool.FindStandIn`, `Entry512StandInPoolTests`). Mixing other designs stays later (question 51). Ships in the nightly after 241; the reply in its thread waits for it.
 - **Asked** (in the bug report of issue 57): allow Pool the chosen to pool sheets of different designs, here a loose 3x3 2 MOA C bull
   sheet used in place of a spoiled sheet of the 3x3 2 MOA C bull set of 3, "as the only thing you're looking at is the offset from the
   bull's center".
@@ -53,6 +54,7 @@ before ending a turn, and at least hourly while waiting on CI) and writes each n
 - **Size:** small to medium (the square's layout, a tag field beside the serial, and keeping the code where there is one).
   **Fits:** yes, if it does not displace the code GroupLab may later read back.
 - **Answered 2026-11-23: later, with session names** (entry 511 section 1). Left open here. Now that sessions have names (issue 56, nightly 241), whether the session's name should also print in that square is request 114 to Alan.
+- **Answered 2026-11-23, (b) carefully** (entry 512 section 3, request 114 left to the planning session): built. A Session name typed on Targets on the computer prints in the square, and each sheet of a set prints its place in the set large ("2 of 3"), whenever the square carries words; where the load's code fills it nothing is added and Targets says so (question 118). Ships in the nightly after 241; the replies in this thread and issue 56's wait for it.
 - **Recommendation:** later, and together with issue 56: one name per session or batch, typed once, printed in the square and shown in
   Session records, would answer both posts. Waits for Alan's word.
 

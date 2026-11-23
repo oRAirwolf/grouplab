@@ -21,6 +21,32 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-11-23, question 118: where a session's name and "2 of 3" go when the load's code fills the square
+
+**Status: open (entry 512 section 3).** Entry 512 says, for request 114's (b): "When a name is typed on Targets before printing, the
+square prints it, and each sheet of a set prints its place in the set large ("2 of 3"), both beside the code. The code keeps its size and
+its quiet zone and is never shrunk to make room." On every built-in sheet with a load block the square is the block's `reserve`, 280 dmm
+(`InstanceCodec.MinimumReserveForCode`), and the instance code is version 11 at 4 dmm a module, 61 modules or 244 dmm, which leaves 18
+dmm of quiet zone a side; the QR rule wants 16. So when the code prints there is no room beside it inside the square, and the block's
+height (310 dmm) leaves 15 dmm above and below it.
+
+**What I built meanwhile:** both print whenever the square carries words, which is a blank load block (the common case), and a filled one
+whose serial is not four letters or digits (report 55's case): the name on top, cut with dots when too long, "2 of 3" below it about four
+times the size of the other words, then the sheet's code and serial as before. A sheet with neither prints exactly as it did. Where the
+code prints nothing is added, and the line under the preview on Targets says the name is not printed while the code fills the square
+(`PrintPanel.NameNotWithCode`). Held by `Entry512SquareNameTests`.
+
+**The options for the code's case:**
+- (a) Leave it as built: name and place only when the square carries words. Costs nothing; a person who fills the block with a good
+  serial gets the code and no name.
+- (b) Widen the square into a rectangle for filled sheets: the code where it is and a text column of about 20 mm to its left, taken from
+  the third column of fields (each 54 mm wide now, 34 mm then). A change to the printed layout of every filled sheet, and the third
+  column's fields get shorter.
+- (c) Put the name and place in the sheet's top name line and make the identifier's "tile 2 of 3" larger, outside the load block.
+  No change to the block; the name is then not in the square, which is what request 114 asked about.
+
+**What I would choose:** (a) for now, since a blank block is how most sheets print, and (b) only if Alan wants the name with the code.
+
 ## 2026-09-28, question 67: the printer check page is grid style 4, and its card outline stands 3 mm outside the card
 
 **Status: open, being tested (entry 278 section 3):** Alan chose to test rather than choose. The three pages, A as built, B a hairline on the card's edge and C corner marks, are made; request 53 asks for them printed, scanned and photographed with a card, and the answer comes from measuring those photographs. A stays built until then.

@@ -71,18 +71,87 @@ public sealed partial class MainWindow
 
         var records = sessions.List().Where(s => sessionChosen.Contains(s.Id)).Select(s => sessions.Get(s.Id)!).ToList();
         var ids = records.Select(r => r.DefinitionId).Distinct().ToList();
-        var definition = ids.Count == 1 && records[0].DefinitionJson is { } json ? GroupLab.Core.Gltd.Json.GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null;
+        var definitions = records.GroupBy(r => r.DefinitionId).ToDictionary(g => g.Key ?? "", g => g.First().DefinitionJson is { } json
+            ? GroupLab.Core.Gltd.Json.GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null);
+        var definition = ids.Count == 1 ? definitions[ids[0] ?? ""] : null;
         var states = records.Select(r => MarkingFile.Read(r.MarkingJson).State).ToList();
+        if (ids.Count > 1 && SetPool.FindStandIn([.. records.Select((r, i) => (r.DefinitionId, definitions[r.DefinitionId ?? ""], states[i]))]) is { } standIn)
+        {
+            PoolWithStandIns(records, states, standIn);
+            return;
+        }
+
         if (definition is null || definition.Tiling is not { } set || set.Cols * set.Rows < 2 || states.Any(s => s.SetSheet is null))
         {
             Refused(ids.Count > 1 ? PoolRefusal.DifferentDesigns(records) : PoolRefusal.NotASet);
             return;
         }
 
+        PoolSet(definition, records, states, null, null);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 512 section 3 (report 57's suggestion): loose sheets ticked with sheets of a set, whose bulls are the
+    /// set's, each counted as a sheet of the set missing from those ticked, so a spoiled sheet can be replaced. Where one place is left for
+    /// one loose sheet it takes it and says so; where it could be several, it asks which, one loose sheet at a time.
+    /// </summary>
+    private void PoolWithStandIns(IReadOnlyList<SessionRecord> records, IReadOnlyList<MarkingState> states, StandIn standIn)
+    {
+        if (standIn.Loose.Count > standIn.Places.Count)
+        {
+            Refused(PoolRefusal.NoPlaceLeft(standIn.Set.Name, standIn.Loose.Count, standIn.Places.Count));
+            return;
+        }
+
+        var names = SessionNames.For(records);
+        var numbers = new int?[records.Count];
+        var placed = new List<string>();
+
+        void Next(int j)
+        {
+            if (j == standIn.Loose.Count)
+            {
+                var counted = states.Select((s, i) => numbers[i] is { } k ? s with { SetSheet = k } : s).ToList();
+                PoolSet(standIn.Set, records, counted, numbers, string.Join(" ", placed));
+                return;
+            }
+
+            int at = standIn.Loose[j];
+            var free = standIn.Places.Where(k => !numbers.Contains(k)).ToList();
+
+            void Take(int k)
+            {
+                numbers[at] = k;
+                placed.Add(PoolRefusal.CountsAs(names[at].Name, k));
+                DiagnosticLog.Info("sessions.pool.stand-in", ("place", k + 1), ("asked", free.Count > 1));
+                Next(j + 1);
+            }
+
+            if (free.Count == 1)
+            {
+                Take(free[0]);
+                return;
+            }
+
+            ShowProblem(PoolRefusal.WhichSheetTitle, PoolRefusal.WhichSheetWhy(names[at].Name, standIn.Set.Name),
+                [.. free.Select(k => (PoolRefusal.SheetChoice(k), (Action)(() => Take(k))))]);
+        }
+
+        Next(0);
+    }
+
+    /// <summary>The sheets of one set pooled and opened in their own tab; <paramref name="numbers"/> are the places of loose sheets standing in.</summary>
+    private void PoolSet(TargetDefinition definition, IReadOnlyList<SessionRecord> records, IReadOnlyList<MarkingState> states, IReadOnlyList<int?>? numbers, string? standIns)
+    {
         var pooled = SetPool.Pool(definition, states);
         DiagnosticLog.Info("sessions.pool", ("sheets", states.Count), ("set", pooled.SetSize), ("missing", pooled.Missing.Count), ("shots", pooled.Shots));
         sessionPoolPanel.Children.Add(new TextBlock { Text = definition.Name, Classes = { AppStyles.Title } });
         sessionPoolPanel.Children.Add(Line(pooled.Said));
+        if (!string.IsNullOrEmpty(standIns))
+        {
+            sessionPoolPanel.Children.Add(Line(standIns));
+        }
+
         if (pooled.Figures is { } figures)
         {
             string Inches(GroupLab.Core.Marking.ReportedEstimate? e) => e is { } v
@@ -97,8 +166,8 @@ public sealed partial class MainWindow
         if (pooled.Shots > 0)
         {
             OpenPooled(definition, SetPool.Composite(definition, states), [.. states.Select(s => s.Scale)]);
-            // Entry 495: the pool is saved with these sheets when it is accepted, saved or closed.
-            poolSources = PooledSessions(records);
+            // Entry 495: the pool is saved with these sheets when it is accepted, saved or closed; entry 512, with a stand-in's place.
+            poolSources = numbers is null ? PooledSessions(records) : new PoolSources([.. records.Select(r => r.Id)], SessionPools.Choices(pictures: false, numbers), null);
         }
     }
 
@@ -460,6 +529,20 @@ internal static class PoolRefusal
             .ToList();
         string named = designs.Count == 2 ? $"{designs[0]} and {designs[1]}" : string.Join(", ", designs.Take(designs.Count - 1)) + " and " + designs[^1];
         return $"These are sheets of different designs: {named}. Pool the chosen reads only the sheets of one set together, so tick only those; "
-            + "pooling another sheet with a set is not built yet.";
+            + "a loose sheet can stand in for a sheet of a set only when its bulls are the set's.";
     }
+
+    /// <summary>Entry 512 section 3: more loose sheets ticked than the set has sheets missing from those ticked.</summary>
+    internal static string NoPlaceLeft(string set, int loose, int places) => places == 0
+        ? $"Every sheet of {set} is ticked already, so the loose {(loose == 1 ? "sheet has" : "sheets have")} no sheet to stand in for. Untick the sheet of the set it replaces, then Pool the chosen."
+        : string.Create(CultureInfo.InvariantCulture, $"{loose} loose sheets are ticked, but only {places} {(places == 1 ? "sheet" : "sheets")} of {set} {(places == 1 ? "is" : "are")} missing from those ticked, so they cannot all stand in. Untick the sheets of the set they replace, then Pool the chosen.");
+
+    internal const string WhichSheetTitle = "Which sheet of the set does this one replace?";
+
+    internal static string WhichSheetWhy(string loose, string set) =>
+        $"{loose} has the same bulls as every sheet of {set}, so it can count as any sheet missing from those ticked. Choose the one it replaces; each shot is still measured about its own bull.";
+
+    internal static string SheetChoice(int place) => string.Create(CultureInfo.InvariantCulture, $"Sheet {place + 1}");
+
+    internal static string CountsAs(string loose, int place) => string.Create(CultureInfo.InvariantCulture, $"{loose} counts as sheet {place + 1} of the set.");
 }

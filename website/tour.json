@@ -935,7 +935,7 @@
     ],
     [
      "The load block",
-     "Blank, to write on at the range, or filled in now from its fields."
+     "Blank, to write on at the range, or filled in now from its fields. A Session name typed here prints in the square at its bottom right, above the sheet's place in its set, whenever the square carries words rather than the load's code."
     ],
     [
      "Print the actual-size instruction",

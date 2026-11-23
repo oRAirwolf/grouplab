@@ -3,6 +3,52 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 114. Should a session's name also print in the load block's square? One question, a minute, whenever suits (entry 511 section 1)
+
+**Answered 2026-11-23:** left to the planning session, which chose (b), carefully (entry 512 section 3): a name typed on Targets before printing prints in the square beside the code, and each sheet of a set prints its place in the set large ("2 of 3"); the code keeps its size and quiet zone, and a name that does not fit is cut with an ellipsis.
+
+**Opened 2026-11-23.** Sessions now have names of their own (suggestion 56, in nightly 241): Rename in Session records or F2 on the
+computer, "Name this session" at the top of the analysis screen, and on the phone the result page and Rename a session. The same tester
+asked in report 55's thread for a big sheet number and a short tag in the square at the bottom right of a filled load block, and you
+said later, with session names. **What is needed:** whether a session's name should also print in that square. **Why it matters:** the
+square holds the code GroupLab may read back from the sheet, and since report 55's fix it prints the serial in words when there is no
+code; a name would go beside or under them, and a name typed after printing cannot be on paper already printed, so it would only help a
+sheet named before it is printed. **A good answer** is one of: (a) yes, print the name in the square when one is typed on Targets before
+printing, beside the code; (b) yes, and the big sheet number too (1, 2, 3 for each sheet of a set); (c) no, leave the square as it is
+now; or anything else in your own words.
+
+## 113. The Discord bot posts Claude Code's replies itself, one look and one paste, about five minutes, whenever suits (entry 511 section 2)
+
+**Answered 2026-11-23:** Alan checked that day's Oracle boot volume backup and ran the paste at 08:03 UTC: six files OK, the dry run found both forums with every post filed and the bot allowed to post in both, the backup `2026-11-23T080353Z-discord-worker-replies`, the timer active, both sites 200, no STOP. The log shows 53-1, 55-1, 56-2 and 57-1 posted at 08:04 UTC. Claude Code confirmed over ssh that the installed worker matches 9cf53235; recorded in `docs/RESTORE.md` (entry 512).
+
+**Opened 2026-11-23.** You asked for Claude Code's replies to go into the Discord threads without you copying them. Claude Code now
+writes each reply as a file in `discord-replies/` in the private grouplab-crash-reports repository, and the bot posts it: once, in the
+thread the report came from, as plain text with mentions switched off so nobody is pinged, ending "(Posted by the GroupLab bot for
+Alan.)", at most five a run. It adds the words and the link to the report. It does not post in a thread that is locked or gone, or
+where you have written since the reply was, and it waits for the nightly a reply speaks of. The bot token stays on the server; the
+bot uses the GitHub token it already has. It is written and tested (68 checks); installing it needs today's server backup confirmed
+first, which Claude Code cannot see (RESTORE.md rule 5). Four replies are waiting: reports 53, 55 and 57, and suggestion 56.
+
+**First, one look:** in the Oracle console, **Storage**, **Block Storage**, **Boot Volume Backups**: is there a backup created in the
+last day? If there is none, stop and say so instead.
+
+**Then this paste**, in your usual bash session on the server. It fetches the six files at 9cf53235 and checks each against the
+repository, shows what the bot would file and post without doing either (and stops if the bot may not post in a forum's threads),
+backs up the bot's script, installs the new one, runs it once (which posts the replies that are ready), shows its log and timer, and
+checks both sites.
+
+```
+mkdir -p /home/ubuntu/grouplab-server-511 && cd /home/ubuntu/grouplab-server-511 && for f in install.py grouplab-change-backup.py grouplab-discord-worker.py grouplab-set-discord-token grouplab-discord-worker.service grouplab-discord-worker.timer; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/oRAirwolf/grouplab/9cf53235/website/server/$f" || { echo "STOP: $f could not be fetched"; break; }; done; printf '%s\n' 'b76c3e8fe6a37df0cdedc2c6e46a46dec93abda2335da812d087e03ea1f137ed  install.py' '2bfd4f9eb61ca3888f15f0aadaaf843d8ea7c157a21d057df0c8e049a722c0dc  grouplab-change-backup.py' 'bddba5d8f13d51b359444c92ff83a57f83288759791eed02e105295990175a2c  grouplab-discord-worker.py' '82fca876d79928b20520154ec424b8530465b9b49bb055bb0a33d1d0d3220fb7  grouplab-set-discord-token' '9fab3f90ad7202f01d47f217e016a9c3f3caa43fd139cbd970c92f4507d607ec  grouplab-discord-worker.service' '759a3ced54099155cc524aed9c83879f5fd4148bf2c97445e1cfcbe50cc0de3f  grouplab-discord-worker.timer' | sha256sum -c || { echo "STOP: a file is not what the repository holds"; false; } && sudo systemd-run --quiet --wait --pipe --collect -p LoadCredential=discord-token:/etc/grouplab/discord-token -p LoadCredential=github-token:/etc/grouplab/error-token /usr/bin/python3 /home/ubuntu/grouplab-server-511/grouplab-discord-worker.py --dry-run > dry-run.txt; d=$?; cat dry-run.txt; [ $d -eq 0 ] || { echo "STOP: the dry run did not finish"; false; } && ! grep -q 'may NOT post' dry-run.txt || { echo "STOP: the bot may not post in a forum's threads; give its role Send Messages in Threads there, then paste this again"; false; } && sudo python3 grouplab-change-backup.py --label discord-worker-replies --file /usr/local/sbin/grouplab-discord-worker.py || { echo "STOP: the backup did not finish"; false; } && sudo python3 install.py --discord || { echo "STOP: the install did not finish"; false; } && sudo systemctl start grouplab-discord-worker.service || { echo "STOP: the worker did not run; its log follows"; false; }; sudo tail -n 15 /home/airwolf/logs/grouplab-discord-worker.log; systemctl list-timers grouplab-discord-worker.timer --no-pager; for s in grouplab.org pissinhot.com; do echo "$s $(curl -s -o /dev/null -w '%{http_code}' https://$s/)"; done
+```
+
+**A good result:** six `OK`; `dry run: forums found: bug-reports, feature-requests`; `dry run: the bot may post in the threads of
+bug-reports, feature-requests`; `dry run: replies: 4 waiting` with `would be posted in thread` for 53-1.md, 55-1.md, 56-2.md and 57-1.md; the backup folder's name; the install's done; a log with a
+line `reply ...: posted in thread ...` for each of those and no Traceback or STOP; the timer
+listed with its next run within five minutes; and `grouplab.org 200` and `pissinhot.com 200`. **A good answer:** paste back what it
+printed. **To undo:** `sudo install -m 755 -o root -g root` the backup folder's copy of the script over
+`/usr/local/sbin/grouplab-discord-worker.py`; messages already posted stay in Discord and can be deleted there by hand. **To stop
+posting without undoing anything:** the `discord-replies/PAUSED` switch near the top of this file.
+
 ## 112. The Discord bot reopens a closed report when somebody replies, one look and one paste, about five minutes, whenever suits (entry 510 section 2)
 
 **Answered 2026-11-23:** Alan checked that day's Oracle boot volume backup and ran the paste: six files OK, the dry run found both forums with nothing unfiled, the backup `2026-11-23T043024Z-discord-worker-new-reply`, the timer active, both sites 200, no STOP. Claude Code confirmed the installed worker matches the repository and that its runs since finish cleanly; recorded in `docs/RESTORE.md`.

@@ -8384,6 +8384,18 @@
   "On Windows, the Microsoft Store carries GroupLab too and gets every nightly once Microsoft has certified it, usually a day or so later, and updates itself ( Get it from Microsoft ); the installer and the zip there are the newest build the moment it is made.": {
    "kind": "decided",
    "where": "NOTES-FROM-PLANNING.md entry 369: Alan, 2026-10-04, every nightly to the Microsoft Store; .github/workflows/store-follow.yml submits each published nightly, the Store's certification taking about a day; the iPhone line, entry 509 finding 1: the App Store copy is version 1.0, build 226 (docs/notes/external-status.md), built before entry 505's iOS 18 floor (a51d8396, nightly 236)"
+  },
+  "On the computer, a Session name typed before printing, such as Rifle A 140 gr, prints in the square at the block's bottom right, and each sheet of a set prints its place in the set there in large figures, such as 2 of 3.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Rendering/SceneBuilder.cs AddSquareWords and src/GroupLab.App/PrintPanel.cs SquareWords, held by Entry512SquareNameTests and PrintScreenTests.ASessionNameTypedOnTargetsPrintsInTheSquareAndTheLineSaysWhenTheCodeLeavesNoRoom (entry 512 section 3)"
+  },
+  "The one exception, on the computer, is a loose sheet with the same bulls as the set's sheets, such as a single 3x3 2 MOA C bull sheet shot in place of a spoiled sheet of the 3x3 2 MOA C bull set: ticked with the set's other sheets, it counts as the sheet missing from those ticked, and where several are missing GroupLab asks which one it replaces.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Marking/SetPool.cs StandsIn and FindStandIn, src/GroupLab.App/MainWindow.Compare.cs PoolWithStandIns, held by Entry512StandInTests and Entry512StandInPoolTests (entry 512 section 3)"
+  },
+  "On the computer, a **Session name** typed before printing, such as Rifle A 140 gr, prints in the square at the block's bottom right, and each sheet of a set prints its place in the set there in large figures, such as 2 of 3.": {
+   "kind": "code",
+   "where": "src/GroupLab.Core/Rendering/SceneBuilder.cs AddSquareWords and src/GroupLab.App/PrintPanel.cs SquareWords, held by Entry512SquareNameTests and PrintScreenTests.ASessionNameTypedOnTargetsPrintsInTheSquareAndTheLineSaysWhenTheCodeLeavesNoRoom (entry 512 section 3)"
   }
  },
  "rules": [

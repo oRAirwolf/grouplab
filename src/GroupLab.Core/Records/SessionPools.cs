@@ -348,7 +348,25 @@ public static class SessionPools
 
     private static TargetDefinition? SharedDefinition(IReadOnlyList<SessionRecord> sheets)
     {
-        if (sheets.Count == 0 || sheets.Select(s => s.DefinitionId).Distinct().Count() != 1 || sheets[0].DefinitionJson is not { } json)
+        if (sheets.Count == 0)
+        {
+            return null;
+        }
+
+        var designs = sheets.GroupBy(s => s.DefinitionId).Select(g => Definition(g.First())).ToList();
+        if (designs.Count == 1)
+        {
+            return designs[0];
+        }
+
+        // Entry 512 section 3: a loose sheet standing in for a sheet of a set pools as the set, its place kept in the pool's numbers.
+        var sets = designs.Where(d => d is { Tiling: { } t } && t.Cols * t.Rows >= 2).ToList();
+        return sets.Count == 1 && designs.All(d => d is not null && (ReferenceEquals(d, sets[0]) || SetPool.StandsIn(sets[0]!, d))) ? sets[0] : null;
+    }
+
+    private static TargetDefinition? Definition(SessionRecord sheet)
+    {
+        if (sheet.DefinitionJson is not { } json)
         {
             return null;
         }

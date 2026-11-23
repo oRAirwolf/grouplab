@@ -451,6 +451,43 @@ Older results, whole and unedited, banded by the entry they belong to. Nothing h
 - [`docs/notes/archive/results-476-500.md`](notes/archive/results-476-500.md), entries 476 to 500, 20 section(s).
 - [`docs/notes/archive/results-milestones.md`](notes/archive/results-milestones.md), the milestone work, before results were written per entry, 145 section(s).
 
+## Entry 512: the Discord bot reads help and support and marks every message; a session's name in the load block; a loose sheet in a set (2026-11-23)
+
+**Request 113, closed.** Alan ran it at 08:03 UTC; over ssh the installed worker's sha256 is bddba5d8..., 9cf53235's, and its log shows
+53-1, 55-1, 56-2 and 57-1 posted at 08:04 UTC; the timer is active. Recorded in RESTORE.md with the backup folder and its undo.
+
+**1. The worker reads four forums** (`website/server/grouplab-discord-worker.py`, committed at ddb1e8fd). Forums are found by
+`canonical(name)`: lower case with any leading emoji, dash, dot or space removed, so a forum named with a question-mark emoji and a dash before Help reads as help. Help and support threads
+are issues labelled `discord`, `question` and the forum's name, posting no "filed" line (`FORUMS[...]["thanks"]`). Every later message on
+an issue labels it `new-reply`, open or closed, reopening it if closed (`reopen_for_reply`); the server owner's message is marked "(Alan,
+the server's owner)" on its comment and labels it `alan-replied`, never reopening it. Labels are made once each and remembered in the
+state (`make_labels`). The dry run lists every forum channel the bot can see and which it reads, says "no forum by that name" for one of
+the four it cannot find, names each permission the bot lacks in a forum it reads ("give its role Send Messages in Threads and Read
+Message History there") and then ends with code 3. 84 checks pass in `tests/python/discord-worker-tests.py`, 16 of them new.
+Request 115 installs it, in the same form as 113, and the paste stops on code 3 or a forum not found.
+
+**2. The standing rule** is in CLAUDE.md under the error reports: at every check, one reply file for every new message from anybody
+but Alan or the bot, labels removed once answered, a thread Alan wrote in last left to him, every reply posted listed in for-alan.md.
+
+**3. Request 114, (b) carefully.** `RenderOptions.SheetName`, typed in a new Session name box on Targets (`PrintPanel`), prints in the
+load block's square, and a sheet of a set prints its place there, "2 of 3", up to `SceneBuilder.SquarePlaceSize` (8 mm), about four times
+the other words (`AddSquareWords`). Both print whenever the square carries words; the lines are centred on the square as a whole, so a
+sheet with neither prints exactly as before (`ASingleSheetWithoutANamePrintsExactlyAsBefore`). The code's case has no room: the square
+is 280 dmm and the version 11 code 244 dmm with its quiet zone; nothing is added there and Targets says so (`NameNotWithCode`), and
+question 118 asks where they should go. The six set designs' printed artwork changed, so `grouplab corpus counts` was run: 55 of 55
+images unchanged (the load block is an excluded zone for hole finding), recorded with `--write`. The phone has no Session name box yet;
+its sets print their place from the same code.
+
+**Report 57's suggestion, yes to the narrow case.** `SetPool.StandsIn` (one page, the set's page size, the same bulls and rings) and
+`SetPool.FindStandIn` find loose sheets ticked with one set's sheets; Pool the chosen counts each as a sheet missing from those ticked,
+asks "Which sheet of the set does this one replace?" with a button for each where several are missing, and refuses in amber where none
+is (`PoolRefusal.NoPlaceLeft`). The pool saved from it keeps the loose sheet's place in its numbers, and `SessionPools.SharedDefinition`
+now takes the set's design for a pool whose other sheets stand in for it, so it opens again whole. `Entry512StandInTests` (Core) and
+`Entry512StandInPoolTests` (App) hold it. The user guide, the Features page (`square-name`, and `pool-set` widened) and the Targets tour
+page's load block line say both.
+
+**Worth an article?** No: neither is research or a measurement.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

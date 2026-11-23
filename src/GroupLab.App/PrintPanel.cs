@@ -67,6 +67,9 @@ public sealed class PrintPanel : UserControl
     private readonly StackPanel fields = new() { Spacing = 4 };
     private readonly Dictionary<string, TextBox> fieldBoxes = new(StringComparer.Ordinal);
     private readonly TextBox serial = new() { Width = 120, PlaceholderText = "optional" };
+
+    /// <summary>Entry 512 section 3: a session's name, typed before printing, printed in the load block's square.</summary>
+    private readonly TextBox sheetName = new() { Width = 260, PlaceholderText = "optional, such as Rifle A 140 gr", MaxLength = 60 };
     private readonly CheckBox note = new() { Content = "Print the actual-size instruction along the bottom of each sheet", IsChecked = true };
 
     /// <summary>Entry 226 section 5.1: a tiled target's sheets on one large page, with cut lines, for a plotter.</summary>
@@ -161,6 +164,7 @@ public sealed class PrintPanel : UserControl
         blank.Click += (_, _) => FieldsChanged();
         filled.Click += (_, _) => FieldsChanged();
         serial.TextChanged += (_, _) => ShowPreview();
+        sheetName.TextChanged += (_, _) => ShowPreview();
 
         var details = new StackPanel { Margin = new Thickness(16), Spacing = Tokens.Space12 };
         details.Children.Add(designer);
@@ -699,8 +703,24 @@ public sealed class PrintPanel : UserControl
             Mode: fill ? DataBlockMode.Filled : DataBlockMode.Blank,
             Instance: instance,
             PrintNote: note.IsChecked == true ? SceneBuilder.ActualSizeNote : null,
-            BullColour: Head is null ? Colour : BullColour.Black);
+            BullColour: Head is null ? Colour : BullColour.Black,
+            SheetName: string.IsNullOrWhiteSpace(sheetName.Text) ? null : sheetName.Text.Trim());
     }
+
+    /// <summary>
+    /// What the line under the preview says about the load block's square: why it carries words rather than a code (report 55), or, entry
+    /// 512, that a typed session's name does not print while the square holds the code, because the code fills it; null for neither.
+    /// </summary>
+    internal static string? SquareWords(IEnumerable<Diagnostic> diagnostics, RenderOptions options, GroupLab.Core.Gltd.Model.TargetDefinition definition)
+    {
+        var list = diagnostics.ToList();
+        return CodeWords(list) ?? (options.SheetName is not null && options.Mode == DataBlockMode.Filled
+            && definition.DataBlock is { Reserve: >= GroupLab.Core.Gltd.Binary.InstanceCodec.MinimumReserveForCode }
+            && !list.Any(d => d.Severity == Severity.Error) ? NameNotWithCode : null);
+    }
+
+    internal const string NameNotWithCode =
+        "The square at the bottom right of the load block holds the code of these fields, which fills it, so the session's name and the sheet's place in its set are not printed there. Leave the serial empty, or print the load block blank, to print them.";
 
     /// <summary>
     /// Error report 55: what the square at the bottom right of a filled load block holds and why, when it cannot hold the code of the fields;
@@ -727,6 +747,8 @@ public sealed class PrintPanel : UserControl
 
     internal void SetSerial(string value) => serial.Text = value;
 
+    internal void SetSheetName(string value) => sheetName.Text = value;
+
     /// <summary>Renders the selected sheet as this screen is set, or null with the reason in the message line.</summary>
     internal RenderResult? Render()
     {
@@ -745,7 +767,7 @@ public sealed class PrintPanel : UserControl
         }
 
         // Error report 55: printing goes ahead, and the line says why the square carries words rather than a code.
-        SetStatus(CodeWords(result.Diagnostics) ?? "", StatusKind.Information);
+        SetStatus(SquareWords(result.Diagnostics, Options(null), selected.Definition) ?? "", StatusKind.Information);
         return result;
     }
 
@@ -804,6 +826,7 @@ public sealed class PrintPanel : UserControl
 
             loadBlock.Children.Add(fields);
             loadBlock.Children.Add(Row(new TextBlock { Text = "Serial", Width = 140, VerticalAlignment = VerticalAlignment.Center }, Detached(serial)));
+            loadBlock.Children.Add(Row(new TextBlock { Text = "Session name", Width = 140, VerticalAlignment = VerticalAlignment.Center }, Detached(sheetName)));
         }
         else
         {
@@ -866,18 +889,18 @@ public sealed class PrintPanel : UserControl
         }
 
         // Entry 300: the scene itself, not a picture of it; the preview draws it as vectors at the screen's own resolution.
-        var scenes = SceneBuilder.Build(selected.Definition, Options(page));
+        var options = Options(page);
+        var scenes = SceneBuilder.Build(selected.Definition, options);
         shown = scenes.Pages.Count > 0 ? scenes.Pages[0] : null;
-        ShowCodeWords(scenes.Diagnostics);
+        ShowCodeWords(SquareWords(scenes.Diagnostics, options, selected.Definition));
         PageShown?.Invoke(shown);
         ShowDots();
         pageCaption.Text = string.Create(CultureInfo.InvariantCulture, $"Sheet {page + 1} of {selected.Sheets}");
     }
 
     /// <summary>Error report 55: the line says why the square carries words, as the preview changes; only its own words are taken away again.</summary>
-    private void ShowCodeWords(IEnumerable<Diagnostic> diagnostics)
+    private void ShowCodeWords(string? words)
     {
-        string? words = CodeWords(diagnostics);
         if (codeWords is not null && status.Text == codeWords && words != codeWords)
         {
             SetStatus("", StatusKind.Information);

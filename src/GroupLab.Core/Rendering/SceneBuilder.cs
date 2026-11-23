@@ -22,6 +22,8 @@ public enum DataBlockMode
 /// mis-scaled print of DESIGN.md section 21's Phase 0 gate, and is 1 for every real print. <see cref="PrintNote"/> is a line of
 /// text along the bottom edge, NOTES-FROM-PLANNING.md entry 25 section 2, so that a sheet printed at the wrong scale carries the
 /// instruction it ignored, and a ruler against the printed edge says whether the scaling was uniform; without it a page is exactly what Phase 0 drew.
+/// <see cref="SheetName"/> is a session's name typed before printing (entry 512 section 3), printed in the load block's square when it
+/// carries words.
 /// </summary>
 public sealed record RenderOptions(
     DataBlockMode Mode = DataBlockMode.Blank,
@@ -31,7 +33,8 @@ public sealed record RenderOptions(
     double Scale = 1.0,
     string? PrintNote = null,
     bool OneSheet = false,
-    BullColour BullColour = BullColour.Black);
+    BullColour BullColour = BullColour.Black,
+    string? SheetName = null);
 
 public sealed record SceneResult(IReadOnlyList<Scene> Pages, string? DefinitionId, IReadOnlyList<Diagnostic> Diagnostics);
 
@@ -46,6 +49,12 @@ public static class SceneBuilder
     public const int InstanceCodeVersion = 11;
 
     public const int InstanceModuleSize = 4;
+
+    /// <summary>The largest size of a session's name in the load block's square, and the smallest before it is cut, in half-dmm (entry 512).</summary>
+    public const long SquareNameSize = 48, SquareNameMinimumSize = 28;
+
+    /// <summary>The largest size of a sheet's place in its set in the load block's square, "2 of 3", in half-dmm (entry 512).</summary>
+    public const long SquarePlaceSize = 160;
 
     /// <summary>The print instruction the print screen puts on every sheet, in plain words.</summary>
     public const string ActualSizeNote = "Print at actual size, 100 percent. Never fit to page: a scaled sheet loses the spacing it was designed for.";
@@ -164,7 +173,7 @@ public static class SceneBuilder
             AddLabels(items);
             AddMarkers(items, tile);
             AddCodes(items, tile);
-            AddDataBlock(items);
+            AddDataBlock(items, tile);
             if (LabelBand is { } band)
             {
                 AddLabelWords(items, tile, band);
@@ -1106,7 +1115,7 @@ public static class SceneBuilder
         /// identifier and serial as text when blank, and also when filled if it is under 280 dmm; a filled square of 280
         /// dmm or more holds the GLTD-I instance code of section 3.11.
         /// </summary>
-        private void AddDataBlock(List<SceneItem> items)
+        private void AddDataBlock(List<SceneItem> items, int tile)
         {
             if (d.DataBlock is not { } block || block.Layout == DataBlockLayout.Explicit || block.FieldSet == FieldSet.Explicit)
             {
@@ -1186,16 +1195,70 @@ public static class SceneBuilder
                 // this square empty on paper while the preview showed words in it. Without a code it carries the words, the serial as typed.
             }
 
+            AddSquareWords(items, square, textColour, instance, tile);
+        }
+
+        /// <summary>
+        /// The square's words when it carries no code: the sheet's code in two lines and its serial, as before entry 512; above them, a
+        /// session's name typed before printing, cut with dots when it does not fit, and a sheet of a set's place in it, large. The lines are
+        /// centred on the square as a whole, so a sheet with neither prints exactly as it did.
+        /// </summary>
+        private void AddSquareWords(List<SceneItem> items, DataFieldCell square, Rgb textColour, Instance? instance, int tile)
+        {
             string id = _encoding!.DefinitionId;
-            string[] lines = [id[..12], id[13..], "Serial " + (instance?.Serial ?? "____")];
-            long lineSize = lines.Min(l => HelveticaMetrics.FitFontSize(l, (2L * square.Width) - 80, 40));
-            long leading = lineSize * 6 / 5;
-            long firstBaseline = (2L * square.Y) + square.Height - leading + (lineSize * HelveticaMetrics.CapHeight / 2000);
-            for (int i = 0; i < lines.Length; i++)
+            long width = (2L * square.Width) - 80;
+            string[] code = [id[..12], id[13..], "Serial " + (instance?.Serial ?? "____")];
+            long lineSize = code.Min(l => HelveticaMetrics.FitFontSize(l, width, 40));
+            var lines = new List<(string Text, long Size)>();
+            if (SquareName(options.SheetName) is { } name)
             {
-                items.Add(new TextRun(SceneLayer.DataBlockContent, textColour, (2L * square.X) + square.Width,
-                    firstBaseline + (i * leading), lineSize, lines[i], TextAnchor.Centre));
+                long size = Math.Max(SquareNameMinimumSize, HelveticaMetrics.FitFontSize(name, width, SquareNameSize));
+                lines.Add((CutToFit(name, width, size), size));
             }
+
+            if (d.Tiling is { } t && t.Cols * t.Rows > 1)
+            {
+                string place = string.Create(CultureInfo.InvariantCulture, $"{tile + 1} of {t.Cols * t.Rows}");
+                long room = ((2L * square.Height) - 80 - ((lines.Sum(l => l.Size) + (code.Length * lineSize)) * 6 / 5)) * 5 / 6;
+                lines.Add((place, Math.Max(lineSize, Math.Min(room, HelveticaMetrics.FitFontSize(place, width, SquarePlaceSize)))));
+            }
+
+            lines.AddRange(code.Select(l => (l, lineSize)));
+            long top = (2L * square.Y) + square.Height - (lines.Sum(l => l.Size * 6 / 5) / 2);
+            foreach (var (text, size) in lines)
+            {
+                long leading = size * 6 / 5;
+                items.Add(new TextRun(SceneLayer.DataBlockContent, textColour, (2L * square.X) + square.Width,
+                    top + (leading / 2) + (size * HelveticaMetrics.CapHeight / 2000), size, text, TextAnchor.Centre));
+                top += leading;
+            }
+        }
+
+        /// <summary>A typed name on one line with its spaces collapsed, or null when there is none.</summary>
+        private static string? SquareName(string? typed)
+        {
+            string name = string.Join(' ', (typed ?? "").Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+            return name.Length == 0 ? null : name;
+        }
+
+        /// <summary><paramref name="text"/> as it is when it fits <paramref name="width"/>, otherwise cut and ended with three dots so it does.</summary>
+        internal static string CutToFit(string text, long width, long size)
+        {
+            if (HelveticaMetrics.TextWidth(text, size) <= width)
+            {
+                return text;
+            }
+
+            for (int n = text.Length - 1; n > 0; n--)
+            {
+                string cut = text[..n].TrimEnd() + "...";
+                if (HelveticaMetrics.TextWidth(cut, size) <= width)
+                {
+                    return cut;
+                }
+            }
+
+            return "...";
         }
 
         /// <summary>A rule of width <paramref name="w"/> laid inside the edge of a rectangle, so its ink stays within the declared box.</summary>

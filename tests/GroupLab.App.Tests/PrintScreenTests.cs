@@ -129,6 +129,39 @@ public class PrintScreenTests
         Assert.NotEqual(PrintPanel.CodeNeedsSerial, window.StatusText);
     }
 
+    /// <summary>
+    /// Entry 512 section 3: a session's name typed on Targets before printing prints in the load block's square with the sheet's place in its
+    /// set, preview and PDF alike; while the square holds the code, which fills it, the line says the name is not printed there.
+    /// </summary>
+    [AvaloniaFact]
+    public void ASessionNameTypedOnTargetsPrintsInTheSquareAndTheLineSaysWhenTheCodeLeavesNoRoom()
+    {
+        var window = TargetsScreen.Open(1200, 800);
+        Dispatcher.UIThread.RunJobs();
+        window.Select("GL-CF9-T-C.gltd.json");
+        window.SetSheetName("Rifle A 140 gr");
+        Dispatcher.UIThread.RunJobs();
+        var words = window.PreviewSource!.Items.OfType<GroupLab.Core.Rendering.TextRun>().Select(t => t.Text).ToList();
+        Assert.Contains("Rifle A 140 gr", words);
+        Assert.Contains("1 of 3", words);
+        var printed = window.Render();
+        Assert.NotNull(printed);
+        Assert.Contains(printed.Pages[1].Items.OfType<GroupLab.Core.Rendering.TextRun>(), t => t.Text == "2 of 3");
+        Assert.Contains(printed.Pages[2].Items.OfType<GroupLab.Core.Rendering.TextRun>(), t => t.Text == "Rifle A 140 gr");
+
+        window.SetFilled(true);
+        window.SetField("cartridge", "7mm PRC");
+        window.SetSerial("T002");
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(PrintPanel.NameNotWithCode, window.StatusText);
+        Assert.DoesNotContain(window.PreviewSource!.Items.OfType<GroupLab.Core.Rendering.TextRun>(), t => t.Text == "Rifle A 140 gr");
+
+        window.SetSerial("");
+        Dispatcher.UIThread.RunJobs();
+        Assert.NotEqual(PrintPanel.NameNotWithCode, window.StatusText);
+        Assert.Contains(window.PreviewSource!.Items.OfType<GroupLab.Core.Rendering.TextRun>(), t => t.Text == "Rifle A 140 gr");
+    }
+
     [AvaloniaFact]
     public void TheLibraryListsEverySheetAndSavesAPdfThatAsksForNoScaling()
     {

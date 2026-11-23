@@ -9,25 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-23, after entry 511; the inbox is empty.
+**Last rewritten:** 2026-11-23, after entry 512; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Entry 511 (2026-11-23)**: suggestion 56 built, a session's own name (`SessionStore.Rename`, `SessionNames` name first; Rename and
-  F2 in Session records, "Name this session" atop the analysis, the phone's result page and Rename a session), for nightly 241. The
-  Discord worker posts `discord-replies/` from the crash-reports repo (9cf53235): waiting for request 113's install; 53-1, 55-1,
-  56-2 (56-1 merged into it once 241 was out) and 57-1 are waiting there, all postable.
-- **Report 57 (2026-11-23)**: Pool the chosen's refusal was a grey line nobody saw; now amber, naming the designs, in the status
-  bar (`PoolRefusal`), for nightly 241, reply 57-1 waiting. Its thread's suggestion (a loose sheet standing in for a set's) waits for Alan.
-- **Entry 510 (2026-11-22)**: report 53's reply (a video, iPhone build 238): the phone's zoomed pictures pinch again after the first
-  and hole circles grow to the bullet (`TwoFingers`, `Entry510PinchTests`); report 55: a filled load block's square carries words when
-  it has no code, the Targets preview is the PDF's page; in nightly 240. The Discord worker reopening a closed issue on a reply is
-  installed (request 112, 2026-11-23); `scripts/closed-replies.py` stays until it reopens one itself (label `new-reply`).
+- **Entry 512 (2026-11-23)**: the Discord worker reads help and support too and labels every new message `new-reply` (Alan's
+  `alan-replied`), committed at ddb1e8fd, installed by request 115; the standing rule to reply to every message is in CLAUDE.md. A
+  Session name typed on Targets and a set's "2 of 3" print in the load block's square when it carries words (question 118 asks about
+  the code's case); Pool the chosen counts a loose sheet with the set's bulls as a missing sheet (report 57's suggestion). Both for
+  nightly 242; replies 55-2, 56-3 and 57-2 wait for it in `discord-replies/`.
+- **Request 113 is in** (2026-11-23 08:03 UTC): 53-1, 55-1, 56-2 and 57-1 were posted at 08:04, links in for-alan.md's Discord note.
+- **Entry 510 (2026-11-22)**: `scripts/closed-replies.py` stays beside the issue check until the worker reopens an issue itself.
 - **Entry 501 (2026-11-18)**, in part: the Mac App Store copy (`org.grouplab.app`, sandboxed, docs/MAC-APP-STORE.md) is built by
-  mac-store.yml after each nightly; nightly 233's copy is on TestFlight, valid, in GroupLab Team only; whether it runs on a real Mac is
-  request 111; never submitted without Alan's word.
+  mac-store.yml after each nightly; whether it runs on a real Mac is request 111; never submitted without Alan's word.
 
 ## The next three
 
@@ -50,13 +46,13 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Once request 113 is in: check the first posts on their issues, list them with links in for-alan.md's Discord note.
-2. Request 114's answer (a name in the load block's square), then request 83, the M834 printing from the computer.
-3. Request 50's sitting, when Alan has it: the device checks and the two camera clips for the launch videos.
+1. Once request 115 is in: answer the help and support threads already there, newest first, and every new message after.
+2. The phone's Session name box on Targets (desktop only in entry 512), then question 118's answer when it comes.
+3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
 ## Blocked, and on what
 
-- **The bot's replies**: request 113 (Alan's look at the Oracle backup, then one paste).
+- **The bot reading help and support, and marking every message**: request 115 (Alan's look at the Oracle backup, then one paste).
 - **The Mac App Store copy**: request 111 (the TestFlight build opened on a real Mac, now also through Mac testers for Alan's friend once
   Apple's beta review approves it), then Alan's word to submit (entry 501 section 4).
 - **The iPhone Duo's inner screen**: the Duo leg on Xcode 27.2 (simulator starts folded; IOS-PLAN.md); nothing needed from Alan.
@@ -64,13 +60,14 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **28**; waiting on him: 114 (a session's name in the load block's square?), 113 (the bot's replies, one paste), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **27**; waiting on him: 115 (the bot reads help and support, one paste), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Two, in `docs/QUESTIONS-FOR-PLANNING.md` (117 closed (a) by entry 506):
+Three, in `docs/QUESTIONS-FOR-PLANNING.md`:
+- **118** where a session's name and "2 of 3" go when the load's code fills the square (entry 512)
 - **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
@@ -95,6 +92,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **Code's Discord replies are files** (entry 511): `discord-replies/<issue>-<n>.md` in the crash-reports repo, header `issue:`,
   `thread:`, `written:`, optional `post-after: nightly N`, then the words, plain, ending "(Posted by the GroupLab bot for Alan.)";
   `reply_problems` in the worker refuses anything else. `discord-replies/PAUSED` stops posting. Drafts no longer go in for-alan.md.
+  Entry 512: every new message labels its issue `new-reply` (Alan's `alan-replied`); Code removes both once it has answered.
 - **The iPhone's launch screen is generated** (entry 508): edit `scripts/ios-launch.py`, never the storyboard; ibtool refuses runtime
   attributes in a launch screen, so rounded corners there are stretchable images. It follows the system's light or dark appearance.
 - **Needs nobody, after entry 508:** the iOS real-tap step on Targets' keyboard Next fails now and then (ios app runs 44891904639 and

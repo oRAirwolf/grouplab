@@ -6,6 +6,9 @@ using GroupLab.Core.Registration;
 
 namespace GroupLab.Core.Marking;
 
+/// <summary>Entry 512 section 3: a set, the chosen sheets that are loose sheets standing in for its sheets, and the places they may take.</summary>
+public sealed record StandIn(TargetDefinition Set, IReadOnlyList<int> Loose, IReadOnlyList<int> Places);
+
 /// <summary>What pooling the sheets of one set found: which sheets are here, missing or read twice, the bulls the set holds, and the group.</summary>
 public sealed record SetPoolResult(int SetSize, IReadOnlyList<int> Found, IReadOnlyList<int> Missing, IReadOnlyList<int> Repeated, int BullsInSet,
     int Shots, GroupFigures? Figures, string Said);
@@ -115,6 +118,71 @@ public static class SetPool
         return new MarkingState(null, new SheetReference(identity, summary) { PrintScale = real ? 1 : null }, null, bulls.ToImmutable(), shots.ToImmutable(), next,
             summary, Calibre: once.Select(s => s.Calibre).FirstOrDefault(c => c is not null), ShotDistanceInches: Same(s => s.ShotDistanceInches),
             Rifle: Same(s => s.Rifle), Barrel: Same(s => s.Barrel), Load: Same(s => s.Load), SheetLabel: label);
+    }
+
+    /// <summary>
+    /// NOTES-FROM-PLANNING.md entry 512 section 3 (report 57's suggestion, Alan's yes to the narrow case): whether a loose sheet of
+    /// <paramref name="loose"/> can stand in for a sheet of the set <paramref name="set"/>, so a spoiled sheet can be replaced: one page,
+    /// the same page size, and the same bulls where every sheet of the set has them, ring for ring. Mixing other designs waits on question 51.
+    /// </summary>
+    public static bool StandsIn(TargetDefinition set, TargetDefinition loose)
+    {
+        ArgumentNullException.ThrowIfNull(set);
+        ArgumentNullException.ThrowIfNull(loose);
+        if (set.Tiling is not { } t || t.Cols * t.Rows < 2 || loose.Tiling is not null
+            || loose.Page.Width != set.Page.Width || loose.Page.Height != set.Page.Height || !loose.Bulls.SequenceEqual(set.Bulls))
+        {
+            return false;
+        }
+
+        foreach (string key in set.Bulls.Select(b => b.RingSet).Distinct())
+        {
+            if (set.RingSets.FirstOrDefault(r => r.Key == key) is not { } a || loose.RingSets.FirstOrDefault(r => r.Key == key) is not { } b
+                || !a.Discs.SequenceEqual(b.Discs))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Entry 512 section 3: sheets chosen together where one design is a set and every other is a loose sheet that stands in for its sheets
+    /// (<see cref="StandsIn"/>): the set, which of the chosen are loose (their indices), and the set's sheets missing from those chosen, which
+    /// they may stand in for, counting from 0. Null when the sheets are not that: one design only, two sets, a loose sheet whose bulls differ,
+    /// or a set's sheet whose codes did not say which it is.
+    /// </summary>
+    public static StandIn? FindStandIn(IReadOnlyList<(string? Id, TargetDefinition? Definition, MarkingState State)> sheets)
+    {
+        ArgumentNullException.ThrowIfNull(sheets);
+        var designs = sheets.GroupBy(s => s.Id ?? "").ToList();
+        var sets = designs.Where(g => g.First().Definition is { Tiling: { } t } && t.Cols * t.Rows >= 2).ToList();
+        if (designs.Count < 2 || sets.Count != 1 || sets[0].Any(s => s.State.SetSheet is null))
+        {
+            return null;
+        }
+
+        var set = sets[0].First().Definition!;
+        var loose = new List<int>();
+        for (int i = 0; i < sheets.Count; i++)
+        {
+            if ((sheets[i].Id ?? "") == sets[0].Key)
+            {
+                continue;
+            }
+
+            if (sheets[i].Definition is not { } d || !StandsIn(set, d) || sheets[i].State.SetSheet is not null)
+            {
+                return null;
+            }
+
+            loose.Add(i);
+        }
+
+        int size = set.Tiling!.Cols * set.Tiling.Rows;
+        var here = sets[0].Select(s => s.State.SetSheet!.Value).ToHashSet();
+        return new StandIn(set, loose, [.. Enumerable.Range(0, size).Where(k => !here.Contains(k))]);
     }
 
     /// <summary>Entry 420: which sheet of the set a bull of <see cref="Composite"/>'s marking is on, from its index, counting from 0.</summary>
