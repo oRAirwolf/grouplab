@@ -79,7 +79,12 @@ internal sealed class KeyboardRoom
             Classes = { PhoneStyles.Card },
             CornerRadius = new CornerRadius(0),
         }.Id("keyboard-bar");
-        shell.AddHandler(InputElement.GotFocusEvent, (_, _) => Dispatcher.UIThread.Post(Follow, DispatcherPriority.Background), RoutingStrategies.Bubble, handledEventsToo: true);
+        shell.AddHandler(InputElement.GotFocusEvent, (_, _) =>
+        {
+            // Entry 514 section 2: while a field has the focus the watch runs, so a bar taken away while it still has it comes back.
+            watch.IsEnabled = true;
+            Dispatcher.UIThread.Post(Follow, DispatcherPriority.Background);
+        }, RoutingStrategies.Bubble, handledEventsToo: true);
         shell.AddHandler(InputElement.LostFocusEvent, (_, _) => Dispatcher.UIThread.Post(Check, DispatcherPriority.Background), RoutingStrategies.Bubble, handledEventsToo: true);
         watch.Tick += (_, _) => Check();
         shell.AttachedToVisualTree += (_, _) => Listen();
@@ -126,12 +131,29 @@ internal sealed class KeyboardRoom
         }
     }
 
-    private void PaneChanged(object? sender, InputPaneStateEventArgs e)
+    private void PaneChanged(object? sender, InputPaneStateEventArgs e) => PaneSaid(e.NewState, e.EndRect);
+
+    /// <summary>
+    /// What the system's input pane says, and where the keyboard will end; the tests call this directly. Entry 514 section 2, the iOS
+    /// real-tap flake (run 44891904639): seven seconds after the first keyboard came up on Targets, with the field still focused and no
+    /// tap from anybody, this room put the keyboard down and took the bar away, and nothing raised it again, so every Next after it found
+    /// no bar. A pane that says Open with no rectangle, which UIKit's frame changes can give, was taken for closed. Now an Open with no
+    /// rectangle takes the pane's own, or changes nothing.
+    /// </summary>
+    internal void PaneSaid(InputPaneState state, Rect end)
     {
-        if (e.NewState == InputPaneState.Open && e.EndRect is { Width: > 0, Height: > 0 })
+        if (state == InputPaneState.Open)
         {
-            closedWhileDown = false;
-            Opened(e.EndRect.Y);
+            Rect? at = end is { Width: > 0, Height: > 0 } ? end : Pane is { Occluded: { Width: > 0, Height: > 0 } occluded } ? occluded : null;
+            if (at is { } rect)
+            {
+                closedWhileDown = false;
+                Opened(rect.Y);
+            }
+            else
+            {
+                DiagnosticLog.Info("keyboard.pane", ("said", "open with no rectangle"), ("kept", KeyboardTop is not null));
+            }
         }
         else if (down)
         {
@@ -139,9 +161,14 @@ internal sealed class KeyboardRoom
         }
         else
         {
-            Closed();
+            Closed("the system said it closed");
         }
     }
+
+    /// <summary>The system's input pane as it stands: its state and what it covers, or null with none. The tests set it.</summary>
+    internal (InputPaneState State, Rect Occluded)? PaneForTests { get; set; }
+
+    private (InputPaneState State, Rect Occluded)? Pane => PaneForTests ?? (pane is null ? null : (pane.State, pane.OccludedRect));
 
     /// <summary>The keyboard is up with its top edge at <paramref name="top"/> in the window's coordinates; the tests call this directly.</summary>
     internal void Opened(double top)
@@ -159,8 +186,12 @@ internal sealed class KeyboardRoom
         Dispatcher.UIThread.Post(Follow, DispatcherPriority.Background);
     }
 
-    /// <summary>The keyboard is down: everything back as it was, whatever this room believed before (entry 350).</summary>
-    internal void Closed()
+    /// <summary>
+    /// The keyboard is down: everything back as it was, whatever this room believed before (entry 350). <paramref name="why"/> goes in
+    /// the log, so a bar that went is never again a mystery (entry 514 section 2). While a field keeps the focus the watch stays on, and
+    /// raises the bar again if the system says the keyboard is still up.
+    /// </summary>
+    internal void Closed(string why = "")
     {
         bool was = KeyboardTop is not null || barShown;
         if (!was)
@@ -173,9 +204,10 @@ internal sealed class KeyboardRoom
         shell.Margin = default;
         shell.KeyboardUp(false);
         ShowBar(null, 0, false);
+        watch.IsEnabled = Typing;
         if (was)
         {
-            DiagnosticLog.Info("keyboard.closed");
+            DiagnosticLog.Info("keyboard.closed", ("why", why), ("focused", Typing));
         }
     }
 
@@ -187,14 +219,34 @@ internal sealed class KeyboardRoom
     /// </summary>
     internal void Check()
     {
-        if (down || (KeyboardTop is null && !barShown))
+        if (down)
         {
             return;
         }
 
-        if (!Typing || pane is { State: InputPaneState.Closed })
+        if (KeyboardTop is null && !barShown)
         {
-            Closed();
+            // Entry 514 section 2: a field still has the focus and the system says the keyboard is up, so the bar comes back.
+            if (Typing && Pane is { State: InputPaneState.Open, Occluded: { Width: > 0, Height: > 0 } shown })
+            {
+                DiagnosticLog.Info("keyboard.again");
+                Opened(shown.Y);
+            }
+            else if (!Typing)
+            {
+                watch.IsEnabled = false;
+            }
+
+            return;
+        }
+
+        if (!Typing)
+        {
+            Closed("no field has the focus");
+        }
+        else if (Pane is { State: InputPaneState.Closed })
+        {
+            Closed("the system's keyboard is down");
         }
     }
 
@@ -293,7 +345,7 @@ internal sealed class KeyboardRoom
     {
         TopLevel.GetTopLevel(shell)?.FocusManager?.Focus(null);
         HideSystemKeyboard?.Invoke();
-        Closed();
+        Closed("done, or a tap outside the field");
     }
 
     private void OutsidePressed(object? sender, PointerPressedEventArgs e)
@@ -382,7 +434,7 @@ internal sealed class KeyboardRoom
             }
             else if (closed)
             {
-                Closed();
+                Closed("the system said it closed while a finger was down");
             }
             else
             {
@@ -398,7 +450,7 @@ internal sealed class KeyboardRoom
     internal void Follow()
     {
         // Entry 350: the keyboard already up when a field takes the focus, and no event to say so; the pane's own state raises the bar.
-        if (KeyboardTop is null && Typing && pane is { State: InputPaneState.Open, OccludedRect: { Height: > 0 } shown })
+        if (KeyboardTop is null && Typing && Pane is { State: InputPaneState.Open, Occluded: { Height: > 0 } shown })
         {
             Opened(shown.Y);
             return;
