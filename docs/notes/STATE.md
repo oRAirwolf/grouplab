@@ -92,7 +92,7 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **A session's name is its sheet label** (entry 511): the stored sheet name keeps "target, name" for older builds; lists show
   `SessionNames.Titled` ("name, target") and `SessionSummary.Label` comes from the marking by `json_extract`. No schema change.
 - **Code's Discord replies are files** (entry 511): `discord-replies/<issue>-<n>.md` in the crash-reports repo, header `issue:`,
-  `thread:`, `written:`, optional `post-after: nightly N`, then the words, plain, ending "(Posted by the GroupLab bot for Alan.)";
+  `thread:`, `written:`, optional `post-after: nightly N`, then the words, plain, ending "This is an AI generated response." (entry 515; nothing else names Alan);
   `reply_problems` in the worker refuses anything else. `discord-replies/PAUSED` stops posting. Drafts no longer go in for-alan.md.
   Entry 512: every new message labels its issue `new-reply` (Alan's `alan-replied`); Code removes both once it has answered.
 - **The iPhone's launch screen is generated** (entry 508): edit `scripts/ios-launch.py`, never the storyboard; ibtool refuses runtime

@@ -108,7 +108,8 @@ FENCE = "~~~~"
 # Entry 511 section 2: replies Claude Code writes for the bot to post.
 REPLIES = "discord-replies"
 REPLY_NAME = re.compile(r"^(\d+)-(\d+)\.md$")
-SIGNED = "(Posted by the GroupLab bot for Alan.)"
+# Entry 515, Alan: "it should not say \"for alan\" just say \"This is an AI generated response\"". Nothing else in a reply names him.
+SIGNED = "This is an AI generated response."
 MOST_REPLIES_A_RUN = 5
 MOST_REPLY_CHARACTERS = 1900
 APP_REPOSITORY = os.environ.get("GROUPLAB_APP_REPO", "oRAirwolf/grouplab")
@@ -489,6 +490,8 @@ def reply_problems(text: str) -> list[str]:
     for link in LINK_LIKE.findall(words):
         if not ALLOWED_LINK.match(link.rstrip(".,;:)!?")):
             problems.append(f"it links somewhere other than grouplab.org and GroupLab's releases ({link[:60]})")
+    if re.search(r"\balan\b", words, re.IGNORECASE):
+        problems.append("it names Alan")
     if words.splitlines()[-1].strip() != SIGNED:
         problems.append(f"its last line is not {SIGNED}")
     return problems

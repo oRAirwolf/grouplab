@@ -66,7 +66,7 @@ in a form he can answer in one sitting. His answers come back the way everything
 bug-reports forums (help and support labelled `question`), labels an issue `new-reply` on any later message from somebody else, and
 `alan-replied` on Alan's own. At every check above, I read each open `discord` issue and each labelled `new-reply`, and in the same check
 write one reply file in `discord-replies/` (the rules in entry 511: plain text, no bold, short, no promised dates, no personal details
-asked, links only to grouplab.org and the releases page, signed "(Posted by the GroupLab bot for Alan.)") for every new message from
+asked, links only to grouplab.org and the releases page, ending "This is an AI generated response." and naming Alan nowhere (entry 515)) for every new message from
 anybody but Alan or the bot, several in a row from one person answered in one reply; then I remove `new-reply` and `alan-replied`. A thread
 where Alan wrote after the newest message is left to him. **Help and support:** answered from what GroupLab does today (the user guide,
 the Features page, STATE.md), with the steps written out and menu names exactly as the app shows them; a bug is also assessed as an error

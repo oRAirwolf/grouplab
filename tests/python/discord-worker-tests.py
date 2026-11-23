@@ -419,7 +419,7 @@ def main() -> int:
         # Entry 511 section 2: replies Code writes into discord-replies/, posted by the bot. Issues 1 to 7 are threads 100, 200, 700,
         # 710, 400, 500 and 600.
         R = "discord-replies/"
-        sign = "(Posted by the GroupLab bot for Alan.)"
+        sign = "This is an AI generated response."
         written = "2026-11-23T05:00:00Z"
 
         def reply_file(issue: int, thread: str, words: str, after: int | None = None) -> bytes:
@@ -439,11 +439,11 @@ def main() -> int:
         world.files[R + "1-1.md"] = reply_file(1, "100", "The fix is in the next build.\n" + sign, after=241)
         world.files[R + "2-1.md"] = reply_file(2, "200", "An old thread.\n" + sign)
         world.files[R + "4-1.md"] = reply_file(4, "710", "A locked thread.\n" + sign)
-        world.files[R + "5-1.md"] = reply_file(5, "400", "Alan answered first.\n" + sign)
+        world.files[R + "5-1.md"] = reply_file(5, "400", "The owner answered first.\n" + sign)
         world.messages["400"].append(message(later("2026-11-23T06:00:00Z"), "42", "I answered this myself."))
-        world.files[R + "6-1.md"] = reply_file(6, "500", "Some **bold**, https://example.com/x and hello @everyone\n" + sign)
+        world.files[R + "6-1.md"] = reply_file(6, "500", "Some **bold**, https://example.com/x and hello @everyone, for Alan\n" + sign)
         world.files[R + "6-2.md"] = reply_file(6, "600", "A thread line that is not the issue's.\n" + sign)
-        world.files[R + "7-1.md"] = reply_file(7, "600", "No line at the end saying who posted it.")
+        world.files[R + "7-1.md"] = reply_file(7, "600", "The old last line, from before entry 515.\n(Posted by the GroupLab bot.)")
         before_files = dict(world.files)
         world.calls.clear()
         r = run(root, port[0], True, "--dry-run")
@@ -457,8 +457,9 @@ def main() -> int:
               and "reply 4-1.md: would not be posted (the thread is locked)" in out
               and "reply 5-1.md: would not be posted (Alan has written in the thread since this reply was)" in out
               and "reply 6-1.md: would not be posted (it has bold; it has an at sign; it links somewhere other than grouplab.org" in out
+              and "; it names Alan)" in out
               and "reply 6-2.md: would not be posted (its thread line does not match" in out
-              and "reply 7-1.md: would not be posted (its last line is not (Posted by the GroupLab bot for Alan.))" in out, out)
+              and "reply 7-1.md: would not be posted (its last line is not This is an AI generated response.)" in out, out)
         check("a dry run of the replies only reads: nothing posted, opened again or moved",
               not any(not c.startswith("GET ") for c in world.calls) and world.files == before_files and "700" in world.archived, str(world.calls))
         world.deny_feature = True
