@@ -16,6 +16,13 @@ Entry 487 section 1: each nightly goes to `internal` and to `alpha` (Play Consol
 
     python scripts/play-upload.py --aab <file.aab> [--symbols <file.zip>] --version 0.2.0-nightly.176 [--tracks internal,alpha] [--dry-run]
     python scripts/play-upload.py --read-only
+    python scripts/play-upload.py --production [--dry-run]
+
+Entry 513: --production puts the closed track's newest completed release (one Google has already reviewed for testers) on the
+production track at full rollout, when it is newer than production's and nothing there is unfinished, with the same review guard.
+Until Google gives the account production access (12 testers for 14 days, then Alan's application in Play Console) it refuses; the
+run then prints one dated "Production: blocked" line with Google's words, for docs/notes/external-status.md, and fails nothing. The
+first night Google allows it, it goes through by itself.
 
 --dry-run checks the files and prints the notes and tracks without contacting Google. --read-only signs in, opens an edit, prints
 each track's releases and the en-US store listing, and deletes the edit without changing anything.
@@ -85,6 +92,58 @@ def closed_track_ready(track: dict) -> tuple[bool, str]:
     if newest.get("status") != "completed":
         return False, f"its newest release is {newest.get('status')}"
     return True, "its newest release is completed"
+
+
+def production_plan(production: dict, closed: dict) -> tuple[str | None, str, dict | None]:
+    """Entry 513: which version code goes to production, if any, and why; with the closed release it comes from."""
+    unfinished = [r for r in production.get("releases") or [] if r.get("status") in ("draft", "inProgress", "halted")]
+    if unfinished:
+        return None, "a production release is " + ", ".join(sorted({r["status"] for r in unfinished})), None
+    done = [r for r in closed.get("releases") or [] if r.get("status") == "completed" and r.get("versionCodes")]
+    if not done:
+        return None, "the closed track has no completed release", None
+    newest = max(done, key=lambda r: max(int(c) for c in r["versionCodes"]))
+    code = str(max(int(c) for c in newest["versionCodes"]))
+    live = max((int(c) for r in production.get("releases") or [] for c in r.get("versionCodes") or []), default=0)
+    if int(code) <= live:
+        return None, f"production already has version code {live}", None
+    return code, f"version code {code} ({newest.get('name', '')}) from the closed track", newest
+
+
+def production(dry_run: bool) -> int:
+    """Entry 513: the closed track's newest reviewed release to production. Never fails the run: a refusal is a dated line."""
+    from datetime import date
+    day = date.today().isoformat()
+    requests, headers, ok = session()
+    edit = ok(requests.post(f"{API}/edits", headers=headers, timeout=60), "a new edit")["id"]
+    try:
+        live = ok(requests.get(f"{API}/edits/{edit}/tracks/production", headers=headers, timeout=60), "the production track")
+        closed = ok(requests.get(f"{API}/edits/{edit}/tracks/alpha", headers=headers, timeout=60), "the alpha track")
+    except SystemExit as said:
+        requests.delete(f"{API}/edits/{edit}", headers=headers, timeout=60)
+        print(f"Production, {day}: blocked: {str(said)[:300]}")
+        return 0
+    code, why, source = production_plan(live, closed)
+    if code is None or dry_run:
+        requests.delete(f"{API}/edits/{edit}", headers=headers, timeout=60)
+        print(f"Production: {'would send ' + why if code and dry_run else 'nothing sent, ' + why}.")
+        return 0
+    release = {"name": source.get("name") or code, "versionCodes": [code], "status": "completed"}
+    if source.get("releaseNotes"):
+        release["releaseNotes"] = source["releaseNotes"]
+    response = requests.put(f"{API}/edits/{edit}/tracks/production", headers=headers, json={"track": "production", "releases": [release]}, timeout=60)
+    if response.status_code < 300:
+        response = requests.post(f"{API}/edits/{edit}:commit?changesInReviewBehavior=ERROR_IF_IN_REVIEW", headers=headers, timeout=120)
+    if response.status_code < 300:
+        print(f"Production: {why} sent at full rollout; Google reviews it before it is public.")
+        return 0
+    requests.delete(f"{API}/edits/{edit}", headers=headers, timeout=60)
+    if in_review(response):
+        print("Production: Google is still reviewing earlier changes, so nothing was sent; the next nightly tries again.")
+    else:
+        print(f"Production, {day}: blocked: Google refused it (HTTP {response.status_code}: {response.text[:300]}). It goes by itself the "
+              "first night Google allows it.")
+    return 0
 
 
 def in_review(response) -> bool:
@@ -190,7 +249,13 @@ def main() -> int:
     parser.add_argument("--tracks", default="internal,alpha")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--read-only", action="store_true")
+    parser.add_argument("--production", action="store_true")
     args = parser.parse_args()
+    if args.production:
+        if not os.environ.get("PLAY_SERVICE_ACCOUNT_JSON"):
+            print("Production: no PLAY_SERVICE_ACCOUNT_JSON (request 80), so nothing was sent.")
+            return 0
+        return production(args.dry_run)
     if args.read_only:
         if not os.environ.get("PLAY_SERVICE_ACCOUNT_JSON"):
             print("no PLAY_SERVICE_ACCOUNT_JSON (request 80), so nothing can be read", file=sys.stderr)

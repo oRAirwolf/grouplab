@@ -22,8 +22,10 @@ on:
         required: false
         default: false
 
+# Entry 513: production too, the closed track's newest reviewed release, from the first night Google allows it; until then one dated
+# "blocked" line a day in docs/notes/external-status.md. STORE_SUBMISSIONS_PAUSED (repository variable or file) stops every send.
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: play-upload
@@ -38,19 +40,22 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
       WANTED: ${{ inputs.version }}
+      PAUSED: ${{ vars.STORE_SUBMISSIONS_PAUSED }}
     steps:
-      - name: Skipped without the service account
+      - uses: actions/checkout@v5
+
+      - name: Skipped without the service account, or while store submissions are paused
         id: key
         run: |
-          if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
+          if [ "$PAUSED" = "true" ] || [ -e STORE_SUBMISSIONS_PAUSED ]; then
+            echo "### STORE_SUBMISSIONS_PAUSED is set, so nothing is sent to Google Play" >> "$GITHUB_STEP_SUMMARY"
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          elif [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
             echo "### No PLAY_SERVICE_ACCOUNT_JSON yet (request 80), so nothing is sent to Google Play" >> "$GITHUB_STEP_SUMMARY"
             echo "present=false" >> "$GITHUB_OUTPUT"
           else
             echo "present=true" >> "$GITHUB_OUTPUT"
           fi
-
-      - uses: actions/checkout@v5
-        if: steps.key.outputs.present == 'true'
 
       - name: Read the tracks and the listing, changing nothing
         if: steps.key.outputs.present == 'true' && inputs.read_only
@@ -79,3 +84,28 @@ jobs:
           aab=$(ls play/*.aab | head -1)
           symbols=$(ls play/*native-symbols*.zip 2>/dev/null | head -1 || true)
           python3 scripts/play-upload.py --aab "$aab" ${symbols:+--symbols "$symbols"} --version "$VERSION" --tracks internal,alpha | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # Entry 513: production, after the closed track; never fails the run.
+      - name: Send the closed track's newest reviewed release to production
+        if: steps.key.outputs.present == 'true' && !inputs.read_only
+        continue-on-error: true
+        run: |
+          pip install --quiet google-auth requests
+          python3 scripts/play-upload.py --production | tee production.txt | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Note production's state
+        if: steps.key.outputs.present == 'true' && !inputs.read_only
+        continue-on-error: true
+        run: |
+          [ -s production.txt ] || exit 0
+          python3 scripts/status-note.py --section play < production.txt > said.txt
+          grep -q '^changed' said.txt || { echo "the state is as it was"; exit 0; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/notes/external-status.md
+          git commit -m "[notes] External status: Google Play production" -m "Written by the play upload workflow, entry 513."
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 10
+          done
+          echo "::warning::the changed state could not be pushed; the next run tries again"

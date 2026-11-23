@@ -89,6 +89,17 @@ check("a review in progress is recognised", play.in_review(Response(400, '{"erro
                                                                       '"details": [{"reason": "CHANGES_ALREADY_IN_REVIEW"}]}}')))
 check("another refusal is not taken for one", not play.in_review(Response(403, "forbidden")))
 
+# Entry 513: production takes the closed track's newest reviewed release, never past an unfinished one, never twice.
+closed = {"releases": [{"name": "1.0.0-nightly.241", "versionCodes": ["241"], "status": "completed"},
+                       {"name": "1.0.0-nightly.242", "versionCodes": ["242"], "status": "inProgress"}]}
+code, why, source = play.production_plan({}, closed)
+check("an empty production track takes the closed track's newest completed release", code == "241" and source["name"].endswith("241"), why)
+check("production never takes the same build twice", play.production_plan({"releases": [{"versionCodes": ["241"], "status": "completed"}]},
+                                                                         closed)[0] is None)
+check("an unfinished production release holds it back", play.production_plan({"releases": [{"versionCodes": ["240"], "status": "draft"}]},
+                                                                             closed)[0] is None)
+check("no completed closed release sends nothing", play.production_plan({}, {"releases": [{"versionCodes": ["9"], "status": "draft"}]})[0] is None)
+
 for f in failed:
     print("FAILED", f)
 print(f"play upload: {passed} passed, {len(failed)} failed")

@@ -1,0 +1,16 @@
+GroupLab measures a group of shots on a printed target. Print one of its sheets, shoot it, then open a scan or a photo of it. GroupLab reads the sheet's printed markers to know its exact size, finds the holes, and reports where each shot landed and how the group measures up.
+
+It gives the figures a shooter needs to compare loads, rifles and days at the range: extreme spread, mean radius, the group's center against the point of aim, and its circular error probable, each with how sure it is from the number of shots. Every figure is shown in inches, centimeters, MOA or mils at the distance you shot, and a click on any figure says what it means.
+
+On the Mac, GroupLab:
+• Opens a scan or a photo of a sheet
+• Finds the holes, and lets you move, add or remove any of them by hand
+• Marks any target by hand, including store-bought targets
+• Works out Shots Needed to Zero and compares loads side by side
+• Gives the dope, the chance of a hit and point blank range
+• Prints its own targets, sized exactly
+• Keeps your sessions, and can keep them in step with the phone through a cloud folder you choose
+
+It uses the same reading engine as GroupLab for iPhone, iPad, Android, Windows and Linux, so a sheet reads the same on every device. Settings, General, Walk me through a demo shows it on a sample sheet.
+
+GroupLab is free and open source under the GPL-3.0 license. It sends nothing about you unless you choose to, and it never reads where a photo was taken.

@@ -64,6 +64,30 @@ public class TestFlightTests
         Assert.DoesNotContain("email", script.Split("FIELDS = ")[1].Split('\n')[0], StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// Entry 513: every new build to App Review for iPhone, iPad and the Mac, released by itself once approved, one review at a time on
+    /// each platform and never cancelling one. scripts/app-store.py's self-test holds the cases; the workflow runs it after TestFlight's
+    /// step, never failing the run, with the pause switch passed in.
+    /// </summary>
+    [Fact]
+    public void TheAppStoreSubmissionsPassTheirOwnSelfTestAndCanBePaused()
+    {
+        if (IpadLogsTests.Python("scripts/app-store.py --self-test") is { } run)
+        {
+            Assert.True(run.Exit == 0, "scripts/app-store.py --self-test failed:\n" + run.Said);
+        }
+
+        string workflow = File.ReadAllText(Repo.PathTo(".github", "workflows", "testflight.yml")).ReplaceLineEndings("\n");
+        int submit = workflow.IndexOf("python scripts/app-store.py", StringComparison.Ordinal);
+        Assert.True(submit > workflow.IndexOf("python scripts/testflight.py --run", StringComparison.Ordinal));
+        string step = workflow[workflow.LastIndexOf("- name:", submit, StringComparison.Ordinal)..submit];
+        Assert.Contains("continue-on-error: true", step, StringComparison.Ordinal);
+        Assert.Contains("STORE_SUBMISSIONS_PAUSED: ${{ vars.STORE_SUBMISSIONS_PAUSED }}", step, StringComparison.Ordinal);
+        string script = File.ReadAllText(Repo.PathTo("scripts", "app-store.py"));
+        Assert.DoesNotContain("appStoreVersionSubmissions\", {\"data\": {\"type\": \"appStoreVersionSubmissions\"", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"DELETE\"", script, StringComparison.Ordinal);   // nothing here ever cancels or removes a review
+    }
+
     [Fact]
     public void TheWorkflowFollowsEveryNightlyAndNeverHoldsAMacRunner()
     {

@@ -65,7 +65,10 @@ jobs:
           STATE: ${{ steps.store.outputs.state }}
           REASON: ${{ steps.store.outputs.reason }}
           WHY: ${{ steps.which.outputs.why }}
+          PAUSED: ${{ vars.STORE_SUBMISSIONS_PAUSED }}
         run: |
+          # Entry 513: one switch stops every store's submissions, this one included.
+          if [ "$PAUSED" = "true" ] || [ -e STORE_SUBMISSIONS_PAUSED ]; then echo "### STORE_SUBMISSIONS_PAUSED is set, so nothing is sent to the Microsoft Store" >> "$GITHUB_STEP_SUMMARY"; echo "go=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           if [ "$WHICH" != "true" ]; then echo "### Nothing to send: $WHY" >> "$GITHUB_STEP_SUMMARY"; echo "go=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           case "$STATE" in
             free) echo "go=true" >> "$GITHUB_OUTPUT" ;;

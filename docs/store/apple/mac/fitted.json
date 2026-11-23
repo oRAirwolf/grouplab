@@ -1,0 +1,43 @@
+{
+ "size": [
+  2880,
+  1800
+ ],
+ "pictures": {
+  "01-analysis.png": {
+   "from": "docs/figures/screens/current/analysis-dark-2560x1440.png",
+   "taken": [
+    2560,
+    1440
+   ]
+  },
+  "02-marking.png": {
+   "from": "docs/figures/screens/current/marking-dark-2560x1440.png",
+   "taken": [
+    2560,
+    1440
+   ]
+  },
+  "03-compare.png": {
+   "from": "docs/figures/screens/current/compare-dark-2560x1440.png",
+   "taken": [
+    2560,
+    1440
+   ]
+  },
+  "04-ballistics-hit.png": {
+   "from": "docs/figures/screens/current/ballistics-hit-dark-2560x1440.png",
+   "taken": [
+    2560,
+    1440
+   ]
+  },
+  "05-targets.png": {
+   "from": "docs/figures/screens/current/targets-dark-2560x1440.png",
+   "taken": [
+    2560,
+    1440
+   ]
+  }
+ }
+}

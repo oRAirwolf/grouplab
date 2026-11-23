@@ -5,6 +5,11 @@ Two jobs, both run by .github/workflows/apple-screens.yml:
     python3 scripts/apple-screens.py fit <scenario results folder> <iphone|ipad> <out folder>
     python3 scripts/apple-screens.py made-from <artifact folder> <source ref>
     python3 scripts/apple-screens.py upload [--dry-run]
+    python3 scripts/apple-screens.py mac
+
+`mac` (entry 513) fits five of the desktop screens the screenshot job renders, docs/figures/screens/current/<screen>-dark-2560x1440.png,
+to the Mac App Store's 2880 by 1800 the same way, into docs/store/apple/mac/; scripts/app-store.py uploads them to a first Mac version's
+empty desktop set.
 
 `fit` takes the seven places of the Play set (result, capture, fingerprint, pairing, targets, scale-markers, open-targets) from a
 scenario's screenshots and fits each to App Store Connect's exact size, 1320 by 2868 for the iPhone's 6.9 inch display and 2064 by 2752
@@ -33,6 +38,10 @@ SIZES = {"iphone": (1320, 2868), "ipad": (2064, 2752)}
 # App Store Connect's display types: the 6.9 inch iPhone's pictures go in the 6.7 inch set, which takes 1320 by 2868, and the 13 inch
 # iPad's in the 12.9 inch set, which takes 2064 by 2752.
 DISPLAY = {"iphone": "APP_IPHONE_67", "ipad": "APP_IPAD_PRO_3GEN_129"}
+# Entry 513: the Mac App Store's pictures, from the desktop screens, in this order.
+MAC_PLACES = ["analysis", "marking", "compare", "ballistics-hit", "targets"]
+MAC_SIZE = (2880, 1800)
+SCREENS = REPO / "docs" / "figures" / "screens" / "current"
 BUNDLE = "org.grouplab.app"
 VERSION = "1.0"
 
@@ -68,6 +77,20 @@ def fit_all(results: Path, device: str, out: Path) -> int:
     print(f"{device}: {len(made)} of {len(PLACES)} fitted to {SIZES[device][0]} by {SIZES[device][1]}"
           + (f"; missing: {', '.join(missing)}" if missing else ""))
     return 0 if made else 1
+
+
+def fit_mac() -> int:
+    out = STORE / "mac"
+    out.mkdir(parents=True, exist_ok=True)
+    made = {}
+    for i, place in enumerate(MAC_PLACES, 1):
+        source = SCREENS / f"{place}-dark-2560x1440.png"
+        picture, raw = fit(source, MAC_SIZE)
+        picture.save(out / name(i, place), optimize=True)
+        made[name(i, place)] = {"from": f"docs/figures/screens/current/{source.name}", "taken": list(raw)}
+    (out / "fitted.json").write_text(json.dumps({"size": list(MAC_SIZE), "pictures": made}, indent=1) + "\n", encoding="utf-8")
+    print(f"mac: {len(made)} fitted to {MAC_SIZE[0]} by {MAC_SIZE[1]}")
+    return 0
 
 
 def apple():
@@ -164,6 +187,8 @@ def main(argv: list[str]) -> int:
         return made_from(Path(argv[1]), argv[2])
     if len(argv) >= 4 and argv[0] == "fit":
         return fit_all(Path(argv[1]), argv[2], Path(argv[3]))
+    if argv and argv[0] == "mac":
+        return fit_mac()
     if argv and argv[0] == "upload":
         return upload("--dry-run" in argv)
     print(__doc__)

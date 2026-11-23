@@ -102,7 +102,7 @@ VERSION_WORDS = {
     "WAITING_FOR_REVIEW": "waiting for review",
     "IN_REVIEW": "in review",
     "WAITING_FOR_EXPORT_COMPLIANCE": "waiting for the export question",
-    "PENDING_DEVELOPER_RELEASE": "approved, waiting for Alan to release it",
+    "PENDING_DEVELOPER_RELEASE": "approved, released by the next run (entry 513)",
     "ACCEPTED": "approved",
     "PENDING_APPLE_RELEASE": "approved, Apple is releasing it",
     "PROCESSING_FOR_APP_STORE": "approved, being prepared for the App Store",
@@ -352,8 +352,8 @@ def app_store(store: Store) -> tuple[list[str], str | None]:
         for_alan = (f"Apple's App Review turned down GroupLab {newest.number}{built}. Apple's own words are under App Review in App Store "
                     "Connect, which this check cannot read; the planning session copies them into for-alan.md. TestFlight goes on as before.")
     elif newest.state == "PENDING_DEVELOPER_RELEASE":
-        for_alan = (f"Apple approved GroupLab {newest.number}{built} for the App Store. Release is manual: nothing is public until Alan "
-                    "says to release it, through the planning session.")
+        # Entry 513: an approved build is released by itself, by scripts/app-store.py on its next run, so this is a line, not a request.
+        lines.append(f"Apple approved GroupLab {newest.number}{built}; it is released by the next submission run.")
     if for_alan:
         lines.append(for_alan)
     return lines, for_alan
@@ -689,7 +689,7 @@ def self_test() -> int:
     expect("a rejection goes to Alan", alan is not None and "turned down" in alan and alan in lines)
     s.versions_[0].state = "PENDING_DEVELOPER_RELEASE"
     lines, alan = app_store(s)
-    expect("an approval goes to Alan", alan is not None and "Release is manual" in alan)
+    expect("an approval is a line, not a request (entry 513)", alan is None and any("released by the next" in l for l in lines))
     s = Pretend(versions_=[Version("1.0", "READY_FOR_SALE", "2026-11-15", 226), Version("1.1", "IN_REVIEW", "2026-12-01", 240)])
     lines, alan = app_store(s)
     expect("the live one named", lines[0].startswith("App Store version 1.1 (build 240): in review") and "version 1.0" in lines[2])
