@@ -73,6 +73,7 @@ its screens, in entry 259's order, each shipped in its own nightly and tried at 
 | Builds for the Mac | `mac` | left out | a platform, not something a phone can do | left out |
 | A start window that shows what is loading | `splash` | left out | entry 507 section 2: the phones keep the system's own start screen, now on GroupLab's dark ground | left out |
 | Pool the sheets of a set | `pool-set` | on the phone | entry 259 screen 6, the set as a checklist, which since entry 420 also opens the pooled plot (See the pooled group): the saved sheets of the set's design shot the same day; since entry 495 the pooled group is saved as a pool record, listed in Sessions, shared as one file and deletable, as on the computer | on iOS |
+| A session's name and the sheet's place in its set, on the paper | `square-name` | on the phone | entry 512 section 3: each sheet of a set printed from the phone carries its place in the set from the shared rendering; the Session name box is on the computer's Targets only so far, coming to the phone, whose Targets has no load block form yet | on iOS |
 | The E bull | `e-bull` | on the phone | | on iOS |
 | The C bull | `c-bull` | on the phone | | on iOS |
 | Large format on a home printer | `large-on-letter` | on the phone | | on a device |
