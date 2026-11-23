@@ -12,6 +12,21 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.240
+
+**2026-11-23**, commit `dff1aa5`. Nightly.
+
+**What you will notice**
+
+- On the phone, a picture you have zoomed into now pinches further in or back out as often as you like, on the result and on Fix holes, and each hole's circle grows with the picture to your bullet's size. (Error report 53, entry 510) (found from 2 Discord posts).
+- When you print a sheet with its load block filled in, the square at its bottom right now prints the sheet's code and your serial in words whenever it cannot hold its code, the preview shows exactly what will print, and a line says the code needs a serial of four letters or digits. (Error report 55, entry 510).
+
+From your reports and targets in this build: 1 fix from 2 error reports.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.240)
+
+---
+
 ## 1.0.0-nightly.239
 
 **2026-11-21**, commit `0d16cb7`. Nightly.
