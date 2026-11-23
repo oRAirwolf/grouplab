@@ -319,6 +319,10 @@
      "At the top of the figures: Scale checked, with a tick, when the sheet's own markers set the scale, and a line under it saying how the scale was found, from the printed markers with your printer check or the scan's resolution behind them, a length you measured, or a store-bought target's printed size. The detail is behind Show work."
     ],
     [
+     "Name this session, top left",
+     "A name of the session's own, such as Rifle A or the letter in its serial box, beside the target's name. It comes first in Session records, the tab and Compare, and Rename on a row in Session records changes the same name."
+    ],
+    [
      "The load block, left",
      "Which rifle, barrel, load and caliber this sheet was shot with, and where the caliber came from."
     ],
@@ -506,7 +510,7 @@
     ],
     [
      "A row",
-     "Opens that session's analysis again, exactly as it was."
+     "Opens that session's analysis again, exactly as it was. Right-click it, or press F2 on it, to Rename it: the name comes first in the sheet column, with the target's name after it, and it is the same name as the box Name this session at the top of the analysis."
     ],
     [
      "Delete",

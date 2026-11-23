@@ -129,6 +129,12 @@ public sealed class SessionsPage : UserControl
             column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } }.Id("sessions-list"));
         }
 
+        // Entry 511 section 1 (suggestion 56): a session given a name of its own, the computer's Rename.
+        if (saved.Any(s => s.Id > 0))
+        {
+            column.Children.Add(Screens.Choice("Rename a session", () => Content = SessionNameCard.Page(() => Content = List())).Id("sessions-rename"));
+        }
+
         // Entry 259 screen 4: two or more sessions compared, one figure at a time.
         if (saved.Count >= 2)
         {

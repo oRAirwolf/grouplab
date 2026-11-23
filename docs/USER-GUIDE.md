@@ -509,6 +509,7 @@ Shots Needed to Zero, suggested by Jylee, sits under them. From the group's spre
 Accept and analyze saves the sheet as a session: the marking with every edit, its figures, a proof image and its own copy of the sheet. **After that, and after any change, it saves itself**: the status bar says when ("Saved 12 seconds ago in grouplab.db"), that it is safe to close, and the ··· menu at the top right has **Open the session's folder**. In Settings, Sync and your data, under **Saving**, you can choose a **Save** button instead; then the bar says **Not saved yet** until you press it, and GroupLab asks before you leave or close a target with unsaved changes. Session records, in the rail, lists them newest first:
 - filter them by rifle (1) and by load (2);
 - open one back to its analysis, which needs no image;
+- name one: right-click its row and choose **Rename**, or press F2 on it, type the name and press Enter. The name comes first in Session records, in the target's tab and in Compare, with the target's name after it, and an empty name takes it away. The same name is the box **Name this session** at the top of the analysis screen, beside the target's name; on the phone it is on the result page, and Sessions has **Rename a session**. A name given on one device reaches the others with the session when they synchronize;
 - delete one (3), after GroupLab asks.
 
 ![Session records: 1 Rifle filter, 2 Load filter, 3 Delete](figures/screens/current/sessions-light-1400x900.png)

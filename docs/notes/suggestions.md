@@ -14,6 +14,7 @@ before ending a turn, and at least hourly while waiting on CI) and writes each n
 
 ## Issue 56, 2026-11-22: name a session, so Session records can tell sheets apart
 
+- **Answered 2026-11-23, yes to (a) and (b)** (entry 511 section 1): built. On the computer, Rename on each Session records row (its menu, and F2), and the box moved to the top of the analysis column as "Name this session", beside the target's name; on the phone, the same box on the result page and Rename a session under Sessions. The name comes first in Session records, the tab and Compare, with the target's name after it, and synchronizes with the session. Ships in nightly 241; issue 56 closed with the commit.
 - **Asked:** on the computer (macOS, nightly 239), a way to rename a session (right-click and Rename, or click the title and type),
   because Session records fills with rows all named after the same target ("GroupLab 3x3 2 MOA, C Bull, Set of 3 Letter Sheets"); the
   target used should still be kept, just not as the session's only name. A screenshot shows eight such rows.
@@ -36,6 +37,7 @@ before ending a turn, and at least hourly while waiting on CI) and writes each n
   and a separate tag are not done.
 - **Size:** small to medium (the square's layout, a tag field beside the serial, and keeping the code where there is one).
   **Fits:** yes, if it does not displace the code GroupLab may later read back.
+- **Answered 2026-11-23: later, with session names** (entry 511 section 1). Left open here. Now that sessions have names (issue 56, nightly 241), whether the session's name should also print in that square is request 114 to Alan.
 - **Recommendation:** later, and together with issue 56: one name per session or batch, typed once, printed in the square and shown in
   Session records, would answer both posts. Waits for Alan's word.
 

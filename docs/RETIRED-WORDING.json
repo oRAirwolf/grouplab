@@ -17,6 +17,16 @@
   ],
   "phrases": [
     {
+      "phrase": "This sheet's own label",
+      "why": "entry 511 section 1: the box is Name this session, at the top of the analysis column; the screenshot walk retakes the pictures whose bounds still name the old heading",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
       "phrase": "M1, M2, M3",
       "why": "entry 316: the Mac download says Apple silicon (M-series) and names no chip generations",
       "allowedIn": [

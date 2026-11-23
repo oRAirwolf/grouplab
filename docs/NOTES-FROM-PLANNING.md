@@ -26,6 +26,54 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-23, entry 511: suggestion 56 yes, and Code's Discord replies posted by the bot
+
+**Status: actioned 2026-11-23. Not done: the bot posting anything, which waits for request 113 (Alan's look at the Oracle backup and one paste); and whether a session's name should also print in the load block's square, which is request 114 to Alan.** Section 1: built on both. On the computer, Rename on each Session records row (its menu, Open and Rename, and F2), and the label box moved to the top of the analysis column as "Name this session", beside the target's name; on the phone, the same box on the result page and Rename a session under Sessions. The name is the existing sheet label, so a rename writes the session's marking and its stored sheet name (`SessionStore.Rename`, `MarkingFile.WithLabel`) and synchronizes as any edit does; `SessionNames` puts it first, with the target's name after it, in Session records, the tab, Compare and the phone's lists; a tab or phone result holding the same session takes the name too. The square's numeral stays open in suggestions.md as "later, with session names". Issue 56 closed with the commit, for nightly 241; user guide (and its PDF), Features page, tour and PHONE-PARITY.md in the same change. Section 2: the Discord worker posts `discord-replies/<issue>-<n>.md` files from the crash-reports repository (at most five a run, each once, mentions off, the thread from its own state, post-after a nightly, refused with a line on the issue when the thread is locked or gone, Alan has written since, or the words break the rules; `discord-replies/PAUSED` stops it), 68 checks in tests/python/discord-worker-tests.py, RESTORE.md, request 113. Backlog: replies 53-1, 55-1 and 56-1 committed there; 52 and 54 left out because Alan had posted them himself; 56-2 (it is out) waits for nightly 241.
+
+From the planning session, Alan's words in chat on 2026-11-23: "yes and can you have code reply to the discord posts directly?" Take
+the sections in order and commit each on its own. The usual guard applies (stop at 85% of the week); the week resets 2026-11-26 02:00 UTC.
+
+### 1. Suggestion 56: yes, (a) and (b)
+
+- (a) On the computer: Rename on each Session records row (its menu, and F2 on a selected row), writing the same label the analysis
+  screen keeps; the label box moved up beside the sheet's name on the analysis screen with the heading "Name this session". The name is
+  what Session records, the tab and Compare show first, with the target's name after it.
+- (b) On the phone: the same name on the result page and a Rename in the phone's session list, kept in sync like the computer's.
+- The large sheet number and short tag in the load block's square (issue 55's thread): later, as recommended; leave it open in
+  suggestions.md with "later, with session names" and, when 56 ships, ask Alan whether the session's name should also print there.
+- Close issue 56 with the entry and the nightly it ships in; user guide, Features page and release notes in the same change.
+
+### 2. Discord replies posted by the bot, without Alan copying them
+
+Alan wants Code's drafted replies posted in the Discord threads directly. The bot token stays on the server and is never read by Code
+or the planning session, so the posting is done by the Discord worker:
+
+- **Where Code puts a reply:** a file per reply in the private oRAirwolf/grouplab-crash-reports repository, for example
+  `discord-replies/<issue>-<n>.md`, holding the thread's id (taken from the issue, never typed from a post's text), the text, and
+  `post-after: nightly <N>` when the reply speaks of a fix. Committed only after that nightly is out (or the worker checks the
+  newest release itself before posting).
+- **The worker** (each run): posts each waiting reply in its thread as the bot, once, records it in its state, moves the file to
+  `discord-replies/posted/` with the message link, and comments on the issue with the text and link. A thread that is locked, deleted or
+  answered by Alan since the reply was written: not posted, a line in the issue instead. At most five replies a run. The words are sent
+  as plain text with mentions switched off (allowed_mentions empty), so nobody is pinged by name and no @everyone ever works.
+- **The rules for what Code writes:** plain words, no bold, short, the same tone as the drafts in for-alan.md; only about the report or
+  suggestion in that thread; never promise a date; never say yes to a suggestion Alan has not answered (say it is written up for the
+  developer); never ask for personal details; never a link except grouplab.org pages and the GitHub releases page. Each ends with one
+  line: "(Posted by the GroupLab bot for Alan.)" so nobody thinks Alan typed it.
+- **Before the first post**, the backlog: replies for error reports 52 and 53 (the center dots, and the video reply about zoom), 54
+  (the Mac columns), 55 (the load block square) and suggestion 56 (the session names: say it is now being built). Skip any thread where
+  Alan has already replied since the fix (his messages are on the issue as comments); merge two replies to one thread into one.
+- **Alan can stop it** by one switch: a file `discord-replies/PAUSED` in the crash-reports repository makes the worker post nothing.
+  Say so in for-alan.md as a standing note, with the exact steps to add and remove it.
+- **Server change:** backup first (RESTORE.md rule 5), tests in tests/python/discord-worker-tests.py (posting once, the pause file,
+  mentions off, a locked thread, a reply already given by Alan, the five-per-run limit), the install and undo in RESTORE.md, and a new
+  request for Alan with the same kind of one-paste install as request 112 (a look at today's Oracle boot volume backup first; file
+  hashes checked; a dry run that lists what would be posted and posts nothing; backup; install; one run; log, timer and both sites).
+  The bot needs "Send Messages in Threads" in both forums; it already replies once in new threads, so check the dry run says so.
+- for-alan.md: the "For Discord" drafts become a list of what the bot posted, with links, instead of text for Alan to copy.
+
+Then rewrite STATE.md.
+
 ## 2026-11-22, entry 509: consistency audit, 2026-11-22
 
 **Status: actioned 2026-11-22. Every finding done.** Finding 1: README, PLATFORM-SUPPORT.md and the user guide (and its PDF) say iOS 18 to 25 is from build 236 and the App Store copy (1.0, build 226) still needs iOS 26. Finding 2: the download page's App Store panel reads the version and build from external-status.md (`app_store_copy` in website/build.py) and says later builds reach the App Store with its next version; the Features card says the same (reworded for nightly 239). Finding 3: "newest build" in the user guide, "trying GroupLab" in the guides page description, both phrases in RETIRED-WORDING.json. Finding 4: README and ANDROID.md name the closed track (entry 487). Finding 5: STATE's iOS line rewritten. Nothing submitted to the App Store.

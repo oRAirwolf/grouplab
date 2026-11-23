@@ -52,7 +52,8 @@ public sealed record SessionSummary(
     int ShotCount,
     double? MeanRadiusInches,
     double? MeanRadiusLowerInches,
-    double? MeanRadiusUpperInches);
+    double? MeanRadiusUpperInches,
+    string? Label = null);
 
 /// <summary>
 /// A chronograph string, DESIGN.md section 15: the velocities in the order the chronograph recorded them. It is kept as its own ordered list,
@@ -562,17 +563,49 @@ public sealed partial class SessionStore
     {
         using var db = Connect();
         using var command = Command(db,
-            "SELECT id, created_utc, shot_date, sheet_name, distance_in, rifle, load, shot_count, mean_radius_in, mean_radius_lower_in, mean_radius_upper_in FROM sessions "
+            "SELECT id, created_utc, shot_date, sheet_name, distance_in, rifle, load, shot_count, mean_radius_in, mean_radius_lower_in, mean_radius_upper_in, "
+            // Entry 511 section 1: the session's own name, read out of its marking; a marking that is not JSON has none, and stops no list.
+            + "CASE WHEN json_valid(marking_json) THEN json_extract(marking_json, '$.sheetLabel') END FROM sessions "
             + "WHERE ($rifle IS NULL OR rifle = $rifle COLLATE NOCASE) AND ($load IS NULL OR load = $load COLLATE NOCASE) ORDER BY created_utc DESC, id DESC",
             [("$rifle", rifle), ("$load", load)]);
         using var r = command.ExecuteReader();
         var list = new List<SessionSummary>();
         while (r.Read())
         {
-            list.Add(new SessionSummary(r.GetInt64(0), r.GetString(1), Text(r, 2), r.GetString(3), Real(r, 4), Text(r, 5), Text(r, 6), r.GetInt32(7), Real(r, 8), Real(r, 9), Real(r, 10)));
+            string? label = r.IsDBNull(11) ? null : r.GetValue(11) as string;
+            list.Add(new SessionSummary(r.GetInt64(0), r.GetString(1), Text(r, 2), r.GetString(3), Real(r, 4), Text(r, 5), Text(r, 6), r.GetInt32(7), Real(r, 8), Real(r, 9), Real(r, 10),
+                string.IsNullOrWhiteSpace(label) ? null : label.Trim()));
         }
 
         return list;
+    }
+
+    /// <summary>
+    /// Entry 511 section 1 (suggestion 56): gives a session its own name, or takes it away with an empty one. It is the label the analysis
+    /// screen keeps ("Name this session"), written into the session's marking and its sheet name, so the change synchronizes as any edit of
+    /// the session does. Null when there is no such session; the session as saved otherwise.
+    /// </summary>
+    public SessionRecord? Rename(long id, string? name)
+    {
+        if (Get(id) is not { } record)
+        {
+            return null;
+        }
+
+        string? label = string.IsNullOrWhiteSpace(name) ? null : name.Trim();
+        string? old = SessionNames.LabelOf(record.MarkingJson);
+        if (old == label)
+        {
+            return record;
+        }
+
+        var renamed = record with
+        {
+            SheetName = SessionNames.Relabelled(record.SheetName, old, label),
+            MarkingJson = MarkingFile.WithLabel(record.MarkingJson, label),
+        };
+        Save(renamed);
+        return renamed;
     }
 
     /// <summary>

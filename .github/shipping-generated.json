@@ -88,6 +88,7 @@
     "src/GroupLab.App/MainWindow.ScopeMount.cs",
     "src/GroupLab.App/MainWindow.Sending.cs",
     "src/GroupLab.App/MainWindow.SessionFiles.cs",
+    "src/GroupLab.App/MainWindow.SessionNames.cs",
     "src/GroupLab.App/MainWindow.SetTab.cs",
     "src/GroupLab.App/MainWindow.SettingsMenu.cs",
     "src/GroupLab.App/MainWindow.SheetProblem.cs",

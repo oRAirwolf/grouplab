@@ -279,7 +279,10 @@ public sealed partial class MainWindow : Window
     /// <summary>Entry 228 section 1.4: saving the bulls placed by hand as a template, and placing a saved one, shown with the bulls tool.</summary>
     private readonly StackPanel templatePanel = new() { Spacing = Tokens.Space8 };
 
-    private readonly TextBox sheetLabelBox = new() { PlaceholderText = "such as the letter in its serial box", MinWidth = 160 };
+    private readonly TextBox sheetLabelBox = new() { PlaceholderText = "such as Rifle A, or the letter in its serial box", MinWidth = 200 };
+
+    /// <summary>The target's name beside the session's own, entry 511 section 1.</summary>
+    private readonly TextBlock sheetTargetName = new() { VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(Tokens.Space8, 0, 0, 0), Classes = { AppStyles.Secondary } };
 
     /// <summary>What was said, if anything, about this sheet's design having been analyzed before (entry 229 section 1), for the tests.</summary>
     internal string? CopyOfADesignSeenBefore { get; private set; }
@@ -1170,19 +1173,31 @@ public sealed partial class MainWindow : Window
         var figureColumn = new Border { Child = new ScrollViewer { Content = figures }, Classes = { AppStyles.Side } };
         figureBorder = figureColumn;
         var shotsColumn = new StackPanel { Margin = Tokens.SectionPadding, Spacing = Tokens.Space8 };
-        shotsColumn.Children.Add(Heading("Load"));
-        shotsColumn.Children.Add(loadLines);
 
-        // Entry 229 section 1: a name of this sheet's own, since every copy printed from one PDF carries the same printed code.
-        sheetLabelBox.LostFocus += (_, _) =>
+        // Entry 229 section 1: a name of this sheet's own, since every copy printed from one PDF carries the same printed code. Entry 511
+        // section 1 (suggestion 56): it leads the column as "Name this session", beside the target's name, where it was "This sheet's own
+        // label" under the load and the person who asked for a way to name sessions did not find it.
+        void TakeName()
         {
             if ((sheetLabelBox.Text ?? "").Trim() != (session.State.SheetLabel ?? ""))
             {
                 session.SetSheetLabel(sheetLabelBox.Text);
             }
+        }
+
+        sheetLabelBox.LostFocus += (_, _) => TakeName();
+        sheetLabelBox.KeyDown += (_, e) =>
+        {
+            if (e.Key == Key.Enter)
+            {
+                e.Handled = true;
+                TakeName();
+            }
         };
-        shotsColumn.Children.Add(Readout("This sheet's own label", "", Tokens.SecondarySize, labelAtTop: true));
-        shotsColumn.Children.Add(sheetLabelBox);
+        shotsColumn.Children.Add(Heading("Name this session"));
+        shotsColumn.Children.Add(new WrapPanel { Orientation = Orientation.Horizontal, Children = { sheetLabelBox, sheetTargetName } });
+        shotsColumn.Children.Add(Heading("Load"));
+        shotsColumn.Children.Add(loadLines);
         shotsColumn.Children.Add(Ruled("Shots, from their own bull"));
         shotsColumn.Children.Add(offsetTable);
         var leftColumn = new Border { Child = new ScrollViewer { Content = shotsColumn }, Classes = { AppStyles.Side } };
@@ -3517,6 +3532,8 @@ public sealed partial class MainWindow : Window
             sheetLabelBox.Text = state.SheetLabel ?? "";
         }
 
+        sheetTargetName.Text = "on " + TargetName(state);
+
         loadLines.Children.Clear();
         loadLines.Children.Add(Readout("Rifle", state.Rifle?.Name ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));
         loadLines.Children.Add(Readout("Barrel", state.Barrel ?? "not chosen", Tokens.SecondarySize, labelAtTop: true));
@@ -4155,7 +4172,8 @@ public sealed partial class MainWindow : Window
         {
             string distance = s.DistanceInches is { } d ? string.Create(CultureInfo.InvariantCulture, $"{UnitSettings.DistanceFromInches(d, units.Distance):0} {UnitSettings.Symbol(units.Distance)}") : "";
             string radius = RadiusWords(s);
-            var cells = Cells([name.When, s.SheetName, s.Rifle ?? "", s.Load ?? "", distance, s.ShotCount.ToString(CultureInfo.InvariantCulture), radius], heading: false);
+            // Entry 511 section 1: the session's own name first, the target's after it.
+            var cells = Cells([name.When, SessionNames.Titled(s.SheetName, s.Label), s.Rifle ?? "", s.Load ?? "", distance, s.ShotCount.ToString(CultureInfo.InvariantCulture), radius], heading: false);
             long id = s.Id;
             var open = new Button { Content = cells, HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch, Classes = { AppStyles.TableRow } };
             if (index++ % 2 == 1)
@@ -4164,7 +4182,7 @@ public sealed partial class MainWindow : Window
             }
 
             long? poolId = SessionPools.PoolOf(id);
-            ToolTip.SetTip(open, poolId is null ? $"Open the session {name.Name}, {s.SheetName}" : $"Open the {poolNames[id]}");
+            ToolTip.SetTip(open, poolId is null ? $"Open the session {name.Name}, {name.Sheet}" : $"Open the {poolNames[id]}");
             open.Click += (_, _) => Leaving(() =>
             {
                 if (poolId is { } p)
@@ -4183,7 +4201,7 @@ public sealed partial class MainWindow : Window
             var choose = new CheckBox { IsChecked = sessionChosen.Contains(id), VerticalAlignment = VerticalAlignment.Center, Width = SessionBoxWidth };
             choose.IsCheckedChanged += (_, _) => ChooseSession(id, choose.IsChecked == true);
             ToolTip.SetTip(choose, "Choose for comparing");
-            Avalonia.Automation.AutomationProperties.SetName(choose, $"Compare the session {name.Name}, {s.SheetName}");
+            Avalonia.Automation.AutomationProperties.SetName(choose, $"Compare the session {name.Name}, {name.Sheet}");
             DockPanel.SetDock(choose, Dock.Left);
             DockPanel.SetDock(delete, Dock.Right);
             row.Children.Add(choose);
@@ -4199,6 +4217,11 @@ public sealed partial class MainWindow : Window
             }
 
             row.Children.Add(open);
+            if (poolId is null)
+            {
+                OfferRename(row, open, id, s.Label);
+            }
+
             // Delete asks first: the button gives way to the question and its two answers. Entry 495: deleting a pool deletes only the pool, and
             // deleting a sheet a pool uses names the pools and what happens to them.
             delete.Click += (_, _) =>

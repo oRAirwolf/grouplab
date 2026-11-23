@@ -435,6 +435,17 @@ public sealed class ResultView : UserControl, IOpenTarget
         var numbers = new StackPanel { Spacing = 12 };
         var picture = new StackPanel { Spacing = 12 };
         var actions = new StackPanel { Spacing = 12 };
+        // Entry 511 section 1 (suggestion 56): the session's own name, as the computer's "Name this session"; saved with the session.
+        if (!pooled)
+        {
+            numbers.Children.Add(SessionNameCard.Card(session.State.SheetLabel, definition?.Name ?? "Marked by hand", name =>
+            {
+                session.SetSheetLabel(name);
+                Changed();
+            }, "result-session-name", out var box).Id("result-session-name-card"));
+            nameBox = box;
+        }
+
         numbers.Children.Add(full);
         // Entry 280 section 2, board MultiAim: on a target GroupLab did not print, a chip per aim point in its own color, its own figures,
         // and "+ Aim point"; the figures above stay the pooled ones.
@@ -770,7 +781,30 @@ public sealed class ResultView : UserControl, IOpenTarget
     }
 
     /// <summary>What the shared picture and the report are named by: the sheet, and the sheet's own label where it has one.</summary>
-    private string Title() => (definition?.Name ?? "Marked by hand") + (session.State.SheetLabel is { Length: > 0 } label ? ", " + label : "");
+    // Entry 511 section 1: the session's own name first, the target's after it.
+    private string Title() => (session.State.SheetLabel is { Length: > 0 } label ? label + ", " : "") + (definition?.Name ?? "Marked by hand");
+
+    /// <summary>The result page's name box, entry 511 section 1; null on a pooled set, which has no name of its own.</summary>
+    private TextBox? nameBox;
+
+    /// <summary>The name box's text, for the tests.</summary>
+    internal string? NameShown => Innermost.nameBox?.Text;
+
+    /// <summary>A name given from Sessions while this result is open: taken here too, so the next save keeps it rather than the old one.</summary>
+    internal void TakeName(string? label)
+    {
+        var shown = Innermost;
+        if (shown.session.State.SheetLabel != label)
+        {
+            shown.session.SetSheetLabel(label);
+            if (shown.nameBox is { } box)
+            {
+                box.Text = label ?? "";
+            }
+
+            shown.Refresh();
+        }
+    }
 
     /// <summary>The day the target was shot, as the session keeps it, or today.</summary>
     private string Date() =>

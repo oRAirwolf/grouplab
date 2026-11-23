@@ -1,5 +1,5 @@
-**Open: 27.** Newest: **113**, one look and one paste so the Discord bot posts Claude Code's replies itself (five minutes, whenever suits). Then **111**, open GroupLab for Mac from TestFlight on a Mac (ten minutes, whenever you have one to hand; from entry 504 your friend's MacBook can do it through the Mac testers group, whose link you copy from App Store Connect once Apple approves it). Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
-**Discord replies, posted by the bot** (not a request, entry 511): Claude Code no longer drafts replies here for you to copy. Each one is a file in `discord-replies/` in the private grouplab-crash-reports repository; once request 113 is installed, the bot posts it in its thread, ending "(Posted by the GroupLab bot for Alan.)", adds the words and the message's link to the report, and this line lists it with the link. **Posted so far:** none yet. **Waiting for request 113:** report 53 (the second pinch and the hole circles, in nightly 240), report 55 (the load block square, in nightly 240, with the big sheet number idea said to be written up) and suggestion 56 (naming a session, said to be now being built, with where the label box is today). **Not sent, because you already posted them yourself:** report 52's reply (in report 53's thread, 21 November) and report 54's (21 November). The two older drafts below, for report 50 and suggestion 48, are left as they were.
+**Open: 28.** Newest: **114**, one question: should a session's name also print in the load block's square (a minute, whenever suits). Then **113**, one look and one paste so the Discord bot posts Claude Code's replies itself (five minutes, whenever suits). Then **111**, open GroupLab for Mac from TestFlight on a Mac (ten minutes, whenever you have one to hand; from entry 504 your friend's MacBook can do it through the Mac testers group, whose link you copy from App Store Connect once Apple approves it). Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Discord replies, posted by the bot** (not a request, entry 511): Claude Code no longer drafts replies here for you to copy. Each one is a file in `discord-replies/` in the private grouplab-crash-reports repository; once request 113 is installed, the bot posts it in its thread, ending "(Posted by the GroupLab bot for Alan.)", adds the words and the message's link to the report, and this line lists it with the link. **Posted so far:** none yet. **Waiting for request 113:** report 53 (the second pinch and the hole circles, in nightly 240), report 55 (the load block square, in nightly 240, with the big sheet number idea said to be written up) and suggestion 56 (naming a session, said to be now being built, with where the label box is today); and, once nightly 241 is out, suggestion 56's second (naming a session is out, and where to find it). **Not sent, because you already posted them yourself:** report 52's reply (in report 53's thread, 21 November) and report 54's (21 November). The two older drafts below, for report 50 and suggestion 48, are left as they were.
 **To stop the bot's replies** (standing note, entry 511): one switch. On github.com open oRAirwolf/grouplab-crash-reports, choose Add file, Create new file, type the name `discord-replies/PAUSED`, leave it empty and choose Commit changes. Within five minutes the bot posts nothing more, its log says `discord-replies/PAUSED is there`, and waiting replies stay where they are. **To start again:** open `discord-replies/PAUSED` there, choose the three dots, Delete file, and Commit changes. A wrong post is deleted by hand in Discord, from the link on its report.
 **GroupLab now installs on iOS 18 to 25, without support** (not a request, entry 505, your answer to entry 502): below iOS 26 it first shows your warning, "iOS 26 is the minimum supported version", and goes on only once the person turns on "I understand there is no support and no guarantee on this version." It asks again only if their iOS version changes while still below 26. "Not now" cannot close the app, because iOS does not let an app close itself, so it stops and says GroupLab has not started. It reaches the App Store with the next version you release; the App Store description gains "Requires iOS 26 or later. It also installs on iOS 18 to 25, without support." then. For the person who asked: TestFlight's nightly has it from the next build.
 **GroupLab 1.0 is on the App Store** (your word, 2026-11-17): build 226 released through App Store Connect, which now says Ready for Distribution; its page is https://apps.apple.com/app/id6817635137 (Apple's search can take a few hours to list it). TestFlight's public beta carries on with the nightlies. The README, the download page, the user guide and PLATFORM-SUPPORT.md say so.
@@ -339,6 +339,18 @@ and once the sheet's corner codes are seen, the sheet's own angle decides, so a 
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
 
+## 114. Should a session's name also print in the load block's square? One question, a minute, whenever suits (entry 511 section 1)
+
+**Opened 2026-11-23.** Sessions now have names of their own (suggestion 56, in nightly 241): Rename in Session records or F2 on the
+computer, "Name this session" at the top of the analysis screen, and on the phone the result page and Rename a session. The same tester
+asked in report 55's thread for a big sheet number and a short tag in the square at the bottom right of a filled load block, and you
+said later, with session names. **What is needed:** whether a session's name should also print in that square. **Why it matters:** the
+square holds the code GroupLab may read back from the sheet, and since report 55's fix it prints the serial in words when there is no
+code; a name would go beside or under them, and a name typed after printing cannot be on paper already printed, so it would only help a
+sheet named before it is printed. **A good answer** is one of: (a) yes, print the name in the square when one is typed on Targets before
+printing, beside the code; (b) yes, and the big sheet number too (1, 2, 3 for each sheet of a set); (c) no, leave the square as it is
+now; or anything else in your own words.
+
 ## 113. The Discord bot posts Claude Code's replies itself, one look and one paste, about five minutes, whenever suits (entry 511 section 2)
 
 **Opened 2026-11-23.** You asked for Claude Code's replies to go into the Discord threads without you copying them. Claude Code now
@@ -347,14 +359,15 @@ thread the report came from, as plain text with mentions switched off so nobody 
 Alan.)", at most five a run. It adds the words and the link to the report. It does not post in a thread that is locked or gone, or
 where you have written since the reply was, and it waits for the nightly a reply speaks of. The bot token stays on the server; the
 bot uses the GitHub token it already has. It is written and tested (68 checks); installing it needs today's server backup confirmed
-first, which Claude Code cannot see (RESTORE.md rule 5). Three replies are waiting: reports 53 and 55, and suggestion 56.
+first, which Claude Code cannot see (RESTORE.md rule 5). Four replies are waiting: reports 53 and 55, and two for suggestion 56
+(the second once nightly 241 is out).
 
 **First, one look:** in the Oracle console, **Storage**, **Block Storage**, **Boot Volume Backups**: is there a backup created in the
 last day? If there is none, stop and say so instead.
 
 **Then this paste**, in your usual bash session on the server. It fetches the six files at 9cf53235 and checks each against the
 repository, shows what the bot would file and post without doing either (and stops if the bot may not post in a forum's threads),
-backs up the bot's script, installs the new one, runs it once (which posts the three waiting replies), shows its log and timer, and
+backs up the bot's script, installs the new one, runs it once (which posts the replies that are ready), shows its log and timer, and
 checks both sites.
 
 ```
@@ -362,8 +375,9 @@ mkdir -p /home/ubuntu/grouplab-server-511 && cd /home/ubuntu/grouplab-server-511
 ```
 
 **A good result:** six `OK`; `dry run: forums found: bug-reports, feature-requests`; `dry run: the bot may post in the threads of
-bug-reports, feature-requests`; `dry run: replies: 3 waiting` with `would be posted in thread` for 53-1.md, 55-1.md and 56-1.md; the
-backup folder's name; the install's done; a log with three lines `reply ...: posted in thread ...` and no Traceback or STOP; the timer
+bug-reports, feature-requests`; `dry run: replies: 4 waiting` with `would be posted in thread` for 53-1.md, 55-1.md and 56-1.md, and 56-2.md
+either waiting for nightly 241 or, once it is out, to be posted too; the backup folder's name; the install's done; a log with a
+line `reply ...: posted in thread ...` for each of those and no Traceback or STOP; the timer
 listed with its next run within five minutes; and `grouplab.org 200` and `pissinhot.com 200`. **A good answer:** paste back what it
 printed. **To undo:** `sudo install -m 755 -o root -g root` the backup folder's copy of the script over
 `/usr/local/sbin/grouplab-discord-worker.py`; messages already posted stay in Discord and can be deleted there by hand. **To stop

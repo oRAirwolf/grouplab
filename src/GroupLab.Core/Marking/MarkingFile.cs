@@ -183,6 +183,28 @@ public static class MarkingFile
     }
 
     /// <summary>
+    /// Entry 511 section 1: a stored marking with the session's own name (its sheet label) set, or taken away when null. Anything that is not
+    /// a marking is given back as it was.
+    /// </summary>
+    public static string WithLabel(string markingJson, string? label)
+    {
+        ArgumentNullException.ThrowIfNull(markingJson);
+        try
+        {
+            if (JsonNode.Parse(markingJson) is JsonObject file)
+            {
+                file["sheetLabel"] = string.IsNullOrWhiteSpace(label) ? null : label.Trim();
+                return file.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+            }
+        }
+        catch (JsonException)
+        {
+        }
+
+        return markingJson;
+    }
+
+    /// <summary>
     /// Entry 383: where a marking's photo is, in this order: beside the marking file, by its file name, so a photo and its marking moved
     /// together still open; then, for a file written before entry 383, the full path it holds, as written. Null when neither is there, and
     /// the person is then asked for the photo.

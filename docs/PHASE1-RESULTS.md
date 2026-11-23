@@ -393,6 +393,39 @@ in claims-backing.json. Nothing was submitted to the App Store; that stays Alan'
 
 **Worth an article?** No: wording kept in step with what GroupLab does.
 
+## Entry 511: naming a session (suggestion 56), and the Discord bot posting Code's replies (2026-11-23)
+
+**2, taken first, because it ends in Alan's paste.** The Discord worker (`website/server/grouplab-discord-worker.py`) now reads
+`discord-replies/` in `grouplab-crash-reports` each run, with the GitHub token it already holds, and posts at most five waiting replies,
+each once, in the thread its issue was filed from (`thread_of`, the worker's own state; a `thread:` line that disagrees is refused). The
+words go as plain text, `allowed_mentions` empty and link previews off; then a comment on the issue with the words and the message's
+link, and the file moves to `posted/`. Refused, with a line on the issue and the file moved to `not-posted/`: a locked or gone thread, a
+message by the server's owner since the reply's `written:` time (read by the Discord id that time gives), and words that break the rules
+(`reply_problems`: bold, an at sign, a link other than grouplab.org or GroupLab's releases, over 1900 characters, no closing line "(Posted
+by the GroupLab bot for Alan.)"). `post-after: nightly N` waits until GroupLab's public releases list nightly N. An archived thread that
+is not locked is opened again first. A run that stopped between posting and keeping the link finds its own message and posts nothing
+twice. `discord-replies/PAUSED` stops everything. The dry run says whether the bot may post in each forum's threads, worked out from its
+roles and the forums' overwrites (`thread_permissions`), and what each waiting reply would do. 68 checks pass in
+`tests/python/discord-worker-tests.py`, 23 of them new. Committed at 9cf53235; request 113 installs it (a look at that day's Oracle boot
+volume backup, six hashes, a dry run that stops if the bot may not post, the change backup, the install, one run). RESTORE.md has the row
+and the undo. The backlog: 53-1 (the second pinch and the circles), 55-1 (the load block square) and 56-1 (session names, being built)
+are in `discord-replies/`; report 52's reply and report 54's were not written again, because Alan had posted both on 21 November.
+
+**1, suggestion 56, yes to (a) and (b).** The name is the label the analysis screen already kept (`MarkingState.SheetLabel`), so no
+schema change: `SessionStore.Rename` writes it into the stored marking (`MarkingFile.WithLabel`) and the stored sheet name, which keeps
+its old shape ("target, name") so a device on an older build reads it as before; `SessionSummary.Label` is read from the marking in
+the list's query (`json_extract`, guarded by `json_valid`). `SessionNames` puts the name first: it names the session (in place of the
+load, still told apart by date and time where two share it), and the line beneath is the target alone; `Titled` makes the Session
+records sheet column "name, target". On the computer: Rename in each session row's menu (Open, Rename) and on F2, typed in place, Enter
+to save, Escape to leave it (`MainWindow.SessionNames.cs`); the box at the top of the analysis column as "Name this session", beside
+"on" and the target's name, Enter or leaving it saves; the tab is "name, target". A tab holding the renamed session, showing or
+parked, takes the name, so its next save keeps it. On the phone: the same box on the result page (`SessionNameCard`), Rename a session
+under Sessions, and the result's title "name, target"; an open result of the same session takes the name. Tests: 6 in
+`SessionRenameTests`, 2 in `Entry511Tests` (App), 2 in `Entry511PhoneTests`; the Core, App and Mobile suites run one after another
+before the push. User guide section 6 and its PDF, the Features page (`session-names`, since next), the tour's Session records and
+analysis stops, and PHONE-PARITY.md changed with it. The large numeral in the load block's square stays open as "later, with session
+names"; whether the session's name should print there is request 114. Issue 56 closed with the commit, for nightly 241.
+
 ## The archive
 
 Older results, whole and unedited, banded by the entry they belong to. Nothing here is ever deleted.

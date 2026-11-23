@@ -35,7 +35,7 @@ public sealed partial class MainWindow
             (paperChoice, "Paper it was printed on"),
             (backingChoice, "What was behind it"),
             (sheetChoice, "Which sheet it is"),
-            (sheetLabelBox, "This sheet's own label"),
+            (sheetLabelBox, "Name this session"),
             (cepPercentBox, "CEP at this percent"),
             (sessionRifle, "Rifle"),
             (sessionLoad, "Load"),

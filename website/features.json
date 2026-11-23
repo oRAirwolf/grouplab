@@ -839,6 +839,27 @@
       }
     },
     {
+      "key": "session-names",
+      "group": "The numbers",
+      "name": "Naming a session",
+      "sentence": "A session can be given a name of its own, in the box Name this session at the top of the analysis screen or with Rename on its row in Session records (or F2), and on the phone on the result page or with Rename a session under Sessions; the name comes first in Session records, the tab and Compare, with the target's name after it, and reaches your other devices when they synchronize. Asked for by Quack.",
+      "shot": "sessions",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iPhone and iPad"
+      ],
+      "since": "next",
+      "note": ["A session can now be given a name of its own"],
+      "tour": "sessions",
+      "guide": "6-sessions-and-the-report",
+      "mobile": {
+        "shot": "fold-sessions-landscape"
+      }
+    },
+    {
       "key": "ballistics",
       "group": "The numbers",
       "name": "Ballistics and hit chances",
