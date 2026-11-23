@@ -478,7 +478,7 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 
 - Top Gun now sets your own groups beside Bryan Litz's trend, as the average five-shot group your shots imply with its range, and says when yours is clearly wider or tighter.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.211)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
