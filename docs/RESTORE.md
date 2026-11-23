@@ -102,6 +102,16 @@ server is limited to GroupLab's own files and its installer.
 **Changes made under rule 5** (newest first). The restore test passed on 2026-10-09 (above), and the newest Oracle backup was from
 09:02 UTC that day when these were made.
 
+- **2026-11-23 22:28 UTC, the bot's nine earlier Discord replies end with the new line** (request 117, answered yes by Alan that day,
+  run by Code over ssh on his standing word of 2026-11-23, announced in panel.md). Fetched `grouplab-discord-old-line.py` and the worker
+  at 79b4f6f5 into `/home/ubuntu/grouplab-server-117/`, both `OK`, the worker the same as the one installed; the dry run found 9 of 9
+  the bot's own and ending "(Posted by the GroupLab bot for Alan.)". Changed: those nine Discord messages, the last line only, and
+  nothing on the server but the backup. Backup, written before the first edit:
+  `/home/ubuntu/grouplab-server/backups/2026-11-23T222816Z-discord-replies-old-line/messages.json`, every message's words and link. A
+  second dry run found nothing left to change; grouplab.org and pissinhot.com answered 200. **Undo:** `sudo systemd-run --quiet --wait
+  --pipe --collect -p LoadCredential=discord-token:/etc/grouplab/discord-token /usr/bin/python3
+  /home/ubuntu/grouplab-server-117/grouplab-discord-old-line.py --restore <that folder>/messages.json`; **check:** its `--dry-run` with
+  the nine links then says 9 of 9 would be edited.
 - **2026-11-23 12:15 UTC, the bot's replies end "This is an AI generated response."** (entry 515, run by Code over ssh on Alan's
   standing word of 2026-11-23, announced in panel.md). Fetched at 5eeeed2b, six files `OK` against the repository; the dry run filed
   and posted nothing. Changed: `/usr/local/sbin/grouplab-discord-worker.py` only (the reply's required last line, and a reply naming

@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-23, after entry 514; the inbox is empty.
+**Last rewritten:** 2026-11-23, after entry 514 and request 117; the inbox is empty.
 
 ---
 
@@ -17,8 +17,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 - **Entry 514 (2026-11-23)**: done; question 119 withdrawn the same day (Android was already compiled ahead of time). The iOS
   keyboard bar fix (da3502ac): proved by three green runs in a row.
-- **Entry 515 (2026-11-23)**: the bot's replies end "This is an AI generated response.", installed 12:15 UTC; request 117 asks about
-  the nine earlier replies.
+- **Entry 515 (2026-11-23)**: the bot's replies end "This is an AI generated response.", installed 12:15 UTC; the nine earlier
+  replies edited in place to the new line at 22:28 UTC (request 117, yes; backup and undo in RESTORE.md).
 - **Entry 513 (2026-11-23)**: every new build to every store; Apple releases by itself once approved (CLAUDE.md). App Review has
   iPhone and iPad 1.0.242 (build 242, the iOS 18 to 25 one) and the Mac's 1.0 (build 240), submitted 11:59 UTC by `scripts/app-store.py`;
   when the iPhone one is released, reply in question 59's thread (Quack, issue 59). Play production waits on Google (14 days of 12
@@ -62,7 +62,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **26**; waiting on him: 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **28**; waiting on him: 119 (Google's production answers, on or after 2 December), 118 (a Discord post for Android testers), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -73,7 +73,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (118 answered (a); 119 withdrawn, 2026-
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.242 (2026-11-23), with entry 512. GitHub's
+- **Last nightly:** 1.0.0-nightly.243 (2026-11-23). GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 

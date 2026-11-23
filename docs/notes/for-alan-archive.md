@@ -3,6 +3,18 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 117. Should the bot edit its earlier Discord replies to the new last line? One yes or no, not urgent (entry 515)
+
+**Opened 2026-11-23.** From entry 515 every reply the bot posts ends "This is an AI generated response." and names you nowhere. The
+replies it posted before that, nine so far (reports 53, 55 twice, 57 twice, suggestion 56 twice, and questions 58 and 59), end "(Posted by
+the GroupLab bot for Alan.)" and are left as they are. **A good answer:** "yes, edit them" (the bot changes only that last line, in place,
+in each of its own messages) or "no, leave them".
+
+**Answered 2026-11-23:** yes. At 22:28 UTC Claude Code edited all nine in place over ssh, changing only the last line to "This is an AI
+generated response.": a dry run first (9 of 9 the bot's own, each ending with the old line), then every message's words saved to
+`/home/ubuntu/grouplab-server/backups/2026-11-23T222816Z-discord-replies-old-line/messages.json` before the first edit, then the edit
+(9 edited), and a second dry run found nothing left to change. Nobody was notified. Recorded in `docs/RESTORE.md`, with the undo.
+
 ## 116. Should the next iPhone version go to the App Store now? One question, a minute, whenever suits (request 115's first help thread)
 
 **Opened 2026-11-23.** Quack asked in the help forum (question 59) why the App Store still refuses GroupLab on an iPhone XS Max on
