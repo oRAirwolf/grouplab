@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-23, after entry 515; next entry 514's overnight queue, item 1 (the Play drafts).
+**Last rewritten:** 2026-11-23, entry 514 in flight: item 1 done (requests 118 and 119), item 2 next (the iOS real-tap flake).
 
 ---
 
@@ -50,7 +50,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Entry 514's queue in order (item 1 first); every new Discord message at every check, replies in `discord-replies/`.
+1. Entry 514 items 2 to 6 in order; every new Discord message at every check, replies in `discord-replies/`.
 2. The phone's Session name box on Targets (desktop only in entry 512).
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 

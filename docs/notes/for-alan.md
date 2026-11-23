@@ -1,4 +1,4 @@
-**Open: 27.** Newest: **117**, one yes or no: should the bot change its earlier Discord replies to end with the new line (not urgent). Then **111**, open GroupLab for Mac from TestFlight on a Mac (ten minutes, whenever you have one to hand; from entry 504 your friend's MacBook can do it through the Mac testers group, whose link you copy from App Store Connect once Apple approves it). Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 29.** Newest: **119**, Google's production questions answered, to copy on or after 2 December; **118**, a Discord post asking for two or three more Android testers, to paste whenever suits; **117**, one yes or no: should the bot change its earlier Discord replies to end with the new line (not urgent). Then **111**, open GroupLab for Mac from TestFlight on a Mac (ten minutes, whenever you have one to hand; from entry 504 your friend's MacBook can do it through the Mac testers group, whose link you copy from App Store Connect once Apple approves it). Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **Every new build now goes to every store** (not a request, entry 513, your word on 2026-11-23): after each nightly passes its checks, the workflows send it to the Microsoft Store as before, to Google Play's testing tracks as before and to production from the first night Google allows it (about 2 December, if all 12 testers stay), and to the App Store for iPhone, iPad and Mac, each released by itself once Apple approves it. One review at a time on each platform; a newer build waits. **Submitted at 11:59 UTC today:** iPhone and iPad 1.0.242 (build 242, the first since 1.0, and the one that installs on iOS 18 to 25 with your warning) and the Mac's first version, 1.0 (build 240). Quack gets a reply in the help thread once Apple releases the iPhone one. A rejection from any store comes here the same day with the store's words and the fix.
 **To stop every store submission** (standing note, entry 513): on github.com open oRAirwolf/grouplab, choose Add file, Create new file, type the name `STORE_SUBMISSIONS_PAUSED`, leave it empty and choose Commit changes. From the next run nothing more goes to the App Store, Google Play or the Microsoft Store, and nothing approved is released; the nightlies and TestFlight carry on. A review already with Apple, Google or Microsoft is not pulled back. **To start again:** open that file there, choose the three dots, Delete file, and Commit changes. (A repository variable of the same name set to `true`, under Settings, Secrets and variables, Actions, Variables, does the same.)
 **Discord replies, posted by the bot** (not a request, entries 511 and 512): Claude Code writes each reply as a file in `discord-replies/` in the private grouplab-crash-reports repository, and the bot posts it in its thread, ending "This is an AI generated response." (entry 515, 2026-11-23; replies before that ended "(Posted by the GroupLab bot for Alan.)" and are left as they are, see request 117), adds the words and the message's link to the report, and this line lists it with the link. Since request 115 went in (Claude Code installed it, 2026-11-23 11:02 UTC), Claude Code answers every new message from anybody but you in the help, support, feature-requests and bug-reports forums, and leaves a thread to you when you wrote after the newest message. **Posted so far** (2026-11-23 08:04 UTC, request 113): report 53, https://discord.com/channels/1552250707237933066/1573485661028089856/1574334707057819780 ; report 55, https://discord.com/channels/1552250707237933066/1574157921267359834/1574334725328212100 ; suggestion 56, https://discord.com/channels/1552250707237933066/1574159581318488114/1574334741753233413 ; report 57, https://discord.com/channels/1552250707237933066/1574296003635318936/1574334758349971497 . **Posted after nightly 242** (10:59 UTC): report 55, https://discord.com/channels/1552250707237933066/1574157921267359834/1574378780560986114 ; suggestion 56, https://discord.com/channels/1552250707237933066/1574159581318488114/1574378799246741569 ; report 57, https://discord.com/channels/1552250707237933066/1574296003635318936/1574378816439320641 . **Posted at 11:09 UTC**, the help threads the bot filed at 11:02: question 58 (a thread started in the read-only announcement channel, which Quack says is sorted), https://discord.com/channels/1552250707237933066/1571440318463742033/1574380912089759788 ; question 59 (the App Store copy on Quack's iOS 18 iPhone XS Max; see request 116), https://discord.com/channels/1552250707237933066/1572794290185445476/1574380934357323916 . **No support forum** is on the server yet; the bot reads one by itself from its first run after you make it. **Not sent, because you already posted them yourself:** report 52's reply (in report 53's thread, 21 November) and report 54's (21 November). The two older drafts below, for report 50 and suggestion 48, are left as they were.
@@ -340,6 +340,85 @@ at a target on its backer as well as flat over a table, choosing by itself; the 
 and once the sheet's corner codes are seen, the sheet's own angle decides, so a leaning backer still reads as square. To try at the next
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
+
+## 119. Google's "Apply for production" questions, answers to copy, on or after 2 December (entry 514 section 1)
+
+**Opened 2026-11-23.** Once Play Console shows 14 days of 12 testers, it offers **Apply for production** (Dashboard, or Testing, Closed
+testing). These answers come only from the record: the test's dates, the reports in `docs/notes/error-reports.md` and the release notes.
+Two answers need a number only Play Console has; they say so in brackets. No tester is named. Once Google approves, the play upload
+workflow sends each nightly to production by itself (entry 513).
+
+### About your closed test
+
+**How easy was it to recruit testers for your app?** Your choice; the record: twelve opted in within the first days and the count has
+held, with no paid recruiting.
+
+**Describe the engagement you received from testers during your closed test.**
+> The closed test opened on 15 November 2026, and new builds that passed their checks went to testers through Google Play. Testers were
+> people from the GroupLab Discord and visitors to grouplab.org/android-test/, which explains how to join. They used it the way the app
+> is meant to be used, on their own targets. One tester went through every screen and Settings page on the first build and sent the
+> app's own diagnostics; another photographed a sheet they had shot, corrected the count by hand, sent the target the hole finder
+> had miscounted, with a note, and posted the same case with screenshots on the Discord. [Add the number of testers who installed it and
+> any activity figure from Play Console's statistics.]
+
+**Provide a summary of the feedback you received from testers, and how you collected it.**
+> Feedback came two ways: Report a problem inside the app (Settings, Help and problems), which sends the app's log and diagnostics with
+> the person's note, and the GroupLab Discord's bug-reports, feature-requests and help forums. Every report was read the same day. On
+> Android: a first run through every screen found nothing wrong; a tap on the result picture that crashed an old build was already fixed
+> in current builds; and on the 2 MOA sheet the printed center dots photographed darker than the rest of the print and were counted as
+> shots, so real holes were flagged as several shots each, which was fixed. Testers on the other platforms in the same weeks asked for
+> sessions with names of their own, a sheet's place in a printed set, and pooling a spare sheet in place of a spoiled one; all three were
+> built.
+
+### About your app
+
+**Who is the intended audience of your app?**
+> Adults who shoot at paper targets and want to measure their groups: hunters checking their zero,
+> competitors, and handloaders comparing loads. The listing is rated for adults.
+
+**Describe how your app provides value to users.**
+> It turns a photograph of a shot target into the measurements a shooter otherwise works out with calipers: extreme spread, mean
+> radius, the group's center against the point of aim, and how sure each figure is from the number of shots, in inches, centimeters, MOA
+> or mils. It prints its own targets at an exact size, so the photograph can be measured accurately, and it keeps sessions so loads and
+> days can be compared. It is free and open source, and sends nothing unless the person chooses to.
+
+**How many installs do you expect your app to have in your first year?** Your estimate; pick the range you think fits.
+
+### Production readiness
+
+**What changes did you make to your app based on what you learned during closed testing?**
+> The miscounted 2 MOA sheet: a dark mark lying wholly inside a printed center dot is now taken as the dot, not a shot (build 237),
+> with a test made from the case. Sessions can be given names of their own (build 241). Each sheet of a printed set now prints its
+> place in the set, and a spare sheet can stand in for a spoiled one when pooling a set (build 242).
+
+**How did you decide that your app is ready for production?**
+> Every build runs the automated test suite on Windows, macOS and Linux before it reaches anybody, and only a build that passes is
+> sent to testers. Reports from testers were answered and fixed within days, the problems found were in measuring particular targets
+> rather than in stability, and GroupLab 1.0 has been on Apple's App Store since 17 November.
+
+**A good answer:** none needed; copy these into Play Console when it offers Apply for production, change what you like, then say it is
+sent.
+
+## 118. A Discord post asking for two or three more Android testers, one paste, whenever suits (entry 514 section 1)
+
+**Opened 2026-11-23.** Play Console says 12 testers have been opted in for 5 days in a row. Google wants 12 for 14 days before it lets
+GroupLab apply for production, so about 2 December if all 12 stay; with exactly 12, one leaving starts the count over. A few spare
+testers make that safe. Here is a post in your voice for the Discord (announcements or general, whichever you use); the bot does not
+post it. Change anything you like.
+
+> Hey all, I'm looking for two or three more Android testers for GroupLab, the shot group app I've been building. Google won't let me
+> put it on the Play Store for everyone until 12 people have been in the test for 14 days straight, and I'm sitting at exactly 12, so if
+> one person drops out the clock starts over. If you've got an Android phone (Android 10 or later) and a couple of minutes:
+>
+> 1. Join the GroupLab testers group on Google Groups with the Google account your Play Store uses. If the group page then says you
+>    don't have permission to see it, that's normal, joining is all it's for.
+> 2. Open the test's opt-in page on Google Play with the same account and press Become a tester.
+> 3. Install GroupLab from Google Play. New builds show up by themselves.
+>
+> The links for all three are on https://grouplab.org/android-test/ . Please stay in for the whole 14 days, and if you can, photograph
+> and analyze a target or two, because Google checks that testers actually use it. Thanks, it really helps.
+
+**A good answer:** none needed; post it when it suits, or say if you want it changed.
 
 ## 117. Should the bot edit its earlier Discord replies to the new last line? One yes or no, not urgent (entry 515)
 
