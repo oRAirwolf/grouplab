@@ -143,3 +143,4 @@
 1.0.0-nightly.239
 1.0.0-nightly.240
 1.0.0-nightly.241
+1.0.0-nightly.242
