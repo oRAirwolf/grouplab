@@ -481,7 +481,7 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 
 - GroupLab can now keep several devices in step through a folder your own cloud app already syncs; nothing switches it on yet, and the first start of this build copies your records aside before updating how they are stored.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.213)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
