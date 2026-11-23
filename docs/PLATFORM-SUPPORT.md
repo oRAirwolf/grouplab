@@ -73,7 +73,7 @@ The one-off 25 dollar Google Play developer fee has been paid. A signed Windows 
 
 ## Apple mobile
 
-GroupLab for iPhone and iPad is on the App Store. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Version 1.0 was released on the App Store on 17 November 2026; the App Store gets a new version when one is submitted and approved. The plan is docs/IOS-PLAN.md. On the iPhone Duo, GroupLab runs, but its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools; the Duo has been checked only in GroupLab's own tests, because nobody on the project has one.
+GroupLab for iPhone and iPad is on the App Store. It is tested on an iPad Mini, sixth generation, and built and signed on GitHub's Mac machines, because the developer still does not own a Mac and does not need one for this. Version 1.0 was released on the App Store on 17 November 2026; every nightly that passes its checks is submitted to Apple on its own, and each version is released automatically once Apple approves it, one review at a time, so the App Store copy follows the nightlies by the days a review takes. The plan is docs/IOS-PLAN.md. On the iPhone Duo, GroupLab runs, but its inner screen shows GroupLab in an iPhone-sized window until a fix in Microsoft's iOS tools lets it be built with Apple's newest tools; the Duo has been checked only in GroupLab's own tests, because nobody on the project has one.
 
 ## Other Linux builds
 

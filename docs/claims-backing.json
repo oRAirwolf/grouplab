@@ -8408,6 +8408,34 @@
   "Still for a person: request 105, twenty minutes with a real screen reader, since a machine can say that a control has a name but not whether the name makes sense read aloud in that place.": {
    "kind": "decided",
    "where": "Entry 514 section 3, 2026-11-23: the accessibility pass by machine (Entry514AccessibilityTests, Entry514PhoneReadingOrderTests); request 105 is the twenty-minute screen reader sitting in docs/notes/for-alan.md"
+  },
+  "What is not finished yet: finding holes by itself on blank paper (Find holes (Experimental) proposes them once the scale is set, for you to check, but its gate still needs a photograph of plain paper with real holes at a known scale), and the newest iOS builds on the App Store (version 1.0 is released there; version 1.0.242 is with Apple for review and is released automatically once approved).": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn; App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved"
+  },
+  "GroupLab 1.0 went to the App Store and the Microsoft Store from nightly builds on Alan's word on 2026-11-17, not from a numbered release; since then every nightly that passes its checks goes to each store by itself, as each store accepts it.": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn; App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved"
+  },
+  "Version 1.0 was released on the App Store on 17 November 2026; every nightly that passes its checks is submitted to Apple on its own, and each version is released automatically once Apple approves it, one review at a time, so the App Store copy follows the nightlies by the days a review takes.": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn; App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved"
+  },
+  "Not in the Mac App Store yet GroupLab is not in the Mac App Store yet: version 1.0 was submitted to Apple on 23 November 2026 and is released automatically once Apple approves it.": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn (Google Play production from the first day Google allows it, after 12 testers for 14 days); App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved; docs/notes/external-status.md"
+  },
+  "Free, like every GroupLab download Released on 17 November 2026 The App Store copy is version 1.0, released on 17 November 2026 Not sure?": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn (Google Play production from the first day Google allows it, after 12 testers for 14 days); App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved; docs/notes/external-status.md"
+  },
+  "The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access; every nightly that passes its checks then goes to production too.": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn (Google Play production from the first day Google allows it, after 12 testers for 14 days); App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved; docs/notes/external-status.md"
+  },
+  "The App Store copy is version 1.0, from build 226; what later builds changed on iPhone and iPad reaches it with the next version Apple approves.": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn (Google Play production from the first day Google allows it, after 12 testers for 14 days); App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved; docs/notes/external-status.md"
   }
  },
  "rules": [

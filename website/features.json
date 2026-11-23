@@ -1530,8 +1530,8 @@
       "key": "app-store",
       "group": "Updates and platforms",
       "name": "On iPhone and iPad, from the App Store",
-      "sentence": "GroupLab 1.0 is on the App Store for iPhone and iPad, released on 17 November 2026, and the App Store updates it; the download page has the link. The App Store copy is version 1.0, from build 226; what later builds changed on iPhone and iPad reaches it with the next App Store version.",
-      "reworded": "1.0.0-nightly.239",
+      "sentence": "GroupLab 1.0 is on the App Store for iPhone and iPad, released on 17 November 2026, and the App Store updates it; the download page has the link. The App Store copy is version 1.0, from build 226; what later builds changed on iPhone and iPad reaches it with the next version Apple approves.",
+      "reworded": "1.0.0-nightly.242",
       "shot": null,
       "platforms": [
         "iPhone and iPad"

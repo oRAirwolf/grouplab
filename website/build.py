@@ -101,7 +101,7 @@ def app_store_words() -> str:
         return "The App Store copy is version 1.0, released on 17 November 2026"
     version, build = copy
     return (f"The App Store copy is version {version}, from build {build}; what later builds changed on iPhone and iPad reaches it "
-            f"with the next App Store version")
+            f"with the next version Apple approves")
 
 
 APP_STORE = "https://apps.apple.com/app/id6817635137"
@@ -932,8 +932,8 @@ def page_download() -> str:
          "Signed, notarized and stapled: opens like any other Mac application",
          "Any Mac with Apple silicon (M-series). Not an Intel Mac"],
         "Download for Apple silicon") + """<div class="panel pad dl-none">
-<h3 class="h3">No store copy for the Mac</h3>
-<p>GroupLab is not in the Mac App Store. Every Mac download is the newest build, and GroupLab tells you when a newer one exists; you download it yourself.</p>
+<h3 class="h3">Not in the Mac App Store yet</h3>
+<p>GroupLab is not in the Mac App Store yet: version 1.0 was submitted to Apple on 23 November 2026 and is released automatically once Apple approves it. Until then, every Mac download here is the newest build, and GroupLab tells you when a newer one exists; you download it yourself.</p>
 </div>""",
         "Apple menu, then About This Mac. A chip whose name begins with M is Apple silicon, and this is its download; Which Mac have I got, below, says more.",
         [fold("The Intel build, untested", other(
@@ -947,7 +947,7 @@ def page_download() -> str:
     iphone = section("iphone", "iPhone and iPad", f"""<article class="panel card card-rec dl-card">
 <div class="card-head"><h3 class="h3">The App Store</h3><span class="badge mono">Released</span></div>
 <div>{btn("Get GroupLab on the App Store", APP_STORE, True, big=True)}</div>
-<p>GroupLab 1.0 is on Apple's App Store for iPhone and iPad. The App Store gets a new version when one is submitted and approved.</p>
+<p>GroupLab 1.0 is on Apple's App Store for iPhone and iPad. Every nightly that passes its checks is submitted to Apple on its own, and each version is released automatically once Apple approves it, one review at a time, so the App Store copy follows the nightlies by the days a review takes.</p>
 {points(["Free, like every GroupLab download", "Released on 17 November 2026", app_store_words()])}
 </article>""",
         "Get GroupLab from the App Store.",
@@ -963,7 +963,7 @@ def page_download() -> str:
         "Download GroupLab Dev", honest=False) + steady(
         "Google Play, closed test",
         btn("Join the Android test", ANDROID_TEST_PATH),
-        f'GroupLab\'s closed test on Google Play is open, and anyone can join: join <a href="https://groups.google.com/g/grouplab-testers">the GroupLab testers group</a>, then <a href="{PLAY_TEST_LINK}">opt in to the test</a> with the same Google account, and Google Play brings you every nightly and updates your copy as it does any app. The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access. The internal test stays open by invitation: ask on the <a href="{DISCORD}">Discord</a>.',
+        f'GroupLab\'s closed test on Google Play is open, and anyone can join: join <a href="https://groups.google.com/g/grouplab-testers">the GroupLab testers group</a>, then <a href="{PLAY_TEST_LINK}">opt in to the test</a> with the same Google account, and Google Play brings you every nightly and updates your copy as it does any app. The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access; every nightly that passes its checks then goes to production too. The internal test stays open by invitation: ask on the <a href="{DISCORD}">Discord</a>.',
         ["Each nightly reaches Play by itself", "Three steps, on the Join the Android test page",
          "Signed with a different key from the plain APK"]),
         "Take GroupLab Dev: it keeps itself on the newest build and installs beside the Play copy. The Play copy gets every nightly through Google Play, the plain APK keeps itself current as GroupLab Dev does, and GroupLab Dev installs beside either with no uninstall.",
