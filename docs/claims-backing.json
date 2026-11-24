@@ -2921,6 +2921,10 @@
    "kind": "code",
    "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
   },
+  "Newest Coming in the next build Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart; with two loads, What the difference means sets their main figures side by side beside the pictures and says in a sentence whether these shots tell them apart and how many would.": {
+   "kind": "code",
+   "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242); the two-load sentence: src/GroupLab.App/LoadGroups.cs Means and WithMeaning, held by Entry465CompareTests (entry 465 item 7B); shown as coming until the nightly carrying suggestion 61's Export publishes"
+  },
   "Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart.": {
    "kind": "code",
    "where": "website/features.json, each feature's note found in its build's section of docs/RELEASE-NOTES.md by website/build.py feature_problems (entry 242)"
