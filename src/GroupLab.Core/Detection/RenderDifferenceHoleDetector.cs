@@ -105,7 +105,12 @@ public sealed record RenderDifferenceOptions(
     /// paper flat under glass, and a stray shot in its margin is a shot: scan 5 of 2026-09-20 has one 0.2 in from its edge, which Alan's
     /// own table counts.
     /// </summary>
-    bool RefuseMargin = false);
+    bool RefuseMargin = false,
+    /// <summary>
+    /// Whether the picture is a flatbed scan GroupLab believes, error report 60: a scan's print is looked at for a printed dot pattern, and where
+    /// it is one, the print shows a hole only where it reaches near the paper's white, as a hole seen through to the lid does.
+    /// </summary>
+    bool Scan = false);
 
 /// <summary>Where the size of a single hole came from, NOTES-FROM-PLANNING.md entry 82.</summary>
 public enum HoleSizeSource
@@ -181,7 +186,7 @@ public sealed record RenderDifferenceHole(double X, double Y, double HullX, doub
 /// expected artwork in image pixels after that alignment, which is where the printed rings, numerals and markers are. The marking
 /// screen's snap and size check read it to tell printed ink from a hole (NOTES-FROM-PLANNING.md entry 40 section 1).
 /// </summary>
-public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null, HoleSizeReference? HoleSize = null, GrayImage? Residual = null)
+public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null, HoleSizeReference? HoleSize = null, GrayImage? Residual = null, HalftoneRead? Halftone = null)
 {
     /// <summary>
     /// The candidates an exclusion zone swallowed, NOTES-FROM-PLANNING.md entry 77 section 3 item 1: each passed every size, compactness and
@@ -237,8 +242,12 @@ public static partial class RenderDifferenceHoleDetector
     /// <param name="registration">Image pixels to page dmm.</param>
     /// <param name="dpi">The image's resolution at the page, to convert inches to pixels and to rasterise the definition at.</param>
     /// <param name="pageRender">The tile's render at <paramref name="dpi"/>, when the caller already has one.</param>
+    /// <param name="luminance">
+    /// The same picture as luminance, where the caller has it: on a scan, error report 60's dot pattern is looked for in it and a hole must reach
+    /// near the paper's white in it, because a blue or red print reads light in <paramref name="observed"/> and dark in luminance.
+    /// </param>
     public static RenderDifferenceResult Detect(GrayImage observed, TargetDefinition definition, int tile, IPageMapping registration, double dpi, IImagingBackend backend,
-        RenderDifferenceOptions? options = null, GrayImage? pageRender = null)
+        RenderDifferenceOptions? options = null, GrayImage? pageRender = null, GrayImage? luminance = null)
     {
         ArgumentNullException.ThrowIfNull(observed);
         ArgumentNullException.ThrowIfNull(definition);
@@ -264,6 +273,27 @@ public static partial class RenderDifferenceHoleDetector
         // around a photographed sheet can neither lower the local paper estimate nor become a residual, whatever image the caller passed.
         var inside = SheetMask(definition.Page.Width, definition.Page.Height, registration, width, height);
         observed = WithinSheet(observed, expected, inside);
+
+        // Error report 60: a bull printed as a grey made of dots, on a black and white laser printer, and scanned in color, reads as rainbow
+        // bands and a coarse speckle, and the finder took patches of both for holes. Where a scan's solid print is a dot pattern, a smoothed
+        // copy of the picture, past the dots, decides where the print shows a hole: only where it reaches near the paper's white, as the
+        // scanner's white lid does through a hole. It is judged in luminance where the caller has it, in which a blue or red print is dark.
+        HalftoneRead? halftone = null;
+        GrayImage? smooth = null;
+        double smoothPaper = 1;
+        if (options.Scan)
+        {
+            var lightness = luminance is { } l && l.Width == width && l.Height == height ? l : observed;
+            double lightPaper = SheetPaper(lightness, expected, inside);
+            double texture = Texture(lightness, expected, inside, Math.Max(4, (int)Math.Round(TextureBlockInches * dpi)),
+                Math.Max(1, (int)Math.Round(TextureReachInches * dpi)), lightPaper);
+            halftone = new HalftoneRead(texture, texture >= HalftoneTextureAtLeast, 0);
+            if (halftone.DotPattern)
+            {
+                smooth = Smoothed(lightness, Math.Max(1, (int)Math.Round(HalftoneSmoothInches * dpi)));
+                smoothPaper = lightPaper / Math.Max(1, SheetPaper(observed, expected, inside));
+            }
+        }
 
         // S5: local paper, from pixels the render calls paper, and the ink level against it.
         int block = Math.Max(4, (int)Math.Round(options.PaperBlockInches * dpi));
@@ -293,6 +323,8 @@ public static partial class RenderDifferenceHoleDetector
         double threshold = options.ResidualFraction * 255;
         var residual = new byte[width * height];
         var over = new byte[width * height];
+        var white = smooth is null ? null : new byte[width * height];
+        var pattern = smooth is null ? null : new byte[width * height];
         // Entry 474 section 1: the paper level's place along a row is the same on every row, so it is worked out once, and the level itself
         // by the same sum PaperAt makes.
         int paperWidth = (width + block - 1) / block;
@@ -317,8 +349,41 @@ public static partial class RenderDifferenceHoleDetector
                 double n = observed.Pixels[i] / p;
                 residual[i] = (byte)Math.Clamp(Math.Round(255 * Math.Abs(e - n) / range), 0, 255);
                 over[i] = residual[i] >= threshold ? (byte)1 : (byte)0;
+
+                // Error report 60: on a scan whose print is a dot pattern, printed paper shows a hole where it reads near the paper's white, as
+                // the scanner's lid does through a hole, and its torn grey edge beside that; anything else darker there is the pattern and its
+                // bands. Bare paper is judged as always.
+                if (smooth is not null && expected.Pixels[i] < 230)
+                {
+                    if (smooth.Pixels[i] >= HoleReachesPaper * p * smoothPaper)
+                    {
+                        white![i] = 1;
+                    }
+                    else
+                    {
+                        pattern![i] = 1;
+                    }
+                }
             }
         });
+
+        if (smooth is not null)
+        {
+            int open0 = Math.Max(2, (int)Math.Round(options.OpenRadiusInches * dpi, MidpointRounding.ToEven));
+            var middles = backend.Morphology(new GrayImage(width, height, white!), MorphologyOperation.Open, open0);
+            var beside = Grown(middles.Pixels, width, height, Math.Max(1, (int)Math.Round(TornEdgeInches * dpi)));
+            Parallel.For(0, height, y =>
+            {
+                for (int i = y * width, end = i + width; i < end; i++)
+                {
+                    if (pattern![i] == 1 && beside[i] == 0)
+                    {
+                        residual[i] = 0;
+                        over[i] = 0;
+                    }
+                }
+            });
+        }
 
         // S7: threshold, open, close, fill, hull. Phase 9 (2026-10-20): the threshold is taken before the open rather than after, which for a
         // flat element gives the same pixels (BinaryMorphology.Open says why), and opens a 0 and 1 image instead of a grey one.
@@ -417,9 +482,14 @@ public static partial class RenderDifferenceHoleDetector
                 && InsideAPrintedDot(dots, blob.Hull, registration, PrintedDotSlackInches * 254)
                 && DarkerThanThePrint(observed, expected, paper, block, blob, width, inkFraction);
 
+            // Error report 60: on a scan whose print is a dot pattern, a mark that never reaches near the paper's white is a band of the
+            // pattern. A hole there shows the scanner's white lid through it.
+            bool notPaperWhite = smooth is not null && !tooSmall && zone is null && BrightestTenth(smooth, paper, block, blob) / smoothPaper < HoleReachesPaper;
+
             string? why = shape
                 ?? (zone is not null ? $"inside {zone.Name}"
                 : printedDot ? PrintedDot
+                : notPaperWhite ? NotPaperWhite
                 : pastThePrint ? PastThePrint
                 : words is not null ? $"the sheet's own printed words, \"{words}\""
                 : !nearTheGrid ? OutsideTheGrid.TooFarOut
@@ -428,7 +498,7 @@ public static partial class RenderDifferenceHoleDetector
 
             // Entry 291 section 7 item 4: a mark large enough that it may be a hole joined to what lies beside it is kept aside, whatever its
             // shape made of it, and looked at again once the size of a single hole is known.
-            if (!tooSmall && zone is null && !printedDot && !pastThePrint && words is null && nearTheGrid && !movedPrint && diameterIn >= options.JoinedDiameters * options.SmallestHoleInches)
+            if (!tooSmall && zone is null && !printedDot && !notPaperWhite && !pastThePrint && words is null && nearTheGrid && !movedPrint && diameterIn >= options.JoinedDiameters * options.SmallestHoleInches)
             {
                 large.Add((blob, hx, hy, ppi, markAreaIn));
             }
@@ -592,7 +662,8 @@ public static partial class RenderDifferenceHoleDetector
             holes[k] = holes[k] with { Beside = Beside(zones, printed, registration.ToPage(new PointD(holes[k].X, holes[k].Y)), reach * 254) };
         }
 
-        return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference, options.KeepResidual ? new GrayImage(width, height, residual) : null);
+        return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference, options.KeepResidual ? new GrayImage(width, height, residual) : null,
+            halftone is null ? null : halftone with { NotPaperWhite = rejected.Count(r => r.Reason == NotPaperWhite) });
     }
 
     /// <summary>

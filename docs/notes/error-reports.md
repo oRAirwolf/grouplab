@@ -12,17 +12,22 @@ headed "unsupported iOS" and still assessed, but goes ahead of feature work only
 - **Said:** a 3x3 2 MOA E bull set of 3 sheet, printed with the bulls in blue on a black and white laser printer and scanned flat at 150
   dpi in color; GroupLab's hole finding marked 55 shots for 9 rounds fired, "55 of 55 and 1 more need review". Every one of the poster's
   12 sheets does it. The poster offers the 12 scans.
-- **Cause (seen in the scan, not yet reproduced):** a blue bull's large solid area prints as a lighter tint (USER-GUIDE.md, Bulls in), and
-  a black and white laser printer makes that gray from a halftone dot pattern; a 150 dpi color scan beats against the pattern and the
-  ring shows broad rainbow bands of hue and lightness. The hole finder takes patches of those bands for holes. The nine real holes are
-  bright paper-white with torn edges, unlike anything in the bands, so the finder could tell them apart if it judged a candidate against
-  paper-white rather than against the local ring.
-- **Proposed fix (not small, so not done ahead of the queue):** before finding holes on a scan, detect a halftone or moire ring (strong
-  hue variation inside a bull that was printed in one color, or a periodic texture at the dot pitch) and blur it out at that scale, or
-  work on lightness alone; and require a scan candidate to reach near paper-white. Measured against the poster's scans once they come
-  through https://grouplab.org/targets/ with a consent level, and against the existing scan bench so nothing else moves.
+- **Cause (reproduced with `grouplab analyze` on the scan: 51 holes without a caliber, 55 with .224):** a blue bull's large solid area
+  prints as a lighter tint (USER-GUIDE.md, Bulls in), and a black and white laser printer makes that gray from dots; a 150 dpi color scan
+  turns the dots into a coarse speckle and broad rainbow bands, and the hole finder took patches of both for holes. The nine real holes
+  read 0.98 to 0.99 of the paper's white, smoothed, where the pattern never comes near it.
+- **Fixed (2026-11-24, Alan's word):** on a scan GroupLab believes, the print is measured for a dot pattern (the median, over small
+  blocks of solid print, of each pixel's distance from its neighbours' mean, in luminance: 0.082 on this scan, 0.002 to 0.040 on every
+  other local scan), and where it is one, printed paper shows a hole only where a smoothed copy reaches 0.80 of the paper's white, plus
+  the torn gray edge within 0.06 in of that; a mark that never reaches it is refused as the pattern. Judged in luminance, so a blue or
+  red print, light in the brightest channel, can never pass as paper. **Measured:** this scan now gives 8 of its 9 holes and nothing
+  else, with or without a caliber (the ninth, on bare paper above bull 1, was missed before too); the window is wide (white share 0.75
+  to 0.875, edge 0.045 to 0.1 in, smoothing 0.004 to 0.016 in all give the same 8). The 34 other local scans and photographs of GroupLab
+  sheets (Alan's range scans of 20 and 26 September, the friend's scan, the samples, the tester's three black-bull scans, the range
+  photographs) read exactly as before, hole for hole. DotPatternScanTests holds it on a synthetic sheet. The tester's twelve scans have
+  not come through the upload page; they are measured when they do.
 - **Workaround given in the reply (60-1):** Bulls in, black on a black and white printer; scan at 600 dpi in grayscale; N (not a hole) on
-  each false mark. **Status:** open; the reply is written, the fix waits for Alan's priority or the scans.
+  each false mark. **Status:** fixed in the next nightly; the reply saying so goes in its thread with `post-after` that nightly.
 
 ## 57, 2026-11-23, nightly 240 on a Mac (posted in the Discord's bug-reports forum, with screenshots and the three sessions)
 

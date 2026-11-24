@@ -191,7 +191,7 @@ public static class AutomaticMarking
                     // Entry 354 section 1.2: a photograph's margin is where its curled or torn edge and the board behind show. A picture whose
                     // stated resolution would make the sheet print at a size no printer makes, as a phone photograph rebuilt at 300 dpi does,
                     // is a photograph too; only a scan GroupLab believes holds its paper flat.
-                    RefuseMargin = SheetReference.Correction(measurement.Scale) is null });
+                    RefuseMargin = SheetReference.Correction(measurement.Scale) is null, Scan = SheetReference.Correction(measurement.Scale) is not null }, luminance: grey);
             }
             catch (InvalidOperationException ex)
             {
@@ -206,6 +206,12 @@ public static class AutomaticMarking
             }
 
             stage.Parameter("resolution", string.Create(CultureInfo.InvariantCulture, $"{dpi:0.0} px per inch, from the registration"));
+            // Error report 60: a scan printed as a dot pattern says so, with how many marks the pattern made that were refused.
+            if (holes.Halftone is { DotPattern: true } halftone)
+            {
+                stage.Detail(string.Create(CultureInfo.InvariantCulture,
+                    $"the print is a dot pattern (texture {halftone.Texture:0.000} of the paper's level), so printed paper shows a hole only where it reads near the paper's white; {halftone.NotPaperWhite} {(halftone.NotPaperWhite == 1 ? "mark" : "marks")} of the pattern refused"));
+            }
             if (holes.HoleSize is { } holeSize)
             {
                 stage.Parameter("hole size", holeSize.Description);
