@@ -480,7 +480,7 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 
 - Screen readers on the phone no longer stop on empty lines of text, and the website link on Capture says what it opens.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.214)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
