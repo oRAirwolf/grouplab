@@ -42,9 +42,9 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:store-search -->
 
 <!-- status:play -->
-## Google Play production, 2026-11-23 13:53 UTC
+## Google Play production, 2026-11-24 20:06 UTC
 
-- Production, 2026-11-23: blocked: Google refused it (HTTP 400: {
+- Production, 2026-11-24: blocked: Google refused it (HTTP 400: {
 -   "error": {
 -     "code": 400,
 -     "message": "Precondition check failed.",
