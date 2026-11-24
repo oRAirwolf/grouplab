@@ -19,8 +19,8 @@ one that matters.
 | backing | claims |
 |---|---|
 | code | 2052 |
-| measured | 2559 |
-| decided | 1586 |
+| measured | 2560 |
+| decided | 1585 |
 | unbacked | 0 |
 | **total** | **6197** |
 
@@ -4427,7 +4427,7 @@ one that matters.
 - *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Opening it on a Mac From nightly 135, the macOS build is signed with a Developer ID, notarized by Apple and stapled.
 - *code* (NOTES-FROM-PLANNING.md entry 306; the Mac packages are notarized from nightly 135, package.yml's Sign, notarize and staple step): Move GroupLab.app into your Applications folder and open it; the first time, macOS checks it with Apple and opens it.
 - *decided* (Alan, 2026-11-17: release GroupLab 1.0 (build 226) on the App Store; App Store Connect READY_FOR_DISTRIBUTION, testflight workflow run 44125823612): iPhone and iPad The App Store Released Get GroupLab on the App Store GroupLab 1.0 is on Apple's App Store for iPhone and iPad.
-- *decided* (Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn (Google Play production from the first day Google allows it, after 12 testers for 14 days); App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved; docs/notes/external-status.md): Free, like every GroupLab download Released on 17 November 2026 The App Store copy is version 1.0, released on 17 November 2026 Not sure?
+- *measured* (docs/notes/external-status.md, the App Store version as the scheduled check saw it on 2026-11-24 20:06 UTC: version 1.0.243 (build 243) released on the App Store, read by website/build.py app_store_copy (entry 509 finding 2); 17 November 2026 is GroupLab 1.0's first release there (entry 500)): Free, like every GroupLab download Released on 17 November 2026 The App Store copy is version 1.0.243, from build 243; what later builds changed on iPhone and iPad reaches it with the next version Apple approves Not sure?
 - *code* (website/build.py newest_build(): the newest nightly's number, date and commit, read from its own entry in docs/RELEASE-NOTES.md, which the nightly writes as it publishes (entry 338); the stable file names are the ones .github/workflows/nightly.yml uploads to the moving release; since entry 488 the build is named as a person reads it, "GroupLab 1.0, build 226" (website/build.py people()), a pattern rather than one sentence a build (entry 490)): Android GroupLab Dev Newest Download GroupLab Dev grouplab-android-dev.apk GroupLab 1.0, build 244, built 2026-11-24 from commit b734fb4 .
 - *decided* (entry 305 section 1 (GroupLab Dev recommended); entry 288 and docs/ANDROID.md section 17 (updates itself); docs/PLATFORM-SUPPORT.md minimums): An arm64 phone or tablet with Android 10 or later and 4 GB of memory.
 - *decided* (Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn (Google Play production from the first day Google allows it, after 12 testers for 14 days); App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved; docs/notes/external-status.md): The public Play listing follows once 12 testers have stayed in the test for 14 days and Google approves production access; every nightly that passes its checks then goes to production too.
