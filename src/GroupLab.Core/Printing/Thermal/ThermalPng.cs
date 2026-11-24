@@ -70,7 +70,7 @@ public static class ThermalPng
         return null;
     }
 
-    private static void Chunk(Stream output, string type, byte[] data)
+    internal static void Chunk(Stream output, string type, byte[] data)
     {
         var length = new byte[4];
         BinaryPrimitives.WriteUInt32BigEndian(length, (uint)data.Length);

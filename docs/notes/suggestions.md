@@ -25,6 +25,13 @@ before ending a turn, and at least hourly while waiting on CI) and writes each n
 - **Fits:** yes; it is the session report's counterpart for the screen that ends a load workup, and a shared picture carries the name.
 - **Recommendation:** yes, as a PDF and a picture of the same page, with a modest GroupLab footer and grouplab.org, not a watermark.
   Reply 61-1 said it is written up and with the developer, no answer yet.
+- **Answered: yes** (Alan, 2026-11-24, in the session: a PDF and a picture of the same page, on the computer and the phone, with a
+  modest GroupLab and grouplab.org footer, not a watermark). **Built the same day:** Export on Compare loads (the computer: PDF… or
+  Picture (PNG)…; the phone: an Export card sharing the picture or the PDF, or saving the picture to the gallery), one page drawn by
+  `ComparisonPages` for both: each load's group at one scale in its color, the figures with their 95 percent intervals, what the
+  difference means, the tests, Top Gun and the shots to resolve a difference, with "Made with GroupLab <version>, grouplab.org" small
+  at the foot. The PDF takes a second page only for many loads; the picture is always one image, 150 dpi. The reply saying so goes in
+  the thread with `post-after` the nightly that carries it.
 
 ## Issue 59, 2026-11-19 (filed 2026-11-23 from the help forum): the App Store copy on an iPhone on iOS 18
 

@@ -532,6 +532,20 @@ public static class BenchSuite
             },
             ["OnePageReports", "ShareCard", "ResultWords"]);
 
+        // Suggestion 61: three loads compared and exported, the PDF and the picture of the same page, as Export makes them.
+        yield return new BenchCase("documents", "the comparison export", "Three loads compared, written as the PDF and drawn as the picture Export saves.",
+            _ =>
+            {
+                var groups = Enumerable.Range(0, 3).Select(k => ($"Load {k + 1}",
+                    (IReadOnlyList<PointD>)[.. Enumerable.Range(0, 10).Select(i => new PointD((0.3 + (0.1 * k)) * Math.Cos(i * 2.1), (0.3 + (0.1 * k)) * Math.Sin(i * 1.3)))])).ToList();
+                var report = LoadComparison.Compare(groups, UnitSettings.Imperial.Length);
+                var page = ComparisonPages.For(report, [.. groups.Select(g => new ExportedLoad(g.Item1, "10 shots", null))], "3 loads, 30 shots.", [],
+                    UnitSettings.Imperial, 3600, GroupLab.Core.Gltd.Model.PageSize.Letter, "2026-11-24", "bench");
+                byte[] pdf = ComparisonPages.Write(page), png = ComparisonPages.Picture(page);
+                return string.Create(CultureInfo.InvariantCulture, $"{pdf.Length / 1024} kB PDF, {png.Length / 1024} kB picture");
+            },
+            ["ComparisonPages", "ColourPng"]);
+
         static BenchCase Guide(BenchMaterial m, string name) =>
             new("documents", name.ToLowerInvariant() + " PDF", $"Laying {name}.md out and writing it as a PDF, pictures and all.",
                 _ =>

@@ -208,14 +208,23 @@ public static class OnePageReports
         double reach = filling.Select(p => Math.Sqrt(Math.Pow(p.OffsetInches.X - centre.X, 2) + Math.Pow(p.OffsetInches.Y - centre.Y, 2)) + ((calibre ?? 0) / 2))
             .Concat([meanRadius ?? 0, 0.1]).Max() * 1.15;
 
-        // The grid in the person's own unit: the smallest step giving at most ten squares across, and the square a whole number of steps.
+        var (half, step, stepWords) = Grid(reach, units);
         double perInch = UnitSettings.FromInches(1, units.Linear);
-        double step = Steps(units.Linear).Select(s => s / perInch).FirstOrDefault(s => 2 * reach / s <= 10, Steps(units.Linear)[^1] / perInch);
-        double half = Math.Ceiling(reach / step) * step;
-        string stepWords = (step * perInch).ToString("0.##", CultureInfo.InvariantCulture) + " " + UnitSettings.Symbol(units.Linear);
         string across = (2 * half * perInch).ToString("0.##", CultureInfo.InvariantCulture) + " " + UnitSettings.Symbol(units.Linear);
         string words = $"Grid squares {stepWords}; the plot is {across} across, centered on the group.";
         return new OnePagePlot(plotted, centre, GroupAnalysis.HasOrigin(state, shots), meanRadius, calibre, half, step, words);
+    }
+
+    /// <summary>
+    /// A plot's grid in the person's own unit, for a square reaching <paramref name="reach"/> inches each side of its center: the smallest step
+    /// giving at most ten squares across, the half width a whole number of steps, and the step in words.
+    /// </summary>
+    internal static (double HalfInches, double StepInches, string StepWords) Grid(double reach, UnitSettings units)
+    {
+        double perInch = UnitSettings.FromInches(1, units.Linear);
+        double step = Steps(units.Linear).Select(s => s / perInch).FirstOrDefault(s => 2 * reach / s <= 10, Steps(units.Linear)[^1] / perInch);
+        double half = Math.Ceiling(reach / step) * step;
+        return (half, step, (step * perInch).ToString("0.##", CultureInfo.InvariantCulture) + " " + UnitSettings.Symbol(units.Linear));
     }
 
     /// <summary>The PDF: one page.</summary>

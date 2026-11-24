@@ -592,14 +592,15 @@
     ],
     [
      "The header",
-     "How many loads, how many shots in total, and that they are in the order you chose."
+     "How many loads, how many shots in total, and that they are in the order you chose. Under it, Export saves the comparison as a PDF or as a picture of the same page, to send or post."
     ]
    ],
    "steps": [
     "Tick two or more sessions in session records and press Compare the chosen.",
     "Read the sentence under the mean radius bars before you read the numbers.",
     "If the intervals overlap, shoot more of both loads rather than picking a winner.",
-    "Look at the plots for a difference in shape that the single numbers hide."
+    "Look at the plots for a difference in shape that the single numbers hide.",
+    "To share it, press Export and choose PDF or Picture (PNG); on the phone, use the Export card at the foot."
    ],
    "fits": "From <a href=\"/tour/sessions/\">session records</a>. It is usually where a load development session ends.",
    "links": [

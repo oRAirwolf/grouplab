@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using GroupLab.App.Diagnostics;
 using GroupLab.App.Theme;
 using GroupLab.Core.Imaging;
@@ -308,22 +309,7 @@ public sealed partial class MainWindow
     /// them, and null where it does not. A figure GroupLab worked out from readings says so, because a measured spread and a typed one are
     /// not the same claim (entry 115 section 3).
     /// </summary>
-    private string? SpeedOf(string? loadName)
-    {
-        if (loadName is null || book.FindLoad(loadName) is not { MuzzleVelocityFps: { } fps })
-        {
-            return null;
-        }
-
-        var load = book.FindLoad(loadName)!;
-        string speed = units.Speed(fps);
-        if (load.MuzzleVelocitySdFps is not { } sd)
-        {
-            return speed;
-        }
-
-        return speed + ", SD " + units.Speed(sd) + (load.MuzzleVelocitySdFrom is { Length: > 0 } from ? " from " + from : "");
-    }
+    private string? SpeedOf(string? loadName) => ComparisonPages.Speed(book, loadName, units);
 
     private void ShowComparison(List<(string, IReadOnlyList<PointD>, string, string?)> groups, string? refusal)
     {
@@ -367,7 +353,8 @@ public sealed partial class MainWindow
         }
 
         compareCharts.Clear();
-        compareColumn.Children.Add(Line($"{report.Groups.Count} loads, {report.Groups.Sum(g => g.Shots)} shots, in the order chosen." + (compareFooting is null ? "" : " " + compareFooting)));
+        compareColumn.Children.Add(Line(CompareSummary(report)));
+        compareColumn.Children.Add(Row(ExportComparisonButton()));
 
         // Entry 309 section 2: the groups first, each about its own center at one scale in its load's color, and a tap stacks them.
         // Entry 465 item 7B: with two loads the card's free space says what the difference means, from this comparison's own words.
@@ -490,6 +477,77 @@ public sealed partial class MainWindow
         }
 
         compareColumn.Children.Add(Note("With 80 percent power at the 5 percent level, by the F test on the Rayleigh sigmas (docs/STATISTICS.md section 9.2)."));
+    }
+
+    /// <summary>The line under the title: how many loads and shots, and the footing they were put on.</summary>
+    private string CompareSummary(LoadComparisonReport report) =>
+        $"{report.Groups.Count} loads, {report.Groups.Sum(g => g.Shots)} shots, in the order chosen." + (compareFooting is null ? "" : " " + compareFooting);
+
+    /// <summary>Suggestion 61: the comparison as one page, the screen's own words, for a PDF or a picture.</summary>
+    internal ComparisonPage? BuildComparisonPage()
+    {
+        if (comparison is not { } report)
+        {
+            return null;
+        }
+
+        var loads = compareGroups.Select(g => new ExportedLoad(g.Item1, g.Item3, g.Item4)).ToList();
+        return ComparisonPages.For(report, loads, CompareSummary(report), compareTopGun, units, compareDistance,
+            OnePageReports.PaperFor(AppSettingsStore.LetterPaper()), DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), AppInfo.Version);
+    }
+
+    /// <summary>Suggestion 61: Export, a PDF of the comparison or a picture of the same page, saved where the person chooses.</summary>
+    private Button ExportComparisonButton()
+    {
+        var menu = new MenuFlyout();
+        foreach (var (words, picture) in new (string, bool)[] { ("PDF…", false), ("Picture (PNG)…", true) })
+        {
+            var item = new MenuItem { Header = words };
+            item.Click += async (_, _) => await ExportComparisonDialog(picture);
+            menu.Items.Add(item);
+        }
+
+        var button = new Button { Content = "Export", Flyout = menu, Margin = new Thickness(2) };
+        ToolTip.SetTip(button, "This comparison as a PDF, or as a picture of the same page to post, with the groups, the figures, the verdict and the tests");
+        return button;
+    }
+
+    private async Task ExportComparisonDialog(bool picture)
+    {
+        string kind = picture ? "comparison-picture" : "comparison-pdf";
+        DiagnosticLog.Info("dialog.open", ("dialog", kind));
+        if (BuildComparisonPage() is not { } page)
+        {
+            return;
+        }
+
+        var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            Title = picture ? "Save the comparison as a picture" : "Save the comparison as a PDF",
+            SuggestedFileName = ComparisonPages.FileName(page) + (picture ? ".png" : ".pdf"),
+            DefaultExtension = picture ? "png" : "pdf",
+        });
+        DiagnosticLog.Info("dialog.result", ("dialog", kind), ("chosen", file is not null));
+        if (file?.TryGetLocalPath() is { } path)
+        {
+            WriteComparison(path, picture, page);
+        }
+    }
+
+    /// <summary>Writes the comparison as a PDF or a picture, and says where; also the headless tests' way in.</summary>
+    internal void WriteComparison(string path, bool picture, ComparisonPage? page = null)
+    {
+        page ??= BuildComparisonPage();
+        if (page is null)
+        {
+            status.Text = "Nothing to export: choose two or more sessions to compare first.";
+            return;
+        }
+
+        byte[] bytes = picture ? ComparisonPages.Picture(page) : ComparisonPages.Write(page);
+        File.WriteAllBytes(path, bytes);
+        status.Text = (picture ? "Comparison picture saved to " : "Comparison PDF saved to ") + path;
+        DiagnosticLog.Info("file.save", [.. DiagnosticLog.File(path), ("kind", picture ? "comparison-picture" : "comparison-pdf"), ("bytes", bytes.Length)]);
     }
 
     /// <summary>Shows or leaves the comparison.</summary>

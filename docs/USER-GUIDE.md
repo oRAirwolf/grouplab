@@ -539,6 +539,15 @@ With two loads, **Each load's group** keeps the two pictures at their size and f
 
 When the intervals overlap, the screen says the data do not separate the loads. The sentence under each chart and the verdict are one decision, so they never disagree. Every test also says what it could have detected, and the table at the foot gives the shots per load it takes to resolve a smaller difference. Sessions shot at different distances are compared as angles, and the screen says so.
 
+### Sharing a comparison
+
+**Export**, under the line that counts the loads and shots, saves the comparison as a **PDF** or as a **Picture (PNG)** of the same
+page: each load's group at one scale in its color, the figures with their 95 percent intervals, what the difference means, the tests
+and what they could detect, and Top Gun where the rifle's weight is known, with "Made with GroupLab" and grouplab.org small at the
+foot. A picture shows where a PDF does not, such as in a Discord channel; it is always one image, while the PDF of many loads goes on
+to a second page. On the phone, the **Export** card at the foot of Compare loads shares the picture or the PDF, or saves the picture
+to the gallery.
+
 ### Each session is named by what tells it apart
 
 Each session is named by what tells it apart: its load where you gave one, then its date where two would read the same, then its time, with the sheet's name beneath. Two sessions shot on one sheet on one day read "2026-09-29, 04:40" and "2026-09-29, 05:01", not the sheet's name twice.

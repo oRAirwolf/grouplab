@@ -5,6 +5,7 @@ using GroupLab.App;
 using GroupLab.App.Diagnostics;
 using GroupLab.Core.Marking;
 using GroupLab.Core.Records;
+using GroupLab.Core.Reporting;
 using GroupLab.Core.Statistics;
 
 namespace GroupLab.Mobile;
@@ -23,6 +24,12 @@ internal sealed class ComparePage : UserControl
     private UnitSettings units;
     private readonly double? distance;
     private string figure = "Mean radius";
+
+    /// <summary>Suggestion 61: the page the comparison exports, made when asked; null where there is no comparison.</summary>
+    private readonly Func<GroupLab.Core.Reporting.ComparisonPage>? exportPage;
+
+    /// <summary>What the last export said.</summary>
+    private readonly TextBlock exportSaid = Screens.Line("");
 
     /// <summary>Where the figure chips go in the column, with the chart's card after them.</summary>
     private int chipsAt;
@@ -88,7 +95,9 @@ internal sealed class ComparePage : UserControl
             column.Children.Add(Screens.Card(list));
 
             // Entry 456 section 3 and request 103: Top Gun for each compared load, and each group beside it on its basis.
-            if (GroupLab.Core.Ballistics.TopGun.Lines(records.Zip(setup.Groups, (r, g) => (r.Rifle, r.Load, g.Name, g.Offsets)), PhoneAnalysis.Store().LoadBook(), setup.Distance) is { Count: > 0 } topGun)
+            var book = PhoneAnalysis.Store().LoadBook();
+            var topGun = GroupLab.Core.Ballistics.TopGun.Lines(records.Zip(setup.Groups, (r, g) => (r.Rifle, r.Load, g.Name, g.Offsets)), book, setup.Distance);
+            if (topGun.Count > 0)
             {
                 var card = new StackPanel { Spacing = 6, Children = { Screens.Heading("Top Gun") } };
                 foreach (string line in topGun)
@@ -131,6 +140,20 @@ internal sealed class ComparePage : UserControl
                 BorderThickness = new Thickness(1),
                 Child = verdict,
             });
+
+            // Suggestion 61: the comparison as one page, the computer's own, shared as a PDF or as a picture of the same page to post.
+            var loads = setup.Groups.Select(g => new ExportedLoad(g.Name, g.Detail, ComparisonPages.Speed(book, g.Load, units))).ToList();
+            string summary = $"{report.Groups.Count} loads, {report.Groups.Sum(g => g.Shots)} shots, in the order chosen." + (setup.Footing is { } said ? " " + said : "");
+            var shown = report;
+            exportPage = () => ComparisonPages.For(shown, loads, summary, topGun, this.units, distance, OnePageReports.PaperFor(AppSettingsStore.LetterPaper()),
+                DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture), AppInfo.ShortVersion);
+            column.Children.Add(Screens.Card(
+                Screens.Heading("Export"),
+                Screens.Dim("One page: each load's group, its figures with their ranges, what the difference means and the tests, with GroupLab and grouplab.org at the foot."),
+                Screens.Primary("Share as a picture", () => Export(picture: true, gallery: false)).Id("compare-share-picture"),
+                Screens.Choice("Share as a PDF", () => Export(picture: false, gallery: false)).Id("compare-share-pdf"),
+                Screens.Choice("Save the picture to the gallery", () => Export(picture: true, gallery: true)).Id("compare-save-picture"),
+                exportSaid));
             Draw();
         }
 
@@ -142,6 +165,48 @@ internal sealed class ComparePage : UserControl
         foreach (var child in column.Children.Where(c => !Wide(c)))
         {
             child.MaxWidth = Reading;
+        }
+    }
+
+    /// <summary>
+    /// Suggestion 61: the comparison as a PDF through the share sheet, or as a picture of the same page through the share sheet or into the
+    /// gallery. The file goes in the shared folder, where only the newest shared file is kept.
+    /// </summary>
+    internal void Export(bool picture, bool gallery)
+    {
+        if (exportPage is null)
+        {
+            return;
+        }
+
+        try
+        {
+            var page = exportPage();
+            byte[] bytes = picture ? ComparisonPages.Picture(page) : ComparisonPages.Write(page);
+            DiagnosticLog.Info("compare.export", ("picture", picture), ("gallery", gallery), ("bytes", bytes.Length));
+            if (!picture)
+            {
+                exportSaid.Text = Phone.Platform.SharePdf(bytes, ComparisonPages.FileName(page)) ?? "";
+                return;
+            }
+
+            string shared = Path.Combine(Phone.Platform.CacheFolder, "shared");
+            if (Directory.Exists(shared))
+            {
+                Directory.Delete(shared, recursive: true);
+            }
+
+            Directory.CreateDirectory(shared);
+            string file = Path.Combine(shared, ComparisonPages.FileName(page) + ".png");
+            File.WriteAllBytes(file, bytes);
+            exportSaid.Text = gallery
+                ? Phone.Platform.SaveToGallery(file, "image/png") ?? "Saved to the gallery, in Pictures, GroupLab."
+                : Phone.Platform.ShareFile(file, "image/png", "Share the comparison") ?? "";
+        }
+        catch (IOException ex)
+        {
+            DiagnosticLog.Exception(LogLevel.Warn, "compare.export", ex);
+            ProblemSheet.Stop(exportSaid, exportSaid, "The comparison could not be exported", "The comparison could not be exported: " + ex.Message);
         }
     }
 
