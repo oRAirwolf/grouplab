@@ -1,6 +1,6 @@
 {
   "about": "Written by scripts/screens-stamp.py when these pictures were rendered: the newest nightly then, and each screen's source files' hash.",
-  "afterNightly": 243,
+  "afterNightly": 244,
   "screens": {
     "analysis": "6ee93d4e7a9d79bd9bd6483125c7bb07f86c8f96b0a9b2c4cd74355f158fc8e1",
     "analysis-open": "52edf4ecd1adb44b6afc970fb8afe6a1f9b1bb5e98cc40ee5f0ac968397d8226",
@@ -8,7 +8,7 @@
     "ballistics-hit": "4406be8a439c64b526ad3e3cd49955d5a6dac9034e5f9ad93eb411a0a36f4556",
     "ballistics-point": "d62f5820edb585a96141aa1528bda7b30f2b6801057f0ca2807549c1c87db934",
     "bull-lines": "546e36003d18b7feac93236dfcd38adc3fe3ddf95994cab88fe894664a125093",
-    "compare": "8fff29185a60fe8c81001794a09d9284637d72aab1373afdabd5e0e350493e37",
+    "compare": "624357b5de8953837907ddf13c57afe6f0986afb19d5f0979406429023f6b505",
     "conditions": "0a43be4db8c70ad3886f44c4a0be95802cf27d4ccd3aa38ceae6685d2569505e",
     "demo-tour": "4938ed2bc08ffb119590b1afd2a2d1ac23494ca6caf62482bb29360733dc5f30",
     "equipment": "03d8ee39c0e11643fbe83afacae59b26b77bea3c5975ed66221eebffee8427c3",
@@ -30,7 +30,7 @@
     "scale-markers": "0ebc0291f57e10db1975f3736b6756b63d33d4021e8c51f180b734a91eef0ef6",
     "scope-unit": "00eebac1f51d91cb140ca56e54bdc765ee11d9231554c1a615a5cec3c697091e",
     "sessions": "7fb532378292656d8977cd49f0f94a4f81d8f5b2e243e13d49eeeb6220cbd692",
-    "set-tab": "702c57ae4f8796394b97c292c03f450bf57f49716357009e9f9d343b1aea7cca",
+    "set-tab": "8b2f7bf0b2c8ff6cc114e4080eec40fba7662e7ac893f07651329d272c030578",
     "settings": "792c68ff17d0b7256381bd8d2cc649e3d6dbae656cc4b17abdd02b1ecf18c412",
     "settings-data": "47fd2d5705997de659246ef0ecc6e3250651b8c491be874d3817605112bfee2e",
     "settings-shooting": "ad4f2d76d618949fc2bee852290e0bb2944d4f2eb46c788f24b4795c19a4a95a",
