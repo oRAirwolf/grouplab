@@ -482,7 +482,7 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 - A save, a print or a file that will not open now says so in the middle of the window, as other failures do, instead of in a small line, on the computer and the phone.
 - Speeds read in feet a second everywhere, and the phone names distances and lengths as the computer does.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.215)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
