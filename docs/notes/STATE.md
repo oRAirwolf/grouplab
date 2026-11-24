@@ -15,6 +15,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 
 ## In flight
 
+- **Discord, 2026-11-24**: report 60 (halftone gray scanned in color, 55 marks for 9 rounds), fix proposed in error-reports.md, not
+  built; suggestion 61 (export Compare loads as PDF or picture) in suggestions.md. Replies 60-1 and 61-1 written.
 - **Entry 514 (2026-11-23)**: done; question 119 withdrawn the same day (Android was already compiled ahead of time). The iOS
   keyboard bar fix (da3502ac): proved by three green runs in a row.
 - **Entry 515 (2026-11-23)**: the bot's replies end "This is an AI generated response.", installed 12:15 UTC; the nine earlier

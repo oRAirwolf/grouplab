@@ -7,6 +7,23 @@ the person's files. Claude Code checks the open issues at the start of a run, be
 hourly while waiting on CI, and writes each new one here. **A report from an iPhone or iPad below iOS 26** (entry 505 section 5) is
 headed "unsupported iOS" and still assessed, but goes ahead of feature work only when the same fault also happens on iOS 26 or later.
 
+## 60, 2026-11-24, nightly 243 on a Mac (posted in the Discord's help forum, with a screenshot and the scan)
+
+- **Said:** a 3x3 2 MOA E bull set of 3 sheet, printed with the bulls in blue on a black and white laser printer and scanned flat at 150
+  dpi in color; GroupLab's hole finding marked 55 shots for 9 rounds fired, "55 of 55 and 1 more need review". Every one of the poster's
+  12 sheets does it. The poster offers the 12 scans.
+- **Cause (seen in the scan, not yet reproduced):** a blue bull's large solid area prints as a lighter tint (USER-GUIDE.md, Bulls in), and
+  a black and white laser printer makes that gray from a halftone dot pattern; a 150 dpi color scan beats against the pattern and the
+  ring shows broad rainbow bands of hue and lightness. The hole finder takes patches of those bands for holes. The nine real holes are
+  bright paper-white with torn edges, unlike anything in the bands, so the finder could tell them apart if it judged a candidate against
+  paper-white rather than against the local ring.
+- **Proposed fix (not small, so not done ahead of the queue):** before finding holes on a scan, detect a halftone or moire ring (strong
+  hue variation inside a bull that was printed in one color, or a periodic texture at the dot pitch) and blur it out at that scale, or
+  work on lightness alone; and require a scan candidate to reach near paper-white. Measured against the poster's scans once they come
+  through https://grouplab.org/targets/ with a consent level, and against the existing scan bench so nothing else moves.
+- **Workaround given in the reply (60-1):** Bulls in, black on a black and white printer; scan at 600 dpi in grayscale; N (not a hole) on
+  each false mark. **Status:** open; the reply is written, the fix waits for Alan's priority or the scans.
+
 ## 57, 2026-11-23, nightly 240 on a Mac (posted in the Discord's bug-reports forum, with screenshots and the three sessions)
 
 - **Said:** three sheets ticked in Session records, two of the 3x3 2 MOA C bull set of 3 and one loose 3x3 2 MOA C bull sheet used as a

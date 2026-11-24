@@ -12,6 +12,20 @@ it ships in. A suggestion that is really a bug goes to `docs/notes/error-reports
 Claude Code lists the open `suggestion` issues at the same points as the error reports (the start of a run, before each inbox entry,
 before ending a turn, and at least hourly while waiting on CI) and writes each new one here at once.
 
+## Issue 61, 2026-11-24: export Compare loads as a PDF or picture, with GroupLab on it
+
+- **Asked** (feature-requests forum, nightly 243 on a Mac): an Export on Compare loads, to PDF, JPG, CSV or text, in a form that suits
+  posting on Discord, since a screenshot cuts off the bottom of the screen. In a second message: a large GroupLab header or watermark
+  with a link back to grouplab.org on the exported report, so people seeing it can find the app.
+- **Already done?** No for comparisons: Compare loads (MainWindow.Compare.cs) has no export of any kind. A single session has the Report
+  button (the full report or one page, PDF) and Export (CSV), and a sheet's analysis can be shared; the comparison cannot.
+- **Size:** medium: a one or two page PDF of the comparison (the groups card, What the difference means, each load's figures and the
+  tests), plus a PNG of the same page for Discord, on the computer and the phone, from the same drawing as the session report. The
+  branding is small: a footer naming GroupLab and grouplab.org; a large watermark is a look change and Alan's to decide.
+- **Fits:** yes; it is the session report's counterpart for the screen that ends a load workup, and a shared picture carries the name.
+- **Recommendation:** yes, as a PDF and a picture of the same page, with a modest GroupLab footer and grouplab.org, not a watermark.
+  Reply 61-1 said it is written up and with the developer, no answer yet.
+
 ## Issue 59, 2026-11-19 (filed 2026-11-23 from the help forum): the App Store copy on an iPhone on iOS 18
 
 - **Asked** (a question in the help forum, labelled `question`): GroupLab from the App Store refuses an iPhone XS Max on iOS 18.7, a
