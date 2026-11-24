@@ -12,6 +12,20 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.244
+
+**2026-11-24**, commit `b734fb4`. Nightly.
+
+**What you will notice**
+
+- On a flatbed scan of a sheet whose bulls printed as a gray made of dots, as a black and white laser printer prints a blue or red bull, finding the holes no longer takes the dots and the rainbow bands of a color scan for holes. (Error report 60) (found from a Discord post).
+
+From your reports and targets in this build: 1 fix from 1 error report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.244)
+
+---
+
 ## 1.0.0-nightly.243
 
 **2026-11-23**, commit `2b49884`. Nightly.
