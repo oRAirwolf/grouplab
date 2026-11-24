@@ -12,6 +12,18 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.245
+
+**2026-11-24**, commit `5227e46`. Nightly.
+
+**What you will notice**
+
+- Compare loads can now be exported as a PDF or as a picture of the same page, on the computer and the phone: each load's group, its figures and their ranges, what the difference means and the tests, with GroupLab and grouplab.org small at the foot, ready to post. (Suggestion 61).
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.245)
+
+---
+
 ## 1.0.0-nightly.244
 
 **2026-11-24**, commit `b734fb4`. Nightly.
