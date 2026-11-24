@@ -9,14 +9,17 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-23, after entry 514 and request 117; the inbox is empty.
+**Last rewritten:** 2026-11-24, after report 60 and suggestion 61 (Alan's word in the session); the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Discord, 2026-11-24**: report 60 (halftone gray scanned in color, 55 marks for 9 rounds), fix proposed in error-reports.md, not
-  built; suggestion 61 (export Compare loads as PDF or picture) in suggestions.md. Replies 60-1, 61-1 and 59-2 posted.
+- **Discord, 2026-11-24, Alan's word in the session**: report 60 fixed (b734fb41, nightly 244: on a scan whose print is a dot
+  pattern, print shows a hole only where it reaches near paper white; tester's scan 8 of 9, nothing false; the other 34 local pictures
+  unchanged); suggestion 61 built (f22bf20f, nightly 245: Export on Compare loads, PDF or picture, computer and phone). Issues 60 and 61
+  closed; replies 60-2 and 61-2 posted. The tester's twelve scans have not come through the upload page yet.
+- **Entry507SplashTests fail here** (6, thread ownership), on clean main too, pass in CI. closed-replies.py stays (entry 510).
 - **Entry 514 (2026-11-23)**: done; question 119 withdrawn the same day (Android was already compiled ahead of time). The iOS
   keyboard bar fix (da3502ac): proved by three green runs in a row.
 - **Entry 515 (2026-11-23)**: the bot's replies end "This is an AI generated response.", installed 12:15 UTC; the nine earlier
@@ -25,9 +28,6 @@ If something here disagrees with the logs, the logs are right and this file is o
   iPhone and iPad 1.0.242 (build 242, the iOS 18 to 25 one) and the Mac's 1.0 (build 240), submitted 11:59 UTC by `scripts/app-store.py`;
   when the iPhone one is released, reply in question 59's thread (Quack, issue 59). Play production waits on Google (14 days of 12
   testers, about 2 December, then Alan's application). `STORE_SUBMISSIONS_PAUSED` stops all three stores.
-- **Request 115 is in** (11:02 UTC, by Code): help is read; a support forum is read once made. Question 118 answered (a).
-- **Entry 510 (2026-11-22)**: `scripts/closed-replies.py` stays beside the issue check until the worker reopens an issue itself.
-- **Entry 501 (2026-11-18)**: the Mac App Store copy, built by mac-store.yml after each nightly, is with App Review (entry 513).
 
 ## The next three
 
@@ -75,7 +75,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (118 answered (a); 119 withdrawn, 2026-
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.243 (2026-11-23). GitHub's
+- **Last nightly:** 1.0.0-nightly.245 (2026-11-24; 244 carried report 60, 245 suggestion 61). GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
