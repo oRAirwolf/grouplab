@@ -16,7 +16,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 ## In flight
 
 - **Discord, 2026-11-24**: report 60 (halftone gray scanned in color, 55 marks for 9 rounds), fix proposed in error-reports.md, not
-  built; suggestion 61 (export Compare loads as PDF or picture) in suggestions.md. Replies 60-1 and 61-1 written.
+  built; suggestion 61 (export Compare loads as PDF or picture) in suggestions.md. Replies 60-1, 61-1 and 59-2 posted.
 - **Entry 514 (2026-11-23)**: done; question 119 withdrawn the same day (Android was already compiled ahead of time). The iOS
   keyboard bar fix (da3502ac): proved by three green runs in a row.
 - **Entry 515 (2026-11-23)**: the bot's replies end "This is an AI generated response.", installed 12:15 UTC; the nine earlier
@@ -50,7 +50,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. When Apple releases 1.0.242: reply in question 59's thread, and update the README's and download page's "with Apple" wording
+1. Apple released 1.0.242 (2026-11-23 22:33 UTC; question 59 answered, reply 59-2): update the README's and download page's "with Apple" wording
    and the Features sentence's "from build 226"; the same for the Mac's 1.0. Every new Discord message at every check.
 2. The phone's Session name box on Targets (desktop only in entry 512).
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
