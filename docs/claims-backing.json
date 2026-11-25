@@ -5,6 +5,14 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+ "The phone's Targets screen draws its page the same way, and a sheet with a load block has a **Session name** box under its picture: the name, such as Rifle A 140 gr, prints in the square at the bottom right of the load block, above the sheet's code, with each sheet of a set's place in it, in Print, Share the PDF and the printer shares.": {
+    "kind": "code",
+    "where": "the phone's Targets screen, mobile/GroupLab.Mobile/TargetsPage.cs (SessionNameWords, SessionNameFor), held by Mobile Entry512PhoneNameTests; Alan's queue of 24 November 2026, part 1"
+   },
+ "The phone's Targets screen draws its page the same way, and a sheet with a load block has a Session name box under its picture: the name, such as Rifle A 140 gr, prints in the square at the bottom right of the load block, above the sheet's code, with each sheet of a set's place in it, in Print, Share the PDF and the printer shares.": {
+    "kind": "code",
+    "where": "the phone's Targets screen, mobile/GroupLab.Mobile/TargetsPage.cs (SessionNameWords, SessionNameFor), held by Mobile Entry512PhoneNameTests; Alan's queue of 24 November 2026, part 1"
+   },
   "On the tour · In the user guide · The research behind it Compare loads honestly Compare loads draws each load&#x27;s figures with the range they could really be, so you can see whether the shots can tell two loads apart; with two loads, What the difference means sets their main figures side by side beside the pictures and says in a sentence whether these shots tell them apart and how many would.": {
    "kind": "code",
    "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"

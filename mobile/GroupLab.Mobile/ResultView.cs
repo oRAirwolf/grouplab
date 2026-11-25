@@ -169,7 +169,13 @@ public sealed class ResultView : UserControl, IOpenTarget
     private string PoolSavedWords => poolId is null ? GroupLab.Core.Records.SessionPools.NothingToSaveWords : GroupLab.Core.Records.SessionPools.SavedWords(poolSaved);
 
     /// <summary>The session saved over itself, or for a pooled group nothing saved and the session it has (none).</summary>
-    private long? SaveHere() => pooled ? sessionId : PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
+    private long? SaveHere() => pooled || deleted ? sessionId : PhoneAnalysis.Save(session.State, definition, units, sessionId) ?? sessionId;
+
+    /// <summary>Set once this result's session is deleted, so a change made afterwards does not save it again as a new one.</summary>
+    private bool deleted;
+
+    /// <summary>Said once a saved session is deleted from its result.</summary>
+    internal const string SessionDeletedWords = "Deleted this session. It is no longer in Sessions; a pooled set that used it keeps its other sheets.";
     private readonly Action again;
 
     /// <summary>
@@ -641,6 +647,47 @@ public sealed class ResultView : UserControl, IOpenTarget
                     deleting.Children.Add(Screens.Line(PoolSavedWords));
                 }).Id("result-pool-delete-no"));
             }).Id("result-pool-delete"));
+            actions.Children.Add(deleting);
+        }
+
+        // Entry 495's sheet question on the phone (Alan's queue of 2026-11-24): a saved session is deleted as on the computer, asking first and
+        // naming each pooled set that uses it, which keeps its other sheets.
+        if (!pooled && sessionId is not null)
+        {
+            var deleting = new StackPanel { Spacing = 8 };
+            void Offer()
+            {
+                deleting.Children.Clear();
+                deleting.Children.Add(Screens.Choice("Delete this session", Ask).Id("result-session-delete"));
+            }
+
+            void Ask()
+            {
+                if (sessionId is not { } asked)
+                {
+                    return;
+                }
+
+                deleting.Children.Clear();
+                deleting.Children.Add(Screens.Line(PhoneAnalysis.DeleteSessionQuestion(asked, units)).Id("result-session-delete-question"));
+                deleting.Children.Add(Screens.Choice("Delete", () =>
+                {
+                    if (sessionId is { } id)
+                    {
+                        PhoneAnalysis.DeleteSession(id);
+                    }
+
+                    sessionId = null;
+                    deleted = true;
+                    deleting.Children.Clear();
+                    deleting.Children.Add(Screens.Line(SessionDeletedWords));
+                    saved.Text = "";
+                }).Id("result-session-delete-yes"));
+                // Keep it puts the choice back as it was, so the person can still delete it later.
+                deleting.Children.Add(Screens.Choice("Keep it", Offer).Id("result-session-delete-no"));
+            }
+
+            Offer();
             actions.Children.Add(deleting);
         }
 

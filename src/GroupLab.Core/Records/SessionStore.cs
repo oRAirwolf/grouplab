@@ -646,6 +646,17 @@ public sealed partial class SessionStore
         return deleted;
     }
 
+    /// <summary>
+    /// How many sessions keep this picture as theirs: the phone deletes its copy of a picture with the last session that used it, since one
+    /// picture can hold several sessions (error report 40).
+    /// </summary>
+    public int CountWithImagePath(string path)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+        using var db = Connect();
+        return (int)(long)Scalar(db, "SELECT count(*) FROM sessions WHERE image_path = $path", ("$path", path))!;
+    }
+
     /// <summary>The sessions analysed against a sheet, by its definition identifier.</summary>
     public int CountUsing(string definitionId)
     {

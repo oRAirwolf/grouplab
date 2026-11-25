@@ -6,12 +6,12 @@
 const fs = require("fs");
 const path = require("path");
 
-// Alan, 2026-10-07: stop at 100 for this week only, raised from 98, 95 and the 88 he set on 2026-10-06 (entry 376), to use the rest of
-// the week before it resets on 2026-10-08 02:00 UTC. Until then the line is 100, and the finishing flag buys nothing; from the reset it
-// is 85 again, with 88 the last line for a finishing block, and no edit needed.
-const RAISED_UNTIL = Date.UTC(2026, 9, 8, 2, 0);
+// Alan, 2026-11-24, for his queue in the session: stop at 95 this week, until the week resets on 2026-11-26 02:00 UTC. Until then the
+// line is 95 and the finishing flag buys nothing; from the reset it is 85 again, with 88 the last line for a finishing block, and no edit
+// needed. (Before: 100 for the week to 2026-10-08, Alan 2026-10-07.)
+const RAISED_UNTIL = Date.UTC(2026, 10, 26, 2, 0);
 const RAISED = Date.now() < RAISED_UNTIL;
-const BACKSTOP = RAISED ? 100 : 88;
+const BACKSTOP = RAISED ? 95 : 88;
 const LIMIT = RAISED ? BACKSTOP : 85;
 const FLAG_MINUTES = 45;
 // Two readings of the same subscription figure: the status line's file, and Claude Code's own cache of the usage it last fetched

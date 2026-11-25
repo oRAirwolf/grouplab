@@ -155,6 +155,9 @@ public sealed class TargetsPage : UserControl
         }
     }
 
+    /// <summary>Opens one sheet's page, as its row in the library does; for the headless tests.</summary>
+    internal void ShowSheet(LibrarySheet sheet) => Content = Sheet(sheet);
+
     /// <summary>One sheet: its picture, what it is, and Print and Share the PDF.</summary>
     private Control Sheet(LibrarySheet sheet, IReadOnlyList<string>? explanation = null)
     {
@@ -172,6 +175,17 @@ public sealed class TargetsPage : UserControl
         // Entry 300 section 6: the sheet drawn live from the scene its PDF is written from, sharp at the phone's own resolution.
         var image = new SheetView { Scene = Page(sheet.Definition, colour), Height = 480, HorizontalAlignment = HorizontalAlignment.Stretch };
         column.Children.Add(image);
+        // Entry 512 section 3, on the phone: a session's name typed before printing prints in the load block's square, as on the computer.
+        // The phone prints the load block blank, so the square always carries words and the name always prints there.
+        var name = new TextBox { MinHeight = Screens.Touch, PlaceholderText = "optional, such as Rifle A 140 gr", MaxLength = 60 }.Id("targets-session-name");
+        string? Named() => SessionNameFor(name.Text);
+        if (sheet.Definition.DataBlock is not null)
+        {
+            column.Children.Add(Field("Session name", name));
+            column.Children.Add(Screens.Dim(SessionNameWords));
+            name.TextChanged += (_, _) => image.Scene = Page(sheet.Definition, Phone.Settings.LoadBullColour(key), Named());
+        }
+
         var colours = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*,*"), ColumnSpacing = 8 };
         foreach (var (choice, at) in GroupLab.Core.Rendering.BullColours.All.Select((c, i) => (c, i)))
         {
@@ -182,7 +196,7 @@ public sealed class TargetsPage : UserControl
                 {
                     Phone.Settings.SaveBullColour(key, choice);
                     DiagnosticLog.Info("print.color", ("sheet", sheet.File), ("color", GroupLab.Core.Rendering.BullColours.Name(choice)));
-                    image.Scene = Page(sheet.Definition, choice);
+                    image.Scene = Page(sheet.Definition, choice, Named());
                 }
             };
             Grid.SetColumn(radio, at);
@@ -197,7 +211,7 @@ public sealed class TargetsPage : UserControl
         var offer = new StackPanel { Spacing = 8, IsVisible = false };
         column.Children.Add(Screens.Primary("Print", () =>
         {
-            Out(sheet, result, print: true);
+            Out(sheet, result, print: true, name: Named());
             // Entry 273: the first time a sheet is printed, the printer check is offered, once, since this printer's sheets are the ones photographed.
             var settings = Phone.Settings;
             if (!GroupLab.Core.Marking.PrinterCheck.IsCheckPage(sheet.Definition) && settings.LoadPrinters().Count == 0 && !settings.LoadPrinterOffered())
@@ -209,21 +223,21 @@ public sealed class TargetsPage : UserControl
             }
         }));
         column.Children.Add(offer);
-        column.Children.Add(Screens.Choice("Share the PDF", () => Out(sheet, result, print: false)));
+        column.Children.Add(Screens.Choice("Share the PDF", () => Out(sheet, result, print: false, name: Named())));
         // Entry 363 section 2a: for a thermal label printer's own app, such as the Phomemo M834's, before GroupLab prints to one itself.
-        column.Children.Add(Screens.Choice("Share for a printer app, as a picture", () => result.Text = ForPrinterApp(sheet, picture: true)).Id("targets-printer-app-picture"));
-        column.Children.Add(Screens.Choice("Share for a printer app, as a PDF", () => result.Text = ForPrinterApp(sheet, picture: false)).Id("targets-printer-app-pdf"));
+        column.Children.Add(Screens.Choice("Share for a printer app, as a picture", () => result.Text = ForPrinterApp(sheet, picture: true, Named())).Id("targets-printer-app-picture"));
+        column.Children.Add(Screens.Choice("Share for a printer app, as a PDF", () => result.Text = ForPrinterApp(sheet, picture: false, Named())).Id("targets-printer-app-pdf"));
         column.Children.Add(Screens.Dim(PrinterAppWords));
         // Request 73: straight to the Phomemo M834 over Bluetooth, at true size, spoken to as the app's own recording showed.
         var stopM834 = Screens.Choice("Cancel the print", () => m834Printing?.Cancel()).Id("targets-print-m834-cancel");
         stopM834.IsVisible = false;
-        column.Children.Add(Screens.Choice(M834Print, () => _ = PrintOnM834(sheet, result, stopM834)).Id("targets-print-m834"));
+        column.Children.Add(Screens.Choice(M834Print, () => _ = PrintOnM834(sheet, result, stopM834, Named())).Id("targets-print-m834"));
         column.Children.Add(stopM834);
         column.Children.Add(M834PaperChoice());
         // Entry 258: a set of tiles as one large page with cut lines between them, for a plotter, shared rather than printed on the phone.
         if (GroupLab.Core.Rendering.CutSheet.Refusal(sheet.Definition) is null)
         {
-            column.Children.Add(Screens.Choice("Share as one large page with cut lines, for a plotter", () => Out(sheet, result, print: false, oneSheet: true)));
+            column.Children.Add(Screens.Choice("Share as one large page with cut lines, for a plotter", () => Out(sheet, result, print: false, oneSheet: true, name: Named())));
         }
         column.Children.Add(result);
         column.Children.Add(Screens.Dim("In the print dialog, keep the scale at 100 percent, actual size. The line printed on the sheet says how to check it with a ruler."));
@@ -406,7 +420,7 @@ public sealed class TargetsPage : UserControl
     /// a few millimetres.
     /// </para>
     /// </summary>
-    private static async Task PrintOnM834(LibrarySheet sheet, TextBlock result, Button cancel)
+    private static async Task PrintOnM834(LibrarySheet sheet, TextBlock result, Button cancel, string? name = null)
     {
         if (m834Printing is not null)
         {
@@ -428,7 +442,7 @@ public sealed class TargetsPage : UserControl
             result.Text = "Drawing the page for the M834…";
             var jobs = await Task.Run(() =>
             {
-                var scenes = SceneBuilder.Build(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote));
+                var scenes = SceneBuilder.Build(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote, SheetName: name));
                 var encoded = new List<byte[]>();
                 foreach (var page in scenes.Pages)
                 {
@@ -566,9 +580,9 @@ public sealed class TargetsPage : UserControl
     /// Entry 363 section 2a: the sheet as the thermal print mode draws it at 300 dpi, shared as a picture (the first page; the PDF has every
     /// page) or as a PDF. A sentence for the screen, or "" where it was handed to the share sheet.
     /// </summary>
-    internal static string ForPrinterApp(LibrarySheet sheet, bool picture)
+    internal static string ForPrinterApp(LibrarySheet sheet, bool picture, string? name = null)
     {
-        var scenes = SceneBuilder.Build(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote));
+        var scenes = SceneBuilder.Build(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote, SheetName: name));
         if (scenes.Pages.Count == 0)
         {
             return "This sheet has no page to share.";
@@ -604,10 +618,10 @@ public sealed class TargetsPage : UserControl
         return refused ?? (pngs.Count > 1 ? $"Page 1 of {pngs.Count} shared; share the PDF for them all." : "");
     }
 
-    private static void Out(LibrarySheet sheet, TextBlock result, bool print, bool oneSheet = false)
+    private static void Out(LibrarySheet sheet, TextBlock result, bool print, bool oneSheet = false, string? name = null)
     {
         var colour = Phone.Settings.LoadBullColour(sheet.File == "custom.gltd.json" ? "designer" : Path.GetFileName(sheet.File));
-        var rendered = TargetRenderer.Render(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote, OneSheet: oneSheet, BullColour: colour));
+        var rendered = TargetRenderer.Render(sheet.Definition, new RenderOptions(PrintNote: SceneBuilder.ActualSizeNote, OneSheet: oneSheet, BullColour: colour, SheetName: name));
         if (rendered.Pdf is not { } pdf)
         {
             ProblemSheet.Stop(result, result, "This sheet cannot be printed", "This sheet cannot be printed as it is: " + string.Join(" ", rendered.Diagnostics.Where(d => d.Severity == Severity.Error).Select(d => d.Message)));
@@ -624,11 +638,17 @@ public sealed class TargetsPage : UserControl
         }
     }
 
+    /// <summary>Entry 512 on the phone: what the line under the Session name box says.</summary>
+    internal const string SessionNameWords = "Printed in the square at the bottom right of the load block, above the sheet's code, with each sheet of a set's place in it.";
+
+    /// <summary>Entry 512 on the phone: the typed name as it prints, trimmed, or null for none, as the computer's Targets takes it.</summary>
+    internal static string? SessionNameFor(string? typed) => string.IsNullOrWhiteSpace(typed) ? null : typed.Trim();
+
     /// <summary>The first sheet's artwork, its longer side near 900 pixels, as the desktop's print screen shows it.</summary>
-    private static Scene? Page(TargetDefinition definition, GroupLab.Core.Rendering.BullColour colour = GroupLab.Core.Rendering.BullColour.Black)
+    internal static Scene? Page(TargetDefinition definition, GroupLab.Core.Rendering.BullColour colour = GroupLab.Core.Rendering.BullColour.Black, string? name = null)
     {
         // Entry 250 section 1: the sheet as its PDF prints it, words and the actual-size instruction included; entry 297, its bulls in color.
-        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: 0, PrintNote: SceneBuilder.ActualSizeNote, BullColour: colour));
+        var scenes = SceneBuilder.Build(definition, new RenderOptions(TileIndex: 0, PrintNote: SceneBuilder.ActualSizeNote, BullColour: colour, SheetName: name));
         return scenes.Pages.Count == 0 ? null : scenes.Pages[0];
     }
 }

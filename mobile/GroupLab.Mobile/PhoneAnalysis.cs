@@ -394,6 +394,48 @@ internal static class PhoneAnalysis
         }
     }
 
+    /// <summary>
+    /// Entry 495's sheet question on the phone (Alan's queue of 2026-11-24, part 1): what is asked before a saved session is deleted, naming
+    /// each pooled set that uses it, or the plain question where none does.
+    /// </summary>
+    public static string DeleteSessionQuestion(long id, UnitSettings units)
+    {
+        var store = Store();
+        if (store.Get(id) is not { } record || store.PoolsUsing(record) is not { Count: > 0 } using_)
+        {
+            return "Delete this session?";
+        }
+
+        var named = GroupLab.Core.Records.SessionPools.Rows(store, units).ToDictionary(p => p.Row.Id, p => GroupLab.Core.Records.SessionPools.Called(p.Row));
+        return GroupLab.Core.Records.SessionPools.DeleteSheetQuestion([.. using_.Select(p =>
+            (p, named.TryGetValue(GroupLab.Core.Records.SessionPools.RowId(p.Id), out var n) ? n : GroupLab.Core.Records.SessionPools.RowName(p.Sheets.Count)))])
+            ?? "Delete this session?";
+    }
+
+    /// <summary>
+    /// A saved session deleted, as Session records does on the computer: it leaves every pool that used it, which keeps its other sheets, and
+    /// the phone's copy of its picture goes when no other session keeps it.
+    /// </summary>
+    public static void DeleteSession(long id)
+    {
+        var store = Store();
+        string? picture = store.Get(id)?.ImagePath;
+        store.Delete(id);
+        DiagnosticLog.Info("session.delete", ("session", id));
+        if (picture is not null && store.CountWithImagePath(picture) == 0 && System.IO.Path.GetDirectoryName(picture) is { } folder
+            && folder.StartsWith(SessionsFolder, StringComparison.Ordinal) && Directory.Exists(folder))
+        {
+            try
+            {
+                Directory.Delete(folder, recursive: true);
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                DiagnosticLog.Info("session.delete", ("error", e.GetType().Name));
+            }
+        }
+    }
+
     /// <summary>A working image nobody kept: a picture abandoned after it could not be read.</summary>
     public static void Discard(WorkingImage? working)
     {

@@ -126,14 +126,14 @@ Set by the planning session in App Store Connect (GroupLab, Apple ID 6817635137)
   review contact is Alan, at support@grouplab.org; the phone number stays in App Store Connect only.
 - **Release:** manual for 1.0, which Alan released on 2026-11-17. From entry 513 (2026-11-23) the release type after approval is automatic: an approved version goes live with no further word (see below).
 - **Screenshots:** from the simulators (entry 487 section 4, `docs/store/apple/`).
-- **Next version:** the description gains "Requires iOS 26 or later. It also installs on iOS 18 to 25, without support.", set in App Store Connect with the version (entry 505 section 1.7); it went to review as 1.0.242 on 2026-11-23 (see below).
+- **Next version:** the description gains "Requires iOS 26 or later. It also installs on iOS 18 to 25, without support.", set in App Store Connect with the version (entry 505 section 1.7); it went to review as 1.0.242 on 2026-11-23 and Apple released it on 2026-11-23 (see below).
 
 ### Submissions from entry 513, 2026-11-23
 
 Alan, entry 513: "All new builds should be submitted to all of the app stores including the apple app store, play store, and microsoft store." This replaces the rule that App Store submissions and releases wait for his word (entries 491 and 501).
 
 - **Automatic:** after each nightly passes its checks, `scripts/app-store.py`, run by testflight.yml, submits the newest build for iPhone, iPad and Mac; the release type after approval is automatic. One review at a time per platform; a newer build waits. `STORE_SUBMISSIONS_PAUSED` stops all store submissions.
-- **Submitted to App Review at 11:59 UTC on 2026-11-23:** iPhone and iPad version 1.0.242 (build 242), the first App Store version since 1.0 (build 226), carrying the iOS 18 to 25 support; and the Mac App Store's first version, 1.0 (build 240). Neither is approved yet. The App Store copy live today is still 1.0, build 226, which needs iOS 26.
+- **Submitted to App Review at 11:59 UTC on 2026-11-23:** iPhone and iPad version 1.0.242 (build 242), the first App Store version since 1.0 (build 226), carrying the iOS 18 to 25 support; and the Mac App Store's first version, 1.0 (build 240). Apple released the iPhone and iPad version that day (1.0.242 at 22:33 UTC, then 1.0.243 on 2026-11-24, which needs iOS 18.0 at least); the Mac version is still in review (2026-11-24 21:34 UTC).
 
 ### Submitted to App Review, 2026-11-15 (entry 491)
 

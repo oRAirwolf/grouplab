@@ -1334,7 +1334,7 @@
       "key": "pool-set",
       "group": "Sheets and printing",
       "name": "Pool the sheets of a set",
-      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing. Dropped onto the window together, the sheets of a set open in one tab, pooled with no question asked, and each sheet can be opened alone there to check and fix; on the phone, sheets chosen together open as the set's checklist with the pooled group showing. The pool is saved in Session records as a pooled set of its own, opens again from there, and can be shared as one file with its sheets. On the computer, a loose sheet with the same bulls as the set's sheets can stand in for a spoiled one: ticked with the others, it counts as the sheet missing from those ticked, and GroupLab asks which where several are. Asked for by Quack and Jylee.",
+      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing. Dropped onto the window together, the sheets of a set open in one tab, pooled with no question asked, and each sheet can be opened alone there to check and fix; on the phone, sheets chosen together open as the set's checklist with the pooled group showing, and Delete this session on a saved session's result asks the same question and names any pooled set that uses the sheet, which keeps its other sheets. The pool is saved in Session records as a pooled set of its own, opens again from there, and can be shared as one file with its sheets. On the computer, a loose sheet with the same bulls as the set's sheets can stand in for a spoiled one: ticked with the others, it counts as the sheet missing from those ticked, and GroupLab asks which where several are. Asked for by Quack and Jylee.",
       "shot": "set-tab",
       "platforms": [
         "Windows",
@@ -1350,9 +1350,10 @@
         "now opens your pooled set on the analysis screen in its own tab",
         "open in one tab, pooled",
         "A pooled set of sheets is now saved in Session records",
-        "a loose sheet with the same bulls as the set's sheets can now stand in"
+        "a loose sheet with the same bulls as the set's sheets can now stand in",
+        "now has Delete this session, which asks first"
       ],
-      "reworded": "1.0.0-nightly.228",
+      "reworded": "1.0.0-nightly.245",
       "tour": "sessions",
       "guide": "the-sheets-of-a-set-pool-into-one-group",
       "mobile": {
@@ -1363,7 +1364,7 @@
       "key": "square-name",
       "group": "Sheets and printing",
       "name": "A session's name and the sheet's place in its set, on the paper",
-      "sentence": "Each sheet of a set prints its place in the set in large figures, such as 2 of 3, in the square at the bottom right of its load block, and on the computer a Session name typed on Targets before printing, such as Rifle A 140 gr, prints above it, cut short with dots when it is too long. Both print when the square carries words; when the load's code prints there it fills the square, so neither is added and the line under the preview says so. Asked for by Quack.",
+      "sentence": "Each sheet of a set prints its place in the set in large figures, such as 2 of 3, in the square at the bottom right of its load block, and a Session name typed on Targets before printing, such as Rifle A 140 gr, prints above it, cut short with dots when it is too long; the phone has the same Session name box under the sheet's picture, with its 60 characters. Both print when the square carries words; when the load's code prints there on the computer it fills the square, so neither is added and the line under the preview says so, and the phone prints its load block blank, so the name always prints there. Asked for by Quack.",
       "shot": "targets",
       "sheets": [
         ["two-moa-set", "The set of three Letter pages, each with its place in the set in the square at the bottom right of its load block"]
@@ -1376,11 +1377,12 @@
         "iPhone and iPad"
       ],
       "since": "next",
-      "note": ["prints its place in the set in large figures"],
+      "note": ["prints its place in the set in large figures", "now prints in the square at the bottom right of its load block"],
+      "reworded": "1.0.0-nightly.245",
       "tour": "targets",
       "guide": "1-print-a-sheet",
       "mobile": {
-        "noPicture": "the phone prints the place in the set with no screen of its own for it; the name is typed on the computer"
+        "noPicture": "the phone's Session name box, under a sheet's picture on Targets, is photographed at the next sitting with the phone"
       }
     },
     {
@@ -1530,8 +1532,8 @@
       "key": "app-store",
       "group": "Updates and platforms",
       "name": "On iPhone and iPad, from the App Store",
-      "sentence": "GroupLab 1.0 is on the App Store for iPhone and iPad, released on 17 November 2026, and the App Store updates it; the download page has the link. The App Store copy is version 1.0, from build 226; what later builds changed on iPhone and iPad reaches it with the next version Apple approves.",
-      "reworded": "1.0.0-nightly.242",
+      "sentence": "GroupLab 1.0 is on the App Store for iPhone and iPad, released on 17 November 2026, and the App Store updates it; the download page has the link. Every nightly that passes its checks is submitted to Apple, which releases it by itself once approved, so the App Store follows the nightlies a day or so behind.",
+      "reworded": "1.0.0-nightly.245",
       "shot": null,
       "platforms": [
         "iPhone and iPad"

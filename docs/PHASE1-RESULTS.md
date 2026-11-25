@@ -531,6 +531,32 @@ page's load block line say both.
    withdrawn; the measuring switch builds with Mono's LLVM code generator instead.
 6. **Consistency after entry 513:** the README, the guide and the download page say every store follows the nightlies.
 
+## Alan's queue of 2026-11-24 (in the session), part 1: the phone's Session name box, Delete this session with the sheet question, the App Store wording (2026-11-25)
+
+**1.1. The Session name box on the phone's Targets.** A sheet with a load block has a Session name box under its picture (60
+characters, "optional, such as Rifle A 140 gr"), and the picture follows it as it is typed. Print, Share the PDF, both printer-app
+shares, the M834 print and the plotter page all print it in the load block's square (`TargetsPage.SessionNameFor`, `RenderOptions.SheetName`,
+the computer's entry 512 rendering). The phone prints the load block blank, so the square always carries words and the name always
+prints; the computer's case of a filled block's code filling the square cannot arise there. A sheet with no load block shows no box.
+**Tests:** `Entry512PhoneNameTests` (2).
+
+**1.2. Entry 495's sheet question on the phone.** Entry 505's 3.1 found nothing to ask it on, because the phone deleted no saved
+session. Now a saved session's result has Delete this session: it asks first, plainly or, where pooled sets use the sheet, with the
+computer's question (`SessionPools.DeleteSheetQuestion`, naming each pool); Delete takes it out of the store and out of each pool, which
+keeps its other sheets, and deletes the phone's copy of the picture once no other session keeps it (`SessionStore.CountWithImagePath`,
+since one picture can be several sessions, report 40); Keep it puts the choice back. A change made after deleting does not save the
+session again. A pooled result keeps only Delete this pooled set. **Tests:** `Entry495PhoneDeleteTests` (2).
+
+**1.3. The App Store wording** (docs worker). Apple's public lookup on 2026-11-25 has the iPhone and iPad copy at version 1.0.243
+(released 2026-11-24 18:22 UTC; 1.0.242 on 2026-11-23 22:33 UTC), minimum iOS 18.0. README, PLATFORM-SUPPORT.md (the download page),
+the user guide (PDF regenerated), Features (`app-store`, reworded at nightly 245) and docs/store/LISTING.md now say the App Store copy
+installs on iOS 18 to 25 without support and follows the nightlies, each released by Apple once approved; "still needs iOS 26" and "is
+with Apple for review" are retired wording. **The Mac's 1.0 is not released:** external-status.md had it in review at 21:34 UTC on
+2026-11-24 and the App Store page shows no Mac version, so nothing says it is; the queue's "the Mac 1.0" was taken as still to come.
+
+**Checks:** Mobile suite 300 passed, 6 skipped; Core 3,300 with the bench coverage line for the new classes; App suite before commit;
+claims all backed, readme current, site build ok. The usage guard stops at 95 until the week resets (2026-11-26 02:00 UTC).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

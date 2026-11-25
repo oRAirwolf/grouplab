@@ -26,6 +26,30 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-24, Alan's queue in the session, after report 60 and suggestion 61
+
+**Status: in progress, 2026-11-25. Part 1 done; parts 2 to 4 follow, each committed on its own.**
+
+From Alan, in the Claude Code session on 2026-11-24 (no inbox file): "Read docs/notes/STATE.md, check the open error reports,
+suggestions and Discord threads, then take this queue from Alan in order, committing after each part, and stop at 95% of the weekly
+budget (Alan allows 95% for this queue; the week resets 2026-11-26 02:00 UTC).
+
+1. Phone catch-up: the Session name box on the phone's Targets screen, as on the computer; the phone's last unbuilt pooled set part
+   (entry 495, the sheet question); the README, download page and Features wording now that Apple released 1.0.242 and the Mac 1.0.
+2. Pool mixed sheets: Alan says yes to the general case of report 57's suggestion, so Pool the chosen takes any sheets, such as a loose
+   sheet with sheets of a set, with tests, on the computer and the phone. Post a DESIGN NEEDED line for any look question and carry on
+   with the rest.
+3. Phase 9 phone speed: measure and speed up opening a photo and finding holes on Android and iPhone, with every result identical, and
+   record the numbers in PERFORMANCE.md.
+4. Audits: a consistency pass over the README, site and guides; a robustness check of hole finding on printed and scanned targets after
+   the report 60 fix, against the scan bench; and a tidy of old files through the trash folder, with backups first.
+
+Reply to any new Discord message at every check, and rewrite STATE.md at the end."
+
+The usage guard (`scripts/usage-guard.js`) stops at 95 until 2026-11-26 02:00 UTC and goes back to 85 by itself.
+
+---
+
 ## 2026-11-23, entry 514: an overnight queue, after entry 513
 
 **Status: actioned 2026-11-23. Every item done; one waits on an answer.** 1: requests 118 (the Discord post) and 119 (Google's production questions, from 2 December). 2: the keyboard bar's cause found in GroupLab Dev's own log and fixed (da3502ac, Entry514KeyboardTests); proved by 3 green runs of the iOS app workflow in a row, 45174815465, 45179981633 and 45187081635. 3: the computer audited in all three themes and the phone's reading order by the accessibility tree, nothing found (docs/ACCESSIBILITY-AUDIT.md). 4: pooled set files and mislabeled pictures added to the bad-file tests, both already refused or read plainly. 5: measured on the Android emulator in three runs; nothing published changed (question 119, asked on a wrong reading that the build was compiled just in time, was withdrawn the same day: Android's Release build is already compiled ahead of time). 6: the README, guide and download page say the stores follow the nightlies.

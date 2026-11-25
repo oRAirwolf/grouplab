@@ -483,6 +483,28 @@
         "docs/claims-backing.json",
         "docs/CLAIMS.md"
       ]
+    },
+    {
+      "phrase": "still needs iOS 26",
+      "why": "the App Store copy installs on iOS 18 to 25 since version 1.0.242 (Apple's public lookup, 2026-11-25; entry 513)",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md",
+        "docs/store/LISTING.md"
+      ]
+    },
+    {
+      "phrase": "is with Apple for review",
+      "why": "iPhone and iPad version 1.0.242 was released by Apple on 2026-11-23 (Apple's public lookup, 2026-11-25); the Mac version is the one still in review, and is said so by name",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md",
+        "docs/store/LISTING.md"
+      ]
     }
   ],
   "settled": []
