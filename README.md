@@ -203,7 +203,7 @@ screen are GroupLab's measurements; nothing is listed for a platform that has no
 | **Windows** | Windows 10 version 1607 or later; version 1809 or later for the Microsoft Store copy | x64 only; Arm64 and 32-bit x86 are not built | 4 GB, 8 GB recommended | 240 MB installed | a window about 1060 wide for the analysis screen |
 | **macOS** | macOS 14 or later | Apple silicon and Intel | 4 GB, 8 GB recommended | 240 MB on Apple silicon, 270 MB on Intel | as Windows |
 | **Linux** | Ubuntu 22.04, Debian 12, Fedora 42, RHEL 8 or later; glibc 2.27 or later | x64 only; Arm64 is not built | 4 GB, 8 GB recommended | 260 MB installed | as Windows |
-| **iPhone and iPad** | Requires iOS 26 or later (an iPhone 11 or newer). GroupLab also installs on iOS 18 to 25, without support, from the nightlies (from build 236) and from the App Store (from version 1.0.242, released by Apple on 2026-11-23); the App Store follows the nightlies a day or so behind. | arm64, from the App Store (version 1.0, released 2026-11-17) | not measured yet | not measured yet | as Android |
+| **iPhone and iPad** | Requires iOS 26 or later (an iPhone 11 or newer). GroupLab also installs on iOS 18 to 25, without support, from the nightlies (from build 236) and from the App Store (from version 1.0.242, released by Apple on 2026-11-23); the App Store follows the nightlies a day or so behind. | arm64, from the App Store (first released as version 1.0 on 2026-11-17) | not measured yet | not measured yet | as Android |
 | **Android** | Android 10 or later | arm64 only: an APK with every nightly, and Google Play's closed test, open to anyone | 4 GB | under 100 MB installed | 360 dp wide; a rear camera of 8 MP or more with autofocus |
 
 Where the figures come from:

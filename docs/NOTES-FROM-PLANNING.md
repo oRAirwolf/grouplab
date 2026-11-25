@@ -28,7 +28,7 @@ only written record of why much of this project is the way it is.
 
 ## 2026-11-24, Alan's queue in the session, after report 60 and suggestion 61
 
-**Status: in progress, 2026-11-25. Parts 1 to 3 done (the iPhone's part of 3 waits on a real iPhone, PERFORMANCE.md); part 4 follows.**
+**Status: actioned 2026-11-25. Every part done but one piece: part 3's iPhone figures wait on a real iPhone (the simulator interprets GroupLab's code), PERFORMANCE.md.**
 
 From Alan, in the Claude Code session on 2026-11-24 (no inbox file): "Read docs/notes/STATE.md, check the open error reports,
 suggestions and Discord threads, then take this queue from Alan in order, committing after each part, and stop at 95% of the weekly

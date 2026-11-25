@@ -5,6 +5,14 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "- **The iPhone and iPad build** is on the App Store: version 1.0 was released on 17 November 2026, and each nightly that passes its checks follows it there once Apple approves it.": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store, released automatically once Apple approves; GroupLab 1.0 (build 226) was released on the App Store on 2026-11-17 (entry 500), version 1.0.243 live on 2026-11-24 (docs/notes/external-status.md)"
+  },
+  "The iPhone and iPad build is on the App Store: version 1.0 was released on 17 November 2026, and each nightly that passes its checks follows it there once Apple approves it.": {
+   "kind": "decided",
+   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store, released automatically once Apple approves; GroupLab 1.0 (build 226) was released on the App Store on 2026-11-17 (entry 500), version 1.0.243 live on 2026-11-24 (docs/notes/external-status.md)"
+  },
  "Sheets of one set count by their codes, as above; a loose sheet with the same bulls as the set's sheets, such as a single 3x3 2 MOA C bull sheet shot in place of a spoiled sheet of the 3x3 2 MOA C bull set, counts as the sheet missing from those ticked, and where several are missing GroupLab asks which one it replaces (on the phone, \"Which sheet of the set does this one replace?\").": {
     "kind": "code",
     "where": "src/GroupLab.Core/Records/ChosenPools.cs, shared by the computer and the phone, held by Core ChosenPoolsTests, computer Report57PoolRefusalTests and Entry512StandInPoolTests, phone Report57PhonePoolTests; Alan's yes to the general case of report 57's suggestion, 2026-11-24"

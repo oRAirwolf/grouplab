@@ -592,6 +592,41 @@ also showed that a picture reads the same every time on each platform, but the i
 fingerprints for the same picture (arm64 against x86_64, OpenCV's own code paths among them); nothing claims otherwise. **Tests:**
 `ReadFingerprintTests`; the bench coverage line for the fingerprint. Details and tables: docs/PERFORMANCE.md.
 
+## Alan's queue of 2026-11-24, part 4: the consistency pass, hole finding on dot-printed scans checked, and a tidy (2026-11-25)
+
+**4.1 Consistency** (docs worker, after parts 1 and 2 had updated the App Store and Pool the chosen wording): the README, the site's
+sources, USER-GUIDE.md and PLATFORM-SUPPORT.md agree with each other and the code. One stale sentence fixed: TESTING-GUIDE.md said the
+iPhone build "is released on the App Store as version 1.0"; it now says 1.0 was released on 17 November and each nightly that passes its
+checks follows once Apple approves it (PDF regenerated). One fault in the site's build, fixed on the main model: the download page's
+App Store line read only the status file's old wording ("App Store version 1.0 (build 226): released"), and since entry 513 the status
+check writes "On the App Store now: version 1.0.243", so the page still said version 1.0; it now reads either (`app_store_copy`, website
+build.py) and says version 1.0.243, from build 243. The platform table's iPhone column reads "first released as version 1.0 on
+2026-11-17" rather than naming 1.0 as the copy. Claims all backed, readme current, consistency 0 findings, site build ok.
+
+**4.2 Hole finding on printed and scanned sheets after report 60's fix.** The corpus: `grouplab corpus counts`, 55 of 55 images
+unchanged from the record. Then a sweep (a scratch test, deleted once it had answered) of synthetic E-bull and C-bull sheets, nine .22 holes
+on the print of each, the bulls printed as a laser printer's screen at 45 degrees (85 and 141 lines an inch, 30 to 60 percent covered,
+as a scanner sees it: each pixel the share the dots cover) and scanned at 150, 300 and 600 dpi, each read with the scan check and
+without it (as nightly 243 did):
+
+| what was scanned | with the check | without it |
+|---|---|---|
+| 40 to 60 percent screens, every resolution (GroupLab's blue and red tints print at about 35 to 42 percent on a black and white printer) | every hole found that the plain black sheet finds, nothing extra | up to 86 false holes at 600 dpi with the fine screen, 24 to 35 at 300 |
+| a 30 percent screen at 300 or 600 dpi | 3 to 7 of 9 | the same 3 to 7 of 9 |
+| plain black print, paper grain up to 20 levels | never read as a dot pattern (texture at most 0.032, against 0.06) | the same |
+| a dark backing behind the paper, solid or dots | no hole on the print found | the same: a dark hole in dark print cannot be told from it |
+
+So the fix never removed a hole the old reading found and never added one; it took away every false hole the screens made. The two
+limits are older than it: a screen lighter than about 40 percent at 300 dpi and finer, and a scan without the white lid behind the paper.
+**Test kept:** `DotScreenScanTests` (a 141 and an 85 line screen at 40 and 60 percent found whole with nothing else, the false holes
+without the check, plain print with grain never a dot pattern).
+
+**4.3 Tidy, backups first** (the newest backup 2026-11-24 09:30 UTC, its last restore test passed; announced in panel.md): the packaging
+build output in `out/` from 20 September (`publish`, `pubobj`, `package`, 1.16 GB, rebuilt by the packaging scripts) deleted as build
+output; `out/guide`, `out/reports`, `out/screens`, `out/sample-check.png` and an old tree listing (about 105 MB, generated, untouched since
+September and 11 October) moved to `C:\Dev\grouplab-trash6-11-25\`, kept 14 days; the trash day 2026-11-08 emptied by
+`scripts/cleanup.py`. Left alone: `Claude outputs/` (it may be Alan's own), the Phase 0 print set in `out/` and `reference/`.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

@@ -90,7 +90,13 @@ def app_store_copy() -> tuple[str, str] | None:
     status = Path(__file__).resolve().parent.parent / "docs" / "notes" / "external-status.md"
     if not status.exists():
         return None
-    m = re.search(r"App Store version ([0-9.]+) \(build (\d+)\): released", status.read_text(encoding="utf-8"))
+    text = status.read_text(encoding="utf-8")
+    m = re.search(r"App Store version ([0-9.]+) \(build (\d+)\): released", text)
+    if m:
+        return (m.group(1), m.group(2))
+    # Alan's queue of 2026-11-24, part 4: since entry 513 the status check writes "On the App Store now: version 1.0.243", and a version
+    # after 1.0 carries the build it was made from as its last part, so the panel had fallen back to 1.0 while the App Store had 1.0.243.
+    m = re.search(r"On the App Store now: version (\d+\.\d+\.(\d+))\b", text)
     return (m.group(1), m.group(2)) if m else None
 
 
