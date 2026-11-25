@@ -635,6 +635,10 @@ line, and its undo are in `docs/RESTORE.md`. `ios/llvm-evidence.sh` runs after t
 publish in `nightly.yml`: it counts LLVM's object files (`*.llvm.o`) and its arguments in a detailed build log, writes `ios-llvm.txt`
 (kept 90 days as `ios-device-llvm` and `ios-nightly-llvm`), a line in the step summary, and a warning when LLVM was asked for and is not
 seen. The detailed log itself is deleted on the runner, never uploaded, since the nightly writes it beside the signing secrets.
+**Proved before the nightly:** the unsigned device build (ios-app 45543325296, on 4e9031db) says `llvm: ran`, with 230 LLVM argument
+lines in its log, LLVM output files named for the assemblies (the four kept in `ios-llvm.txt` include the share extension's and
+the SDK's), and two `*.llvm.o`
+left in its obj folder; the device job took 5 min 34 s.
 
 **The Mac:** the Mac App Store copy is the computer's application (`mac-store.yml` publishes `src/GroupLab.App` for `osx-arm64`), on
 .NET's own runtime and compiled ahead of time with ReadyToRun since question 110; it has no Mono, so there is no LLVM to turn on and
