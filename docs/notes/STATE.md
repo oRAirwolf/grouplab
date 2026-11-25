@@ -46,7 +46,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Reply 57-3 (Pool the chosen takes any sheets) posts after nightly 246; list its link in for-alan.md; the DESIGN NEEDED line.
+1. The DESIGN NEEDED line in for-alan.md (where Pool the chosen sits on the phone; a mixed pool's key); reply 57-3 is posted.
 2. A real phone's log after the next sitting: `read.holes` and `phone.detect`'s fingerprint, to confirm LLVM's gain and identity on arm64.
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
