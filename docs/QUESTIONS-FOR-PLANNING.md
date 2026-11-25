@@ -23,7 +23,9 @@ number is never reused and a question is never lost:
 
 ## 2026-11-25, question 120: turn on LLVM for the iPhone and iPad, which nothing in CI can measure?
 
-**Status: open. Nothing is changed; the iPhone builds as before.** Alan's queue of 2026-11-24, part 3, asked for the phones to open a
+**Status: answered 2026-11-25: (b), on now for the iPhone and iPad** (Alan, in the Claude Code session; NOTES-FROM-PLANNING.md has
+it). The Mac App Store copy turned out to be the computer's application, ReadyToRun since question 110, with no LLVM to turn on. A
+device comparison at request 50's sitting is still to be recorded. As asked: Alan's queue of 2026-11-24, part 3, asked for the phones to open a
 photo and find holes sooner with every result identical. On Android, Mono's LLVM code generator did it (`EnableLLVM`, shipped in
 546aea54): on the emulator the 600 dpi scan reads in 4.5 s instead of 9.9 and finds its holes in 1.4 s instead of 4.3, and both pictures'
 result fingerprints are the same in both builds (docs/PERFORMANCE.md). The iPhone build is compiled ahead of time the same way, so

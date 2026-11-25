@@ -95,8 +95,10 @@ sample's holes in 2,864 ms on an earlier build, so the same share is expected th
 in 20 to 37 s, its holes 14 to 37 s, because the simulator runs GroupLab's code in Mono's interpreter: its log says `jit=False`, and
 nothing is compiled ahead of time for a simulator. An iPhone or iPad runs code compiled ahead of time, as Android does, so the simulator's
 figures say nothing about it. A device build with LLVM asked for (`MtouchUseLlvm`) passed (ios-app 45526275997, 4 min 16 s against 4 min
-47 s without), though its log cannot show that LLVM ran (errors only, no build log kept, 63 MB either way); whether to turn it on before
-a real device has measured it is question 120.
+47 s without), though its log could not show that LLVM ran (errors only, no build log kept, 63 MB either way). **Question 120 answered
+(b), 2026-11-25: on for the iPhone and iPad**, on Android's evidence (`GroupLabAppleLlvm`); each device build now says in `ios-llvm.txt`
+whether LLVM ran. The iPhone's own figures, and its fingerprint against a build without LLVM, wait for a real device at request 50's
+sitting.
 
 ## Entry 514 section 5, 2026-11-23: a phone photograph on Android, stage by stage
 

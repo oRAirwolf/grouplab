@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-25, after Alan's queue of 2026-11-24 (four parts, in the session); the inbox is empty.
+**Last rewritten:** 2026-11-25, after Alan's answer to question 120 (in the session); the inbox is empty.
 
 ---
 
@@ -19,9 +19,11 @@ If something here disagrees with the logs, the logs are right and this file is o
   Session name box on Targets, Delete this session on a saved result asking entry 495's sheet question, and the App Store wording
   (1.0.243 out; **the Mac's 1.0 is still in review**, nothing says it is out); 2, Pool the chosen takes any sheets on both (`ChosenPools`),
   DESIGN NEEDED line in for-alan.md; 3, Android Release builds use LLVM (the 600 dpi scan 9.9 s to 4.5 s on the emulator, every
-  fingerprint identical); the iPhone's figures wait on a real iPhone (the simulator interprets); the LLVM device build compiles
-  (question 120 asks whether to turn it on before a device measures it);
+  fingerprint identical); the iPhone's figures wait on a real iPhone (the simulator interprets);
   4, consistency pass, the download page's App Store line fixed, report 60's check swept (`DotScreenScanTests`), the tidy.
+- **Question 120 answered (b), 2026-11-25: LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`, one line; RESTORE.md has the undo).
+  To check: the next nightly's `ios-nightly-llvm` artifact says `llvm: ran`; every Apple error report is read for an LLVM cause and the
+  switch goes off at once if one could be; the device comparison is at request 50's sitting. The Mac's copy has no LLVM (ReadyToRun).
 - **The usage guard stops at 95** until 2026-11-26 02:00 UTC (Alan, for this queue), then 85 by itself.
 - **Entry507SplashTests fail here** (6, thread ownership; pass in CI). closed-replies.py stays (entry 510).
 
@@ -46,8 +48,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. The DESIGN NEEDED line in for-alan.md (where Pool the chosen sits on the phone; a mixed pool's key); reply 57-3 is posted.
-2. A real phone's log after the next sitting: `read.holes` and `phone.detect`'s fingerprint, to confirm LLVM's gain and identity on arm64.
+1. The next nightly's `ios-llvm.txt`; then a real phone's and iPhone's log at request 50's sitting (`read.holes`, the fingerprint).
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
 ## Blocked, and on what
@@ -65,8 +66,8 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Three, in `docs/QUESTIONS-FOR-PLANNING.md` (118 answered (a); 119 withdrawn, 2026-11-23):
-- **120** LLVM for the iPhone before a device measures it ((a) recommended: wait); **67** the printer check page as grid style 4 (with
+Two, in `docs/QUESTIONS-FOR-PLANNING.md` (120 answered (b), 2026-11-25; 118 answered (a); 119 withdrawn):
+- **67** the printer check page as grid style 4 (with
   Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
@@ -89,7 +90,6 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 - **Android is compiled with LLVM** (`EnableLLVM` in GroupLab.Android.csproj, Release only); `android-emulator.yml`'s `no_llvm` builds
   without, for comparing. The phone's log has `read.holes` (the hole finder's nine steps, cores, `jit`) and a `result=` fingerprint on
   `phone.detect` (`ReadFingerprint`); the same fingerprint on the same picture means the same result to the bit.
-
 - **A session's name is its sheet label** (entry 511): the stored sheet name keeps "target, name" for older builds; lists show
   `SessionNames.Titled` ("name, target") and `SessionSummary.Label` comes from the marking by `json_extract`. No schema change.
 - **Code's Discord replies are files** (entry 511): `discord-replies/<issue>-<n>.md` in the crash-reports repo, header `issue:`,

@@ -627,6 +627,24 @@ output; `out/guide`, `out/reports`, `out/screens`, `out/sample-check.png` and an
 September and 11 October) moved to `C:\Dev\grouplab-trash6-11-25\`, kept 14 days; the trash day 2026-11-08 emptied by
 `scripts/cleanup.py`. Left alone: `Claude outputs/` (it may be Alan's own), the Phase 0 print set in `out/` and `reference/`.
 
+## Question 120 answered (b): LLVM on for the iPhone and iPad builds, on Android's evidence (2026-11-25)
+
+**Done.** `GroupLabAppleLlvm` in `ios/GroupLab.iOS/GroupLab.iOS.csproj` turns on `MtouchUseLlvm` for a Release device build
+(`ios-arm64`) only; the simulator interprets and never gets it, and `-p:GroupLabAppleLlvm=false` builds one without it. The switch, one
+line, and its undo are in `docs/RESTORE.md`. `ios/llvm-evidence.sh` runs after the device build in `ios-app.yml` and after the signed
+publish in `nightly.yml`: it counts LLVM's object files (`*.llvm.o`) and its arguments in a detailed build log, writes `ios-llvm.txt`
+(kept 90 days as `ios-device-llvm` and `ios-nightly-llvm`), a line in the step summary, and a warning when LLVM was asked for and is not
+seen. The detailed log itself is deleted on the runner, never uploaded, since the nightly writes it beside the signing secrets.
+
+**The Mac:** the Mac App Store copy is the computer's application (`mac-store.yml` publishes `src/GroupLab.App` for `osx-arm64`), on
+.NET's own runtime and compiled ahead of time with ReadyToRun since question 110; it has no Mono, so there is no LLVM to turn on and
+nothing in it changed. Question 120's option (b) said otherwise, and that was wrong.
+
+**Still to do:** the first nightly's `ios-llvm.txt` shows LLVM ran (recorded here when it has); new error reports from iPhone, iPad and
+the Mac are read for anything LLVM could cause, and the switch goes off at once if one is; at request 50's sitting, with an iPhone or
+iPad to hand, the sweep picture read on a build with LLVM and one without, `read.holes` and the result fingerprint compared, then the
+number goes in `docs/PERFORMANCE.md`. The two DESIGN NEEDED looks from part 2 stay as built (Alan).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

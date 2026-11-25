@@ -26,6 +26,21 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-25, Alan's answer to question 120, in the session
+
+**Status: actioned 2026-11-25. Not done yet, and each waits on something outside this run: the first nightly with LLVM, whose
+`ios-llvm.txt` shows it ran; the device comparison at request 50's sitting; the watch on Apple error reports, which goes on.**
+
+From Alan, in the Claude Code session on 2026-11-25 (no inbox file): "Question 120 answered (b): turn on LLVM now for the iPhone, iPad
+and Mac App Store builds, on Android's evidence. Keep a build log of the first nightly with it so the log shows LLVM ran. Add a one-line
+switch to turn it off, and write the undo in RESTORE.md. Watch new error reports from iPhone, iPad and Mac for anything that could come
+from it, and turn it off at once if one does. When a real device is next to hand, at request 50's sitting, compare the sweep picture's
+result fingerprint against a build without it. Record it and close question 120. The two DESIGN NEEDED looks from the pooling queue
+stay as built for now."
+
+Found while doing it: the Mac App Store copy is the computer's application on .NET's own runtime (ReadyToRun since question 110), not
+the iPhone package, so LLVM does not exist for it; only the iPhone and iPad build changed. PHASE1-RESULTS.md has the rest.
+
 ## 2026-11-24, Alan's queue in the session, after report 60 and suggestion 61
 
 **Status: actioned 2026-11-25. Every part done but one piece: part 3's iPhone figures wait on a real iPhone (the simulator interprets GroupLab's code), PERFORMANCE.md.**

@@ -649,8 +649,12 @@ jobs:
           dotnet publish ios/GroupLab.iOS --configuration Release -r ios-arm64 \
             -p:GroupLabOpenCvFrameworks="${{ steps.opencv.outputs.frameworks }}" -p:GroupLabOpenCvLinkerFlags="${{ steps.opencv.outputs.flags }}" \
             -p:Version="$VERSION" -p:ApplicationDisplayVersion="$(echo "${VERSION%%-*}" | cut -d. -f1-2).$code" -p:ApplicationVersion="$code" -p:GroupLabTrain=nightly \
-            -p:ArchiveOnBuild=true "$@" -o "$RUNNER_TEMP/ipa" \
+            -p:ArchiveOnBuild=true "$@" -o "$RUNNER_TEMP/ipa" -flp:"LogFile=$RUNNER_TEMP/publish-ios-detail.log;Verbosity=detailed" \
             -v:minimal -clp:ErrorsOnly > publish-ios.log 2>&1 || { grep -E "error" publish-ios.log | head -40; exit 1; }
+          # Question 120 (b): the build log says whether LLVM compiled this package (ios-llvm.txt, kept 90 days); the detailed log itself
+          # is never kept, since it was written beside the signing secrets.
+          sh ios/llvm-evidence.sh "$RUNNER_TEMP/publish-ios-detail.log" ios-llvm.txt
+          rm -f "$RUNNER_TEMP/publish-ios-detail.log"
           ipa=$(ls "$RUNNER_TEMP"/ipa/*.ipa | head -1)
           # The package carries the share extension, and each bundle its own profile.
           unzip -q -o "$ipa" -d "$RUNNER_TEMP/ipa-check"
@@ -691,6 +695,14 @@ jobs:
           echo "### iOS: $sent, version $VERSION." >> "$GITHUB_STEP_SUMMARY"
           rm -f "$HOME/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
           security delete-keychain "$keychain"
+
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.signing.outputs.sign == 'true'
+        with:
+          name: ios-nightly-llvm
+          path: ios-llvm.txt
+          if-no-files-found: ignore
+          retention-days: 90
 
       - uses: actions/upload-artifact@v4
         if: failure()

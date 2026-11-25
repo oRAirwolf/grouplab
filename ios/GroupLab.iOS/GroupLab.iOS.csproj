@@ -37,6 +37,15 @@
       interpreter, which makes that wrapper when it is needed; everything else stays compiled ahead of time.
     -->
     <MtouchInterpreter>OpenCvSharp</MtouchInterpreter>
+    <!--
+      Question 120, answered (b) by Alan on 2026-11-24: a device's Release build (the iPhone and iPad package) is compiled ahead of time
+      with Mono's LLVM code generator, on Android's evidence (docs/PERFORMANCE.md). The simulator runs the interpreter and never gets it.
+      The Mac App Store copy is the computer's application (mac-store.yml), on .NET's own runtime and ReadyToRun since question 110, which
+      has no Mono and so no LLVM to turn on. ios/llvm-evidence.sh says in the build's log whether it ran. The switch is the next line:
+      false turns it off for every Apple build, and -p:GroupLabAppleLlvm=false builds one without it (docs/RESTORE.md has the undo).
+    -->
+    <GroupLabAppleLlvm Condition="'$(GroupLabAppleLlvm)' == ''">true</GroupLabAppleLlvm>
+    <MtouchUseLlvm Condition="'$(GroupLabAppleLlvm)' == 'true' and '$(Configuration)' == 'Release' and '$(RuntimeIdentifier)' == 'ios-arm64'">true</MtouchUseLlvm>
     <!-- An exception says what went wrong in words, in the log and an error report, rather than a resource key. -->
     <UseSystemResourceKeys>false</UseSystemResourceKeys>
     <!-- Entry 292 section 2.3: the app group the share extension leaves shared pictures in. -->
