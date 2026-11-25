@@ -9,25 +9,21 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-24, after report 60 and suggestion 61 (Alan's word in the session); the inbox is empty.
+**Last rewritten:** 2026-11-25, after Alan's queue of 2026-11-24 (four parts, in the session); the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Discord, 2026-11-24, Alan's word in the session**: report 60 fixed (b734fb41, nightly 244: on a scan whose print is a dot
-  pattern, print shows a hole only where it reaches near paper white; tester's scan 8 of 9, nothing false; the other 34 local pictures
-  unchanged); suggestion 61 built (f22bf20f, nightly 245: Export on Compare loads, PDF or picture, computer and phone). Issues 60 and 61
-  closed; replies 60-2 and 61-2 posted. The tester's twelve scans have not come through the upload page yet.
-- **Entry507SplashTests fail here** (6, thread ownership), on clean main too, pass in CI. closed-replies.py stays (entry 510).
-- **Entry 514 (2026-11-23)**: done; question 119 withdrawn the same day (Android was already compiled ahead of time). The iOS
-  keyboard bar fix (da3502ac): proved by three green runs in a row.
-- **Entry 515 (2026-11-23)**: the bot's replies end "This is an AI generated response.", installed 12:15 UTC; the nine earlier
-  replies edited in place to the new line at 22:28 UTC (request 117, yes; backup and undo in RESTORE.md).
-- **Entry 513 (2026-11-23)**: every new build to every store; Apple releases by itself once approved (CLAUDE.md). App Review has
-  iPhone and iPad 1.0.242 (build 242, the iOS 18 to 25 one) and the Mac's 1.0 (build 240), submitted 11:59 UTC by `scripts/app-store.py`;
-  when the iPhone one is released, reply in question 59's thread (Quack, issue 59). Play production waits on Google (14 days of 12
-  testers, about 2 December, then Alan's application). `STORE_SUBMISSIONS_PAUSED` stops all three stores.
+- **Alan's queue of 2026-11-24, done** (064f133c, 5725d37a, 546aea54, 54bea04b; NOTES-FROM-PLANNING.md has it whole): 1, the phone's
+  Session name box on Targets, Delete this session on a saved result asking entry 495's sheet question, and the App Store wording
+  (1.0.243 out; **the Mac's 1.0 is still in review**, nothing says it is out); 2, Pool the chosen takes any sheets on both (`ChosenPools`),
+  DESIGN NEEDED line in for-alan.md; 3, Android Release builds use LLVM (the 600 dpi scan 9.9 s to 4.5 s on the emulator, every
+  fingerprint identical); the iPhone's figures wait on a real iPhone (the simulator interprets); the LLVM device build compiles
+  (question 120 asks whether to turn it on before a device measures it);
+  4, consistency pass, the download page's App Store line fixed, report 60's check swept (`DotScreenScanTests`), the tidy.
+- **The usage guard stops at 95** until 2026-11-26 02:00 UTC (Alan, for this queue), then 85 by itself.
+- **Entry507SplashTests fail here** (6, thread ownership; pass in CI). closed-replies.py stays (entry 510).
 
 ## The next three
 
@@ -50,9 +46,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Apple released 1.0.242 (2026-11-23 22:33 UTC; question 59 answered, reply 59-2): update the README's and download page's "with Apple" wording
-   and the Features sentence's "from build 226"; the same for the Mac's 1.0. Every new Discord message at every check.
-2. The phone's Session name box on Targets (desktop only in entry 512).
+1. Reply 57-3 (Pool the chosen takes any sheets) posts after nightly 246; list its link in for-alan.md; the DESIGN NEEDED line.
+2. A real phone's log after the next sitting: `read.holes` and `phone.detect`'s fingerprint, to confirm LLVM's gain and identity on arm64.
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
 ## Blocked, and on what
@@ -70,12 +65,13 @@ steps; then 33, 9, 16 and 20).
 
 ## Open questions
 
-Two, in `docs/QUESTIONS-FOR-PLANNING.md` (118 answered (a); 119 withdrawn, 2026-11-23):
-- **67** the printer check page as grid style 4 (with Alan); **51** which hole center to report, waits on request 9
+Three, in `docs/QUESTIONS-FOR-PLANNING.md` (118 answered (a); 119 withdrawn, 2026-11-23):
+- **120** LLVM for the iPhone before a device measures it ((a) recommended: wait); **67** the printer check page as grid style 4 (with
+  Alan); **51** which hole center to report, waits on request 9
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.245 (2026-11-24; 244 carried report 60, 245 suggestion 61). GitHub's
+- **Last nightly:** 1.0.0-nightly.245 (2026-11-24); the next one carries the queue's four parts. GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
@@ -89,6 +85,10 @@ they differ.
 Inbox files are never committed, so CI sees an empty inbox and this line says none. Waiting locally: none.
 
 ## Things that would surprise somebody who was not here yesterday
+
+- **Android is compiled with LLVM** (`EnableLLVM` in GroupLab.Android.csproj, Release only); `android-emulator.yml`'s `no_llvm` builds
+  without, for comparing. The phone's log has `read.holes` (the hole finder's nine steps, cores, `jit`) and a `result=` fingerprint on
+  `phone.detect` (`ReadFingerprint`); the same fingerprint on the same picture means the same result to the bit.
 
 - **A session's name is its sheet label** (entry 511): the stored sheet name keeps "target, name" for older builds; lists show
   `SessionNames.Titled` ("name, target") and `SessionSummary.Label` comes from the marking by `json_extract`. No schema change.

@@ -21,6 +21,24 @@ number is never reused and a question is never lost:
 
 ---
 
+## 2026-11-25, question 120: turn on LLVM for the iPhone and iPad, which nothing in CI can measure?
+
+**Status: open. Nothing is changed; the iPhone builds as before.** Alan's queue of 2026-11-24, part 3, asked for the phones to open a
+photo and find holes sooner with every result identical. On Android, Mono's LLVM code generator did it (`EnableLLVM`, shipped in
+546aea54): on the emulator the 600 dpi scan reads in 4.5 s instead of 9.9 and finds its holes in 1.4 s instead of 4.3, and both pictures'
+result fingerprints are the same in both builds (docs/PERFORMANCE.md). The iPhone build is compiled ahead of time the same way, so
+`MtouchUseLlvm` should give a like gain there. A device build with it set passed on GitHub's Mac (ios-app run 45526275997, 4 min 16 s
+against 4 min 47 s without), but whether LLVM ran cannot be told from that run: its log shows only errors, it keeps no build log on
+success, and the app is 63 MB either way. Before (a) or (b), a measuring run that keeps its build log has to show LLVM's output. **But nothing in CI can run it:** the simulator runs GroupLab's code in Mono's interpreter
+(`jit=False` in its log, 20 to 37 s a reading), and only a real iPhone or iPad runs code compiled ahead of time.
+
+- **(a) Wait for a real device.** At request 50's sitting, or whenever the iPad is to hand, a TestFlight build without LLVM and one with
+  it, the sweep picture read on each: the gain from `read.holes` and the fingerprint the same. Nothing is risked; the iPhone waits.
+- **(b) Turn it on now** for the iPhone and the Mac's App Store build alike, on Android's evidence: the same compiler, the same code. If
+  a result moved, nobody would see it until a device's log said so, and the App Store build would carry it.
+
+**I would choose (a)**, because the queue said "with every result identical" and only a device can show it for the iPhone.
+
 ## 2026-11-23, question 119: should Android's build be compiled ahead of time, now that the phone's read is measured?
 
 **Status: withdrawn 2026-11-23, the same day: the measurement was wrong.** Both emulator builds were already compiled ahead of time (a Release build for Android compiles every assembly so, and the published app holds 109 such libraries); the difference between the runs was the emulator's, and a third run shows it. docs/PERFORMANCE.md has the corrected figures. As asked: Question 110 (answered (a), entry 471) put ReadyToRun on the computer's builds and left
