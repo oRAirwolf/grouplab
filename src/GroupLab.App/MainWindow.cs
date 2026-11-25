@@ -227,6 +227,9 @@ public sealed partial class MainWindow : Window
     /// <summary>Entry 141 section 5.2.4: is this load getting better or worse? Shown only when the filters name one load.</summary>
     private readonly StackPanel sessionTrendPanel = new() { Spacing = Tokens.Space8 };
 
+    /// <summary>Beside Pool the chosen: since Alan's yes of 2026-11-24 it takes any sheets, the sheets of a set counted by their codes.</summary>
+    internal const string PoolChosenHint = "Tick two or more sheets to read them as one group, each shot about its own bull; the sheets of a set count by their codes.";
+
     /// <summary>Entry 243 section 3.1: the chosen sheets of one set, pooled into one group.</summary>
     private readonly StackPanel sessionPoolPanel = new() { Spacing = Tokens.Space4 };
 
@@ -4039,7 +4042,7 @@ public sealed partial class MainWindow : Window
         column.Children.Add(filters);
         // Entry 113 section 2: each row's box chooses it for comparing, and two or more chosen compare side by side.
         column.Children.Add(Row(Button("Compare the chosen", CompareChosen), new TextBlock { Text = "Tick two or more sessions to compare their loads.", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
-        column.Children.Add(Row(Button("Pool the chosen", PoolChosen), new TextBlock { Text = "Tick the sheets of one set from Made for your optic to read them as one group.", VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
+        column.Children.Add(Row(Button("Pool the chosen", PoolChosen), new TextBlock { Text = PoolChosenHint, VerticalAlignment = VerticalAlignment.Center, Classes = { AppStyles.Secondary } }));
         column.Children.Add(sessionPoolPanel);
         column.Children.Add(sessionTrendPanel);
         column.Children.Add(sessionRows);

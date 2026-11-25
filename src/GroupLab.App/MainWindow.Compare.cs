@@ -66,29 +66,47 @@ public sealed partial class MainWindow
         sessionPoolPanel.Children.Clear();
         if (sessions is null || sessionChosen.Count == 0)
         {
-            sessionPoolPanel.Children.Add(Line("Tick the sheets of one set, then Pool the chosen."));
+            sessionPoolPanel.Children.Add(Line(PoolRefusal.NothingTicked));
             return;
         }
 
         var records = sessions.List().Where(s => sessionChosen.Contains(s.Id)).Select(s => sessions.Get(s.Id)!).ToList();
-        var ids = records.Select(r => r.DefinitionId).Distinct().ToList();
-        var definitions = records.GroupBy(r => r.DefinitionId).ToDictionary(g => g.Key ?? "", g => g.First().DefinitionJson is { } json
-            ? GroupLab.Core.Gltd.Json.GltdJsonReader.Read(System.Text.Encoding.UTF8.GetBytes(json)).Definition : null);
-        var definition = ids.Count == 1 ? definitions[ids[0] ?? ""] : null;
-        var states = records.Select(r => MarkingFile.Read(r.MarkingJson).State).ToList();
-        if (ids.Count > 1 && SetPool.FindStandIn([.. records.Select((r, i) => (r.DefinitionId, definitions[r.DefinitionId ?? ""], states[i]))]) is { } standIn)
+        // Report 57's suggestion, Alan's yes to the general case (2026-11-24): any sheets pool; the planner is the phone's too.
+        var plan = ChosenPools.Plan(records);
+        switch (plan.Kind)
         {
-            PoolWithStandIns(records, states, standIn);
+            case ChosenPoolKind.Set:
+                PoolSet(plan.Set!, records, plan.States, null, null);
+                break;
+            case ChosenPoolKind.StandIn:
+                PoolWithStandIns(records, plan.States, plan.StandIn!);
+                break;
+            case ChosenPoolKind.Mixed:
+                PoolMixed(plan);
+                break;
+            default:
+                Refused(plan.Words!);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Alan's yes to report 57's general case (2026-11-24): sheets that are not one set, pooled each about its own bulls with its own scale,
+    /// in the order ticked, opened in their own tab and saved as a pool of pictures, as pooled pictures are (entry 423).
+    /// </summary>
+    private void PoolMixed(ChosenPlan plan)
+    {
+        var composite = ChosenPools.MixedComposite(plan);
+        DiagnosticLog.Info("sessions.pool.mixed", ("sheets", plan.Records.Count), ("shots", composite.Shots.Count(s => s.IsShot)));
+        sessionPoolPanel.Children.Add(new TextBlock { Text = SessionPools.RowName(plan.Records.Count), Classes = { AppStyles.Title } });
+        sessionPoolPanel.Children.Add(Line(plan.Words!));
+        if (composite.Shots.Count(s => s.IsShot) == 0)
+        {
             return;
         }
 
-        if (definition is null || definition.Tiling is not { } set || set.Cols * set.Rows < 2 || states.Any(s => s.SetSheet is null))
-        {
-            Refused(ids.Count > 1 ? PoolRefusal.DifferentDesigns(records) : PoolRefusal.NotASet);
-            return;
-        }
-
-        PoolSet(definition, records, states, null, null);
+        OpenPooled(null, composite, [.. plan.States.Select(s => s.Scale)]);
+        poolSources = new PoolSources([.. plan.Records.Select(r => r.Id)], SessionPools.Choices(pictures: true), null);
     }
 
     /// <summary>
@@ -194,7 +212,7 @@ public sealed partial class MainWindow
     /// own shade with a key, every figure, and the Shots list naming each shot sheet.bull. It is opened as a saved sheet with no picture is,
     /// and is not saved again as a session of its own.
     /// </summary>
-    internal void OpenPooled(TargetDefinition definition, MarkingState pooled, IReadOnlyList<ScaleReference?>? scales = null)
+    internal void OpenPooled(TargetDefinition? definition, MarkingState pooled, IReadOnlyList<ScaleReference?>? scales = null)
     {
         if (AddTarget(choose: false) is null)
         {
@@ -571,36 +589,3 @@ public sealed partial class MainWindow
     private LoadGroups? compareGroupsCard;
 }
 
-/// <summary>What Pool the chosen says when it will not pool the sessions ticked, error report 57.</summary>
-internal static class PoolRefusal
-{
-    internal const string NotASet = "These are not sheets of a set, so Pool the chosen cannot read them as one group. A set is what Made for your "
-        + "optic makes when the shots need several sheets; each sheet's codes say which of the set it is.";
-
-    /// <summary>The designs ticked, each with how many of its sheets, and what to tick instead.</summary>
-    internal static string DifferentDesigns(IReadOnlyList<SessionRecord> records)
-    {
-        var designs = records
-            .GroupBy(r => r.DefinitionId ?? "")
-            .Select(g => (Name: SessionNames.TargetOf(g.First().SheetName, SessionNames.LabelOf(g.First().MarkingJson)), Count: g.Count()))
-            .Select(d => $"{d.Name} ({(d.Count == 1 ? "1 sheet" : d.Count.ToString(CultureInfo.InvariantCulture) + " sheets")})")
-            .ToList();
-        string named = designs.Count == 2 ? $"{designs[0]} and {designs[1]}" : string.Join(", ", designs.Take(designs.Count - 1)) + " and " + designs[^1];
-        return $"These are sheets of different designs: {named}. Pool the chosen reads only the sheets of one set together, so tick only those; "
-            + "a loose sheet can stand in for a sheet of a set only when its bulls are the set's.";
-    }
-
-    /// <summary>Entry 512 section 3: more loose sheets ticked than the set has sheets missing from those ticked.</summary>
-    internal static string NoPlaceLeft(string set, int loose, int places) => places == 0
-        ? $"Every sheet of {set} is ticked already, so the loose {(loose == 1 ? "sheet has" : "sheets have")} no sheet to stand in for. Untick the sheet of the set it replaces, then Pool the chosen."
-        : string.Create(CultureInfo.InvariantCulture, $"{loose} loose sheets are ticked, but only {places} {(places == 1 ? "sheet" : "sheets")} of {set} {(places == 1 ? "is" : "are")} missing from those ticked, so they cannot all stand in. Untick the sheets of the set they replace, then Pool the chosen.");
-
-    internal const string WhichSheetTitle = "Which sheet of the set does this one replace?";
-
-    internal static string WhichSheetWhy(string loose, string set) =>
-        $"{loose} has the same bulls as every sheet of {set}, so it can count as any sheet missing from those ticked. Choose the one it replaces; each shot is still measured about its own bull.";
-
-    internal static string SheetChoice(int place) => string.Create(CultureInfo.InvariantCulture, $"Sheet {place + 1}");
-
-    internal static string CountsAs(string loose, int place) => string.Create(CultureInfo.InvariantCulture, $"{loose} counts as sheet {place + 1} of the set.");
-}

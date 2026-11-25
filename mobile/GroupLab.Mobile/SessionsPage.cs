@@ -183,7 +183,7 @@ public sealed class SessionsPage : UserControl
                 IsChecked = chosen.Contains(s.Id),
                 MinHeight = Screens.Touch,
                 Content = new StackPanel { Children = { Screens.Line(name.Name), Screens.Quiet(Detail(s, name, units)) } },
-            };
+            }.Id(string.Create(CultureInfo.InvariantCulture, $"sessions-choose-{s.Id}"));
             box.IsCheckedChanged += (_, _) =>
             {
                 if (box.IsChecked == true)
@@ -202,8 +202,92 @@ public sealed class SessionsPage : UserControl
 
         column.Children.Add(new Border { Child = rows, Classes = { PhoneStyles.Card } });
         column.Children.Add(compare);
+        // Report 57's suggestion, Alan's yes to the general case (2026-11-24), on the phone: Pool the chosen takes any sheets, read by the
+        // computer's own planner; the pooled group is saved as a pool and opens as one, as a set's does.
+        var refused = new Border { Classes = { PhoneStyles.Card, PhoneStyles.Warn }, IsVisible = false };
+        column.Children.Add(Screens.Choice("Pool the chosen", () => PoolChosen(saved, chosen, refused)).Id("sessions-pool-chosen"));
+        column.Children.Add(Screens.Quiet(PoolChosenWords));
+        column.Children.Add(refused);
         column.Children.Add(Screens.BackButton("Back to Sessions", () => Content = List()).Id("sessions-back"));
         return Screens.Page(column);
+    }
+
+    /// <summary>Under Pool the chosen on the phone, as beside it on the computer.</summary>
+    internal const string PoolChosenWords = "Pool the chosen reads two or more sheets as one group, each shot about its own bull; the sheets of a set count by their codes.";
+
+    /// <summary>
+    /// The sessions ticked pooled (pooled sets ticked are left out, as on the computer): a refusal said in amber under the button, a loose sheet
+    /// that could stand in for several of a set's sheets asked about one at a time, and otherwise the pool saved and opened.
+    /// </summary>
+    private void PoolChosen(IReadOnlyList<SessionSummary> saved, HashSet<long> chosen, Border refused)
+    {
+        var store = PhoneAnalysis.Store();
+        var records = saved.Where(s => s.Id > 0 && chosen.Contains(s.Id)).Select(s => store.Get(s.Id)).OfType<SessionRecord>().ToList();
+        var plan = ChosenPools.Plan(records);
+        DiagnosticLog.Info("sessions.pool.chosen", ("sheets", records.Count), ("kind", plan.Kind.ToString()));
+        switch (plan.Kind)
+        {
+            case ChosenPoolKind.Refused:
+                refused.Child = Screens.Line(plan.Words!).Id("sessions-pool-refused");
+                refused.IsVisible = true;
+                return;
+            case ChosenPoolKind.StandIn:
+                PlaceStandIns(plan, new int?[records.Count], 0, () => Content = Choose(saved, chosen));
+                return;
+            default:
+                OpenChosenPool(plan, plan.Kind == ChosenPoolKind.Mixed ? SessionPools.Choices(pictures: true) : SessionPools.Choices(pictures: false));
+                return;
+        }
+    }
+
+    /// <summary>Entry 512 on the phone: each loose sheet given its place, asking which where several of the set's sheets are missing.</summary>
+    private void PlaceStandIns(ChosenPlan plan, int?[] numbers, int j, Action back)
+    {
+        var standIn = plan.StandIn!;
+        if (j == standIn.Loose.Count)
+        {
+            OpenChosenPool(plan, SessionPools.Choices(pictures: false, numbers));
+            return;
+        }
+
+        int at = standIn.Loose[j];
+        var free = standIn.Places.Where(k => !numbers.Contains(k)).ToList();
+        if (free.Count == 1)
+        {
+            numbers[at] = free[0];
+            PlaceStandIns(plan, numbers, j + 1, back);
+            return;
+        }
+
+        string name = SessionNames.For(plan.Records)[at].Name;
+        var column = new StackPanel { Spacing = 8, Children = { Screens.Title(PoolRefusal.WhichSheetTitle), Screens.Line(PoolRefusal.WhichSheetWhy(name, standIn.Set.Name)) } };
+        foreach (int k in free)
+        {
+            column.Children.Add(Screens.Choice(PoolRefusal.SheetChoice(k), () =>
+            {
+                numbers[at] = k;
+                DiagnosticLog.Info("sessions.pool.stand-in", ("place", k + 1), ("asked", true));
+                PlaceStandIns(plan, numbers, j + 1, back);
+            }).Id($"sessions-pool-sheet-{k + 1}"));
+        }
+
+        column.Children.Add(Screens.BackButton("Back to the sessions chosen", back).Id("sessions-pool-which-back"));
+        Content = Screens.Page(column);
+    }
+
+    /// <summary>The chosen sheets saved as a pool and opened from it, as a saved pool's row opens.</summary>
+    private void OpenChosenPool(ChosenPlan plan, string choices)
+    {
+        if (PhonePools.Save([.. plan.Records.Select(r => r.Id)], choices, null) is not { } pool)
+        {
+            return;
+        }
+
+        var (result, _) = PhonePools.Open(pool.Id);
+        if (result is not null)
+        {
+            Content = Opened(new ResultView(result, new ShotSetup(result.State.Calibre, result.State.ShotDistanceInches), Phone.Settings.LoadUnits(), ToList));
+        }
     }
 
     /// <summary>Entry 219 item A5: a session file from the phone's files, a share, email or USB, opened as a session of its own.</summary>

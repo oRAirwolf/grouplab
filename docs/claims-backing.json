@@ -5,6 +5,14 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+ "Sheets of one set count by their codes, as above; a loose sheet with the same bulls as the set's sheets, such as a single 3x3 2 MOA C bull sheet shot in place of a spoiled sheet of the 3x3 2 MOA C bull set, counts as the sheet missing from those ticked, and where several are missing GroupLab asks which one it replaces (on the phone, \"Which sheet of the set does this one replace?\").": {
+    "kind": "code",
+    "where": "src/GroupLab.Core/Records/ChosenPools.cs, shared by the computer and the phone, held by Core ChosenPoolsTests, computer Report57PoolRefusalTests and Entry512StandInPoolTests, phone Report57PhonePoolTests; Alan's yes to the general case of report 57's suggestion, 2026-11-24"
+   },
+ "Any other mix, such as sheets of different designs or several loose sheets of one design, is pooled as separate sheets in the order ticked: each shot is measured about its own bull, with its own sheet's scale, and shot 2.5 is bull 5 on the second sheet.": {
+    "kind": "code",
+    "where": "src/GroupLab.Core/Records/ChosenPools.cs, shared by the computer and the phone, held by Core ChosenPoolsTests, computer Report57PoolRefusalTests and Entry512StandInPoolTests, phone Report57PhonePoolTests; Alan's yes to the general case of report 57's suggestion, 2026-11-24"
+   },
  "The phone's Targets screen draws its page the same way, and a sheet with a load block has a **Session name** box under its picture: the name, such as Rifle A 140 gr, prints in the square at the bottom right of the load block, above the sheet's code, with each sheet of a set's place in it, in Print, Share the PDF and the printer shares.": {
     "kind": "code",
     "where": "the phone's Targets screen, mobile/GroupLab.Mobile/TargetsPage.cs (SessionNameWords, SessionNameFor), held by Mobile Entry512PhoneNameTests; Alan's queue of 24 November 2026, part 1"

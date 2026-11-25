@@ -557,6 +557,24 @@ with Apple for review" are retired wording. **The Mac's 1.0 is not released:** e
 **Checks:** Mobile suite 300 passed, 6 skipped; Core 3,300 with the bench coverage line for the new classes; App suite before commit;
 claims all backed, readme current, site build ok. The usage guard stops at 95 until the week resets (2026-11-26 02:00 UTC).
 
+## Alan's queue of 2026-11-24, part 2: Pool the chosen takes any sheets, on the computer and the phone (2026-11-25)
+
+Alan said yes to the general case of report 57's suggestion. **One planner for both** (`ChosenPools.Plan`, Core): sheets of one set
+pool as the set, counted by their codes (entry 243); a loose sheet with the set's bulls stands in for a missing sheet, asking which where
+several are (entry 512); **any other mix** (different designs, loose sheets of one design, or a loose sheet when every sheet of the set is
+ticked already) pools as separate sheets in the order ticked, each shot about its own bull with its own sheet's scale, the model pooled
+pictures have used since entry 423 (`SetPool.CompositeOfPictures`), and is saved as a pool of pictures, so it reopens, shares and syncs
+as any pool does. Still refused, in amber: one loose sheet alone, and sheets shot at different distances (more than half an inch apart)
+or with different calibers, because their inches do not pool; a sheet's distance and caliber are its marking's or, where the marking has
+none, its session's. The words moved to Core (`PoolRefusal`) so the phone says the same. **Computer:** Session records' Pool the chosen
+uses it, with the hint "Tick two or more sheets to read them as one group, each shot about its own bull; the sheets of a set count by
+their codes." **Phone:** Sessions, Compare loads gains Pool the chosen under Compare; a refusal is an amber card under it, a stand-in's
+question is a page of Sheet N choices, and the pool is saved and opened as a saved pool's row opens. **Look:** a DESIGN NEEDED line in
+for-alan.md (where the phone's button sits, and whether a mixed pool's key names each sheet's design); built the plainest way meanwhile.
+**Tests:** `ChosenPoolsTests` (4), `Report57PoolRefusalTests` (rewritten: pools, saves and reopens three mixed sheets, then refuses one
+sheet, distances and calibers), `Entry512StandInPoolTests` (its last step now pools four as separate sheets), `Report57PhonePoolTests`.
+Docs (docs worker): the guide's "not built yet" paragraph, Features `pool-set`, PHONE-PARITY.md and suggestions.md's issue 57 entry.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

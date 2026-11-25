@@ -9,8 +9,8 @@ namespace GroupLab.App.Tests;
 /// <summary>
 /// NOTES-FROM-PLANNING.md entry 512 section 3, report 57's suggestion (Alan's yes to the narrow case): a loose 3x3 2 MOA C bull sheet ticked
 /// with sheets of the 3x3 2 MOA C bull set of 3 counts as the set's sheet missing from those ticked, so a spoiled sheet can be replaced.
-/// With one place it takes it and says so; with several it asks which; with none it is refused in amber. The pool saved with it opens again
-/// with the loose sheet in its place. The sheets here are one analyzed sheet's marking saved under each design, which is all pooling reads.
+/// With one place it takes it and says so; with several it asks which. The pool saved with it opens again
+/// with the loose sheet in its place; with none, since Alan's yes to the general case, the sheets pool as separate sheets. The sheets here are one analyzed sheet's marking saved under each design, which is all pooling reads.
 /// </summary>
 public class Entry512StandInPoolTests
 {
@@ -86,17 +86,23 @@ public class Entry512StandInPoolTests
             Assert.Contains("counts as sheet 3 of the set.", string.Join(" | ", window.PoolText), StringComparison.Ordinal);
             Assert.Equal([0, 2], window.Plot.PooledSheets);
 
-            // With every sheet of the set ticked, there is nothing for it to stand in for: refused in amber, saying what to untick.
+            // With every sheet of the set ticked, there is nothing for it to stand in for. Since Alan's yes to the general case (2026-11-24)
+            // that is no refusal: the four are pooled as separate sheets, in the order ticked, and it says why the set's numbers were not used.
             window.ShowSessions();
             foreach (long id in new[] { second, third })
             {
                 window.ChooseSession(id, true);
             }
 
+            tabs = window.Targets.Count;
             window.PoolChosen();
             Dispatcher.UIThread.RunJobs();
-            Assert.StartsWith($"Every sheet of {SetName} is ticked already", Assert.Single(window.PoolText), StringComparison.Ordinal);
-            Assert.True(window.PoolRefusedInAmber);
+            said = string.Join(" | ", window.PoolText);
+            Assert.Contains($"Every sheet of {SetName} is ticked already, so the loose sheet cannot stand in for one.", said, StringComparison.Ordinal);
+            Assert.Contains("The 4 sheets are pooled as separate sheets", said, StringComparison.Ordinal);
+            Assert.False(window.PoolRefusedInAmber);
+            Assert.Equal(tabs + 1, window.Targets.Count);
+            Assert.Equal([0, 1, 2, 3], window.Plot.PooledSheets);
             window.Close();
         }
         finally

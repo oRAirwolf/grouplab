@@ -1334,7 +1334,7 @@
       "key": "pool-set",
       "group": "Sheets and printing",
       "name": "Pool the sheets of a set",
-      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing. Dropped onto the window together, the sheets of a set open in one tab, pooled with no question asked, and each sheet can be opened alone there to check and fix; on the phone, sheets chosen together open as the set's checklist with the pooled group showing, and Delete this session on a saved session's result asks the same question and names any pooled set that uses the sheet, which keeps its other sheets. The pool is saved in Session records as a pooled set of its own, opens again from there, and can be shared as one file with its sheets. On the computer, a loose sheet with the same bulls as the set's sheets can stand in for a spoiled one: ticked with the others, it counts as the sheet missing from those ticked, and GroupLab asks which where several are. Asked for by Quack and Jylee.",
+      "sentence": "The sheets of a set from Made for your optic are read in any order and pooled into one group, which opens on the analysis screen in a tab of its own with each sheet's shots in their own shade, and GroupLab says which sheets are still missing. Dropped onto the window together, the sheets of a set open in one tab, pooled with no question asked, and each sheet can be opened alone there to check and fix; on the phone, sheets chosen together open as the set's checklist with the pooled group showing, and Delete this session on a saved session's result asks the same question and names any pooled set that uses the sheet, which keeps its other sheets. The pool is saved in Session records as a pooled set of its own, opens again from there, and can be shared as one file with its sheets. A loose sheet with the same bulls as the set's sheets can stand in for a spoiled one: ticked with the others, it counts as the sheet missing from those ticked, and GroupLab asks which where several are. Any other mix, such as sheets of different designs, is pooled as separate sheets in the order ticked, each shot measured about its own bull with its own sheet's scale; sheets shot at different distances, sheets of different calibers and a single loose sheet are still refused, in amber, with the reason. The phone has Pool the chosen too, under Compare loads in Sessions. Asked for by Quack and Jylee.",
       "shot": "set-tab",
       "platforms": [
         "Windows",
@@ -1351,13 +1351,15 @@
         "open in one tab, pooled",
         "A pooled set of sheets is now saved in Session records",
         "a loose sheet with the same bulls as the set's sheets can now stand in",
-        "now has Delete this session, which asks first"
+        "now has Delete this session, which asks first",
+        "now pools any sheets you tick",
+        "now has Pool the chosen, which pools the sessions you tick into one group"
       ],
       "reworded": "1.0.0-nightly.245",
       "tour": "sessions",
       "guide": "the-sheets-of-a-set-pool-into-one-group",
       "mobile": {
-        "noPicture": "the phone's set checklist is photographed at the next sitting with the phone"
+        "noPicture": "the phone's set checklist and its Pool the chosen under Compare loads are photographed at the next sitting with the phone"
       }
     },
     {
