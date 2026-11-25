@@ -12,6 +12,18 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.247
+
+**2026-11-25**, commit `4e9031d`. Nightly.
+
+**What you will notice**
+
+- On iPhone and iPad, GroupLab is now built with the faster compiler Android got on 24 November, which there halved the time to read a scan with the same results; the iPhone's own figures come from the next device test.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.247)
+
+---
+
 ## 1.0.0-nightly.246
 
 **2026-11-25**, commit `54bea04`. Nightly.
