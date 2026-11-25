@@ -13,13 +13,13 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
-## The App Store version, 2026-11-24 21:45 UTC
+## The App Store version, 2026-11-25 02:44 UTC
 
 - App Store version 1.0.244 (build 244): waiting for review.
 - The App Store page: https://apps.apple.com/app/id6817635137
 - On the App Store now: version 1.0.243; TestFlight stays the way in.
 - App Store, iPhone and iPad: version 1.0.244 (build 244) is waiting for review; build 245 waits until the review ends.
-- App Store, Mac: version 1.0 (build 240) is in review; build 244 waits until the review ends.
+- App Store, Mac: App Store Connect refused a request (409 This resource cannot be reviewed, please check associated errors to see why.); the next run tries again.
 <!-- /status:app-store -->
 
 <!-- status:store -->
