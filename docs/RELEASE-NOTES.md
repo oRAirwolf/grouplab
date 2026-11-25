@@ -12,6 +12,28 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.246
+
+**2026-11-25**, commit `54bea04`. Nightly.
+
+**What you will notice**
+
+- Pool the chosen in Session records now pools any sheets you tick, such as a loose sheet with the sheets of a set or sheets of different designs, each shot measured about its own bull; sheets shot at different distances or with different calibers are still kept apart. (Error report 57) (suggested in a Discord post).
+- On the phone, Compare loads under Sessions now has Pool the chosen, which pools the sessions you tick into one group the same way as on the computer. (Error report 57).
+- On the phone, a session name typed on a sheet's page under Targets now prints in the square at the bottom right of its load block, as it does from the computer. (Alan's queue of 24 November, part 1).
+- On the phone, the result of a saved session now has Delete this session, which asks first and names any pooled set that uses the sheet; that pooled set keeps its other sheets.
+- On Android, reading a photo or a scan now takes about half as long in GroupLab's tests, and finding the holes about a third as long, with the same results as before. (Alan's queue of 24 November, part 3).
+
+**Under the hood**
+
+- The phone's log now says how long each step of finding the holes took, with a check that shows a reading's result did not change. (Alan's queue of 24 November, part 3).
+
+From your reports and targets in this build: 1 change suggested in a Discord post.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.246)
+
+---
+
 ## 1.0.0-nightly.245
 
 **2026-11-24**, commit `5227e46`. Nightly.
