@@ -477,7 +477,7 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 - GroupLab now tidies old change files out of your sync folder once every device has read them, keeps them 14 days in the folder's trash, and says in Sync between devices what it tidied and freed.
 - A phone photograph is now opened and read a little sooner on the computer and the phone, with exactly the same result as before.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.217)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
