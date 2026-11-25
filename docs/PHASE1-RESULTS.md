@@ -575,6 +575,23 @@ for-alan.md (where the phone's button sits, and whether a mixed pool's key names
 sheet, distances and calibers), `Entry512StandInPoolTests` (its last step now pools four as separate sheets), `Report57PhonePoolTests`.
 Docs (docs worker): the guide's "not built yet" paragraph, Features `pool-set`, PHONE-PARITY.md and suggestions.md's issue 57 entry.
 
+## Alan's queue of 2026-11-24, part 3: Phase 9 on the phones, Android about twice as fast to read a picture, every result identical (2026-11-25)
+
+**Measured:** finding the holes now times its nine steps (`RenderDifferenceResult.Took`), which the phone's log writes as `read.holes`
+with its cores and whether code is compiled as it runs, and `phone.detect` ends with a result fingerprint (`ReadFingerprint`, every bull's
+and hole's position, diameter and bull, to the bit); the computer's bench files the same steps and prints the fingerprint. On the computer
+with 2 cores a photograph's holes take 140 ms, against 5.3 to 10.1 s on the Android emulator, so the cores were not the reason: Android's
+compiled code was. **Changed:** Android's Release builds use Mono's LLVM code generator (`EnableLLVM`). On the emulator, two runs side by
+side (45520552937, 45520556735): start-up 1,886 to 1,290 ms, the 600 dpi scan read in 9.9 s to 4.5 s (its holes 4.3 s to 1.4 s),
+switching targets 243 to 109 ms, the sweep's photographs 9.2 to 16.7 s to 3.6 to 7.8 s; **every result identical**, both pictures'
+fingerprints the same in every reading of both builds; the APK 1 MB smaller, the build about a minute longer. `android-emulator.yml`'s
+measuring switch is now `no_llvm`. **iPhone:** the simulator in CI runs GroupLab's code in Mono's interpreter (`jit=False`, nothing
+compiled ahead of time there), 20 to 37 s a reading, so it says nothing about an iPhone, which runs code compiled ahead of time; the
+device build with LLVM is tried in a measuring run, and a real iPhone's figures wait on a sitting (PERFORMANCE.md). The fingerprints
+also showed that a picture reads the same every time on each platform, but the iOS simulator and the Android emulator give different
+fingerprints for the same picture (arm64 against x86_64, OpenCV's own code paths among them); nothing claims otherwise. **Tests:**
+`ReadFingerprintTests`; the bench coverage line for the fingerprint. Details and tables: docs/PERFORMANCE.md.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

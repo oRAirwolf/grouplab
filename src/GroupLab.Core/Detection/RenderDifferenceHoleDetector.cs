@@ -189,6 +189,12 @@ public sealed record RenderDifferenceHole(double X, double Y, double HullX, doub
 public sealed record RenderDifferenceResult(double Dpi, double InkFraction, double Threshold, IReadOnlyList<RenderDifferenceHole> Holes, IReadOnlyList<RejectedBlob> Rejected, IReadOnlyList<PointD> CellShifts, GrayImage? Expected = null, HoleSizeReference? HoleSize = null, GrayImage? Residual = null, HalftoneRead? Halftone = null)
 {
     /// <summary>
+    /// Phase 9 on the phones (Alan's queue of 2026-11-24, part 3): where the detection's time went, step by step in milliseconds, such as
+    /// "render=40 warp=12 ...", for the phone's log, where nothing else says which step is slow. Never part of a trace or a report.
+    /// </summary>
+    public string? Took { get; init; }
+
+    /// <summary>
     /// The candidates an exclusion zone swallowed, NOTES-FROM-PLANNING.md entry 77 section 3 item 1: each passed every size, compactness and
     /// shape filter and was refused only because it lies inside a zone. A zone is blind, so a hole there is dropped from every figure, and this
     /// count is how that shows as a number rather than as nothing.
@@ -264,15 +270,19 @@ public static partial class RenderDifferenceHoleDetector
         }
 
         var scene = pages[tile];
+        var took = new StepClock();
         pageRender ??= SceneRasterizer.Rasterize(scene, dpi);
+        took.Step("render");
         int width = observed.Width, height = observed.Height;
         var expected = ExpectedImage.Render(pageRender, dpi, registration, width, height);
+        took.Step("warp");
 
         // Detection runs inside the registered sheet, NOTES-FROM-PLANNING.md entry 23 section 4 and docs/DETECTION-PIPELINE.md before S5.
         // Beyond the page's edge the observed image is replaced by the sheet's own paper level before any stage reads it, so a dark mat
         // around a photographed sheet can neither lower the local paper estimate nor become a residual, whatever image the caller passed.
         var inside = SheetMask(definition.Page.Width, definition.Page.Height, registration, width, height);
         observed = WithinSheet(observed, expected, inside);
+        took.Step("mask");
 
         // Error report 60: a bull printed as a grey made of dots, on a black and white laser printer, and scanned in color, reads as rainbow
         // bands and a coarse speckle, and the finder took patches of both for holes. Where a scan's solid print is a dot pattern, a smoothed
@@ -295,6 +305,8 @@ public static partial class RenderDifferenceHoleDetector
             }
         }
 
+        took.Step("halftone");
+
         // S5: local paper, from pixels the render calls paper, and the ink level against it.
         int block = Math.Max(4, (int)Math.Round(options.PaperBlockInches * dpi));
         var paper = PaperField(observed, expected, block, SheetMask(definition.Page.Width, definition.Page.Height, registration, width, height, options.EdgeBandInches * 254));
@@ -311,11 +323,14 @@ public static partial class RenderDifferenceHoleDetector
             inkFraction = inks.Rest;
         }
 
+        took.Step("paper");
+
         // S5, alignment: each bull's cell by phase correlation, the rest by the median shift.
         var cells = DetectionCells(definition);
         var (aligned, shifts) = Align(observed, expected, paper, block, inkFraction, cells, registration, options.MaximumShiftInches * dpi, backend);
         expected = aligned;
         inkFraction = InkFraction(observed, expected, paper, block);
+        took.Step("align");
 
         // S6: the residual as a fraction of the paper-to-ink range, both signs. And nothing beyond the page's edge can become a candidate: on
         // the N568 photograph the mat merged into one blob that swallowed every hole.
@@ -385,6 +400,8 @@ public static partial class RenderDifferenceHoleDetector
             });
         }
 
+        took.Step("residual");
+
         // S7: threshold, open, close, fill, hull. Phase 9 (2026-10-20): the threshold is taken before the open rather than after, which for a
         // flat element gives the same pixels (BinaryMorphology.Open says why), and opens a 0 and 1 image instead of a grey one.
         int open = Math.Max(2, (int)Math.Round(options.OpenRadiusInches * dpi, MidpointRounding.ToEven));
@@ -392,6 +409,7 @@ public static partial class RenderDifferenceHoleDetector
         var binary = backend.Morphology(new GrayImage(width, height, over), MorphologyOperation.Open, open).Pixels;
 
         var closed = backend.Morphology(new GrayImage(width, height, binary), MorphologyOperation.Close, close);
+        took.Step("morphology");
 
         // S8: filters, declared zones, the position prior, and the weighted centre.
         var zones = Zones(definition, scene, tile);
@@ -662,8 +680,24 @@ public static partial class RenderDifferenceHoleDetector
             holes[k] = holes[k] with { Beside = Beside(zones, printed, registration.ToPage(new PointD(holes[k].X, holes[k].Y)), reach * 254) };
         }
 
+        took.Step("marks");
         return new RenderDifferenceResult(dpi, inkFraction, threshold, holes, rejected, shifts, expected, reference, options.KeepResidual ? new GrayImage(width, height, residual) : null,
-            halftone is null ? null : halftone with { NotPaperWhite = rejected.Count(r => r.Reason == NotPaperWhite) });
+            halftone is null ? null : halftone with { NotPaperWhite = rejected.Count(r => r.Reason == NotPaperWhite) }) { Took = took.Said };
+    }
+
+    /// <summary>Times the detection's steps one after another, for <see cref="RenderDifferenceResult.Took"/>.</summary>
+    private sealed class StepClock
+    {
+        private readonly System.Diagnostics.Stopwatch clock = System.Diagnostics.Stopwatch.StartNew();
+        private readonly System.Text.StringBuilder said = new();
+
+        public void Step(string name)
+        {
+            said.Append(said.Length == 0 ? "" : " ").Append(name).Append('=').Append(clock.ElapsedMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            clock.Restart();
+        }
+
+        public string Said => said.ToString();
     }
 
     /// <summary>

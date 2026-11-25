@@ -115,6 +115,7 @@ public class BenchCoverageTests
         ["ShotEditor"] = "It builds the buttons of a popover from the state, looping over the bulls once, and converts an arrow key press through three calls to the scale. It runs under a person's finger like the canvas controls beside it.",
         ["ChosenPools"] = "It reads the few sessions a person ticked and says how they pool, when Pool the chosen is pressed, then hands them to SetPool. Alan's yes to report 57's general case, 2026-11-24.",
         ["PoolRefusal"] = "The words Pool the chosen says: sentences, not a measurement. Error report 57.",
+        ["ReadFingerprint"] = "A short hash of what a phone reading found, written to its log so a change made for speed can be shown to change no result; part of the reading, which is measured. Alan's queue of 2026-11-24, part 3.",
         ["SetPool"] = "It groups a few saved sessions by their set and adds up their shots, when a person presses Pool the chosen. The analysis of each sheet is measured. Entry 243 section 3.1.",
         ["RingBox"] = "Four projections of a marker's box against a square bull, once per candidate marker when a sheet's markers are derived. Deriving them is measured. Entry 243 section 4.",
         ["StageWords"] = "A fixed sentence looked up by a stage's name as the stage finishes. There is nothing in it that takes time. Entry 243 section 3.2.",

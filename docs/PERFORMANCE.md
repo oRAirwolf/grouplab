@@ -48,6 +48,49 @@ so a record of the emulator rather than a phone, and never a gate. Its figures a
 - **Responsiveness separately from speed.** A window that freezes for four seconds feels worse than one that works for six and says what it is doing. The interface table below records the freeze as its own figure for exactly that reason.
 - **Memory too**, since a 600 dpi colour scan is about 25 MB before anything is derived from it.
 
+## Alan's queue of 2026-11-24, part 3: opening a photo and finding holes on the phones, every result identical
+
+**Measured first, step by step.** Finding the holes (S5 to S8) now times its own nine steps (`RenderDifferenceResult.Took`): drawing the
+sheet, warping it onto the picture, the sheet's mask, the dot-pattern check, the paper's level, aligning each bull, the residual, the
+morphology and judging the marks. The phone's log writes them as `read.holes`, with the cores it had and whether code is compiled as it
+runs, and `phone.detect` now ends with a **result fingerprint** (`ReadFingerprint`: sixteen hex digits of SHA-256 over every bull's and
+hole's position, diameter and bull, to the bit), so a change made for speed is shown to change nothing on a device where only the log comes
+back. The bench files the same steps under each stage-by-stage figure and prints the fingerprint. Neither enters a trace or a report.
+
+**The computer is not the reason.** `grouplab bench --area measurement --runs 3` (Release, this desktop), with 16 cores and with 2
+(`DOTNET_PROCESSOR_COUNT=2`, as the emulator has): a phone photograph's holes 104 and 140 ms, the 600 dpi scan's 334 and 472 ms, the same
+fingerprints both ways. The emulator took 5,300 to 10,100 ms on the same kind of picture, about fifty times the computer's with as many
+cores, while the stages that are mostly OpenCV took only 3 to 12 times. So the time was in how Android compiles GroupLab's own code.
+
+**What changed: Mono's LLVM code generator for Android's Release builds** (`EnableLLVM`, `GroupLab.Android.csproj`). Android's Release
+build was already compiled ahead of time; LLVM compiles it again with a real optimizer. Two runs of `android-emulator.yml` on the same
+commit with the baseline, side by side (45520552937 without, 45520556735 with), the emulator's x86_64 at 2 cores:
+
+| median ms, the emulator | without LLVM | with LLVM |
+|---|---|---|
+| start-up to a usable window (5 launches) | 1,886 | 1,290 |
+| read the 600 dpi scan, from the picture to its result (6) | 9,871 | 4,455 |
+| of that, finding the holes | 4,349 | 1,414 |
+| of that, the codes | 1,737 | 1,005 |
+| of that, making the working copy | 1,294 | 735 |
+| switch between three open targets (12) | 243 | 109 |
+| the sweep's two photographs, the whole reading (7) | 9,155 to 16,734 | 3,637 to 7,753 |
+
+| a sweep photograph's hole steps, ms, typical | render | warp | mask | paper | align | residual | morphology | marks |
+|---|---|---|---|---|---|---|---|---|
+| without LLVM | 170 to 536 | 576 to 1,280 | 106 to 416 | 209 to 516 | 1,130 to 2,087 | 345 to 1,155 | 934 to 4,195 | 267 to 2,438 |
+| with LLVM | 70 to 301 | 75 to 356 | 79 to 185 | 75 to 186 | 283 to 1,236 | 42 to 291 | 80 to 322 | 351 to 686 |
+
+**Every result identical:** the two pictures' fingerprints are the same in both builds on every reading (f5050b3fb21ea0a9 and
+3ffa05ba4620ee59, 7 readings each), and so are the hole counts. The APK is 1 MB smaller with LLVM (65.9 MB against 66.9), and the build
+takes about a minute longer for each architecture (3 min 5 s against 4 min 8 s for the emulator's). Nothing in the computer's builds
+changed. **On a phone's arm64, the same bits are expected but not yet seen:** the one way LLVM could move a
+result there is fusing a multiply and an add into one instruction, and Mono's compiler asks LLVM for that only with its fast-math option
+(`--ffast-math`, the only place `-fp-contract=fast` appears in the arm64 compiler of the 10.0.12 pack), which GroupLab's builds do not
+pass; without it LLVM fuses only operations marked for it, which Mono's code does not carry. A real phone is arm64 and several times faster than the emulator; the Galaxy Fold 7's log of 27 September found the 600 dpi
+sample's holes in 2,864 ms on an earlier build, so the same share is expected there, which the next sitting's log will show
+(`read.holes`, `phone.detect`'s fingerprint).
+
 ## Entry 514 section 5, 2026-11-23: a phone photograph on Android, stage by stage
 
 **Measured** on the Android emulator in CI (x86_64, android-emulator.yml), not a phone: GroupLab Dev's own `read.stage` lines for the

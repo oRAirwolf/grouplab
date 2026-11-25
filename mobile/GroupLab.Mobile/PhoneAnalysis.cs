@@ -312,7 +312,17 @@ internal static class PhoneAnalysis
         survey?.Record(new AnalysisFacts(working.OriginalWidth, working.OriginalHeight, grey.Width, grey.Height, Benchmark.Stages(trace), Benchmark.PeakMegabytes()));
         // Entry 246: the most memory held and where the time went, so a phone's run can be read from its log alone.
         DiagnosticLog.Info("phone.detect", ("named", chosen is null), ("holes", result.Detections.Count), ("failure", result.Failure), ("ms", clock.ElapsedMilliseconds),
-            ("peakMb", Benchmark.PeakMegabytes()), ("stages", string.Join(" ", Benchmark.Stages(trace).Select(s => $"{s.Stage}={s.Milliseconds}"))));
+            ("peakMb", Benchmark.PeakMegabytes()), ("stages", string.Join(" ", Benchmark.Stages(trace).Select(s => $"{s.Stage}={s.Milliseconds}"))),
+            ("result", GroupLab.Core.Marking.ReadFingerprint.Of(result)));
+        // Phase 9 on the phones (Alan's queue of 2026-11-24, part 3): where finding the holes spent its time, step by step, since the
+        // stage's own line gives only the whole; and the fingerprint above shows a change made for speed changed no result.
+        if (result.Difference?.Took is { } took)
+        {
+            // Whether code is compiled as it runs: false on an iPhone, which runs what was compiled ahead of time, and on a simulator or
+            // phone where GroupLab's code is interpreted, which is many times slower.
+            DiagnosticLog.Info("read.holes", ("steps", took), ("cores", Environment.ProcessorCount),
+                ("jit", System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeCompiled));
+        }
         // Entry 291 section 3.3: the markers the picture read, at its own size and field of view, against those the last live frame read and
         // foretold (camera.live), so the two can be compared picture by picture.
         DiagnosticLog.Info("phone.markers", ("read", result.Measurement.Fiducials?.Matches.Count), ("of", result.Measurement.Fiducials?.Expected),

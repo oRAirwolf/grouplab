@@ -19,6 +19,13 @@
     <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <!--
+      Phase 9 on the phones (Alan's queue of 2026-11-24, part 3): a Release build is compiled ahead of time with Mono's LLVM code generator
+      as well. On the Android emulator it found the holes about three times sooner (4.3 s to 1.4 s on the 600 dpi scan) and read the whole
+      picture in under half the time, with every result identical, bit for bit (the log's result fingerprint), for about a minute more of
+      build and a slightly smaller APK. docs/PERFORMANCE.md has the figures. A measuring run can still build without it, -p:EnableLLVM=false.
+    -->
+    <EnableLLVM Condition="'$(Configuration)' == 'Release' and '$(EnableLLVM)' == ''">true</EnableLLVM>
     <RootNamespace>GroupLab.Android</RootNamespace>
     <AndroidManifestPlaceholders>grouplabLabel=GroupLab;grouplabDebuggable=false;grouplabIcon=@mipmap/ic_launcher;grouplabRoundIcon=@mipmap/ic_launcher_round</AndroidManifestPlaceholders>
   </PropertyGroup>

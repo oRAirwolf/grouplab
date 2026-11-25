@@ -17,8 +17,8 @@ on:
         description: "Entry 388 section 4: also measure Phase 9's baseline on the emulator (start-up, the 600 dpi scan, switching targets)"
         type: boolean
         default: false
-      llvm:
-        description: "Entry 514 section 5, measuring only: build GroupLab Dev with Mono's LLVM code generator, to compare its reading times and size"
+      no_llvm:
+        description: "Measuring only: build GroupLab Dev without Mono's LLVM code generator, which Release builds use since Alan's queue of 2026-11-24, to compare"
         type: boolean
         default: false
 
@@ -77,15 +77,15 @@ jobs:
           cp "$RUNNER_TEMP/android-native-x86_64/x86_64/libOpenCvSharpExtern.so" android/native/x86_64/
           # Release, signed with the build machine's debug key, as android.yml builds it: a Debug APK expects Visual Studio's fast
           # deployment and does not start on its own (entry 202).
-          # Entry 514 section 5: a Release build for Android is already compiled ahead of time; a run by hand with llvm builds it
-          # with Mono's LLVM code generator as well, for measuring only. Nothing published is built this way.
+          # A Release build for Android is compiled ahead of time with Mono's LLVM code generator (Alan's queue of 2026-11-24, part 3);
+          # a run by hand with no_llvm builds it without, for measuring only.
           aot=""
-          if [ "${{ inputs.llvm }}" = "true" ]; then aot="-p:EnableLLVM=true"; fi
+          if [ "${{ inputs.no_llvm }}" = "true" ]; then aot="-p:EnableLLVM=false"; fi
           dotnet build android/GroupLab.Android --configuration Release -p:GroupLabDev=true -p:GroupLabEmulator=true $aot \
             -p:AndroidSdkDirectory="$ANDROID_HOME" -p:JavaSdkDirectory="$JAVA_HOME_17_X64" > build.log 2>&1 || { grep -E 'error|Error' build.log | head -40; exit 1; }
           apk=$(find android/GroupLab.Android/bin/Release -name 'org.grouplab.app.dev-Signed.apk' | head -1)
           test -n "$apk"
-          echo "### GroupLab Dev for the emulator: $(stat -c %s "$apk") bytes${aot:+, with LLVM}" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "### GroupLab Dev for the emulator: $(stat -c %s "$apk") bytes${aot:+, without LLVM}" | tee -a "$GITHUB_STEP_SUMMARY"
           for item in lib/x86_64/libOpenCvSharpExtern.so assets/targets/GL-CF25-LTR.gltd.json; do
             unzip -l "$apk" | grep -q " $item$" || { echo "::error::GroupLab Dev for x86_64 does not carry $item"; exit 1; }
           done

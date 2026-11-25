@@ -200,7 +200,8 @@ public static class BenchSuite
                         sink.Part(record.Stage, record.DurationMs);
                     }
 
-                    return string.Create(CultureInfo.InvariantCulture, $"{result.Detections.Count} holes, {result.MissingMarkers.Count} markers not found");
+                    HoleSteps(sink, result);
+                    return string.Create(CultureInfo.InvariantCulture, $"{result.Detections.Count} holes, {result.MissingMarkers.Count} markers not found, result {ReadFingerprint.Of(result)}");
                 },
                 ["AutomaticMarking", "BinaryMorphology"]);
         }
@@ -228,9 +229,26 @@ public static class BenchSuite
                         sink.Part(record.Stage, record.DurationMs);
                     }
 
-                    return string.Create(CultureInfo.InvariantCulture, $"{definition.Name}, {result.Detections.Count} holes, {result.MissingMarkers.Count} markers not found");
+                    HoleSteps(sink, result);
+                    return string.Create(CultureInfo.InvariantCulture, $"{definition.Name}, {result.Detections.Count} holes, {result.MissingMarkers.Count} markers not found, result {ReadFingerprint.Of(result)}");
                 },
                 ["SheetIdentification", "AutomaticMarking", "LiveSheet", "BentSheetMapping"]);
+        }
+    }
+
+    /// <summary>
+    /// Phase 9 on the phones (Alan's queue of 2026-11-24, part 3): finding the holes step by step, as the phone's log has it
+    /// (<see cref="GroupLab.Core.Detection.RenderDifferenceResult.Took"/>), each step its own figure under the stage.
+    /// </summary>
+    private static void HoleSteps(BenchSink sink, AutomaticResult result)
+    {
+        foreach (string step in (result.Difference?.Took ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            int at = step.IndexOf('=', StringComparison.Ordinal);
+            if (at > 0 && double.TryParse(step[(at + 1)..], NumberStyles.Float, CultureInfo.InvariantCulture, out double ms))
+            {
+                sink.Part("S5-S8.holes." + step[..at], ms);
+            }
         }
     }
 
