@@ -9,37 +9,37 @@
       87,
       27
     ],
-    "2026-11-25, 00:06, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
-      109,
-      532,
-      1187,
-      19
-    ],
-    "2026-11-25, 01:06, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
-      109,
-      436,
-      1187,
-      19
-    ],
-    "2026-11-25, 01:06, Pooled set of 3 sheets, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 72, 0.131 in (0.117 to 0.148)": [
-      109,
-      404,
-      1096,
-      19
-    ],
-    "2026-11-25, 23:06, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
+    "2026-11-26, 11:12, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
       109,
       564,
       1187,
       19
     ],
-    "2026-11-25, GroupLab 5x5 Load Development with Load Block, Letter, 6 ARC, 6 ARC, Dominus K, 100 yd, 25, 0.435 in (0.363 to 0.544)": [
+    "2026-11-26, 12:12, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
+      109,
+      532,
+      1187,
+      19
+    ],
+    "2026-11-26, 13:12, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 24, 0.133 in (0.111 to 0.167)": [
+      109,
+      436,
+      1187,
+      19
+    ],
+    "2026-11-26, 13:12, Pooled set of 3 sheets, GroupLab 5x5 Load Development, Letter, Test rifle, Test load, 41.7 gr, 100 yd, 72, 0.131 in (0.117 to 0.148)": [
+      109,
+      404,
+      1096,
+      19
+    ],
+    "2026-11-26, GroupLab 5x5 Load Development with Load Block, Letter, 6 ARC, 6 ARC, Dominus K, 100 yd, 25, 0.435 in (0.363 to 0.544)": [
       109,
       500,
       1187,
       19
     ],
-    "2026-11-25, GroupLab 5x5 Load Development with Load Block, Letter, 6 ARC, 6 ARC, Magnus S, 100 yd, 25, 0.428 in (0.357 to 0.534)": [
+    "2026-11-26, GroupLab 5x5 Load Development with Load Block, Letter, 6 ARC, 6 ARC, Magnus S, 100 yd, 25, 0.428 in (0.357 to 0.534)": [
       109,
       468,
       1187,
@@ -93,27 +93,27 @@
       32,
       32
     ],
-    "Compare the session Test load, 41.7 gr, 2026-11-25, 00:06, GroupLab 5x5 Load Development, Letter": [
+    "Compare the session Test load, 41.7 gr, 2026-11-26, 11:12, GroupLab 5x5 Load Development, Letter": [
+      77,
+      558,
+      32,
+      32
+    ],
+    "Compare the session Test load, 41.7 gr, 2026-11-26, 12:12, GroupLab 5x5 Load Development, Letter": [
       77,
       526,
       32,
       32
     ],
-    "Compare the session Test load, 41.7 gr, 2026-11-25, 01:06, session -1, Pooled set of 3 sheets, GroupLab 5x5 Load Development, Letter": [
+    "Compare the session Test load, 41.7 gr, 2026-11-26, 13:12, session -1, Pooled set of 3 sheets, GroupLab 5x5 Load Development, Letter": [
       77,
       398,
       32,
       32
     ],
-    "Compare the session Test load, 41.7 gr, 2026-11-25, 01:06, session 3, GroupLab 5x5 Load Development, Letter": [
+    "Compare the session Test load, 41.7 gr, 2026-11-26, 13:12, session 3, GroupLab 5x5 Load Development, Letter": [
       77,
       430,
-      32,
-      32
-    ],
-    "Compare the session Test load, 41.7 gr, 2026-11-25, 23:06, GroupLab 5x5 Load Development, Letter": [
-      77,
-      558,
       32,
       32
     ],
