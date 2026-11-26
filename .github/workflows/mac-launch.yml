@@ -179,6 +179,28 @@ jobs:
           else say "sandbox-open-nodiag: not running after 45 seconds"; fi
           echo "::endgroup::"
           echo "::endgroup::"
+          # Request 121's suspect: the executable's name, GroupLab.App, reads as a bundle's own name on a disk that ignores case.
+          echo "::group::renamed (GroupLab.App renamed GroupLab, in the sandbox)"
+          rm -rf out/renamed; mkdir -p out/renamed; cp -R out/base/GroupLab.app out/renamed/
+          mv out/renamed/GroupLab.app/Contents/MacOS/GroupLab.App out/renamed/GroupLab.app/Contents/MacOS/GroupLab
+          plutil -replace CFBundleExecutable -string GroupLab out/renamed/GroupLab.app/Contents/Info.plist
+          find out/renamed/GroupLab.app/Contents/MacOS -type f ! -name GroupLab | while read -r f; do codesign --force --sign - "$f" 2>/dev/null; done
+          codesign --force --sign - --entitlements out/sandbox.entitlements out/renamed/GroupLab.app 2>/dev/null
+          fresh
+          (log stream --level debug --style compact --predicate 'process BEGINSWITH "GroupLab" OR sender == "Sandbox"' > out/renamed/stream.txt 2>&1 &) ; sleep 2
+          out/renamed/GroupLab.app/Contents/MacOS/GroupLab --self-check > out/renamed/out.txt 2>&1 &
+          pid=$!
+          for i in $(seq 1 60); do kill -0 $pid 2>/dev/null || break; sleep 2; done
+          if kill -0 $pid 2>/dev/null; then say "renamed: still running after two minutes"; kill $pid; else wait $pid; say "renamed: ended with exit $?"; fi
+          cat "$container/Data/.config/GroupLab/self-check.json" 2>/dev/null | head -20
+          echo "::endgroup::"
+          # The same, unrenamed, with the log streamed live, so the words macOS gives before it stops are seen.
+          echo "::group::sandbox, the live log"
+          fresh
+          out/sandbox/GroupLab.app/Contents/MacOS/GroupLab.App --self-check > /dev/null 2>&1; say "sandbox again: exit $?"
+          sleep 3; pkill -f "log stream" || true
+          grep -iv "adhoc\|amfid" out/renamed/stream.txt | grep -i "fault\|error\|asn\|deny\|launchservices\|unable\|abort\|register" | cut -c1-300 | tail -40
+          echo "::endgroup::"
           # The control: the smallest AppKit application, built here and sandboxed the same way. If it stops too, the machine is the
           # cause and not GroupLab.
           echo "::group::control"
@@ -199,6 +221,11 @@ jobs:
           since=$(date "+%Y-%m-%d %H:%M:%S"); touch out/control/.since
           out/control/Control.app/Contents/MacOS/Control > out/control/out.txt 2>&1; code=$?
           say "control-sandbox: exit $code ($(head -c 300 out/control/out.txt | paste -sd ' ' -))"
+          mv out/control/Control.app/Contents/MacOS/Control out/control/Control.app/Contents/MacOS/Control.App
+          plutil -replace CFBundleExecutable -string Control.App out/control/Control.app/Contents/Info.plist
+          codesign --force --sign - --entitlements out/sandbox.entitlements out/control/Control.app 2>/dev/null
+          out/control/Control.app/Contents/MacOS/Control.App > out/control/out2.txt 2>&1; code=$?
+          say "control-sandbox named Control.App: exit $code ($(head -c 300 out/control/out2.txt | paste -sd ' ' -))"
           find "$HOME/Library/Logs/DiagnosticReports" -newer out/control/.since -name "Control*" 2>/dev/null | while read -r f; do python3 current/scripts/ips-summary.py "$f"; done
           log show --start "$since" --info --style compact --predicate 'process == "Control"' 2>/dev/null | grep -v "^Timestamp" | cut -c1-300 | tail -25
           echo "::endgroup::"
