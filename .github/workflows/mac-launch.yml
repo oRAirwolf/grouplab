@@ -51,6 +51,11 @@ jobs:
       - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.ref }}
+      # This workflow's own scripts, whatever the commit built.
+      - uses: actions/checkout@v5
+        with:
+          path: current
+          sparse-checkout: scripts
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
@@ -102,8 +107,9 @@ jobs:
             log show --start "$2" --info --style compact --predicate 'process CONTAINS "GroupLab" OR process == "Control" OR (sender == "Sandbox" AND eventMessage CONTAINS "GroupLab") OR (eventMessage CONTAINS "GroupLab" AND (sender == "AppleMobileFileIntegrity" OR process == "amfid" OR process == "taskgated" OR process == "ReportCrash" OR process == "launchservicesd" OR process == "runningboardd"))' 2>/dev/null \
               | grep -v "^Timestamp" | cut -c1-400 | tail -60
             echo "--- crash reports"
+            sleep 20
             find "$HOME/Library/Logs/DiagnosticReports" /Library/Logs/DiagnosticReports -newer "out/$1/.since" -name "*GroupLab*" 2>/dev/null | while read -r f; do
-              echo "=== $f"; python3 scripts/ips-summary.py "$f"; done
+              echo "=== $f"; python3 current/scripts/ips-summary.py "$f"; done
             echo "--- GroupLab's own log"
             for d in "$container/Data/Library/Logs/GroupLab" "$HOME/Library/Logs/GroupLab"; do
               ls "$d" 2>/dev/null | tail -3 | while read -r f; do [ -f "$d/$f" ] && { echo "=== $d/$f"; tail -60 "$d/$f"; }; done
@@ -152,8 +158,26 @@ jobs:
           # .NET without AppKit inside the sandbox: the command line in the bundle, signed with the sandbox's own keys.
           echo "::group::the command line inside the sandbox"
           codesign --force --sign - --entitlements out/sandbox.entitlements out/sandbox/GroupLab.app/Contents/MacOS/grouplab 2>/dev/null
-          out/sandbox/GroupLab.app/Contents/MacOS/grouplab --version > out/cli.txt 2>&1; code=$?
-          say "cli-sandbox: exit $code ($(head -c 200 out/cli.txt | paste -sd ' ' -))"
+          touch out/.cli-since
+          for setting in none DOTNET_EnableDiagnostics=0 DOTNET_EnableWriteXorExecute=0; do
+            if [ "$setting" = none ]; then out/sandbox/GroupLab.app/Contents/MacOS/grouplab --version > out/cli.txt 2>&1; code=$?
+            else env "$setting" out/sandbox/GroupLab.app/Contents/MacOS/grouplab --version > out/cli.txt 2>&1; code=$?; fi
+            say "cli-sandbox, $setting: exit $code ($(head -c 200 out/cli.txt | paste -sd ' ' -))"
+          done
+          sleep 20
+          find "$HOME/Library/Logs/DiagnosticReports" -newer out/.cli-since -name "grouplab*" 2>/dev/null | head -1 | while read -r f; do python3 current/scripts/ips-summary.py "$f"; done
+          # The window application inside the sandbox with .NET's diagnostics off, from the shell and as a double click.
+          export DOTNET_EnableDiagnostics=0
+          direct sandbox-nodiag out/sandbox.entitlements no --self-check
+          unset DOTNET_EnableDiagnostics
+          echo "::group::sandbox-open-nodiag (through LaunchServices)"
+          sign sandbox-open-nodiag out/sandbox.entitlements no > /dev/null; fresh
+          open -n --env DOTNET_EnableDiagnostics=0 out/sandbox-open-nodiag/GroupLab.app
+          sleep 45
+          pid=$(pgrep -f "out/sandbox-open-nodiag/GroupLab.app/Contents/MacOS/GroupLab.App" | head -1)
+          if [ -n "$pid" ]; then say "sandbox-open-nodiag: still running after 45 seconds"; screencapture -x out/sandbox-open-nodiag.png; kill "$pid"
+          else say "sandbox-open-nodiag: not running after 45 seconds"; fi
+          echo "::endgroup::"
           echo "::endgroup::"
           # The control: the smallest AppKit application, built here and sandboxed the same way. If it stops too, the machine is the
           # cause and not GroupLab.
@@ -175,7 +199,7 @@ jobs:
           since=$(date "+%Y-%m-%d %H:%M:%S"); touch out/control/.since
           out/control/Control.app/Contents/MacOS/Control > out/control/out.txt 2>&1; code=$?
           say "control-sandbox: exit $code ($(head -c 300 out/control/out.txt | paste -sd ' ' -))"
-          find "$HOME/Library/Logs/DiagnosticReports" -newer out/control/.since -name "Control*" 2>/dev/null | while read -r f; do python3 scripts/ips-summary.py "$f"; done
+          find "$HOME/Library/Logs/DiagnosticReports" -newer out/control/.since -name "Control*" 2>/dev/null | while read -r f; do python3 current/scripts/ips-summary.py "$f"; done
           log show --start "$since" --info --style compact --predicate 'process == "Control"' 2>/dev/null | grep -v "^Timestamp" | cut -c1-300 | tail -25
           echo "::endgroup::"
       - name: The results, in one place
