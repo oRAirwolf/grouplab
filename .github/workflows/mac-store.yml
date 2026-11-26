@@ -129,7 +129,9 @@ jobs:
             log show --last 5m --style compact --predicate 'process == "GroupLab.App" OR (sender == "Sandbox" AND eventMessage CONTAINS "GroupLab")' 2>/dev/null | tail -40 || true
             for f in "$HOME"/Library/Logs/DiagnosticReports/*GroupLab*; do [ -f "$f" ] && head -80 "$f"; done
           }
-          result="$HOME/Library/Containers/org.grouplab.app/Data/.config/GroupLab/self-check.json"
+          # Beside the settings, which .NET keeps in Library/Application Support on a Mac (request 121: this read .config, and found nothing).
+          result=$(find "$HOME/Library/Containers/org.grouplab.app/Data" -name self-check.json 2>/dev/null | head -1)
+          result=${result:-"$HOME/Library/Containers/org.grouplab.app/Data/Library/Application Support/GroupLab/self-check.json"}
           { echo "### The Mac App Store copy, ${{ steps.which.outputs.tag }}, inside the sandbox: exit $code"; echo '```'; cat "$result" 2>/dev/null || tail -40 out/self-check.out; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           test -f "$result" || { echo "::error::no self-check.json in the container, so the copy did not run inside the sandbox"; why; exit 1; }
           cat "$result"
