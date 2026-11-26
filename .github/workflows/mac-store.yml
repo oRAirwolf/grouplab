@@ -50,6 +50,11 @@ jobs:
           if [ -z "$tag" ] && [ "${{ github.event_name }}" = "workflow_run" ]; then
             tag=$(gh api "repos/${{ github.repository }}/tags?per_page=100" --jq '.[] | select(.commit.sha == "${{ github.event.workflow_run.head_sha }}") | .name' | grep '^v' | head -1 || true)
           fi
+          # Request 121: nightly 248 ran for a screenshot commit on top of the one it tagged, so no tag sat on the run's commit and the Mac
+          # copy was never made. A numbered nightly released after the run began is the one it made.
+          if [ -z "$tag" ] && [ "${{ github.event_name }}" = "workflow_run" ]; then
+            tag=$(gh release list -R "${{ github.repository }}" --limit 10 --json tagName,createdAt --jq '.[] | select(.tagName | startswith("v")) | select(.createdAt >= "${{ github.event.workflow_run.created_at }}") | .tagName' | head -1 || true)
+          fi
           if [ -z "$tag" ] && [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             tag=$(gh release list -R "${{ github.repository }}" --limit 20 --json tagName --jq '.[].tagName' | grep '^v' | head -1)
           fi

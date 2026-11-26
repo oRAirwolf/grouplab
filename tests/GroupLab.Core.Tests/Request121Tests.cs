@@ -24,6 +24,13 @@ public class Request121Tests
     }
 
     [Fact]
+    public void ANightlyTaggedOnAnEarlierCommitStillGetsItsMacCopy()
+    {
+        Assert.Contains("select(.createdAt >= \"${{ github.event.workflow_run.created_at }}\")", Text(".github", "workflows", "mac-store.yml"),
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void AStoreCopyThatFailsInsideTheSandboxIsNeverSentToApple()
     {
         string workflow = Text(".github", "workflows", "mac-store.yml");
