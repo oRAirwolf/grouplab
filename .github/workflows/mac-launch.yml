@@ -1,0 +1,161 @@
+name: mac launch
+
+# Request 121: Apple turned down GroupLab for Mac 1.0 (build 240) as crashing on launch on macOS 27.2.1, and the crash logs it said were
+# attached never showed. This finds the cause without a Mac on the desk. One job asks App Store Connect's API for every crash or
+# diagnostic log it holds on the Mac builds (scripts/apple-crash-logs.py, read only). The other builds the store copy exactly as
+# mac-store.yml does and starts it six ways on a fresh account's state (no container, no settings): with and without the App Sandbox,
+# with and without the hardened runtime, from the shell (so .NET's own words are seen) and through LaunchServices, as a double click
+# starts it. After each it prints how the process ended, macOS's sandbox and code signing messages, any crash report, and GroupLab's own
+# log from inside the container. It never signs for the store, uploads or submits anything. Run by hand only.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'The commit or tag to build, such as v1.0.0-nightly.247. Empty builds main.'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  apple:
+    name: what App Store Connect holds
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: scripts
+      - name: Ask for the crash and diagnostic logs
+        env:
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+          python3 -m pip install --quiet --disable-pip-version-check "pyjwt[crypto]==2.10.1"
+          python3 scripts/apple-crash-logs.py apple-logs 240 247 || true
+          for f in apple-logs/*; do [ -f "$f" ] && { echo "=== $f"; head -c 20000 "$f"; echo; }; done
+
+  launch:
+    name: start the store copy, ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-26, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Publish the store copy, as mac-store.yml does
+        shell: bash
+        run: |
+          set -o pipefail
+          sw_vers
+          dotnet publish src/GroupLab.App --configuration Release -r osx-arm64 --self-contained -o publish/grouplab \
+            "-p:Version=1.0.0-nightly.999" -p:GroupLabTrain=nightly -p:GroupLabDistribution=store | tail -3
+          cp LICENSE THIRD-PARTY-NOTICES.md publish/grouplab/
+          python3 scripts/macos-bundle.py publish/grouplab out/base --version 1.0.0-nightly.999 --arch macos-arm64 --store-build 999
+          rm -f out/base/GroupLab.app/Contents/MacOS/createdump
+          python3 - <<'PY'
+          import plistlib
+          e = plistlib.load(open("scripts/macos/GroupLab.store.entitlements", "rb"))
+          for k in ("com.apple.application-identifier", "com.apple.developer.team-identifier"):
+              e.pop(k, None)
+          plistlib.dump(e, open("out/sandbox.entitlements", "wb"))
+          # Ad hoc libraries carry no team, so the hardened runtime needs library validation off to load them; the store copy's are
+          # all signed by the one team and need no such key.
+          e["com.apple.security.cs.disable-library-validation"] = True
+          plistlib.dump(e, open("out/sandbox-runtime.entitlements", "wb"))
+          r = {"com.apple.security.cs.allow-jit": True, "com.apple.security.cs.disable-library-validation": True}
+          plistlib.dump(r, open("out/runtime.entitlements", "wb"))
+          PY
+
+      - name: Start it six ways
+        shell: bash
+        run: |
+          say() { echo "RESULT $*"; echo "- $*" >> "$GITHUB_STEP_SUMMARY"; }
+          container="$HOME/Library/Containers/org.grouplab.app"
+          sign() { # name entitlements(or none) runtime(yes|no)
+            rm -rf "out/$1"; mkdir -p "out/$1"; cp -R out/base/GroupLab.app "out/$1/"
+            local app="out/$1/GroupLab.app" main="out/$1/GroupLab.app/Contents/MacOS/GroupLab.App" opts=()
+            [ "$3" = yes ] && opts=(--options runtime)
+            find "$app/Contents" -type f | while read -r f; do
+              [ "$f" = "$main" ] && continue
+              case "$f" in "$app/Contents/MacOS/"*) codesign --force "${opts[@]}" --sign - "$f" 2>/dev/null ;;
+                *) if file "$f" | grep -q "Mach-O"; then codesign --force "${opts[@]}" --sign - "$f" 2>/dev/null; fi ;; esac
+            done
+            if [ "$2" = none ]; then codesign --force "${opts[@]}" --sign - "$app" 2>/dev/null
+            else codesign --force "${opts[@]}" --sign - --entitlements "$2" "$app" 2>/dev/null; fi
+            codesign --display --entitlements - --xml "$app" 2>/dev/null | plutil -convert xml1 -o - - 2>/dev/null | grep -o "com.apple.security[a-z.-]*" | tr '\n' ' '; echo
+          }
+          report() { # name since
+            echo "--- sandbox, code signing and crash messages"
+            log show --start "$2" --style compact --predicate 'process CONTAINS "GroupLab" OR (sender == "Sandbox" AND eventMessage CONTAINS "GroupLab") OR (eventMessage CONTAINS "GroupLab" AND (sender == "AppleMobileFileIntegrity" OR process == "amfid" OR process == "taskgated" OR process == "ReportCrash" OR process == "launchservicesd" OR process == "runningboardd"))' 2>/dev/null \
+              | grep -v "^Timestamp" | cut -c1-400 | tail -60
+            echo "--- crash reports"
+            find "$HOME/Library/Logs/DiagnosticReports" /Library/Logs/DiagnosticReports -newer "out/$1/.since" -name "*GroupLab*" 2>/dev/null | while read -r f; do
+              echo "=== $f"; head -c 12000 "$f"; echo; done
+            echo "--- GroupLab's own log"
+            for d in "$container/Data/Library/Logs/GroupLab" "$HOME/Library/Logs/GroupLab"; do
+              ls "$d" 2>/dev/null | tail -3 | while read -r f; do [ -f "$d/$f" ] && { echo "=== $d/$f"; tail -60 "$d/$f"; }; done
+            done
+          }
+          fresh() { # as a new account: no container and no settings from an earlier run
+            rm -rf "$container" "$HOME/.config/GroupLab" "$HOME/Library/Logs/GroupLab" 2>/dev/null || echo "(the container could not be emptied: $(ls "$container" 2>&1 | head -1))"
+          }
+          direct() { # name entitlements runtime args...
+            local name=$1 ent=$2 rt=$3; shift 3
+            echo "::group::$name (from the shell, $*)"
+            echo -n "signed with: "; sign "$name" "$ent" "$rt"; fresh; touch "out/$name/.since"; local since; since=$(date "+%Y-%m-%d %H:%M:%S")
+            "out/$name/GroupLab.app/Contents/MacOS/GroupLab.App" "$@" > "out/$name/out.txt" 2> "out/$name/err.txt" &
+            local pid=$! i
+            for i in $(seq 1 60); do kill -0 $pid 2>/dev/null || break; sleep 2; done
+            if kill -0 $pid 2>/dev/null; then say "$name: still running after two minutes"; screencapture -x "out/$name.png" 2>/dev/null; kill $pid; sleep 2; kill -9 $pid 2>/dev/null
+            else wait $pid; local code=$?; say "$name: ended with exit $code$( [ $code -gt 128 ] && echo ", signal $((code-128))")"; fi
+            echo "--- standard output"; tail -40 "out/$name/out.txt"; echo "--- standard error"; tail -60 "out/$name/err.txt"
+            report "$name" "$since"
+            ls "$container/Data/.config/GroupLab" 2>/dev/null | head -20 | tr '\n' ' '; echo
+            cat "$container/Data/.config/GroupLab/self-check.json" "$HOME/.config/GroupLab/self-check.json" 2>/dev/null | head -40
+            echo "::endgroup::"
+          }
+          opened() { # name entitlements runtime args...: as a double click starts it
+            local name=$1 ent=$2 rt=$3; shift 3
+            echo "::group::$name (through LaunchServices, $*)"
+            echo -n "signed with: "; sign "$name" "$ent" "$rt"; fresh; touch "out/$name/.since"; local since; since=$(date "+%Y-%m-%d %H:%M:%S")
+            open -n --stdout "$PWD/out/$name/out.txt" --stderr "$PWD/out/$name/err.txt" "out/$name/GroupLab.app" --args "$@"
+            sleep 45
+            local pid; pid=$(pgrep -f "out/$name/GroupLab.app/Contents/MacOS/GroupLab.App" | head -1)
+            if [ -n "$pid" ]; then say "$name: still running after 45 seconds"; screencapture -x "out/$name.png" 2>/dev/null; kill "$pid"; sleep 2; kill -9 "$pid" 2>/dev/null
+            else say "$name: not running after 45 seconds"; fi
+            echo "--- standard output"; tail -40 "out/$name/out.txt" 2>/dev/null; echo "--- standard error"; tail -60 "out/$name/err.txt" 2>/dev/null
+            report "$name" "$since"
+            cat "$container/Data/.config/GroupLab/self-check.json" "$HOME/.config/GroupLab/self-check.json" 2>/dev/null | head -40
+            echo "::endgroup::"
+          }
+          echo "### Starting the Mac App Store copy on $(sw_vers -productVersion)" >> "$GITHUB_STEP_SUMMARY"
+          export COREHOST_TRACE=0 DOTNET_DbgEnableMiniDump=0
+          direct plain none no --self-check
+          opened plain-open none no
+          direct runtime out/runtime.entitlements yes --self-check
+          direct sandbox out/sandbox.entitlements no --self-check
+          opened sandbox-open out/sandbox.entitlements no
+          opened store-like out/sandbox-runtime.entitlements yes
+      - name: The results, in one place
+        if: always()
+        shell: bash
+        run: ls out/*.png 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mac-launch-${{ matrix.os }}
+          path: out/*.png
+          retention-days: 3
+          if-no-files-found: ignore
