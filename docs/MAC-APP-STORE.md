@@ -97,13 +97,15 @@ Store, which keeps it up to date, so GroupLab's own updater is off."
    demo's sample sheet, opens it, waits for the sheet to be read, accepts and analyzes it, checks a session was saved, that the picture was
    kept in `originals/`, and that a bookmark of a folder leads back to it, and writes `self-check.json` in the container. The job fails when
    any step does, and the summary shows the file.
-   **Found on the first runs, 2026-11-18:** signed ad hoc, the copy starts in the sandbox (macOS logs the AppSandbox set up and makes the
-   container) and is then stopped: the sandbox refuses it the connection to LaunchServices that every window application needs ("Process
-   unable to create connection because the sandbox denied the right to lookup com.apple.coreservices.launchservicesd", then "unable to get
-   application ASN from launchservicesd ... aborting"). A copy signed for the store cannot be run on the runner either, since it runs only
-   once installed from TestFlight or the store. So the step reports what happened in the summary and does not turn the run red; the
-   proof that the copy reads a sheet and saves a session inside the sandbox is either a development signature (an Apple Development
-   certificate and a Mac development profile, a later request) or the TestFlight build opened on a real Mac.
+   **Found on the first runs, 2026-11-18, and wrongly put down to the ad hoc signature:** the copy started in the sandbox and was then
+   stopped, refused LaunchServices ("unable to get application ASN from launchservicesd ... aborting"). The step was made to note it
+   and carry on, and every copy sent to Apple had the same fault: App Review turned down Mac 1.0 (build 240) on 25 November for crashing
+   on launch on macOS 27.2.1 (request 121). **Found on 2026-11-26 (`mac-launch.yml`, run by hand):** a ten line .NET program that only
+   makes the window application aborts the same way inside the sandbox, a Swift program doing the same does not, and the same .NET
+   program published as one file, with the runtime inside the executable rather than in separate libraries beside it, is let through;
+   so is GroupLab. The Mac App Store copy is therefore published as one file (`PublishSingleFile` in `GroupLab.App.csproj`, for the store
+   copy on a Mac only), its self-check passes inside the sandbox, ad hoc and with the hardened runtime, and the step now stops the run,
+   so a copy that fails inside the sandbox is never signed or sent to Apple.
 4. **With request 110's secrets:** signed for the store with the hardened runtime, packaged with `productbuild` and signed with the Mac
    Installer Distribution certificate, and sent to TestFlight with `xcrun altool --upload-app --type macos`. TestFlight's internal group
    only; nothing is submitted for review. .NET's `createdump` is left out of the store copy (a second executable the store refuses without its own sandbox, and one that only writes a crash dump when a setting nobody sets asks for one), and the command line `grouplab` inside the bundle is signed into the app's sandbox with `com.apple.security.inherit`, so it runs only when GroupLab starts it. `testflight.py --mac-internal` then gives the build to GroupLab Team; the half-hourly TestFlight step reads the iPhone and iPad builds only, so a Mac build never reaches Public Beta. **First done for nightly 233, 2026-11-18:** Apple processed it as valid and GroupLab Team has it.

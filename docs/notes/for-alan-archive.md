@@ -3,6 +3,42 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 121. Apple turned down GroupLab for Mac: copy Apple's words to the planning session (entry 516 section 2)
+
+**Opened 2026-11-26.** App Store Connect shows the Mac's first App Store version, 1.0 (build 240), sent on 23 November, rejected by
+App Review some time on 25 November; its review submission says "unresolved issues". Nothing told you, because the script put the
+newest build on the version straight away and then spent a day asking Apple to review a submission Apple would not take back ("409 This
+resource cannot be reviewed"). Both are fixed (entry 516): build 247 was resubmitted in its place at 08:52 UTC on 26 November, and a
+rejection is now always written here. Apple's reason is only shown on App Store Connect's web page, never through the API Code reads, so if the
+reason is something in the app or the listing, build 247 will be turned down for it too.
+
+**What is needed:** App Store Connect, Apps, GroupLab, the **macOS** column, **App Review** (or the red "Rejected" message on the 1.0
+page). Copy Apple's message, the guideline numbers and anything it asks for, and paste it to the planning session. Leave out any name
+or email in it. Nothing else to do there: do not press Resubmit yourself, the workflow does it.
+
+**A good answer:** Apple's words, pasted. If you would rather the Mac waits until the cause is fixed, say "pause the Mac" and Code stops
+only the Mac's submissions.
+
+**Answered 2026-11-26:** Apple's words, Guideline 2.1(a): "We were unable to review the app as it crashed on launch on Mac running macOS 27.2.1", on a MacBook Pro (14-inch, Nov 2024), reviewed 24 November; the crash logs Apple mentions did not show, and App Store Connect's API holds none either (no diagnostic logs on builds 240 or 247, no TestFlight crash feedback, nothing on the review submission). **The cause, found the same day on GitHub's Macs** (`mac-launch.yml`): inside Apple's sandbox, .NET started from its separate runtime libraries is refused macOS's LaunchServices, and the moment GroupLab makes its window application macOS stops it ("unable to get application ASN from launchservicesd ... aborting"). A ten line .NET program does the same; a ten line Swift program does not; the same .NET program published as one file runs. The Mac App Store copy is now published as one file, and GroupLab then passes its whole self-check inside the sandbox (reads the sample, saves a session, keeps a bookmark) and opens its window, with the hardened runtime as the store copy has it. The sandbox check in the nightly's Mac App Store job had been failing since 18 November and was put down to the test signature; it now stops the job, so a copy that fails there is never sent to Apple. Build 247 has the same fault, hence request 122.
+
+## 120. Approve or change the sentence on which platforms are supported (entry 516 sections 3 and 4)
+
+**Opened 2026-11-26.** The README, docs/PLATFORM-SUPPORT.md and grouplab.org's download page still say, in your words from entries 147
+and 166, "Windows is the supported platform" and "Other platforms get proper attention once the pace of change slows and the Windows
+application is generally working the way the developer wants it to", and of the Mac builds "These builds are an experiment rather than
+a release". Since then GroupLab is on the App Store for iPhone and iPad (and tells iOS 18 to 25 that iOS 26 is the minimum supported),
+the Mac copy has gone to the Mac App Store, Android is on Google Play's test, and every store follows the nightlies. Because the
+sentences are recorded as your statement, Code changes nothing in them until you answer.
+
+**Proposed replacement** (the planning session's draft): "Windows is where GroupLab is developed and tested by hand. iPhone and iPad on
+iOS 26 or later are supported through the App Store, and Android 10 or later through the APK and Google Play's test. The Mac and Linux
+builds are published and tested by the suite on every change, and reports from them are welcome." The Mac's "experiment rather than a
+release" sentence would go, replaced by "The Mac build is signed and notarized, and is sent to the Mac App Store."
+
+**A good answer:** "yes", or the words you would rather have, or "leave it". Tell the planning session; it comes back as an entry.
+
+**Answered 2026-11-26:** use the proposed sentence as written, and the Mac line "The Mac build is signed and notarized, and is sent to the Mac App Store." Done the same day: docs/PLATFORM-SUPPORT.md carries both, "Other platforms get proper attention once the pace of change slows" is gone with the statement it belonged to, and the README and the download page are generated from it; the three old phrases are in docs/RETIRED-WORDING.json.
+
 ## 117. Should the bot edit its earlier Discord replies to the new last line? One yes or no, not urgent (entry 515)
 
 **Opened 2026-11-23.** From entry 515 every reply the bot posts ends "This is an AI generated response." and names you nowhere. The

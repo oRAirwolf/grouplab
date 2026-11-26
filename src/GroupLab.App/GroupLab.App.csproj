@@ -20,6 +20,14 @@
       which is how every desktop build is made; the phones publish their own projects, which do not set it.
     -->
     <PublishReadyToRun Condition="'$(RuntimeIdentifier)' != ''">true</PublishReadyToRun>
+    <!--
+      Request 121: Apple turned down Mac 1.0 for crashing on launch. Inside the App Sandbox, .NET started the usual way, by the small host
+      with its runtime beside it in separate libraries, is refused LaunchServices, and AppKit stops the app the moment the window
+      application is made ("unable to get application ASN from launchservicesd"); the same program published as one file, its runtime built
+      into the executable, is let through (mac-launch.yml proved both, with a ten line program and with GroupLab itself). So the Mac App
+      Store copy is published as one file. The Developer ID download, which is not sandboxed, and every other platform are unchanged.
+    -->
+    <PublishSingleFile Condition="'$(GroupLabDistribution)' == 'store' And $(RuntimeIdentifier.StartsWith('osx'))">true</PublishSingleFile>
   </PropertyGroup>
 
   <ItemGroup>

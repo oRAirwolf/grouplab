@@ -17,6 +17,36 @@
   ],
   "phrases": [
     {
+      "phrase": "Windows is the supported platform",
+      "why": "request 120 (Alan, 2026-11-26): Windows is where GroupLab is developed and tested by hand; iPhone, iPad and Android are supported through their stores",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "an experiment rather than a release",
+      "why": "request 120: the Mac build is signed and notarized, and is sent to the Mac App Store",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "phrase": "once the pace of change slows",
+      "why": "request 120: the sentence went with the platform statement it belonged to",
+      "allowedIn": [
+        "docs/RETIRED-WORDING.json",
+        "docs/RELEASE-NOTES.md",
+        "docs/claims-backing.json",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
       "phrase": "This sheet's own label",
       "why": "entry 511 section 1: the box is Name this session, at the top of the analysis column; the screenshot walk retakes the pictures whose bounds still name the old heading",
       "allowedIn": [

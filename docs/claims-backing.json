@@ -5,6 +5,22 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "What is supported and tested What is supported, and what is not Windows is where GroupLab is developed and tested by hand.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166, its Windows and Mac sentences replaced by his answer to request 120 (2026-11-26); README and download page generated from it"
+  },
+  "iPhone and iPad on iOS 26 or later are supported through the App Store, and Android 10 or later through the APK and Google Play's test.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166, its Windows and Mac sentences replaced by his answer to request 120 (2026-11-26); README and download page generated from it"
+  },
+  "--- **Windows is where GroupLab is developed and tested by hand.** iPhone and iPad on iOS 26 or later are supported through the App Store, and Android 10 or later through the APK and Google Play's test.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166, its Windows and Mac sentences replaced by his answer to request 120 (2026-11-26); README and download page generated from it"
+  },
+  "The Mac and Linux builds are published and tested by the suite on every change, and reports from them are welcome.": {
+   "kind": "decided",
+   "where": "docs/PLATFORM-SUPPORT.md, Alan's statement, entries 147 and 166, its Windows and Mac sentences replaced by his answer to request 120 (2026-11-26); README and download page generated from it"
+  },
   "Quack's scans of a sheet whose blue bulls a black and white laser printer had printed as dots led to the fix in nightly 244 that stops the dots being taken for holes.": {
    "kind": "code",
    "where": "docs/notes/error-reports.md report 60 (Discord issue 60, the poster's scans); the fix b734fb41, in nightly 244 (docs/RELEASE-NOTES.md), held by DotPatternScanTests; the poster is named with consent (samples/PROVENANCE.md and the thanks list); entry 516 section 8."

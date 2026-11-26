@@ -82,13 +82,12 @@ jobs:
             "-p:Version=${{ steps.which.outputs.version }}" -p:GroupLabTrain=nightly -p:GroupLabDistribution=store
           cp LICENSE THIRD-PARTY-NOTICES.md publish/grouplab/
 
-      # Entry 501, found 2026-11-18: signed ad hoc, the sandbox refuses the copy its connection to LaunchServices on GitHub's Mac machines
-      # and AppKit stops it ("unable to get application ASN from launchservicesd"), and a copy signed for the store runs only once installed
-      # from TestFlight. So this step says what happened in the summary without turning the run red until the copy can be signed for
-      # development or installed on a real Mac (docs/MAC-APP-STORE.md); the signing and upload below do not depend on it.
+      # Request 121: this step failed every night from 18 November, and the failure was put down to the ad hoc signature. It was the real
+      # fault: .NET started from separate runtime libraries is refused LaunchServices inside the sandbox, and Apple's reviewer saw the
+      # same crash on launch. The copy is now one file (GroupLab.App.csproj) and passes here, so a copy that fails inside the sandbox
+      # stops the run and is never signed or sent to Apple.
       - name: Check it inside the sandbox
         if: steps.which.outputs.tag != ''
-        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail

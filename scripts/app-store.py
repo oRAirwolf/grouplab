@@ -151,7 +151,10 @@ def step(store: Connect, platform: str, notes: str, dry_run: bool = False) -> tu
     live = newest(versions, RELEASED)
     editable = newest(versions, EDITABLE)
     down = editable if editable and editable.state in TURNED_DOWN else None
-    floor = max((live.build or 0) if live else 0, (down.build or 0) if down else 0)
+    # Request 121: a submission taken back from review (DEVELOPER_REJECTED) was taken back for a reason, as Mac 1.0.247 was for crashing
+    # inside the sandbox, so its build is not sent again either; the next newer build goes in its place.
+    withdrawn = editable if editable and editable.state == "DEVELOPER_REJECTED" else None
+    floor = max((live.build or 0) if live else 0, (down.build or 0) if down else 0, (withdrawn.build or 0) if withdrawn else 0)
     # Entry 516 section 2: a rejection is said for Alan whether or not a newer build is ready to go in its place; before, a newer build
     # went straight in and the rejection was said nowhere.
     turned = (f"Apple's App Review turned down GroupLab for {PLATFORMS[platform]} {down.number} (build {down.build}). Apple's words "
@@ -535,6 +538,14 @@ def self_test() -> int:
     expect("a rejection is said even when a newer build replaces it", alan and "turned down" in alan and "build 246 was submitted" in alan
            and newer.build == 246 and newer.state == "WAITING_FOR_REVIEW", (lines, alan))
     expect("a refusal says where the newest version stands", "is waiting for review" in standing(p, "IOS"), standing(p, "IOS"))
+    # Request 121: a review taken back is not resubmitted with the same build; the next build goes in its place.
+    newer.state = "DEVELOPER_REJECTED"
+    lines, _ = step(p, "IOS", notes4)
+    expect("a withdrawn build is not sent again", newer.build == 246 and newer.state == "DEVELOPER_REJECTED", lines)
+    p.builds_["IOS"].insert(0, Build("b247", 247, "1.0.247", "VALID"))
+    notes5 = "## 1.0.0-nightly.247\n\n**What you will notice**\n\n- Fixed.\n\n" + notes4
+    lines, _ = step(p, "IOS", notes5)
+    expect("the next build replaces a withdrawn one", newer.build == 247 and newer.state == "WAITING_FOR_REVIEW", lines)
     # The Mac's first version: the listing from the iPhone's, its own description and screenshots, no What's New.
     p = world()
     lines, alan = step(p, "MAC_OS", notes)

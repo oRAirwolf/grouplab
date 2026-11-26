@@ -1,4 +1,4 @@
-**Open: 30.** Most urgent: **121**, Apple turned down GroupLab for Mac; copy Apple's words from App Store Connect (five minutes). Newest after it: **120**, approve or change the sentence on which platforms are supported (one reply, whenever suits); **119**, Google's production questions answered, to copy on or after 2 December; **118**, a Discord post asking for two or three more Android testers, to paste whenever suits. Then **111**, open GroupLab for Mac from TestFlight on a Mac (ten minutes, whenever you have one to hand; from entry 504 your friend's MacBook can do it through the Mac testers group, whose link you copy from App Store Connect once Apple approves it). Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
+**Open: 29.** Most urgent: **122**, take Mac 1.0.247 out of Apple's review (one reply, "cancel 247"; it has the crash Apple turned 1.0 down for, which is now found and fixed). Newest after it: **119**, Google's production questions answered, to copy on or after 2 December; **118**, a Discord post asking for two or three more Android testers, to paste whenever suits. Then **111**, open GroupLab for Mac from TestFlight on a Mac (ten minutes, whenever you have one to hand; from entry 504 your friend's MacBook can do it through the Mac testers group, whose link you copy from App Store Connect once Apple approves it). Most urgent today: **104**, the point blank card on your M220 (five minutes; nightly 206 or later has it). Then **83**, the M834 printing from the computer (twenty minutes), **56**, your printer's scale from one scan (ten minutes), and turn off the photo correction meanwhile, then **50**, the camera test of 33 inside it. **46**, one look at the Oracle backups, one minute whenever suits. **54** the store-bought target and **74**, a photo of a target on your kitchen table, whenever suits. **75**, redo two reference files and measure two sheets, fifteen minutes. **76**, scale markers on real paper, half an hour. **61**, the Apple steps for GroupLab Dev, whenever suits. **62**, Firebase Test Lab, ten minutes whenever you choose. **57** and **58**, red bulls and store-bought targets, at the range. Then **33**, ten minutes with the Fold 7. Then 9, 16 and 20 (rewritten: eight sheets, and a page to print).
 **What happened since this morning** (not a request, entry 514): entries 513 and 515 are done (every store follows the nightlies; the bot's replies end "This is an AI generated response."), and the overnight queue: requests 118 and 119 below (a Discord post asking for Android testers, and Google's production answers for 2 December); the iPhone's Next bar above the keyboard no longer disappears while you type (proved by three green runs in a row); every screen checked by machine for names, reading order and contrast in every theme, nothing found; damaged files of every kind refused plainly; and the phone's photograph timed on Android, stage by stage (finding the holes is about half of it); nothing in the app changed for it.
 **Every new build now goes to every store** (not a request, entry 513, your word on 2026-11-23): after each nightly passes its checks, the workflows send it to the Microsoft Store as before, to Google Play's testing tracks as before and to production from the first night Google allows it (about 2 December, if all 12 testers stay), and to the App Store for iPhone, iPad and Mac, each released by itself once Apple approves it. One review at a time on each platform; a newer build waits. **Submitted at 11:59 UTC today:** iPhone and iPad 1.0.242 (build 242, the first since 1.0, and the one that installs on iOS 18 to 25 with your warning) and the Mac's first version, 1.0 (build 240). Quack gets a reply in the help thread once Apple releases the iPhone one. A rejection from any store comes here the same day with the store's words and the fix.
 **To stop every store submission** (standing note, entry 513): on github.com open oRAirwolf/grouplab, choose Add file, Create new file, type the name `STORE_SUBMISSIONS_PAUSED`, leave it empty and choose Commit changes. From the next run nothing more goes to the App Store, Google Play or the Microsoft Store, and nothing approved is released; the nightlies and TestFlight carry on. A review already with Apple, Google or Microsoft is not pulled back. **To start again:** open that file there, choose the three dots, Delete file, and Commit changes. (A repository variable of the same name set to `true`, under Settings, Secrets and variables, Actions, Variables, does the same.)
@@ -103,7 +103,7 @@ Working from the terminal, 18 October: entries 441, 442 and 443 taken; nothing i
 **Corner brackets** (entry 375, not a request): a 2 mm gap at the corners made the target read 2 to 3 percent large, 10 mm up to 12; now the printed codes alone give the scale, 0.03 to 0.13 percent at any gap or however roughly they are cut, and the corners come from the paper's own edges.
 
 <!-- automation-week: written by scripts/automation-report.py each week; not a request -->
-**This week, by itself** (not a request): backed up on 25 November (3798 MB, backup-2026-11-25); the restore test passed on 22 November; 0 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: archive 19; the server's own backup is from 2026-11-21; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
+**This week, by itself** (not a request): backed up on 26 November (3803 MB, backup-2026-11-26); the restore test passed on 22 November; 4 archived submissions copied here; cleanup freed 0 MB; on the server, workers deleted or archived: archive 19; the server's own backup is from 2026-11-21; the Oracle boot volume backups are not seen by this report: Alan can check them in the Oracle console, under Boot Volume Backups, whenever he wants.
 <!-- /automation-week -->
 **About that restore test** (Code, 11 October): the bundle's head ac0c1ff was entry 409's commit as first made on this computer; it was rebased onto the screenshot job's commit before it was pushed, and is on GitHub as e740a25a. Nothing is missing; the next weekly run tests a pushed head.
 
@@ -343,37 +343,13 @@ and once the sheet's corner codes are seen, the sheet's own angle decides, so a 
 sitting: both positions, and the phone turned sideways. Also new: "Find holes (Experimental)" when marking a target GroupLab did not
 print, on the computer and in GroupLab Dev; and a mark much bigger than your bullet is ringed in amber on the result for you to check.
 
-## 121. Apple turned down GroupLab for Mac: copy Apple's words to the planning session (entry 516 section 2)
+## 122. Take Mac 1.0.247 out of Apple's review: one yes, whenever suits (request 121)
 
-**Opened 2026-11-26.** App Store Connect shows the Mac's first App Store version, 1.0 (build 240), sent on 23 November, rejected by
-App Review some time on 25 November; its review submission says "unresolved issues". Nothing told you, because the script put the
-newest build on the version straight away and then spent a day asking Apple to review a submission Apple would not take back ("409 This
-resource cannot be reviewed"). Both are fixed (entry 516): build 247 was resubmitted in its place at 08:52 UTC on 26 November, and a
-rejection is now always written here. Apple's reason is only shown on App Store Connect's web page, never through the API Code reads, so if the
-reason is something in the app or the listing, build 247 will be turned down for it too.
+**Opened 2026-11-26.** Mac 1.0.247 is waiting for Apple's review and has exactly the fault Apple turned down 1.0 for: it closes the moment it opens, inside the sandbox every App Store copy runs in (request 121, in the archive, says how it was found). Left there, Apple will review it, turn it down again, and only then take the fixed build. Taken out now, the fixed build goes in as soon as Apple has processed it: the first nightly after the fix (248, building now) uploads it, and the half-hourly App Store step submits it by itself. A build you took back is never sent again (the App Store step now treats it like a turned-down one), so it does not matter whether you do this before or after build 248 arrives.
 
-**What is needed:** App Store Connect, Apps, GroupLab, the **macOS** column, **App Review** (or the red "Rejected" message on the 1.0
-page). Copy Apple's message, the guideline numbers and anything it asks for, and paste it to the planning session. Leave out any name
-or email in it. Nothing else to do there: do not press Resubmit yourself, the workflow does it.
+**What is needed, either way:** (a) reply "cancel 247" to the planning session and Code takes it out of review through App Store Connect's API, the one time a review in progress is cancelled; or (b) yourself: App Store Connect, Apps, GroupLab, the **macOS** column, version 1.0.247, then **Remove from Review** (Apple may call it **Cancel Submission**) and confirm. Nothing else to change there.
 
-**A good answer:** Apple's words, pasted. If you would rather the Mac waits until the cause is fixed, say "pause the Mac" and Code stops
-only the Mac's submissions.
-
-## 120. Approve or change the sentence on which platforms are supported (entry 516 sections 3 and 4)
-
-**Opened 2026-11-26.** The README, docs/PLATFORM-SUPPORT.md and grouplab.org's download page still say, in your words from entries 147
-and 166, "Windows is the supported platform" and "Other platforms get proper attention once the pace of change slows and the Windows
-application is generally working the way the developer wants it to", and of the Mac builds "These builds are an experiment rather than
-a release". Since then GroupLab is on the App Store for iPhone and iPad (and tells iOS 18 to 25 that iOS 26 is the minimum supported),
-the Mac copy has gone to the Mac App Store, Android is on Google Play's test, and every store follows the nightlies. Because the
-sentences are recorded as your statement, Code changes nothing in them until you answer.
-
-**Proposed replacement** (the planning session's draft): "Windows is where GroupLab is developed and tested by hand. iPhone and iPad on
-iOS 26 or later are supported through the App Store, and Android 10 or later through the APK and Google Play's test. The Mac and Linux
-builds are published and tested by the suite on every change, and reports from them are welcome." The Mac's "experiment rather than a
-release" sentence would go, replaced by "The Mac build is signed and notarized, and is sent to the Mac App Store."
-
-**A good answer:** "yes", or the words you would rather have, or "leave it". Tell the planning session; it comes back as an entry.
+**A good answer:** "cancel 247" or "done" (you removed it), or "leave it" (Apple reviews 247, turns it down, and 248 follows).
 
 ## 119. Google's "Apply for production" questions, answers to copy, on or after 2 December (entry 514 section 1)
 
@@ -486,6 +462,8 @@ opens it on one, the Mac App Store copy is not ready to submit. If you have no M
 
 **A good answer:** "Mac TestFlight build works", or the step where it stopped and what it said. If it closes as it starts, send the
 error report it offers, or say so. Entry 513: this no longer holds the Mac App Store submission, which went to App Review on 2026-11-23 (version 1.0, build 240); it stays open as the check on a real Mac, and if Apple refuses the build because it does not start in the sandbox, Apple's words and the fix come here.
+
+**Changed 2026-11-26 (request 121):** use Mac build 248 or later; every Mac App Store and TestFlight build up to 247 closes the moment it opens.
 
 ## 106. A weekly look at the Oracle backups without you, about fifteen minutes once, whenever suits (entry 462 section 5)
 

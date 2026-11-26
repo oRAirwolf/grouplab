@@ -676,6 +676,38 @@ nightly 247. **Section 7:** the user guide's phone section and section 6's list 
 **Section 8:** Quack's thanks names the dot-printed scans behind nightly 244's fix. **Section 9:** STATE.md rewritten; also, nightly
 247's `ios-nightly-llvm` says `llvm: ran` (question 120's first check).
 
+## Requests 120 and 121: the platform sentence, and why the Mac App Store copy crashed on launch (2026-11-26)
+
+**Request 121, the crash.** Apple turned down Mac 1.0 (build 240), Guideline 2.1(a), "crashed on launch on Mac running macOS 27.2.1".
+App Store Connect's API holds no log of it (`scripts/apple-crash-logs.py`: no diagnostic signatures on Mac builds 240 or 247, no TestFlight
+crash feedback, nothing attached to the review submission). `mac-launch.yml`, run by hand on GitHub's macOS 26.7.2 machines, built
+nightly 247's store copy as `mac-store.yml` does and started it on a fresh container:
+
+| Started | Result |
+|---|---|
+| no sandbox, from the shell or as a double click | runs; the self-check passes |
+| hardened runtime and the JIT key only | runs (JIT is fine) |
+| sandbox, from the shell, as a double click, with the hardened runtime, with .NET's diagnostics off, executable renamed | aborts within a second |
+| a ten line .NET program making `NSApplication`, sandboxed the same way | aborts the same way |
+| a ten line Swift program doing the same, also named `.App` | runs |
+| the ten line .NET program as one file, as native code, and as one file with the loose libraries, data files or a loaded library added | runs |
+| GroupLab published as one file, sandboxed, ad hoc and with the hardened runtime | runs, opens its window, self-check `ok: true` in the container |
+
+The crash report (`scripts/ips-summary.py`): main thread, `[NSApplication sharedApplication]` from Avalonia's start, `_RegisterApplication`,
+`abort()`; macOS's log: "Connection init failed at lookup with error 159 - Sandbox restriction" for `com.apple.coreservices.launchservicesd`,
+then "_RegisterApplication(), unable to get application ASN from launchservicesd, and this application requires an ASN, so aborting."
+The nightly's own sandbox check had shown this since 18 November and was put down to the ad hoc signature, so it was let pass.
+
+**Changed:** the Mac App Store copy is published as one file (`PublishSingleFile` in `GroupLab.App.csproj`, store copy on macOS only;
+the Developer ID download and the other platforms are unchanged); `mac-store.yml`'s sandbox check stops the job instead of being noted;
+`app-store.py` never resubmits a build taken back from review (`DEVELOPER_REJECTED` sets the floor, with a self-test); the menu bar says
+GroupLab instead of "Avalonia Application". Held by `Request121Tests`. Request 122 asks Alan whether to take 1.0.247 out of review: it
+has the fault. **Not proven yet:** a store-signed copy installed from the App Store on macOS 27; the runners run macOS 26.7.2, and
+Apple's next review is that proof.
+
+**Request 120.** The proposed platform sentence and the Mac line, as written, in `docs/PLATFORM-SUPPORT.md`, so the README and download
+page; "Other platforms get proper attention once the pace of change slows" went with them; the three old phrases are retired.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

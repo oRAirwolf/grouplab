@@ -46,7 +46,7 @@ def for_readme() -> str:
     for line in statement().splitlines():
         if line.startswith("## "):
             lines.append("#" + line)
-        elif line.startswith("**Windows is the supported platform.**"):
+        elif line.startswith("**Windows is where GroupLab is developed and tested by hand.**"):
             lines.append(line)
         else:
             lines.append(line)

@@ -207,11 +207,13 @@ public partial class MacBuildsTests
     /// </summary>
     private static readonly string[] TheStatement =
     [
-        "Windows is the supported platform.",
+        // Request 120 (Alan, 2026-11-26): the planning session's sentence, as written, replaced entry 147's "Windows is the supported platform".
+        "Windows is where GroupLab is developed and tested by hand.",
         "the Apple silicon build has been run on two Macs.",
         "The Intel build has never been run on a Mac.",
         "The updater does not install them, and the developer still does not own a Mac.",
-        "These builds are an experiment rather than a release.",
+        // Request 120: replaced "These builds are an experiment rather than a release."
+        "The Mac build is signed and notarized, and is sent to the Mac App Store.",
         // Entry 278 section 6: Alan's decision that iOS is being built replaced entry 147's "the machine to build it does not".
         "built and signed on GitHub's Mac machines",
         // Entry 306 section 4: nightly 135 is signed and notarized, which replaced entry 147's reasons the macOS build was not.

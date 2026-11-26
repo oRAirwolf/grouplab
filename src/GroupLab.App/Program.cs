@@ -75,6 +75,8 @@ public sealed class App : Application
 
     public override void Initialize()
     {
+        // Request 121: the Mac's menu bar names the application by this, and said "Avalonia Application" without it.
+        Name = "GroupLab";
         Styles.Add(new FluentTheme());
         AppStyles.Apply(this);
         SpokenNames.Attach();

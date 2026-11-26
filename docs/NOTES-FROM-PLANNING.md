@@ -26,6 +26,23 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-26, requests 120 and 121 answered, in the session
+
+**Status: actioned 2026-11-26. Not done yet, and each waits on something outside this run: Apple's review of the first Mac build
+published as one file (nightly 248 or later), and Alan's answer to request 122, whether Code takes Mac 1.0.247 out of review.**
+
+From the planning session, in the Claude Code session on 2026-11-26 (no inbox file): "Request 121 answered: Apple turned down Mac 1.0
+(build 240) under Guideline 2.1(a): 'We were unable to review the app as it crashed on launch on Mac running macOS 27.2.1.' Review device
+MacBook Pro (14-inch, Nov 2024), reviewed 24 November. Apple says crash logs are attached, but none show on the message in App Store
+Connect. Try the App Store Connect API for the build's crash or diagnostic logs; otherwise find the cause yourself by launching the
+sandboxed Mac App Store copy the way a reviewer would (fresh user, no earlier data, sandbox and entitlements as shipped). Mac 1.0.247 is
+waiting for review and very likely has the same fault: once you know the cause, tell me whether to cancel that submission, and the fixed
+build goes in its place. Request 120 answered: use the proposed replacement sentence as written, and the Mac line 'The Mac build is
+signed and notarized, and is sent to the Mac App Store.' Close request 120."
+
+Found: inside the App Sandbox, .NET started from its separate runtime libraries is refused LaunchServices and AppKit aborts; one file is
+let through. The Mac App Store copy is published as one file. PHASE1-RESULTS.md has the evidence.
+
 ## 2026-11-25, entry 516: consistency audit
 
 **Status: actioned 2026-11-26. Every section done but two that wait on Alan: section 4, the platform sentence (request 120), and section 3's "experiment rather than a release" sentence, which goes with it; section 3's Command Z and pinch zoom sentence is unchanged, since no report or screenshot shows either on a Mac. Section 2's cause is fixed and the Mac's build 247 is in App Review; Apple's reason for turning down 1.0 waits on Alan (request 121).**
