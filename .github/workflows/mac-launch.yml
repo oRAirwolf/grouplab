@@ -16,6 +16,11 @@ on:
         required: false
         default: ''
         type: string
+      quick:
+        description: 'Only the small programs (the control and the .NET one), not GroupLab itself.'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -149,6 +154,7 @@ jobs:
           }
           echo "### Starting the Mac App Store copy on $(sw_vers -productVersion)" >> "$GITHUB_STEP_SUMMARY"
           export COREHOST_TRACE=0 DOTNET_DbgEnableMiniDump=0
+          if [ "${{ inputs.quick }}" != "true" ]; then
           direct plain none no --self-check
           opened plain-open none no
           direct runtime out/runtime.entitlements yes --self-check
@@ -200,6 +206,52 @@ jobs:
           out/sandbox/GroupLab.app/Contents/MacOS/GroupLab.App --self-check > /dev/null 2>&1; say "sandbox again: exit $?"
           sleep 3; pkill -f "log stream" || true
           grep -iv "adhoc\|amfid" out/renamed/stream.txt | grep -i "fault\|error\|asn\|deny\|launchservices\|unable\|abort\|register" | cut -c1-300 | tail -40
+          echo "::endgroup::"
+          fi
+          # The smallest .NET program that makes the application object, self-contained and sandboxed as GroupLab is.
+          echo "::group::mini, .NET making NSApplication in the sandbox"
+          mkdir -p out/mini/src
+          cat > out/mini/src/Mini.csproj <<'XML'
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable></PropertyGroup>
+          </Project>
+          XML
+          cat > out/mini/src/Program.cs <<'CS'
+          using System;
+          using System.Runtime.InteropServices;
+          static class P
+          {
+              [DllImport("/usr/lib/libobjc.dylib")] static extern IntPtr objc_getClass(string n);
+              [DllImport("/usr/lib/libobjc.dylib")] static extern IntPtr sel_registerName(string n);
+              [DllImport("/usr/lib/libobjc.dylib")] static extern IntPtr objc_msgSend(IntPtr r, IntPtr s);
+              [DllImport("/usr/lib/libSystem.dylib")] static extern IntPtr dlopen(string p, int m);
+              static int Main()
+              {
+                  Console.WriteLine("mini: started, HOME=" + (Environment.GetEnvironmentVariable("HOME")?.Contains("Containers") == true ? "the container" : "not the container"));
+                  dlopen("/System/Library/Frameworks/AppKit.framework/AppKit", 2);
+                  var app = objc_msgSend(objc_getClass("NSApplication"), sel_registerName("sharedApplication"));
+                  Console.WriteLine("mini: the application object " + (app == IntPtr.Zero ? "is missing" : "exists"));
+                  return 0;
+              }
+          }
+          CS
+          dotnet publish out/mini/src/Mini.csproj -c Release -r osx-arm64 --self-contained -o out/mini/pub 2>&1 | tail -2
+          minibundle() { # name entitlements
+            rm -rf "out/mini/$1"; mkdir -p "out/mini/$1/Mini.app/Contents/MacOS"; cp -R out/mini/pub/. "out/mini/$1/Mini.app/Contents/MacOS/"
+            python3 -c "import plistlib; plistlib.dump({'CFBundleIdentifier': 'org.grouplab.mini', 'CFBundleExecutable': 'Mini', 'CFBundlePackageType': 'APPL', 'CFBundleName': 'Mini', 'LSMinimumSystemVersion': '12.0'}, open('out/mini/$1/Mini.app/Contents/Info.plist', 'wb'))"
+            find "out/mini/$1/Mini.app/Contents/MacOS" -type f ! -name Mini | while read -r f; do codesign --force --sign - "$f" 2>/dev/null; done
+            if [ "$2" = none ]; then codesign --force --sign - "out/mini/$1/Mini.app" 2>/dev/null; else codesign --force --sign - --entitlements "$2" "out/mini/$1/Mini.app" 2>/dev/null; fi
+          }
+          minirun() { # name [env]
+            "out/mini/$1/Mini.app/Contents/MacOS/Mini" > "out/mini/$1.txt" 2>&1; local code=$?
+            say "mini $1: exit $code ($(head -c 300 "out/mini/$1.txt" | paste -sd ' ' -))"
+          }
+          minibundle plain none; minirun plain
+          minibundle sandbox out/sandbox.entitlements; minirun sandbox
+          for setting in DOTNET_EnableDiagnostics=0 DOTNET_EnableWriteXorExecute=0 DOTNET_TieredCompilation=0; do
+            env "$setting" "out/mini/sandbox/Mini.app/Contents/MacOS/Mini" > out/mini/env.txt 2>&1; code=$?
+            say "mini sandbox, $setting: exit $code ($(head -c 300 out/mini/env.txt | paste -sd ' ' -))"
+          done
           echo "::endgroup::"
           # The control: the smallest AppKit application, built here and sandboxed the same way. If it stops too, the machine is the
           # cause and not GroupLab.
