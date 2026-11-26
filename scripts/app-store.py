@@ -367,7 +367,25 @@ class Apple(testflight.Apple, Connect):
             submission = open_[0]["id"]
             items = self.call("GET", f"/v1/reviewSubmissions/{submission}/items?include=appStoreVersion&limit=50").get("data", [])
             held = {((i.get("relationships") or {}).get("appStoreVersion") or {}).get("data", {}).get("id") for i in items}
-        else:
+            # Entry 516 section 2: after a rejection the submission waits with "unresolved issues" and its item for the version stays
+            # REJECTED, and Apple refuses to take that submission for review again ("409 This resource cannot be reviewed") until the
+            # item is marked resolved, which is what "Resubmit to App Review" does in App Store Connect. The Mac's sat there for a day.
+            # If Apple will not take the item as resolved, that submission is given up (it is not in review: Apple has already
+            # answered it) and a new one made, so a review in progress is still never cancelled.
+            for i in items:
+                linked = (((i.get("relationships") or {}).get("appStoreVersion") or {}).get("data") or {}).get("id")
+                if linked == version and (i.get("attributes") or {}).get("state") == "REJECTED":
+                    try:
+                        self.call("PATCH", f"/v1/reviewSubmissionItems/{i['id']}",
+                                  {"data": {"type": "reviewSubmissionItems", "id": i["id"], "attributes": {"resolved": True}}})
+                    except Refused:
+                        if (open_[0].get("attributes") or {}).get("state") != "UNRESOLVED_ISSUES":
+                            raise
+                        self.call("PATCH", f"/v1/reviewSubmissions/{submission}",
+                                  {"data": {"type": "reviewSubmissions", "id": submission, "attributes": {"canceled": True}}})
+                        open_ = []
+                    break
+        if not open_:
             submission = self.call("POST", "/v1/reviewSubmissions", {"data": {"type": "reviewSubmissions", "attributes": {"platform": platform},
                                    "relationships": {"app": {"data": {"type": "apps", "id": app}}}}})["data"]["id"]
             held = set()

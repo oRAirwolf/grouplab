@@ -939,7 +939,7 @@ def page_download() -> str:
          "Any Mac with Apple silicon (M-series). Not an Intel Mac"],
         "Download for Apple silicon") + """<div class="panel pad dl-none">
 <h3 class="h3">Not in the Mac App Store yet</h3>
-<p>GroupLab is not in the Mac App Store yet: version 1.0 was submitted to Apple on 23 November 2026 and is released automatically once Apple approves it. Until then, every Mac download here is the newest build, and GroupLab tells you when a newer one exists; you download it yourself.</p>
+<p>GroupLab is not in the Mac App Store yet: Apple turned down the first version, sent on 23 November 2026, and the newest build has gone in its place, released automatically once Apple approves it. Until then, every Mac download here is the newest build, and GroupLab tells you when a newer one exists; you download it yourself.</p>
 </div>""",
         "Apple menu, then About This Mac. A chip whose name begins with M is Apple silicon, and this is its download; Which Mac have I got, below, says more.",
         [fold("The Intel build, untested", other(

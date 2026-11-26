@@ -8457,9 +8457,9 @@
    "kind": "decided",
    "where": "Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn; App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved"
   },
-  "Not in the Mac App Store yet GroupLab is not in the Mac App Store yet: version 1.0 was submitted to Apple on 23 November 2026 and is released automatically once Apple approves it.": {
+  "Not in the Mac App Store yet GroupLab is not in the Mac App Store yet: Apple turned down the first version, sent on 23 November 2026, and the newest build has gone in its place, released automatically once Apple approves it.": {
    "kind": "decided",
-   "where": "Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn (Google Play production from the first day Google allows it, after 12 testers for 14 days); App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved; docs/notes/external-status.md"
+   "where": "Entry 516 section 2, 2026-11-26: App Store Connect's review submissions show the Mac's 1.0 (build 240), submitted 2026-11-23, rejected and its submission unresolved; the newest build (247) is put on the version and resubmitted by scripts/app-store.py (Apple.submit). Alan, entry 513, 2026-11-23: every new build goes to every store automatically after its nightly passes its checks, each store accepting it in turn (Google Play production from the first day Google allows it, after 12 testers for 14 days); App Store review one at a time per platform; iPhone and iPad 1.0.242 (build 242) and the Mac 1.0 (build 240) submitted 2026-11-23, not yet approved; docs/notes/external-status.md"
   },
   "Free, like every GroupLab download Released on 17 November 2026 The App Store copy is version 1.0, released on 17 November 2026 Not sure?": {
    "kind": "decided",
@@ -8475,6 +8475,12 @@
   }
  },
  "rules": [
+  {
+   "surface": "^site:download/",
+   "match": "The App Store copy is version [0-9.]+, from build [0-9]+; what later builds changed on iPhone and iPad reaches it with the next version Apple approves",
+   "kind": "code",
+   "where": "website/build.py (app_store_copy, app_store_words): the version and build Apple released, read from docs/notes/external-status.md, which the testflight workflow writes and which asks for a publish when it changes (entry 509 finding 2, entry 516 section 1)."
+  },
   {
    "surface": "^docs/USER-GUIDE\\.md$|^site:guides/user-guide/|^README\\.md$",
    "match": "Numbers from another\\s+GroupLab|both its numbers to type into another GroupLab",
