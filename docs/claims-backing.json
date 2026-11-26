@@ -5,6 +5,22 @@
   "A rule is not a reading, and docs/CLAIMS.md counts the two apart."
  ],
  "backed": {
+  "Quack's scans of a sheet whose blue bulls a black and white laser printer had printed as dots led to the fix in nightly 244 that stops the dots being taken for holes.": {
+   "kind": "code",
+   "where": "docs/notes/error-reports.md report 60 (Discord issue 60, the poster's scans); the fix b734fb41, in nightly 244 (docs/RELEASE-NOTES.md), held by DotPatternScanTests; the poster is named with consent (samples/PROVENANCE.md and the thanks list); entry 516 section 8."
+  },
+  "**Run on two real Macs**, by two testers, the second steadily through nightly 247; the Intel build has not been.": {
+   "kind": "decided",
+   "where": "docs/notes/error-reports.md: reports 54, 55, 57 and 60 (nightlies 236, 239, 240 and 243) and Discord issue 62 (nightly 247) were sent from the second tester's Mac with Apple silicon; entry 516 section 3. The AI replies: entries 511, 512 and 515 (discord-replies/, each ending with that line), entry 516 section 5."
+  },
+  "Since then the second tester has used it steadily, sending reports from nightlies 236 to 247.": {
+   "kind": "decided",
+   "where": "docs/notes/error-reports.md: reports 54, 55, 57 and 60 (nightlies 236, 239, 240 and 243) and Discord issue 62 (nightly 247) were sent from the second tester's Mac with Apple silicon; entry 516 section 3. The AI replies: entries 511, 512 and 515 (discord-replies/, each ending with that line), entry 516 section 5."
+  },
+  "Two testers, nightlies 93 and 190, and reports from nightlies 236 to 247 Signed, notarized and stapled: opens like any other Mac application Any Mac with Apple silicon (M-series).": {
+   "kind": "decided",
+   "where": "docs/notes/error-reports.md: reports 54, 55, 57 and 60 (nightlies 236, 239, 240 and 243) and Discord issue 62 (nightly 247) were sent from the second tester's Mac with Apple silicon; entry 516 section 3. The AI replies: entries 511, 512 and 515 (discord-replies/, each ending with that line), entry 516 section 5."
+  },
   "- **The iPhone and iPad build** is on the App Store: version 1.0 was released on 17 November 2026, and each nightly that passes its checks follows it there once Apple approves it.": {
    "kind": "decided",
    "where": "Alan, entry 513, 2026-11-23: every new build goes to every store, released automatically once Apple approves; GroupLab 1.0 (build 226) was released on the App Store on 2026-11-17 (entry 500), version 1.0.243 live on 2026-11-24 (docs/notes/external-status.md)"

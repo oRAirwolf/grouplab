@@ -26,6 +26,114 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-25, entry 516: consistency audit
+
+**Status: actioned 2026-11-26. Every section done but two that wait on Alan: section 4, the platform sentence (request 120), and section 3's "experiment rather than a release" sentence, which goes with it; section 3's Command Z and pinch zoom sentence is unchanged, since no report or screenshot shows either on a Mac. Section 2's cause is fixed and the Mac's build 247 is in App Review; Apple's reason for turning down 1.0 waits on Alan (request 121).**
+
+From the planning session's scheduled consistency audit (entry 267 section 2b). Read only: README.md and docs on GitHub's main (the
+local clone was behind origin by the bot commits from 05:00 to 12:58 UTC), the live grouplab.org pages (home, /download/, /features/,
+/tour/, /shoot-a-target/, /guides/, /releases/, /support/, /discord/, /android-test/), website/features.json, docs/RELEASE-NOTES.md
+(nightlies 240 to 247), docs/notes/STATE.md, docs/notes/for-alan.md, docs/notes/external-status.md, docs/notes/error-reports.md,
+docs/PLATFORM-SUPPORT.md, docs/PHONE-PARITY.md, docs/USER-GUIDE.md, docs/TESTING-GUIDE.md and the log. No open `consistency` issue
+(issue 1 closed 2026-10-21). Nothing was found on lawyers, "What GroupLab is not", Justin, or Android's APK and Play test wording; the
+README, the site and the release notes agree on nightly 247.
+
+Nine findings. Finding 4 needs Alan's word; the rest need nobody.
+
+### 1. The download page names the wrong App Store version, and nothing republishes it when Apple releases one
+
+- **Where:** https://grouplab.org/download/, iPhone and iPad panel (from `app_store_words()` in website/build.py, line 103).
+- **Says (16:48 UTC):** "The App Store copy is version 1.0.243, from build 243".
+- **Should say:** version 1.0.244, from build 244.
+- **Evidence:** docs/notes/external-status.md on main (commit 32485457, 12:58 UTC): "On the App Store now: version 1.0.244". The last
+  website.yml run was 08:34 UTC (e2709050); none followed 0fd25e47 (05:10) or 32485457 (12:58).
+- **Cause:** store-status.yml (line 60 on) dispatches website.yml when the Microsoft Store's version changes (entry 476 finding 1a);
+  testflight.yml (its commit at line 130) has no such step for the App Store block, and docs/notes/external-status.md is not in
+  website.yml's push paths.
+- **Fix:** in testflight.yml, the same `version_changed` check on a `^+.*On the App Store now: version` line and the same
+  `gh workflow run website.yml` dispatch. A test that both status workflows dispatch on a version change would hold it.
+
+### 2. The Mac App Store state has been unknown since 02:44 UTC, while the site says it is in review
+
+- **Where:** https://grouplab.org/download/, Mac panel: "version 1.0 was submitted to Apple on 23 November 2026 and is released
+  automatically once Apple approves it". STATE.md line 20: "the Mac's 1.0 is still in review".
+- **Evidence:** external-status.md, before d20e99be (02:44 UTC): "App Store, Mac: version 1.0 (build 240) is in review; build 244 waits
+  until the review ends." Since then: "App Store, Mac: App Store Connect refused a request (409 This resource cannot be reviewed, please
+  check associated errors to see why.); the next run tries again." It has said that on every run for 14 hours.
+- **To do:** read the Mac version's state and the 409's associated errors through the App Store Connect API. If Apple rejected 1.0,
+  Apple's words and the fix go into for-alan.md the same day (entry 513's rule), and the Mac panel, README and PLATFORM-SUPPORT.md change
+  with it. If it is still in review, make the status line say so rather than repeating the 409, and make mac-store.yml stop asking for a
+  review it cannot have while one is open.
+
+### 3. The Mac platform statement is out of date on who has run the Mac build
+
+- **Where:** docs/PLATFORM-SUPPORT.md line 27, README.md line 198, and /download/ (Mac panel and "What is supported and tested").
+- **Says:** "the Apple silicon build has been run on two Macs. Two testers have run it." The Mac panel: "Run on two real Macs. Two
+  testers, nightlies 93 and 190". Also "neither fix has been checked on a Mac yet" (Command Z and pinch zoom, from nightly 94), and
+  "These builds are an experiment rather than a release."
+- **Should say:** that a tester has used the Apple silicon build steadily through nightly 243, and whether Command Z and pinch zoom have
+  been seen working since (check those reports and their screenshots before claiming it). The "experiment rather than a release"
+  sentence no longer fits a signed, notarized build that has been sent to the Mac App Store; reword it with finding 4 if Alan agrees,
+  since it sits inside his statement.
+- **Evidence:** docs/notes/error-reports.md lines 14, 36, 50 and 82: reports 60 (nightly 243), 57 (nightly 240), 55 (nightly 239) and
+  54 (nightly 236), each "on a Mac".
+
+### 4. Needs Alan: "Windows is the supported platform" no longer matches what is published
+
+- **Where:** docs/PLATFORM-SUPPORT.md lines 23 and 56, README.md lines 194 and 227, /download/ "What is supported and tested".
+- **Says:** "Windows is the supported platform." and "Other platforms get proper attention once the pace of change slows and the Windows
+  application is generally working the way the developer wants it to."
+- **Why it no longer holds:** GroupLab for iPhone and iPad is on the App Store, and the app itself tells iOS 18 to 25 users that "iOS 26
+  is the minimum supported version" (entry 505), so iOS 26 and later is supported; error-reports.md heads reports below 26 "unsupported
+  iOS". The Mac's 1.0 went to the Mac App Store on 23 November, Android has the APK and Google Play's open closed test, and every store
+  follows the nightlies (entry 513).
+- **Why Code cannot simply change it:** CLAIMS.md lines 2338 and 2356 record both sentences as Alan's statement (entries 147 and 166).
+- **To do:** one line in for-alan.md asking Alan to approve or edit a replacement, for example: "Windows is where GroupLab is developed
+  and tested by hand. iPhone and iPad on iOS 26 or later are supported through the App Store, and Android 10 or later through the APK and
+  Google Play's test. The Mac and Linux builds are published and tested by the suite on every change, and reports from them are
+  welcome." Change nothing until he answers.
+
+### 5. The Support and Discord pages do not say the forum replies are written by AI
+
+- **Where:** https://grouplab.org/support/ (from website/build.py line 1337): "The project's developer reads it." and "A post in the
+  feature-requests forum becomes a suggestion that is read and answered." https://grouplab.org/discord/: "talk to whoever is working on
+  GroupLab".
+- **Should also say:** that replies in the help, support, feature-requests and bug-reports forums are often written by an AI assistant
+  working for the project and posted by the GroupLab bot, and that each one ends "This is an AI generated response."
+- **Evidence:** for-alan.md, "Discord replies, posted by the bot" (entries 511, 512 and 515, request 115 installed 2026-11-23): Claude
+  Code answers every new message from anybody but Alan in those four forums.
+
+### 6. The Features page sentence for pooled sets has a question with nothing before it
+
+- **Where:** website/features.json line 1339 (`pool-set`), live at https://grouplab.org/features/#pool-set.
+- **Says:** "on the phone, sheets chosen together open as the set's checklist with the pooled group showing, and Delete this session on a
+  saved session's result asks the same question and names any pooled set that uses the sheet".
+- **Should say:** what nightly 246's note says: "...and Delete this session on a saved session's result asks first and names any pooled
+  set that uses the sheet, which keeps its other sheets." Mark it `"reworded"` for nightly 247 (entry 421's rule). Whether Delete this
+  session belongs under Sessions rather than pooled sets is Code's call.
+
+### 7. The user guide's phone section does not mention Delete this session
+
+- **Where:** docs/USER-GUIDE.md line 1053, "From the result: How you shot this sheet ..., sharing the session, and sharing the shots as a
+  CSV file."
+- **Should add:** Delete this session (nightly 246), which asks first and names any pooled set that uses the sheet; that set keeps its
+  other sheets. Section 6's list (line 513, "delete one (3), after GroupLab asks") could say the phone has it on the result page.
+
+### 8. Thanks: Quack's line does not name report 60
+
+- **Where:** README.md line 686.
+- **Should add:** a few words that Quack's scans of a sheet whose blue bulls a black and white laser printer printed as dots led to the fix
+  in nightly 244.
+- **Evidence:** for-alan.md, "report 60 (Quack's rainbow-banded scans ...)"; RELEASE-NOTES.md, nightly 244. Quack is already named with
+  consent; no other name is added.
+
+### 9. STATE.md (internal) is behind on the nightlies and the App Store
+
+- **Where:** docs/notes/STATE.md line 75: "Last nightly: 1.0.0-nightly.245 (2026-11-24); the next one carries the queue's four parts."
+  Line 43: "1.0.242 in App Review (entry 513)". Line 56: "Apple's review of 1.0.242".
+- **Should say:** nightly 247 (2026-11-25, commit 4e9031d) is the newest, and 246 carried the queue; the App Store has 1.0.244 and
+  1.0.247 waits for review (external-status.md, 12:58 UTC). The rewrite at 4e9031db came after nightly 246 was announced (78c80b5e).
+
 ## 2026-11-25, Alan's answer to question 120, in the session
 
 **Status: actioned 2026-11-25. Not done yet, and each waits on something outside this run: the first nightly with LLVM, whose

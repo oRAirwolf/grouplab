@@ -934,7 +934,7 @@ def page_download() -> str:
     mac = section("mac", "Mac", newest(
         "macOS, Apple silicon", "grouplab-macos-arm64.tar.gz",
         "For any Mac with Apple silicon. Self-contained, built on macOS, and tested by the suite on every change.",
-        ["<strong>Run on two real Macs.</strong> Two testers, nightlies 93 and 190",
+        ["<strong>Run on two real Macs.</strong> Two testers, nightlies 93 and 190, and reports from nightlies 236 to 247",
          "Signed, notarized and stapled: opens like any other Mac application",
          "Any Mac with Apple silicon (M-series). Not an Intel Mac"],
         "Download for Apple silicon") + """<div class="panel pad dl-none">
@@ -1335,7 +1335,7 @@ def page_support() -> str:
 <div class="panel pad stack tight">
 <h2 class="h3">Discord</h2>
 <p>Questions, bug reports, target sheets, and what people are shooting. The project's developer reads it.</p>
-<p class="small">A post in the bug-reports forum becomes a bug report for the developer, and the pictures you post there go on that report and nowhere else. A post in the feature-requests forum becomes a suggestion that is read and answered. For anything private, the support address below is better.</p>
+<p class="small">A post in the bug-reports forum becomes a bug report for the developer, and the pictures you post there go on that report and nowhere else. A post in the feature-requests forum becomes a suggestion that is read and answered. Replies in the help, support, feature-requests and bug-reports forums are often written by an AI assistant working for the project and posted by the GroupLab bot; each one ends "This is an AI generated response." For anything private, the support address below is better.</p>
 <p class="small">Reports you send are counted in the release notes: <a href="/releases/#from-you">what your reports and targets changed</a>.</p>
 <div class="actions">{btn("What is in the Discord", DISCORD, True)}</div>
 </div>
@@ -3618,7 +3618,7 @@ def page_discord() -> str:
 
 <section class="wrap stack">
 <h2>What is in there</h2>
-<p>The server is grouped like this, so you can see what you are joining before you join.</p>
+<p>The server is grouped like this, so you can see what you are joining before you join. Replies in the help, support, feature-requests and bug-reports forums are often written by an AI assistant working for the project and posted by the GroupLab bot; each one ends "This is an AI generated response."</p>
 <div class="grid-2">{groups}</div>
 </section>
 

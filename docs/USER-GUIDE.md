@@ -510,7 +510,7 @@ Accept and analyze saves the sheet as a session: the marking with every edit, it
 - filter them by rifle (1) and by load (2);
 - open one back to its analysis, which needs no image;
 - name one: right-click its row and choose **Rename**, or press F2 on it, type the name and press Enter. The name comes first in Session records, in the target's tab and in Compare, with the target's name after it, and an empty name takes it away. The same name is the box **Name this session** at the top of the analysis screen, beside the target's name; on the phone it is on the result page, and Sessions has **Rename a session**. A name given on one device reaches the others with the session when they synchronize;
-- delete one (3), after GroupLab asks.
+- delete one (3), after GroupLab asks; on the phone, **Delete this session** is on the session's result page.
 
 ![Session records: 1 Rifle filter, 2 Load filter, 3 Delete](figures/screens/current/sessions-light-1400x900.png)
 <!-- marks: Rifle | Load | Delete -->
@@ -1051,7 +1051,7 @@ where it started and a line says how far it has moved, and the picture scrolls w
 it and **Cancel** puts it back. On the computer, every hole's circle is the caliber's size too once one is set, with the size GroupLab
 measured dashed beside it, and a hole dragged with the select tool leaves the same dashed ghost. **Done** takes
 the changes back to the result, which measures again; leaving any other way asks whether to keep them. From the result: How you shot this sheet (the same two parts as the computer's Groups section, loads included), Shots Needed to Zero, Ballistics with the group carried in, sharing
-the session, and sharing the shots as a CSV file. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
+the session, and sharing the shots as a CSV file, and **Delete this session**, which asks first and names any pooled set that uses the sheet; that set keeps its other sheets. **Import shots from a CSV file,** under Sessions, shows the group as it will be read
 and a card of GroupLab's guesses at what each column is, each line tapped to change, then **Import** and the result. Several files with the same columns can be chosen at once and are read as one group.
 
 ![The result held sideways, with Fix holes and the start of the sheet on the left, the unit choice and the figures on the right](figures/screens/phone/fold-result-landscape-light.png)

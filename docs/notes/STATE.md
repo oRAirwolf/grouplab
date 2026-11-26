@@ -9,38 +9,33 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-25, after Alan's answer to question 120 (in the session); the inbox is empty.
+**Last rewritten:** 2026-11-26, after entry 516 (the consistency audit of 25 November); the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Alan's queue of 2026-11-24, done** (064f133c, 5725d37a, 546aea54, 54bea04b; NOTES-FROM-PLANNING.md has it whole): 1, the phone's
-  Session name box on Targets, Delete this session on a saved result asking entry 495's sheet question, and the App Store wording
-  (1.0.243 out; **the Mac's 1.0 is still in review**, nothing says it is out); 2, Pool the chosen takes any sheets on both (`ChosenPools`),
-  DESIGN NEEDED line in for-alan.md; 3, Android Release builds use LLVM (the 600 dpi scan 9.9 s to 4.5 s on the emulator, every
-  fingerprint identical); the iPhone's figures wait on a real iPhone (the simulator interprets);
-  4, consistency pass, the download page's App Store line fixed, report 60's check swept (`DotScreenScanTests`), the tidy.
-- **Question 120 answered (b), 2026-11-25: LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`, one line; RESTORE.md has the undo).
-  To check: the next nightly's `ios-nightly-llvm` artifact says `llvm: ran`; every Apple error report is read for an LLVM cause and the
-  switch goes off at once if one could be; the device comparison is at request 50's sitting. The Mac's copy has no LLVM (ReadyToRun).
-- **The usage guard stops at 95** until 2026-11-26 02:00 UTC (Alan, for this queue), then 85 by itself.
+- **Entry 516, done 2026-11-26**: **Apple turned down the Mac's 1.0 (build 240) on 25 November**; the script put build 247 on it but
+  re-asked review of the rejected submission, refused for a day (409, "Version is not ready to be submitted yet"). Now the rejected item
+  is resolved first, refusals carry Apple's associated errors, a rejection is always said; **Mac 1.0.247 in App Review since 08:52 UTC
+  26 November**; Apple's reason, request 121. The site republishes on an App Store version change; the platform sentence is request 120.
+- **Question 120 (b): LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`; RESTORE.md has the undo): nightly 247 says `llvm: ran`.
+  Apple error reports are read for an LLVM cause (switch off at once if one could be); the device comparison at request 50's sitting.
+- **Report 60's poster** says nightly 247 finds .338 holes poorly and sent four three-page sets (testing only): read them on 243 and 247
+  when the nightly's submissions copy brings them here, to see whether the dot-pattern rule drops large holes (error-reports.md).
 - **Entry507SplashTests fail here** (6, thread ownership; pass in CI). closed-replies.py stays (entry 510).
 
 ## The next three
 
 **What is left of the plan** (entry 318 section 5, one line each, with what blocks it):
-- **Detection, angled photos**: done in entry 324 section 1 (da9cf190): the far column from 0.08 to 0.01 or 0.02 in on the 9 and 15
-  degree photos, nothing else changed. **Holes on any target**: Experimental, measured; harder cases wait on request 58.
+- **Detection, angled photos**: done (entry 324). **Holes on any target**: Experimental, measured; harder cases wait on request 58.
 - **Detection on blank paper with no definition** (Phase 4): needs a photo of plain paper with real holes at a known scale (54, 58).
 - **Chronograph files** (Phase 5): every one of Alan's Xero exports reads, and a timed string proposes its pairing (entry 342);
   checking a proposal needs a sheet shot with its string.
-- **Velocity regression** (Phase 5): on both screens since entry 323, in the conditions entered on Ballistics since 329; a
-  session's own conditions are entered under the block (entry 416); the phone's picture waits for request 50's sitting.
-- **Synchronization** (Phase 7): built on every platform with tidying (entries 461, 463, 464); in tests a simulated cloud with three
-  devices, late, out of order and half-written files, conflicted copies and wrong clocks (entry 472); a real cloud client over weeks
-  needs Alan's two devices (PROOF-CHECKLIST.md, line 4 of entry 472's list).
-- **iOS** (Phase 8): on the App Store (1.0, build 226); 1.0.242 in App Review (entry 513), and every nightly after it; TestFlight for
+- **Velocity regression** (Phase 5): on both screens, with a session's own conditions (entry 416); the phone's picture waits on 50.
+- **Synchronization** (Phase 7): built on every platform (entries 461 to 472), tested on a simulated cloud with three devices; a real
+  cloud client over weeks needs Alan's two devices (PROOF-CHECKLIST.md, line 4 of entry 472's list).
+- **iOS** (Phase 8): on the App Store as 1.0.247 (entry 513), each nightly after it to App Review; TestFlight for
   the testers already in it; the device checks need a sitting (50), GroupLab Dev on the iPad request 61.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
@@ -48,19 +43,21 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. The next nightly's `ios-llvm.txt`; then a real phone's and iPhone's log at request 50's sitting (`read.holes`, the fingerprint).
+1. Apple's words on the Mac's rejection (request 121), then fix what they name; Apple's answer on Mac 1.0.247.
+2. Report 60's four sets read on nightlies 243 and 247 (the .338 holes); a real phone's and iPhone's log at request 50's sitting.
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
 ## Blocked, and on what
 
-- **The App Store versions**: Apple's review of 1.0.242 and the Mac's 1.0 (entry 513); request 111 stays a check on a real Mac only.
+- **The Mac App Store**: Apple's review of Mac 1.0.247 after 1.0 was turned down; its reason, request 121. Request 111 stays a real Mac check.
 - **Google Play production**: Google's 14 days (about 2 December) and Alan's application.
 - **The iPhone Duo's inner screen**: the Duo leg on Xcode 27.2 (simulator starts folded; IOS-PLAN.md); nothing needed from Alan.
 - **Entry 380 section 3**: measuring the M220 labels waits on request 77's photos in `m220-labels`.
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **28**; waiting on him: 119 (Google's production answers, on or after 2 December), 118 (a Discord post for Android testers), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **30**; waiting on him: 121 (Apple's words on the Mac's rejection, most urgent), 120 (the
+platform sentence), 119 (Google's production answers, on or after 2 December), 118 (a Discord post for Android testers), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 
@@ -72,7 +69,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (120 answered (b), 2026-11-25; 118 answ
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.245 (2026-11-24); the next one carries the queue's four parts. GitHub's
+- **Last nightly:** 1.0.0-nightly.247 (2026-11-25, 4e9031d); 246 carried Alan's queue of 24 November. GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
@@ -87,6 +84,8 @@ Inbox files are never committed, so CI sees an empty inbox and this line says no
 
 ## Things that would surprise somebody who was not here yesterday
 
+- **An App Store refusal now says why** (entry 516): `said_by` in testflight.py keeps Apple's associated errors; `app-store.py --inspect`
+  (testflight.yml run by hand with inspect) lists each platform's review submissions. Both status workflows publish the site on a version change.
 - **Android is compiled with LLVM** (`EnableLLVM` in GroupLab.Android.csproj, Release only); `android-emulator.yml`'s `no_llvm` builds
   without, for comparing. The phone's log has `read.holes` (the hole finder's nine steps, cores, `jit`) and a `result=` fingerprint on
   `phone.detect` (`ReadFingerprint`); the same fingerprint on the same picture means the same result to the bit.

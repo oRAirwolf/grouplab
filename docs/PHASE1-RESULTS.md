@@ -649,6 +649,33 @@ the Mac are read for anything LLVM could cause, and the switch goes off at once 
 iPad to hand, the sweep picture read on a build with LLVM and one without, `read.holes` and the result fingerprint compared, then the
 number goes in `docs/PERFORMANCE.md`. The two DESIGN NEEDED looks from part 2 stay as built (Alan).
 
+## Entry 516: the consistency audit of 25 November, and why the Mac App Store copy kept getting a 409 (2026-11-26)
+
+**Section 2, the 409, first.** App Store Connect's review submissions (a read-only inspect, testflight run 45785427242) showed the
+Mac's 1.0 (build 240), submitted on 23 November, **rejected** by App Review on 25 November, its review submission left in
+`UNRESOLVED_ISSUES` with the item `REJECTED`. `scripts/app-store.py` then did what entry 513 designed, putting the newest build (247) on
+the turned-down version, but asked Apple to review that same submission again, and Apple refuses until the rejected item is resolved:
+the associated error, now printed, was "Version is not ready to be submitted yet". The refusal's associated errors had been dropped by
+`said_by`'s predecessor in `scripts/testflight.py`, so the status note repeated a bare 409 for a day, and the rejection itself was said
+nowhere, because a rejection was only reported when no newer build was ready. Fixed: refusals carry their associated errors (named by
+kind, never by id) and where the newest version stands; inspect lists the review submissions; a rejection is said for Alan whether or
+not a newer build replaces it; `Apple.submit` marks a rejected item resolved, as "Resubmit to App Review" does, and if Apple refuses
+that, gives up only that answered submission and makes a new one (never one in review). **Result:** testflight run 45786792184, "App
+Store, Mac: build 247 submitted for App Review as version 1.0.247". Apple's reason for the rejection is not in the API; request 121
+asks Alan to copy it from App Store Connect, since build 247 will be turned down for the same reason if it is in the app or the listing.
+
+**Section 1:** testflight.yml now asks for a publish of the site when the App Store version in external-status.md changes, as
+store-status.yml does for the Store (`WebsiteWorkflowTests.BothStatusWorkflowsPublishTheSiteWhenAStoreVersionChanges`, and testflight.yml
+joins the allowed dispatchers). The download page's generated "The App Store copy is version N, from build N" line is backed by a rule
+in claims-backing.json, since an exact sentence would have gone unbacked, and the page been held back, with every new version.
+**Section 3:** the second tester's steady use through nightly 247 (reports 54, 55, 57, 60 and issue 62) added to PLATFORM-SUPPORT.md,
+the README and the download page; the Mac panel says Apple turned down the first version and the newest build went in its place.
+**Section 4:** request 120. **Section 5:** the Support and Discord pages say the forum replies are often written by an AI assistant and
+end "This is an AI generated response." **Section 6:** pool-set's sentence says Delete this session "asks first", reworded for
+nightly 247. **Section 7:** the user guide's phone section and section 6's list name Delete this session; the PDFs regenerated.
+**Section 8:** Quack's thanks names the dot-printed scans behind nightly 244's fix. **Section 9:** STATE.md rewritten; also, nightly
+247's `ios-nightly-llvm` says `llvm: ran` (question 120's first check).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
