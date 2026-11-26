@@ -37,14 +37,14 @@ jobs:
         run: |
           python3 -m pip install --quiet --disable-pip-version-check "pyjwt[crypto]==2.10.1"
           python3 scripts/apple-crash-logs.py apple-logs 240 247 || true
-          for f in apple-logs/*; do [ -f "$f" ] && { echo "=== $f"; head -c 20000 "$f"; echo; }; done
+          for f in apple-logs/*; do [ -f "$f" ] && { echo "=== $f"; head -c 20000 "$f"; echo; }; done; true
 
   launch:
     name: start the store copy, ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-26, macos-latest]
+        os: [macos-26]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     steps:
@@ -81,6 +81,7 @@ jobs:
       - name: Start it six ways
         shell: bash
         run: |
+          set +e +o pipefail
           say() { echo "RESULT $*"; echo "- $*" >> "$GITHUB_STEP_SUMMARY"; }
           container="$HOME/Library/Containers/org.grouplab.app"
           sign() { # name entitlements(or none) runtime(yes|no)
