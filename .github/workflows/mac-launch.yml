@@ -226,8 +226,12 @@ jobs:
               [DllImport("/usr/lib/libobjc.dylib")] static extern IntPtr sel_registerName(string n);
               [DllImport("/usr/lib/libobjc.dylib")] static extern IntPtr objc_msgSend(IntPtr r, IntPtr s);
               [DllImport("/usr/lib/libSystem.dylib")] static extern IntPtr dlopen(string p, int m);
-              static int Main()
+              static int Main(string[] args)
               {
+                  if (args.Length == 2 && args[0] == "load")
+                  {
+                      Console.WriteLine("mini: loaded " + args[1] + " " + (dlopen(System.IO.Path.Combine(AppContext.BaseDirectory, args[1]), 2) != IntPtr.Zero));
+                  }
                   Console.WriteLine("mini: started, HOME=" + (Environment.GetEnvironmentVariable("HOME")?.Contains("Containers") == true ? "the container" : "not the container"));
                   dlopen("/System/Library/Frameworks/AppKit.framework/AppKit", 2);
                   var app = objc_msgSend(objc_getClass("NSApplication"), sel_registerName("sharedApplication"));
@@ -243,9 +247,10 @@ jobs:
             find "out/mini/$1/Mini.app/Contents/MacOS" -type f ! -name Mini | while read -r f; do codesign --force --sign - "$f" 2>/dev/null; done
             if [ "$2" = none ]; then codesign --force --sign - "out/mini/$1/Mini.app" 2>/dev/null; else codesign --force --sign - --entitlements "$2" "out/mini/$1/Mini.app" 2>/dev/null; fi
           }
-          minirun() { # name [env]
-            "out/mini/$1/Mini.app/Contents/MacOS/Mini" > "out/mini/$1.txt" 2>&1; local code=$?
-            say "mini $1: exit $code ($(head -c 300 "out/mini/$1.txt" | paste -sd ' ' -))"
+          minirun() { # name [args]
+            local n=$1; shift
+            "out/mini/$n/Mini.app/Contents/MacOS/Mini" "$@" > "out/mini/$n.txt" 2>&1; local code=$?
+            say "mini $n $*: exit $code ($(head -c 300 "out/mini/$n.txt" | paste -sd ' ' -))"
           }
           if [ "${{ inputs.quick }}" = "true" ]; then
             python3 -c "import plistlib; plistlib.dump({'com.apple.security.app-sandbox': True, 'com.apple.security.cs.allow-jit': True, 'com.apple.security.network.client': True}, open('out/sandbox.entitlements', 'wb'))"
@@ -266,7 +271,20 @@ jobs:
             rm -rf out/mini/pub; dotnet publish out/mini/src/Mini.csproj -c Release -r osx-arm64 --self-contained $extra -o out/mini/pub 2>&1 | tail -1
             echo "$kind: $(ls out/mini/pub | wc -l) files"
             minibundle "$kind" out/sandbox.entitlements; minirun "$kind"
+            [ "$kind" = single ] && cp -R out/mini/pub out/mini/single-pub
           done
+          # Which part of the loose layout: many files that are not code beside the program, a library there unused, or one loaded.
+          rm -rf out/mini/pub; dotnet publish out/mini/src/Mini.csproj -c Release -r osx-arm64 --self-contained -o out/mini/multi 2>&1 | tail -1
+          variant() { # name, then the files to add from the loose layout
+            local n=$1; shift
+            rm -rf out/mini/pub; cp -R out/mini/single-pub out/mini/pub
+            for f in "$@"; do cp out/mini/multi/$f out/mini/pub/ 2>/dev/null; done
+            minibundle "$n" out/sandbox.entitlements
+          }
+          variant with-dlls $(cd out/mini/multi && ls *.dll | grep -v "^Mini.dll$"); minirun with-dlls
+          variant with-dylib libSystem.Native.dylib; minirun with-dylib
+          minirun with-dylib load libSystem.Native.dylib
+          variant with-json Mini.deps.json Mini.runtimeconfig.json; minirun with-json
           echo "::endgroup::"
           # The control: the smallest AppKit application, built here and sandboxed the same way. If it stops too, the machine is the
           # cause and not GroupLab.
