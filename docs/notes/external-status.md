@@ -10,12 +10,12 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
-## The App Store version, 2026-11-26 08:46 UTC
+## The App Store version, 2026-11-26 08:53 UTC
 
 - App Store version 1.0.247 (build 247): released on the App Store.
 - The App Store page: https://apps.apple.com/app/id6817635137
 - App Store, iPhone and iPad: nothing newer to submit; on the App Store: version 1.0.247.
-- App Store, Mac: App Store Connect refused a request (409 This resource cannot be reviewed, please check associated errors to see why. Associated errors: appStoreVersions: Version is not ready to be submitted yet, please try again later.); its newest version, 1.0.247 (build 247), is being prepared, not submitted; the next run tries again.
+- App Store, Mac: build 247 submitted for App Review as version 1.0.247, released by itself once approved.
 <!-- /status:app-store -->
 
 <!-- status:store -->
