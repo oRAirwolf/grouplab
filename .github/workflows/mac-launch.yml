@@ -16,6 +16,11 @@ on:
         required: false
         default: ''
         type: string
+      single:
+        description: 'Publish GroupLab as one file (PublishSingleFile), the fix under test for request 121.'
+        required: false
+        default: false
+        type: boolean
       quick:
         description: 'Only the small programs (the control and the .NET one), not GroupLab itself.'
         required: false
@@ -71,7 +76,8 @@ jobs:
           set -o pipefail
           sw_vers
           dotnet publish src/GroupLab.App --configuration Release -r osx-arm64 --self-contained -o publish/grouplab \
-            "-p:Version=1.0.0-nightly.999" -p:GroupLabTrain=nightly -p:GroupLabDistribution=store | tail -3
+            "-p:Version=1.0.0-nightly.999" -p:GroupLabTrain=nightly -p:GroupLabDistribution=store             ${{ inputs.single && '-p:PublishSingleFile=true' || '' }} | tail -3
+          echo "published: $(ls publish/grouplab | wc -l) files: $(ls publish/grouplab | head -30 | paste -sd ' ' -)"
           cp LICENSE THIRD-PARTY-NOTICES.md publish/grouplab/
           python3 scripts/macos-bundle.py publish/grouplab out/base --version 1.0.0-nightly.999 --arch macos-arm64 --store-build 999
           rm -f out/base/GroupLab.app/Contents/MacOS/createdump
