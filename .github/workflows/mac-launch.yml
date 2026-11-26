@@ -99,11 +99,11 @@ jobs:
           }
           report() { # name since
             echo "--- sandbox, code signing and crash messages"
-            log show --start "$2" --style compact --predicate 'process CONTAINS "GroupLab" OR (sender == "Sandbox" AND eventMessage CONTAINS "GroupLab") OR (eventMessage CONTAINS "GroupLab" AND (sender == "AppleMobileFileIntegrity" OR process == "amfid" OR process == "taskgated" OR process == "ReportCrash" OR process == "launchservicesd" OR process == "runningboardd"))' 2>/dev/null \
+            log show --start "$2" --info --style compact --predicate 'process CONTAINS "GroupLab" OR process == "Control" OR (sender == "Sandbox" AND eventMessage CONTAINS "GroupLab") OR (eventMessage CONTAINS "GroupLab" AND (sender == "AppleMobileFileIntegrity" OR process == "amfid" OR process == "taskgated" OR process == "ReportCrash" OR process == "launchservicesd" OR process == "runningboardd"))' 2>/dev/null \
               | grep -v "^Timestamp" | cut -c1-400 | tail -60
             echo "--- crash reports"
             find "$HOME/Library/Logs/DiagnosticReports" /Library/Logs/DiagnosticReports -newer "out/$1/.since" -name "*GroupLab*" 2>/dev/null | while read -r f; do
-              echo "=== $f"; head -c 12000 "$f"; echo; done
+              echo "=== $f"; python3 scripts/ips-summary.py "$f"; done
             echo "--- GroupLab's own log"
             for d in "$container/Data/Library/Logs/GroupLab" "$HOME/Library/Logs/GroupLab"; do
               ls "$d" 2>/dev/null | tail -3 | while read -r f; do [ -f "$d/$f" ] && { echo "=== $d/$f"; tail -60 "$d/$f"; }; done
@@ -149,6 +149,35 @@ jobs:
           direct sandbox out/sandbox.entitlements no --self-check
           opened sandbox-open out/sandbox.entitlements no
           opened store-like out/sandbox-runtime.entitlements yes
+          # .NET without AppKit inside the sandbox: the command line in the bundle, signed with the sandbox's own keys.
+          echo "::group::the command line inside the sandbox"
+          codesign --force --sign - --entitlements out/sandbox.entitlements out/sandbox/GroupLab.app/Contents/MacOS/grouplab 2>/dev/null
+          out/sandbox/GroupLab.app/Contents/MacOS/grouplab --version > out/cli.txt 2>&1; code=$?
+          say "cli-sandbox: exit $code ($(head -c 200 out/cli.txt | paste -sd ' ' -))"
+          echo "::endgroup::"
+          # The control: the smallest AppKit application, built here and sandboxed the same way. If it stops too, the machine is the
+          # cause and not GroupLab.
+          echo "::group::control"
+          mkdir -p out/control/Control.app/Contents/MacOS
+          cat > out/control/main.swift <<'SWIFT'
+          import AppKit
+          let app = NSApplication.shared
+          app.setActivationPolicy(.regular)
+          let w = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 300, height: 200), styleMask: [.titled], backing: .buffered, defer: false)
+          w.makeKeyAndOrderFront(nil)
+          print("control: window shown")
+          DispatchQueue.main.asyncAfter(deadline: .now() + 20) { print("control: quitting"); app.terminate(nil) }
+          app.run()
+          SWIFT
+          swiftc -O out/control/main.swift -o out/control/Control.app/Contents/MacOS/Control 2>&1 | tail -3
+          python3 -c "import plistlib; plistlib.dump({'CFBundleIdentifier': 'org.grouplab.control', 'CFBundleExecutable': 'Control', 'CFBundlePackageType': 'APPL', 'CFBundleName': 'Control', 'LSMinimumSystemVersion': '12.0'}, open('out/control/Control.app/Contents/Info.plist', 'wb'))"
+          codesign --force --sign - --entitlements out/sandbox.entitlements out/control/Control.app 2>/dev/null
+          since=$(date "+%Y-%m-%d %H:%M:%S"); touch out/control/.since
+          out/control/Control.app/Contents/MacOS/Control > out/control/out.txt 2>&1; code=$?
+          say "control-sandbox: exit $code ($(head -c 300 out/control/out.txt | paste -sd ' ' -))"
+          find "$HOME/Library/Logs/DiagnosticReports" -newer out/control/.since -name "Control*" 2>/dev/null | while read -r f; do python3 scripts/ips-summary.py "$f"; done
+          log show --start "$since" --info --style compact --predicate 'process == "Control"' 2>/dev/null | grep -v "^Timestamp" | cut -c1-300 | tail -25
+          echo "::endgroup::"
       - name: The results, in one place
         if: always()
         shell: bash
