@@ -12,6 +12,18 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.248
+
+**2026-11-26**, commit `1fab547`. Nightly.
+
+**What you will notice**
+
+- On the Mac, the menu bar now says GroupLab, and the Mac App Store copy no longer closes the moment it opens, the crash Apple turned its first version down for.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.248)
+
+---
+
 ## 1.0.0-nightly.247
 
 **2026-11-25**, commit `4e9031d`. Nightly.
