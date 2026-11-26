@@ -140,4 +140,40 @@ public class ComparisonPageTests
         Assert.Equal("Compare loads Test load 1 vs Test load 2 2026-11-24", ComparisonPages.FileName(Page(2)));
         Assert.Equal("Compare loads 5 loads 2026-11-24", ComparisonPages.FileName(Page(5)));
     }
+
+    /// <summary>
+    /// Suggestion 62: the export draws the screen's two interval charts, a bar a load in its color with its figure a dot and the
+    /// comparison's sentence beneath, and gives the shots to resolve a difference as a table; two loads still fit one page.
+    /// </summary>
+    [Fact]
+    public void TheExportDrawsTheIntervalChartsAndTheShotsTable()
+    {
+        var page = Page(2);
+        var scene = Assert.Single(ComparisonPages.Pages(page));
+        var texts = Texts(scene);
+        Assert.Equal(["Mean radius, the range each could be", "Sigma, the range each could be"], page.Charts.Select(c => c.Title));
+        foreach (var chart in page.Charts)
+        {
+            Assert.Contains(chart.Title, texts);
+            Assert.Contains(chart.LowWords, texts);
+            Assert.Contains(chart.HighWords, texts);
+            Assert.All(chart.Rows, r => Assert.InRange(r.Lower, chart.Low, chart.High));
+            Assert.All(chart.Rows, r => Assert.InRange(r.Upper, chart.Low, chart.High));
+        }
+
+        Assert.Equal(page.Report.Groups.Select(g => g.MeanRadius), page.Charts[0].Rows);
+        Assert.Equal(page.Report.Groups.Select(g => g.Rayleigh.Sigma), page.Charts[1].Rows);
+        foreach (string heading in new[] { "Difference in spread", "Shots per load", "Rounds in all", "10 percent", "25 percent", "50 percent" })
+        {
+            Assert.Contains(heading, texts);
+        }
+
+        foreach (var row in page.Report.Resolve)
+        {
+            Assert.Contains(row.ShotsPerLoad.ToString(System.Globalization.CultureInfo.InvariantCulture), texts);
+            Assert.Contains((2 * row.ShotsPerLoad).ToString(System.Globalization.CultureInfo.InvariantCulture), texts);
+        }
+
+        Assert.DoesNotContain(texts, t => t.Contains("shots per load;", StringComparison.Ordinal));
+    }
 }

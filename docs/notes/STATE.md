@@ -9,21 +9,22 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-26, after requests 120 and 121 (the platform sentence; the Mac's crash on launch); the inbox is empty.
+**Last rewritten:** 2026-11-26, after request 122 (Mac 1.0.247 out of review, 248 in), report 60's .338 sets and suggestion 62; the inbox is empty.
 
 ---
 
 ## In flight
 
-- **Requests 120 and 121, done 2026-11-26**: Apple turned down Mac 1.0 for crashing on launch. Cause found (`mac-launch.yml`): inside the
-  sandbox, .NET started from separate runtime libraries is refused LaunchServices and AppKit aborts; one file is let through. The Mac App
-  Store copy is now one file (`PublishSingleFile`, store copy on macOS only) and passes its self-check in the sandbox; the nightly's
-  sandbox check now stops the job. **Mac 1.0.247 in review has the fault**: request 122 asks Alan to take it out; a withdrawn build is
-  never resubmitted, so 248 (uploaded, waiting behind 247's review) goes in. The platform sentence (120) is in PLATFORM-SUPPORT.md, README and download page.
+- **Request 122, done 2026-11-26** (Alan: "cancel 247"): Mac 1.0.247, which crashes on launch in the sandbox (request 121's cause), was
+  taken out of App Review by `app-store.py --withdraw` (testflight.yml's withdraw input, run by hand only); Mac 1.0.248, the one-file
+  store copy that passes the sandbox check, was submitted at 23:17 UTC. iPhone and iPad 1.0.248 is released on the App Store.
+- **Suggestion 62, built 2026-11-26** (Alan's yes): centers from the aim and the shift, with ranges, on screen and export; the export's
+  range charts and shots table. The aim mark is request 123; reply 62-2 posts after nightly 249.
 - **Question 120 (b): LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`; RESTORE.md has the undo): nightly 247 says `llvm: ran`.
   Apple error reports are read for an LLVM cause (switch off at once if one could be); the device comparison at request 50's sitting.
-- **Report 60's poster** says nightly 247 finds .338 holes poorly and sent four three-page sets (testing only): read them on 243 and 247
-  when the nightly's submissions copy brings them here, to see whether the dot-pattern rule drops large holes (error-reports.md).
+- **Report 60's .338 sets, assessed 2026-11-26**: 0 to 3 of about 10 holes a page; not the dot-pattern rule (it refused nothing). A
+  .338 hole over a white paper backer at 150 dpi is a white middle and a scattered ring of torn fibers that falls apart into specks; the
+  .224 sets over cardboard read 8 or 9. Workaround in reply 60-4; a fix is proposed in error-reports.md, not built.
 - **Entry507SplashTests fail here** (6, thread ownership; pass in CI). closed-replies.py stays (entry 510).
 
 ## The next three
@@ -44,20 +45,20 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Nightly 248's Mac store copy through mac-store.yml's sandbox check and into review in 247's place (request 122); Apple's answer.
-2. Report 60's four sets read on nightlies 243 and 247 (the .338 holes); a real phone's and iPhone's log at request 50's sitting.
+1. Apple's answer on Mac 1.0.248; nightly 249 publishes suggestion 62, then reply 62-2 posts.
+2. Report 60's proposed fix: a large hole over a white backer read from its white middle at the caliber's size, held against the local scans.
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
 ## Blocked, and on what
 
-- **The Mac App Store**: 1.0.247 in review has the crash; request 122 (take it out), then build 248 or later. Request 111 needs build 248 or later.
+- **The Mac App Store**: 1.0.248 waits for App Review (247 withdrawn). Request 111 needs build 248 or later.
 - **Google Play production**: Google's 14 days (about 2 December) and Alan's application.
 - **The iPhone Duo's inner screen**: the Duo leg on Xcode 27.2 (simulator starts folded; IOS-PLAN.md); nothing needed from Alan.
 - **Entry 380 section 3**: measuring the M220 labels waits on request 77's photos in `m220-labels`.
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **29**; waiting on him: 122 (take Mac 1.0.247 out of review, most urgent), 119 (Google's production answers, on or after 2 December), 118 (a Discord post for Android testers), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **29**; waiting on him: 123 (mark the aim on Compare loads' pictures, a, b or c, most urgent), 119 (Google's production answers, on or after 2 December), 118 (a Discord post for Android testers), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

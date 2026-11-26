@@ -292,7 +292,8 @@ internal sealed class LoadGroups : UserControl
     /// <summary>
     /// Entry 465 item 7B, "What the difference means": the two loads' main figures side by side, the shots and then the figures the phone's
     /// chart offers (mean radius, extreme spread and CEP 90), then the comparison's own headline, its sentence on how far apart the spreads
-    /// could be, and how many shots each would take to tell a 10 percent difference apart. Nothing here is worked out afresh.
+    /// could be, where each center is from the aim and how far apart they are (suggestion 62), and how many shots each would take to tell a
+    /// 10 percent difference apart. Nothing here is worked out afresh.
     /// </summary>
     internal static StackPanel Means(LoadComparisonReport report, Func<double, string> size)
     {
@@ -345,7 +346,8 @@ internal sealed class LoadGroups : UserControl
 
         panel.Children.Add(table);
         panel.Children.Add(new TextBlock { Text = report.Headline, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Warn } });
-        foreach (string? line in new[] { report.Apart, report.ShotsNeeded })
+        // Suggestion 62: where each group sits from the aim and how far apart the centers are, before the shots needed.
+        foreach (string? line in new[] { report.Apart }.Concat(report.Centres).Concat([report.Shift, report.ShotsNeeded]))
         {
             if (line is { Length: > 0 })
             {

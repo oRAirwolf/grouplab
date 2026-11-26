@@ -3,6 +3,14 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 122. Take Mac 1.0.247 out of Apple's review: one yes, whenever suits (request 121)
+
+**Answered 2026-11-26** ("cancel 247", in the session): Code took Mac 1.0.247 out of App Review through App Store Connect's API at 21:53 UTC (testflight.yml run 45908232329, its new withdraw input, request 122's one use); build 247 is never sent again and build 248 goes in by the half-hourly step. **Opened 2026-11-26.** Mac 1.0.247 is waiting for Apple's review and has exactly the fault Apple turned down 1.0 for: it closes the moment it opens, inside the sandbox every App Store copy runs in (request 121, in the archive, says how it was found). Left there, Apple will review it, turn it down again, and only then take the fixed build. Taken out now, the fixed build goes in as soon as Apple has processed it: the first nightly after the fix (248, building now) uploads it, and the half-hourly App Store step submits it by itself. A build you took back is never sent again (the App Store step now treats it like a turned-down one), so it does not matter whether you do this before or after build 248 arrives.
+
+**What is needed, either way:** (a) reply "cancel 247" to the planning session and Code takes it out of review through App Store Connect's API, the one time a review in progress is cancelled; or (b) yourself: App Store Connect, Apps, GroupLab, the **macOS** column, version 1.0.247, then **Remove from Review** (Apple may call it **Cancel Submission**) and confirm. Nothing else to change there.
+
+**A good answer:** "cancel 247" or "done" (you removed it), or "leave it" (Apple reviews 247, turns it down, and 248 follows).
+
 ## 121. Apple turned down GroupLab for Mac: copy Apple's words to the planning session (entry 516 section 2)
 
 **Opened 2026-11-26.** App Store Connect shows the Mac's first App Store version, 1.0 (build 240), sent on 23 November, rejected by

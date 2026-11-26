@@ -531,7 +531,7 @@ shots. The phone makes the same page.
 
 Tick two or more sessions in Session records and press Compare the chosen. They appear side by side on the comparison screen, the rail's chart. Each has its plot and its figures with intervals, and below them are the tests with their verdicts.
 
-With two loads, **Each load's group** keeps the two pictures at their size and fills the rest of the card with **What the difference means**: each load's shots, mean radius, extreme spread and CEP 90 side by side, GroupLab's plain sentence on whether these shots can tell the two apart and how far apart their spreads could be, and how many shots each would take to tell a 10 percent difference apart. It sits beside the pictures where the card is wide enough and under them where it is not, as on a phone held upright. With three or more loads the card shows the pictures alone.
+With two loads, **Each load's group** keeps the two pictures at their size and fills the rest of the card with **What the difference means**: each load's shots, mean radius, extreme spread and CEP 90 side by side, GroupLab's plain sentence on whether these shots can tell the two apart and how far apart their spreads could be, where each load's group sits from your aim (right or left, high or low) and how far apart the two groups' centers are, each with the range it could really be, and how many shots each would take to tell a 10 percent difference apart. It sits beside the pictures where the card is wide enough and under them where it is not, as on a phone held upright. With three or more loads the card shows the pictures alone.
 
 ![Two loads compared](figures/screens/current/compare-light-1400x900.png)
 
@@ -542,9 +542,10 @@ When the intervals overlap, the screen says the data do not separate the loads. 
 ### Sharing a comparison
 
 **Export**, under the line that counts the loads and shots, saves the comparison as a **PDF** or as a **Picture (PNG)** of the same
-page: each load's group at one scale in its color, the figures with their 95 percent intervals, what the difference means, the tests
-and what they could detect, and Top Gun where the rifle's weight is known, with "Made with GroupLab" and grouplab.org small at the
-foot. A picture shows where a PDF does not, such as in a Discord channel; it is always one image, while the PDF of many loads goes on
+page: each load's group at one scale in its color, the figures with their 95 percent intervals, the mean radius and sigma charts with
+the range each could really be (beside the groups where there is room), what the difference means, including where each group sits from
+your aim and how far apart the centers are, the tests and what they could detect, Top Gun where the rifle's weight is known, and the
+shots to resolve a difference as a table, with "Made with GroupLab" and grouplab.org small at the foot. A picture shows where a PDF does not, such as in a Discord channel; it is always one image, while the PDF of many loads goes on
 to a second page. On the phone, the **Export** card at the foot of Compare loads shares the picture or the PDF, or saves the picture
 to the gallery.
 

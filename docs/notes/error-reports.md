@@ -33,8 +33,17 @@ before anything else. The Mac's copy carries no LLVM, so a Mac report that looks
 - **Workaround given in the reply (60-1):** Bulls in, black on a black and white printer; scan at 600 dpi in grayscale; N (not a hole) on
   each false mark. **Status:** fixed in the next nightly; the reply saying so goes in its thread with `post-after` that nightly.
 - **2026-11-26:** the poster sent four three-page sets through the upload page (testing only) and wrote that nightly 247 finds .338
-  holes poorly, with a new report to follow once scoped. Not yet assessed: the sets reach this computer with the nightly's submissions
-  copy, and are then read on nightly 243 and 247 to see whether the dot-pattern rule (b734fb41) drops any large hole. Reply 60-3 said so.
+  holes poorly, with a new report to follow once scoped. Reply 60-3 said they would be run.
+- **Assessed 2026-11-26** (`grouplab analyze`, pages 2 and 3 of each set, the caliber entered; page 1 of one set reads no frame): the two
+  .224 sets, shot over cardboard, give 8, 8, 9 and 9 holes; the two .338 sets, shot over a paper backer, give 0, 2, 3 and 1 of about 10 a
+  page. With the dot-pattern rule switched off the .338 pages give 14 to 23, mostly the bands, so the rule is not the cause: it refused no
+  mark on any page. Each missed .338 hole is a white middle with a scattered ring of torn fibers over the white backer, and it reaches the
+  filters as specks of 0.026 to 0.065 in (too small) or a ring of solidity 0.46. A torn-edge reach of 0.17 in and a closing radius of
+  0.085 in, scaled to the caliber, changed no count. **Cause:** a large-caliber hole over a white backer at 150 dpi; same printer, scan and
+  print as the .224 sets, which read well over cardboard. **Workaround, reply 60-4:** a dark sheet behind the target on the glass, 300 or
+  600 dpi, a missed hole placed by hand. **Proposed fix, not built:** read a hole over a white backer as its white middle at the caliber's
+  size with torn fibers round it (entry 417's rim test asks for a closed rim, which a 150 dpi scan does not give); measured on these pages
+  and held against the local scans before it ships. The user guide's scanning section gains a sentence on a dark backing with it.
 
 ## 57, 2026-11-23, nightly 240 on a Mac (posted in the Discord's bug-reports forum, with screenshots and the three sessions)
 

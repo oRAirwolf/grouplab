@@ -7,7 +7,19 @@ namespace GroupLab.Core.Statistics;
 public sealed record ComparedGroup(string Name, IReadOnlyList<PointD> Offsets, RayleighEstimate Rayleigh, Estimate MeanRadius, double ExtremeSpread, PointD Centre)
 {
     public int Shots => Offsets.Count;
+
+    /// <summary>
+    /// Suggestion 62: the center from the point of aim, right and low positive, each direction with its 95 percent t interval. The offsets
+    /// are each shot's from its own bull, which on a bull sheet is where the shooter aimed.
+    /// </summary>
+    public (Estimate X, Estimate Y) CentreRange { get; init; }
 }
+
+/// <summary>
+/// Suggestion 62: how far the second load's center sits from the first's, right and low positive, each direction with its 95 percent
+/// interval by Welch's t, and the straight distance between them.
+/// </summary>
+public sealed record CentreShift(int First, int Second, Estimate Right, Estimate Low, double Distance);
 
 /// <summary>A dispersion ratio between two of the groups, with its interval, its p-value and, among more than two, Holm's adjustment of it.</summary>
 public sealed record PairedDispersion(int First, int Second, Estimate Ratio, double PValue, double HolmPValue);
@@ -49,6 +61,15 @@ public sealed record LoadComparisonReport(
 
     /// <summary>Entry 465 item 7B: the sentence of <see cref="Plain"/> on how many shots each would take to tell a 10 percent difference apart.</summary>
     public string ShotsNeeded { get; init; } = "";
+
+    /// <summary>Suggestion 62: each pair's shift between centers, the second load from the first.</summary>
+    public IReadOnlyList<CentreShift> Shifts { get; init; } = [];
+
+    /// <summary>Suggestion 62: the sentences of <see cref="Plain"/> on where each load's center is from the aim, one a load.</summary>
+    public IReadOnlyList<string> Centres { get; init; } = [];
+
+    /// <summary>Suggestion 62: with two loads, the sentence of <see cref="Plain"/> on how far apart their centers are; null with three or more.</summary>
+    public string? Shift { get; init; }
 }
 
 public static class LoadComparison
@@ -85,8 +106,19 @@ public static class LoadComparison
         {
             var rayleigh = GroupStatistics.Rayleigh(g.Offsets);
             double spread = GroupGeometry.MaximumPairDistance([.. g.Offsets]) is var (d, _, _) ? d : 0;
-            return new ComparedGroup(g.Name, g.Offsets, rayleigh, rayleigh.MeanRadius, spread, GroupStatistics.Centre(g.Offsets));
+            return new ComparedGroup(g.Name, g.Offsets, rayleigh, rayleigh.MeanRadius, spread, GroupStatistics.Centre(g.Offsets))
+            {
+                CentreRange = GroupStatistics.CentreIntervals(g.Offsets),
+            };
         }).ToList();
+        var shifts = new List<CentreShift>();
+        for (int a = 0; a < compared.Count; a++)
+        {
+            for (int b = a + 1; b < compared.Count; b++)
+            {
+                shifts.Add(ShiftBetween(compared[a], compared[b], a, b));
+            }
+        }
 
         // Pairwise dispersion ratios, with Holm's adjustment when there are more than two groups (STATISTICS.md section 8.4).
         var pairs = new List<(int A, int B, Estimate Ratio, double P)>();
@@ -192,13 +224,91 @@ public static class LoadComparison
             plain.Add("Every pair of loads is compared under Details, and with this many pairs one of them can look different by chance alone.");
         }
 
+        // Suggestion 62: where each load's group sits from the aim, and how far apart the centers are, each direction with its range.
+        var centres = compared.Select(g =>
+            $"{g.Name}'s center is {Side(g.CentreRange.X, "left", "right", length)} and {Side(g.CentreRange.Y, "high", "low", length)} of the aim; it could really be anywhere from {Span(g.CentreRange.X, "left", "right", length)} and {Span(g.CentreRange.Y, "high", "low", length)}.").ToList();
+        plain.AddRange(centres);
+        foreach (var g in compared)
+        {
+            explanation.Add($"{g.Name}'s center from the aim: {Side(g.CentreRange.X, "left", "right", length)}, 95 percent interval {Span(g.CentreRange.X, "left", "right", length)}; {Side(g.CentreRange.Y, "high", "low", length)}, 95 percent interval {Span(g.CentreRange.Y, "high", "low", length)} (Student's t on each direction).");
+        }
+
+        string? shiftSaid = null;
+        foreach (var s in shifts)
+        {
+            string first = compared[s.First].Name, second = compared[s.Second].Name;
+            if (compared.Count == 2)
+            {
+                shiftSaid = $"{second}'s center is {length(s.Distance)} from {first}'s, {Side(s.Right, "left", "right", length)} and {Side(s.Low, "high", "low", length)}; the shift could really be anywhere from {Span(s.Right, "left", "right", length)} and {Span(s.Low, "high", "low", length)}.";
+                plain.Add(shiftSaid);
+            }
+
+            explanation.Add($"{second}'s center from {first}'s: {length(s.Distance)} apart; {Side(s.Right, "left", "right", length)}, 95 percent interval {Span(s.Right, "left", "right", length)}; {Side(s.Low, "high", "low", length)}, 95 percent interval {Span(s.Low, "high", "low", length)} (Welch's t on each direction).");
+        }
+
         string have = compared.Count == 2 ? $"{compared[0].Shots} and {compared[1].Shots}" : string.Join(", ", compared.Select(g => g.Shots));
         string shotsNeeded = $"To tell a 10 percent difference in spread apart would take about {SampleSize.ShotsPerLoad(1.10)} shots each; these groups have {have}.";
         plain.Add(shotsNeeded);
         explanation.Add($"To resolve a difference of 10 percent, with 80 percent power at the 5 percent level, takes {SampleSize.ShotsPerLoad(1.10)} shots per load. These groups have {string.Join(", ", compared.Select(g => g.Shots))}.");
         var resolve = new[] { 1.10, 1.25, 1.50 }.Select(k => new ResolveRow(k, SampleSize.ShotsPerLoad(k))).ToList();
         var details = explanation.Skip(said).ToList();
-        return new LoadComparisonReport(compared, tests, paired, overlap, headline, explanation, resolve) { Plain = plain, Details = details, Apart = apart, ShotsNeeded = shotsNeeded };
+        return new LoadComparisonReport(compared, tests, paired, overlap, headline, explanation, resolve)
+        {
+            Plain = plain,
+            Details = details,
+            Apart = apart,
+            ShotsNeeded = shotsNeeded,
+            Shifts = shifts,
+            Centres = centres,
+            Shift = shiftSaid,
+        };
+    }
+
+    /// <summary>
+    /// Suggestion 62: the second group's center from the first's, each direction by Welch's t, which does not assume the two spread alike.
+    /// </summary>
+    internal static CentreShift ShiftBetween(ComparedGroup first, ComparedGroup second, int a, int b, double level = 0.95)
+    {
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        var (ax, _, ay) = GroupStatistics.Covariance(first.Offsets);
+        var (bx, _, by) = GroupStatistics.Covariance(second.Offsets);
+        int n = first.Shots, m = second.Shots;
+        Estimate Axis(double difference, double va, double vb)
+        {
+            double qa = va / n, qb = vb / m, se = Math.Sqrt(qa + qb);
+            if (se <= 0)
+            {
+                return new Estimate(difference, difference, difference);
+            }
+
+            double df = (qa + qb) * (qa + qb) / ((qa * qa / (n - 1)) + (qb * qb / (m - 1)));
+            double half = Distributions.StudentTQuantile(1 - ((1 - level) / 2), df) * se;
+            return new Estimate(difference, difference - half, difference + half);
+        }
+
+        double dx = second.Centre.X - first.Centre.X, dy = second.Centre.Y - first.Centre.Y;
+        return new CentreShift(a, b, Axis(dx, ax, bx), Axis(dy, ay, by), Math.Sqrt((dx * dx) + (dy * dy)));
+    }
+
+    /// <summary>Suggestion 62: a distance along one direction with its side, such as "0.12 in right".</summary>
+    internal static string Side(Estimate e, string negative, string positive, Func<double, string> length) =>
+        $"{length(Math.Abs(e.Value))} {(e.Value < 0 ? negative : positive)}";
+
+    /// <summary>
+    /// Suggestion 62: a range along one direction, such as "0.02 in to 0.26 in right" where it lies on one side, or "0.10 in left to 0.20 in
+    /// right" where it crosses the aim.
+    /// </summary>
+    internal static string Span(Estimate e, string negative, string positive, Func<double, string> length)
+    {
+        if (e.Lower >= 0)
+        {
+            return $"{length(e.Lower)} to {length(e.Upper)} {positive}";
+        }
+
+        return e.Upper <= 0
+            ? $"{length(-e.Upper)} to {length(-e.Lower)} {negative}"
+            : $"{length(-e.Lower)} {negative} to {length(e.Upper)} {positive}";
     }
 
     /// <summary>

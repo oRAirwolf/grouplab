@@ -29,6 +29,12 @@ before ending a turn, and at least hourly while waiting on CI) and writes each n
 - **Fits:** yes; a load workup asks where a load prints as well as how tight it is, and the export should not say less than the screen.
 - **Recommendation:** yes to the numbers (center from aim, shift with its interval), the export's interval chart and a shots table;
   the aim marked only as Alan chooses (a stacked view about the aim is the smallest change). Reply 62-1 said it is written up, no answer yet.
+- **Answered: yes, as recommended** (Alan, 2026-11-26, in the session). **Built the same day:** each load's center from the aim, right
+  or left and high or low, with its range (Student's t on each direction), and with two loads how far apart the centers are, with the
+  shift's range (Welch's t on each direction), in What the difference means on the screen and on the exported page; the export also
+  draws the mean radius and sigma charts with their ranges (beside the groups where there is room) and gives the shots to resolve a
+  difference as a table. Every pair's shift is under Details for three loads or more. **Not built:** an X for the aim on the pictures,
+  or the groups drawn about the aim, which changes Alan's chosen look; request 123 asks him. Reply 62-2 says so, `post-after` nightly 249.
 
 ## Issue 61, 2026-11-24: export Compare loads as a PDF or picture, with GroupLab on it
 

@@ -16,6 +16,12 @@ public sealed record ExportedLoad(string Name, string Detail, string? Speed);
 public sealed record ComparisonRow(string Load, string Shots, string Sigma, string SigmaInterval, string MeanRadius, string MeanRadiusInterval, string ExtremeSpread);
 
 /// <summary>
+/// Suggestion 62: one of the screen's interval charts as the export draws it: each load's figure with the range it could really be, on one
+/// axis from <paramref name="Low"/> to <paramref name="High"/> inches, the axis's ends in words, and the comparison's own sentence beneath.
+/// </summary>
+public sealed record ComparisonChart(string Title, IReadOnlyList<Estimate> Rows, double Low, double High, string LowWords, string HighWords, string Says);
+
+/// <summary>
 /// Everything the exported Compare loads page carries, suggestion 61 (Discord, Alan's yes on 2026-11-24): the groups side by side at one
 /// scale, each load's figures with their intervals, what the difference means, the tests and what they could detect, and a modest footer
 /// naming GroupLab and grouplab.org. Every word comes from <see cref="ComparisonPages.For"/>, so the computer and the phone make the same page.
@@ -31,7 +37,11 @@ public sealed record ComparisonPage(
     double HalfWidthInches,
     double GridInches,
     IReadOnlyList<string> TopGun,
-    string Footer);
+    string Footer)
+{
+    /// <summary>Suggestion 62: the screen's interval charts, mean radius and sigma, drawn on the page.</summary>
+    public IReadOnlyList<ComparisonChart> Charts { get; init; } = [];
+}
 
 /// <summary>
 /// Lays the comparison out through GroupLab's own <see cref="PdfWriter"/>, as the one-page report is laid out, and draws the same layout as a
@@ -90,9 +100,26 @@ public static class ComparisonPages
         double reach = report.Groups.SelectMany(g => g.Offsets.Select(o => Math.Sqrt(Math.Pow(o.X - g.Centre.X, 2) + Math.Pow(o.Y - g.Centre.Y, 2))))
             .Concat(report.Groups.Select(g => g.MeanRadius.Value)).Concat([0.1]).Max() * 1.15;
         var (half, step, words) = OnePageReports.Grid(reach, units);
+
+        // Suggestion 62: the same two charts as the screen, in the same order, each on its own axis with a little room either side.
+        ComparisonChart Chart(string title, IReadOnlyList<Estimate> ranges)
+        {
+            double low = ranges.Min(e => e.Lower), high = ranges.Max(e => e.Upper), pad = Math.Max(1e-6, (high - low) * 0.08);
+            low = Math.Max(0, low - pad);
+            high += pad;
+            return new ComparisonChart(title + ", the range each could be", ranges, low, high, units.Length(low), units.Length(high),
+                LoadComparison.ChartSays(report, title, hasRange: true));
+        }
+
+        var charts = new[]
+        {
+            Chart("Mean radius", [.. report.Groups.Select(g => g.MeanRadius)]),
+            Chart("Sigma", [.. report.Groups.Select(g => g.Rayleigh.Sigma)]),
+        };
         return new ComparisonPage(date, paper, report, loads, summary, rows,
             $"Each load's shots about their own center, all at one scale; grid squares {words}.", half, step, topGun,
-            $"Made with GroupLab {version}, {Branding}");
+            $"Made with GroupLab {version}, {Branding}")
+        { Charts = charts };
     }
 
     /// <summary>
@@ -242,9 +269,38 @@ public static class ComparisonPages
         var details = Enumerable.Range(0, n).Select(i => ReportWriter.Wrap(
             page.Loads[i].Detail + (page.Loads[i].Speed is { } speed ? "; " + speed : ""), Pt(7.5), cell)).ToList();
         long under = names.Max(l => l.Count) * Leading(Pt(9.5)) + (details.Max(l => l.Count) * Leading(Pt(7.5)));
+
+        // Suggestion 62: the interval charts sit in the room the pictures leave on the right where it is wide and tall enough, and under
+        // the figures otherwise.
+        long besideLeft = margin + (n * (cell + gap)) + (gap / 2);
+        long chartsTall = page.Charts.Sum(c => ChartHeight(c));
+        bool beside = page.Charts.Count > 0 && right - besideLeft >= 5 * Inch / 2 && chartsTall <= cell + under;
+        var said = page.Charts.Select(c => c.Says).Distinct().ToList();
+        var saidBeside = said.SelectMany(w => ReportWriter.Wrap(w, Pt(7.5), right - besideLeft)).ToList();
+        bool saysBeside = beside && chartsTall + Pt(3) + (saidBeside.Count * Leading(Pt(7.5))) <= cell + under;
         blocks.Add(new Block(Pt(10) + cell + Pt(4) + under, (items, top) =>
         {
             long squareTop = top + Pt(10);
+            if (beside)
+            {
+                long y = squareTop - Pt(10);
+                foreach (var chart in page.Charts)
+                {
+                    DrawChart(items, page, chart, besideLeft, right, y);
+                    y += ChartHeight(chart);
+                }
+
+                if (saysBeside)
+                {
+                    y += Pt(3);
+                    foreach (string line in saidBeside)
+                    {
+                        y += Leading(Pt(7.5));
+                        items.Add(new TextRun(SceneLayer.Labels, Grey, besideLeft, y - (Pt(7.5) / 4), Pt(7.5), line, TextAnchor.Left));
+                    }
+                }
+            }
+
             for (int i = 0; i < n; i++)
             {
                 long left = margin + (i * (cell + gap));
@@ -311,6 +367,21 @@ public static class ComparisonPages
             }
         }));
 
+        // Suggestion 62: the interval charts, as the screen draws them, under the figures where they did not fit beside the pictures; what
+        // they say once where every chart says the same.
+        if (!beside)
+        {
+            foreach (var chart in page.Charts)
+            {
+                blocks.Add(new Block(ChartHeight(chart), (items, top) => DrawChart(items, page, chart, margin, right, top)));
+            }
+        }
+
+        foreach (string says in saysBeside ? [] : said)
+        {
+            blocks.Add(Words(says, Pt(7.5), Grey, before: Pt(3)));
+        }
+
         // What the difference means: the comparison's own verdict, which never ranks by the point estimates.
         blocks.Add(Heading("What the difference means"));
         blocks.Add(Words(report.Headline, Pt(10), Ink, bold: true));
@@ -351,13 +422,78 @@ public static class ComparisonPages
 
         if (report.Resolve.Count > 0)
         {
+            // Suggestion 62: a table, as the screen lists it, rather than a sentence.
             blocks.Add(Heading("Shots to resolve a difference"));
-            blocks.Add(Words(string.Join("; ", report.Resolve.Select(r => string.Create(CultureInfo.InvariantCulture,
-                $"{100 * (r.Ratio - 1):0} percent: {r.ShotsPerLoad} shots per load"))) + ". With 80 percent power at the 5 percent level, by the F test on the Rayleigh sigmas.",
-                Pt(8), Ink, before: Pt(2)));
+            long cellSize = Pt(8.5), tableRow = Leading(cellSize) + Pt(2);
+            long[] at = [margin + Pt(4), margin + (width * 35 / 100), margin + (width * 62 / 100)];
+            string[] titles = ["Difference in spread", "Shots per load", "Rounds in all"];
+            blocks.Add(new Block(Leading(Pt(7.5)) + Pt(4) + (tableRow * report.Resolve.Count), (items, top) =>
+            {
+                long y = top + Leading(Pt(7.5));
+                for (int c = 0; c < titles.Length; c++)
+                {
+                    items.Add(new TextRun(SceneLayer.Labels, Grey, at[c], y, Pt(7.5), titles[c], TextAnchor.Left));
+                }
+
+                y += Pt(4);
+                for (int r = 0; r < report.Resolve.Count; r++)
+                {
+                    var row = report.Resolve[r];
+                    if (r % 2 == 0)
+                    {
+                        items.Add(new RectFill(SceneLayer.Cells, Shade, margin, y, width, tableRow));
+                    }
+
+                    long baseline = y + Pt(2) + Leading(cellSize) - (cellSize / 4);
+                    string[] cells =
+                    [
+                        string.Create(CultureInfo.InvariantCulture, $"{100 * (row.Ratio - 1):0} percent"),
+                        row.ShotsPerLoad.ToString(CultureInfo.InvariantCulture),
+                        (row.ShotsPerLoad * n).ToString(CultureInfo.InvariantCulture),
+                    ];
+                    for (int c = 0; c < cells.Length; c++)
+                    {
+                        items.Add(new TextRun(SceneLayer.Labels, Ink, at[c], baseline, cellSize, cells[c], TextAnchor.Left));
+                    }
+
+                    y += tableRow;
+                }
+            }));
+            blocks.Add(Words("With 80 percent power at the 5 percent level, by the F test on the Rayleigh sigmas.", Pt(7.5), Grey, before: Pt(2)));
         }
 
         return blocks;
+    }
+
+    /// <summary>Suggestion 62: how tall one interval chart is drawn: its title, a row a load and the axis with its ends in words.</summary>
+    private static long ChartHeight(ComparisonChart chart) => Pt(6) + Leading(Pt(9)) + (Pt(14) * chart.Rows.Count) + Pt(3) + Leading(Pt(7));
+
+    /// <summary>
+    /// Suggestion 62: one interval chart between <paramref name="left"/> and <paramref name="right"/>: its title, then a load a row, its
+    /// name in its color, its range a bar and its figure a dot, on one axis whose ends are given in words.
+    /// </summary>
+    private static void DrawChart(List<SceneItem> items, ComparisonPage page, ComparisonChart chart, long left, long right, long top)
+    {
+        long y = top + Pt(6) + Leading(Pt(9));
+        items.Add(new TextRun(SceneLayer.Labels, Ink, left, y - (Pt(9) / 4), Pt(9), Fit(chart.Title, Pt(9), right - left), TextAnchor.Left, Bold: true));
+        long line = Pt(14), plotLeft = left + ((right - left) * 30 / 100), plotRight = right - Pt(4);
+        double per = (plotRight - plotLeft) / Math.Max(1e-9, chart.High - chart.Low);
+        long X(double inches) => plotLeft + (long)Math.Round((inches - chart.Low) * per);
+        for (int r = 0; r < chart.Rows.Count; r++)
+        {
+            var e = chart.Rows[r];
+            long middle = y + (r * line) + (line / 2);
+            items.Add(new TextRun(SceneLayer.Labels, LoadInk(r), left + Pt(4), middle + (Pt(8) / 3), Pt(8),
+                Fit(page.Loads[r].Name, Pt(8), plotLeft - left - Pt(10)), TextAnchor.Left, Bold: true));
+            items.Add(new RectFill(SceneLayer.Labels, LoadInk(r), X(e.Lower), middle - 6, Math.Max(6, X(e.Upper) - X(e.Lower)), 12));
+            items.Add(new DiscBand(SceneLayer.Labels, LoadInk(r), X(e.Value), middle, 26, 0));
+        }
+
+        long axis = y + (line * chart.Rows.Count) + Pt(1);
+        items.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, plotLeft, axis, plotRight - plotLeft, 3));
+        long words = axis + Leading(Pt(7));
+        items.Add(new TextRun(SceneLayer.Labels, Grey, plotLeft, words, Pt(7), ReportWriter.Plain(chart.LowWords), TextAnchor.Left));
+        items.Add(new TextRun(SceneLayer.Labels, Grey, plotRight, words, Pt(7), ReportWriter.Plain(chart.HighWords), TextAnchor.Right));
     }
 
     /// <summary>A cell's words, cut with an ellipsis where they are wider than the column.</summary>

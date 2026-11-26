@@ -182,4 +182,50 @@ public class LoadComparisonTests
         Assert.Null(three.Apart);
         Assert.Contains(three.ShotsNeeded, three.Plain);
     }
+
+    /// <summary>
+    /// Suggestion 62 (Discord, Alan's yes on 2026-11-26): where each load's center sits from the aim and how far apart two loads' centers
+    /// are, each direction with its range, in plain words first and with the intervals and their tests behind Details.
+    /// </summary>
+    [Fact]
+    public void EachCenterFromTheAimAndTheShiftBetweenTwoLoadsAreSaidWithTheirRanges()
+    {
+        Assert.Equal("0.100 in left to 0.200 in right", LoadComparison.Span(new Estimate(0.05, -0.1, 0.2), "left", "right", Inches));
+        Assert.Equal("0.100 in to 0.300 in high", LoadComparison.Span(new Estimate(-0.2, -0.3, -0.1), "high", "low", Inches));
+        Assert.Equal("0.020 in to 0.260 in right", LoadComparison.Span(new Estimate(0.12, 0.02, 0.26), "left", "right", Inches));
+        Assert.Equal("0.200 in high", LoadComparison.Side(new Estimate(-0.2, -0.3, -0.1), "high", "low", Inches));
+
+        // Welch's t by hand: x of 0, 1, 2 against 1, 2, 3 (variance 1 each, n 3 each) is a shift of 1, standard error sqrt(2/3), 4 degrees
+        // of freedom, t 2.7764, so 1 plus or minus 2.2669.
+        var a = LoadComparison.Compare([("a", [new(0, 0), new(1, 1), new(2, 2)]), ("b", [new(1, 0), new(2, 1), new(3, 2)])], Inches);
+        var hand = Assert.Single(a.Shifts);
+        Assert.Equal(1, hand.Right.Value, 9);
+        Assert.Equal(1 - 2.2669, hand.Right.Lower, 3);
+        Assert.Equal(1 + 2.2669, hand.Right.Upper, 3);
+        Assert.Equal(0, hand.Low.Value, 9);
+        Assert.Equal(1, hand.Distance, 9);
+
+        var report = LoadComparison.Compare([("wide", Group(3, 30, 0.1)), ("moved", Group(4, 30, 0.1, dx: 0.4))], Inches);
+        var shift = Assert.Single(report.Shifts);
+        Assert.InRange(shift.Right.Value, 0.3, 0.5);
+        Assert.True(shift.Right.Lower > 0, "a 0.4 in shift with 30 shots a load is seen");
+        Assert.True(shift.Low.Lower < 0 && shift.Low.Upper > 0, "no shift up or down");
+        Assert.Equal(2, report.Centres.Count);
+        Assert.StartsWith("moved's center is ", report.Centres[1], StringComparison.Ordinal);
+        Assert.Contains(" right and ", report.Centres[1], StringComparison.Ordinal);
+        Assert.All(report.Centres, c => Assert.Contains(c, report.Plain));
+        Assert.NotNull(report.Shift);
+        Assert.StartsWith("moved's center is " + Inches(shift.Distance) + " from wide's, ", report.Shift!, StringComparison.Ordinal);
+        Assert.Contains(report.Shift!, report.Plain);
+        Assert.Equal(report.ShotsNeeded, report.Plain[^1]);
+        Assert.Contains(report.Details, d => d.Contains("Welch's t", StringComparison.Ordinal) && d.Contains("95 percent interval", StringComparison.Ordinal));
+        Assert.Contains(report.Details, d => d.StartsWith("wide's center from the aim: ", StringComparison.Ordinal));
+        Assert.Equal(report.Groups[1].CentreRange.X.Value, report.Groups[1].Centre.X, 12);
+
+        var three = LoadComparison.Compare([("a", Group(5, 8, 0.1)), ("b", Group(6, 8, 0.1)), ("c", Group(7, 8, 0.1))], Inches);
+        Assert.Null(three.Shift);
+        Assert.Equal(3, three.Shifts.Count);
+        Assert.Equal(3, three.Centres.Count);
+        Assert.Equal(3, three.Details.Count(d => d.Contains("Welch's t", StringComparison.Ordinal)));
+    }
 }
