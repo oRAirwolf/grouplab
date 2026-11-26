@@ -10,13 +10,12 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
-## The App Store version, 2026-11-26 23:01 UTC
+## The App Store version, 2026-11-26 23:17 UTC
 
-- App Store version 1.0.248 (build 248): in review.
+- App Store version 1.0.248 (build 248): released on the App Store.
 - The App Store page: https://apps.apple.com/app/id6817635137
-- On the App Store now: version 1.0.247; TestFlight stays the way in.
-- App Store, iPhone and iPad: version 1.0.248 (build 248) is in review.
-- App Store, Mac: version 1.0.247 (build 247) is waiting for review; build 248 waits until the review ends.
+- App Store, iPhone and iPad: nothing newer to submit; on the App Store: version 1.0.248.
+- App Store, Mac: build 248 submitted for App Review as version 1.0.248, released by itself once approved.
 <!-- /status:app-store -->
 
 <!-- status:store -->
