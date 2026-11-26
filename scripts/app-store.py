@@ -8,7 +8,8 @@ can be run again at any time without doing anything twice:
 
 1. A version Apple approved and holds for release (PENDING_DEVELOPER_RELEASE) is released.
 2. While a version is waiting for review, in review or being released, nothing is submitted on that platform: the newer build waits, and
-   the newest waiting build goes in once the review ends. A review in progress is never cancelled.
+   the newest waiting build goes in once the review ends. A review in progress is never cancelled by a step; only --withdraw, run by
+   hand on Alan's word for one version he names (request 122), takes one out.
 3. Otherwise the newest build Apple has processed, from a nightly whose release notes are published (a nightly whose checks fail never
    publishes them), newer than the one live and than any turned down, is put on an App Store version, released automatically once
    approved: the version being prepared or turned down is reused, or a new one is made, named by the build's own version (1.0.N).
@@ -25,6 +26,8 @@ STORE_SUBMISSIONS_PAUSED (a repository variable set to true, or a file of that n
 
     python3 scripts/app-store.py --run [--dry-run]   one step for each platform; --dry-run reads only and says what it would do
     python3 scripts/app-store.py --inspect           what App Store Connect holds for each platform, read only, no words of the listing
+    python3 scripts/app-store.py --withdraw Mac 1.0.247   Alan's word only: take that one version out of App Review; its build is never
+                                                     sent again and the next newer one goes in by the next --run (request 122)
     python3 scripts/app-store.py --self-test         every case against a made-up App Store Connect, no network
 
 The key is the one the nightly uploads with: APPLE_API_ISSUER_ID, APPLE_API_KEY_ID, APPLE_API_KEY_P8. No key, email, phone number or
@@ -107,6 +110,7 @@ class Connect:
     def no_encryption(self, build: str) -> None: raise NotImplementedError
     def submit(self, app: str, platform: str, version: str) -> None: raise NotImplementedError
     def submissions(self, app: str, platform: str) -> list[str]: return []
+    def cancel_review(self, app: str, platform: str, version: str) -> bool: raise NotImplementedError
     def release(self, version: str) -> None: raise NotImplementedError
 
 
@@ -186,6 +190,30 @@ def step(store: Connect, platform: str, notes: str, dry_run: bool = False) -> tu
     alan = turned + f"build {build.number} was submitted in its place." if turned else None
     return ([f"{name}: build {build.number} submitted for App Review as version {build.version}, released by itself once approved."]
             + ([alan] if alan else [])), alan
+
+
+WORDS = {"mac": "MAC_OS", "macos": "MAC_OS", "mac_os": "MAC_OS", "iphone": "IOS", "ipad": "IOS", "ios": "IOS"}
+
+
+def withdraw(store: Connect, said: str, number: str) -> tuple[list[str], bool]:
+    """Request 122: one version, named by Alan, taken out of App Review. Returns the lines and whether it was taken out.
+
+    Only the exact version number on the platform named, and only while it waits for or is in review; anything else changes nothing."""
+    platform = WORDS.get(said.strip().lower())
+    if platform is None or not re.fullmatch(r"\d+\.\d+(\.\d+)?", number.strip()):
+        return [f"App Store: '{said} {number}' names no platform and version (say 'Mac 1.0.247' or 'iPhone 1.0.250'); nothing was changed."], False
+    name = f"App Store, {PLATFORMS[platform]}"
+    app = store.app(BUNDLE_ID)
+    version = next((v for v in store.versions(app, platform) if v.number == number.strip()), None) if app else None
+    if version is None:
+        return [f"{name}: there is no version {number}; nothing was changed."], False
+    if version.state not in {"WAITING_FOR_REVIEW", "IN_REVIEW"}:
+        return [f"{name}: version {number} (build {version.build}) is {VERSION_WORDS.get(version.state, version.state.lower())}, not in "
+                "review, so nothing was taken out."], False
+    if not store.cancel_review(app, platform, version.id):
+        return [f"{name}: no review submission holding version {number} was found; nothing was changed."], False
+    return [f"{name}: version {number} (build {version.build}) was taken out of App Review on Alan's word (request 122); its build is "
+            "not sent again, and the next newer build goes in by the next run."], True
 
 
 def complete(store: Connect, app: str, platform: str, version: str, build: Build, notes: str, first: bool) -> list[str]:
@@ -363,6 +391,17 @@ class Apple(testflight.Apple, Connect):
             said.append(f"{a.get('state', '?')} {(a.get('submittedDate') or '')[:10] or 'not submitted'}: {', '.join(items) or 'no items'}")
         return said
 
+    def cancel_review(self, app, platform, version):
+        """Request 122: the review submission holding this version, while Apple has it, is cancelled. Nothing else is touched."""
+        for s in self.call("GET", f"/v1/reviewSubmissions?filter[app]={app}&filter[platform]={platform}"
+                                  "&filter[state]=WAITING_FOR_REVIEW,IN_REVIEW&limit=10").get("data", []):
+            items = self.call("GET", f"/v1/reviewSubmissions/{s['id']}/items?include=appStoreVersion&limit=50").get("data", [])
+            if any((((i.get("relationships") or {}).get("appStoreVersion") or {}).get("data") or {}).get("id") == version for i in items):
+                self.call("PATCH", f"/v1/reviewSubmissions/{s['id']}",
+                          {"data": {"type": "reviewSubmissions", "id": s["id"], "attributes": {"canceled": True}}})
+                return True
+        return False
+
     def submit(self, app, platform, version):
         open_ = self.call("GET", f"/v1/reviewSubmissions?filter[app]={app}&filter[platform]={platform}"
                                  "&filter[state]=READY_FOR_REVIEW,UNRESOLVED_ISSUES&limit=10").get("data", [])
@@ -466,6 +505,11 @@ class Pretend(Connect):
         self.find(version).state = "PROCESSING_FOR_DISTRIBUTION"
         self.released.append(version)
 
+    def cancel_review(self, app, platform, version):
+        self.writes += 1
+        self.find(version).state = "DEVELOPER_REJECTED"
+        return True
+
 
 def self_test() -> int:
     failures: list[str] = []
@@ -546,6 +590,17 @@ def self_test() -> int:
     notes5 = "## 1.0.0-nightly.247\n\n**What you will notice**\n\n- Fixed.\n\n" + notes4
     lines, _ = step(p, "IOS", notes5)
     expect("the next build replaces a withdrawn one", newer.build == 247 and newer.state == "WAITING_FOR_REVIEW", lines)
+    # Request 122: Alan's named version taken out of review; nothing else is, and the next build goes in its place.
+    lines, done = withdraw(p, "iPhone", "1.0.246")
+    expect("a version not in review is not taken out", not done and newer.state == "WAITING_FOR_REVIEW", lines)
+    lines, done = withdraw(p, "Pear", "1.0.247")
+    expect("an unknown platform changes nothing", not done and newer.state == "WAITING_FOR_REVIEW", lines)
+    lines, done = withdraw(p, "iPhone", "1.0.247")
+    expect("the named version in review is taken out", done and newer.state == "DEVELOPER_REJECTED", lines)
+    p.builds_["IOS"].insert(0, Build("b248", 248, "1.0.248", "VALID"))
+    notes6 = "## 1.0.0-nightly.248\n\n**What you will notice**\n\n- Fixed.\n\n" + notes5
+    lines, _ = step(p, "IOS", notes6)
+    expect("after a withdrawal the newer build goes in", newer.build == 248 and newer.state == "WAITING_FOR_REVIEW", lines)
     # The Mac's first version: the listing from the iPhone's, its own description and screenshots, no What's New.
     p = world()
     lines, alan = step(p, "MAC_OS", notes)
@@ -604,7 +659,7 @@ def store_from_env() -> Apple | None:
 def main(argv: list[str]) -> int:
     if argv[1:2] == ["--self-test"]:
         return self_test()
-    if argv[1:2] not in (["--run"], ["--inspect"]):
+    if argv[1:2] not in (["--run"], ["--inspect"], ["--withdraw"]) or (argv[1:2] == ["--withdraw"] and len(argv) != 4):
         print(__doc__)
         return 2
     notes = NOTES.read_text(encoding="utf-8") if NOTES.is_file() else ""
@@ -612,6 +667,14 @@ def main(argv: list[str]) -> int:
     store = store_from_env()
     if store is None:
         lines = ["App Store: the App Store Connect key is not set, so nothing was read or submitted."]
+    elif argv[1] == "--withdraw":
+        try:
+            lines, done = withdraw(store, argv[2], argv[3])
+        except Refused as said:
+            lines, done = [f"App Store: App Store Connect refused taking {argv[2]} {argv[3]} out of review ({said})."], False
+        for line in lines:
+            print(line)
+        return 0 if done else 1
     elif argv[1] == "--inspect":
         try:
             lines = inspect(store, notes)
@@ -638,7 +701,7 @@ def main(argv: list[str]) -> int:
         print(line)
     for alan in alans:
         print(f"::warning::{alan}")
-    return 0
+    return 1 if argv[1] == "--withdraw" else 0
 
 
 if __name__ == "__main__":

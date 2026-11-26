@@ -78,14 +78,24 @@ public class TestFlightTests
         }
 
         string workflow = File.ReadAllText(Repo.PathTo(".github", "workflows", "testflight.yml")).ReplaceLineEndings("\n");
-        int submit = workflow.IndexOf("python scripts/app-store.py", StringComparison.Ordinal);
+        int submit = workflow.IndexOf("python scripts/app-store.py ${{ inputs.inspect", StringComparison.Ordinal);
         Assert.True(submit > workflow.IndexOf("python scripts/testflight.py --run", StringComparison.Ordinal));
         string step = workflow[workflow.LastIndexOf("- name:", submit, StringComparison.Ordinal)..submit];
         Assert.Contains("continue-on-error: true", step, StringComparison.Ordinal);
         Assert.Contains("STORE_SUBMISSIONS_PAUSED: ${{ vars.STORE_SUBMISSIONS_PAUSED }}", step, StringComparison.Ordinal);
         string script = File.ReadAllText(Repo.PathTo("scripts", "app-store.py"));
         Assert.DoesNotContain("appStoreVersionSubmissions\", {\"data\": {\"type\": \"appStoreVersionSubmissions\"", script, StringComparison.Ordinal);
-        Assert.DoesNotContain("\"DELETE\"", script, StringComparison.Ordinal);   // nothing here ever cancels or removes a review
+        Assert.DoesNotContain("\"DELETE\"", script, StringComparison.Ordinal);   // nothing here ever removes a review
+
+        // Request 122: a review is taken out only by the step run by hand with a version named, before the submissions, failing when it
+        // took out nothing; the half-hourly step never cancels one.
+        int withdraw = workflow.IndexOf("python scripts/app-store.py --withdraw", StringComparison.Ordinal);
+        Assert.True(withdraw > 0 && withdraw < submit);
+        string named = workflow[workflow.LastIndexOf("- name:", withdraw, StringComparison.Ordinal)..withdraw];
+        Assert.Contains("if: github.event_name == 'workflow_dispatch' && inputs.withdraw != ''", named, StringComparison.Ordinal);
+        Assert.DoesNotContain("continue-on-error", named, StringComparison.Ordinal);
+        // Two cancels and no more: a submission Apple already answered (entry 516) and the one Alan names (request 122).
+        Assert.Equal(2, script.Split("\"canceled\": True").Length - 1);
     }
 
     [Fact]

@@ -20,6 +20,10 @@ on:
         description: "Alan's word only: release this approved App Store version and build, as '1.0 226'. Empty releases nothing."
         required: false
         default: ""
+      withdraw:
+        description: "Alan's word only: take this one App Store version out of App Review, as 'Mac 1.0.247' (request 122). Empty takes nothing out."
+        required: false
+        default: ""
       inspect:
         description: "Only read what App Store Connect holds for iPhone, iPad and Mac (entry 513); submit nothing"
         type: boolean
@@ -59,6 +63,18 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
         run: python scripts/testflight.py --run --wait-minutes ${{ github.event_name == 'workflow_run' && '30' || '0' }} | tee state-lines.txt
+
+      # Request 122, Alan, 2026-11-26 ("cancel 247"): the one step that takes a version out of App Review. It runs only when the withdraw
+      # input is filled in by hand, takes out only that version on that platform while Apple has it, and fails the run when it took out
+      # nothing. The build taken out is never sent again; the next step submits the newer one in its place.
+      - name: Take the named version out of App Review
+        if: github.event_name == 'workflow_dispatch' && inputs.withdraw != ''
+        env:
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          WITHDRAW: ${{ inputs.withdraw }}
+        run: python scripts/app-store.py --withdraw $WITHDRAW | tee withdraw-lines.txt; exit ${PIPESTATUS[0]}
 
       # Entry 513: every new build to App Review for iPhone and iPad and for the Mac, released by itself once approved, one review at a time
       # on each platform, never cancelling one (scripts/app-store.py). The repository variable or file STORE_SUBMISSIONS_PAUSED stops it.
