@@ -32,6 +32,9 @@ before anything else. The Mac's copy carries no LLVM, so a Mac report that looks
   not come through the upload page; they are measured when they do.
 - **Workaround given in the reply (60-1):** Bulls in, black on a black and white printer; scan at 600 dpi in grayscale; N (not a hole) on
   each false mark. **Status:** fixed in the next nightly; the reply saying so goes in its thread with `post-after` that nightly.
+- **2026-11-26:** the poster sent four three-page sets through the upload page (testing only) and wrote that nightly 247 finds .338
+  holes poorly, with a new report to follow once scoped. Not yet assessed: the sets reach this computer with the nightly's submissions
+  copy, and are then read on nightly 243 and 247 to see whether the dot-pattern rule (b734fb41) drops any large hole. Reply 60-3 said so.
 
 ## 57, 2026-11-23, nightly 240 on a Mac (posted in the Discord's bug-reports forum, with screenshots and the three sessions)
 

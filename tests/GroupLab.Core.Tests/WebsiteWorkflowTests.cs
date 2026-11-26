@@ -76,15 +76,16 @@ public partial class WebsiteWorkflowTests
     }
 
     /// <summary>
-    /// Nothing else may start it, which is the other half of the same rule, with four exceptions, each a job that pushes content the site
+    /// Nothing else may start it, which is the other half of the same rule, with five exceptions, each a job that pushes content the site
     /// is built from with its own token, which starts no workflow, so the paths filter never sees it: entry 459 section 7, the nightly's
     /// notes and README; entry 476 finding 1, the Store's version on /download/ and the phone's screenshots; entry 479 section 7, the
-    /// weekly screenshots. Each dispatches it once, after its push, and still through the same group, so a burst still publishes once.
+    /// weekly screenshots; entry 516 section 1, the App Store's version on /download/. Each dispatches it once, after its push, and still
+    /// through the same group, so a burst still publishes once.
     /// </summary>
     [Fact]
     public void NoOtherWorkflowStartsTheWebsiteWorkflow()
     {
-        string[] allowed = ["nightly.yml", "screenshots.yml", "android-emulator.yml", "store-status.yml"];
+        string[] allowed = ["nightly.yml", "screenshots.yml", "android-emulator.yml", "store-status.yml", "testflight.yml"];
         var found = new List<string>();
         foreach (string file in OtherWorkflows())
         {
@@ -100,6 +101,22 @@ public partial class WebsiteWorkflowTests
         Assert.True(found.Count(f => !Allowed(f)) == 0 && found.GroupBy(f => f).All(g => g.Count() <= 1),
             "only a person, a change to its content, and the four jobs that push its content with their own token may publish the website: "
             + string.Join(", ", found));
+    }
+
+    /// <summary>
+    /// Entry 516 section 1: /download/ quotes both stores' versions from docs/notes/external-status.md, which neither status workflow's push
+    /// can publish by itself, so each asks for a publish when the version it writes changes. The App Store's had no such step, and the page
+    /// said 1.0.243 for a day after Apple released 1.0.244.
+    /// </summary>
+    [Theory]
+    [InlineData("store-status.yml")]
+    [InlineData("testflight.yml")]
+    public void BothStatusWorkflowsPublishTheSiteWhenAStoreVersionChanges(string workflow)
+    {
+        string yaml = File.ReadAllText(Repo.PathTo(".github", "workflows", workflow));
+        Assert.Contains("actions: write", yaml, StringComparison.Ordinal);
+        Assert.Contains("version_changed=yes", yaml, StringComparison.Ordinal);
+        Assert.Matches(@"if \[ ""\$version_changed"" = yes \]; then\s+GH_TOKEN=[^\n]*? gh workflow run website\.yml", yaml);
     }
 
     /// <summary>

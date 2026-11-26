@@ -106,6 +106,7 @@ class Connect:
     def make_review_detail(self, version: str, fields: dict) -> None: raise NotImplementedError
     def no_encryption(self, build: str) -> None: raise NotImplementedError
     def submit(self, app: str, platform: str, version: str) -> None: raise NotImplementedError
+    def submissions(self, app: str, platform: str) -> list[str]: return []
     def release(self, version: str) -> None: raise NotImplementedError
 
 
@@ -151,12 +152,14 @@ def step(store: Connect, platform: str, notes: str, dry_run: bool = False) -> tu
     editable = newest(versions, EDITABLE)
     down = editable if editable and editable.state in TURNED_DOWN else None
     floor = max((live.build or 0) if live else 0, (down.build or 0) if down else 0)
+    # Entry 516 section 2: a rejection is said for Alan whether or not a newer build is ready to go in its place; before, a newer build
+    # went straight in and the rejection was said nowhere.
+    turned = (f"Apple's App Review turned down GroupLab for {PLATFORMS[platform]} {down.number} (build {down.build}). Apple's words "
+              "are under App Review in App Store Connect; ") if down else None
     if candidate is None or candidate.number <= floor:
         lines = [f"{name}: nothing newer to submit; on the App Store: {'version ' + live.number if live else 'nothing yet'}."]
-        alan = None
-        if down:
-            alan = (f"Apple's App Review turned down GroupLab for {PLATFORMS[platform]} {down.number} (build {down.build}). Apple's words "
-                    "are under App Review in App Store Connect; the next nightly's build is submitted in its place.")
+        alan = turned + "the next nightly's build is submitted in its place." if turned else None
+        if alan:
             lines.append(alan)
         return lines, alan
     build = candidate
@@ -177,7 +180,9 @@ def step(store: Connect, platform: str, notes: str, dry_run: bool = False) -> tu
     if build.encryption is None:
         store.no_encryption(build.id)
     store.submit(app, platform, version)
-    return [f"{name}: build {build.number} submitted for App Review as version {build.version}, released by itself once approved."], None
+    alan = turned + f"build {build.number} was submitted in its place." if turned else None
+    return ([f"{name}: build {build.number} submitted for App Review as version {build.version}, released by itself once approved."]
+            + ([alan] if alan else [])), alan
 
 
 def complete(store: Connect, app: str, platform: str, version: str, build: Build, notes: str, first: bool) -> list[str]:
@@ -235,6 +240,8 @@ def inspect(store: Connect, notes: str) -> list[str]:
             lines.append(f"  version {v.number} {v.state} build {v.build} release {v.release_type or '-'}; English listing: {filled}; "
                          f"screenshots: {', '.join(f'{k} {n}' for k, n in sorted(counts.items())) or 'none'}; review contact: "
                          f"{'yes' if store.review_detail(v.id) else 'no'}")
+        for s in store.submissions(app, platform):
+            lines.append(f"  review submission {s}")
     return lines
 
 
@@ -339,6 +346,19 @@ class Apple(testflight.Apple, Connect):
     def make_review_detail(self, version, fields):
         self.call("POST", "/v1/appStoreReviewDetails", {"data": {"type": "appStoreReviewDetails", "attributes": fields,
                   "relationships": {"appStoreVersion": {"data": {"type": "appStoreVersions", "id": version}}}}})
+
+    def submissions(self, app, platform):
+        """Entry 516 section 2: the platform's newest review submissions, each with its state and its items' states and versions."""
+        said = []
+        for s in self.call("GET", f"/v1/reviewSubmissions?filter[app]={app}&filter[platform]={platform}&limit=5").get("data", []):
+            a = s.get("attributes") or {}
+            answer = self.call("GET", f"/v1/reviewSubmissions/{s['id']}/items?include=appStoreVersion&limit=20")
+            numbers = {v["id"]: (v.get("attributes") or {}).get("versionString", "") for v in answer.get("included", [])}
+            items = [f"{(i.get('attributes') or {}).get('state', '?')} "
+                     f"{numbers.get((((i.get('relationships') or {}).get('appStoreVersion') or {}).get('data') or {}).get('id'), 'not a version')}"
+                     for i in answer.get("data", [])]
+            said.append(f"{a.get('state', '?')} {(a.get('submittedDate') or '')[:10] or 'not submitted'}: {', '.join(items) or 'no items'}")
+        return said
 
     def submit(self, app, platform, version):
         open_ = self.call("GET", f"/v1/reviewSubmissions?filter[app]={app}&filter[platform]={platform}"
@@ -489,6 +509,14 @@ def self_test() -> int:
     lines, _ = step(p, "IOS", notes3)
     expect("the next build reuses the turned-down version", newer.build == 245 and newer.number == "1.0.245"
            and newer.state == "WAITING_FOR_REVIEW" and p.submitted.count(newer.id) == 2, (lines, newer))
+    # Entry 516 section 2: turned down with a newer build already waiting: the rejection is still said, and the newer build goes in.
+    newer.state = "REJECTED"
+    p.builds_["IOS"].insert(0, Build("b246", 246, "1.0.246", "VALID"))
+    notes4 = "## 1.0.0-nightly.246\n\n**What you will notice**\n\n- Fixed.\n\n" + notes3
+    lines, alan = step(p, "IOS", notes4)
+    expect("a rejection is said even when a newer build replaces it", alan and "turned down" in alan and "build 246 was submitted" in alan
+           and newer.build == 246 and newer.state == "WAITING_FOR_REVIEW", (lines, alan))
+    expect("a refusal says where the newest version stands", "is waiting for review" in standing(p, "IOS"), standing(p, "IOS"))
     # The Mac's first version: the listing from the iPhone's, its own description and screenshots, no What's New.
     p = world()
     lines, alan = step(p, "MAC_OS", notes)
@@ -524,6 +552,19 @@ def self_test() -> int:
     return 1 if failures else 0
 
 
+def standing(store: Connect, platform: str) -> str:
+    """Entry 516 section 2: with a refusal, where the platform's newest version stands, so the status line says more than the refusal."""
+    try:
+        app = store.app(BUNDLE_ID)
+        versions = sorted(store.versions(app, platform), key=lambda v: v.created) if app else []
+    except Refused:
+        return ""
+    if not versions:
+        return ""
+    v = versions[-1]
+    return f"; its newest version, {v.number} (build {v.build}), is {VERSION_WORDS.get(v.state, v.state.replace('_', ' ').lower())}"
+
+
 def store_from_env() -> Apple | None:
     names = ("APPLE_API_ISSUER_ID", "APPLE_API_KEY_ID", "APPLE_API_KEY_P8")
     if not all(os.environ.get(n) for n in names):
@@ -556,7 +597,8 @@ def main(argv: list[str]) -> int:
             try:
                 said, alan = step(store, platform, notes, dry_run="--dry-run" in argv)
             except Refused as refused:
-                said, alan = [f"App Store, {PLATFORMS[platform]}: App Store Connect refused a request ({refused}); the next run tries again."], None
+                said, alan = [f"App Store, {PLATFORMS[platform]}: App Store Connect refused a request ({refused}){standing(store, platform)}; "
+                              "the next run tries again."], None
             lines += said
             if alan:
                 alans.append(alan)

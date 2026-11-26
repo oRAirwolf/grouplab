@@ -77,6 +77,24 @@ class Refused(Exception):
     """App Store Connect said no to a request, with its own words."""
 
 
+def said_by(error: dict, limit: int = 900) -> str:
+    """One refusal in Apple's words, with the associated errors that say why (entry 516 section 2: "409 This resource cannot be reviewed,
+    please check associated errors" was all the Mac's submissions said for a day, because those were dropped). Each is named by the kind
+    of thing it is about, never its id, and the whole is cut to a length a status line can carry."""
+    words = error.get("detail") or error.get("title", "")
+    why = []
+    for path, found in ((error.get("meta") or {}).get("associatedErrors") or {}).items():
+        parts = [p for p in str(path).strip("/").split("/") if p and not p[:1].isdigit() and "-" not in p and p != "v1"]
+        kind = parts[-1] if parts else ""
+        for e in found or []:
+            text = e.get("detail") or e.get("title") or e.get("code") or ""
+            if text:
+                why.append(f"{kind}: {text}" if kind else text)
+    if why:
+        words += " Associated errors: " + "; ".join(dict.fromkeys(why))
+    return words if len(words) <= limit else words[:limit - 3] + "..."
+
+
 @dataclass
 class Build:
     id: str
@@ -399,7 +417,7 @@ class Apple(Store):
                 return json.loads(text) if text else {}
         except urllib.error.HTTPError as error:
             try:
-                said = "; ".join(e.get("detail") or e.get("title", "") for e in json.loads(error.read()).get("errors", []))
+                said = "; ".join(said_by(e) for e in json.loads(error.read()).get("errors", []))
             except ValueError:
                 said = ""
             raise Refused(f"{error.code} {said}".strip()) from None
@@ -548,6 +566,14 @@ def self_test() -> int:
             failures.append(what)
 
     no_notes = lambda n: f"Nightly {n}."
+
+    # Entry 516 section 2: a refusal carries its associated errors, named by kind, never by id.
+    said = said_by({"detail": "This resource cannot be reviewed, please check associated errors to see why.", "meta": {"associatedErrors": {
+        "/v1/appStoreVersions/0b1c2d3e-aaaa-bbbb-cccc-1234567890ab": [{"code": "ENTITY_ERROR.ATTRIBUTE.REQUIRED", "detail": "copyright is required"}],
+        "/v1/builds/12345": [{"code": "X", "detail": "The build is not valid"}]}}})
+    expect("associated errors carried", "Associated errors: appStoreVersions: copyright is required; builds: The build is not valid" in said)
+    expect("no ids in a refusal", "0b1c2d3e" not in said and "12345" not in said)
+    expect("a plain refusal unchanged", said_by({"detail": "Not found"}) == "Not found")
 
     # No groups yet: one line, nothing touched.
     s = Pretend(builds_=[Build("b134", 134, "VALID")], names={})

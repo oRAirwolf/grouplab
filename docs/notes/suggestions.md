@@ -12,6 +12,24 @@ it ships in. A suggestion that is really a bug goes to `docs/notes/error-reports
 Claude Code lists the open `suggestion` issues at the same points as the error reports (the start of a run, before each inbox entry,
 before ending a turn, and at least hourly while waiting on CI) and writes each new one here at once.
 
+## Issue 62, 2026-11-26: the point of aim and the shift between loads on Compare loads and its export
+
+- **Asked** (feature-requests forum, nightly 247 on a Mac): on Compare loads and in its exported page, mark the point of aim (an X on
+  the pictures), give how far each load's center sits from it and how far the loads' centers are apart, not only the sentence that they
+  "put their groups in different places"; use the empty right side of the picture, carry the drawn interval chart into the export, and
+  give the shots needed to tell a difference as a table rather than a sentence. A drawing was attached.
+- **Already done?** Partly. The shots are offsets from each shot's own bull, so the point of aim is known, but both the screen's groups
+  card (LoadGroups, entry 309's design A) and the export (ComparisonPage) draw each group centered on its own middle, by design; the
+  centers' difference is given only as the MANOVA verdict and the smallest shift it could detect, with no measured shift. The screen
+  draws the interval charts and the planning table; the export gives the figures with their intervals as text and the planning as words.
+- **Size:** small to medium. Each load's center from the aim (right and up, with an interval) and the shift between two loads, in the
+  "What the difference means" block and the export: small, from figures already computed. The interval chart and a shots table in the
+  export: small, the same drawing as the screen. Marking the aim means drawing the groups about the aim instead of their own middles, or
+  an option to: a change to Alan's chosen look, so his decision.
+- **Fits:** yes; a load workup asks where a load prints as well as how tight it is, and the export should not say less than the screen.
+- **Recommendation:** yes to the numbers (center from aim, shift with its interval), the export's interval chart and a shots table;
+  the aim marked only as Alan chooses (a stacked view about the aim is the smallest change). Reply 62-1 said it is written up, no answer yet.
+
 ## Issue 61, 2026-11-24: export Compare loads as a PDF or picture, with GroupLab on it
 
 - **Asked** (feature-requests forum, nightly 243 on a Mac): an Export on Compare loads, to PDF, JPG, CSV or text, in a form that suits

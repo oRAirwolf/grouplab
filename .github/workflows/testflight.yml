@@ -28,6 +28,8 @@ on:
 
 permissions:
   contents: write
+  # Entry 516 section 1: actions, to ask for a publish of the site when the App Store version the download page quotes changes.
+  actions: write
 
 # One at a time, and a run is never cut short: a half-finished step is picked up by the next run anyway, but two at once could submit twice.
 concurrency:
@@ -127,9 +129,19 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/notes/external-status.md
+          # Entry 516 section 1: /download/ quotes the App Store's version from this file (app_store_copy in website/build.py), and this
+          # push, made with the workflow's own token, starts no workflow, so a new version asks for a publish of the site, as the Store's does.
+          version_changed=no
+          git diff --cached -- docs/notes/external-status.md | grep -qE '^\+.*(App Store version [0-9.]+ \(build [0-9]+\): released|On the App Store now: version)' && version_changed=yes
           git commit -m "[notes] External status: testflight or the App Store version changed" -m "Written by the testflight workflow, entries 335, 336 and 491."
           for attempt in 1 2 3; do
-            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              if [ "$version_changed" = yes ]; then
+                GH_TOKEN="${{ github.token }}" gh workflow run website.yml --ref main -f reason="the App Store carries a new version" \
+                  || echo "::warning::the site could not be asked to publish; the next push that touches it will"
+              fi
+              exit 0
+            fi
             sleep 10
           done
           echo "::warning::the changed state could not be pushed; the next run tries again"
