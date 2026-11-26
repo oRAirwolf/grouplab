@@ -65,6 +65,7 @@ jobs:
         with:
           dotnet-version: '10.0.x'
       - name: Publish the store copy, as mac-store.yml does
+        if: ${{ !inputs.quick }}
         shell: bash
         run: |
           set -o pipefail
@@ -246,11 +247,25 @@ jobs:
             "out/mini/$1/Mini.app/Contents/MacOS/Mini" > "out/mini/$1.txt" 2>&1; local code=$?
             say "mini $1: exit $code ($(head -c 300 "out/mini/$1.txt" | paste -sd ' ' -))"
           }
+          if [ "${{ inputs.quick }}" = "true" ]; then
+            python3 -c "import plistlib; plistlib.dump({'com.apple.security.app-sandbox': True, 'com.apple.security.cs.allow-jit': True, 'com.apple.security.network.client': True}, open('out/sandbox.entitlements', 'wb'))"
+          fi
           minibundle plain none; minirun plain
           minibundle sandbox out/sandbox.entitlements; minirun sandbox
           for setting in DOTNET_EnableDiagnostics=0 DOTNET_EnableWriteXorExecute=0 DOTNET_TieredCompilation=0; do
             env "$setting" "out/mini/sandbox/Mini.app/Contents/MacOS/Mini" > out/mini/env.txt 2>&1; code=$?
             say "mini sandbox, $setting: exit $code ($(head -c 300 out/mini/env.txt | paste -sd ' ' -))"
+          done
+          # One file instead of two hundred, and native code with no .NET runtime at all: which part the sandbox stops.
+          (log stream --level debug --style compact --predicate 'process == "Mini"' > out/mini/stream.txt 2>&1 &); sleep 2
+          minirun sandbox > /dev/null
+          sleep 2; pkill -f "log stream" || true
+          grep -i "error\|invalid\|denied\|deny\|fail\|unable\|asn\|checkin\|check-in\|sandbox" out/mini/stream.txt | grep -v "Unable to load Info.plist exceptions" | cut -c1-280 | head -40
+          for kind in single aot; do
+            case $kind in single) extra="-p:PublishSingleFile=true" ;; aot) extra="-p:PublishAot=true" ;; esac
+            rm -rf out/mini/pub; dotnet publish out/mini/src/Mini.csproj -c Release -r osx-arm64 --self-contained $extra -o out/mini/pub 2>&1 | tail -1
+            echo "$kind: $(ls out/mini/pub | wc -l) files"
+            minibundle "$kind" out/sandbox.entitlements; minirun "$kind"
           done
           echo "::endgroup::"
           # The control: the smallest AppKit application, built here and sandboxed the same way. If it stops too, the machine is the
