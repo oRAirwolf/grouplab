@@ -19,7 +19,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   sandbox, .NET started from separate runtime libraries is refused LaunchServices and AppKit aborts; one file is let through. The Mac App
   Store copy is now one file (`PublishSingleFile`, store copy on macOS only) and passes its self-check in the sandbox; the nightly's
   sandbox check now stops the job. **Mac 1.0.247 in review has the fault**: request 122 asks Alan to take it out; a withdrawn build is
-  never resubmitted, so nightly 248's goes in. The platform sentence (120) is in PLATFORM-SUPPORT.md, README and download page.
+  never resubmitted, so 248 (uploaded, waiting behind 247's review) goes in. The platform sentence (120) is in PLATFORM-SUPPORT.md, README and download page.
 - **Question 120 (b): LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`; RESTORE.md has the undo): nightly 247 says `llvm: ran`.
   Apple error reports are read for an LLVM cause (switch off at once if one could be); the device comparison at request 50's sitting.
 - **Report 60's poster** says nightly 247 finds .338 holes poorly and sent four three-page sets (testing only): read them on 243 and 247
@@ -69,7 +69,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (120 answered (b), 2026-11-25; 118 answ
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.247 (2026-11-25, 4e9031d); 246 carried Alan's queue of 24 November. GitHub's
+- **Last nightly:** 1.0.0-nightly.248 (2026-11-26, 1fab547), the Mac App Store copy as one file; its Mac build passed the sandbox check and is on TestFlight. GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 

@@ -705,6 +705,11 @@ GroupLab instead of "Avalonia Application". Held by `Request121Tests`. Request 1
 has the fault. **Not proven yet:** a store-signed copy installed from the App Store on macOS 27; the runners run macOS 26.7.2, and
 Apple's next review is that proof.
 
+**Nightly 248** carries it. Its Mac App Store job skipped itself: the nightly ran for a screenshot commit on top of the commit it tagged, and
+the job looked for a tag on the run's commit only. Started by hand, 248's store copy passed the sandbox check (now a gate), was signed,
+uploaded and given to GroupLab Team; the job now also takes a numbered nightly released after the run began. It waits behind 1.0.247's
+review until request 122 is answered.
+
 **Request 120.** The proposed platform sentence and the Mac line, as written, in `docs/PLATFORM-SUPPORT.md`, so the README and download
 page; "Other platforms get proper attention once the pace of change slows" went with them; the three old phrases are retired.
 
