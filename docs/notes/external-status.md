@@ -42,13 +42,14 @@ Written by scripts/status-note.py from the testflight and store status workflows
 <!-- /status:store-search -->
 
 <!-- status:play -->
-## Google Play production, 2026-11-26 20:50 UTC
+## Google Play production, 2026-11-27 00:41 UTC
 
-- Production, 2026-11-26: blocked: Play refused the production track: HTTP 503 {
+- Production, 2026-11-27: blocked: Google refused it (HTTP 400: {
 -   "error": {
--     "code": 503,
--     "message": "The service is currently unavailable.",
--     "status": "UNAVAILABLE"
+-     "code": 400,
+-     "message": "Precondition check failed.",
+-     "status": "FAILED_PRECONDITION"
 -   }
 - }
+- ). It goes by itself the first night Google allows it.
 <!-- /status:play -->
