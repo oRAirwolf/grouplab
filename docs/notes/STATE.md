@@ -19,7 +19,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   taken out of App Review by `app-store.py --withdraw` (testflight.yml's withdraw input, run by hand only); Mac 1.0.248, the one-file
   store copy that passes the sandbox check, was submitted at 23:17 UTC. iPhone and iPad 1.0.248 is released on the App Store.
 - **Suggestion 62, built 2026-11-26** (Alan's yes): centers from the aim and the shift, with ranges, on screen and export; the export's
-  range charts and shots table. The aim mark is request 123; reply 62-2 posts after nightly 249.
+  range charts and shots table. In nightly 249; the aim mark is request 123; reply 62-2 posted.
 - **Question 120 (b): LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`; RESTORE.md has the undo): nightly 247 says `llvm: ran`.
   Apple error reports are read for an LLVM cause (switch off at once if one could be); the device comparison at request 50's sitting.
 - **Report 60's .338 sets, assessed 2026-11-26**: 0 to 3 of about 10 holes a page; not the dot-pattern rule (it refused nothing). A
@@ -45,7 +45,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Apple's answer on Mac 1.0.248; nightly 249 publishes suggestion 62, then reply 62-2 posts.
+1. Apple's answer on Mac 1.0.248 (nightly 249, with suggestion 62, waits behind it; reply 62-2 posted).
 2. Report 60's proposed fix: a large hole over a white backer read from its white middle at the caliber's size, held against the local scans.
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
@@ -70,7 +70,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (120 answered (b), 2026-11-25; 118 answ
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.248 (2026-11-26, 1fab547), the Mac App Store copy as one file; its Mac build passed the sandbox check and is on TestFlight. GitHub's
+- **Last nightly:** 1.0.0-nightly.249 (2026-11-27), suggestion 62; Mac 1.0.248 is in App Review. GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
