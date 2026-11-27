@@ -3,10 +3,8 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-27 05:21 UTC
+## TestFlight, 2026-11-27 05:22 UTC
 
-- Build 250 added to Public Beta, with its release notes as What to Test.
-- Build 250 submitted for Beta App Review.
 - Build 250 for Public Beta: waiting for beta review, review waiting for review.
 - Both groups have build 248.
 - GroupLab Team also has build 250, 249, newer than Public Beta's; it was added by hand and is left there.
