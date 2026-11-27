@@ -3,21 +3,23 @@
 Written by scripts/status-note.py from the testflight and store status workflows (entries 335 and 336), only when a state changes. Both sessions read it at the start of a run; anything here that needs Alan goes into for-alan.md the same day.
 
 <!-- status:testflight -->
-## TestFlight, 2026-11-27 01:03 UTC
+## TestFlight, 2026-11-27 05:21 UTC
 
-- Build 249 for Public Beta: waiting for beta review, review waiting for review.
+- Build 250 added to Public Beta, with its release notes as What to Test.
+- Build 250 submitted for Beta App Review.
+- Build 250 for Public Beta: waiting for beta review, review waiting for review.
 - Both groups have build 248.
-- GroupLab Team also has build 249, newer than Public Beta's; it was added by hand and is left there.
+- GroupLab Team also has build 250, 249, newer than Public Beta's; it was added by hand and is left there.
 - Apple approved Mac build 248 for Mac testers, who can install it; Alan copies the public link from App Store Connect (Apps, GroupLab, TestFlight, Mac testers, Public Link). The link is never written here.
 <!-- /status:testflight -->
 
 <!-- status:app-store -->
-## The App Store version, 2026-11-27 01:03 UTC
+## The App Store version, 2026-11-27 05:21 UTC
 
 - App Store version 1.0.249 (build 249): waiting for review.
 - The App Store page: https://apps.apple.com/app/id6817635137
 - On the App Store now: version 1.0.248; TestFlight stays the way in.
-- App Store, iPhone and iPad: version 1.0.249 (build 249) is waiting for review.
+- App Store, iPhone and iPad: version 1.0.249 (build 249) is waiting for review; build 250 waits until the review ends.
 - App Store, Mac: version 1.0.248 (build 248) is waiting for review.
 <!-- /status:app-store -->
 
