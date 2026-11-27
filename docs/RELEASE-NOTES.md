@@ -12,6 +12,20 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.250
+
+**2026-11-27**, commit `df1c590`. Nightly.
+
+**What you will notice**
+
+- On a flatbed scan of a sheet shot over a white paper backer, GroupLab now finds the holes from the torn paper around them when you have entered the caliber, where before most large holes there were missed. (Error report 60) (found from a Discord post).
+
+From your reports and targets in this build: 1 fix from 1 error report.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.250)
+
+---
+
 ## 1.0.0-nightly.249
 
 **2026-11-27**, commit `ab13fd1`. Nightly.
