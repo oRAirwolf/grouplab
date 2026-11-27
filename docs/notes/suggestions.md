@@ -35,6 +35,8 @@ before ending a turn, and at least hourly while waiting on CI) and writes each n
   draws the mean radius and sigma charts with their ranges (beside the groups where there is room) and gives the shots to resolve a
   difference as a table. Every pair's shift is under Details for three loads or more. **Not built:** an X for the aim on the pictures,
   or the groups drawn about the aim, which changes Alan's chosen look; request 123 asks him. Reply 62-2 says so, `post-after` nightly 249.
+  **Request 123 answered (a), 2026-11-26** (Alan, in the session): the pictures stay drawn about each group's own middle; the numbers say
+  where each group sits. Nothing more to build; reply 62-3 says so.
 
 ## Issue 61, 2026-11-24: export Compare loads as a PDF or picture, with GroupLab on it
 

@@ -173,12 +173,16 @@ public sealed record HoleSizeReference(HoleSizeSource Source, double VetoInches,
 /// <see cref="Beside"/> names the sheet's own printing a mark lies on or within a crinkle's reach of, a marker, a code or a line of words,
 /// so that when there are more marks than rounds the review can show those first (NOTES-FROM-PLANNING.md entry 354 section 1.6).
 /// </para>
+/// <para>
+/// <see cref="Fibres"/> is set on a hole read from the torn paper round it over a white backer (error report 60, the .338 sets): its place is
+/// the specks' centre and its size the caliber's, because the specks say where the hole is and not how large it was.
+/// </para>
 /// </summary>
 public sealed record RenderDifferenceHole(double X, double Y, double HullX, double HullY, double DiameterInches, double Solidity, bool OnInk, double Closure,
     double Elongation = double.NaN, bool PossibleMerge = false, bool Oversized = false, double? CalibreHoles = null, bool SplitVetoed = false,
     double? SizeHoles = null, bool OversizeTentative = false, double InkFraction = 0, double AreaInches = 0, double Aspect = double.NaN,
     double HullAreaInches = 0, PointD? SplitA = null, PointD? SplitB = null, double? JoinedHoles = null, double? JoinedAcrossInches = null,
-    double? JoinedAcrossHoles = null, string? Beside = null);
+    double? JoinedAcrossHoles = null, string? Beside = null, bool Fibres = false);
 
 /// <summary>
 /// One render-and-difference pass: the resolution, the measured ink level as a fraction of paper, the resolved residual
@@ -382,11 +386,14 @@ public static partial class RenderDifferenceHoleDetector
             }
         });
 
+        byte[]? besideMiddles = null, middlePixels = null;
         if (smooth is not null)
         {
             int open0 = Math.Max(2, (int)Math.Round(options.OpenRadiusInches * dpi, MidpointRounding.ToEven));
             var middles = backend.Morphology(new GrayImage(width, height, white!), MorphologyOperation.Open, open0);
             var beside = Grown(middles.Pixels, width, height, Math.Max(1, (int)Math.Round(TornEdgeInches * dpi)));
+            besideMiddles = beside;
+            middlePixels = middles.Pixels;
             Parallel.For(0, height, y =>
             {
                 for (int i = y * width, end = i + width; i < end; i++)
@@ -626,6 +633,74 @@ public static partial class RenderDifferenceHoleDetector
                 holes.RemoveAll(h => h.HullX == hx && h.HullY == hy);
                 rejected.RemoveAll(r => r.X == hx && r.Y == hy);
                 holes.Insert(at >= 0 ? at : holes.Count, joined with { JoinedAcrossInches = across, JoinedAcrossHoles = across / single });
+            }
+        }
+
+        // Error report 60, the .338 sets: on a scan with a caliber named, a hole over a white backer that left only torn fibers, every speck
+        // of them too small to be a hole, is read from the specks where they fill a disc of the caliber's hole all the way round
+        // (RenderDifferenceHoleDetector.WhiteBacker.cs). Nowhere a hole was already found, on printing, or far off the grid.
+        if (options.Scan && options.CalibreInches is { } fibreHole)
+        {
+            double slack = MovedPrintInches * 254;
+            bool OnPrinting(PointD at) =>
+                zones.Any(z => at.X >= z.Left - slack && at.X <= z.Right + slack && at.Y >= z.Top - slack && at.Y <= z.Bottom + slack)
+                || printed.Words.Any(w => at.X >= w.Left - slack && at.X <= w.Right + slack && at.Y >= w.Top - slack && at.Y <= w.Bottom + slack);
+            byte[]? colour = luminance is { } lit && lit.Width == width && lit.Height == height
+                ? [.. observed.Pixels.Select((v, i) => (byte)Math.Max(0, v - lit.Pixels[i]))]
+                : null;
+            double radius = fibreHole / 2 * dpi, holeArea = Math.PI * Math.Pow(fibreHole / 2, 2);
+            var found = holes.ToList();
+            // Where the print is solid, specks count only on paper it does not come near: along a printed edge a registration error leaves
+            // slivers that break into specks all the way round a ring. Where it is a dot pattern, its own light dots are specks too, so a speck
+            // on print counts only beside a hole's white middle, as the torn edge does above, and bare paper counts as it is; the pattern's
+            // edges are soft and leave no slivers (the poster's six pages had none).
+            var specks = new byte[over.Length];
+            if (besideMiddles is null)
+            {
+                var print = new byte[over.Length];
+                for (int i = 0; i < over.Length; i++)
+                {
+                    print[i] = expected.Pixels[i] < 230 ? (byte)1 : (byte)0;
+                }
+
+                var nearPrint = Grown(print, width, height, Math.Max(1, (int)Math.Round(FibresClearOfPrintInches * dpi)));
+                for (int i = 0; i < over.Length; i++)
+                {
+                    specks[i] = nearPrint[i] == 0 ? over[i] : (byte)0;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < over.Length; i++)
+                {
+                    specks[i] = expected.Pixels[i] >= 230 || besideMiddles[i] != 0 ? over[i] : (byte)0;
+                }
+            }
+
+            foreach (var c in SpeckClusters(specks, colour, width, height, dpi, radius, (x, y) => OnPrinting(registration.ToPage(new PointD(x, y)))))
+            {
+                var page = registration.ToPage(new PointD(c.X, c.Y));
+                if (!IsFibresHole(c) || OnPrinting(page) || IsPastThePrint(printed, page)
+                    || found.Any(k => Math.Pow(k.X - c.X, 2) + Math.Pow(k.Y - c.Y, 2) < Math.Pow(FibresClearOfHoles * 2 * radius, 2))
+                    || !(cells.Any(k => Math.Abs(page.X - k.X) <= k.HalfWidth && Math.Abs(page.Y - k.Y) <= k.HalfHeight)
+                        || OutsideTheGrid.NearEnoughToBeAMissedShot(page.X, page.Y, [.. cells.Select(k => (k.X, k.Y, k.HalfWidth, k.HalfHeight))])))
+                {
+                    continue;
+                }
+
+                // On a scan printed as dots, a hole over the print shows the backer's white through it; specks there with no white middle
+                // at all are the edge of something printed solid, such as a bull's center dot.
+                double ink = InkOver(expected, width, height, c.X, c.Y, radius);
+                if (middlePixels is not null && ink >= FibresOnPrintInk && ShareOver(middlePixels, width, height, c.X, c.Y, radius) < FibresMiddleAtLeast)
+                {
+                    continue;
+                }
+
+                // The specks this hole is made of were each refused as too small or not compact; they are the hole now.
+                rejected.RemoveAll(k => k.Zone is null && Math.Pow(k.X - c.X, 2) + Math.Pow(k.Y - c.Y, 2) <= radius * radius
+                    && (k.Reason.StartsWith("too small", StringComparison.Ordinal) || k.Reason.StartsWith("not compact", StringComparison.Ordinal)));
+                holes.Add(new RenderDifferenceHole(c.X, c.Y, c.X, c.Y, fibreHole, c.Fill, ink > 0.3, c.Sectors / 8.0, c.Elongation, CalibreHoles: 1,
+                    InkFraction: ink, AreaInches: holeArea, Aspect: 1, HullAreaInches: holeArea, Fibres: true));
             }
         }
 

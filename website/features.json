@@ -442,7 +442,7 @@
       ],
       "since": "0.2.0-nightly.28",
       "note": ["You can now click a hole to edit it", "a picture you have zoomed into now pinches", "each bull's number now sits outside its ring", "On a crinkled sheet, GroupLab no longer marks a hole", "On a flatbed scan, GroupLab now finds the holes that show the scanner", "holes found on a target with no bulls",
-        "Finding the holes in a photograph is about a sixth quicker", "On the 2 MOA sheet, a printed center dot", "On a flatbed scan of a sheet whose bulls printed as a gray made of dots", "On the phone, the result's picture now pinches in and out"],
+        "Finding the holes in a photograph is about a sixth quicker", "On the 2 MOA sheet, a printed center dot", "On a flatbed scan of a sheet whose bulls printed as a gray made of dots", "On a flatbed scan of a sheet shot over a white paper backer", "On the phone, the result's picture now pinches in and out"],
       "tour": "marking",
       "guide": "4-mark-it-and-settle-the-review-queue",
       "article": "one-hole-or-two",

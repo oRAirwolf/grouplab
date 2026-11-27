@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-26, after request 122 (Mac 1.0.247 out of review, 248 in), report 60's .338 sets and suggestion 62; the inbox is empty.
+**Last rewritten:** 2026-11-26, after report 60's .338 fix (holes over a white backer read from their torn paper) and request 123 answered (a); the inbox is empty.
 
 ---
 
@@ -19,12 +19,12 @@ If something here disagrees with the logs, the logs are right and this file is o
   taken out of App Review by `app-store.py --withdraw` (testflight.yml's withdraw input, run by hand only); Mac 1.0.248, the one-file
   store copy that passes the sandbox check, was submitted at 23:17 UTC. iPhone and iPad 1.0.248 is released on the App Store.
 - **Suggestion 62, built 2026-11-26** (Alan's yes): centers from the aim and the shift, with ranges, on screen and export; the export's
-  range charts and shots table. In nightly 249; the aim mark is request 123; reply 62-2 posted.
+  range charts and shots table. In nightly 249. Request 123 answered (a): the pictures stay as they are; reply 62-3 queued.
 - **Question 120 (b): LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`; RESTORE.md has the undo): nightly 247 says `llvm: ran`.
   Apple error reports are read for an LLVM cause (switch off at once if one could be); the device comparison at request 50's sitting.
-- **Report 60's .338 sets, assessed 2026-11-26**: 0 to 3 of about 10 holes a page; not the dot-pattern rule (it refused nothing). A
-  .338 hole over a white paper backer at 150 dpi is a white middle and a scattered ring of torn fibers that falls apart into specks; the
-  .224 sets over cardboard read 8 or 9. Workaround in reply 60-4; a fix is proposed in error-reports.md, not built.
+- **Report 60's .338 sets, fixed 2026-11-26** (Alan's go): on a scan with a caliber, a hole is also read from the torn paper round it
+  (`RenderDifferenceHoleDetector.WhiteBacker.cs`); the five .338 pages give 30 holes where they gave 7, the local bench loses nothing.
+  Ships in the next nightly; reply 60-5 has `post-after` it; issue 60 closed with the commit. The guide says to scan on a dark sheet.
 - **Entry507SplashTests fail here** (6, thread ownership; pass in CI). closed-replies.py stays (entry 510).
 
 ## The next three
@@ -45,8 +45,8 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Apple's answer on Mac 1.0.248 (nightly 249, with suggestion 62, waits behind it; reply 62-2 posted).
-2. Report 60's proposed fix: a large hole over a white backer read from its white middle at the caliber's size, held against the local scans.
+1. Apple's answer on Mac 1.0.248 (nightly 249, with suggestion 62, waits behind it).
+2. The next nightly carries report 60's .338 fix, and reply 60-5 posts after it; what it still misses is in error-reports.md.
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
 ## Blocked, and on what
@@ -58,7 +58,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **The iOS GroupLab Dev upload**: request 61 (its App ID, profiles and record).
 - **The phones**: not reachable over adb since 2026-09-30. **Entry 170 section 4.4.** Request 9. **Entry 166 section 3.2.** Request 16.
 
-Open requests in `docs/notes/for-alan.md`: **29**; waiting on him: 123 (mark the aim on Compare loads' pictures, a, b or c, most urgent), 119 (Google's production answers, on or after 2 December), 118 (a Discord post for Android testers), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
+Open requests in `docs/notes/for-alan.md`: **28**; waiting on him: 119 (Google's production answers, on or after 2 December, most urgent), 118 (a Discord post for Android testers), 111 (the Mac TestFlight build on a real Mac), 105 (a screen reader sitting, later), 83, 70, 72, 74 to 77, 104 (104 the point blank card on the M220; 86 aim points through the other optics, for later; 83 the M834 from the computer; 77 M220 labels; 76 scale markers on real paper; 75 two reference files and a tape measure; 74 a kitchen table photo; 70 Fenix's report package; 67 TestFlight team distribution off; 59 TestFlight groups; 62 Firebase Test Lab; 56 printer scale; 50 the device sitting,
 now with a look at the velocity card; 54, 57, 58 at the range; 46 backups on 4 October; 61 GroupLab Dev's Apple
 steps; then 33, 9, 16 and 20).
 

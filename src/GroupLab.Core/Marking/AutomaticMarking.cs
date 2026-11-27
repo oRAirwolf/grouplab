@@ -212,6 +212,13 @@ public static class AutomaticMarking
                 stage.Detail(string.Create(CultureInfo.InvariantCulture,
                     $"the print is a dot pattern (texture {halftone.Texture:0.000} of the paper's level), so printed paper shows a hole only where it reads near the paper's white; {halftone.NotPaperWhite} {(halftone.NotPaperWhite == 1 ? "mark" : "marks")} of the pattern refused"));
             }
+            // Error report 60, the .338 sets: holes read from the torn paper round them over a white backing say so, with how many.
+            if (holes.Holes.Count(h => h.Fibres) is > 0 and var fibres)
+            {
+                stage.Detail(string.Create(CultureInfo.InvariantCulture,
+                    $"{fibres} {(fibres == 1 ? "hole" : "holes")} read from the torn paper round {(fibres == 1 ? "it" : "them")}, as a white backing shows a hole on a scan, placed at the specks' center and given the caliber's size"));
+            }
+
             if (holes.HoleSize is { } holeSize)
             {
                 stage.Parameter("hole size", holeSize.Description);

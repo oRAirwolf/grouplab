@@ -44,6 +44,22 @@ before anything else. The Mac's copy carries no LLVM, so a Mac report that looks
   600 dpi, a missed hole placed by hand. **Proposed fix, not built:** read a hole over a white backer as its white middle at the caliber's
   size with torn fibers round it (entry 417's rim test asks for a closed rim, which a 150 dpi scan does not give); measured on these pages
   and held against the local scans before it ships. The user guide's scanning section gains a sentence on a dark backing with it.
+- **Fixed (2026-11-26, Alan's go):** on a scan with a caliber entered, a hole is now also read from the torn paper round it
+  (`RenderDifferenceHoleDetector.WhiteBacker.cs`): the specks of the residual too small to be holes, gray rather than colored (so a pen
+  line or writing is never one), not on printed words, a marker, a code or the data block, clear of solid print by 0.03 in (on a dotted
+  print, on print only beside a hole's white middle), are gathered at 150 dpi, and a disc of the caliber's hole they fill by 0.05 or
+  more, reaching 7 of 8 sectors round its center and no more than 2 times longer than wide, is a hole placed at their center at the
+  caliber's size. Not past the print, not within two holes of a hole already found, and over a dotted print only with a white
+  middle in it (the specks round a bull's solid center dot on a laser screen at 300 dpi made one without). **Measured:** the five .338 pages that read give 8,
+  8, 6, 2 and 6 holes (30) where they gave 1, 3, 1, 0 and 2 (7), every one checked on the page; still missed are a faint one on bare
+  paper, one beside a marker, one at a diamond's tip with no white middle, one in a code and a long torn pair at bull 2 of the third
+  set. The .224 cardboard sets read as before plus two real holes that were missed (pages 1 and 3 of the second set). The whole local
+  bench, 800 runs (each scan and photograph with its stated caliber or none, and again as a .338): 773 unchanged, nothing lost anywhere;
+  with its own caliber every change is a real hole found. Read as a .338, the other changes are six real holes found and, on sheets of
+  other calibers, the tears round 12 gauge slug holes and a mark under the identifier (none at the slugs' own 0.729), and a torn tan
+  bottom edge on the 2026-10-13 sheets. Error report 60's first scan reads exactly as before, without a caliber, at .22 and at .338.
+  WhiteBackerScanTests holds it; DotPatternScanTests and DotScreenScanTests still find every hole and nothing else. The user guide's scanning section now says to lay a dark sheet behind the target. **Status:** fixed in
+  the next nightly; reply 60-5 waits for it (`post-after`).
 
 ## 57, 2026-11-23, nightly 240 on a Mac (posted in the Discord's bug-reports forum, with screenshots and the three sessions)
 

@@ -201,6 +201,8 @@ A sheet with one scoring bull takes a group. Every shot on it goes to that bull,
 
 GroupLab reads the resolution your scanner wrote into the file and uses it as a starting point, then measures the real resolution from the sheet's own printed markers and tells you both. Where the two disagree, the markers win, because they were printed at a known size and the file's number is only what the scanner meant to do.
 
+Lay a sheet of dark paper or card behind the target on the glass before you scan it. Through each hole the scanner then sees the dark sheet, and the hole reads as a clean dark circle. Without it, and especially when the target was shot over a white paper backer, a hole is as white as the paper round it and shows only by its torn edge. With the caliber entered, GroupLab still looks for those holes from the torn paper round them and places each at the caliber's size, but a faint one can be missed; place a missed hole by hand.
+
 For photographs:
 - stand about 2 ft (60 cm) from the sheet, close enough that the sheet nearly fills the frame;
 - use the phone's main camera, not its wide or zoom lens;

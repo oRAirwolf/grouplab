@@ -3,6 +3,21 @@
 NOTES-FROM-PLANNING.md entry 317 section 4: answered requests and old summaries moved here whole from
 `for-alan.md` on 2026-09-30, so the file read every day holds only what is open. Nothing here needs anything from Alan.
 
+## 123. Mark your point of aim on Compare loads' pictures? One answer, whenever suits (suggestion 62)
+
+**Answered 2026-11-26: (a)** (in the session: "62: a, leave the pictures as they are; the numbers say where each group sits"). Nothing changed; reply 62-3 tells the poster. **Opened 2026-11-26.** You said yes to suggestion 62 as recommended, and that is built: What the difference means, on the screen and on
+the exported page, now says where each load's group sits from your aim and how far apart two loads' centers are, each with its range;
+the export draws the range charts beside the groups and gives the shots needed as a table. The one part the recommendation left to you
+is the pictures. Today each load's group is drawn about its own middle, by your choice in entry 309, so the pictures show shape and
+size but not where each group landed. The poster asked for an X at the aim, which only means something if the groups are drawn about
+the aim.
+
+**What is needed:** one letter. (a) Leave the pictures as they are; the numbers say where each group sits. (b) The smallest change: the
+view you get by tapping the pictures, where the loads are stacked on one picture, is drawn about the aim with an X there, and the
+side-by-side pictures stay about their own middles. (c) Every picture, on the screen and the export, drawn about the aim with an X.
+
+**A good answer:** "62: a", "62: b" or "62: c".
+
 ## 122. Take Mac 1.0.247 out of Apple's review: one yes, whenever suits (request 121)
 
 **Answered 2026-11-26** ("cancel 247", in the session): Code took Mac 1.0.247 out of App Review through App Store Connect's API at 21:53 UTC (testflight.yml run 45908232329, its new withdraw input, request 122's one use); build 247 is never sent again and build 248 goes in by the half-hourly step. **Opened 2026-11-26.** Mac 1.0.247 is waiting for Apple's review and has exactly the fault Apple turned down 1.0 for: it closes the moment it opens, inside the sandbox every App Store copy runs in (request 121, in the archive, says how it was found). Left there, Apple will review it, turn it down again, and only then take the fixed build. Taken out now, the fixed build goes in as soon as Apple has processed it: the first nightly after the fix (248, building now) uploads it, and the half-hourly App Store step submits it by itself. A build you took back is never sent again (the App Store step now treats it like a turned-down one), so it does not matter whether you do this before or after build 248 arrives.
