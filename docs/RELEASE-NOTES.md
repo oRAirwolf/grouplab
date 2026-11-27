@@ -468,7 +468,7 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 - On the phone, holes found on a target with no bulls no longer carry numbers, as on the computer, because a number beside a hole reads as the order the shots were fired.
 - The computer downloads now come precompiled, so the first photograph after GroupLab starts is read about a quarter sooner; the downloads are about an eighth larger.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.220)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
