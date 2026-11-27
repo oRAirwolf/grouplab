@@ -12,6 +12,18 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.249
+
+**2026-11-27**, commit `ab13fd1`. Nightly.
+
+**What you will notice**
+
+- Compare loads now says how far each load's group sits from your aim and how far apart two loads' groups are, each with its range, and its exported page draws the range charts and lists the shots needed as a table. (Suggestion 62).
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.249)
+
+---
+
 ## 1.0.0-nightly.248
 
 **2026-11-26**, commit `1fab547`. Nightly.
