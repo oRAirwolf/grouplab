@@ -803,7 +803,7 @@
       "key": "compare",
       "group": "The numbers",
       "name": "Compare loads honestly",
-      "sentence": "Compare loads draws each load's figures with the range they could really be, so you can see whether the shots can tell two loads apart; with two loads, What the difference means sets their main figures side by side beside the pictures and says in a sentence whether these shots tell them apart and how many would, where each group sits from your aim and how far apart the two groups are, with their ranges. Export saves the comparison as a PDF or as a picture of the same page, to send or post, on the computer and the phone.",
+      "sentence": "Compare loads draws each load's figures with the range they could really be, so you can see whether the shots can tell two loads apart; with two loads, What the difference means sets their main figures side by side beside the pictures and says in a sentence whether these shots tell them apart and how many would; Where each center sits draws each load's center from your aim with the range it could really be, lettered A, B, C, beside a table of each center and how far apart the loads are. Export saves the comparison as a PDF or as a picture of the same page, to send or post, on the computer and the phone.",
       "shot": "compare",
       "platforms": [
         "Windows",
@@ -813,7 +813,7 @@
         "iPhone and iPad"
       ],
       "since": "0.2.0-nightly.42",
-      "note": ["Compare loads now draws each load's mean radius and sigma", "What the difference means", "Compare loads can now be exported as a PDF", "Compare loads now says how far each load's group sits from your aim"],
+      "note": ["Compare loads now draws each load's mean radius and sigma", "What the difference means", "Compare loads can now be exported as a PDF", "Compare loads now says how far each load's group sits from your aim", "Compare loads now draws where each load's center sits"],
       "tour": "compare",
       "guide": "7-comparing-loads",
       "article": "pooling-groups",

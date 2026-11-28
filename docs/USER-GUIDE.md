@@ -533,7 +533,9 @@ shots. The phone makes the same page.
 
 Tick two or more sessions in Session records and press Compare the chosen. They appear side by side on the comparison screen, the rail's chart. Each has its plot and its figures with intervals, and below them are the tests with their verdicts.
 
-With two loads, **Each load's group** keeps the two pictures at their size and fills the rest of the card with **What the difference means**: each load's shots, mean radius, extreme spread and CEP 90 side by side, GroupLab's plain sentence on whether these shots can tell the two apart and how far apart their spreads could be, where each load's group sits from your aim (right or left, high or low) and how far apart the two groups' centers are, each with the range it could really be, and how many shots each would take to tell a 10 percent difference apart. It sits beside the pictures where the card is wide enough and under them where it is not, as on a phone held upright. With three or more loads the card shows the pictures alone.
+With two loads, **Each load's group** keeps the two pictures at their size and fills the rest of the card with **What the difference means**: each load's shots, mean radius, extreme spread and CEP 90 side by side, GroupLab's plain sentence on whether these shots can tell the two apart and how far apart their spreads could be, one line on how far apart the two groups' centers are and whether that is more than chance would give, and how many shots each would take to tell a 10 percent difference apart. It sits beside the pictures where the card is wide enough and under them where it is not, as on a phone held upright. With three or more loads the card shows the pictures alone.
+
+Further down, **Where each center sits** draws each load's center from your aim, the aim a cross in the middle and each center its load's marker, with bars across and up for the range it could really be. Each load is lettered A, B, C, beside its marker wherever it is named, and the table beside the chart (under it on a phone) gives each center from the aim, right or left and high or low, and how far each load's center is from each other's, each with its range. The pictures of the groups above stay drawn about their own centers.
 
 ![Two loads compared](figures/screens/current/compare-light-1400x900.png)
 
@@ -545,10 +547,9 @@ When the intervals overlap, the screen says the data do not separate the loads. 
 
 **Export**, under the line that counts the loads and shots, saves the comparison as a **PDF** or as a **Picture (PNG)** of the same
 page: each load's group at one scale in its color, the figures with their 95 percent intervals, the mean radius and sigma charts with
-the range each could really be (beside the groups where there is room), what the difference means, including where each group sits from
-your aim and how far apart the centers are, the tests and what they could detect, Top Gun where the rifle's weight is known, and the
-shots to resolve a difference as a table, with "Made with GroupLab" and grouplab.org small at the foot. A picture shows where a PDF does not, such as in a Discord channel; it is always one image, while the PDF of many loads goes on
-to a second page. On the phone, the **Export** card at the foot of Compare loads shares the picture or the PDF, or saves the picture
+the range each could really be (beside the groups where there is room), what the difference means, the chart and table of where each center sits, the tests and what they could detect, Top Gun where the rifle's weight is known, and the
+shots to resolve a difference as a table, with "Made with GroupLab" and grouplab.org small at the foot. A picture shows where a PDF does not, such as in a Discord channel; it is always one image, while the PDF goes on to a second page
+where the comparison does not fit on one. Each load's name starts with its letter, A, B, C, which the chart uses. On the phone, the **Export** card at the foot of Compare loads shares the picture or the PDF, or saves the picture
 to the gallery.
 
 ### Each session is named by what tells it apart

@@ -351,6 +351,9 @@ public sealed partial class MainWindow
 
     private string? compareRefusal;
 
+    /// <summary>Suggestion 63: the chart of the centers and its table as last built, for the tests.</summary>
+    internal StackPanel? CompareCentres { get; private set; }
+
     /// <summary>Lays the comparison out, or says how to start one.</summary>
     private void FillCompare()
     {
@@ -441,6 +444,10 @@ public sealed partial class MainWindow
             compareColumn.Children.Add(chart);
             compareColumn.Children.Add(Note(chart.Description));
         }
+
+        // Suggestion 63: where each center sits from the aim, drawn with its ranges, and the table of the figures beside it.
+        CompareCentres = CentreChart.Part(report, inches => Sized(inches, compareDistance).Value, compact: false);
+        compareColumn.Children.Add(new Border { Child = CompareCentres, Classes = { AppStyles.ResultCard } });
 
         // The verdict, which never ranks by point estimate.
         var verdict = new StackPanel { Spacing = Tokens.Space4 };

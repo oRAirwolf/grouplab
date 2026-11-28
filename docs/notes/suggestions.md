@@ -32,6 +32,16 @@ before ending a turn, and at least hourly while waiting on CI) and writes each n
   leaves the pictures exactly as they are, but it does put the aim on the page as a drawing of its own, so it is his call.
 - **Recommendation:** yes: the chart and the table on the screen and the export, the sentences cut to the verdict, and short load labels
   where a name is cut. The group pictures stay as request 123 left them. Reply 63-1 says it is written up, no answer yet.
+- **Answered: yes, as recommended** (Alan, 2026-11-28, in the session). **Built the same day**, for nightly 251: Where each center sits
+  on Compare loads on the computer and the phone and on the exported page (`CentreChart`, `ComparisonPages.DrawCentres`): the aim a
+  cross, each load's center its marker and letter with its 95 percent range as bars across and up, on one scale reaching every range,
+  and a table of each center from the aim and each pair's shift, each with its range (a short block a row on the phone). Suggestion 62's
+  sentences became one line, `LoadComparison.Where` ("B's center is 0.834 in from A's, more than chance would give."); the methods are
+  one line under Details. Letters: the load marker carries its letter wherever a load is named on screen, and the export puts it before
+  each name. **One cost:** two loads no longer fit one Letter page in the PDF (the old page had about 7 points to spare with short names,
+  and long names already took two); the chart needs about 100 points and only shrinking it under an inch or the group pictures would
+  make room, so the PDF goes on to a second page where it must and the picture stays one image; the guide says so. Reply 63-2 says it is
+  built, `post-after` nightly 251.
 
 ## Issue 62, 2026-11-26: the point of aim and the shift between loads on Compare loads and its export
 

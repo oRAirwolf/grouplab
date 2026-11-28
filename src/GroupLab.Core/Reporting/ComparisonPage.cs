@@ -41,6 +41,9 @@ public sealed record ComparisonPage(
 {
     /// <summary>Suggestion 62: the screen's interval charts, mean radius and sigma, drawn on the page.</summary>
     public IReadOnlyList<ComparisonChart> Charts { get; init; } = [];
+
+    /// <summary>Suggestion 63: the chart of the centers, inches from the aim to its edge, its grid's step, and the step in words.</summary>
+    public (double HalfInches, double GridInches, string GridWords) Centres { get; init; }
 }
 
 /// <summary>
@@ -116,10 +119,12 @@ public static class ComparisonPages
             Chart("Mean radius", [.. report.Groups.Select(g => g.MeanRadius)]),
             Chart("Sigma", [.. report.Groups.Select(g => g.Rayleigh.Sigma)]),
         };
+        // Suggestion 63: the centers about the aim, on a grid of their own, since they sit far closer together than the shots spread.
+        var (centreHalf, centreStep, centreWords) = OnePageReports.Grid(LoadComparison.CentreReach(report), units);
         return new ComparisonPage(date, paper, report, loads, summary, rows,
             $"Each load's shots about their own center, all at one scale; grid squares {words}.", half, step, topGun,
             $"Made with GroupLab {version}, {Branding}")
-        { Charts = charts };
+        { Charts = charts, Centres = (centreHalf, centreStep, centreWords) };
     }
 
     /// <summary>
@@ -265,7 +270,8 @@ public static class ComparisonPages
         // The groups side by side, each in a square, then each load's name in its color and its line beneath.
         int n = report.Groups.Count;
         long gap = Inch / 6, cell = Math.Min((width - ((n - 1) * gap)) / n, 2 * Inch);
-        var names = Enumerable.Range(0, n).Select(i => ReportWriter.Wrap(page.Loads[i].Name, Pt(9.5), cell)).ToList();
+        // Suggestion 63: each load's letter before its name, which the chart of the centers and its table use, and wherever a name is cut.
+        var names = Enumerable.Range(0, n).Select(i => ReportWriter.Wrap(Lettered(i, page.Loads[i].Name), Pt(9.5), cell)).ToList();
         var details = Enumerable.Range(0, n).Select(i => ReportWriter.Wrap(
             page.Loads[i].Detail + (page.Loads[i].Speed is { } speed ? "; " + speed : ""), Pt(7.5), cell)).ToList();
         long under = names.Max(l => l.Count) * Leading(Pt(9.5)) + (details.Max(l => l.Count) * Leading(Pt(7.5)));
@@ -345,11 +351,13 @@ public static class ComparisonPages
                 }
 
                 long first = y + Pt(2) + Leading(size) - (size / 4), second = first + Leading(small);
-                var name = ReportWriter.Wrap(cells.Load, size, Room(0));
-                items.Add(new TextRun(SceneLayer.Labels, LoadInk(r), columns[0], first, size, Fit(name[0], size, Room(0)), TextAnchor.Left, Bold: true));
+                // Bold is wider than the measure the wrap uses, so the name is wrapped a tenth short of its column.
+                long nameRoom = Room(0) * 9 / 10;
+                var name = ReportWriter.Wrap(Lettered(r, cells.Load), size, nameRoom);
+                items.Add(new TextRun(SceneLayer.Labels, LoadInk(r), columns[0], first, size, Fit(name[0], size, nameRoom), TextAnchor.Left, Bold: true));
                 if (name.Count > 1)
                 {
-                    items.Add(new TextRun(SceneLayer.Labels, LoadInk(r), columns[0], second, small, Fit(string.Join(" ", name.Skip(1)), small, Room(0)), TextAnchor.Left, Bold: true));
+                    items.Add(new TextRun(SceneLayer.Labels, LoadInk(r), columns[0], second, small, Fit(string.Join(" ", name.Skip(1)), small, nameRoom), TextAnchor.Left, Bold: true));
                 }
 
                 string[] values = [cells.Shots, cells.Sigma, cells.MeanRadius, cells.ExtremeSpread];
@@ -388,6 +396,58 @@ public static class ComparisonPages
         foreach (string line in report.Plain.Count > 0 ? report.Plain : report.Explanation)
         {
             blocks.Add(Words(line, Pt(9), Ink, before: Pt(3)));
+        }
+
+        // Suggestion 63: where each center sits, drawn about the aim with its ranges, and beside it its title, the table of the figures and
+        // what the chart shows, all inside "What the difference means" so that two loads still fit on one page.
+        if (report.CentreRows.Count > 0)
+        {
+            long square = Math.Min(5 * Inch / 4, width * 25 / 100), tableLeft = margin + square + Pt(14);
+            long cellSize = Pt(8.5), smallSize = Pt(7), tableRow = Leading(cellSize) + Leading(smallSize) + Pt(1);
+            long tableWidth = right - tableLeft;
+            long[] at = [tableLeft + Pt(4), tableLeft + (tableWidth * 24 / 100), tableLeft + (tableWidth * 40 / 100), tableLeft + (tableWidth * 70 / 100)];
+            long CellRoom(int c) => (c + 1 < at.Length ? at[c + 1] : right) - at[c] - Pt(4);
+            string[] titles = [CentresHeading, "Distance", "Across, and its range", "Up or down, and its range"];
+            var says = ReportWriter.Wrap(CentresSay(page.Centres.GridWords), Pt(7), tableWidth);
+            long tableTall = Leading(Pt(8.5)) + Pt(3) + (tableRow * report.CentreRows.Count) + Pt(2) + (says.Count * Leading(Pt(7)));
+            blocks.Add(new Block(Pt(5) + Math.Max(square, tableTall), (items, top) =>
+            {
+                DrawCentres(items, page, margin, top + Pt(5), square);
+                long y = top + Pt(5) + Leading(Pt(8.5)) - Pt(2);
+                for (int c = 0; c < titles.Length; c++)
+                {
+                    // The table's own title heads its first column, in ink and bold, so the part needs no heading of its own.
+                    items.Add(c == 0
+                        ? new TextRun(SceneLayer.Labels, Ink, at[c], y, Pt(8.5), Fit(titles[c], Pt(8.5), CellRoom(c) + (at[1] - at[0])), TextAnchor.Left, Bold: true)
+                        : new TextRun(SceneLayer.Labels, Grey, at[c], y, Pt(7.5), Fit(titles[c], Pt(7.5), CellRoom(c)), TextAnchor.Left));
+                }
+
+                y += Pt(3);
+                for (int r = 0; r < report.CentreRows.Count; r++)
+                {
+                    var row = report.CentreRows[r];
+                    if (r % 2 == 0)
+                    {
+                        items.Add(new RectFill(SceneLayer.Cells, Shade, tableLeft, y, tableWidth, tableRow));
+                    }
+
+                    long first = y + Pt(2) + Leading(cellSize) - (cellSize / 4), second = first + Leading(smallSize);
+                    items.Add(new TextRun(SceneLayer.Labels, r < n ? LoadInk(r) : Ink, at[0], first, cellSize, Fit(row.Label, cellSize, CellRoom(0)), TextAnchor.Left, Bold: true));
+                    items.Add(new TextRun(SceneLayer.Labels, Ink, at[1], first, cellSize, Fit(ReportWriter.Plain(row.Distance), cellSize, CellRoom(1)), TextAnchor.Left));
+                    items.Add(new TextRun(SceneLayer.Labels, Ink, at[2], first, cellSize, Fit(ReportWriter.Plain(row.Across), cellSize, CellRoom(2)), TextAnchor.Left));
+                    items.Add(new TextRun(SceneLayer.Labels, Grey, at[2], second, smallSize, Fit(ReportWriter.Plain(row.AcrossRange), smallSize, CellRoom(2)), TextAnchor.Left));
+                    items.Add(new TextRun(SceneLayer.Labels, Ink, at[3], first, cellSize, Fit(ReportWriter.Plain(row.Up), cellSize, CellRoom(3)), TextAnchor.Left));
+                    items.Add(new TextRun(SceneLayer.Labels, Grey, at[3], second, smallSize, Fit(ReportWriter.Plain(row.UpRange), smallSize, CellRoom(3)), TextAnchor.Left));
+                    y += tableRow;
+                }
+
+                y += Pt(2);
+                foreach (string line in says)
+                {
+                    y += Leading(Pt(7));
+                    items.Add(new TextRun(SceneLayer.Labels, Grey, tableLeft, y - (Pt(7) / 4), Pt(7), line, TextAnchor.Left));
+                }
+            }));
         }
 
         blocks.Add(Heading("Tests run"));
@@ -484,7 +544,7 @@ public static class ComparisonPages
             var e = chart.Rows[r];
             long middle = y + (r * line) + (line / 2);
             items.Add(new TextRun(SceneLayer.Labels, LoadInk(r), left + Pt(4), middle + (Pt(8) / 3), Pt(8),
-                Fit(page.Loads[r].Name, Pt(8), plotLeft - left - Pt(10)), TextAnchor.Left, Bold: true));
+                Fit(Lettered(r, page.Loads[r].Name), Pt(8), plotLeft - left - Pt(10)), TextAnchor.Left, Bold: true));
             items.Add(new RectFill(SceneLayer.Labels, LoadInk(r), X(e.Lower), middle - 6, Math.Max(6, X(e.Upper) - X(e.Lower)), 12));
             items.Add(new DiscBand(SceneLayer.Labels, LoadInk(r), X(e.Value), middle, 26, 0));
         }
@@ -494,6 +554,66 @@ public static class ComparisonPages
         long words = axis + Leading(Pt(7));
         items.Add(new TextRun(SceneLayer.Labels, Grey, plotLeft, words, Pt(7), ReportWriter.Plain(chart.LowWords), TextAnchor.Left));
         items.Add(new TextRun(SceneLayer.Labels, Grey, plotRight, words, Pt(7), ReportWriter.Plain(chart.HighWords), TextAnchor.Right));
+    }
+
+    /// <summary>Suggestion 63: the heading of the chart of the centers and its table, on the page and on the screen.</summary>
+    public const string CentresHeading = "Where each center sits";
+
+    /// <summary>Suggestion 63: what the chart of the centers shows, under it on the page and on the screen.</summary>
+    public static string CentresSay(string gridWords) =>
+        $"The cross is the point of aim; the bars are the range each center could really be. Grid squares {gridWords}.";
+
+    /// <summary>Suggestion 63: a load's name after its letter, as the page names it wherever the name may be cut.</summary>
+    public static string Lettered(int index, string name) => $"{LoadComparison.Letter(index)}  {name}";
+
+    /// <summary>
+    /// Suggestion 63: the chart of the centers in a square <paramref name="size"/> across: the grid about the aim, the aim a cross, and each
+    /// load's center a dot in its color with its letter, its range a bar across and a bar up and down, at the page's one scale.
+    /// </summary>
+    private static void DrawCentres(List<SceneItem> items, ComparisonPage page, long left, long top, long size)
+    {
+        var (halfWidth, grid, _) = page.Centres;
+        double k = size / (2 * Math.Max(1e-9, halfWidth));
+        long cx = left + (size / 2), cy = top + (size / 2);
+        int lines = grid > 0 ? (int)Math.Floor(halfWidth / grid) : 0;
+        for (int i = -lines; i <= lines; i++)
+        {
+            long at = (long)Math.Round(i * grid * k);
+            items.Add(new RectFill(SceneLayer.MeasurementGrid, GridInk, cx + at - 1, top, 3, size));
+            items.Add(new RectFill(SceneLayer.MeasurementGrid, GridInk, left, cy + at - 1, size, 3));
+        }
+
+        const long hair = 3;
+        items.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, left, top, size, hair));
+        items.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, left, top + size - hair, size, hair));
+        items.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, left, top, hair, size));
+        items.Add(new RectFill(SceneLayer.MeasurementGrid, Rule, left + size - hair, top, hair, size));
+
+        // The aim: a cross in ink, larger than any marker, so it is never taken for a load.
+        long arm = Pt(7), bar = 7;
+        items.Add(new RectFill(SceneLayer.Labels, Ink, cx - arm, cy - (bar / 2), 2 * arm, bar));
+        items.Add(new RectFill(SceneLayer.Labels, Ink, cx - (bar / 2), cy - arm, bar, 2 * arm));
+
+        long Clamp(long v, long low, long high) => Math.Min(high, Math.Max(low, v));
+        var groups = page.Report.Groups;
+        for (int i = 0; i < groups.Count; i++)
+        {
+            var g = groups[i];
+            var ink = LoadInk(i);
+            long X(double inches) => Clamp(cx + (long)Math.Round(inches * k), left, left + size);
+            long Y(double inches) => Clamp(cy + (long)Math.Round(inches * k), top, top + size);
+            long x = X(g.CentreRange.X.Value), y = Y(g.CentreRange.Y.Value);
+            long x0 = X(g.CentreRange.X.Lower), x1 = X(g.CentreRange.X.Upper), y0 = Y(g.CentreRange.Y.Lower), y1 = Y(g.CentreRange.Y.Upper);
+            const long stroke = 6, whisker = 22;
+            items.Add(new RectFill(SceneLayer.Labels, ink, x0, y - (stroke / 2), Math.Max(stroke, x1 - x0), stroke));
+            items.Add(new RectFill(SceneLayer.Labels, ink, x - (stroke / 2), y0, stroke, Math.Max(stroke, y1 - y0)));
+            items.Add(new RectFill(SceneLayer.Labels, ink, x0 - (stroke / 2), y - (whisker / 2), stroke, whisker));
+            items.Add(new RectFill(SceneLayer.Labels, ink, x1 - (stroke / 2), y - (whisker / 2), stroke, whisker));
+            items.Add(new RectFill(SceneLayer.Labels, ink, x - (whisker / 2), y0 - (stroke / 2), whisker, stroke));
+            items.Add(new RectFill(SceneLayer.Labels, ink, x - (whisker / 2), y1 - (stroke / 2), whisker, stroke));
+            items.Add(new DiscBand(SceneLayer.Labels, ink, x, y, 26, 0));
+            items.Add(new TextRun(SceneLayer.Labels, ink, x + Pt(4), y - Pt(3), Pt(9), LoadComparison.Letter(i), TextAnchor.Left, Bold: true));
+        }
     }
 
     /// <summary>A cell's words, cut with an ellipsis where they are wider than the column.</summary>

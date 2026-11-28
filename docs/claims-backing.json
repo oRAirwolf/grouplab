@@ -69,9 +69,9 @@
    "kind": "code",
    "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
   },
-  "With two loads, What the difference means fills the rest of the card: each load's shots, mean radius, extreme spread and CEP 90 side by side, whether these shots can tell the two apart, and how many shots each would take to tell a 10 percent difference apart.": {
+  "With two loads, What the difference means fills the rest of the card: each load's shots, mean radius, extreme spread and CEP 90 side by side, whether these shots can tell the two apart, how far apart the two groups' centers are, and how many shots each would take to tell a 10 percent difference apart.": {
    "kind": "code",
-   "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B)"
+   "where": "src/GroupLab.App/LoadGroups.cs Means and WithMeaning, from src/GroupLab.Core/Statistics/LoadComparison.cs Compare (Headline, Apart, Where, ShotsNeeded), held by Entry465CompareTests and Entry465PhoneTests (entry 465 item 7B; Where, suggestion 63)"
   },
   "Newest Coming in the next build CEP circles, any percent CEP 50, 90, 95 and 99 are drawn and listed with their ranges, named in the key in a compact box under the plot, and under Advanced a circle for any percent you type.": {
    "kind": "code",

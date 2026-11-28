@@ -36,11 +36,14 @@ public class ComparisonPageTests
     private static List<string> Texts(Scene page) => [.. page.Items.OfType<TextRun>().Select(t => t.Text)];
 
     [Fact]
-    public void TwoLoadsAreOnePageWithEverySectionAndAModestFooter()
+    public void TwoLoadsCarryEverySectionAndAModestFooter()
     {
+        // Suggestion 63's chart of the centers made two loads more than a Letter page; the PDF goes on to a second page only where it must.
         var page = Page(2);
-        var scene = Assert.Single(ComparisonPages.Pages(page));
-        var texts = Texts(scene);
+        var pages = ComparisonPages.Pages(page);
+        Assert.InRange(pages.Count, 1, 2);
+        var scene = pages[0];
+        var texts = pages.SelectMany(Texts).ToList();
         Assert.Equal(2159 * 2, scene.Width);
         Assert.Equal(2794 * 2, scene.Height);
         foreach (string words in new[] { "Compare loads", "GroupLab comparison, dated 2026-11-24", "Figures, each with its 95 percent interval", "What the difference means", "Tests run" })
@@ -48,8 +51,8 @@ public class ComparisonPageTests
             Assert.Contains(words, texts);
         }
 
-        Assert.Contains("Test load 1", texts);
-        Assert.Contains("Test load 2", texts);
+        Assert.Contains("A  Test load 1", texts);
+        Assert.Contains("B  Test load 2", texts);
         Assert.Contains(page.Report.Headline, texts);
         Assert.Contains(texts, t => t.Contains("2810 ft/s", StringComparison.Ordinal));
 
@@ -78,7 +81,7 @@ public class ComparisonPageTests
     {
         var page = Page(5);
         var pages = ComparisonPages.Pages(page);
-        Assert.Equal(2, pages.Count);
+        Assert.True(pages.Count >= 2, "five loads take more than one page");
         Assert.All(pages, p => Assert.Contains(p.Items.OfType<TextRun>(), t => t.Text.EndsWith(ComparisonPages.Branding, StringComparison.Ordinal)));
         Assert.Equal(Texts(ComparisonPages.Tall(page)).Count(t => t != page.Footer && !t.StartsWith("Compare loads, ", StringComparison.Ordinal)),
             pages.Sum(p => Texts(p).Count(t => t != page.Footer && !t.StartsWith("Compare loads, ", StringComparison.Ordinal))));
@@ -149,8 +152,7 @@ public class ComparisonPageTests
     public void TheExportDrawsTheIntervalChartsAndTheShotsTable()
     {
         var page = Page(2);
-        var scene = Assert.Single(ComparisonPages.Pages(page));
-        var texts = Texts(scene);
+        var texts = ComparisonPages.Pages(page).SelectMany(Texts).ToList();
         Assert.Equal(["Mean radius, the range each could be", "Sigma, the range each could be"], page.Charts.Select(c => c.Title));
         foreach (var chart in page.Charts)
         {
@@ -175,5 +177,34 @@ public class ComparisonPageTests
         }
 
         Assert.DoesNotContain(texts, t => t.Contains("shots per load;", StringComparison.Ordinal));
+    }
+
+    /// <summary>
+    /// Suggestion 63 (Discord, Alan's yes on 2026-11-28): the export draws where each center sits about the aim with the table of each center
+    /// and each shift beside it, names the loads by letter where a name may be cut, and says where the groups sit in one line.
+    /// </summary>
+    [Fact]
+    public void TheExportDrawsWhereEachCenterSitsWithItsTableAndLetters()
+    {
+        var page = Page(2);
+        var scene = ComparisonPages.Tall(page);
+        var texts = Texts(scene);
+        Assert.Contains(ComparisonPages.CentresHeading, texts);
+        foreach (var row in page.Report.CentreRows)
+        {
+            Assert.Contains(row.Label, texts);
+            Assert.Contains(row.Across, texts);
+            Assert.Contains(row.UpRange, texts);
+        }
+
+        Assert.Contains(texts, t => t.StartsWith("A  Test load 1", StringComparison.Ordinal));
+        Assert.Contains(texts, t => t.StartsWith("B  Test load 2", StringComparison.Ordinal));
+        Assert.Equal(2, texts.Count(t => t is "A" or "B"));
+        Assert.DoesNotContain(texts, t => t.Contains("of the aim;", StringComparison.Ordinal));
+        Assert.True(page.Centres.HalfInches >= LoadComparison.CentreReach(page.Report) * 0.99);
+
+        // Every load's dot inside the chart's square, and the aim's cross at its middle.
+        var discs = scene.Items.OfType<DiscBand>().Where(d => d.OuterRadius == 26).ToList();
+        Assert.True(discs.Count >= 2);
     }
 }

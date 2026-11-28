@@ -346,8 +346,8 @@ internal sealed class LoadGroups : UserControl
 
         panel.Children.Add(table);
         panel.Children.Add(new TextBlock { Text = report.Headline, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap, Classes = { AppStyles.Warn } });
-        // Suggestion 62: where each group sits from the aim and how far apart the centers are, before the shots needed.
-        foreach (string? line in new[] { report.Apart }.Concat(report.Centres).Concat([report.Shift, report.ShotsNeeded]))
+        // Suggestion 63: where the groups sit in one line, the figures being in the chart of the centers, before the shots needed.
+        foreach (string? line in new[] { report.Apart, report.Where, report.ShotsNeeded })
         {
             if (line is { Length: > 0 })
             {
@@ -439,14 +439,18 @@ internal sealed class GroupDots : Control
     }
 }
 
-/// <summary>A load's marker in its color, beside its name wherever the load is named: on the card, the buttons and the verdict.</summary>
+/// <summary>
+/// A load's marker in its color, beside its name wherever the load is named: on the card, the buttons and the verdict. Suggestion 63: the
+/// load's letter follows the marker, in the text color, so the letters the chart of the centers uses are named wherever the loads are.
+/// </summary>
 internal sealed class LoadSwatch : Control
 {
     public LoadSwatch(int index)
     {
         Index = index;
-        Width = 12;
-        Height = 12;
+        Width = 26;
+        Height = 14;
+        Avalonia.Automation.AutomationProperties.SetName(this, "load " + LoadComparison.Letter(index));
     }
 
     public int Index { get; }
@@ -455,6 +459,15 @@ internal sealed class LoadSwatch : Control
     {
         ArgumentNullException.ThrowIfNull(context);
         var brush = LoadGroups.Brush(Index, ActualThemeVariant);
-        GroupDots.Marker(context, Index, brush, new Pen(brush, 1.5), new Rect(Bounds.Size).Center, 4.5);
+        GroupDots.Marker(context, Index, brush, new Pen(brush, 1.5), new Point(6, Bounds.Height / 2), 4.5);
+        DrawLetter(context, Index, new Point(14, Bounds.Height / 2), Tokens.For(ActualThemeVariant).Text);
+    }
+
+    /// <summary>A load's letter, its left edge at <paramref name="at"/>'s x and centered on its y.</summary>
+    internal static void DrawLetter(DrawingContext context, int index, Point at, Color colour)
+    {
+        var letter = new FormattedText(LoadComparison.Letter(index), CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+            new Typeface(Tokens.Sans, FontStyle.Normal, FontWeight.SemiBold), 11, new SolidColorBrush(colour));
+        context.DrawText(letter, new Point(at.X, at.Y - (letter.Height / 2)));
     }
 }

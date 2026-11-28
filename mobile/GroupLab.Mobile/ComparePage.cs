@@ -141,6 +141,10 @@ internal sealed class ComparePage : UserControl
                 Child = verdict,
             });
 
+            // Suggestion 63: where each center sits from the aim, drawn with its ranges, and each figure as a short block beneath.
+            Centres = CentreChart.Part(report, Size, compact: true, side: 240);
+            column.Children.Add(Screens.Card(Centres));
+
             // Suggestion 61: the comparison as one page, the computer's own, shared as a PDF or as a picture of the same page to post.
             var loads = setup.Groups.Select(g => new ExportedLoad(g.Name, g.Detail, ComparisonPages.Speed(book, g.Load, units))).ToList();
             string summary = $"{report.Groups.Count} loads, {report.Groups.Sum(g => g.Shots)} shots, in the order chosen." + (setup.Footing is { } said ? " " + said : "");
@@ -269,6 +273,9 @@ internal sealed class ComparePage : UserControl
 
     /// <summary>The card of each load's group, for the tests.</summary>
     internal LoadGroups? Groups { get; }
+
+    /// <summary>Suggestion 63: the chart of the centers and its blocks, for the tests.</summary>
+    internal StackPanel? Centres { get; }
 
     /// <summary>The figures the chips offer, in their order.</summary>
     internal static readonly string[] Figures = ["Mean radius", "Extreme spread", "CEP 90"];

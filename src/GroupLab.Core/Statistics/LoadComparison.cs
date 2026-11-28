@@ -21,6 +21,12 @@ public sealed record ComparedGroup(string Name, IReadOnlyList<PointD> Offsets, R
 /// </summary>
 public sealed record CentreShift(int First, int Second, Estimate Right, Estimate Low, double Distance);
 
+/// <summary>
+/// Suggestion 63: one row of the table under "Where each center sits": a load's center from the aim, or one load's center from another's,
+/// its straight distance, and each direction with the range it could really be. <paramref name="Label"/> names loads by their letters.
+/// </summary>
+public sealed record CentreRow(string Label, string Distance, string Across, string AcrossRange, string Up, string UpRange);
+
 /// <summary>A dispersion ratio between two of the groups, with its interval, its p-value and, among more than two, Holm's adjustment of it.</summary>
 public sealed record PairedDispersion(int First, int Second, Estimate Ratio, double PValue, double HolmPValue);
 
@@ -65,11 +71,14 @@ public sealed record LoadComparisonReport(
     /// <summary>Suggestion 62: each pair's shift between centers, the second load from the first.</summary>
     public IReadOnlyList<CentreShift> Shifts { get; init; } = [];
 
-    /// <summary>Suggestion 62: the sentences of <see cref="Plain"/> on where each load's center is from the aim, one a load.</summary>
-    public IReadOnlyList<string> Centres { get; init; } = [];
+    /// <summary>
+    /// Suggestion 63 (Discord, Alan's yes on 2026-11-28): the one line of <see cref="Plain"/> on where the groups sit, naming the loads by
+    /// their letters, which replaced suggestion 62's sentence a load; the figures are in <see cref="CentreRows"/> and drawn by the chart.
+    /// </summary>
+    public string Where { get; init; } = "";
 
-    /// <summary>Suggestion 62: with two loads, the sentence of <see cref="Plain"/> on how far apart their centers are; null with three or more.</summary>
-    public string? Shift { get; init; }
+    /// <summary>Suggestion 63: each load's center from the aim, a row a load in the order chosen, then each pair's shift.</summary>
+    public IReadOnlyList<CentreRow> CentreRows { get; init; } = [];
 }
 
 public static class LoadComparison
@@ -79,6 +88,25 @@ public static class LoadComparison
 
     /// <summary>The fewest shots a group needs to take part: a sigma needs two, and a test on so few says nothing, which its power statement shows.</summary>
     public const int MinimumShots = 3;
+
+    /// <summary>
+    /// Suggestion 63: the short label of the load at <paramref name="index"/> in the order chosen, A, B, C and on, used wherever a full
+    /// name would be cut or repeated: the chart of the centers, its table, and the exported page.
+    /// </summary>
+    public static string Letter(int index) =>
+        ((char)('A' + (index % 26))).ToString() + (index >= 26 ? (index / 26 + 1).ToString(CultureInfo.InvariantCulture) : "");
+
+    /// <summary>
+    /// Suggestion 63: how far the centers reach from the aim, the range of each included, in inches: the half width of the chart of the
+    /// centers, with a little room, so every range is drawn whole and every chart of the same comparison is at one scale.
+    /// </summary>
+    public static double CentreReach(LoadComparisonReport report)
+    {
+        ArgumentNullException.ThrowIfNull(report);
+        double reach = report.Groups.SelectMany(g => new[] { g.CentreRange.X.Lower, g.CentreRange.X.Upper, g.CentreRange.Y.Lower, g.CentreRange.Y.Upper, g.Centre.X, g.Centre.Y })
+            .Where(double.IsFinite).Select(Math.Abs).DefaultIfEmpty(0).Max();
+        return Math.Max(0.05, reach) * 1.15;
+    }
 
     private static string Percent(double ratio) => (100 * (ratio - 1)).ToString("0", CultureInfo.InvariantCulture);
 
@@ -224,27 +252,22 @@ public static class LoadComparison
             plain.Add("Every pair of loads is compared under Details, and with this many pairs one of them can look different by chance alone.");
         }
 
-        // Suggestion 62: where each load's group sits from the aim, and how far apart the centers are, each direction with its range.
-        var centres = compared.Select(g =>
-            $"{g.Name}'s center is {Side(g.CentreRange.X, "left", "right", length)} and {Side(g.CentreRange.Y, "high", "low", length)} of the aim; it could really be anywhere from {Span(g.CentreRange.X, "left", "right", length)} and {Span(g.CentreRange.Y, "high", "low", length)}.").ToList();
-        plain.AddRange(centres);
-        foreach (var g in compared)
-        {
-            explanation.Add($"{g.Name}'s center from the aim: {Side(g.CentreRange.X, "left", "right", length)}, 95 percent interval {Span(g.CentreRange.X, "left", "right", length)}; {Side(g.CentreRange.Y, "high", "low", length)}, 95 percent interval {Span(g.CentreRange.Y, "high", "low", length)} (Student's t on each direction).");
-        }
-
-        string? shiftSaid = null;
-        foreach (var s in shifts)
-        {
-            string first = compared[s.First].Name, second = compared[s.Second].Name;
-            if (compared.Count == 2)
-            {
-                shiftSaid = $"{second}'s center is {length(s.Distance)} from {first}'s, {Side(s.Right, "left", "right", length)} and {Side(s.Low, "high", "low", length)}; the shift could really be anywhere from {Span(s.Right, "left", "right", length)} and {Span(s.Low, "high", "low", length)}.";
-                plain.Add(shiftSaid);
-            }
-
-            explanation.Add($"{second}'s center from {first}'s: {length(s.Distance)} apart; {Side(s.Right, "left", "right", length)}, 95 percent interval {Span(s.Right, "left", "right", length)}; {Side(s.Low, "high", "low", length)}, 95 percent interval {Span(s.Low, "high", "low", length)} (Welch's t on each direction).");
-        }
+        // Suggestion 63: where the groups sit, in one line naming the loads by their letters; each center from the aim and each pair's shift,
+        // with their ranges, are rows of a table and points on a chart rather than a sentence each (suggestion 62's, which read as a wall).
+        var rows = compared.Select((g, i) => new CentreRow($"{Letter(i)} from the aim", length(Math.Sqrt((g.Centre.X * g.Centre.X) + (g.Centre.Y * g.Centre.Y))),
+            Side(g.CentreRange.X, "left", "right", length), Span(g.CentreRange.X, "left", "right", length),
+            Side(g.CentreRange.Y, "high", "low", length), Span(g.CentreRange.Y, "high", "low", length))).ToList();
+        rows.AddRange(shifts.Select(s => new CentreRow($"{Letter(s.Second)} from {Letter(s.First)}", length(s.Distance),
+            Side(s.Right, "left", "right", length), Span(s.Right, "left", "right", length),
+            Side(s.Low, "high", "low", length), Span(s.Low, "high", "low", length))));
+        string chance = tests.Count < 2 ? "" : centreDiffers ? ", more than chance would give" : ", which these shots cannot tell from chance";
+        var widest = shifts.MaxBy(s => s.Distance)!;
+        string where = compared.Count == 2
+            ? $"{Letter(1)}'s center is {length(widest.Distance)} from {Letter(0)}'s{chance}."
+            : $"The centers are up to {length(widest.Distance)} apart, {Letter(widest.Second)} from {Letter(widest.First)}{chance}.";
+        plain.Add(where);
+        explanation.Add(where);
+        explanation.Add("Each center's range from the aim is by Student's t on each direction, and each shift's range by Welch's t on each direction, which does not assume the loads spread alike; both are 95 percent intervals.");
 
         string have = compared.Count == 2 ? $"{compared[0].Shots} and {compared[1].Shots}" : string.Join(", ", compared.Select(g => g.Shots));
         string shotsNeeded = $"To tell a 10 percent difference in spread apart would take about {SampleSize.ShotsPerLoad(1.10)} shots each; these groups have {have}.";
@@ -259,8 +282,8 @@ public static class LoadComparison
             Apart = apart,
             ShotsNeeded = shotsNeeded,
             Shifts = shifts,
-            Centres = centres,
-            Shift = shiftSaid,
+            Where = where,
+            CentreRows = rows,
         };
     }
 

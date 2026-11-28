@@ -210,22 +210,45 @@ public class LoadComparisonTests
         Assert.InRange(shift.Right.Value, 0.3, 0.5);
         Assert.True(shift.Right.Lower > 0, "a 0.4 in shift with 30 shots a load is seen");
         Assert.True(shift.Low.Lower < 0 && shift.Low.Upper > 0, "no shift up or down");
-        Assert.Equal(2, report.Centres.Count);
-        Assert.StartsWith("moved's center is ", report.Centres[1], StringComparison.Ordinal);
-        Assert.Contains(" right and ", report.Centres[1], StringComparison.Ordinal);
-        Assert.All(report.Centres, c => Assert.Contains(c, report.Plain));
-        Assert.NotNull(report.Shift);
-        Assert.StartsWith("moved's center is " + Inches(shift.Distance) + " from wide's, ", report.Shift!, StringComparison.Ordinal);
-        Assert.Contains(report.Shift!, report.Plain);
         Assert.Equal(report.ShotsNeeded, report.Plain[^1]);
         Assert.Contains(report.Details, d => d.Contains("Welch's t", StringComparison.Ordinal) && d.Contains("95 percent interval", StringComparison.Ordinal));
-        Assert.Contains(report.Details, d => d.StartsWith("wide's center from the aim: ", StringComparison.Ordinal));
         Assert.Equal(report.Groups[1].CentreRange.X.Value, report.Groups[1].Centre.X, 12);
 
+        // Suggestion 63: a row a load and a row a pair, with the ranges, instead of a sentence each.
+        Assert.Equal(["A from the aim", "B from the aim", "B from A"], report.CentreRows.Select(r => r.Label));
+        var moved = report.CentreRows[2];
+        Assert.Equal(Inches(shift.Distance), moved.Distance);
+        Assert.Equal(LoadComparison.Side(shift.Right, "left", "right", Inches), moved.Across);
+        Assert.Equal(LoadComparison.Span(shift.Right, "left", "right", Inches), moved.AcrossRange);
+        Assert.Equal(LoadComparison.Span(shift.Low, "high", "low", Inches), moved.UpRange);
+        Assert.EndsWith(" right", report.CentreRows[1].Across, StringComparison.Ordinal);
+
         var three = LoadComparison.Compare([("a", Group(5, 8, 0.1)), ("b", Group(6, 8, 0.1)), ("c", Group(7, 8, 0.1))], Inches);
-        Assert.Null(three.Shift);
         Assert.Equal(3, three.Shifts.Count);
-        Assert.Equal(3, three.Centres.Count);
-        Assert.Equal(3, three.Details.Count(d => d.Contains("Welch's t", StringComparison.Ordinal)));
+        Assert.Equal(["A from the aim", "B from the aim", "C from the aim", "B from A", "C from A", "C from B"], three.CentreRows.Select(r => r.Label));
+    }
+
+    /// <summary>
+    /// Suggestion 63 (Discord, Alan's yes on 2026-11-28): where the groups sit is one line naming the loads by their letters, with the test's
+    /// verdict, and no sentence repeats a load's name; the chart of the centers reaches every range.
+    /// </summary>
+    [Fact]
+    public void WhereTheGroupsSitIsOneLineByLetter()
+    {
+        var report = LoadComparison.Compare([("A long load name, 3 of 3 sheets pooled", Group(3, 30, 0.1)), ("Another long load name, pooled", Group(4, 30, 0.1, dx: 0.4))], Inches);
+        Assert.StartsWith("B's center is " + Inches(report.Shifts[0].Distance) + " from A's, more than chance would give", report.Where, StringComparison.Ordinal);
+        Assert.Contains(report.Where, report.Plain);
+        Assert.DoesNotContain(report.Plain, p => p.Contains("long load name", StringComparison.Ordinal));
+        Assert.DoesNotContain(report.Explanation, p => p.Contains("of the aim;", StringComparison.Ordinal));
+
+        var same = LoadComparison.Compare([("a", Group(5, 8, 0.1)), ("b", Group(5, 8, 0.1))], Inches);
+        Assert.Contains("which these shots cannot tell from chance", same.Where, StringComparison.Ordinal);
+        var three = LoadComparison.Compare([("a", Group(5, 8, 0.1)), ("b", Group(6, 8, 0.1)), ("c", Group(7, 8, 0.1))], Inches);
+        Assert.StartsWith("The centers are up to ", three.Where, StringComparison.Ordinal);
+
+        double reach = LoadComparison.CentreReach(report);
+        Assert.All(report.Groups, g => Assert.True(Math.Abs(g.CentreRange.X.Lower) < reach && Math.Abs(g.CentreRange.X.Upper) < reach
+            && Math.Abs(g.CentreRange.Y.Lower) < reach && Math.Abs(g.CentreRange.Y.Upper) < reach));
+        Assert.Equal(["A", "B", "Z", "A2"], new[] { 0, 1, 25, 26 }.Select(LoadComparison.Letter));
     }
 }

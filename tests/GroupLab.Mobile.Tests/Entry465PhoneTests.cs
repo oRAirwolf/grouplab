@@ -81,6 +81,14 @@ public class Entry465PhoneTests
                 Dispatcher.UIThread.RunJobs();
                 var card = page.Groups!;
                 Assert.All(card.Plots, p => Assert.Equal(150, p.Width));
+
+                // Suggestion 63: the chart of the centers and a short block a row under it, every pair's shift included, nothing cut.
+                var centres = page.Centres!.GetLogicalDescendants().OfType<TextBlock>().ToList();
+                Assert.Contains(centres, t => t.Text == GroupLab.Core.Reporting.ComparisonPages.CentresHeading);
+                Assert.Equal(loads, centres.Count(t => t.Text == "from the aim"));
+                Assert.Contains(centres, t => t.Text == (loads == 3 ? "C from B" : "B from A"));
+                Assert.All(centres, t => Assert.Equal(Avalonia.Media.TextWrapping.Wrap, t.TextWrapping));
+                Assert.Single(page.Centres!.GetLogicalDescendants().OfType<CentreChart>());
                 if (loads == 3)
                 {
                     Assert.Null(card.Meaning);

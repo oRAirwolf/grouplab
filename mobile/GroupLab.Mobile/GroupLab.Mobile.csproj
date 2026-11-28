@@ -86,6 +86,7 @@
     <Compile Include="..\..\src\GroupLab.App\SharePicture.cs" Link="Shared\SharePicture.cs" />
     <Compile Include="..\..\src\GroupLab.App\ShotsCurve.cs" Link="Shared\ShotsCurve.cs" />
     <Compile Include="..\..\src\GroupLab.App\IntervalChart.cs" Link="Shared\IntervalChart.cs" />
+    <Compile Include="..\..\src\GroupLab.App\CentreChart.cs" Link="Shared\CentreChart.cs" />
     <Compile Include="..\..\src\GroupLab.App\HitGraphs.cs" Link="Shared\HitGraphs.cs" />
     <Compile Include="..\..\src\GroupLab.App\TrajectoryGraph.cs" Link="Shared\TrajectoryGraph.cs" />
     <Compile Include="..\..\src\GroupLab.App\Theme\Tokens.cs" Link="Shared\Theme\Tokens.cs" />

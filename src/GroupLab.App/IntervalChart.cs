@@ -70,7 +70,7 @@ internal sealed class IntervalChart : Control
     public bool RowsAreLoads { get; set; }
 
     /// <summary>The room a load's marker takes before its name.</summary>
-    private double Indent => RowsAreLoads ? 16 : 0;
+    private double Indent => RowsAreLoads ? 30 : 0;
 
     public IntervalChart()
     {
@@ -227,7 +227,9 @@ internal sealed class IntervalChart : Control
             if (RowsAreLoads)
             {
                 var load = LoadGroups.Brush(i, ActualThemeVariant);
-                GroupDots.Marker(context, i, load, new Pen(load, 1.5), new Point(Indent / 2, place.Name.Top + (TextSize * 0.7)), 4.5);
+                var at = new Point(6, place.Name.Top + (TextSize * 0.7));
+                GroupDots.Marker(context, i, load, new Pen(load, 1.5), at, 4.5);
+                LoadSwatch.DrawLetter(context, i, new Point(14, at.Y), palette.Text);
             }
 
             // The interval first and heavier than the dot, because the interval is the thing that decides whether a comparison means

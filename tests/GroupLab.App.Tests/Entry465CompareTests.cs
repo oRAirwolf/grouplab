@@ -60,6 +60,20 @@ public sealed class Entry465CompareTests
             Assert.Contains(report.ShotsNeeded, said);
             Assert.StartsWith("To tell a 10 percent difference in spread apart would take about", report.ShotsNeeded, StringComparison.Ordinal);
 
+            // Suggestion 63: where the groups sit is one line by letter beside the pictures, and the chart of the centers with its table follows.
+            Assert.Contains(report.Where, said);
+            Assert.DoesNotContain(said, t => t.Contains("of the aim;", StringComparison.Ordinal));
+            var centres = Assert.IsType<StackPanel>(window.CompareCentres);
+            var table = Texts(centres);
+            Assert.Contains(GroupLab.Core.Reporting.ComparisonPages.CentresHeading, table);
+            Assert.Equal(2, table.Count(t => t == "from the aim"));
+            Assert.Contains("B from A", table);
+            Assert.All(report.CentreRows, r => Assert.Contains(r.AcrossRange, table));
+            var chart = Assert.Single(centres.GetLogicalDescendants().OfType<CentreChart>());
+            var square = new Avalonia.Size(200, 200);
+            Assert.All(report.Groups, g => Assert.InRange(chart.At(g.Centre.X, g.Centre.Y, square).X, 1, 199));
+            Assert.Equal(new Avalonia.Point(100, 100), chart.At(0, 0, square));
+
             // Three loads: no meaning, and the card says what the card always said.
             long third = window.Sessions.Save(window.Sessions.Get(first)! with { Id = 0, CreatedUtc = "2099-02-01T00:00:00Z", ShotDate = "2099-02-01", Load = "Hand load 3" });
             window.ChooseSession(third, true);
