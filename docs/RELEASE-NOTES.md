@@ -12,6 +12,20 @@ GroupLab 1.0 is ready to use and still in active development, so a new build arr
 
 ---
 
+## 1.0.0-nightly.251
+
+**2026-11-28**, commit `3f2234d`. Nightly.
+
+**What you will notice**
+
+- Compare loads now draws where each load's center sits from your aim, with the range it could really be, beside a table of the centers and how far apart they are, on the computer, the phone and the exported page; the long sentences are cut to one line and each load is lettered A, B, C. (Suggestion 63).
+- On the phone, Which target is this? now says when the picture still has no scale, after adding a store-bought target or leaving marking by hand, and that Mark it by hand gives it one, such as the target's printed size typed in.
+- Marking by hand now asks for the scale at the top of the right column on the computer, with a length you know, the sheet's printed size or the paper's edges found for you; on the phone, Which target is this? fills the screen, Back comes back to it, and its first choice shows its title.
+
+[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v1.0.0-nightly.251)
+
+---
+
 ## 1.0.0-nightly.250
 
 **2026-11-27**, commit `df1c590`. Nightly.
