@@ -255,6 +255,8 @@ public sealed partial class MainWindow
             (OpeningWords.ByHand.Label, MarkByHand),
             (OpeningWords.StoreBought.Label, () =>
             {
+                // Entry 517 section 1: back on the picture, the scale is asked for at once if the target was not added.
+                scaleAskWanted = true;
                 AddStoreTarget();
                 DiagnosticLog.Info("opening.store-bought");
             }),
@@ -305,6 +307,7 @@ public sealed partial class MainWindow
     {
         sheetChooser.IsVisible = false;
         pendingDetection = null;
+        AskForScale();
         SetTool(MarkingTool.Length);
         status.Text = OpeningWords.ByHandStatus;
 

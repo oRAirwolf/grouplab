@@ -22,7 +22,9 @@ internal static class ProblemSheet
     /// The sheet over <paramref name="behind"/>: <paramref name="body"/> under the title, the first of <paramref name="choices"/> taken by
     /// Enter, and <paramref name="dismissed"/> by the × and by Escape.
     /// </summary>
-    public static Control Over(Control behind, string title, Control body, IReadOnlyList<Button> choices, Action dismissed)
+    /// <param name="fill">Entry 517 section 2: the sheet as large as the screen, for a choice a person comes back to from what it opens, so it
+    /// is the same size the first time as every time after.</param>
+    public static Control Over(Control behind, string title, Control body, IReadOnlyList<Button> choices, Action dismissed, bool fill = false)
     {
         ArgumentNullException.ThrowIfNull(choices);
         var dismiss = new Button { Content = "×", FontSize = 22, MinWidth = 44, MinHeight = 44, Background = Brushes.Transparent, BorderThickness = new Thickness(0), VerticalAlignment = VerticalAlignment.Top, Classes = { PhoneStyles.SheetDismiss } };
@@ -44,8 +46,8 @@ internal static class ProblemSheet
         var card = new Border
         {
             Child = new ScrollViewer { Content = column },
-            Margin = new Thickness(16, 56, 16, 16),
-            VerticalAlignment = VerticalAlignment.Top,
+            Margin = fill ? new Thickness(8) : new Thickness(16, 56, 16, 16),
+            VerticalAlignment = fill ? VerticalAlignment.Stretch : VerticalAlignment.Top,
             Classes = { PhoneStyles.Card },
         };
         Avalonia.Automation.AutomationProperties.SetName(card, title);

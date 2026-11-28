@@ -329,4 +329,9 @@ public partial class MobileSweepTests
 
         Assert.True(fields >= 5, $"only {fields} fields were found");
     }
+
+    /// <summary>Entry 517 section 2, in the sweep: "Which target is this?" fills the screen and Back comes back to it at that size, at every sweep size.</summary>
+    [AvaloniaTheory]
+    [MemberData(nameof(Sizes))]
+    public void WhichTargetIsOneSizeEveryTime(int width, int height) => new Entry517PhoneTests().WhichTargetFillsTheScreenAndBackComesBackToItAtThatSize(width, height);
 }

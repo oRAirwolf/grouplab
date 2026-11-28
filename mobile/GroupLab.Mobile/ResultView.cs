@@ -184,10 +184,19 @@ public sealed class ResultView : UserControl, IOpenTarget
     /// </summary>
     private Control WhichTargetIsThis(Control behind, WorkingImage working, ShotSetup setup, UnitSettings units, Action again)
     {
-        void Back()
+        void Dismissed()
         {
             // The choices behind the sheet come back as the screen, out of the layer they sat in.
             ProblemSheet.PutBack(this, behind);
+        }
+
+        // Entry 517 section 2: Back from marking by hand or from adding a store-bought target comes back to this same question, at the size it
+        // first opened. It came back as the list behind it, larger, which a person took for the question opening too small the first time.
+        void Back()
+        {
+            Content = null;
+            (behind.Parent as Panel)?.Children.Remove(behind);
+            Content = WhichTargetIsThis(behind, working, setup, units, again);
         }
 
         var byHand = Screens.Row(GroupLab.Core.Registration.OpeningWords.ByHand.Label, GroupLab.Core.Registration.OpeningWords.ByHand.Says, async () =>
@@ -195,7 +204,7 @@ public sealed class ResultView : UserControl, IOpenTarget
             .Id("which-target-by-hand");
         var store = Screens.Row(GroupLab.Core.Registration.OpeningWords.StoreBought.Label, GroupLab.Core.Registration.OpeningWords.StoreBought.Says,
             () => Content = new FingerprintPage(Back), explain: false).Id("which-target-store");
-        var sheet = Screens.Row(GroupLab.Core.Registration.OpeningWords.GroupLabSheet.Label, GroupLab.Core.Registration.OpeningWords.GroupLabSheet.Says, Back, explain: false)
+        var sheet = Screens.Row(GroupLab.Core.Registration.OpeningWords.GroupLabSheet.Label, GroupLab.Core.Registration.OpeningWords.GroupLabSheet.Says, Dismissed, explain: false)
             .Id("which-target-grouplab");
         byHand.Classes.Add(PhoneStyles.Primary);
         var body = new StackPanel { Spacing = 10 };
@@ -204,7 +213,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         body.Children.Add(store);
         body.Children.Add(sheet);
         body.Children.Add(Screens.Quiet(GroupLab.Core.Registration.OpeningWords.WhichFooter));
-        return ProblemSheet.Over(behind, GroupLab.Core.Registration.OpeningWords.WhichTitle, body, [byHand, store, sheet], Back);
+        return ProblemSheet.Over(behind, GroupLab.Core.Registration.OpeningWords.WhichTitle, body, [byHand, store, sheet], Dismissed, fill: true);
     }
 
     /// <summary>

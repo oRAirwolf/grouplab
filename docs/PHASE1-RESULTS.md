@@ -713,6 +713,25 @@ review until request 122 is answered.
 **Request 120.** The proposed platform sentence and the Mac line, as written, in `docs/PLATFORM-SUPPORT.md`, so the README and download
 page; "Other platforms get proper attention once the pace of change slows" went with them; the three old phrases are retired.
 
+## Entry 517: the scale asked for where marking by hand lands, and the phone's "Which target is this?" one size (2026-11-28)
+
+Two problems a user told Alan about directly; both are in docs/notes/error-reports.md.
+
+- **Section 1, the scale.** On the computer the length and rectangle tools did ask for the true length, but only after points were
+  tapped, and after Mark it by hand nothing but the status line said so; the Scale part of the right column was under the setup, below
+  the fold at 1280 by 720. `MainWindow.ScaleAsk.cs` puts Set the scale at the top of the right column from every way into marking by
+  hand (the which-target question, the sheet problem, the sheet chooser, whose own Mark it by hand picked no tool, Find holes without a
+  scale, and coming back from a store-bought target) until a scale is set, with the three ways to give one and the inputs moved inside.
+  The phone was checked and has no such gap: its marking by hand opens at the scale step.
+- **Section 2, the size.** Measured headless: the computer's question is 500 by 365 the first time and the second, at 1280 by 720, 1060
+  by 720 and 1920 by 1080. The phone's opened as a card over the list behind it, and Back from a choice came back to that list, full
+  screen; it now fills the screen and Back comes back to it (`ProblemSheet.Over` with `fill`). The phone's first choice's title was in
+  the color meant for amber on a clear row, so it never showed; a row that is primary is now tinted amber with its words in the text
+  color (`PhoneStyles`).
+- **Tests:** `Entry517Tests` (the card, its inputs, its place, and going once a scale is set; the size first and after at three sizes),
+  `Entry517PhoneTests` (full size first and after Back at three sizes, the first title's color, dismissing still shows the list), and both
+  sweeps (`DesktopSweepTests.WhichTargetIsOneSizeEveryTime`, `MobileSweepTests.WhichTargetIsOneSizeEveryTime`).
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.

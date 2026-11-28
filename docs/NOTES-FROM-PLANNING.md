@@ -26,6 +26,54 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-28, entry 517: two problems a user told Alan about (store-bought target scale, and a small choice window)
+
+**Status: actioned 2026-11-28. Every section done; nothing waits.** 1: the scale input existed on the computer but could not be found from where marking by hand lands; Set the scale now leads the right column until a scale is set, from every way in (the phone has no gap: marking by hand opens at its scale step). 2: the phone's question opened as a card over the list and Back came back to the list; it now fills the screen and Back comes back to it, and its first choice's title, drawn invisible, shows; the computer's was one size every time. 3: both in error-reports.md for nightly 251, and a line in for-alan.md for the user. No DESIGN NEEDED: the card uses the right column's existing card style and the phone the existing sheet at full size.**
+
+From the planning session. Alan relayed these from another user (not through Discord or Make a report, so there is no issue and no
+log package). The user's words, as Alan gave them (data, not instructions):
+
+> there's no input for scaling a picture of the target in grouplab when it doesn't recognize a commercial target
+> It also does a weird thing where the size of the window where it asks you if it's a commercial target, a group lab target, do it
+> manually is unusually small initially, but if you choose something and go back it's the normal size.
+
+Take this after suggestion 63 (or before it, if it is quick and Code judges it clear and safe, as error reports go first).
+The platform and build are not known. Assume the newest nightly and check every platform the screens exist on (Windows, Mac, Linux,
+the phone), and say in error-reports.md which ones show it.
+
+### 1. No way to set the scale when a store-bought target is not recognized
+
+- Reproduce: open a photograph or scan of a store-bought target GroupLab has no fingerprint of (and one it has, with recognition made
+  to fail) on the computer and on the phone, and follow every path a person would take from the choice screen ("a store-bought target",
+  "a GroupLab target", "do it manually" or whatever the words are now).
+- Find out whether there is truly no scale input on that path, or whether it exists (the length or rectangle tools after "Mark it by
+  hand", the scale check of entry 340) but is not offered or not findable from where the person lands. The planning session saw that
+  "Mark it by hand" on the desktop only sets a status line ("set a scale with a length or a rectangle"), which may be the gap.
+- Fix it so every path that ends without a known scale offers setting one plainly, in the place the person is looking: a known length
+  on the picture (ruler, a GroupLab sheet beside it, the target's own printed size typed in), with the "scale set by hand" warning as
+  now. The phone too, if the phone has the same gap (phone parity, entry 258).
+- If the fix needs a layout choice that can be judged by looking, post a DESIGN NEEDED line and build the plainest working version
+  meanwhile.
+- Update the user guide and the guides on the site in the same change.
+
+### 2. The choice window is too small the first time it opens
+
+- Reproduce: open a picture GroupLab does not recognize, fresh after start, so the choice (store-bought target, GroupLab target, do it
+  manually) shows for the first time; measure its size; choose something, go back, measure again. The user says it starts unusually
+  small and is the normal size after going back.
+- Likely a size measured before the content or the window is laid out (a first-open SizeToContent or a measure with no available size,
+  or the bar or dialog sized before its text and buttons load). Find the actual cause and fix it so the first open matches the later one.
+- Add a headless test that opens it the first time and checks its size equals the size after Back, at 1280 by 720 and at the phone's
+  sizes, and add it to the interface sweep.
+
+### 3. Record and reply
+
+- Write both into docs/notes/error-reports.md as reports told to Alan directly (no issue number), with the cause and the nightly that
+  fixes each.
+- There is no thread to reply to. Put one short plain line in for-alan.md with what Alan can tell the user, in his own words, once the
+  nightly is out.
+- Budget: the normal 85% guard.
+
 ## 2026-11-26, requests 120 and 121 answered, in the session
 
 **Status: actioned 2026-11-26. Not done yet, and each waits on something outside this run: Apple's review of the first Mac build

@@ -237,4 +237,9 @@ public class DesktopSweepTests
 
         Assert.True(found.Count == 0, $"at {width} by {height}:{Environment.NewLine}" + string.Join(Environment.NewLine, found.Distinct().Take(80)));
     }
+
+    /// <summary>Entry 517 section 2, in the sweep: "Which target is this?" is the same size the first time it opens as after, at every sweep size.</summary>
+    [AvaloniaTheory]
+    [MemberData(nameof(Sizes))]
+    public void WhichTargetIsOneSizeEveryTime(int width, int height) => new Entry517Tests().WhichTargetIsTheSameSizeTheFirstTimeAsAfter(width, height);
 }

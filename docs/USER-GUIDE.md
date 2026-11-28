@@ -259,7 +259,9 @@ choose or open is always brought fully into view.
 
 A picture of a target GroupLab did not print is not a mistake: GroupLab asks **Which target is this?**
 in the middle of the window, with **Mark it by hand** (1) first (one true length: the sheet's size, a ring, or a ruler in the picture),
-**It is a store-bought target** (2), and **It is a GroupLab sheet** (3). A picture that has a GroupLab sheet's corner squares or codes, but whose
+**It is a store-bought target** (2), and **It is a GroupLab sheet** (3). After **Mark it by hand**, **Set the scale** leads the
+right column until a scale is set: **A length I know: tap its two ends**, **The sheet's printed size: tap its four corners**, or **Find
+the paper's edges for me**, and then the length or the size to type, in the same place. A picture that has a GroupLab sheet's corner squares or codes, but whose
 codes would not read, says so in the middle of the window instead: the picture with its corner codes outlined, what got done and what did
 not, and **Choose the sheet** first, then **Try again, reading harder** and **Mark it by hand**; under a line, **Not a GroupLab sheet?**
 for a store-bought or hand-drawn target, which GroupLab remembers for that picture; and **Show what went wrong**. **Try again, reading
@@ -986,7 +988,7 @@ on when you come back to it. When a picture's square codes cannot be read, a she
 the sheet it looks like, **Choose the sheet**, **Take it again**, **Try again, reading harder** once, which names each step and can be
 canceled, and **Store-bought or hand-drawn** for a target GroupLab did not print,
 which it remembers for that picture. A picture with no GroupLab marks at all asks **Which target is this?** instead, calmly, with **Mark it
-by hand** first.
+by hand** first; on the phone it fills the screen, and **Back** from a store-bought target or from marking by hand comes back to it.
 
 ![Capture on the phone, with the caliber and distance row, Take a picture, Choose a photo, Print a target and the five places along the bottom](figures/screens/phone/fold-capture-light.png)
 

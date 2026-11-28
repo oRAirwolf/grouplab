@@ -31,6 +31,23 @@ public static class OpeningWords
     /// <summary>What the status line says once the person has chosen to mark a target by hand.</summary>
     public const string ByHandStatus = "Mark it by hand: set a scale with one true length, the sheet's size, a ring or a ruler, then place the shots.";
 
+    // Entry 517 section 1: marking by hand, the scale asked for at the top of the right column, where the person is looking, until it is set.
+
+    /// <summary>The heading of the card that asks for the scale.</summary>
+    public const string ScaleAskTitle = "Set the scale";
+
+    /// <summary>What the card says the scale is and where it can come from.</summary>
+    public const string ScaleAskSays = "GroupLab needs one true length on this picture before it can measure anything: a ruler or a ring whose size you know, or the sheet's own printed size.";
+
+    /// <summary>The choice of a known length: the length tool.</summary>
+    public const string ScaleAskLength = "A length I know: tap its two ends";
+
+    /// <summary>The choice of the sheet's size: the rectangle tool.</summary>
+    public const string ScaleAskCorners = "The sheet's printed size: tap its four corners";
+
+    /// <summary>The choice of finding the paper's edges, then typing its size.</summary>
+    public const string ScaleAskPaper = "Find the paper's edges for me";
+
     // The problem dialog: it looks like a GroupLab sheet and its codes would not read.
 
     public const string CodesTitle = "GroupLab could not read this sheet's codes";

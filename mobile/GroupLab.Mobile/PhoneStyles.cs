@@ -141,6 +141,12 @@ internal static class PhoneStyles
             (TemplatedControl.CornerRadiusProperty, new CornerRadius(0)), (TemplatedControl.PaddingProperty, new Thickness(0, Tokens.Space8)),
             (ContentControl.HorizontalContentAlignmentProperty, HorizontalAlignment.Stretch)),
 
+        // Entry 517: the first, most useful row of a choice, as the desktop marks it: tinted amber with the text in the text color. Primary
+        // alone left the row clear but its words in the color meant for amber, so "Mark it by hand" did not show at all.
+        Rule(x => x.OfType<Button>().Class(Row).Class(Primary), (TemplatedControl.BackgroundProperty, Brush(p.AmberTint)), (TemplatedControl.ForegroundProperty, Brush(p.Text)),
+            (TemplatedControl.BorderBrushProperty, Brush(p.Amber)), (TemplatedControl.BorderThicknessProperty, new Thickness(1)),
+            (TemplatedControl.CornerRadiusProperty, new CornerRadius(CardRadius)), (TemplatedControl.PaddingProperty, new Thickness(Tokens.Space8, Tokens.Space8))),
+
         // A choice among several: a card of its own, amber when it is the one chosen.
         Rule(x => x.OfType<RadioButton>().Class(Choice), (TemplatedControl.BackgroundProperty, Brush(p.Panel)), (TemplatedControl.BorderBrushProperty, Brush(p.Line2)),
             (TemplatedControl.BorderThicknessProperty, new Thickness(1)), (TemplatedControl.CornerRadiusProperty, new CornerRadius(CardRadius)),

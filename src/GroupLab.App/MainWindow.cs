@@ -810,6 +810,7 @@ public sealed partial class MainWindow : Window
         panel.Children.Add(crashBanner);
         BuildLeavingAsk();
         panel.Children.Add(leavingAsk);
+        panel.Children.Add(BuildScaleAsk());
         panel.Children.Add(setup);
         panel.Children.Add(Heading("Review"));
         panel.Children.Add(review);
@@ -971,12 +972,7 @@ public sealed partial class MainWindow : Window
         BuildBullLoads(panel);
         sheetChooser.Children.Add(FieldLabel("Which sheet is this?"));
         sheetChooser.Children.Add(sheetChoice);
-        sheetChooser.Children.Add(Row(Button("Detect with this sheet", async () => await DetectAsTheChosenSheet()), Button("Mark it by hand", () =>
-        {
-            sheetChooser.IsVisible = false;
-            pendingDetection = null;
-            status.Text = "Mark it by hand: set a scale with a length or a rectangle, then place the shots.";
-        })));
+        sheetChooser.Children.Add(Row(Button("Detect with this sheet", async () => await DetectAsTheChosenSheet()), Button("Mark it by hand", MarkByHand)));
         panel.Children.Add(sheetChooser);
         panel.Children.Add(printScale);
         panel.Children.Add(printerPanel);
@@ -2764,6 +2760,7 @@ public sealed partial class MainWindow : Window
         }
 
         status.Text = ToolStatus(tool);
+        ShowScaleAsk();
 
         // Entry 157 section 4: the paper itself is a known rectangle, and GroupLab can find its edges when the sheet stands out from what is behind it.
         if (tool == MarkingTool.Rectangle && grey is not null && canvas.AwaitingTaps.Count == 0)
@@ -3083,6 +3080,7 @@ public sealed partial class MainWindow : Window
     private void Refresh()
     {
         canvas.InvalidateVisual();
+        ShowScaleAsk();
         SavingAfterChange();
         UpdateCurrentTab();
         var state = session.State;

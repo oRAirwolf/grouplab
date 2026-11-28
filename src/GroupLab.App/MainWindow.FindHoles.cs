@@ -32,7 +32,11 @@ public sealed partial class MainWindow
         if (valueImage is not { } value || !FindHoles.Offered(session.State))
         {
             Failed("Find holes needs the scale first", "Set the scale first: Find holes needs to know how big an inch is on this picture.",
-                ("Set the scale", () => SetTool(MarkingTool.Length)), ("Not now", () => { }));
+                ("Set the scale", () =>
+                {
+                    AskForScale();
+                    SetTool(MarkingTool.Length);
+                }), ("Not now", () => { }));
             return;
         }
 

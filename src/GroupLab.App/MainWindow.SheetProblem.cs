@@ -78,6 +78,7 @@ public sealed partial class MainWindow
         sheetProblem = null;
         problemBar.IsVisible = false;
         ShowWorkAttention();
+        ForgetScaleAsk();
     }
 
     /// <summary>The SHA-256 of the picture open now, which is how "not a GroupLab sheet" is remembered; null where it cannot be read.</summary>

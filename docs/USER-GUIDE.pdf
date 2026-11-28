@@ -663,7 +663,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 35 0 R >>
 endobj
 35 0 obj
-<< /Length 4467 >>
+<< /Length 4810 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -697,19 +697,21 @@ BT /F1 81 Tf 1 0 0 -1 381 2106 Tm (When a picture names no sheet) Tj ET
 0.27451 0.27451 0.27451 rg
 BT /F1 71 Tf 1 0 0 -1 381 2232 Tm (A picture of a target GroupLab did not print is not a mistake: GroupLab asks Which target is this? in the middle of) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 2320 Tm (the window, with Mark it by hand \(1\) first \(one true length: the sheet's size, a ring, or a ruler in the picture\), It is a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2408 Tm (store-bought target \(2\), and It is a GroupLab sheet \(3\). A picture that has a GroupLab sheet's corner squares or) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2496 Tm (codes, but whose codes would not read, says so in the middle of the window instead: the picture with its corner) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2584 Tm (codes outlined, what got done and what did not, and Choose the sheet first, then Try again, reading harder and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2672 Tm (Mark it by hand; under a line, Not a GroupLab sheet? for a store-bought or hand-drawn target, which GroupLab) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2760 Tm (remembers for that picture; and Show what went wrong. Try again, reading harder reads the picture at full size,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2848 Tm (then each corner code on its own, lit evenly and turned square on, then looks for the sheet's printed name,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2936 Tm (naming each step in the status line with Cancel beside it; it takes a minute or two, and is offered once a picture. A) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3024 Tm (sheet it names is measured at once; if it names none, the window comes back saying so. Dismissed with Escape) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3112 Tm (or its ×, it leaves an amber bar under the header with Choose the sheet and All choices, and Show work says) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3200 Tm (codes not read. Any other problem that stops the work on the computer, such as a picture or a file that could not) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3288 Tm (be opened, a save, export, send or print that failed, or Find holes without a scale, opens the same kind of window) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3376 Tm (with what to do next; what needs no decision, such as saved or sent, stays in the status line. In any such window) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3464 Tm (Enter takes the first choice and Escape closes it.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2408 Tm (store-bought target \(2\), and It is a GroupLab sheet \(3\). After Mark it by hand, Set the scale leads the right column) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2496 Tm (until a scale is set: A length I know: tap its two ends, The sheet's printed size: tap its four corners, or Find the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2584 Tm (paper's edges for me, and then the length or the size to type, in the same place. A picture that has a GroupLab) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2672 Tm (sheet's corner squares or codes, but whose codes would not read, says so in the middle of the window instead:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2760 Tm (the picture with its corner codes outlined, what got done and what did not, and Choose the sheet first, then Try) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2848 Tm (again, reading harder and Mark it by hand; under a line, Not a GroupLab sheet? for a store-bought or) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2936 Tm (hand-drawn target, which GroupLab remembers for that picture; and Show what went wrong. Try again, reading) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3024 Tm (harder reads the picture at full size, then each corner code on its own, lit evenly and turned square on, then looks) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3112 Tm (for the sheet's printed name, naming each step in the status line with Cancel beside it; it takes a minute or two,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3200 Tm (and is offered once a picture. A sheet it names is measured at once; if it names none, the window comes back) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3288 Tm (saying so. Dismissed with Escape or its ×, it leaves an amber bar under the header with Choose the sheet and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3376 Tm (All choices, and Show work says codes not read. Any other problem that stops the work on the computer, such) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3464 Tm (as a picture or a file that could not be opened, a save, export, send or print that failed, or Find holes without a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3552 Tm (scale, opens the same kind of window with what to do next; what needs no decision, such as saved or sent,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3640 Tm (stays in the status line. In any such window Enter takes the first choice and Escape closes it.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 16 of 52) Tj ET
 Q
 endstream
@@ -2214,7 +2216,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 139 0 R >> >> /Contents 99 0 R >>
 endobj
 99 0 obj
-<< /Length 3224 >>
+<< /Length 3231 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
@@ -2231,17 +2233,17 @@ BT /F1 71 Tf 1 0 0 -1 381 1156 Tm (screen locked does not count, and a reading c
 BT /F1 71 Tf 1 0 0 -1 381 1244 Tm (codes cannot be read, a sheet in the middle of the screen says so: what it got done, the sheet it looks like,) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1332 Tm (Choose the sheet, Take it again, Try again, reading harder once, which names each step and can be canceled,) Tj ET
 BT /F1 71 Tf 1 0 0 -1 381 1420 Tm (and Store-bought or hand-drawn for a target GroupLab did not print, which it remembers for that picture. A) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1508 Tm (picture with no GroupLab marks at all asks Which target is this? instead, calmly, with Mark it by hand first.) Tj ET
-q 1295 0 0 -2794 1511 4382 cm /Im0 Do Q
-BT /F1 56 Tf 1 0 0 -1 381 4438 Tm (Capture on the phone, with the caliber and distance row, Take a picture, Choose a photo, Print a target and the five places along the bottom) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1508 Tm (picture with no GroupLab marks at all asks Which target is this? instead, calmly, with Mark it by hand first; on the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1596 Tm (phone it fills the screen, and Back from a store-bought target or from marking by hand comes back to it.) Tj ET
+q 1295 0 0 -2794 1511 4470 cm /Im0 Do Q
+BT /F1 56 Tf 1 0 0 -1 381 4526 Tm (Capture on the phone, with the caliber and distance row, Take a picture, Choose a photo, Print a target and the five places along the bottom) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 4631 Tm (Show diagnostics on the camera) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 4719 Tm (Show diagnostics on the camera) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 4757 Tm (Settings, Help and problems, Show diagnostics on the camera is off until you turn it on, on Android, iPhone and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4845 Tm (iPad alike. With it on, a small block of numbers sits in the bottom corner of the camera: how many frames a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4933 Tm (second the camera is judging and how long each takes, the instruction and the check holding it back \(the angle,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5021 Tm (the focus or the light, with its value\), the tilt, and the torch's level. While a picture is read the same corner names) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5109 Tm (the step being read, how long that step and the whole reading have taken, and on both screens the memory) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4845 Tm (Settings, Help and problems, Show diagnostics on the camera is off until you turn it on, on Android, iPhone and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4933 Tm (iPad alike. With it on, a small block of numbers sits in the bottom corner of the camera: how many frames a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5021 Tm (second the camera is judging and how long each takes, the instruction and the check holding it back \(the angle,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5109 Tm (the focus or the light, with its value\), the tilt, and the torch's level. While a picture is read the same corner names) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 48 of 52) Tj ET
 Q
 endstream
@@ -2250,73 +2252,73 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 101 0 R >>
 endobj
 101 0 obj
-<< /Length 6511 >>
+<< /Length 6504 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (GroupLab is using and how warm the phone says it is. It changes nothing about how a picture is taken or read; it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (is there so that a screenshot shows somebody helping you exactly where GroupLab was. The log records the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (same memory and warmth with each step of a reading and each change of instruction.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (the step being read, how long that step and the whole reading have taken, and on both screens the memory) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (GroupLab is using and how warm the phone says it is. It changes nothing about how a picture is taken or read; it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (is there so that a screenshot shows somebody helping you exactly where GroupLab was. The log records the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 716 Tm (same memory and warmth with each step of a reading and each change of instruction.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 817 Tm (A photograph from any photo app) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 905 Tm (A photograph from any photo app) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 943 Tm (Choose a photo opens Android's photo picker, which shows the photographs in your photo apps, those kept only) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1031 Tm (in the cloud included where Google Photos keeps them, and asks for no permission to your storage; a phone) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1119 Tm (without one offers the apps instead. From another app lists every app that offers pictures by name: Google) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1207 Tm (Photos, Samsung Gallery, your phone maker's own gallery, Drive, OneDrive, Dropbox and Files. A picture) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1295 Tm (shared into GroupLab from any app, or opened or edited with it, is read the same way. Choose a photo and From) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1383 Tm (another app take several at once, and several chosen or shared together are read one after another; when they) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1471 Tm (are all sheets of one set, the set's checklist opens with the pooled group showing. A photograph kept only in the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1559 Tm (cloud is downloaded first, with a line saying which app it is coming from and a Cancel; the phone has to be online) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1647 Tm (for that. GroupLab always reads the whole photograph, and when an app hands over a smaller copy it says so) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1735 Tm (before reading it and suggests another way.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1031 Tm (Choose a photo opens Android's photo picker, which shows the photographs in your photo apps, those kept only) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1119 Tm (in the cloud included where Google Photos keeps them, and asks for no permission to your storage; a phone) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1207 Tm (without one offers the apps instead. From another app lists every app that offers pictures by name: Google) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1295 Tm (Photos, Samsung Gallery, your phone maker's own gallery, Drive, OneDrive, Dropbox and Files. A picture) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1383 Tm (shared into GroupLab from any app, or opened or edited with it, is read the same way. Choose a photo and From) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1471 Tm (another app take several at once, and several chosen or shared together are read one after another; when they) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1559 Tm (are all sheets of one set, the set's checklist opens with the pooled group showing. A photograph kept only in the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1647 Tm (cloud is downloaded first, with a line saying which app it is coming from and a Cancel; the phone has to be online) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1735 Tm (for that. GroupLab always reads the whole photograph, and when an app hands over a smaller copy it says so) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1823 Tm (before reading it and suggests another way.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 1924 Tm (On iPhone and iPad) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 2012 Tm (On iPhone and iPad) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 2050 Tm (On iPhone and iPad \(from the App Store\): Choose a photo opens Photos, iCloud Photos included, with no) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2138 Tm (question about access, and From another app opens Files, which reaches iCloud Drive, Google Drive, OneDrive) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2226 Tm (and Dropbox. iOS lets no app open another app's library, so a Google Photos picture is shared into GroupLab: in) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2314 Tm (Google Photos, Share, then GroupLab. The same works from Photos and any other app, and Open in GroupLab) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2402 Tm (from Files; the picture opens straight into analysis. A picture opened from Files is read where it lies and left there.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2490 Tm (GroupLab's own folder is in the Files app, under On My iPad \(or On My iPhone\), GroupLab: its log is in logs, and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2578 Tm (with Keep every picture taken, on this device only turned on in Settings, Help and problems, each picture of a) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2666 Tm (sitting is in sitting with what the camera read before it and how it was analyzed. That switch is off until you turn it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2754 Tm (on, and turning it off deletes what was kept. On the camera the panel with the instruction sits above the preview) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2842 Tm (rather than over it, so the preview shows the whole of what the picture will hold.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2138 Tm (On iPhone and iPad \(from the App Store\): Choose a photo opens Photos, iCloud Photos included, with no) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2226 Tm (question about access, and From another app opens Files, which reaches iCloud Drive, Google Drive, OneDrive) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2314 Tm (and Dropbox. iOS lets no app open another app's library, so a Google Photos picture is shared into GroupLab: in) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2402 Tm (Google Photos, Share, then GroupLab. The same works from Photos and any other app, and Open in GroupLab) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2490 Tm (from Files; the picture opens straight into analysis. A picture opened from Files is read where it lies and left there.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2578 Tm (GroupLab's own folder is in the Files app, under On My iPad \(or On My iPhone\), GroupLab: its log is in logs, and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2666 Tm (with Keep every picture taken, on this device only turned on in Settings, Help and problems, each picture of a) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2754 Tm (sitting is in sitting with what the camera read before it and how it was analyzed. That switch is off until you turn it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2842 Tm (on, and turning it off deletes what was kept. On the camera the panel with the instruction sits above the preview) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2930 Tm (rather than over it, so the preview shows the whole of what the picture will hold.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 3031 Tm (Updates on phones that stop apps in the background) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 3119 Tm (Updates on phones that stop apps in the background) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 3157 Tm (GroupLab Dev looks for an update every time it opens, as well as about every six hours, so an update is late at) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3245 Tm (worst and never missed. Many phones stop that six-hourly check to save battery unless you allow it \(the names) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 3333 Tm (differ a little between versions\):) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3456 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3456 Tm (Xiaomi, Redmi and POCO: Settings, Apps, GroupLab Dev, Battery saver, No restrictions, and turn on) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3544 Tm (Autostart.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3646 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3646 Tm (OPPO, OnePlus and realme: Settings, Apps, GroupLab Dev, Battery usage, Allow background activity.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3748 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3748 Tm (vivo: Settings, Battery, Background power consumption management, GroupLab Dev, Allow high background) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3836 Tm (power consumption.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 3938 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 3938 Tm (Honor: Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4040 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4040 Tm (Huawei: Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4142 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4142 Tm (Samsung: Settings, Apps, GroupLab Dev, Battery, Unrestricted.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 395 4244 Tm (-) Tj ET
-BT /F1 71 Tf 1 0 0 -1 494 4244 Tm (Motorola: Settings, Apps, GroupLab Dev, App battery usage, Unrestricted.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3245 Tm (GroupLab Dev looks for an update every time it opens, as well as about every six hours, so an update is late at) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3333 Tm (worst and never missed. Many phones stop that six-hourly check to save battery unless you allow it \(the names) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 3421 Tm (differ a little between versions\):) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3544 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3544 Tm (Xiaomi, Redmi and POCO: Settings, Apps, GroupLab Dev, Battery saver, No restrictions, and turn on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3632 Tm (Autostart.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3734 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3734 Tm (OPPO, OnePlus and realme: Settings, Apps, GroupLab Dev, Battery usage, Allow background activity.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 3836 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3836 Tm (vivo: Settings, Battery, Background power consumption management, GroupLab Dev, Allow high background) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 3924 Tm (power consumption.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4026 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4026 Tm (Honor: Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4128 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4128 Tm (Huawei: Settings, Battery, App launch, GroupLab Dev, Manage manually, with Run in background on.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4230 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4230 Tm (Samsung: Settings, Apps, GroupLab Dev, Battery, Unrestricted.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 395 4332 Tm (-) Tj ET
+BT /F1 71 Tf 1 0 0 -1 494 4332 Tm (Motorola: Settings, Apps, GroupLab Dev, App battery usage, Unrestricted.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 4412 Tm (The picture check) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 4500 Tm (The picture check) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 4538 Tm (Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4626 Tm (on the picture itself: mostly what GroupLab corrected, sometimes what would help next time. Use it, or take it) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4714 Tm (again.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4626 Tm (Every picture, taken or chosen, gets a score from 0 to 100 on a red, amber and green bar, and numbered notes) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4714 Tm (on the picture itself: mostly what GroupLab corrected, sometimes what would help next time. Use it, or take it) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4802 Tm (again.) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 4903 Tm (The result) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 4991 Tm (The result) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 5029 Tm (The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 5117 Tm (and tap a number to switch its units. The picture of the sheet stands upright across the screen, with a ring on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 5117 Tm (The same figures as the computer: tap a figure's name for what it means and what your number of shots can tell,) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 49 of 52) Tj ET
 Q
 endstream
@@ -2325,45 +2327,46 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> /XObject << /Im0 140 0 R >> >> /Contents 103 0 R >>
 endobj
 103 0 obj
-<< /Length 4844 >>
+<< /Length 4998 >>
 stream
 q
 0.141732 0 0 -0.141732 0 792 cm
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 452 Tm (every hole and a line from each hole to its bull; Lines to bulls turns them off. Unsure lines are dashed in orange) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 540 Tm (with a ?. Pinch the picture to zoom in and drag it to move around; once it is large enough for every hole's tag to fit) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 628 Tm (without touching another tag or a hole, the tags appear, as on Fix holes, and they go again when you pinch back) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 716 Tm (out. In Fix holes, Next unsure hole goes to the next one, tapping a bull chooses it, and tapping holes gives them) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 804 Tm (to it or takes them away; Done with bull C3 ends it. Bull by bull in the figures does the same from a list, which is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 892 Tm (the way to check which bull each shot was given to. Fix holes opens it under a crosshair fixed in the middle:) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 980 Tm (pinch to zoom and drag the picture until the crosshair is on a hole, then Add a hole here, or Remove this hole,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1068 Tm (with Undo for each. After adding or moving a hole, GroupLab asks which bull it was fired at, its own choice first.) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1156 Tm (Each hole's circle is drawn at your bullet's diameter, so a correct circle sits on the edge of its hole; with no caliber) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1244 Tm (set, a line says that setting it makes the circles true size. Move this hole leaves the circle where it was: drag the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1332 Tm (circle itself with your finger, ringed in magenta with four short ticks pointing at its center, while a dashed ghost) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1420 Tm (stays where it started and a line says how far it has moved, and the picture scrolls when the circle nears an edge;) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1508 Tm (Put the hole here drops it and Cancel puts it back. On the computer, every hole's circle is the caliber's size too) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1596 Tm (once one is set, with the size GroupLab measured dashed beside it, and a hole dragged with the select tool) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1684 Tm (leaves the same dashed ghost. Done takes the changes back to the result, which measures again; leaving any) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1772 Tm (other way asks whether to keep them. From the result: How you shot this sheet \(the same two parts as the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1860 Tm (computer's Groups section, loads included\), Shots Needed to Zero, Ballistics with the group carried in, sharing) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 1948 Tm (the session, and sharing the shots as a CSV file, and Delete this session, which asks first and names any pooled) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2036 Tm (set that uses the sheet; that set keeps its other sheets. Import shots from a CSV file, under Sessions, shows the) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2124 Tm (group as it will be read and a card of GroupLab's guesses at what each column is, each line tapped to change,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2212 Tm (then Import and the result. Several files with the same columns can be chosen at once and are read as one) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 2300 Tm (group.) Tj ET
-q 3555 0 0 -1346 381 3726 cm /Im0 Do Q
-BT /F1 56 Tf 1 0 0 -1 381 3782 Tm (The result held sideways, with Fix holes and the start of the sheet on the left, the unit choice and the figures on the right) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 452 Tm (and tap a number to switch its units. The picture of the sheet stands upright across the screen, with a ring on) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 540 Tm (every hole and a line from each hole to its bull; Lines to bulls turns them off. Unsure lines are dashed in orange) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 628 Tm (with a ?. Pinch the picture to zoom in and drag it to move around; once it is large enough for every hole's tag to fit) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 716 Tm (without touching another tag or a hole, the tags appear, as on Fix holes, and they go again when you pinch back) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 804 Tm (out. In Fix holes, Next unsure hole goes to the next one, tapping a bull chooses it, and tapping holes gives them) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 892 Tm (to it or takes them away; Done with bull C3 ends it. Bull by bull in the figures does the same from a list, which is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 980 Tm (the way to check which bull each shot was given to. Fix holes opens it under a crosshair fixed in the middle:) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1068 Tm (pinch to zoom and drag the picture until the crosshair is on a hole, then Add a hole here, or Remove this hole,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1156 Tm (with Undo for each. After adding or moving a hole, GroupLab asks which bull it was fired at, its own choice first.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1244 Tm (Each hole's circle is drawn at your bullet's diameter, so a correct circle sits on the edge of its hole; with no caliber) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1332 Tm (set, a line says that setting it makes the circles true size. Move this hole leaves the circle where it was: drag the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1420 Tm (circle itself with your finger, ringed in magenta with four short ticks pointing at its center, while a dashed ghost) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1508 Tm (stays where it started and a line says how far it has moved, and the picture scrolls when the circle nears an edge;) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1596 Tm (Put the hole here drops it and Cancel puts it back. On the computer, every hole's circle is the caliber's size too) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1684 Tm (once one is set, with the size GroupLab measured dashed beside it, and a hole dragged with the select tool) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1772 Tm (leaves the same dashed ghost. Done takes the changes back to the result, which measures again; leaving any) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1860 Tm (other way asks whether to keep them. From the result: How you shot this sheet \(the same two parts as the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 1948 Tm (computer's Groups section, loads included\), Shots Needed to Zero, Ballistics with the group carried in, sharing) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2036 Tm (the session, and sharing the shots as a CSV file, and Delete this session, which asks first and names any pooled) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2124 Tm (set that uses the sheet; that set keeps its other sheets. Import shots from a CSV file, under Sessions, shows the) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2212 Tm (group as it will be read and a card of GroupLab's guesses at what each column is, each line tapped to change,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2300 Tm (then Import and the result. Several files with the same columns can be chosen at once and are read as one) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 2388 Tm (group.) Tj ET
+q 3555 0 0 -1346 381 3814 cm /Im0 Do Q
+BT /F1 56 Tf 1 0 0 -1 381 3870 Tm (The result held sideways, with Fix holes and the start of the sheet on the left, the unit choice and the figures on the right) Tj ET
 0.078431 0.078431 0.078431 rg
-BT /F1 81 Tf 1 0 0 -1 381 3975 Tm (Several targets open at once) Tj ET
+BT /F1 81 Tf 1 0 0 -1 381 4063 Tm (Several targets open at once) Tj ET
 0.27451 0.27451 0.27451 rg
-BT /F1 71 Tf 1 0 0 -1 381 4101 Tm (Every target you read on Capture or open from Sessions stays open until you close it, each as you left it, marks) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4189 Tm (not yet saved included. The target's name at the top of its result, or above the step while you mark it by hand,) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4277 Tm (opens Open targets: a row for each, with a small picture of it, whether it is at Analysis or Marking, not saved, and) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4365 Tm (a close button. Tap a row to switch to it; Open another target goes to the start of Capture with the others kept. A) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4453 Tm (result is saved in Sessions as you go, so closing it loses nothing; marking by hand is saved only when it is) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4541 Tm (finished, so closing a target with marks not saved asks first. Opening a session that is already open switches to) Tj ET
-BT /F1 71 Tf 1 0 0 -1 381 4629 Tm (it. Up to eight are kept open; past that the oldest that would lose nothing is closed, and it stays in Sessions.) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4189 Tm (Every target you read on Capture or open from Sessions stays open until you close it, each as you left it, marks) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4277 Tm (not yet saved included. The target's name at the top of its result, or above the step while you mark it by hand,) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4365 Tm (opens Open targets: a row for each, with a small picture of it, whether it is at Analysis or Marking, not saved, and) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4453 Tm (a close button. Tap a row to switch to it; Open another target goes to the start of Capture with the others kept. A) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4541 Tm (result is saved in Sessions as you go, so closing it loses nothing; marking by hand is saved only when it is) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4629 Tm (finished, so closing a target with marks not saved asks first. Opening a session that is already open switches to) Tj ET
+BT /F1 71 Tf 1 0 0 -1 381 4717 Tm (it. Up to eight are kept open; past that the oldest that would lose nothing is closed, and it stays in Sessions.) Tj ET
 BT /F1 56 Tf 1 0 0 -1 3594 5398 Tm (page 50 of 52) Tj ET
 Q
 endstream
@@ -28438,25 +28441,25 @@ endobj
 << /Title (Capture) /Parent 216 0 R /Prev 217 0 R /Next 219 0 R /Dest [96 0 R /XYZ 0 221.952756 null] >>
 endobj
 219 0 obj
-<< /Title (Show diagnostics on the camera) /Parent 216 0 R /Prev 218 0 R /Next 220 0 R /Dest [98 0 R /XYZ 0 147.11811 null] >>
+<< /Title (Show diagnostics on the camera) /Parent 216 0 R /Prev 218 0 R /Next 220 0 R /Dest [98 0 R /XYZ 0 134.645669 null] >>
 endobj
 220 0 obj
-<< /Title (A photograph from any photo app) /Parent 216 0 R /Prev 219 0 R /Next 221 0 R /Dest [100 0 R /XYZ 0 687.685039 null] >>
+<< /Title (A photograph from any photo app) /Parent 216 0 R /Prev 219 0 R /Next 221 0 R /Dest [100 0 R /XYZ 0 675.212598 null] >>
 endobj
 221 0 obj
-<< /Title (On iPhone and iPad) /Parent 216 0 R /Prev 220 0 R /Next 222 0 R /Dest [100 0 R /XYZ 0 530.787402 null] >>
+<< /Title (On iPhone and iPad) /Parent 216 0 R /Prev 220 0 R /Next 222 0 R /Dest [100 0 R /XYZ 0 518.314961 null] >>
 endobj
 222 0 obj
-<< /Title (Updates on phones that stop apps in the background) /Parent 216 0 R /Prev 221 0 R /Next 223 0 R /Dest [100 0 R /XYZ 0 373.889764 null] >>
+<< /Title (Updates on phones that stop apps in the background) /Parent 216 0 R /Prev 221 0 R /Next 223 0 R /Dest [100 0 R /XYZ 0 361.417323 null] >>
 endobj
 223 0 obj
-<< /Title (The picture check) /Parent 216 0 R /Prev 222 0 R /Next 224 0 R /Dest [100 0 R /XYZ 0 178.15748 null] >>
+<< /Title (The picture check) /Parent 216 0 R /Prev 222 0 R /Next 224 0 R /Dest [100 0 R /XYZ 0 165.685039 null] >>
 endobj
 224 0 obj
-<< /Title (The result) /Parent 216 0 R /Prev 223 0 R /Next 225 0 R /Dest [100 0 R /XYZ 0 108.566929 null] >>
+<< /Title (The result) /Parent 216 0 R /Prev 223 0 R /Next 225 0 R /Dest [100 0 R /XYZ 0 96.094488 null] >>
 endobj
 225 0 obj
-<< /Title (Several targets open at once) /Parent 216 0 R /Prev 224 0 R /Next 226 0 R /Dest [102 0 R /XYZ 0 240.094488 null] >>
+<< /Title (Several targets open at once) /Parent 216 0 R /Prev 224 0 R /Next 226 0 R /Dest [102 0 R /XYZ 0 227.622047 null] >>
 endobj
 226 0 obj
 << /Title (Sessions, Ballistics and Targets) /Parent 216 0 R /Prev 225 0 R /Next 227 0 R /Dest [104 0 R /XYZ 0 314.220472 null] >>
@@ -28502,200 +28505,200 @@ xref
 0000052851 00000 n 
 0000056814 00000 n 
 0000056942 00000 n 
-0000061462 00000 n 
-0000061618 00000 n 
-0000065829 00000 n 
-0000065985 00000 n 
-0000069398 00000 n 
-0000069526 00000 n 
-0000075517 00000 n 
-0000075645 00000 n 
-0000080963 00000 n 
-0000081119 00000 n 
-0000084727 00000 n 
-0000084855 00000 n 
-0000091820 00000 n 
-0000091948 00000 n 
-0000097120 00000 n 
-0000097276 00000 n 
-0000101164 00000 n 
-0000101292 00000 n 
-0000107303 00000 n 
-0000107459 00000 n 
-0000111351 00000 n 
-0000111507 00000 n 
-0000114969 00000 n 
-0000115125 00000 n 
-0000118362 00000 n 
-0000118490 00000 n 
-0000124233 00000 n 
-0000124389 00000 n 
-0000126891 00000 n 
-0000127047 00000 n 
-0000130113 00000 n 
-0000130269 00000 n 
-0000133332 00000 n 
-0000133488 00000 n 
-0000136910 00000 n 
-0000137038 00000 n 
-0000143290 00000 n 
-0000143418 00000 n 
-0000149026 00000 n 
-0000149182 00000 n 
-0000153161 00000 n 
-0000153289 00000 n 
-0000159941 00000 n 
-0000160069 00000 n 
-0000167071 00000 n 
-0000167227 00000 n 
-0000170892 00000 n 
-0000171048 00000 n 
-0000174763 00000 n 
-0000174919 00000 n 
-0000178218 00000 n 
-0000178346 00000 n 
-0000182399 00000 n 
-0000182555 00000 n 
-0000182916 00000 n 
-0000183072 00000 n 
-0000183538 00000 n 
-0000183694 00000 n 
-0000185189 00000 n 
-0000185345 00000 n 
-0000189104 00000 n 
-0000189260 00000 n 
-0000192409 00000 n 
-0000192565 00000 n 
-0000195842 00000 n 
-0000195972 00000 n 
-0000202537 00000 n 
-0000202695 00000 n 
-0000207593 00000 n 
-0000207751 00000 n 
-0000210235 00000 n 
-0000210393 00000 n 
-0000213839 00000 n 
-0000316287 00000 n 
-0000418765 00000 n 
-0000539723 00000 n 
-0000806637 00000 n 
-0001076727 00000 n 
-0001220463 00000 n 
-0001428138 00000 n 
-0001580036 00000 n 
-0001785893 00000 n 
-0001996953 00000 n 
-0002196800 00000 n 
-0002321623 00000 n 
-0002542881 00000 n 
-0002812783 00000 n 
-0003058019 00000 n 
-0003332530 00000 n 
-0003425494 00000 n 
-0003582446 00000 n 
-0003795179 00000 n 
-0003997072 00000 n 
-0004254487 00000 n 
-0004490097 00000 n 
-0004765711 00000 n 
-0004881710 00000 n 
-0005017050 00000 n 
-0005156308 00000 n 
-0005267057 00000 n 
-0005367635 00000 n 
-0005464817 00000 n 
-0005726402 00000 n 
-0005810262 00000 n 
-0005872194 00000 n 
-0005949878 00000 n 
-0006016108 00000 n 
-0006070383 00000 n 
-0006070461 00000 n 
-0006070609 00000 n 
-0006070733 00000 n 
-0006070875 00000 n 
-0006071004 00000 n 
-0006071121 00000 n 
-0006071292 00000 n 
-0006071434 00000 n 
-0006071574 00000 n 
-0006071734 00000 n 
-0006071894 00000 n 
-0006072053 00000 n 
-0006072187 00000 n 
-0006072322 00000 n 
-0006072457 00000 n 
-0006072585 00000 n 
-0006072725 00000 n 
-0006072867 00000 n 
-0006072995 00000 n 
-0006073141 00000 n 
-0006073270 00000 n 
-0006073387 00000 n 
-0006073513 00000 n 
-0006073690 00000 n 
-0006073843 00000 n 
-0006074003 00000 n 
-0006074133 00000 n 
-0006074325 00000 n 
-0006074447 00000 n 
-0006074591 00000 n 
-0006074722 00000 n 
-0006074861 00000 n 
-0006075005 00000 n 
-0006075180 00000 n 
-0006075309 00000 n 
-0006075441 00000 n 
-0006075579 00000 n 
-0006075719 00000 n 
-0006075858 00000 n 
-0006075998 00000 n 
-0006076132 00000 n 
-0006076260 00000 n 
-0006076411 00000 n 
-0006076566 00000 n 
-0006076697 00000 n 
-0006076818 00000 n 
-0006076998 00000 n 
-0006077100 00000 n 
-0006077272 00000 n 
-0006077422 00000 n 
-0006077557 00000 n 
-0006077702 00000 n 
-0006077918 00000 n 
-0006078039 00000 n 
-0006078180 00000 n 
-0006078309 00000 n 
-0006078443 00000 n 
-0006078573 00000 n 
-0006078691 00000 n 
-0006078875 00000 n 
-0006078996 00000 n 
-0006079186 00000 n 
-0006079326 00000 n 
-0006079454 00000 n 
-0006079635 00000 n 
-0006079752 00000 n 
-0006079918 00000 n 
-0006080037 00000 n 
-0006080203 00000 n 
-0006080332 00000 n 
-0006080467 00000 n 
-0006080623 00000 n 
-0006080746 00000 n 
-0006080903 00000 n 
-0006081027 00000 n 
-0006081149 00000 n 
-0006081293 00000 n 
-0006081440 00000 n 
-0006081574 00000 n 
-0006081740 00000 n 
-0006081872 00000 n 
-0006081998 00000 n 
-0006082142 00000 n 
-0006082290 00000 n 
+0000061805 00000 n 
+0000061961 00000 n 
+0000066172 00000 n 
+0000066328 00000 n 
+0000069741 00000 n 
+0000069869 00000 n 
+0000075860 00000 n 
+0000075988 00000 n 
+0000081306 00000 n 
+0000081462 00000 n 
+0000085070 00000 n 
+0000085198 00000 n 
+0000092163 00000 n 
+0000092291 00000 n 
+0000097463 00000 n 
+0000097619 00000 n 
+0000101507 00000 n 
+0000101635 00000 n 
+0000107646 00000 n 
+0000107802 00000 n 
+0000111694 00000 n 
+0000111850 00000 n 
+0000115312 00000 n 
+0000115468 00000 n 
+0000118705 00000 n 
+0000118833 00000 n 
+0000124576 00000 n 
+0000124732 00000 n 
+0000127234 00000 n 
+0000127390 00000 n 
+0000130456 00000 n 
+0000130612 00000 n 
+0000133675 00000 n 
+0000133831 00000 n 
+0000137253 00000 n 
+0000137381 00000 n 
+0000143633 00000 n 
+0000143761 00000 n 
+0000149369 00000 n 
+0000149525 00000 n 
+0000153504 00000 n 
+0000153632 00000 n 
+0000160284 00000 n 
+0000160412 00000 n 
+0000167414 00000 n 
+0000167570 00000 n 
+0000171235 00000 n 
+0000171391 00000 n 
+0000175106 00000 n 
+0000175262 00000 n 
+0000178561 00000 n 
+0000178689 00000 n 
+0000182742 00000 n 
+0000182898 00000 n 
+0000183259 00000 n 
+0000183415 00000 n 
+0000183881 00000 n 
+0000184037 00000 n 
+0000185532 00000 n 
+0000185688 00000 n 
+0000189447 00000 n 
+0000189603 00000 n 
+0000192752 00000 n 
+0000192908 00000 n 
+0000196192 00000 n 
+0000196322 00000 n 
+0000202880 00000 n 
+0000203038 00000 n 
+0000208090 00000 n 
+0000208248 00000 n 
+0000210732 00000 n 
+0000210890 00000 n 
+0000214336 00000 n 
+0000316784 00000 n 
+0000419262 00000 n 
+0000540220 00000 n 
+0000807134 00000 n 
+0001077224 00000 n 
+0001220960 00000 n 
+0001428635 00000 n 
+0001580533 00000 n 
+0001786390 00000 n 
+0001997450 00000 n 
+0002197297 00000 n 
+0002322120 00000 n 
+0002543378 00000 n 
+0002813280 00000 n 
+0003058516 00000 n 
+0003333027 00000 n 
+0003425991 00000 n 
+0003582943 00000 n 
+0003795676 00000 n 
+0003997569 00000 n 
+0004254984 00000 n 
+0004490594 00000 n 
+0004766208 00000 n 
+0004882207 00000 n 
+0005017547 00000 n 
+0005156805 00000 n 
+0005267554 00000 n 
+0005368132 00000 n 
+0005465314 00000 n 
+0005726899 00000 n 
+0005810759 00000 n 
+0005872691 00000 n 
+0005950375 00000 n 
+0006016605 00000 n 
+0006070880 00000 n 
+0006070958 00000 n 
+0006071106 00000 n 
+0006071230 00000 n 
+0006071372 00000 n 
+0006071501 00000 n 
+0006071618 00000 n 
+0006071789 00000 n 
+0006071931 00000 n 
+0006072071 00000 n 
+0006072231 00000 n 
+0006072391 00000 n 
+0006072550 00000 n 
+0006072684 00000 n 
+0006072819 00000 n 
+0006072954 00000 n 
+0006073082 00000 n 
+0006073222 00000 n 
+0006073364 00000 n 
+0006073492 00000 n 
+0006073638 00000 n 
+0006073767 00000 n 
+0006073884 00000 n 
+0006074010 00000 n 
+0006074187 00000 n 
+0006074340 00000 n 
+0006074500 00000 n 
+0006074630 00000 n 
+0006074822 00000 n 
+0006074944 00000 n 
+0006075088 00000 n 
+0006075219 00000 n 
+0006075358 00000 n 
+0006075502 00000 n 
+0006075677 00000 n 
+0006075806 00000 n 
+0006075938 00000 n 
+0006076076 00000 n 
+0006076216 00000 n 
+0006076355 00000 n 
+0006076495 00000 n 
+0006076629 00000 n 
+0006076757 00000 n 
+0006076908 00000 n 
+0006077063 00000 n 
+0006077194 00000 n 
+0006077315 00000 n 
+0006077495 00000 n 
+0006077597 00000 n 
+0006077769 00000 n 
+0006077919 00000 n 
+0006078054 00000 n 
+0006078199 00000 n 
+0006078415 00000 n 
+0006078536 00000 n 
+0006078677 00000 n 
+0006078806 00000 n 
+0006078940 00000 n 
+0006079070 00000 n 
+0006079188 00000 n 
+0006079372 00000 n 
+0006079493 00000 n 
+0006079683 00000 n 
+0006079823 00000 n 
+0006079951 00000 n 
+0006080132 00000 n 
+0006080249 00000 n 
+0006080415 00000 n 
+0006080534 00000 n 
+0006080700 00000 n 
+0006080829 00000 n 
+0006080964 00000 n 
+0006081120 00000 n 
+0006081243 00000 n 
+0006081400 00000 n 
+0006081524 00000 n 
+0006081646 00000 n 
+0006081791 00000 n 
+0006081938 00000 n 
+0006082072 00000 n 
+0006082238 00000 n 
+0006082371 00000 n 
+0006082496 00000 n 
+0006082640 00000 n 
+0006082788 00000 n 
 trailer
 << /Size 228 /Root 1 0 R >>
 startxref
-6082423
+6082921
 %%EOF
