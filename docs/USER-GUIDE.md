@@ -988,7 +988,9 @@ on when you come back to it. When a picture's square codes cannot be read, a she
 the sheet it looks like, **Choose the sheet**, **Take it again**, **Try again, reading harder** once, which names each step and can be
 canceled, and **Store-bought or hand-drawn** for a target GroupLab did not print,
 which it remembers for that picture. A picture with no GroupLab marks at all asks **Which target is this?** instead, calmly, with **Mark it
-by hand** first; on the phone it fills the screen, and **Back** from a store-bought target or from marking by hand comes back to it.
+by hand** first; on the phone it fills the screen, and **Back** from a store-bought target or from marking by hand comes back to it, saying first
+when the picture still has no scale. Adding a store-bought target there saves a file for the project and does not give this picture a
+scale; **Mark it by hand** does, with a length you know, such as the target's printed size, typed in.
 
 ![Capture on the phone, with the caliber and distance row, Take a picture, Choose a photo, Print a target and the five places along the bottom](figures/screens/phone/fold-capture-light.png)
 

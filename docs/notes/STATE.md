@@ -9,7 +9,7 @@ him is mirrored in `docs/notes/panel.md` (local, not committed), and what needs 
 
 If something here disagrees with the logs, the logs are right and this file is out of date. Say so.
 
-**Last rewritten:** 2026-11-28, after suggestion 63 (Where each center sits on Compare loads) and entry 517 (Set the scale; the phone's which-target one size); the inbox is empty.
+**Last rewritten:** 2026-11-28, after suggestion 63 (Where each center sits on Compare loads) and entries 517 and 518 (Set the scale; the phone's which-target, on Android); the inbox is empty.
 
 ---
 
@@ -22,7 +22,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   range charts and shots table. In nightly 249. Request 123 answered (a): the pictures stay as they are; reply 62-3 posted.
 - **Question 120 (b): LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`; RESTORE.md has the undo): nightly 247 says `llvm: ran`.
   Apple error reports are read for an LLVM cause (switch off at once if one could be); the device comparison at request 50's sitting.
-- **Nightly 251 carries** suggestion 63 (Where each center sits; reply 63-2 posts after it) and entry 517 (Set the scale on the computer; the phone's which-target fills the screen).
+- **Nightly 251 carries** suggestion 63 (Where each center sits; reply 63-2 posts after it) and entries 517 and 518 (Set the scale on the computer; on the phone Mark it by hand shows and the question says when there is no scale).
 - **Report 60's .338 sets, fixed 2026-11-26** (Alan's go): on a scan with a caliber, a hole is also read from the torn paper round it
   (`RenderDifferenceHoleDetector.WhiteBacker.cs`); the five .338 pages give 30 holes where they gave 7, the local bench loses nothing.
   In nightly 250; reply 60-5 posts after it; issue 60 closed with the commit. The guide says to scan on a dark sheet.

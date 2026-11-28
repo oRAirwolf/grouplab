@@ -182,7 +182,8 @@ public sealed class ResultView : UserControl, IOpenTarget
     /// Entry 356 section 5: "Which target is this?", a sheet over the choices behind it, each with the line that says what it needs. Marking
     /// it by hand opens Marking A; a store-bought target opens Add a store-bought target; a GroupLab sheet leaves the list of sheets behind it.
     /// </summary>
-    private Control WhichTargetIsThis(Control behind, WorkingImage working, ShotSetup setup, UnitSettings units, Action again)
+    /// <param name="noScaleYet">Entry 518: come back to from a choice, where the picture still has no scale, so the question says so first.</param>
+    private Control WhichTargetIsThis(Control behind, WorkingImage working, ShotSetup setup, UnitSettings units, Action again, bool noScaleYet = false)
     {
         void Dismissed()
         {
@@ -196,7 +197,7 @@ public sealed class ResultView : UserControl, IOpenTarget
         {
             Content = null;
             (behind.Parent as Panel)?.Children.Remove(behind);
-            Content = WhichTargetIsThis(behind, working, setup, units, again);
+            Content = WhichTargetIsThis(behind, working, setup, units, again, noScaleYet: true);
         }
 
         var byHand = Screens.Row(GroupLab.Core.Registration.OpeningWords.ByHand.Label, GroupLab.Core.Registration.OpeningWords.ByHand.Says, async () =>
@@ -208,6 +209,11 @@ public sealed class ResultView : UserControl, IOpenTarget
             .Id("which-target-grouplab");
         byHand.Classes.Add(PhoneStyles.Primary);
         var body = new StackPanel { Spacing = 10 };
+        if (noScaleYet)
+        {
+            body.Children.Add(Screens.Line(GroupLab.Core.Registration.OpeningWords.StillNoScale).Id("which-target-still-no-scale"));
+        }
+
         body.Children.Add(Screens.Dim(GroupLab.Core.Registration.OpeningWords.WhichSays));
         body.Children.Add(byHand);
         body.Children.Add(store);

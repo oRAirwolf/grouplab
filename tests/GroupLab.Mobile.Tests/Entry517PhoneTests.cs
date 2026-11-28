@@ -68,6 +68,7 @@ public class Entry517PhoneTests
         {
             Settle();
             var first = Card(view)!.Bounds;
+            Assert.DoesNotContain(OpeningWords.StillNoScale, view.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text));
             Assert.True(first.Height >= height - 40, $"at {width} by {height} the question opened {first.Height:0} tall");
             Assert.True(first.Width >= width - 40, $"at {width} by {height} the question opened {first.Width:0} wide");
 
@@ -85,6 +86,11 @@ public class Entry517PhoneTests
                 .RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Settle();
             Assert.Equal(first.Size, Card(view)!.Bounds.Size);
+
+            // Entry 518: adding a store-bought target gives this picture no scale, so the question come back to says so first, and how.
+            var words = view.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
+            Assert.Contains(OpeningWords.StillNoScale, words);
+            Assert.Contains(OpeningWords.ByHand.Label, words);
 
             // Dismissed, the list behind it is the screen, as before.
             view.GetLogicalDescendants().OfType<Button>().First(b => AutomationProperties.GetName(b) == OpeningWords.Dismiss)

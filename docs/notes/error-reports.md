@@ -11,34 +11,47 @@ iPhone, iPad or Mac is read for anything it could cause (a crash inside compiled
 the computer's on the same picture, a start-up failure), and if one could, `GroupLabAppleLlvm` goes to false at once (docs/RESTORE.md)
 before anything else. The Mac's copy carries no LLVM, so a Mac report that looks like it points at something else.
 
-## Told to Alan directly, 2026-11-28 (entry 517 section 2): "Which target is this?" opens unusually small, normal size after going back
+## Told to Alan directly, 2026-11-28, on Android (entry 517 section 2, entry 518): "Which target is this?" opens unusually small, normal size after going back
 
 - **Said** (relayed by Alan, no issue and no log): the window asking whether it is a store-bought target, a GroupLab target or to do it
-  manually is unusually small the first time, and the normal size after choosing something and going back. Platform and build not known.
+  manually is unusually small the first time, and the normal size after choosing something and going back. **On Android** (the user told
+  Alan afterwards, entry 518); build not known, taken as a recent nightly or the Play test copy.
 - **Checked:** the computer (headless at 1280 by 720, 1060 by 720 and 1920 by 1080, Windows; the Mac and Linux run the same code) opens
   it at 500 by 365 the first time and every time after, and has no Back to it. **The phone shows it:** the question opened as a card over
   the list of sheets behind it, and Back from a store-bought target or from marking by hand came back to that list as the whole screen,
   not to the question, so the question first seen looked like a small version of what came back. The same card also drew its first
   choice's title, "Mark it by hand", in the color meant for amber on a clear row, so it did not show at all (on every phone and tablet).
-- **Fixed (entry 517, nightly 251):** on the phone the question fills the screen when it opens, Back from either choice comes back to it
+- **Fixed (entry 517, nightly 251, on Android, iPhone and iPad alike):** on the phone the question fills the screen when it opens, Back from either choice comes back to it
   at that size (dismissing it still shows the list behind), and the first choice is tinted amber with its title in the text color.
   `Entry517PhoneTests` and the phone sweep check the size first and after Back at 390 by 844, 320 by 568, 1024 by 1366 and the sweep's
   sizes; `Entry517Tests` and the desktop sweep check the computer's is one size every time.
 
-## Told to Alan directly, 2026-11-28 (entry 517 section 1): no way to set the scale when a store-bought target is not recognized
+## Told to Alan directly, 2026-11-28, on Android (entry 517 section 1, entry 518): no way to set the scale when a store-bought target is not recognized
 
 - **Said** (relayed by Alan, no issue and no log): there is no input for scaling a picture of a target when GroupLab does not recognize a
-  store-bought target. Platform and build not known.
+  store-bought target. **On Android** (the user told Alan afterwards, entry 518); build not known.
+- **The cause on Android (entry 518, rechecked path by path):** on the phone the only way to a scale for such a picture is **Mark it by
+  hand**, whose first step is the scale (a length you know, such as the target's printed size, typed in), and that choice's title did not
+  show at all: the first row of "Which target is this?" drew its words in the color meant for amber on a clear row, so only its gray line
+  beneath could be seen and it did not look like a choice. "It is a store-bought target" opens the steps that save a reference file for the
+  project and give the open picture no scale; Back from them came back to the list behind the question, where "Not a GroupLab sheet:
+  mark it by hand" is, but nothing said the picture still had no scale. The other routes were checked and each reaches a scale: "It is a
+  GroupLab sheet" leaves the list of sheets, each with its size; a store-bought target recognized with no size chosen opens marking at its
+  scale step; Find holes is offered only once a scale is set; a picture opened from Share or the camera asks the same question.
+  **So the invisible title is the explanation**, and the store-bought route was the one that ended with no scale and no word of it.
 - **Cause:** the input existed but could not be found from where the person lands, on the computer. After **Mark it by hand** (from
   "Which target is this?", the sheet problem, the sheet chooser or Find holes), only the status line at the foot said to set a scale; the
   right column's Scale part sat under the whole setup, out of view at 1280 by 720, and stayed empty until two points had been tapped on
   the picture with a tool the person had not been told was chosen. The sheet chooser's own Mark it by hand did not even pick a tool.
-  "It is a store-bought target" goes to Add a store-bought target and back without the scale ever being asked for. **The phone** has no
-  gap here: marking by hand opens at its scale step, a length's two ends under the crosshair and the length typed.
+  "It is a store-bought target" goes to Add a store-bought target and back without the scale ever being asked for. (Entry 517 said the
+  phone had no gap; entry 518 found it, above.)
 - **Fixed (entry 517, nightly 251):** every way into marking by hand on the computer puts **Set the scale** at the top of the right column
   until a scale is set: what the scale is, **A length I know: tap its two ends**, **The sheet's printed size: tap its four corners**,
   **Find the paper's edges for me**, what the tool in hand asks for, and the length or size to type, moved into the card; the "scale set
   by hand" warning is as before. Choosing a store-bought target asks for it too on coming back to the picture. `Entry517Tests` holds it.
+- **Fixed on the phone (entries 517 and 518, nightly 251, Android, iPhone and iPad):** "Mark it by hand" shows, first and tinted amber;
+  the question fills the screen and Back from either choice comes back to it; come back to, it says first "This picture still has no
+  scale. Mark it by hand gives it one: a length you know, such as the target's printed size, typed in." `Entry517PhoneTests` holds it.
 
 ## 60, 2026-11-24, nightly 243 on a Mac (posted in the Discord's help forum, with a screenshot and the scan)
 

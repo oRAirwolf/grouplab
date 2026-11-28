@@ -26,6 +26,27 @@ only written record of why much of this project is the way it is.
 
 ---
 
+## 2026-11-28, entry 518: entry 517's two problems were on Android; recheck the phone's scale path
+
+**Status: actioned 2026-11-28. Every section done; nothing waits.** 1: every Android route from "Which target is this?" walked: a GroupLab sheet, a recognized store-bought target with no size, Find holes, and Share or the camera each reach a scale; "It is a store-bought target" saves a reference file and gives the picture none. 2: the invisible "Mark it by hand" title is the explanation, since it was the only way to a scale; the question come back to now says the picture still has no scale and how (Entry517PhoneTests). 3: both reports corrected to Android with what nightly 251 fixes on the phone; Alan's line rewritten for Android.**
+
+From the planning session. The user behind entry 517 has since told Alan that **both problems were on Android** (build not known; assume
+a recent nightly or the Play test copy). Never write the user's name anywhere.
+
+error-reports.md (entry 517 section 1) says the phone "has no gap here" for the scale, and the fix in nightly 251 is on the computer. The
+user saw the gap on Android, so please look again on the phone:
+
+1. Walk every way an unrecognized store-bought picture can go on Android, from the "Which target is this?" question: "It is a
+   store-bought target" (does the phone, like the computer did, go to adding a store-bought target and come back with no scale asked
+   for?), "a GroupLab target" when the codes are not found, and any route that skips marking by hand's scale step (Find holes, a
+   recognized family member with the size not chosen, Back from the fingerprint steps, opening the picture from Share or the camera).
+2. Entry 517 found that the phone's card drew "Mark it by hand", its first choice, in a color that did not show at all. That may be the
+   real cause: the one path with the scale step could not be seen. Say in error-reports.md whether that is the explanation, and if any
+   other phone path ends without a scale, fix it the same way as the computer (Set the scale offered plainly until a scale is set, the
+   printed size typed in as one choice), with a test.
+3. Correct both entry 517 reports in error-reports.md: platform Android (told to Alan 2026-11-28), and what nightly 251 fixes on the
+   phone. Update the one line for Alan in for-alan.md so it fits Android.
+
 ## 2026-11-28, entry 517: two problems a user told Alan about (store-bought target scale, and a small choice window)
 
 **Status: actioned 2026-11-28. Every section done; nothing waits.** 1: the scale input existed on the computer but could not be found from where marking by hand lands; Set the scale now leads the right column until a scale is set, from every way in (the phone has no gap: marking by hand opens at its scale step). 2: the phone's question opened as a card over the list and Back came back to the list; it now fills the screen and Back comes back to it, and its first choice's title, drawn invisible, shows; the computer's was one size every time. 3: both in error-reports.md for nightly 251, and a line in for-alan.md for the user. No DESIGN NEEDED: the card uses the right column's existing card style and the phone the existing sheet at full size.**

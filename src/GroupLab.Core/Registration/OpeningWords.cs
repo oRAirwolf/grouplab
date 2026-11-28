@@ -33,6 +33,12 @@ public static class OpeningWords
 
     // Entry 517 section 1: marking by hand, the scale asked for at the top of the right column, where the person is looking, until it is set.
 
+    /// <summary>
+    /// Entry 518: on the phone, "Which target is this?" come back to from adding a store-bought target or from marking by hand, where the
+    /// picture still has no scale: what gives it one. Adding a target saves a reference file for the project and gives this picture nothing.
+    /// </summary>
+    public const string StillNoScale = "This picture still has no scale. Mark it by hand gives it one: a length you know, such as the target's printed size, typed in.";
+
     /// <summary>The heading of the card that asks for the scale.</summary>
     public const string ScaleAskTitle = "Set the scale";
 

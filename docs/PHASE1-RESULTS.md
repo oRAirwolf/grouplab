@@ -732,6 +732,18 @@ Two problems a user told Alan about directly; both are in docs/notes/error-repor
   `Entry517PhoneTests` (full size first and after Back at three sizes, the first title's color, dismissing still shows the list), and both
   sweeps (`DesktopSweepTests.WhichTargetIsOneSizeEveryTime`, `MobileSweepTests.WhichTargetIsOneSizeEveryTime`).
 
+## Entry 518: entry 517's two problems were on Android; the phone's scale path rechecked (2026-11-28)
+
+- **Every Android route from "Which target is this?"**, walked in the code and the headless phone: "It is a GroupLab sheet" leaves the
+  list of sheets, each with its size; a store-bought target recognized with no size chosen opens marking at its scale step; Find holes
+  is offered only once a scale is set; Share and the camera ask the same question. "It is a store-bought target" opens the steps that
+  save a reference file for the project, which give the open picture no scale.
+- **The cause:** the one way to a scale, Mark it by hand, had a title that did not show (entry 517 fixed the color), so the person saw
+  no way to set one. Come back to from either choice, the question now says first that the picture still has no scale and that Mark it
+  by hand gives it one, a length you know such as the target's printed size typed in (`OpeningWords.StillNoScale`, `Entry517PhoneTests`).
+- **Records:** both entry 517 reports in error-reports.md now say Android and what nightly 251 fixes on the phone; Alan's line in
+  for-alan.md says it in the words that fit Android.
+
 ## Decision log
 
 One line per method choice where there was a real alternative: what was rejected, and why.
