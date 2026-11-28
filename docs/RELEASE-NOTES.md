@@ -466,7 +466,7 @@ From your reports and targets in this build: 2 fixes from 2 error reports.
 - A damaged session file, marking or GroupLab data file is now refused with a plain reason instead of failing, a data file is imported whole or not at all, and a sync file a cloud service left damaged now waits until it arrives whole.
 - On Android, the back gesture now returns to the screen before on a result, the picture's check, How did you shoot this sheet, Add a store-bought target and the printer check, where it could close GroupLab or skip a page.
 
-[Downloads for this build](https://github.com/oRAirwolf/grouplab/releases/tag/v0.2.0-nightly.221)
+**This build's release no longer exists on GitHub**, so there is nothing to download from it. The entry stays as the record of what the build was.
 
 ---
 
