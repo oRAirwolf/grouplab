@@ -22,7 +22,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   range charts and shots table. In nightly 249. Request 123 answered (a): the pictures stay as they are; reply 62-3 posted.
 - **Question 120 (b): LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`; RESTORE.md has the undo): nightly 247 says `llvm: ran`.
   Apple error reports are read for an LLVM cause (switch off at once if one could be); the device comparison at request 50's sitting.
-- **Nightly 251 carries** suggestion 63 (Where each center sits; reply 63-2 posts after it) and entries 517 and 518 (Set the scale on the computer; on the phone Mark it by hand shows and the question says when there is no scale).
+- **Nightly 251, published 2026-11-28,** carries suggestion 63 (Where each center sits; reply 63-2 posts after it) and entries 517 and 518 (Set the scale on the computer; on the phone Mark it by hand shows and the question says when there is no scale).
 - **Report 60's .338 sets, fixed 2026-11-26** (Alan's go): on a scan with a caliber, a hole is also read from the torn paper round it
   (`RenderDifferenceHoleDetector.WhiteBacker.cs`); the five .338 pages give 30 holes where they gave 7, the local bench loses nothing.
   In nightly 250; reply 60-5 posts after it; issue 60 closed with the commit. The guide says to scan on a dark sheet.
@@ -45,7 +45,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Deferred on purpose**: the designer's canvas and automatic detection on a bought target; nine are recognized by fingerprint.
 - **A numbered release** (made by release.yml from a tag): only when Alan asks, after the eight checks in `docs/RELEASE-PLAN.md`.
 
-1. Apple's answer on Mac 1.0.248 (nightly 249, with suggestion 62, waits behind it); nightly 251 to publish (suggestion 63, entry 517).
+1. Apple's answer on Mac 1.0.248 (nightly 249, with suggestion 62, waits behind it); reply 63-2 posts now that nightly 251 is out.
 2. Report 60's .338 fix is in nightly 250 (reply 60-5 follows it); what it still misses is in error-reports.md.
 3. Request 83, the M834 printing from the computer; request 50's sitting, when Alan has it.
 
@@ -70,7 +70,7 @@ Two, in `docs/QUESTIONS-FOR-PLANNING.md` (120 answered (b), 2026-11-25; 118 answ
 
 ## Builds and the site
 
-- **Last nightly:** 1.0.0-nightly.250 (2026-11-27), report 60's .338 fix; Mac 1.0.248 is in App Review. GitHub's
+- **Last nightly:** 1.0.0-nightly.251 (2026-11-28), suggestion 63 and entries 517 and 518; Mac 1.0.248 is in App Review. GitHub's
   Mac runners are sometimes short: rerun a job "not acquired" with --failed.
 - **The site** follows main by itself (website.yml), and now also after the Store's version and either screenshot job (entry 476).
 
