@@ -12,6 +12,27 @@ it ships in. A suggestion that is really a bug goes to `docs/notes/error-reports
 Claude Code lists the open `suggestion` issues at the same points as the error reports (the start of a run, before each inbox entry,
 before ending a turn, and at least hourly while waiting on CI) and writes each new one here at once.
 
+## Issue 63, 2026-11-28: draw where each load's center sits, instead of the sentences
+
+- **Asked** (feature-requests forum, nightly 250 on a Mac, following on from issue 62): the centers from the aim and the shift between
+  loads that issue 62 added to What the difference means, on the screen and the exported page, are long sentences and hard to read;
+  draw them instead, as an X-Y chart with error bars and labels, the way the groups are drawn, with a table like the shots to resolve a
+  difference. An annotated picture of nightly 250's exported page was attached, with each figure inside the sentences boxed.
+- **Already done?** The numbers, yes (issue 62, nightly 249): `LoadComparison` already holds each load's center with its 95 percent
+  range in both directions (`CentreRange`) and every pair's shift with its range (`Shifts`). The drawing, no: they reach the reader only
+  as sentences, each starting with the load's full name (about 90 characters, twice in the shift sentence), so the figures are buried.
+  The picture also shows the interval charts' labels cut to "GroupLab 3..." for both loads, told apart by color alone.
+- **Size:** small to medium. A chart "Where each center sits": the aim as a cross at its middle, each load's center as a dot in its
+  color with its range drawn as bars across and up, a grid at the groups' scale, drawn once and used on the screen (computer and phone)
+  and on the exported page beside the interval charts, as `IntervalChart` is. A short table under it (each load's center, across and
+  up, with its range, and the shift for each pair) in place of the sentences, which shrink to one line of verdict. Plus, cheaply: a short
+  label for each load (A, B, C, matching the colored name in the figures table) wherever a name is now cut or repeated.
+- **Fits:** yes; it is issue 62's numbers made readable, and the export should read at a glance when it is posted to Discord.
+  **One thing for Alan:** request 123 (a) kept the group pictures drawn about each group's own middle, with no aim on them. This chart
+  leaves the pictures exactly as they are, but it does put the aim on the page as a drawing of its own, so it is his call.
+- **Recommendation:** yes: the chart and the table on the screen and the export, the sentences cut to the verdict, and short load labels
+  where a name is cut. The group pictures stay as request 123 left them. Reply 63-1 says it is written up, no answer yet.
+
 ## Issue 62, 2026-11-26: the point of aim and the shift between loads on Compare loads and its export
 
 - **Asked** (feature-requests forum, nightly 247 on a Mac): on Compare loads and in its exported page, mark the point of aim (an X on

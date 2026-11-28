@@ -22,6 +22,7 @@ If something here disagrees with the logs, the logs are right and this file is o
   range charts and shots table. In nightly 249. Request 123 answered (a): the pictures stay as they are; reply 62-3 posted.
 - **Question 120 (b): LLVM on for the iPhone and iPad** (`GroupLabAppleLlvm`; RESTORE.md has the undo): nightly 247 says `llvm: ran`.
   Apple error reports are read for an LLVM cause (switch off at once if one could be); the device comparison at request 50's sitting.
+- **Suggestion 63, written up 2026-11-28, waits on Alan's yes**: Compare loads' centers and shift as a chart and table. Not built.
 - **Report 60's .338 sets, fixed 2026-11-26** (Alan's go): on a scan with a caliber, a hole is also read from the torn paper round it
   (`RenderDifferenceHoleDetector.WhiteBacker.cs`); the five .338 pages give 30 holes where they gave 7, the local bench loses nothing.
   In nightly 250; reply 60-5 posts after it; issue 60 closed with the commit. The guide says to scan on a dark sheet.
@@ -37,8 +38,7 @@ If something here disagrees with the logs, the logs are right and this file is o
 - **Velocity regression** (Phase 5): on both screens, with a session's own conditions (entry 416); the phone's picture waits on 50.
 - **Synchronization** (Phase 7): built on every platform (entries 461 to 472), tested on a simulated cloud with three devices; a real
   cloud client over weeks needs Alan's two devices (PROOF-CHECKLIST.md, line 4 of entry 472's list).
-- **iOS** (Phase 8): on the App Store as 1.0.247 (entry 513), each nightly after it to App Review; TestFlight for
-  the testers already in it; the device checks need a sitting (50), GroupLab Dev on the iPad request 61.
+- **iOS** (Phase 8): on the App Store (entry 513), each nightly to App Review; device checks need a sitting (50), GroupLab Dev request 61.
 - **Performance** (Phase 9): hole finding on a scan (entries 392, 433, 447, and 2026-10-20's open); a photograph's codes left as they are (question 106, (b)); nothing queued.
 - **Proof of the 31 "built, not proven" features**: docs/PROOF-CHECKLIST.md, one checklist of material; question 79 on five met.
 - **Stores**: Microsoft follows the nightlies (entry 369); Play's closed test is open (entry 490); Test Lab waits on request 62.
